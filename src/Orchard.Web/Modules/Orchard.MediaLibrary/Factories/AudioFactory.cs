@@ -57,12 +57,9 @@ namespace Orchard.MediaLibrary.Factories {
             part.Title = Path.GetFileNameWithoutExtension(path);
 
             var audioPart = part.As<AudioPart>();
-            
             if (audioPart == null) {
                 return null;
             }
-
-            audioPart.Length = 0;
 
             return part;
         }

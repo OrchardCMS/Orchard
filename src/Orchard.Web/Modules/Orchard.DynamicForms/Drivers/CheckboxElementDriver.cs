@@ -32,7 +32,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "large", "tokenized" },
+                        Classes: new[] { "text", "large" },
                         Description: T("The value of this checkbox.")));
 
                 return form;

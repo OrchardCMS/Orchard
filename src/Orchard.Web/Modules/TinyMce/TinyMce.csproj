@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -88,6 +90,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Less\orchard-tinymce.css">
+      <DependentUpon>orchard-tinymce.less</DependentUpon>
+    </Content>
+    <Content Include="Assets\Less\orchard-tinymce.min.css">
+      <DependentUpon>orchard-tinymce.css</DependentUpon>
+    </Content>
     <Content Include="Module.txt" />
     <Content Include="Scripts\langs\ar.js" />
     <Content Include="Scripts\langs\ar_SA.js" />
@@ -258,6 +266,7 @@
     <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\orchard-tinymce.css" />
     <Content Include="Views\Body-Html.Editor.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +313,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets.json" />
+    <Content Include="Assets\Less\orchard-tinymce.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -226,6 +226,12 @@ namespace Orchard.OutputCache.Filters {
                         // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
                         // should be resolved from it.
 
+                        // Recheck the response status code incase it was modified before the callback.
+                        if (response.StatusCode != 200) {
+                            Logger.Debug("Response for item '{0}' will not be cached because status code was set to {1} during rendering.", _cacheKey, response.StatusCode);
+                            return;
+                        }
+
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                             var cacheItem = new CacheItem() {
                                 CachedOnUtc = _now,
@@ -284,7 +290,7 @@ namespace Orchard.OutputCache.Filters {
                 var action = filterContext.ActionDescriptor.ActionName;
                 var culture = _workContext.CurrentCulture.ToLowerInvariant();
                 var auth = filterContext.HttpContext.User.Identity.IsAuthenticated.ToString().ToLowerInvariant();
-                var theme = _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant();
+                var theme = _workContext.CurrentTheme.Id.ToLowerInvariant();
 
                 itemDescriptor = string.Format("{0} (Area: {1}, Controller: {2}, Action: {3}, Culture: {4}, Theme: {5}, Auth: {6})", url, area, controller, action, culture, theme, auth);
             }
@@ -370,8 +376,11 @@ namespace Orchard.OutputCache.Filters {
             foreach (var p in filterContext.ActionParameters)
                 result.Add("PARAM:" + p.Key, p.Value);
 
+            // Vary by scheme.
+            result.Add("scheme", filterContext.RequestContext.HttpContext.Request.Url.Scheme);
+
             // Vary by theme.
-            result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
+            result.Add("theme", _workContext.CurrentTheme.Id.ToLowerInvariant());
 
             // Vary by configured query string parameters.
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
@@ -384,10 +393,16 @@ namespace Orchard.OutputCache.Filters {
             // Vary by configured request headers.
             var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
             foreach (var varyByRequestHeader in CacheSettings.VaryByRequestHeaders) {
-                if (requestHeaders.AllKeys.Contains(varyByRequestHeader))
+                if (requestHeaders[varyByRequestHeader]!=null)
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 
+            // Vary by configured cookies.
+            var requestCookies = filterContext.RequestContext.HttpContext.Request.Cookies;
+            foreach (var varyByRequestCookies in CacheSettings.VaryByRequestCookies) {
+                if (requestCookies[varyByRequestCookies] != null)
+                    result["COOKIE:" + varyByRequestCookies] = requestCookies[varyByRequestCookies].Value;
+            }
 
             // Vary by request culture if configured.
             if (CacheSettings.VaryByCulture) {
@@ -610,7 +625,7 @@ namespace Orchard.OutputCache.Filters {
                 return cacheItem;
             }
             catch (Exception e) {
-                Logger.Error(e, "An unexpected error occured while reading a cache entry");
+                Logger.Error(e, "An unexpected error occurred while reading a cache entry");
             }
 
             return null;

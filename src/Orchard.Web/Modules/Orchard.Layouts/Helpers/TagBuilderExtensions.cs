@@ -14,9 +14,10 @@ namespace Orchard.Layouts.Helpers {
         public static OrchardTagBuilder CreateElementTagBuilder(dynamic shape, string tag = "div") {
             return AddCommonElementAttributes(new OrchardTagBuilder(tag), shape);
         }
-        
+
         public static OrchardTagBuilder AddCommonElementAttributes(this OrchardTagBuilder tagBuilder, dynamic shape) {
             var attributes = GetCommonElementAttributes(shape);
+            tagBuilder.MergeAttributes(shape.Attributes);
             tagBuilder.MergeAttributes(attributes);
             return tagBuilder;
         }
@@ -46,7 +47,7 @@ namespace Orchard.Layouts.Helpers {
                 classes.Add(cssClass);
             }
 
-            if(classes.Any())
+            if (classes.Any())
                 attributes["class"] = String.Join(" ", classes);
 
             return attributes;

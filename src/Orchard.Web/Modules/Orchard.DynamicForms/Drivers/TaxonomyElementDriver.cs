@@ -67,6 +67,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
                         Classes: new[] { "text", "large", "tokenized" }),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this query field.")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -126,6 +132,13 @@ namespace Orchard.DynamicForms.Drivers {
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
 
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
+
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
@@ -150,8 +163,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             var projection = terms.Select(x => {
                 var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var value = _tokenizer.Replace(valueExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 return new SelectListItem {
                     Text = text,

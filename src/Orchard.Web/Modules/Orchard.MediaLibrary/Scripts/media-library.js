@@ -327,6 +327,17 @@ $(function () {
                 window.location = url;
             };
 
+            self.replaceMedia = function (item) {
+                var url = settings.replaceUrl;
+                var ids = [];
+                var folder = "";
+                if (self.displayed()) {
+                    folder = self.displayed();
+                }
+                viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+                var actionurl = url + '?folderPath=' + encodeURIComponent(folder) + "&replaceId=" + encodeURIComponent(ids[0]);
+                window.location = actionurl;
+            }
             var selectFolderOrRecent = function () {
                 if (self.displayed()) {
                     self.selectFolder(self.displayed());
@@ -382,7 +393,7 @@ $(function () {
                         /* NTFS uses "\" as the directory separator, but AFS uses "/".
                            Since both of them are illegal characters for file and folder names, it's safe to determine the type of file storage
                            currently in use based on the directory separator character. */
-                        var separator = deepestChildPath.contains('/') ? '/' : '\\';
+                        var separator = deepestChildPath.indexOf('/') > -1 ? '/' : '\\';
 
                         var deepestChildPathBreadCrumbs = deepestChildPath.split(separator);
                         var currentBreadCrumbs = self.folderPath().split(separator);

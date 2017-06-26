@@ -4,17 +4,19 @@
     Style.Require("ContentTypesAdmin");
 
     Layout.Title = T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString();
+
+    var returnUrl = Request.QueryString["returnUrl"];
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
-        <label for="DisplayName">@T("Display Name")</label>
+        <label for="DisplayName" class="required">@T("Display Name")</label>
         @Html.TextBoxFor(m => m.DisplayName, new {@class = "text medium", autofocus = "autofocus"})
         <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
-        <label for="Name">@T("Technical Name")</label>
+        <label for="Name" class="required">@T("Technical Name")</label>
         @Html.TextBoxFor(m => m.Name, new {@class = "text"})
-        <span class="hint">@T("Technical name of the field.")</span>    
+        <span class="hint">@T("Technical name of the field.")</span>
     </fieldset>
     <fieldset>
         <label for="FieldTypeName">@T("Field Type")</label>
@@ -22,6 +24,9 @@
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
+        @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+            <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+        }
     </fieldset>
 }
 

@@ -183,13 +183,15 @@ Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
             }
             else {
                 if (!String.IsNullOrEmpty(Text)) {
-                    layout = 
-                        "{\"elements\": [" +
-                            "{" +
-                              "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
-                              "\"data\": \"Content=" + Encode(Text) + "\"" +
-                            "}" +
-                          "]}";
+                    layout = @"{
+    'elements': [{
+        'typeName': 'Orchard.Layouts.Elements.Canvas',
+        'elements': [{
+            'typeName': 'Orchard.Layouts.Elements.Html',
+            'data': 'Content=" + Encode(Text) + @"'
+        }]
+    }]
+}";
                 }
             }
 

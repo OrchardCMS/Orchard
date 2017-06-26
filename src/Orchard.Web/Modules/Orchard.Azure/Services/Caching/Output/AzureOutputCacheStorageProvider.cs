@@ -141,7 +141,7 @@ namespace Orchard.Azure.Services.Caching.Output {
                     return Retry(function, times--);
                 }
                 catch (Exception e) {
-                    Logger.Error(e, "An unexpected error occured while releasing a DataCacheFactory.");
+                    Logger.Error(e, "An unexpected error occurred while releasing a DataCacheFactory.");
                     return default(T);
                 }
             }

@@ -46,7 +46,7 @@ namespace Orchard.Roles.Services {
 
         public IEnumerable<RoleRecord> GetRoles() {
             var roles = from role in _roleRepository.Table select role;
-            return roles.ToList();
+            return roles;
         }
 
         public RoleRecord GetRole(int id) {
@@ -90,10 +90,6 @@ namespace Orchard.Roles.Services {
             roleRecord.Name = roleName;
             roleRecord.RolesPermissions.Clear();
 
-            if (!String.Equals(currentRoleName, roleName)) {
-                _roleEventHandlers.Renamed(new RoleRenamedContext {Role = roleRecord, NewRoleName = roleName, PreviousRoleName = currentRoleName});
-            }
-
             foreach (var rolePermission in rolePermissions) {
                 string permission = rolePermission;
                 if (_permissionRepository.Get(x => x.Name == permission) == null) {
@@ -115,6 +111,10 @@ namespace Orchard.Roles.Services {
 
             foreach(var permission in currentPermissions.Values)
                 _roleEventHandlers.PermissionRemoved(new PermissionRemovedContext { Role = roleRecord, Permission = permission.Permission });
+
+            if (!String.Equals(currentRoleName, roleName)) {
+                _roleEventHandlers.Renamed(new RoleRenamedContext {Role = roleRecord, NewRoleName = roleName, PreviousRoleName = currentRoleName});
+            }
 
             TriggerSignal();
         }
