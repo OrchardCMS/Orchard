@@ -167,17 +167,19 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId)
+                .OrderBy(x => x.FullWeight)
                 .List();
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId && x.Path == "/")
+                .OrderBy(x => x.FullWeight)
                 .List();
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public TermPart GetTermByPath(string path) {
@@ -191,8 +193,10 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetAllTerms() {
             var result = _contentManager
                 .Query<TermPart, TermPartRecord>()
+                .OrderBy(x=>x.TaxonomyId)
+                .OrderBy(x=>x.FullWeight)
                 .List();
-            return TermPart.Sort(result);
+            return result;
         }
 
         public int GetTermsCount(int taxonomyId) {
@@ -331,13 +335,14 @@ namespace Orchard.Taxonomies.Services {
 
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.Path.StartsWith(rootPath))
+                .OrderBy(x=>x.FullWeight)
                 .List();
 
             if (includeParent) {
                 result = result.Concat(new[] { term });
             }
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         public IEnumerable<TermPart> GetParents(TermPart term) {
@@ -362,16 +367,31 @@ namespace Orchard.Taxonomies.Services {
             var children = GetChildren(term);
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
+            string previousFullWeight = term.FullWeight;
+            ProcessFullWeight(term, parentTerm);
 
             var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
             _contentManager.Publish(contentItem);
 
             foreach (var childTerm in children) {
                 ProcessPath(childTerm);
-
+                childTerm.FullWeight = ProcessChildrenFullWeight(childTerm.FullWeight, term.FullWeight, previousFullWeight);
                 contentItem = _contentManager.Get(childTerm.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }
+        }
+
+        public void ProcessFullWeight(TermPart term, TermPart parentTerm) {
+            term.FullWeight = (parentTerm != null ? parentTerm.FullWeight : "") + term.Weight.ToString("D6") + "." + term.Id + "/";
+        }
+
+        public string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight) {
+            if (string.IsNullOrWhiteSpace(childrenFullWeight)){
+                childrenFullWeight = parentFullWeight;
+            }
+            int pos = childrenFullWeight.IndexOf(parentOldFullWeight);
+
+            return childrenFullWeight.Substring(0, pos) + parentFullWeight + childrenFullWeight.Substring(pos + parentOldFullWeight.Length);
         }
 
         public void ProcessPath(TermPart term) {

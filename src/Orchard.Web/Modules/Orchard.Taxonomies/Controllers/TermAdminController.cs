@@ -46,9 +46,8 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
 
-            var allTerms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).List());
-
-            var termsPage = pager.PageSize > 0 ? allTerms.Skip(pager.GetStartIndex()).Take(pager.PageSize) : allTerms;
+            var allTerms = _taxonomyService.GetTermsQuery(taxonomyId).OrderBy(x => x.FullWeight);
+            var termsPage = pager.PageSize > 0 ? allTerms.Slice(pager.GetStartIndex(), pager.PageSize) : allTerms.Slice(0, 0);
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
 
@@ -90,7 +89,9 @@ namespace Orchard.Taxonomies.Controllers {
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
-                        _taxonomyService.DeleteTerm(term);
+                        if (term != null) {
+                            _taxonomyService.DeleteTerm(term);
+                        }
                     }
 
                     Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
