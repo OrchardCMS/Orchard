@@ -97,9 +97,10 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
                 .Where(x => x.TaxonomyId == taxonomyId)
+                .OrderBy(x=>x.FullWeight)
                 .List();
 
-            return TermPart.Sort(result);
+            return result;
         }
 
         new public TermPart GetTermByPath(string path) {
@@ -113,8 +114,10 @@ namespace Orchard.Taxonomies.Services {
         new public IEnumerable<TermPart> GetAllTerms() {
             var result = _contentManager
                 .Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
+                .OrderBy(x=>x.TaxonomyId)
+                .OrderBy(x=>x.FullWeight)
                 .List();
-            return TermPart.Sort(result);
+            return result;
         }
 
         new public TermPart GetTerm(int id) {
