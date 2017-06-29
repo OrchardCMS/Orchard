@@ -238,7 +238,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+    <!-- Orchard.Web doesn't have views and trying to build its views yields an error, so just do nothing. -->
   </Target>
   <ProjectExtensions>
     <VisualStudio>

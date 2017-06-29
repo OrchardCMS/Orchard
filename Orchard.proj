@@ -129,11 +129,19 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
-      Targets="Build"/>
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+  </Target>
+  
+  <Target Name="BuildViews">
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">

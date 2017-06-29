@@ -181,12 +181,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
       <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project>
@@ -229,7 +229,7 @@
     -->
   </Target>
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>
