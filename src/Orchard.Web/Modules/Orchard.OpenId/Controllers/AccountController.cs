@@ -65,21 +65,21 @@ namespace Orchard.OpenId.Controllers {
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
             _userEventHandler.LoggingIn(userNameOrEmail, password);
 
-            var user = ValidateLogOn(userNameOrEmail, password);
+            var validationResult = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 return View(_openIdProviders);
             }
 
             var membershipSettings = _membershipService.GetSettings();
-            if (user != null &&
+            if (validationResult != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(user.User, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = user.User.UserName });
+                _membershipService.PasswordIsExpired(validationResult.User, membershipSettings.PasswordExpirationTimeInDays)) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = validationResult.User.UserName });
             }
 
-            _authenticationService.SignIn(user.User, rememberMe);
-            _userEventHandler.LoggedIn(user.User);
+            _authenticationService.SignIn(validationResult.User, rememberMe);
+            _userEventHandler.LoggedIn(validationResult.User);
 
             return this.RedirectLocal(returnUrl);
         }

@@ -143,7 +143,7 @@ namespace Orchard.Users.Services {
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
             if (user == null || ValidatePassword(user.As<UserPart>(), password) == false)
-                return new IUserIdentityResult(null, new List<string>() { "Invalid password" });
+                return new IUserIdentityResult(null, new List<string>() { "The username or e-mail or password provided is incorrect." });
 
             if (user.EmailStatus != UserStatus.Approved)
                 errors.Add("You must verify your email");

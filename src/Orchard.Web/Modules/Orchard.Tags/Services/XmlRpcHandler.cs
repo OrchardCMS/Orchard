@@ -88,8 +88,8 @@ namespace Orchard.Tags.Services {
             if (postId < 1)
                 return;
 
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user.User, null);
+            var validationResult = _membershipService.ValidateUser(userName, password);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, validationResult.User, null);
 
             var driver = new XmlRpcDriver(item => {
                 var post = item as XRpcStruct;
@@ -117,8 +117,8 @@ namespace Orchard.Tags.Services {
         }
 
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user.User, null);
+            var validationResult = _membershipService.ValidateUser(userName, password);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, validationResult.User, null);
 
             var array = new XRpcArray();
             foreach (var tag in _tagService.GetTags()) {
@@ -137,7 +137,7 @@ namespace Orchard.Tags.Services {
         }
 
         private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
-            var user = _membershipService.ValidateUser(userName, password);
+            var validationResult = _membershipService.ValidateUser(userName, password);
 
             var rawTags = content.Optional<string>("mt_keywords");
             if (string.IsNullOrWhiteSpace(rawTags))
@@ -153,7 +153,7 @@ namespace Orchard.Tags.Services {
                 if (contentItem == null)
                     return;
 
-                _orchardServices.WorkContext.CurrentUser = user.User;
+                _orchardServices.WorkContext.CurrentUser = validationResult.User;
                 _tagService.UpdateTagsForContentItem(contentItem, tags);
             });
 

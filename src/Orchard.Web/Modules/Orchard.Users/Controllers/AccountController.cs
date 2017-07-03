@@ -419,16 +419,16 @@ namespace Orchard.Users.Controllers {
             if (!validate)
                 return null;
 
-            var user = _membershipService.ValidateUser(userNameOrEmail, password);
-            if (user.User == null) {
+            var validationResult = _membershipService.ValidateUser(userNameOrEmail, password);
+            if (validationResult.User == null) {
                 _userEventHandler.LogInFailed(userNameOrEmail, password);
             }
 
-            foreach (var error in user.Errors) {
+            foreach (var error in validationResult.Errors) {
                 ModelState.AddModelError("_FORM", error);
             }
 
-            return user.User;
+            return validationResult.User;
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
