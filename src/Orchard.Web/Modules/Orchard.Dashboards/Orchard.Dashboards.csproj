@@ -95,8 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
-    <Content Include="Styles\bootstrap.css" />
-    <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\dashboard.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
