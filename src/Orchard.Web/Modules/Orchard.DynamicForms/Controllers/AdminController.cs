@@ -6,6 +6,7 @@ using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.ViewModels;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DynamicForms.Controllers {
     public class AdminController : Controller {
