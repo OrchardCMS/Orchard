@@ -139,11 +139,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 37
     testRunner.When("I fill in", ((string)(null)), table3, "When ");
 #line 40
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 41
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 43
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 44
@@ -209,7 +209,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 72
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
 #line 75
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 76
     testRunner.Then("I should see \"The Active field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

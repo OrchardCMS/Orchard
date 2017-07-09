@@ -1,6 +1,7 @@
 ﻿<Placement>
   <!-- Location of field edition -->
   <Place Fields_TaxonomyField_Edit="Content:9"/>
+   <Place Fields_TaxonomyFieldList_Edit="Content:9"/>
   
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">
@@ -19,6 +20,9 @@
   
   <!-- Display in admin -->
   <Place Parts_Taxonomies_Term_Fields="Content:2"/>
+  
+  <!-- Display term selector in admin -->
+  <Place Parts_TaxonomyTermSelector="Content:1"/>
   
   <!-- New Shapes -->
   <Place Parts_TaxonomyPart="Content:5" />

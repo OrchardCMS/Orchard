@@ -2,10 +2,10 @@
 @{
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Templates");
-    var createLinkText = T("Create Template");
+    var createLinkText = T("Create New Template");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
         pageTitle = T("Manage {0}s", typeDisplayName);
-        createLinkText = T("Create {0}", typeDisplayName);
+        createLinkText = T("Create New {0}", typeDisplayName);
     }
 
     Layout.Title = pageTitle;

@@ -21,19 +21,17 @@ namespace Orchard.OpenId.Models {
             set { this.Store(x => x.PostLogoutRedirectUri, value); }
         }
 
-        public bool IsValid {
-            get {
-                if (String.IsNullOrWhiteSpace(ClientId) ||
-                    String.CompareOrdinal(ClientId, Constants.ActiveDirectoryFederationServices.DefaultClientId) == 0 ||
-                    String.IsNullOrWhiteSpace(MetadataAddress) ||
-                    String.CompareOrdinal(MetadataAddress, Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress) == 0 ||
-                    String.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
+        public bool IsValid() {
+            if (String.IsNullOrWhiteSpace(ClientId) ||
+                String.CompareOrdinal(ClientId, Constants.ActiveDirectoryFederationServices.DefaultClientId) == 0 ||
+                String.IsNullOrWhiteSpace(MetadataAddress) ||
+                String.CompareOrdinal(MetadataAddress, Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress) == 0 ||
+                String.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
 
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
     }
 }

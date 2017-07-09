@@ -26,7 +26,7 @@ namespace Orchard.Azure.Authentication.Services.ActiveDirectoryFederationService
             var workContext = _orchardServices.WorkContext;
             var settings = workContext.CurrentSite.As<ActiveDirectoryFederationServicesSettingsPart>();
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 var url = _urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Active Directory Federation Services settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }

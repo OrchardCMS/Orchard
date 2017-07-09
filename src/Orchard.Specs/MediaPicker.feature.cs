@@ -141,11 +141,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 39
     testRunner.When("I fill in", ((string)(null)), table3, "When ");
 #line 42
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 43
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 44
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 47
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
@@ -188,7 +188,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 62
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
 #line 65
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 66
     testRunner.Then("I should see \"The File field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 69
@@ -219,7 +219,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 76
     testRunner.And("I fill in", ((string)(null)), table8, "And ");
 #line 79
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 80
     testRunner.Then("I should see \"The File field must have one of these extensions: jpg.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

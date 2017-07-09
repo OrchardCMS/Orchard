@@ -21,47 +21,59 @@ namespace Orchard.Mvc.Routes {
 
             foreach (var item in displayPathsPerArea) {
                 var areaName = item.Key;
-                var extensionDescriptor = item.Distinct().Single();
-                var displayPath = extensionDescriptor.Path;
-                SessionStateBehavior defaultSessionState;
-                Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);
+                var extensionDescriptors = item.Distinct();
+
+                var displayPaths = new System.Collections.Generic.HashSet<string>();
+
+                foreach (var extensionDescriptor in extensionDescriptors)
+                {
+                    var displayPath = extensionDescriptor.Path;
+
+                    if (!displayPaths.Contains(displayPath))
+                    {
+                        displayPaths.Add(displayPath);
+
+                        SessionStateBehavior defaultSessionState;
+                        Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);
 
 
-                routes.Add(new RouteDescriptor {
-                    Priority = -10,
-                    SessionState = defaultSessionState,
-                    Route = new Route(
-                        "Admin/" + displayPath + "/{action}/{id}",
-                        new RouteValueDictionary {
-                            {"area", areaName},
-                            {"controller", "admin"},
-                            {"action", "index"},
-                            {"id", ""}
-                        },
-                        new RouteValueDictionary(),
-                        new RouteValueDictionary {
-                            {"area", areaName}
-                        },
-                        new MvcRouteHandler())
-                });
+                        routes.Add(new RouteDescriptor {
+                            Priority = -10,
+                            SessionState = defaultSessionState, 
+                            Route = new Route(
+                                "Admin/" + displayPath + "/{action}/{id}",
+                                new RouteValueDictionary {
+                                    {"area", areaName},
+                                    {"controller", "admin"},
+                                    {"action", "index"},
+                                    {"id", ""}
+                                },
+                                new RouteValueDictionary(),
+                                new RouteValueDictionary {
+                                    {"area", areaName}
+                                },
+                                new MvcRouteHandler())
+                        });
 
-                routes.Add(new RouteDescriptor {
-                    Priority = -10,
-                    SessionState = defaultSessionState,
-                    Route = new Route(
-                        displayPath + "/{controller}/{action}/{id}",
-                        new RouteValueDictionary {
-                            {"area", areaName},
-                            {"controller", "home"},
-                            {"action", "index"},
-                            {"id", ""}
-                        },
-                        new RouteValueDictionary(),
-                        new RouteValueDictionary {
-                            {"area", areaName}
-                        },
-                        new MvcRouteHandler())
-                });
+                        routes.Add(new RouteDescriptor {
+                            Priority = -10,
+                            SessionState = defaultSessionState,
+                            Route = new Route(
+                                displayPath + "/{controller}/{action}/{id}",
+                                new RouteValueDictionary {
+                                    {"area", areaName},
+                                    {"controller", "home"},
+                                    {"action", "index"},
+                                    {"id", ""}
+                                },
+                                new RouteValueDictionary(),
+                                new RouteValueDictionary {
+                                    {"area", areaName}
+                                },
+                                new MvcRouteHandler())
+                        });
+                    }
+                }
             }
         }
     }

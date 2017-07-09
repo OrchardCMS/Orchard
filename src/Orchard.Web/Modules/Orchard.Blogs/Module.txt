@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.1
+Version: 1.10.2
 OrchardVersion: 1.9
 Description: The Orchard Blogs module is implementing basic blogging features. 
 FeatureDescription: A simple web log.
@@ -14,3 +14,8 @@ Features:
         Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.
         Dependencies: XmlRpc, Orchard.Autoroute, Orchard.ContentPicker
         Category: Content Publishing
+	Orchard.Blogs.LocalizationExtensions:
+        Name: Blog multi-language support
+        Description: Extend Orchard Blogs module with fully integrated multi-language support.
+        Dependencies: Orchard.Localization
+        Category: Content

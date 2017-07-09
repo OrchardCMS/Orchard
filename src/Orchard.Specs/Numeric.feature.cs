@@ -139,11 +139,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 37
     testRunner.When("I fill in", ((string)(null)), table3, "When ");
 #line 40
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 41
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 43
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 44
@@ -192,7 +192,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 63
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
 #line 66
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 67
     testRunner.Then("I should see \"The Guests field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 70
@@ -227,7 +227,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 79
     testRunner.When("I fill in", ((string)(null)), table8, "When ");
 #line 82
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 83
     testRunner.Then("I should see \"The value must be greater than -10\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 84
@@ -242,7 +242,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 85
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
 #line 88
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 89
     testRunner.Then("I should see \"The value must be less than 100\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 92
@@ -260,7 +260,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 93
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
 #line 97
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 98
     testRunner.Then("I should see \"The value &#39;a&#39; is not valid for Minimum.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 99
@@ -277,7 +277,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 103
         testRunner.And("I fill in", ((string)(null)), table11, "And ");
 #line 106
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 107
     testRunner.Then("I should see \"Guests is an invalid number\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 110

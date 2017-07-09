@@ -8,7 +8,7 @@ Scenario: Default site is listed
         And I have installed "Orchard.MultiTenancy"
     When I go to "Admin/MultiTenancy"
     Then I should see "List of Site&#39;s Tenants"
-        And I should see "<h3>Default\s*</h3>"
+        And I should see "<h3>\s*Default\s*</h3>"
         And the status should be 200 "OK"
 
 Scenario: New tenant fields are required
@@ -28,7 +28,7 @@ Scenario: A new tenant is created
             | RequestUrlPrefix | scott |
         And I hit "Save"
         And I am redirected
-    Then I should see "<h3>Scott\s*</h3>"
+    Then I should see "<h3>\s*Scott\s*</h3>"
         And the status should be 200 "OK"
         
 Scenario: A new tenant is created with uninitialized state

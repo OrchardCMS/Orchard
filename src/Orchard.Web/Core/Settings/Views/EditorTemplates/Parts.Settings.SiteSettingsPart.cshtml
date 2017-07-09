@@ -70,6 +70,13 @@
         <span class="help-block">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version", new { @class = "form-control auto-size" })</span>
     </fieldset>
     <fieldset class="form-group">
+        <div class="or-checkbox">
+	    @Html.CheckBoxFor(m => m.UseFileHash)
+            @Html.LabelFor(m => m.UseFileHash, T("Use Resource File Hashing").Text, new { @class = "forcheckbox" })
+        </div>
+        <span class="hint">@T("Determines whether MD5 file hashes are appended to the URLs for scripts and stylesheets (provides automatic cache busting).")</span>
+    </div>
+    <fieldset class="form-group">
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "form-control auto-size" })
         <span class="help-block">@T("Determines the default number of items that are shown per page.")</span>

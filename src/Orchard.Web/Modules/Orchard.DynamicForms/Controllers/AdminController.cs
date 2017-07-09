@@ -31,5 +31,13 @@ namespace Orchard.DynamicForms.Controllers {
             };
             return View(viewModel);
         }
+        
+        public ActionResult GetTechnicalName(string displayName, int version) {
+            return Json(new {
+                result = displayName.ToHtmlName(),
+                version = version
+            });
+        }
+
     }
 }

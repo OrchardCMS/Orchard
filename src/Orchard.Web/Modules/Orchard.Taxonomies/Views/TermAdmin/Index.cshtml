@@ -61,6 +61,9 @@
                                             <input id="@Html.NameOf(m => m.Terms[ti].IsChecked)" type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
                                             <label for="@Html.NameOf(m => m.Terms[ti].IsChecked)"></label>
                                         </div>
+	                                @if (termEntry.HasDraft) {
+                                            <text>@T(" (Draft)")</text>
+                                        }
                                     </td>
                                     <td>
                                         @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)

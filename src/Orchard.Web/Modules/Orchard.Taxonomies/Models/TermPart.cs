@@ -51,6 +51,11 @@ namespace Orchard.Taxonomies.Models {
             set { Store(x => x.Weight, value); }
         }
 
+        public string FullWeight {
+            get { return Record.FullWeight; }
+            set { Record.FullWeight = value; }
+        }
+
         public string FullPath { get { return String.Concat(Path, Id); } }
 
         public static IEnumerable<TermPart> Sort(IEnumerable<TermPart> terms) {
@@ -59,6 +64,7 @@ namespace Orchard.Taxonomies.Models {
             return list.OrderBy(x => x, new TermsComparer(index));
         }
 
+        [Obsolete]
         private class TermsComparer : IComparer<TermPart> {
             private readonly IDictionary<string, TermPart> _index;
 

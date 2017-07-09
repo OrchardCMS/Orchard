@@ -4,8 +4,8 @@
     I want to create, edit and publish Text fields
 
 Scenario: Creating and using Text fields
-    
-    # Creating an Event content type 
+
+    # Creating an Event content type
     Given I have installed Orchard
         And I have installed "Orchard.Fields"
     When I go to "Admin/ContentTypes"
@@ -18,7 +18,7 @@ Scenario: Creating and using Text fields
         And I hit "Create"
         And I go to "Admin/ContentTypes/"
     Then I should see "Event"
-    
+
     # Adding a Text field
     When I go to "Admin/ContentTypes/Edit/Event"
         And I follow "Add Field"
@@ -30,52 +30,52 @@ Scenario: Creating and using Text fields
         And I hit "Save"
         And I am redirected
     Then I should see "The \"Subject\" field has been added."
-    
+
     # The display option should be effective
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                       | value |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "class=\"text large\""
-    
+
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                         | value |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I fill in 
+        And I fill in
             | name               | value |
             | Event.Subject.Text |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Subject field is required."
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                     | value                |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
-    
+
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"
     Then I should see "Subject"
-    When I fill in 
+    When I fill in
             | name               | value                |
             | Event.Subject.Text | Orchard Harvest 2015 |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as a draft."
         And I should see "Orchard Harvest 2015"
 
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                             | value                |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
         And I hit "Save"
@@ -84,7 +84,7 @@ Scenario: Creating and using Text fields
 
     # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                             | value |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
         And I hit "Save"
@@ -93,7 +93,7 @@ Scenario: Creating and using Text fields
 
     # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                             | value |
             | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | false |
         And I hit "Save"

@@ -52,7 +52,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             var azureWebSiteProtectionEnabled = false;
             var azureUseAzureGraphApi = false;
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 
@@ -60,6 +60,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             _azureTenant = settings.Tenant;
             _azureAdInstance = settings.ADInstance;
             _azureGraphApiUri = settings.GraphApiUrl;
+            _azureGraphApiKey = settings.GraphApiKey;
             logoutRedirectUri = settings.LogoutRedirectUri;
             azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
             azureAppKey = settings.AppKey;

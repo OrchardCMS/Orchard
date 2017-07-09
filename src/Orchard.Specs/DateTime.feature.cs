@@ -142,7 +142,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 37
     testRunner.When("I fill in", ((string)(null)), table3, "When ");
 #line 41
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
     testRunner.Then("I should see \"Date of the event could not be parsed as a valid date and time\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 45
@@ -168,11 +168,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 50
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
 #line 53
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 54
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 55
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 56
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 57
@@ -267,11 +267,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 98
     testRunner.When("I fill in", ((string)(null)), table10, "When ");
 #line 102
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 103
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 104
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 105
     testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
@@ -284,7 +284,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 106
      testRunner.And("I fill in", ((string)(null)), table11, "And ");
 #line 109
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 110
     testRunner.Then("I should see \"Date of the event is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 111
@@ -299,7 +299,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 112
      testRunner.And("I fill in", ((string)(null)), table12, "And ");
 #line 115
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 116
     testRunner.Then("I should see \"Date of the event is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 119
@@ -323,7 +323,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 126
     testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 127
-    testRunner.When("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 128
     testRunner.Then("I should see \"Date of the event is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 131
@@ -347,7 +347,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 138
     testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 139
-    testRunner.When("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 140
     testRunner.Then("I should see \"Date of the event is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 143
@@ -374,11 +374,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 151
     testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 152
-    testRunner.When("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 153
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 154
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 155
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 156
@@ -485,7 +485,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 197
         testRunner.And("I fill in", ((string)(null)), table19, "And ");
 #line 201
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 202
     testRunner.Then("I should see \"Date of the event could not be parsed as a valid date and time\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 203
@@ -503,11 +503,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 204
         testRunner.And("I fill in", ((string)(null)), table20, "And ");
 #line 208
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 209
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 210
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

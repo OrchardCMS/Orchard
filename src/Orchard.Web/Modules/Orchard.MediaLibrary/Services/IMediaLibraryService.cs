@@ -143,7 +143,7 @@ namespace Orchard.MediaLibrary.Services {
         string Combine(string path1, string path2);
     }
 
-    public static class MediaLibrayServiceExtensions {
+    public static class MediaLibraryServiceExtensions {
         public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
             // The current user can manage a media if he has access to the whole hierarchy
             // or the media is under his personal storage folder.
