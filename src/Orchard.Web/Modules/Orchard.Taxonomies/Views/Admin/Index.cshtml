@@ -74,7 +74,7 @@
                                             if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {                                            
                                                 <a class="btn btn-default" href="@Url.Action(" Import", new { id=taxonomyEntry.Id })"><i class="fa fa-cloud-download"></i> @T("Import")</a>
                                             }
-                                            <a class="btn btn-default" href="@Url.Action(" Index", "TermAdmin" , new { taxonomyId = taxonomyEntry.Id })"><i class="fa fa-tags"></i> @T("Terms")</a>
+                                            <a class="btn btn-default" href="@Url.Action("Index", "TermAdmin" , new { taxonomyId = taxonomyEntry.Id })"><i class="fa fa-tags"></i> @T("Terms")</a>
                                             if (Authorizer.Authorize(Permissions.ManageTaxonomies)) {
                                                 <a class="btn btn-primary" href="@Url.ItemEditUrl(taxonomyEntry.ContentItem)"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                                 <a class="btn btn-danger" href="@Url.ItemRemoveUrl(taxonomyEntry.ContentItem, new { returnUrl = Request.RawUrl })" data-confirm="@T(" Are you sure you want to delete this item?")"><i class="fa fa-trash"></i> @T("Delete")</a>
