@@ -50,30 +50,30 @@
             @if (contentItem.HasPublished()) {
                 @Html.ItemDisplayLink(T("View").Text, contentItem)
 
-            if (contentItem.HasDraft()) {
-                if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                    @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                    @T(" | ")
-                }
+                if (contentItem.HasDraft()) {
+                    if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                        @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                        @T(" | ")
+                    }
 
-                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
-                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                    @T(" | ")
+                    if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+                        @T(" | ")
+                    }
                 }
-            }
 
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
                     @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
 
                 }
-            }
-        } else {
-            if (contentItem.HasDraft()) {
-                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
-                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                    @T(" | ")
+
+            } else {
+                if (contentItem.HasDraft()) {
+                    if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+                        @T(" | ")
+                    }
                 }
-            }
 
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
                     @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
@@ -84,7 +84,7 @@
                 @Html.ItemEditLink(T("Edit").Text, contentItem)
             }
             @if (Authorizer.Authorize(Orchard.Blogs.Permissions.DeleteBlogPost, contentItem)) {
-                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new Dictionary<string, Object> { { "data-confirm", @T("Are you sure you want to delete this item?") } } )
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new Dictionary<string, Object> { { "data-confirm", @T("Are you sure you want to delete this item?") } })
             }
         </li>
     </ul>

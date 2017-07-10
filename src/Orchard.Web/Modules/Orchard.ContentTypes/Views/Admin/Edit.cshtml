@@ -5,7 +5,6 @@
     Script.Require("jQuery");
     Style.Require("jQueryUI");
     Layout.Title = T("Edit {0} Definition", Html.Raw(Model.DisplayName)).Text;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
     Html.AdminBreadcrumbs(new { CurrentContentType = Model.Definition });
 }
 

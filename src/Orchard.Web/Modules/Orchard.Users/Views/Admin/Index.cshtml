@@ -7,7 +7,7 @@
 
     Layout.Title = T("Users").ToString();
     Layout.Tail.Add(New.ConfirmationDialog());
-    Script.Require("UsersAdmin");
+    //Script.Require("UsersAdmin");
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -48,13 +48,13 @@
                         @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
                     </select>
                     <label for="sortResults">@T("Sort by:")</label>
-                        <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control">
-                            @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
-                            @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
-                            @Html.SelectOption(Model.Options.Order, UsersOrder.CreatedUtc, T("Creation Time").ToString())
-                            @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
-                        </select>
-                    
+                    <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)" class="form-control">
+                        @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
+                        @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
+                        @Html.SelectOption(Model.Options.Order, UsersOrder.CreatedUtc, T("Creation Time").ToString())
+                        @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
+                    </select>
+
                     <button type="submit" name="submit.Filter" value="@T("Filter")" class="btn btn-default">@T("Filter")</button>
                 </fieldset>
             </div>
@@ -113,7 +113,7 @@
                                         <a class="btn btn-success" href="@Url.Action("Approve", new { entry.User.Id })" itemprop="UnsafeUrl"><i class="fa fa-thumbs-up"></i> @T("Approve")</a>
                                         <a class="btn btn-primary" href="@Url.Action("Edit",  new { entry.User.Id })"><i class="fa fa-pencil-square-o"></i> @T("Edit")</a>
                                     } else {
-                                        <a class="btn btn-warning" href="@Url.Action("Moderate", new { entry.User.Id })" itemprop = "UnsafeUrl"><i class="fa fa-thumbs-down"></i> @T("Disable")</a>
+                                        <a class="btn btn-warning" href="@Url.Action("Moderate", new { entry.User.Id })" itemprop="UnsafeUrl"><i class="fa fa-thumbs-down"></i> @T("Disable")</a>
                                     }
                                     @if (entry.User.EmailStatus == UserStatus.Pending) {
                                         <a class="btn btn-primary" href="@Url.Action("SendChallengeEmail", new { entry.User.Id })" itemprop="UnsafeUrl"><i class="fa fa-envelope-o"></i> @T("Send challenge E-mail")</a>
