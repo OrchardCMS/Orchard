@@ -23,7 +23,7 @@ namespace Orchard.Layouts.Services {
         /// Renders the specified layout Data into a shape tree.
         /// </summary>
         /// <param name="data">The layout Data.</param>
-        /// <param name="displayType">Optional. The dislay type to use when rendering the elements.</param>
+        /// <param name="displayType">Optional. The display type to use when rendering the elements.</param>
         /// <param name="content">Optional. Provides additional context to the elements being loaded and rendered.</param>
         /// <returns>A shape representing the layout to be rendered.</returns>
         dynamic RenderLayout(string data, string displayType = null, IContent content = null);
