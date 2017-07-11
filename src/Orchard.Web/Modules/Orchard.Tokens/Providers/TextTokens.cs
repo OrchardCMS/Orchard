@@ -32,7 +32,7 @@ namespace Orchard.Tokens.Providers {
                 // {Text}
                 .Token(
                     token => token == String.Empty ? String.Empty : null,
-                    (token, d) => d.ToString())
+                    (token, d) => d)
                 // {Text.Limit:<length>[,<ellipsis>]}
                 .Token(
                     token => FilterTokenParam("Limit:", token),
