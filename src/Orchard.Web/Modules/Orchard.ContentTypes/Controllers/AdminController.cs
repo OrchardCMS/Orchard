@@ -390,6 +390,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
 
+            viewModel.Name = viewModel.Name.ToSafeName(); // The name must be sanitized first.
+
             if (_contentDefinitionManager.GetPartDefinition(viewModel.Name) != null)
                 ModelState.AddModelError("Name", T("Cannot add part named '{0}'. It already exists.", viewModel.Name).ToString());
 
