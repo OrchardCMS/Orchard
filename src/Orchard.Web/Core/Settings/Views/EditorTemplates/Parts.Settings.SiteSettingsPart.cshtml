@@ -71,11 +71,11 @@
     </fieldset>
     <fieldset class="form-group">
         <div class="or-checkbox">
-	    @Html.CheckBoxFor(m => m.UseFileHash)
+            @Html.CheckBoxFor(m => m.UseFileHash)
             @Html.LabelFor(m => m.UseFileHash, T("Use Resource File Hashing").Text, new { @class = "forcheckbox" })
         </div>
         <span class="hint">@T("Determines whether MD5 file hashes are appended to the URLs for scripts and stylesheets (provides automatic cache busting).")</span>
-    </div>
+    </fieldset>
     <fieldset class="form-group">
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "form-control auto-size" })

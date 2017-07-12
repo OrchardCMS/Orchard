@@ -1,13 +1,14 @@
 ﻿/*------------------------------------------------------------------
 	[Left sidebar]
 */
-.sidebar-elements {
+.or-left-sidebar .sidebar-elements {
 
     > li {
 
         > a {
             text-align: left;
             position: relative;
+            padding: 7px 7px 7px 15px;
             //RTL Support
             .rtl & {
                 text-align: right;
@@ -15,9 +16,12 @@
 
             .icon {
                 display: inline-block;
-                font-size: 25px;
+                font-size: 22px;
                 margin-right: 10px;
+                text-align: center;
                 vertical-align: middle;
+                width: 20px;
+                text-align: center;
                 //RTL Support
                 .rtl & {
                     margin-right: 0;
@@ -68,6 +72,10 @@
                         padding-top: 0;
                         overflow: visible;
                         position: relative;
+
+                        > ul > li > a {
+                            padding: 7px 30px;
+                        }
                     }
                 }
             }
