@@ -7,6 +7,9 @@
     tagBuilder.Attributes["type"] = "radio";
     tagBuilder.Attributes["name"] = element.Name;
     tagBuilder.Attributes["value"] = element.Value;
+    if (element.DefaultValue) {
+        tagBuilder.Attributes["checked"] = "checked";
+    }
 }
 @if (element.ShowLabel) {
     <label>

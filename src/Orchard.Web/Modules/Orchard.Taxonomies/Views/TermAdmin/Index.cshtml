@@ -1,6 +1,6 @@
 ﻿@model TermAdminIndexViewModel
+@using Orchard.Taxonomies
 @using Orchard.Taxonomies.ViewModels;
-
 @using Orchard.Taxonomies.Helpers;
 @{
     Style.Include("admin-taxonomy.css");
@@ -9,19 +9,21 @@
     var termIndex = 0;
 }
 
-@using(Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-    @Html.HiddenFor(m=>m.TaxonomyId)
+    @Html.HiddenFor(m => m.TaxonomyId)
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Delete, T("Delete").ToString())
             @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Move, T("Move").ToString())
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
     </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a term").ToString(), "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "button primaryAction" })</div>
+    if (Authorizer.Authorize(Permissions.CreateTerm)) {
+        <div class="manage">@Html.ActionLink(T("Add a term").ToString(), "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "button primaryAction" })</div>
+    }
     <fieldset>
         <table class="items" summary="@T("This is a table of the terms in your application")">
             <colgroup>
@@ -34,20 +36,25 @@
                     <th scope="col"></th>
                 </tr>
             </thead>
-                @foreach ( var termEntry in Model.Terms) {
+            @foreach (var termEntry in Model.Terms) {
                     var ti = termIndex;
-                    <tr>
-                <td>
-                    <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)"/>
-                    @* Tabs for levels *@ @for ( var i = 1; i <= termEntry.GetLevels(); i++ ) { <span class="gap">&nbsp;</span> }
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)"/>
-                    @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
-                </td>
-                <td>
-                @Html.ItemEditLink(T("Edit").Text, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) }) |
-                @Html.ActionLink(T("Move").ToString(), "MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)" />
+                        @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) { <span class="gap">&nbsp;</span> }
+                        <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
+                        @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
+                        @if (termEntry.HasDraft) {
+                            <text>@T(" (Draft)")</text>
+                        }
+                    </td>
+                    <td>
+                        @if (Authorizer.Authorize(Permissions.EditTerm)) {
+                            @Html.ItemEditLink(T("Edit").Text, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) }) <text>|</text>
+                            @Html.ActionLink(T("Move").ToString(), "MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })
+                        }
+                    </td>
+                </tr>
                 termIndex++;
             }
         </table>

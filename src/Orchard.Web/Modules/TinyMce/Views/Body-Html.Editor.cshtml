@@ -3,6 +3,7 @@
 @using Orchard.Localization
 
 @{
+    var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
 }
 
@@ -11,16 +12,17 @@
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
     var directionality = '@WorkContext.GetTextDirection((IContent)Model.ContentItem)';
     var language = '@Model.Language';
-    var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId("Text") : null)";
+    var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId(propertyName) : null)";
 </script>
 
 @{ 
     Script.Require("OrchardTinyMce");
     Script.Require("jQueryColorBox");
     Style.Require("jQueryColorBox");
+    Style.Require("OrchardTinyMce");
 }
 
-@Html.TextArea("Text", (string)Model.Text, 25, 80,
+@Html.TextArea(propertyName, (string)Model.Text, 25, 80,
      new Dictionary<string,object> {
         {"class", "html tinymce"},
         {"data-mediapicker-uploadpath",Model.AddMediaPath},

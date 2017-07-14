@@ -19,7 +19,7 @@ namespace Orchard.DynamicForms.ValidationRules {
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
             return String.IsNullOrWhiteSpace(ErrorMessage)
-                ? T("{0} is a mandatory field.", context.FieldName)
+                ? T("{0} is a required field.", context.FieldName)
                 : T(ErrorMessage);
         }
     }

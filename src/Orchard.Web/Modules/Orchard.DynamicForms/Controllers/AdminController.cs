@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.ViewModels;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DynamicForms.Controllers {
     public class AdminController : Controller {
@@ -16,6 +17,13 @@ namespace Orchard.DynamicForms.Controllers {
                 Forms = forms
             };
             return View(viewModel);
+        }
+
+        public ActionResult GetTechnicalName(string displayName, int version) {
+            return Json(new {
+                result = displayName.ToHtmlName(),
+                version = version
+            });
         }
     }
 }

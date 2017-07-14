@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -67,12 +69,12 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -118,13 +120,14 @@
     <Content Include="Styles\DynamicForms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
+    <Content Include="Styles\recipebuilderstep-forms.css" />
     <Content Include="Styles\workflows-activity-add-model-error.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-submitted.css" />
     <Content Include="Styles\workflows-activity-dynamic-form-validating.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +307,7 @@
     <Compile Include="Validators\TextAreaValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="Validators\UrlFieldValidator.cs" />
+    <Compile Include="ViewModels\FormExportEntry.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
     <Compile Include="Helpers\ContentTypeDefinitionExtensions.cs" />
@@ -548,6 +552,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\BuilderSteps\FormSubmissions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AutoLabelScript.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

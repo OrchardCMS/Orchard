@@ -9,7 +9,7 @@ Scenario: HTML markup in any given comment is encoded
         And I fill in
             | name | value |
             | Title.Title | My Blog |
-        And I hit "Save"
+        And I hit "Publish"
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
@@ -17,7 +17,7 @@ Scenario: HTML markup in any given comment is encoded
             | name | value |
             | Title.Title | My Post |
             | Body.Text | Hi there. |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "my-blog/my-post"
         And I fill in
             | name | value |

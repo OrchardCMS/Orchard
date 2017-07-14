@@ -36,7 +36,7 @@ namespace Orchard.AntiSpam.Services {
                 return SpamStatus.Ham;
             }
             catch(Exception e) {
-                Logger.Error(e, "An error occured while checking for spam");
+                Logger.Error(e, "An error occurred while checking for spam");
                 return SpamStatus.Spam;
             }
         }
@@ -46,7 +46,7 @@ namespace Orchard.AntiSpam.Services {
                 var result = ExecuteValidateRequest(context, "submit-spam");
             }
             catch (Exception e) {
-                Logger.Error(e, "An error occured while reporting spam");
+                Logger.Error(e, "An error occurred while reporting spam");
             }
         }
 
@@ -55,7 +55,7 @@ namespace Orchard.AntiSpam.Services {
                 var result = ExecuteValidateRequest(context, "submit-ham");
             }
             catch (Exception e) {
-                Logger.Error(e, "An error occured while reporting ham");
+                Logger.Error(e, "An error occurred while reporting ham");
             }
         }
 

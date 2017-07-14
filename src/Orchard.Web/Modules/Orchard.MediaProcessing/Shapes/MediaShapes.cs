@@ -54,7 +54,7 @@ namespace Orchard.MediaProcessing.Shapes {
                 Output.Write(_imageProfileManager.Value.GetImageProfileUrl(Path, Profile, CustomFilter, ContentItem));
             }
             catch (Exception ex) {
-                Logger.Error(ex, "An error occured while rendering shape {0} for image {1}", Profile, Path);
+                Logger.Error(ex, "An error occurred while rendering shape {0} for image {1}", Profile, Path);
             }
         }
 

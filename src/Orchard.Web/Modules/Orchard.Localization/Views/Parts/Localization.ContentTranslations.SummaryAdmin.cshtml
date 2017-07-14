@@ -16,7 +16,7 @@ var localizationLinks = Html.UnorderedList(localizations, (c, i) => Html.ItemEdi
     }
     @if (Model.Culture != null && !((IEnumerable<string>)Model.SiteCultures).All(c => c == Model.Culture || localizations.Any(l => c == l.Culture.Culture)))
     {
-    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.Id }, null)</div>
+    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.MasterId }, new { itemprop = "UnsafeUrl" })</div>
     }
 </div>
 }

@@ -46,8 +46,7 @@ namespace Orchard.Modules.Controllers {
             IRecipeManager recipeManager,
             ShellDescriptor shellDescriptor,
             ShellSettings shellSettings,
-            IShapeFactory shapeFactory)
-        {
+            IShapeFactory shapeFactory) {
             Services = services;
             _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _moduleService = moduleService;
@@ -77,7 +76,7 @@ namespace Orchard.Modules.Controllers {
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType) &&
-                                              
+
                                               (string.IsNullOrEmpty(options.SearchText) || extensionDescriptor.Name.ToLowerInvariant().Contains(options.SearchText.ToLowerInvariant())))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
@@ -158,13 +157,13 @@ namespace Orchard.Modules.Controllers {
             try {
                 _recipeManager.Execute(recipe);
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 Logger.Error(e, "Error while executing recipe {0} in {1}", moduleId, name);
                 Services.Notifier.Error(T("Recipes {0} contains  unsupported module installation steps.", recipe.Name));
             }
 
-            Services.Notifier.Information(T("The recipe {0} was executed successfully.", recipe.Name));
-            
+            Services.Notifier.Success(T("The recipe {0} was executed successfully.", recipe.Name));
+
             return RedirectToAction("Recipes");
 
         }
@@ -177,15 +176,15 @@ namespace Orchard.Modules.Controllers {
             IEnumerable<ModuleFeature> features = _featureManager.GetAvailableFeatures()
                 .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType))
                 .Select(f => new ModuleFeature {
-                                Descriptor = f,
-                                IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
-                                IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(f.Extension),
-                                NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id),
-                                DependentFeatures = _moduleService.GetDependentFeatures(f.Id).Where(x => x.Id != f.Id).ToList()
-                            })
+                    Descriptor = f,
+                    IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
+                    IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(f.Extension),
+                    NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id),
+                    DependentFeatures = _moduleService.GetDependentFeatures(f.Id).Where(x => x.Id != f.Id).ToList()
+                })
                 .ToList();
 
-            return View(new FeaturesViewModel { 
+            return View(new FeaturesViewModel {
                 Features = features,
                 IsAllowed = ExtensionIsAllowed
             });
@@ -212,13 +211,13 @@ namespace Orchard.Modules.Controllers {
                     case FeaturesBulkAction.None:
                         break;
                     case FeaturesBulkAction.Enable:
-                        _moduleService.EnableFeatures(disabledFeatures, force == true);
+                        EnableFeatures(disabledFeatures, force == true);
                         break;
                     case FeaturesBulkAction.Disable:
                         _moduleService.DisableFeatures(enabledFeatures, force == true);
                         break;
                     case FeaturesBulkAction.Toggle:
-                        _moduleService.EnableFeatures(disabledFeatures, force == true);
+                        EnableFeatures(disabledFeatures, force == true);
                         _moduleService.DisableFeatures(enabledFeatures, force == true);
                         break;
                     case FeaturesBulkAction.Update:
@@ -229,10 +228,10 @@ namespace Orchard.Modules.Controllers {
                             var id = feature.Descriptor.Id;
                             try {
                                 _dataMigrationManager.Update(id);
-                                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
+                                Services.Notifier.Success(T("The feature {0} was updated successfully", id));
                             }
                             catch (Exception exception) {
-                                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));
+                                Services.Notifier.Error(T("An error occurred while updating the feature {0}: {1}", id, exception.Message));
                             }
                         }
                         break;
@@ -249,6 +248,17 @@ namespace Orchard.Modules.Controllers {
         /// </summary>
         private bool ExtensionIsAllowed(ExtensionDescriptor extensionDescriptor) {
             return _shellSettings.Modules.Length == 0 || _shellSettings.Modules.Contains(extensionDescriptor.Id);
+        }
+
+        private void EnableFeatures(List<string> disabledFeatures, bool force) {
+            foreach (var feature in disabledFeatures) {
+                if (_featureManager.HasLoader(feature)) {
+                    _moduleService.EnableFeatures(disabledFeatures, force);
+                }
+                else {
+                    Services.Notifier.Error(T("No loader found for feature's (\"{0}\") exension!", feature));
+                }
+            }
         }
     }
 }

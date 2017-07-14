@@ -474,18 +474,17 @@ nav ul.breadcrumb
 .meta {}
 
 /* Comments */
-#comments { margin: 24px 0 0 0; padding: 0; }
+.comments-disabled { margin: 24px 0 0 0; padding: 0; }
 .comment-form { margin: 24px 0 0 0; padding: 0; }
-.comments { margin: 0; padding: 0; list-style: none; }
+.comments { margin: 0 0 1em 0; padding: 0; list-style: none; }
 .comments li { margin: 12px 0 0 0; padding: 12px; border: 1px solid #dbdbdb; }
+.comments .comments { margin-bottom: 0; }
 .comment { margin: 0; padding: 0; }
 .comment h4 { font-size: 1.077em; }
 .comment .who {}
 .comment .what {}
 .comment .reply { float: right;}
-.comment #add-comment {}
-.comment-form #comment-by { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
-.comment-form .comment-text { width: 33.2em; }
+.comment-form .comment-text { width: 97%; max-width: 33.2em; }
 .comment-form input[type="text"] { width: 32em; }
 .comment-form li { border: inherit; margin: inherit; padding: inherit}
 .comment-disabled {}
@@ -494,7 +493,8 @@ nav ul.breadcrumb
 /* Confirmations */
 .message, .validation-summary-errors { margin:10px 0 4px 0; padding:4px; }
 .messages a { font-weight:bold; }
-.message-Information { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Success { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Information { background:#d9edf7; /* blue */ border:1px solid #bce8f1; color:#31708f; }
 .message-Warning { background:#fdf5bc; /* yellow */ border:1px solid #ffea9b; }
 .critical.message, .validation-summary-errors, .message-Error { background:#e68585; /* red */ border:1px solid #990808; color:#fff; }
 
@@ -739,7 +739,7 @@ button:focus, .button:focus {
 .dir-rtl .aside-2 .aside-second { float: left; }
 
 /* If zones 1, 2 are on */
-.dir-rtl .aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:right; }
+.dir-rtl .aside-12 .aside-first, .dir-rtl .aside-12 .aside-second, .dir-rtl .aside-12 #layout-content { float:right; }
 
 /* Tripel Zones*/
 .dir-rtl #layout-tripel > div { float:right; }

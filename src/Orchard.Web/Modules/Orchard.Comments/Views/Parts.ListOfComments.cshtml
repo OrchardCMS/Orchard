@@ -4,6 +4,7 @@
     
     // add 'comments' class on the list container
     Model.List.Classes.Add("comments");
+    Model.List.Id = string.Format("comments_{0}", commentsPart.ContentItem.Id);
 }
 
 <h2 class="comment-count">@T.Plural("No Comments", "1 Comment", "{0} Comments", (int)Model.CommentCount)</h2>
@@ -11,48 +12,5 @@
 
 @* render reply button if threaded comments enabled *@
 @if(commentsPart.ThreadedComments) {
-    Script.Require("jQuery");
-    using (Script.Foot()) {
-
-<script type="text/javascript">
-//<![CDATA[
-    $(function() {
-        $('.comment-reply-button').click(function() {
-            var self = $(this);
-
-            var reply = $('#Comments_RepliedOn');
-            var currentReply = reply.val();
-
-            @* should we restore the form at its original location ? *@
-            if (currentReply && currentReply.length > 0) {
-                reply.val('');
-                $('#comment-form-beacon').after($('.comment-form'));
-            } else {
-                @* assign repliedOn id *@
-                var id = self.data('id');
-                reply.val(id);
-
-                @* inject the form in the replied zone *@
-                $('.comment-form').appendTo(self.parents('article').first());
-            }
-
-            @* don't execute the link action *@
-            return false;
-        });
-
-
-        @if (TempData.ContainsKey("Comments.RepliedOn")) {
-            // invalid form while replying
-
-        <text>
-        var reply = $('#Comments_RepliedOn');
-        reply.val(@TempData["Comments.RepliedOn"]);
-        $('.comment-form').appendTo($('#comment-@TempData["Comments.RepliedOn"]'));
-        </text>
-        }
-
-    });
-//]]>
-</script>
- }
+    Script.Require("Comments.Threaded").AtFoot();
 }

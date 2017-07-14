@@ -4,12 +4,14 @@
     Style.Require("ContentTypesAdmin");
 
     Layout.Title = T("Edit Field \"{0}\"", Html.Raw(Model.DisplayName)).ToString();
+
+    var returnUrl = Request.QueryString["returnUrl"];
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
-        <label for="DisplayName">@T("Display Name")</label>
+        <label for="DisplayName" class="required">@T("Display Name")</label>
         @Html.TextBoxFor(m => m.DisplayName, new {@class = "text medium", autofocus = "autofocus"})
         <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
         
@@ -17,5 +19,8 @@
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
+        @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+            <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+        }
     </fieldset>
 }

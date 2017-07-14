@@ -64,7 +64,7 @@ namespace Orchard.Projections.Controllers {
             sortCriterion.QueryPartRecord.SortCriteria.Remove(sortCriterion);
             _repository.Delete(sortCriterion);
 
-            Services.Notifier.Information(T("Sort criteria deleted"));
+            Services.Notifier.Success(T("Sort criteria deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id });
         }

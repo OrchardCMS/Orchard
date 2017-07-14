@@ -6,58 +6,60 @@
 <fieldset class="localization culture-selection">
     <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
     <div>
-        @*Brand new content item*@
-        @if (Model.ContentItem.ContentItem.Id == 0) {
-            if (Model.MasterContentItem == null) {
-                @T("This is the <em>{0}</em> variation of the content",
-                    BuildSelectedCultureList(
-                        Html.FieldIdFor(m => m.SelectedCulture),
-                        Html.FieldNameFor(m => m.SelectedCulture),
-                        Model.MissingCultures,
-                        Model.SelectedCulture))
+        @if (!string.IsNullOrEmpty(Model.SelectedCulture))
+        {
+            @T("This is the <em>{0}</em> variation of the content",
+                Html.Encode(Model.SelectedCulture))
+
+            if (Model.ContentLocalizations.Localizations.Any())
+            {
+                <dl class="content-localization">
+                    <dt>@T("Other translations:")</dt>
+                    <dd class="content-localizations">
+                        @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
+                            Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+                    </dd>
+                </dl>
             }
-            else {
-                @T("This is the <em>{0}</em> variation of {1}",
+
+            if (Model.MissingCultures.Any())
+            {
+                var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
+
+                <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId }, new { itemprop = "UnsafeUrl" })</div>
+            }
+
+            @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
+        }
+        else if (Model.MasterContentItem != null)
+        {
+            @T("This is the <em>{0}</em> variation of {1}",
                     BuildSelectedCultureList(
                         Html.FieldIdFor(m => m.SelectedCulture),
                         Html.FieldNameFor(m => m.SelectedCulture),
                         Model.MissingCultures,
                         Model.SelectedCulture),
                     Html.ItemEditLink(Model.MasterContentItem))
+
+            if (Model.ContentLocalizations.Localizations.Any())
+            {
+                <dl class="content-localization">
+                    <dt>@T("Other translations:")</dt>
+                    <dd class="content-localizations">
+                        @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
+                            Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+                    </dd>
+                </dl>
             }
         }
-
-        @if (Model.ContentItem.ContentItem.Id > 0) {
-            if (string.IsNullOrEmpty(Model.SelectedCulture)) {
-                @T("This content currently has no culture associated to it, please select a culture to associate to this piece of content: {0}",
-                    BuildSelectedCultureList(
-                        Html.FieldIdFor(m => m.SelectedCulture),
-                        Html.FieldNameFor(m => m.SelectedCulture),
-                        Model.MissingCultures,
-                        Model.SelectedCulture))
-            }
-            else {
-                @T("This is the <em>{0}</em> variation of the content",
-                    Html.Encode(Model.SelectedCulture))
-
-                if (Model.ContentLocalizations.Localizations.Any()) {
-                    <dl class="content-localization">
-                        <dt>@T("Other translations:")</dt>
-                        <dd class="content-localizations">
-                            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
-                                Html.ItemEditLink(c.Culture.Culture, c), "localizations")
-                        </dd>
-                    </dl>
-                }
-
-                if (Model.MissingCultures.Any()) {
-                    var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
-
-                    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new {area = "Orchard.Localization", id = contentItemId}, null)</div>
-                }
-
-                @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
-            }
+        else
+        {
+            @T("This is the <em>{0}</em> variation of the content",
+                BuildSelectedCultureList(
+                    Html.FieldIdFor(m => m.SelectedCulture),
+                    Html.FieldNameFor(m => m.SelectedCulture),
+                    Model.MissingCultures,
+                    Model.SelectedCulture))
         }
     </div>
 </fieldset>
@@ -74,8 +76,15 @@
             TagBuilder optionTag = new TagBuilder("option");
             optionTag.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(siteCulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
 
-            if (siteCulture == culture) {
-                optionTag.Attributes["selected"] = "selected";
+            if(string.IsNullOrEmpty(culture)) {
+                if (siteCulture == WorkContext.CurrentSite.SiteCulture) {
+                    optionTag.Attributes["selected"] = "selected";
+                }
+            }
+            else {
+                if (siteCulture == culture) {
+                    optionTag.Attributes["selected"] = "selected";
+                }
             }
             optionTag.SetInnerText(Html.Encode(siteCulture));
             selectTag.InnerHtml += optionTag.ToString();

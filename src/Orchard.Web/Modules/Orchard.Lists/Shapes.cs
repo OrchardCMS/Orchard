@@ -24,6 +24,8 @@ namespace Orchard.Lists {
             builder.Describe("ListNavigation").OnDisplaying(context => {
                 var containable = (ContainablePart) context.Shape.ContainablePart;
                 var container = _containerService.Value.GetContainer(containable, VersionOptions.Latest);
+                if (container == null) return;
+
                 var previous = _containerService.Value.Previous(container.Id, containable);
                 var next = _containerService.Value.Next(container.Id, containable);
 

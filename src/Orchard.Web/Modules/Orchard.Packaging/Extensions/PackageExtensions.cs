@@ -41,9 +41,17 @@ namespace Orchard.Packaging.Extensions {
         }
 
         private static string ExtensionId(bool isTheme, string packageId) {
-            return isTheme ?
-                packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length) :
-                packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length);
+
+            if (packageId.Contains(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))
+                || packageId.Contains(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+
+                return isTheme
+                    ? packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length)
+                    : packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length);
+            }
+            else {
+                return packageId;
+            }
         }
 
 

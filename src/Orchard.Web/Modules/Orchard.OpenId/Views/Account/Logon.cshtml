@@ -1,0 +1,39 @@
+﻿@model IEnumerable<IOpenIdProvider>
+@using Orchard.OpenId.Services
+@using Orchard.Utility.Extensions
+
+<h1 class="title">Logon</h1>
+<hr />
+<h5></h5>
+@using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", "Account", new { Area = "Orchard.OpenId", ReturnUrl = Request.QueryString["ReturnUrl"] }))) {
+    <fieldset class="login-form group">
+        <legend>@T("Account Information")</legend>
+        <ol>
+            <li>
+                <label for="username-email">@T("Username")</label>
+                @Html.TextBox("userNameOrEmail", "", new { id = "username-email", autofocus = "autofocus" })
+                @Html.ValidationMessage("userNameOrEmail")
+            </li>
+            <li>
+                <label for="password">@T("Password")</label>
+                @Html.Password("password")
+                @Html.ValidationMessage("password")
+            </li>
+            <li>
+                @Html.CheckBox("rememberMe", new { id = "remember-me" })<label class="forcheckbox" for="remember-me">@T("Remember Me")</label>
+            </li>
+        </ol>
+        <button class="primaryAction" type="submit">@T("Sign In")</button>
+    </fieldset>
+}
+<hr />
+<h5>Or choose your OpenId account provider</h5>
+<br />
+
+@foreach (var provider in Model) {
+    if (provider.IsValid) {
+        <a class="button @provider.Name.HtmlClassify()" href="@Url.Action("Challenge", "Account", new { Area = "Orchard.OpenId", openIdProvider = provider.AuthenticationType, returnUrl = ViewData["ReturnUrl"] })">
+            @provider.DisplayName
+        </a>
+    }
+}

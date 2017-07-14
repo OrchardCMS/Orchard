@@ -16,8 +16,13 @@ using Orchard.Services;
 using Orchard.Settings;
 
 namespace Orchard.AuditTrail.Services {
+
+    /// <summary>
+    /// Manage the audit trail.
+    /// </summary>
     public class AuditTrailManager : Component, IAuditTrailManager {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailRepository;
+        private readonly ITransactionManager _transactionManager;
         private readonly IAuditTrailEventProvider _providers;
         private readonly IClock _clock;
         private readonly IAuditTrailEventHandler _auditTrailEventHandlers;
@@ -30,6 +35,7 @@ namespace Orchard.AuditTrail.Services {
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
+            ITransactionManager transactionManager,
             IAuditTrailEventProvider providers,
             IClock clock,
             IAuditTrailEventHandler auditTrailEventHandlers,
@@ -41,6 +47,7 @@ namespace Orchard.AuditTrail.Services {
             IClientHostAddressAccessor clientHostAddressAccessor) {
 
             _auditTrailRepository = auditTrailRepository;
+            _transactionManager = transactionManager;
             _providers = providers;
             _clock = clock;
             _auditTrailEventHandlers = auditTrailEventHandlers;
@@ -52,6 +59,14 @@ namespace Orchard.AuditTrail.Services {
             _clientHostAddressAccessor = clientHostAddressAccessor;
         }
 
+        /// <summary>
+        /// Gets a page of event records from the audit trail.
+        /// </summary>
+        /// <param name="page">The page number to get records from.</param>
+        /// <param name="pageSize">The number of records to get.</param>
+        /// <param name="orderBy">The value to order by.</param>
+        /// <param name="filters">Optional. An object to filter the records on.</param>
+        /// <returns>A page of event records.</returns>
         public IPageOfItems<AuditTrailEventRecord> GetRecords(
             int page,
             int pageSize,
@@ -102,10 +117,20 @@ namespace Orchard.AuditTrail.Services {
             };
         }
 
+        /// <summary>
+        /// Gets a single event record from the audit trail by ID.
+        /// </summary>
+        /// <param name="id">The event record ID.</param>
+        /// <returns>A single event record.</returns>
         public AuditTrailEventRecord GetRecord(int id) {
             return _auditTrailRepository.Get(id);
         }
 
+        /// <summary>
+        /// Builds a shape tree of filter displays.
+        /// </summary>
+        /// <param name="filters">Input for each filter builder.</param>
+        /// <returns>A tree of shapes.</returns>
         public dynamic BuildFilterDisplay(Filters filters) {
             var filterDisplay = (dynamic)_shapeFactory.Create("AuditTrailFilter");
             var filterDisplayContext = new DisplayFilterContext(_shapeFactory, filters, filterDisplay);
@@ -123,6 +148,17 @@ namespace Orchard.AuditTrail.Services {
             return filterDisplay;
         }
 
+        /// <summary>
+        /// Records an audit trail event.
+        /// </summary>
+        /// <typeparam name="T">The audit trail event provider type to determine the scope of the event name.</typeparam>
+        /// <param name="eventName">The shorthand name of the event</param>
+        /// <param name="user">The user to associate with the event. This is typically the currently loggedin user.</param>
+        /// <param name="properties">A property bag of custom event data that could be useful for <see cref="IAuditTrailEventHandler"/> implementations. These values aren't stored. Use the eventData parameter to persist additional data with the event.</param>
+        /// <param name="eventData">A property bag of custom event data that will be stored with the event record.</param>
+        /// <param name="eventFilterKey">The name of a custom key to use when filtering events.</param>
+        /// <param name="eventFilterData">The value of a custom filter key to filter on.</param>
+        /// <returns>The created audit trail event record if the specified event was not disabled.</returns>
         public AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider {
             var eventDescriptor = DescribeEvent<T>(eventName);
             if (!IsEventEnabled(eventDescriptor))
@@ -165,26 +201,49 @@ namespace Orchard.AuditTrail.Services {
             };
         }
 
+        /// <summary>
+        /// Describes all audit trail events provided by the system.
+        /// </summary>
+        /// <returns>A list of audit trail category descriptors.</returns>
         public IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories() {
             var context = DescribeProviders();
             return context.Describe();
         }
 
+        /// <summary>
+        /// Describes all audit trail event providers.
+        /// </summary>
         public DescribeContext DescribeProviders() {
             var context = new DescribeContext();
             _providers.Describe(context);
             return context;
         }
 
+        /// <summary>
+        /// Describes a single audit trail event.
+        /// </summary>
+        /// <param name="record">The audit trail event record for which to find its descriptor.</param>
+        /// <returns>A single audit trail event descriptor.</returns>
         public AuditTrailEventDescriptor DescribeEvent(AuditTrailEventRecord record) {
             return DescribeEvent(record.FullEventName) ?? AuditTrailEventDescriptor.Basic(record);
         }
 
+        /// <summary>
+        /// Describes a single audit trail event.
+        /// </summary>
+        /// <typeparam name="T">The scope of the specified event name.</typeparam>
+        /// <param name="eventName">The shorthand name of the event.</param>
+        /// <returns>A single audit trail event descriptor.</returns>
         public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T : IAuditTrailEventProvider {
             var fullyQualifiedEventName = EventNameExtensions.GetFullyQualifiedEventName<T>(eventName);
             return DescribeEvent(fullyQualifiedEventName);
         }
 
+        /// <summary>
+        /// Describes a single audit trail event.
+        /// </summary>
+        /// <param name="fullyQualifiedEventName">The fully qualified event name to describe.</param>
+        /// <returns>A single audit trail event descriptor.</returns>
         public AuditTrailEventDescriptor DescribeEvent(string fullyQualifiedEventName) {
             var categoryDescriptors = DescribeCategories();
             var eventDescriptorQuery =
@@ -200,13 +259,10 @@ namespace Orchard.AuditTrail.Services {
         public IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod) {
             var dateThreshold = (_clock.UtcNow.EndOfDay() - retentionPeriod);
             var query = _auditTrailRepository.Table.Where(x => x.CreatedUtc <= dateThreshold);
-            var records = query.ToArray();
 
-            foreach (var record in records) {
-                _auditTrailRepository.Delete(record);
-            }
+            _transactionManager.GetSession().Delete(query);
 
-            return records;
+            return query.ToArray();
         }
 
         public string SerializeProviderConfiguration(IEnumerable<AuditTrailEventSetting> settings) {

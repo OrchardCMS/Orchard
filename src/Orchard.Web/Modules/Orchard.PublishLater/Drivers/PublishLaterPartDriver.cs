@@ -11,6 +11,7 @@ using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
 using Orchard.Services;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
@@ -19,19 +20,22 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
         private readonly IDateLocalizationServices _dateLocalizationServices;
+        private readonly IPublishingTaskManager _publishingTaskManager;
 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
             IClock clock,
-            IDateLocalizationServices dateLocalizationServices) {
+            IDateLocalizationServices dateLocalizationServices,
+            IPublishingTaskManager publishingTaskManager) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;
             _dateLocalizationServices = dateLocalizationServices;
             T = NullLocalizer.Instance;
             Services = services;
+            _publishingTaskManager = publishingTaskManager;
         }
 
         public Localizer T {
@@ -101,10 +105,13 @@ namespace Orchard.PublishLater.Drivers {
                     }
                 }
                 else {
-                    updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
+                    updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save Draft or Publish."));
                 }
             }
 
+            if (httpContext.Request.Form["submit.Save"] == "submit.CancelPublishLaterTasks") {
+                _publishingTaskManager.DeleteTasks(model.ContentItem);
+            }
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }

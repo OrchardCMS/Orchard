@@ -12,7 +12,7 @@ Scenario: I can edit a default layer
     When I fill in
             | name | value |
             | LayerPart.Description | This is the default layer. |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "Your Layer has been saved"
     When I follow "Edit"
@@ -27,9 +27,9 @@ Scenario: I can add a new layer and that layer is active when I'm redirected to 
             | name | value |
             | LayerPart.Name | For awesome stuff |
             | LayerPart.LayerRule | url "~/awesome*" |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Layer has been created."
+    Then I should see "The Layer has been created as draft."
         And I should see "<option[^>]+selected="selected"[^>]+value="\d+">For awesome stuff</option>"
 
 Scenario: I can delete a layer
@@ -59,7 +59,7 @@ Scenario: I can add a widget to a specific zone in a specific layer
             | name | value |
             | WidgetPart.Title | Flashy HTML Widget |
             | Body.Text | <p><blink>hi</blink></p> |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "Your Html Widget has been added."
         And I should see "<option[^>]*selected[^>]*>Disabled"

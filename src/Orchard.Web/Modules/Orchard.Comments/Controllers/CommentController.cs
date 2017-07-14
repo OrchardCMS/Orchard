@@ -37,7 +37,7 @@ namespace Orchard.Comments.Controllers {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.Site")) {
+            if (!ModelState.IsValidField("Comments.SiteName")) {
                 Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
             }
 
@@ -46,7 +46,9 @@ namespace Orchard.Comments.Controllers {
             }
 
             if (ModelState.IsValid) {
-                Services.ContentManager.Create(comment);
+                Services.ContentManager.Create(comment, VersionOptions.Draft);
+                Services.ContentManager.UpdateEditor(comment, this);
+                Services.ContentManager.Publish(comment.ContentItem);
 
                 var commentPart = comment.As<CommentPart>();
 
@@ -105,14 +107,14 @@ namespace Orchard.Comments.Controllers {
                     // if the user who submitted the comment has the right to moderate, don't make this comment moderated
                     if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
                         commentPart.Status = CommentStatus.Approved;
-                        Services.Notifier.Information(T("Your comment has been posted."));
+                        Services.Notifier.Success(T("Your comment has been posted."));
                     }
                     else {
                         Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
                     }
                 }
                 else {
-                    Services.Notifier.Information(T("Your comment has been posted."));
+                    Services.Notifier.Success(T("Your comment has been posted."));
                 }
 
                 // send email notification
@@ -141,7 +143,7 @@ namespace Orchard.Comments.Controllers {
                 _commentService.ApproveComment(id);
             }
 
-            Services.Notifier.Information(T("Comment approved successfully"));
+            Services.Notifier.Success(T("Comment approved successfully"));
             return Redirect("~/");
         }
 
@@ -151,7 +153,7 @@ namespace Orchard.Comments.Controllers {
                 _commentService.DeleteComment(id);
             }
 
-            Services.Notifier.Information(T("Comment deleted successfully"));
+            Services.Notifier.Success(T("Comment deleted successfully"));
             return Redirect("~/");
         }
 
@@ -161,7 +163,7 @@ namespace Orchard.Comments.Controllers {
                 _commentService.UnapproveComment(id);
             }
 
-            Services.Notifier.Information(T("Comment moderated successfully"));
+            Services.Notifier.Success(T("Comment moderated successfully"));
             return Redirect("~/");
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -126,14 +127,14 @@ namespace Orchard.CustomForms.Controllers {
                 _contentManager.Create(contentItem, VersionOptions.Draft);
 
             var model = _contentManager.UpdateEditor(contentItem, this);
-            
+
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
 
                 // if custom form is inside a widget, we display the form itself
                 if (form.ContentType == "CustomFormWidget") {
                     foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
-                        Services.Notifier.Error(T(error));
+                        Services.Notifier.Error(new LocalizedString(HttpUtility.HtmlEncode(error)));
                     }
 
                     // save the updated editor shape into TempData to survive a redirection and keep the edited values
@@ -170,7 +171,7 @@ namespace Orchard.CustomForms.Controllers {
             // writes a confirmation message
             if (customForm.CustomMessage) {
                 if (!String.IsNullOrWhiteSpace(customForm.Message)) {
-                    Services.Notifier.Information(T(customForm.Message));
+                    Services.Notifier.Success(T(customForm.Message));
                 }
             }
 

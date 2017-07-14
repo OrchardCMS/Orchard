@@ -16,8 +16,8 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(CheckBox element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var checkBoxEditor = BuildForm(context, "CheckBox");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var checkBoxEditor = BuildForm(context, "CheckBox", "Properties:15");
             var checkBoxValidation = BuildForm(context, "CheckBoxValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, checkBoxEditor, checkBoxValidation);
@@ -32,7 +32,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "large", "tokenized" },
+                        Classes: new[] { "text", "large" },
                         Description: T("The value of this checkbox.")));
 
                 return form;
@@ -45,9 +45,9 @@ namespace Orchard.DynamicForms.Drivers {
                     _IsRequired: shape.Checkbox(
                         Id: "IsMandatory",
                         Name: "IsMandatory",
-                        Title: "Mandatory",
+                        Title: "Required",
                         Value: "true",
-                        Description: T("Tick this checkbox to make this check box element mandatory.")),
+                        Description: T("Tick this checkbox to make this check box element required.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",

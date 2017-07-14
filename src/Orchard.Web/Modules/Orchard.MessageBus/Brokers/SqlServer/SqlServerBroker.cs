@@ -82,7 +82,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 }
             }
             catch(Exception e) {
-                Logger.Error(e, "An error occured while creating a Worker.");
+                Logger.Error(e, "An error occurred while creating a Worker.");
             }
         }
 

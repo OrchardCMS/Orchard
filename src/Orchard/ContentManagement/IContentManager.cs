@@ -86,6 +86,12 @@ namespace Orchard.ContentManagement {
         void Remove(ContentItem contentItem);
 
         /// <summary>
+        /// Deletes the draft version of the content item permanently.
+        /// </summary>
+        /// <param name="contentItem">The content item of which the draft version will be deleted.</param>
+        void DiscardDraft(ContentItem contentItem);
+
+        /// <summary>
         /// Permanently deletes the specified content item, including all of its content part records.
         /// </summary>
         void Destroy(ContentItem contentItem);

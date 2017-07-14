@@ -288,18 +288,18 @@ namespace Orchard.Indexing.Services {
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while adding a document to the index");
+                Logger.Warning(ex, "An error occurred while adding a document to the index");
             }
 
             // removing documents from the index
             try {
                 if (deleteFromIndex.Count > 0) {
                     _indexProvider.Delete(indexName, deleteFromIndex);
-                    Logger.Information("Added content items to index: {0}", addToIndex.Count);
+                    Logger.Information("Deleted content items from index: {0}",  deleteFromIndex.Count);
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while removing a document from the index");
+                Logger.Warning(ex, "An error occurred while removing a document from the index");
             }
 
             return true;
@@ -332,7 +332,7 @@ namespace Orchard.Indexing.Services {
         }
 
         /// <summary>
-        /// Creates a IDocumentIndex instance for a specific content item id. If the content 
+        /// Creates a IDocumentIndex instance for a specific content item id. If the content
         /// item is no more published, it returns null.
         /// </summary>
         private IDocumentIndex ExtractDocumentIndex(ContentItem contentItem) {

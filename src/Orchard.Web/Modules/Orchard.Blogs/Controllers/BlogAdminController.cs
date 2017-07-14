@@ -101,14 +101,14 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
             _blogService.Delete(blog);
 
-            Services.Notifier.Information(T("Blog deleted"));
+            Services.Notifier.Success(T("Blog was deleted."));
 
             return Redirect(Url.BlogsForAdmin());
         }
 
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired("submit.Save")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult EditPOST(int blogId) {
             var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
 
@@ -125,7 +125,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog);
-            Services.Notifier.Information(T("Blog information updated"));
+            Services.Notifier.Success(T("Blog properties were updated."));
 
             return Redirect(Url.BlogsForAdmin());
         }
@@ -142,7 +142,7 @@ namespace Orchard.Blogs.Controllers {
 
             _blogService.Delete(blog);
 
-            Services.Notifier.Information(T("Blog was successfully deleted"));
+            Services.Notifier.Success(T("Blog was successfully deleted."));
             return Redirect(Url.BlogsForAdmin());
         }
 

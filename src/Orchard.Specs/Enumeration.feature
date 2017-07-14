@@ -46,9 +46,9 @@ Scenario: Creating and using Enumeration fields
     When I fill in 
             | name                 | value   |
             | Event.Location.Value | Seattle |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as a draft."
     When I go to "Admin/Contents/List"
     Then I should see "Location:" 
         And I should see "Seattle"
@@ -105,5 +105,36 @@ Scenario: Creating and using Enumeration fields
             | Fields[0].EnumerationFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
+        And I hit "Save Draft"
+    Then I should see "The Location field is required."
+    
+    # The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value    |
+            | Fields[0].EnumerationFieldSettings.Options      | Seattle  |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Dropdown |
+            | Fields[0].EnumerationFieldSettings.DefaultValue | Seattle  |
         And I hit "Save"
-    Then I should see "The field Location is mandatory."
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "selected=\"selected">Seattle"
+	
+    # The required attribute should be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value   |
+            | Fields[0].EnumerationFieldSettings.Required     | true    |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "required=\"required\""
+	
+    # The required attribute should not be used
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                            | value   |
+            | Fields[0].EnumerationFieldSettings.Required     | false   |
+            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should not see "required=\"required\""

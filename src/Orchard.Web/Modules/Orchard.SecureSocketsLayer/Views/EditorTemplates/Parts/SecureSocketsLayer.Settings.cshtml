@@ -11,17 +11,46 @@
         <div>
             <label for="@Html.FieldIdFor(m => m.SecureHostName)">@T("Secure Host Name")</label>
             @Html.TextBoxFor(m => m.SecureHostName, new { @class = "textMedium" })
-            <span class="hint">@T("(Mandatory) The host name secured traffic should be redirected to (e.g. localhost:44300, secure.mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. secure.127-0-0-1.org.uk:4333).")</span>
+            @Html.Hint(T("(Mandatory) The host name secured traffic should be redirected to (e.g. localhost:44300, secure.mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. secure.127-0-0-1.org.uk:4333)."))
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.InsecureHostName)">@T("Insecure Host Name")</label>
             @Html.TextBoxFor(m => m.InsecureHostName, new { @class = "textMedium" })
-            <span class="hint">@T("(Mandatory) The host name non-secured traffic should be redirected to (e.g. localhost:30321, mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. dev.127-0-0-1.org.uk:4333).")</span>
+            @Html.Hint(T("(Mandatory) The host name non-secured traffic should be redirected to (e.g. localhost:30321, mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. dev.127-0-0-1.org.uk:4333)."))
         </div>
         <div>
             @Html.EditorFor(m => m.SecureEverything)
             <label for="@Html.FieldIdFor(m => m.SecureEverything)" class="forcheckbox">@T("Force SSL on all pages")</label>
             @Html.ValidationMessage("SecureEverything", "*")
+        </div>
+        <div data-controllerid="@Html.FieldIdFor(m => m.SecureEverything)">
+            <div>
+                @Html.EditorFor(m => m.SendStrictTransportSecurityHeaders)
+                <label for="@Html.FieldIdFor(m => m.SendStrictTransportSecurityHeaders)" class="forcheckbox">@T("Enable HTTP Strict Transport Security")</label>
+                @Html.Hint(@T("<a href='https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security' target='_blank'>More information about HSTS</a>"))
+                @Html.ValidationMessage("SendStrictTransportSecurityHeaders", "*")
+            </div>
+            <div data-controllerid="@Html.FieldIdFor(m => m.SendStrictTransportSecurityHeaders)">
+                <div>
+                    <label for="@Html.FieldIdFor(m => m.StrictTransportSecurityMaxAge)">@T("Expiration time")</label>
+                    @Html.TextBoxFor(m => m.StrictTransportSecurityMaxAge, new { @class = "textMedium" })
+                    @Html.Hint(T("(Mandatory) Specify the max age of HSTS in seconds (e.g. 31536000 is one year). If you set this parameter to 0, the HSTS Header will immediately expire."))
+                </div>
+                <div>
+                    @Html.EditorFor(m => m.StrictTransportSecurityIncludeSubdomains)
+                    <label for="@Html.FieldIdFor(m => m.StrictTransportSecurityIncludeSubdomains)" class="forcheckbox">@T("Include Subdomains")</label>
+                    @Html.ValidationMessage("StrictTransportSecurityIncludeSubdomains", "*")
+                    @Html.Hint(T("Applies the HSTS rules to all of the site's subdomains."))
+                </div>
+                <div data-controllerid="@Html.FieldIdFor(m => m.StrictTransportSecurityIncludeSubdomains)">
+                    <div>
+                        @Html.EditorFor(m => m.StrictTransportSecurityPreload)
+                        <label for="@Html.FieldIdFor(m => m.StrictTransportSecurityPreload)" class="forcheckbox">@T("Preload")</label>
+                        @Html.ValidationMessage("StrictTransportSecurityPreload", "*")
+                        @Html.Hint(T("You can use this if you successfully submitted your domain to an HSTS preload service and serve all subdomains over HTTPS. If you send this directive, it can have PERMANENT CONSEQUENCES. Please read the <a href='https://hstspreload.appspot.com/' target='_blank'>details</a> before sending the header with \"preload\"."))
+                    </div>
+                </div>
+            </div>
         </div>
         <div>
             <div>
@@ -34,11 +63,10 @@
                     <label for="@Html.FieldIdFor(m => m.Urls)">@T("Urls")</label>
                     @Html.TextAreaFor(m => m.Urls, new { @class = "textMedium", rows = "5" })
                     @Html.ValidationMessage("Urls", "*")
-                    <span class="hint">@T("Provide a list of urls, one per line. Urls can contains wildcard matches using '*', or root identifier like '~/'")</span>
-                    <span class="hint">@T("Examples: http://mysite.com/mypage, ~/Profile/Edit, ~/Profile/*")</span>
+                    @Html.Hint(T("Provide a list of urls, one per line. Urls can contains wildcard matches using '*', or root identifier like '~/'"))
+                    @Html.Hint(T("Examples: http://mysite.com/mypage, ~/Profile/Edit, ~/Profile/*"))
                 </div>
             </div>
         </div>
     </div>
-
 </fieldset>

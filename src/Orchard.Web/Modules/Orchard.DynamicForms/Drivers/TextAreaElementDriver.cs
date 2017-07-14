@@ -14,8 +14,8 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(TextArea element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var textAreaEditor = BuildForm(context, "TextArea");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var textAreaEditor = BuildForm(context, "TextArea", "Properties:15");
             var textAreaValidation = BuildForm(context, "TextAreaValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, textAreaEditor, textAreaValidation);
@@ -30,7 +30,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "large", "tokenized" },
+                        Classes: new[] { "text", "large" },
                         Description: T("The value of this text area.")),
                     _Rows: shape.Textbox(
                         Id: "Rows",
@@ -88,9 +88,13 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(TextArea element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
-            context.ElementShape.ProcessedValue = element.RuntimeValue;
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }
