@@ -26,6 +26,11 @@
                 bottom: 0;
             }
 
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
             .layout-toolbox-group {
                 margin-top: @container-padding;
 
@@ -33,7 +38,7 @@
                     display: block;
                     margin-bottom: @container-padding / 3;
                     text-decoration: none;
-                
+
                     &:before {
                         display: inline-block;
                         width: 10px;
@@ -43,7 +48,7 @@
                         content: "\f0d7";
                     }
                 }
-            
+
                 &.collapsed {
                     .layout-toolbox-group-heading:before {
                         content: "\f0da";
