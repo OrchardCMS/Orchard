@@ -39,7 +39,7 @@ namespace Orchard.Tags.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TagRecord> GetTags() {
-            return _tagRepository.Table.ToList();
+            return _tagRepository.Table.OrderBy(x => x.TagName).ToList();
         }
 
         public IEnumerable<TagRecord> GetTagsByNameSnippet(string snippet, int maxCount = 10) {

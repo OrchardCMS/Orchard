@@ -1,11 +1,15 @@
 ﻿@model Orchard.Autoroute.Settings.AutorouteSettings
-@using Orchard.Utility.Extensions;
 
 @{
     Script.Require("AutorouteBrowser");
     Style.Require("AutorouteSettings");
+
     int patternCount = 0;
     int patternCultureCount = 0;
+
+    List<string> cultures = new List<string>();
+    cultures.Add(null);
+    cultures.AddRange(Model.SiteCultures);
 }
 <fieldset>
     <div>
@@ -40,10 +44,10 @@
                 int i = 1;
                 string cssClass = "";
             }
-            <li class="first selected"><a class="culture" href="#cat-@Model.DefaultSiteCulture">@Model.DefaultSiteCulture</a></li>
-            @foreach (var culture in Model.SiteCultures) {
-                if (culture != Model.DefaultSiteCulture) {
-                    cssClass = i == Model.SiteCultures.Count - 1 ? "last" : "middle";
+            <li class="first selected"><a class="culture" href="#cat-culture-neutral">@T("All cultures")</a></li>
+            @foreach (var culture in cultures) {
+                if (!String.IsNullOrEmpty(culture)) {
+                    cssClass = i == cultures.Count - 1 ? "last" : "middle";
                     <li class="@cssClass" style="@(Model.UseCulturePattern == false ? "display:none;" : "")"><a class="culture" href="#cat-@culture">@culture</a></li>
                     i++;
                 }
@@ -51,8 +55,8 @@
         </ul>
     </div>
     <div id="content">
-        @foreach (var culture in Model.SiteCultures) {
-            <fieldset id="cat-@culture" class="items @(culture == Model.DefaultSiteCulture ? "default" : "")" style="@(culture == Model.DefaultSiteCulture ? "display:block;" : "display:none;")">
+        @foreach (var culture in cultures) {
+            <fieldset id="cat-@(String.IsNullOrEmpty(culture) ? "culture-neutral" : culture)" class="items @(String.IsNullOrEmpty(culture) ? "default" : "")" style="@(String.IsNullOrEmpty(culture) ? "display:block;" : "display:none;")">
                 <table class="autoroute-settings-patterns">
                     <tr>
                         <th class="autoroute-settings-default">@T("Default")</th>
@@ -63,7 +67,7 @@
                     </tr>
                     @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
                         <tr>
-                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex ? new { @checked = "checked" } : null)</td>
+                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[cultures.IndexOf(culture)].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[cultures.IndexOf(culture)].PatternIndex ? new { @checked = "checked" } : null)</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>

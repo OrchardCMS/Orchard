@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -205,7 +207,6 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars.julian.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.lang.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.mayan.js" />
-    <Content Include="Assets\Js\Calendars\jquery.calendars.min.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.nepali-ne.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.nepali.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.persian-fa.js" />
@@ -557,7 +558,6 @@
     <Content Include="Scripts\Calendars\jquery.calendars.mayan.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.mayan.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.min.js" />
-    <Content Include="Scripts\Calendars\jquery.calendars.min.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.nepali-ne.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.nepali-ne.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.nepali.js" />

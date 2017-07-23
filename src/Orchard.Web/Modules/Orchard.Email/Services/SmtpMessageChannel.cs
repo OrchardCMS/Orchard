@@ -9,6 +9,8 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Email.Models;
+using System.Linq;
+using System.IO;
 
 namespace Orchard.Email.Services {
     public class SmtpMessageChannel : Component, ISmtpChannel, IDisposable {
@@ -51,10 +53,11 @@ namespace Orchard.Email.Services {
                 ReplyTo = Read(parameters, "ReplyTo"),
                 From = Read(parameters, "From"),
                 Bcc = Read(parameters, "Bcc"),
-                Cc = Read(parameters, "CC")
+                Cc = Read(parameters, "CC"),
+                Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments") ? parameters["Attachments"] : new List<string>())
             };
 
-            if (emailMessage.Recipients.Length == 0) {
+            if (string.IsNullOrWhiteSpace(emailMessage.Recipients)) {
                 Logger.Error("Email message doesn't have any recipient");
                 return;
             }
@@ -118,6 +121,22 @@ namespace Orchard.Email.Services {
                         mailMessage.ReplyToList.Add(new MailAddress(recipient));
                     }
                 }
+                foreach (var attachmentPath in emailMessage.Attachments) {
+                    if (File.Exists(attachmentPath)) {
+                        mailMessage.Attachments.Add(new Attachment(attachmentPath));
+                    }
+                    else {
+                        throw new FileNotFoundException(T("One or more attachments not found.").Text);
+                    }
+                }
+
+                if (parameters.ContainsKey("NotifyReadEmail")) {
+                    if (parameters["NotifyReadEmail"] is bool) {
+                        if ((bool)(parameters["NotifyReadEmail"])) {
+                            mailMessage.Headers.Add("Disposition-Notification-To", mailMessage.From.ToString());
+                        }
+                    }
+                }
 
                 _smtpClientField.Value.Send(mailMessage);
             }
@@ -129,7 +148,7 @@ namespace Orchard.Email.Services {
         private SmtpClient CreateSmtpClient() {
             // If no properties are set in the dashboard, use the web.config value.
             if (String.IsNullOrWhiteSpace(_smtpSettings.Host)) {
-                return new SmtpClient(); 
+                return new SmtpClient();
             }
 
             var smtpClient = new SmtpClient {
@@ -155,7 +174,7 @@ namespace Orchard.Email.Services {
         }
 
         private IEnumerable<string> ParseRecipients(string recipients) {
-            return recipients.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries);
+            return recipients.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

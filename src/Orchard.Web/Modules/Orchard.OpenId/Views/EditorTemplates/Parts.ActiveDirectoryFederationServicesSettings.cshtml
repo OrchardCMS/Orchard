@@ -1,0 +1,20 @@
+﻿@model Orchard.OpenId.Models.ActiveDirectoryFederationServicesSettingsPart
+@using Orchard.OpenId.Constants
+
+<h2>Active Directory Federation Services Settings</h2>
+<fieldset>
+    <label for="@Html.IdFor(m => m.ClientId)">@T("Client Id")</label>
+    @Html.TextBoxFor(m => m.ClientId, new { @class = "text large" })
+    <span class="hint">@T("ADFS's Client Id obtained from your ADFS configuration (e.g. {0})", ActiveDirectoryFederationServices.DefaultClientId)</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.IdFor(m => m.MetadataAddress)">@T("Metadata Address")</label>
+    @Html.TextBoxFor(m => m.MetadataAddress, new { @class = "text large" })
+    <span class="hint">@T("ADFS's Metadata Address url obtained from your ADFS configuration (e.g. {0})", ActiveDirectoryFederationServices.DefaultMetadataAddress)</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.IdFor(m => m.PostLogoutRedirectUri)">@T("Post Logout Redirect Uri")</label>
+    @Html.TextBoxFor(m => m.PostLogoutRedirectUri, new { @class = "text large" })
+    <span class="hint">@T("ADFS's Post Logout Redirect url obtained from your ADFS configuration (e.g. {0})", ActiveDirectoryFederationServices.DefaultPostLogoutRedirectUri)</span>
+</fieldset>
+<hr />

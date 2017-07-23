@@ -23,7 +23,7 @@
     }
 
     @if (unpublishedContentItems.Any()) {
-        <span>@T(" | ") @T("Not Published"):</span>
+        <span>@T("Not Published"):</span>
         foreach (var contentItem in unpublishedContentItems) {
             <span class="value">@Html.ItemEditLink(contentItem)</span>
             if (contentItem != unpublishedContentItems.Last()) {

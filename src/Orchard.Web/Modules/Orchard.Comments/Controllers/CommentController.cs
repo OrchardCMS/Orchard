@@ -37,7 +37,7 @@ namespace Orchard.Comments.Controllers {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.Site")) {
+            if (!ModelState.IsValidField("Comments.SiteName")) {
                 Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
             }
 

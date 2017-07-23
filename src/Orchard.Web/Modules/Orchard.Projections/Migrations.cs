@@ -239,6 +239,19 @@ namespace Orchard.Projections {
                 DisplayName = T("Body Part Text").Text,
                 Description = T("The text from the Body part").Text
             });
+            
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
+                .CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id")
+            );
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table
+                .CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id")
+            );
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table
+                .CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id")
+            );
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table
+                .CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id")
+            );
 
             return 1;
         }

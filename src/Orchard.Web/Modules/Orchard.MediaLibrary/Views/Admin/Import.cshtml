@@ -18,16 +18,15 @@
     <div id="media-library-toolbar">
 
         <div id="media-library-toolbar-actions">
-
-            <label for="filterMediaType">@T("Create")</label>
+            <label for="filterMediaType">@if (Model.Replace == null) { <text>@T("Create")</text> } else { <text>@T("Replace")</text> }</label>
             <select id="filterMediaType" name="FilteredMediaType">
                 @Html.SelectOption("", true, T("Any").ToString())
                 @foreach (var mediaType in Model.MediaTypes) {
                     @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
                 }
             </select>
-
-            <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
+            
+            <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button close">@T("Close")</a>
         </div>
 
         @Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, null)
@@ -37,11 +36,15 @@
 
     <div id="media-library-main">
         <div id="media-library-main-navigation">
-            @foreach (var menuItem in Model.Menu) {
+            @foreach (var menuItem in Model.Menu)
+            {
                 string sectionHeaderTextHint = menuItem.Text.TextHint;
                 var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
-
-                <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                if (Model.Replace == null) {
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>
+                } else {
+                    <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)&replaceId=@HttpUtility.UrlEncode(Model.Replace.Id.ToString())">@menuItem.Text</a></div>
+                }
             }
         </div>
         <div id="media-library-main-list-wrapper">

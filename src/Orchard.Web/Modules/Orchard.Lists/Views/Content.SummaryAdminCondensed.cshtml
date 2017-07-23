@@ -7,22 +7,28 @@
 }
 <div class="summary-condensed" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
-        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
+        <input type="checkbox" value="@contentItem.Id" name="itemIds" />
         <h3>@Html.ItemAdminLink(contentItem)</h3> - <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
         @if (Model.Header != null) {
-        <div class="header">@Display(Model.Header)</div>
+            <div class="header">@Display(Model.Header)</div>
         }
     </div>
     <div class="related">
-        @Display(Model.Actions)
-        @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-            @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
-        }
-        @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
-            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
-        }
+        <ul class="action-links">
+            @Display(Model.Actions)
+            @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+                <li class="action-link">
+                    @Html.ItemEditLink(T("Edit").Text, contentItem)
+                </li>
+            }
+            @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
+                <li class="action-link">
+                    @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+                </li>
+            }
+        </ul>
     </div>
     @if (Model.Content != null) {
-    <div class="primary">@Display(Model.Content)</div>
+        <div class="primary">@Display(Model.Content)</div>
     }
 </div>

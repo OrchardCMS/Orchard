@@ -2,6 +2,7 @@
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Security;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Packaging {
     [OrchardFeature("Gallery")]
@@ -11,15 +12,22 @@ namespace Orchard.Packaging {
         public string MenuName {
             get { return "admin"; }
         }
+        private readonly ShellSettings _shellSettings;
+
+        public AdminMenu(ShellSettings shellSettings) {
+            _shellSettings = shellSettings;
+        }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder
-                .Add(T("Modules"), menu => menu
-                    .Add(T("Gallery"), "3", item => Describe(item, "Modules", "Gallery", true)))
-                .Add(T("Themes"), menu => menu
-                    .Add(T("Gallery"), "3", item => Describe(item, "Themes", "Gallery", true)))
-                .Add(T("Settings"), menu => menu
-                    .Add(T("Gallery"), "1", item => Describe(item, "Sources", "Gallery", false)));
+            if (_shellSettings.Name.ToLower() == "default") {
+                builder
+                    .Add(T("Modules"), menu => menu
+                        .Add(T("Gallery"), "3", item => Describe(item, "Modules", "Gallery", true)))
+                    .Add(T("Themes"), menu => menu
+                        .Add(T("Gallery"), "3", item => Describe(item, "Themes", "Gallery", true)))
+                    .Add(T("Settings"), menu => menu
+                        .Add(T("Gallery"), "1", item => Describe(item, "Sources", "Gallery", false)));
+            }
         }
 
         static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav) {

@@ -1,0 +1,9 @@
+﻿@using Orchard.Utility.Extensions
+<fieldset class="cancel-button">
+    @{
+        var returnUrl = Request.QueryString["returnUrl"];
+    }
+    @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+        <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+    }
+</fieldset>

@@ -86,6 +86,11 @@ namespace Orchard.Tokens.Tests {
                     set { throw new NotImplementedException(); }
                 }
 
+                public bool UseFileHash {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
                 public int PageSize {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }

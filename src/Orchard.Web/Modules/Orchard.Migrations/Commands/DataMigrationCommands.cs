@@ -33,7 +33,7 @@ namespace Orchard.Migrations.Commands {
                 }
             }
             catch ( Exception ex ) {
-                throw new OrchardException(T("An error occured while upgrading the database."), ex);
+                throw new OrchardException(T("An error occurred while upgrading the database."), ex);
             }
 
             Context.Output.WriteLine(T("Database upgraded"));

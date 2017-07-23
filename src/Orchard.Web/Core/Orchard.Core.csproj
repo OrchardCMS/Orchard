@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -48,6 +49,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -394,7 +396,9 @@
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Contents\Views\Content.CancelButton.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
@@ -557,9 +561,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\MenuItemLink-ShapeMenuItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Item\Display.cshtml" />

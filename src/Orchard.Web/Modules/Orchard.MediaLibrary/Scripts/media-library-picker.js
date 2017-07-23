@@ -130,7 +130,7 @@
         element.on("click",'.media-library-picker-remove', function(e) {
             e.preventDefault();
             if (!confirm(removePrompt)) return false;
-            $(this).closest('li').remove();
+            $(this).closest('.media-library-picker.items > ul > li').remove();
             refreshIds();
             showSaveMsg();
             return false;

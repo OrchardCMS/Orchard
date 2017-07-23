@@ -1,8 +1,19 @@
-﻿<div class="sections">
-    <div class="primary">
-        @Display(Model.Content)
+﻿<div class="edit-item">
+    <div class="edit-item-primary">
+        @if (Model.Content != null) {
+            <div class="edit-item-content">
+                @Display(Model.Content)
+            </div>
+        }
     </div>
-    <div class="secondary">
-        @Display(Model.Sidebar)
+    <div class="edit-item-secondary group">
+        @if (Model.Sidebar != null) {
+            <div class="edit-item-sidebar group">
+                @Display(Model.Sidebar)
+            </div>
+        }
     </div>
 </div>
+@if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
+    @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
+}

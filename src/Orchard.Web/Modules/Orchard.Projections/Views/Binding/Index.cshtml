@@ -15,7 +15,7 @@
 }
 
 <h1>@Html.TitleForPage(T("Manage Bindings").ToString()) </h1>
-@using (Html.BeginFormAntiForgeryPost()) { 
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <div class="manage">@Html.ActionLink(T("Add a new Binding").ToString(), "Select", new { }, new { @class = "button primaryAction" })</div>
 
@@ -28,38 +28,38 @@
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
-		<label for="filterResults">@T("Sort by:")</label>
+        <label for="filterResults">@T("Sort by:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, BindingsOrder.Name, T("Name").ToString())
         </select>
-		<input type="hidden" name="Page" value="1" />
-		<label for="pageSize">@T("Show:")</label>
-		<select id="pageSize" name="PageSize">
-			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-			@foreach (int size in pageSizes.OrderBy(p => p)) {
-				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-   }
-		</select>
+        <input type="hidden" name="Page" value="1" />
+        <label for="pageSize">@T("Show:")</label>
+        <select id="pageSize" name="PageSize">
+            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+            @foreach (int size in pageSizes.OrderBy(p => p)) {
+                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+            }
+        </select>
         <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
 }
-       <fieldset>		
-        <table class="items">
-            <thead>
-                <tr>
-                    <th scope="col">&nbsp;&darr;</th>
-                    <th scope="col">@T("Type")</th>
-                    <th scope="col">@T("Member")</th>
-                    <th scope="col">@T("Display")</th>
-                    <th scope="col">@T("Description")</th>
-                    <th scope="col">&nbsp;</th>
-                </tr>
-            </thead>
-            @foreach (var entry in Model.Bindings) { 
-			<tr>
+<fieldset>
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col">&nbsp;&darr;</th>
+                <th scope="col">@T("Type")</th>
+                <th scope="col">@T("Member")</th>
+                <th scope="col">@T("Display")</th>
+                <th scope="col">@T("Description")</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        @foreach (var entry in Model.Bindings) {
+            <tr>
                 <td>
-                    <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)"/>
+                    <input type="hidden" value="@Model.Bindings[index].Binding.Id" name="@Html.NameOf(m => m.Bindings[index].Binding.Id)" />
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Bindings[index].IsChecked)" />
                 </td>
                 <td>
                     @entry.Binding.Type
@@ -74,18 +74,24 @@
                     @entry.Binding.Description
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Binding.Id }) |
-                    @using (Html.BeginFormAntiForgeryPost(Url.Action("Delete"), FormMethod.Post, new { @class = "inline link" })) {
-                        @Html.Hidden("id", entry.Binding.Id)
-                        <button type="submit" itemprop="RemoveUrl">@T("Delete")</button> 
-                    }
+                    <ul class="action-links">
+                        <li class="action-link">
+                            @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.Binding.Id })
+                        </li>
+                        <li class="action-link">
+                            @using (Html.BeginFormAntiForgeryPost(Url.Action("Delete"), FormMethod.Post, new { @class = "inline link" })) {
+                                @Html.Hidden("id", entry.Binding.Id)
+                                <button type="submit" itemprop="RemoveUrl">@T("Delete")</button>
+                            }
+                        </li>
+                    </ul>
                 </td>
             </tr>
-                    index++;
-            }
-        </table>
-    </fieldset>
+            index++;
+        }
+    </table>
+</fieldset>
 
-@using (Html.BeginFormAntiForgeryPost()) { 
-	@Display(Model.Pager)
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Display(Model.Pager)
 } 

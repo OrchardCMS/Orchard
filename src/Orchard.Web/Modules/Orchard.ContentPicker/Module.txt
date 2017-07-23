@@ -2,7 +2,7 @@ Name: Orchard.ContentPicker
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://www.orchardproject.net
-Version: 1.10.1
+Version: 1.10.2
 OrchardVersion: 1.9
 Description: UI for selecting Content Items.
 Features:
@@ -10,3 +10,8 @@ Features:
         Description: UI for selecting Content Items.
         Dependencies: Contents, Navigation
         Category: Input Editor
+	Orchard.ContentPicker.LocalizationExtensions:
+		Name: Orchard.ContentPicker.LocalizationExtensions
+		Description: Provides settings to enable advanced localization behaviours for ContentPickerFields.
+		Dependencies: Orchard.ContentPicker, Orchard.Localization, Orchard.Resources
+		Category: Input Editor

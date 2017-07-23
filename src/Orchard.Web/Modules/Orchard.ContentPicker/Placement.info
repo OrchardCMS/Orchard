@@ -1,5 +1,6 @@
 ﻿<Placement>
   <Place Fields_ContentPicker_Edit="Content:2.3"/>
+  <Place Fields_ContentPickerLocalization_Edit="Content:2.3"/>
   <Place Parts_Navigation_Edit="Content:10"/>
   <Place Parts_ContentMenuItem_Edit="Content:10"/>
 

@@ -26,8 +26,8 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(Taxonomy element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var enumerationEditor = BuildForm(context, "TaxonomyForm");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var enumerationEditor = BuildForm(context, "TaxonomyForm", "Properties:15");
             var checkBoxValidation = BuildForm(context, "TaxonomyValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
@@ -163,8 +163,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             var projection = terms.Select(x => {
                 var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var value = _tokenizer.Replace(valueExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 return new SelectListItem {
                     Text = text,

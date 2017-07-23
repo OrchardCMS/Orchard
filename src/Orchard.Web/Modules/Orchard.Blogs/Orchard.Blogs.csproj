@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -93,6 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="BlogsLocalizationExtensions\Handlers\BlogPostPartHandler.cs" />
+    <Compile Include="BlogsLocalizationExtensions\Migrations\Migrations.cs" />
+    <Compile Include="Commands\BlogWidgetCommands.cs" />
     <Compile Include="Controllers\RemoteBlogPublishingController.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
@@ -191,6 +196,10 @@
     <ProjectReference Include="..\Orchard.ContentPicker\Orchard.ContentPicker.csproj">
       <Project>{f301ef7d-f19c-4d83-aa94-cb64f29c037d}</Project>
       <Name>Orchard.ContentPicker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
+      <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project>
+      <Name>Orchard.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>

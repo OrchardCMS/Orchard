@@ -7,14 +7,14 @@
     </div>
 </fieldset>
 <fieldset>
-    <label class="forpicker" for="@Html.FieldIdFor(m => m.Options)">@T("Options")</label>
+    <label for="@Html.FieldIdFor(m => m.Options)">@T("Options")</label>
 	<div class="editor-field">
     @Html.TextAreaFor(m => m.Options, new { @class = "text medium", rows = "5" })
     @Html.ValidationMessageFor(m => m.Options)
     <span class="hint">@T("Enter an option per line.")</span>
 	</div>
     
-	<label class="forpicker" for="@Html.FieldIdFor(m => m.ListMode)">@T("List mode")</label>    
+	<label for="@Html.FieldIdFor(m => m.ListMode)">@T("List mode")</label>    
     <select id="@Html.FieldIdFor(m => m.ListMode)" name="@Html.FieldNameFor(m => m.ListMode)">
         @Html.SelectOption(ListMode.Dropdown, Model.ListMode == ListMode.Dropdown, T("Dropdown list").ToString())
         @Html.SelectOption(ListMode.Radiobutton, Model.ListMode == ListMode.Radiobutton, T("Radio button list").ToString())

@@ -14,20 +14,24 @@ using Orchard.Taxonomies.Helpers;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
 using Orchard.DisplayManagement;
+using Orchard.Taxonomies.Events;
 
 namespace Orchard.Taxonomies.Controllers {
     [ValidateInput(false), Admin]
     public class TermAdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
+        private readonly ITermLocalizationEventHandler _termLocalizationEventHandler;
 
         public TermAdminController(IOrchardServices services,
             ITaxonomyService taxonomyService,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ITermLocalizationEventHandler termLocalizationEventHandler) {
             Services = services;
             _siteService = siteService;
             _taxonomyService = taxonomyService;
+            _termLocalizationEventHandler = termLocalizationEventHandler;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -42,11 +46,12 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
 
-            var terms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).Slice(pager.GetStartIndex(), pager.PageSize));
+            var allTerms = _taxonomyService.GetTermsQuery(taxonomyId).OrderBy(x => x.FullWeight);
+            var termsPage = pager.PageSize > 0 ? allTerms.Slice(pager.GetStartIndex(), pager.PageSize) : allTerms.Slice(0, 0);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTermsQuery(taxonomyId).Count());
+            var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
 
-            var entries = terms
+            var entries = termsPage
                     .Select(term => term.CreateTermEntry())
                     .ToList();
 
@@ -74,7 +79,7 @@ namespace Orchard.Taxonomies.Controllers {
                     Services.Notifier.Information(T("No action selected."));
                     break;
                 case TermsAdminIndexBulkAction.Delete:
-                    if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
+                    if (!Services.Authorizer.Authorize(Permissions.DeleteTerm, T("Couldn't delete term")))
                         return new HttpUnauthorizedResult();
                     
                     if(!checkedEntries.Any()) {
@@ -84,14 +89,16 @@ namespace Orchard.Taxonomies.Controllers {
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
-                        _taxonomyService.DeleteTerm(term);
+                        if (term != null) {
+                            _taxonomyService.DeleteTerm(term);
+                        }
                     }
 
                     Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
 
                     break;
                 case TermsAdminIndexBulkAction.Merge:
-                    if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't delete term")))
+                    if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't merge term")))
                         return new HttpUnauthorizedResult();
 
                     return RedirectToAction("Merge", new {
@@ -99,7 +106,7 @@ namespace Orchard.Taxonomies.Controllers {
                         termIds = string.Join(",", checkedEntries.Select(o => o.Id))
                     });
                 case TermsAdminIndexBulkAction.Move:
-                    if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't move terms")))
+                    if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Couldn't move terms")))
                         return new HttpUnauthorizedResult();
 
                     return RedirectToAction("MoveTerm", new {
@@ -128,19 +135,19 @@ namespace Orchard.Taxonomies.Controllers {
                 return View(model);
             }
 
-            return RedirectToAction("Create", new { taxonomyId, parentTermId = -1 });
+            return RedirectToAction("Create", new { taxonomyId, parentTermId = -1, ReturnUrl = Url.Action("Index", new { taxonomyId = taxonomyId }) });
         }
 
         [HttpPost]
         public ActionResult SelectTerm(int taxonomyId, int selectedTermId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to select terms")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateTerm, T("Not allowed to select terms")))
                 return new HttpUnauthorizedResult();
 
-            return RedirectToAction("Create", new { taxonomyId, parentTermId = selectedTermId });
+            return RedirectToAction("Create", new { taxonomyId, parentTermId = selectedTermId, ReturnUrl = Url.Action("Index", new { taxonomyId = taxonomyId }) });
         }
 
         public ActionResult MoveTerm(int taxonomyId, string termIds) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTerm, T("Not allowed to move terms")))
+            if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to move terms")))
                 return new HttpUnauthorizedResult();
 
             var terms = ResolveTermIds(termIds);
@@ -162,12 +169,17 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost]
         public ActionResult MoveTerm(int taxonomyId, int selectedTermId, string termIds) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to move terms")))
+            if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to move terms")))
                 return new HttpUnauthorizedResult();
+
+            MoveTermsContext context = new MoveTermsContext();
+            context.Terms = ResolveTermIds(termIds);
+            context.ParentTerm = _taxonomyService.GetTerm(selectedTermId);
+            _termLocalizationEventHandler.MovingTerms(context);
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(selectedTermId);
-            var terms = ResolveTermIds(termIds);
+            var terms = context.Terms;
 
             foreach (var term in terms) {
                 _taxonomyService.MoveTerm(taxonomy, term, parentTerm);
@@ -215,7 +227,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         public ActionResult Edit(int id) {
 
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage terms")))
+            if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to edit terms")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);
@@ -228,7 +240,7 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Couldn't edit term")))
+            if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Couldn't edit term")))
                 return new HttpUnauthorizedResult();
 
             var term = _taxonomyService.GetTerm(id);

@@ -126,7 +126,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 25
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
 #line 29
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31

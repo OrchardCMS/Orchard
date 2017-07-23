@@ -75,14 +75,21 @@ namespace Orchard.Azure.Services.FileSystems {
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
             _container = _blobClient.GetContainerReference(ContainerName);
-
+ 
+            ////Set the default service version to the current version "2015-12-11" so that newer features and optimizations are enabled on the images and videos stored in the blob storage.
+            var properties = _blobClient.GetServiceProperties();
+            if (properties.DefaultServiceVersion == null) {
+                properties.DefaultServiceVersion = "2015-12-11";
+                _blobClient.SetServiceProperties(properties);
+            }
+            
             _container.CreateIfNotExists(_isPrivate ? BlobContainerPublicAccessType.Off : BlobContainerPublicAccessType.Blob);
         }
 
         private static string ConvertToRelativeUriPath(string path) {
             var newPath = path.Replace(@"\", "/");
 
-            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://")) {
+            if (newPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 throw new ArgumentException("Path must be relative");
             }
 
@@ -106,7 +113,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return path2;
             }
 
-            if (path2.StartsWith("http://") || path2.StartsWith("https://")) {
+            if (path2.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || path2.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 return path2;
             }
 

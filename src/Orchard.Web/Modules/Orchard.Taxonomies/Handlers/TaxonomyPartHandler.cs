@@ -8,6 +8,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Taxonomies.Settings;
 using System;
+using System.Web.Routing;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TaxonomyPartHandler : ContentHandler {
@@ -21,7 +22,7 @@ namespace Orchard.Taxonomies.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
 
-                if (part.TermTypeName == null) {
+                if (String.IsNullOrWhiteSpace(part.TermTypeName)) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }
@@ -50,6 +51,20 @@ namespace Orchard.Taxonomies.Handlers {
                     previousName = part.Title;
                 }
             });
+        }
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var taxonomy = context.ContentItem.As<TaxonomyPart>();
+
+            if (taxonomy == null)
+                return;
+
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "Admin"},
+                {"Action", "Edit"},
+                {"Id", taxonomy.Id}
+            };
+
         }
     }
 }

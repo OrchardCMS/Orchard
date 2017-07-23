@@ -59,5 +59,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         /// For example, Razor or WebForms views needs to be recompiled when a dependency of a module changes.
         /// </summary>
         IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency);
+
+        bool LoaderIsSuitable(ExtensionDescriptor descriptor);
     }
 }

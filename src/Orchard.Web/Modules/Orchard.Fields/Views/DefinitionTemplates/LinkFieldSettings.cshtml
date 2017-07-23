@@ -3,7 +3,7 @@
 
 <fieldset>
     <div>
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
+        <label for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
         <select id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
             @Html.SelectOption(TargetMode.None, Model.TargetMode == TargetMode.None, T("No target").ToString())
             @Html.SelectOption(TargetMode.NewWindow, Model.TargetMode == TargetMode.NewWindow, T("Open link in new window").ToString())
@@ -21,7 +21,7 @@
 </fieldset>
 <fieldset>
     <div>
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
+        <label for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
         <select id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
             @Html.SelectOption(LinkTextMode.Optional, Model.LinkTextMode == LinkTextMode.Optional, T("Optional").ToString())
             @Html.SelectOption(LinkTextMode.Required, Model.LinkTextMode == LinkTextMode.Required, T("Required").ToString())

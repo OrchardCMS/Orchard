@@ -177,5 +177,13 @@ namespace Orchard.Core.Navigation {
 
             return 6;
         }
+        
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem", cfg => cfg
+                .WithIdentity()
+            );
+
+            return 7;
+        }
     }
 }

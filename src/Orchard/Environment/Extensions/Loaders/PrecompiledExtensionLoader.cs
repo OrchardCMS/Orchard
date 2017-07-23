@@ -19,6 +19,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
+        private readonly IDependenciesFolder _dependenciesFolder;
 
         public PrecompiledExtensionLoader(
             IHostEnvironment hostEnvironment,
@@ -31,6 +32,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
+            _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
         }
@@ -166,7 +168,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Loader = this,
                     Name = Path.GetFileNameWithoutExtension(path),
                     VirtualPath = path
-                } )
+                })
                 .ToList();
 
             Logger.Information("Done probing references for module '{0}'", descriptor.Id);
@@ -243,6 +245,15 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             return assemblyPath;
+        }
+
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                return _assemblyProbingFolder.AssemblyExists(descriptor.Id);
+            }
+
+            return false;
         }
     }
 }

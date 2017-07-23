@@ -93,7 +93,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 14
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
 #line 18
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 19
         testRunner.And("I go to \"super-duper\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 20
@@ -115,7 +115,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 25
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 29
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
         testRunner.And("I go to \"super-duper-2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31
@@ -137,7 +137,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
 #line 40
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 41
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
@@ -161,7 +161,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 48
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
 #line 52
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 53
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 54

@@ -49,8 +49,14 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")
-                    <a href="@editUrl">@T("Edit")</a>
+                    <ul class="action-links">
+                        <li class="action-link">
+                            <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>
+                        </li>
+                        <li class="action-link">
+                            <a href="@editUrl">@T("Edit")</a>
+                        </li>
+                    </ul>
                 </li>
             }
         </ul>

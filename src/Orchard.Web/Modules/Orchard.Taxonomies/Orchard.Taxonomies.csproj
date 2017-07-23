@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,6 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -62,6 +64,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -109,6 +112,26 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\LocalizedTaxonomyController.cs" />
+    <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
+    <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
+    <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
+    <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
+    <Compile Include="Events\ITermLocalizationEventHandler.cs" />
+    <Compile Include="Handlers\LocalizedTaxonomyFieldHandler.cs" />
+    <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
+    <Compile Include="LocalizedTaxonomyMigration.cs" />
+    <Compile Include="Models\MoveTermsContext.cs" />
+    <Compile Include="Services\ITaxonomyExtensionsService.cs" />
+    <Compile Include="Services\ITaxonomySource.cs" />
+    <Compile Include="Services\LocalizedTaxonomySource.cs" />
+    <Compile Include="Services\TaxonomyExtensionsService.cs" />
+    <Compile Include="Services\TaxonomyServiceDraftable.cs" />
+    <Compile Include="Services\TaxonomySource.cs" />
+    <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
+    <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
+    <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
+    <Compile Include="ViewModels\LocalizedTaxonomiesViewModel.cs" />
     <Compile Include="ViewModels\Tag.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\TermAdminController.cs" />
@@ -227,6 +250,10 @@
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
+      <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project>
+      <Name>Orchard.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
@@ -256,6 +283,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\TaxonomyFieldLocalizationSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\TaxonomyFieldList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TaxonomyTermSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

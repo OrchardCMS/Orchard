@@ -2,7 +2,7 @@
 @using Orchard.Core.Navigation.ViewModels;
 @using Orchard.Utility.Extensions;
 
-@{ 
+@{
     Layout.Title = T("Navigation").ToString();
     Style.Include("navigation-admin.css");
 
@@ -25,16 +25,16 @@
                         @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu, false)))
                     }
                 </select>
-                @if (hasPermission) { 
+                @if (hasPermission) {
                     @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
                 }
             </fieldset>
         }
     }
-    @if (hasPermission) { 
-    <div id="navigation-menu-add">
-        @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }))
-    </div>
+    @if (hasPermission) {
+        <div id="navigation-menu-add">
+            @Html.Link(T("Add a new menu...").Text, Url.Action("Create", "Admin", new { area = "Contents", id = "Menu", returnUrl = Request.RawUrl }))
+        </div>
     }
 </div>
 
@@ -59,7 +59,8 @@
             <ul class="menu-items-zone">
                 @foreach (var descriptor in Model.MenuItemDescriptors.OrderBy(x => x.DisplayName)) {
                     <li>
-                        <div class="menu-item-description"><h2>@T(descriptor.DisplayName)</h2>
+                        <div class="menu-item-description">
+                            <h2>@T(descriptor.DisplayName)</h2>
                             @if (!string.IsNullOrWhiteSpace(descriptor.Description)) {
                                 <span class="hint">@T(descriptor.Description)</span>
                             }
@@ -70,7 +71,7 @@
             </ul>
         </div>
     </div>
-    
+
     <fieldset class="actions">
         <button id="saveButton" type="submit" class="button">@T("Save All")</button>
     </fieldset>
@@ -78,53 +79,57 @@
 
 
 @helper RenderMenuItems(IList<MenuItemEntry> menuItems, int index) {
-            
-    @:<ol> 
 
-    // store current level to detect lowerb or upper level
-    int currentLevel = Model.MenuItemEntries[index].Position.Split('.').Length - 1;
-    bool first = true;
+    @:<ol>
 
-    for (int i = index; i < Model.MenuItemEntries.Count; i++) {
 
-        var menuPartEntry = Model.MenuItemEntries[i];
-        var level = menuPartEntry.Position.Split('.').Length - 1; // 0 is for root level
+// store current level to detect lowerb or upper level
+int currentLevel = Model.MenuItemEntries[index].Position.Split('.').Length - 1;
+bool first = true;
 
-        if (level > currentLevel) {
-            // render sub level, then continue to next element
-            @RenderMenuItems(menuItems, i) 
-    
-            var j = i;
-            while (j < Model.MenuItemEntries.Count && Model.MenuItemEntries[j].Position.Split('.').Length - 1 > currentLevel) { j++; };
-            i = j - 1;
-            continue;
+for (int i = index; i < Model.MenuItemEntries.Count; i++) {
+
+    var menuPartEntry = Model.MenuItemEntries[i];
+    var level = menuPartEntry.Position.Split('.').Length - 1; // 0 is for root level
+
+    if (level > currentLevel) {
+        // render sub level, then continue to next element
+        @RenderMenuItems(menuItems, i)
+
+        var j = i;
+        while (j < Model.MenuItemEntries.Count && Model.MenuItemEntries[j].Position.Split('.').Length - 1 > currentLevel) { j++; };
+        i = j - 1;
+        continue;
+    }
+
+    if (level == currentLevel) {
+        if (!first) {
+            @:</li>
         }
 
-        if (level == currentLevel) {
-            if (!first) {
-                @:</li>
-            }
+        first = false;
 
-            first = false;
-    
-            @:<li class="navigation-menu-item" data-index="@i">
-        
-                <div>
-                    <h2>@menuPartEntry.Text</h2>
-                    <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
-                    <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
-                    <span class="navigation-actions">
-                        <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
-                        @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })@T(" | ")
+        @:<li class="navigation-menu-item" data-index="@i">
+            <div>
+                <h2>@menuPartEntry.Text</h2>
+                <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
+                <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
+                <span class="navigation-actions action-links">
+                    <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
+                    <span class="action-link">
+                        @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
+                    </span>
+                    <span class="action-link">
                         @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
                     </span>
-                </div>
-            
-            continue;
-        }
+                </span>
+            </div>
 
-        // done with current level
-        if (level < currentLevel) {
+        continue;
+    }
+
+    // done with current level
+    if (level < currentLevel) {
             @:</li>
             break;
         }
@@ -133,7 +138,7 @@
 }
 
 @using (Script.Foot()) {
-<script type="text/javascript">
+    <script type="text/javascript">
     //<![CDATA[
     var leaveConfirmation = '@HttpUtility.JavaScriptStringEncode(T("Some items where not saved.").Text)';
 
@@ -141,5 +146,5 @@
         $(this).parents('form').submit();
     });
     //]]>
-</script>
+    </script>
 }

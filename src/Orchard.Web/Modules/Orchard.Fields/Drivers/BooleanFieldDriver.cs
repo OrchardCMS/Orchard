@@ -36,7 +36,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, BooleanField field, dynamic shapeHelper) {
             return ContentShape("Fields_Boolean_Edit", GetDifferentiator(field, part),
                 () => {
-                    if (part.IsNew()) {
+                    if (part.IsNew() && field.Value == null) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
                         field.Value = settings.DefaultValue;
                     }
@@ -49,7 +49,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<BooleanFieldSettings>();
 
                 if (!settings.Optional && !field.Value.HasValue) {
-                    updater.AddModelError(field.Name, T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(field.Name, T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
@@ -62,8 +62,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, BooleanField field, ExportContentContext context) {
-			if (field.Value.HasValue)
-				context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Cloning(ContentPart part, BooleanField originalField, BooleanField cloneField, CloneContentContext context) {

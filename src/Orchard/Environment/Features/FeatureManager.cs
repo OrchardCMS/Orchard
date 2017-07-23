@@ -4,7 +4,7 @@ using System.Linq;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Helpers;
+using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -13,6 +13,7 @@ namespace Orchard.Environment.Features {
     public class FeatureManager : IFeatureManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IEnumerable<IExtensionLoader> _loaders;
 
         /// <summary>
         /// Delegate to notify about feature dependencies.
@@ -21,10 +22,11 @@ namespace Orchard.Environment.Features {
 
         public FeatureManager(
             IExtensionManager extensionManager,
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            IEnumerable<IExtensionLoader> loaders) {
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
-
+            _loaders = loaders;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -161,6 +163,22 @@ namespace Orchard.Environment.Features {
             return GetAffectedFeatures(featureId, availableFeatures, getEnabledDependants);
         }
 
+        public bool HasLoader(string featureId) {
+            var descriptor = _extensionManager
+                .AvailableExtensions()
+                .Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType))
+                .OrderBy(d => d.Id)
+                .FirstOrDefault(e => e.Id == featureId || e.Features.Select(f => f.Id).Contains(featureId));
+
+            foreach (var loader in _loaders) {
+                if (loader.LoaderIsSuitable(descriptor)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Enables a feature.
         /// </summary>
@@ -228,7 +246,7 @@ namespace Orchard.Environment.Features {
         }
 
         private static IEnumerable<string> GetAffectedFeatures(
-            string featureId, IDictionary<FeatureDescriptor, bool> features, 
+            string featureId, IDictionary<FeatureDescriptor, bool> features,
             Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>> getAffectedDependencies) {
 
             var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { featureId };

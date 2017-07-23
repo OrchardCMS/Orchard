@@ -46,11 +46,11 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-            var recipes = _setupService.Recipes().ToList();
+            var recipes = _setupService.Recipes().OrderBy(c => c.Name).ToList();
             string recipeDescription = null;
 
             if (recipes.Any()) {
-                recipeDescription = recipes[0].Description;
+                recipeDescription = recipes.First().Description;
             }
 
             // On the first time installation of Orchard, the user gets to the setup screen, which

@@ -41,12 +41,16 @@ namespace Orchard.Taxonomies.Services {
 
 
         IEnumerable<TermPart> GetTerms(int taxonomyId);
+        IEnumerable<TermPart> GetRootTerms(int taxonomyId);
         int GetTermsCount(int taxonomyId);
         TermPart GetTerm(int id);
         TermPart GetTermByName(int taxonomyId, string name);
         void DeleteTerm(TermPart termPart);
         void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm);
         void ProcessPath(TermPart term);
+        void ProcessFullWeight(TermPart term, TermPart parentTerm);
+        string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight);
+
         IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId);
 
         string GenerateTermTypeName(string taxonomyName);

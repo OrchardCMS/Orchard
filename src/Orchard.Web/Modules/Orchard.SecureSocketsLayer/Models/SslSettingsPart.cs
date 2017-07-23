@@ -16,8 +16,7 @@ namespace Orchard.SecureSocketsLayer.Models {
     public class SslSettingsPart : ContentPart {
         public const string CacheKey = "SslSettingsPart";
 
-        public string Urls
-        {
+        public string Urls {
             get { return this.As<InfosetPart>().Get<SslSettingsPart>("Urls"); }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("Urls", value); }
         }
@@ -56,6 +55,27 @@ namespace Orchard.SecureSocketsLayer.Models {
         public string InsecureHostName {
             get { return this.As<InfosetPart>().Get<SslSettingsPart>("InsecureHostName"); }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("InsecureHostName", value); }
+        }
+
+        public bool SendStrictTransportSecurityHeaders {
+            get { return this.Retrieve(x => x.SendStrictTransportSecurityHeaders); }
+            set { this.Store(x => x.SendStrictTransportSecurityHeaders, value); }
+        }
+
+        public bool StrictTransportSecurityIncludeSubdomains {
+            get { return this.Retrieve(x => x.StrictTransportSecurityIncludeSubdomains); }
+            set { this.Store(x => x.StrictTransportSecurityIncludeSubdomains, value); }
+        }
+
+        [Required]
+        public int StrictTransportSecurityMaxAge {
+            get { return this.Retrieve(x => x.StrictTransportSecurityMaxAge, 31536000); }
+            set { this.Store(x => x.StrictTransportSecurityMaxAge, value); }
+        }
+
+        public bool StrictTransportSecurityPreload {
+            get { return this.Retrieve(x => x.StrictTransportSecurityPreload); }
+            set { this.Store(x => x.StrictTransportSecurityPreload, value); }
         }
     }
 }
