@@ -69,6 +69,7 @@ namespace Orchard.Core.Navigation {
                     .WithPart("ShapeMenuItemPart")
                     .WithPart("MenuPart")
                     .WithPart("CommonPart")
+                    .WithIdentity()
                     .DisplayedAs("Shape Link")
                     .WithSetting("Description", "Injects menu items from a Shape")
                     .WithSetting("Stereotype", "MenuItem")
@@ -153,6 +154,7 @@ namespace Orchard.Core.Navigation {
                     .WithPart("ShapeMenuItemPart")
                     .WithPart("MenuPart")
                     .WithPart("CommonPart")
+                    .WithIdentity()
                     .DisplayedAs("Shape Link")
                     .WithSetting("Description", "Injects menu items from a Shape")
                     .WithSetting("Stereotype", "MenuItem")
@@ -178,6 +180,14 @@ namespace Orchard.Core.Navigation {
             );
 
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem", cfg => cfg
+                .WithIdentity()
+            );
+
+            return 7;
         }
     }
 }
