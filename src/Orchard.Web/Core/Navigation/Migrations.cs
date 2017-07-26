@@ -30,6 +30,7 @@ namespace Orchard.Core.Navigation {
             ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
                 .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
                 .WithPart("TitlePart")
+                .WithIdentity()
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
@@ -101,6 +102,7 @@ namespace Orchard.Core.Navigation {
             ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
                 .WithPart("CommonPart")
                 .WithPart("TitlePart")
+                .WithIdentity()
                 );
 
             SchemaBuilder.CreateTable("MenuWidgetPartRecord",table => table
