@@ -22,8 +22,7 @@
         {
             <div class="panel-heading no-border">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-3 form-group form-inline">
-
+                    <div class="col-xs-12 col-sm-12 col-md-6 form-group form-inline">
                         <div class="or-checkbox inline">
                             <input id="checkAll" class="check-all" type="checkbox">
                             <label class="check-all" for="checkAll" title="@T("Select all")"></label>
@@ -43,46 +42,50 @@
                         </div>
 
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 form-group form-inline">
+                    <div class="col-xs-12 col-sm-12 col-md-6 text-right form-group form-inline">
+                        <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 form-group form-inline">
 
-                        <label for="filterResults" class="bulk-filter">@T("Show")</label>
+                        <label for="filterResults" class="bulk-filter"><i class="icon s7-angle-right"></i>@T("Show")</label>
                         <select id="filterResults" name="Options.SelectedFilter" class="form-control">
-                                @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
-                                @foreach (var filterOption in Model.Options.FilterOptions) {
-                                    @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
-                                }
-                            </select>
+                            @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
+                            @foreach (var filterOption in Model.Options.FilterOptions)
+                            {
+                                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                            }
+                        </select>
 
                         @if (cultures.Count() > 1)
                         {
-                            <label for="filterCultures" class="bulk-culture">@T("Culture")</label>
+                            <label for="filterCultures" class="bulk-culture"><i class="icon s7-angle-right"></i>@T("Culture")</label>
                             <select id="filterCultures" name="Options.SelectedCulture" class="form-control">
-                                    @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
-                                    @foreach (string culture in cultures) {
-                                        @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
-                                    }
-                                </select>
+                                @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+                                @foreach (string culture in cultures)
+                                {
+                                    @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                                }
+                            </select>
                         }
 
-                        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+                        <label for="orderResults" class="bulk-order"><i class="icon s7-angle-right"></i>@T("Ordered by")</label>
                         <select id="orderResults" name="Options.OrderBy" class="form-control">
-                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
-                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
-                                @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
-                            </select>
+                            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
+                            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+                            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
+                        </select>
 
-                        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+                        <label for="contentResults" class="bulk-order"><i class="icon s7-angle-right"></i>@T("Filter by")</label>
                         <select id="contentResults" name="Options.ContentsStatus" class="form-control">
-                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
-                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
-                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
-                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
-                                @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
-                            </select>
-                            <button type="submit" name="submit.Filter" value="yes please" class="btn btn-default">@T("Filter")</button>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 text-right form-group form-inline">
-                        <a href="@Url.Action("Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter })" class="btn btn-primary"><i class="fa fa-plus"></i> @createLinkText.Text</a>
+                            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
+                            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+                            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+                            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+                            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+                        </select>
+                        <button type="submit" name="submit.Filter" value="yes please" class="btn btn-default">@T("Filter")</button>
                     </div>
                 </div>
             </div>

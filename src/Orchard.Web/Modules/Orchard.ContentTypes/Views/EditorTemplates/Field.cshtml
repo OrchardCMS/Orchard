@@ -11,7 +11,7 @@
         <div class="panel-heading information">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#@accordionId" href="#@accordionPanelId" aria-expanded="false" class="collapsed">
-                    <i class="icon fa fa-angle-down"></i> @String.Format("{0} ({1})", Model.DisplayName, Model.FieldDefinition._Definition.Name)
+                    <i class="icon s7-angle-down"></i> @String.Format("{0} ({1})", Model.DisplayName, Model.FieldDefinition._Definition.Name)
                 </a>
                 <span class="manage">
                     <a href="@Url.Action("RemoveFieldFrom", new {area = "Orchard.ContentTypes", id = Model.Part.Name, name = Model.Name})" class="btn-link btn-danger" itemprop="RemoveUrl UnsafeUrl">

@@ -75,7 +75,7 @@
                                 <tr>
                                     <td>
                                         <div class="or-radio">
-                                            <input type="radio" id="@radioId" name="@Html.NameFor(m => m.DefaultPatterns[cultures.IndexOf(culture)].Culture)" value="@(culture + "|" + patternCultureCount)" @if (patternCultureCount.ToString() == Model.DefaultPatterns[Model.SiteCultures.IndexOf(culture)].PatternIndex) { <text>checked="checked"</text>} />
+                                            <input type="radio" id="@radioId" name="@Html.NameFor(m => m.DefaultPatterns[cultures.IndexOf(culture)].Culture)" value="@(culture + "|" + patternCultureCount)" @if (patternCultureCount.ToString() == Model.DefaultPatterns[cultures.IndexOf(culture)].PatternIndex) { <text>checked="checked"</text>} />
                                             <label for="@radioId"></label>
                                         </div>
                                     </td>
