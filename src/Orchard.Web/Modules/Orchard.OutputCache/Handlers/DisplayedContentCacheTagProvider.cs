@@ -1,26 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Orchard.OutputCache.Services;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.OutputCache.Handlers {
     /// <summary>
-    /// Saves references to content items which have been displayed during a request
+    /// Creates tags for content items which have been displayed during a request
     /// </summary>
-    public class DisplayedContentItemHandler : ContentHandler, IDisplayedContentItemHandler {
+    public class DisplayedContentCacheTagProvider : ContentHandler, ICacheTagProvider {
         private readonly Collection<int> _itemIds = new Collection<int>();
 
         protected override void BuildDisplayShape(BuildDisplayContext context) {
             _itemIds.Add(context.Content.Id);
         }
 
-        public bool IsDisplayed(int id) {
-            return _itemIds.Contains(id);
-        }
-
-        public IEnumerable<int> GetDisplayed() {
-            return _itemIds.Distinct();
+        public IEnumerable<string> GetTags() {
+            return _itemIds.Distinct().Select(id => id.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
