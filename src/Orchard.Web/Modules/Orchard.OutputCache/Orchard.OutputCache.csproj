@@ -128,7 +128,7 @@
     <Compile Include="Filters\CaptureStream.cs" />
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
-    <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
+    <Compile Include="Handlers\DisplayedContentCacheTagProvider.cs" />
     <Compile Include="DatabaseOutputCacheMigrations.cs" />
     <Compile Include="Helpers\OutputCacheAttributeExtensions.cs" />
     <Compile Include="Migrations.cs" />
@@ -144,7 +144,7 @@
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />
     <Compile Include="Services\DefaultTagCache.cs" />
     <Compile Include="Services\ICacheControlStrategy.cs" />
-    <Compile Include="Services\IDisplayedContentItemHandler.cs" />
+    <Compile Include="Services\ICacheTagProvider.cs" />
     <Compile Include="Services\ITagCache.cs" />
     <Compile Include="Services\DefaultCacheStorageProvider.cs" />
     <Compile Include="Services\ICacheService.cs" />
