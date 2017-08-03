@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -67,17 +68,21 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             try {
-                _mediaLibraryService.CreateFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder created"));
+                bool valid = String.IsNullOrWhiteSpace(viewModel.Name) || Regex.IsMatch(viewModel.Name, @"^[^:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+$");
+                if (!valid) {
+                    throw new ArgumentException(T("Folder contains invalid characters").ToString());
+                }
+                else {
+                    _mediaLibraryService.CreateFolder(viewModel.FolderPath, viewModel.Name);
+                    Services.Notifier.Information(T("Media folder created"));
+                }
             }
             catch (ArgumentException argumentException) {
                 Services.Notifier.Error(T("Creating Folder failed: {0}", argumentException.Message));
                 Services.TransactionManager.Cancel();
                 return View(viewModel);
             }
-
             return RedirectToAction("Index", "Admin", new { area = "Orchard.MediaLibrary" });
-
         }
 
         public ActionResult Edit(string folderPath) {
@@ -130,8 +135,14 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             try {
-                _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder renamed"));
+                bool valid = String.IsNullOrWhiteSpace(viewModel.Name) || Regex.IsMatch(viewModel.Name, @"^[^:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+$");
+                if (!valid) {
+                    throw new ArgumentException(T("Folder contains invalid characters").ToString());
+                }
+                else {
+                    _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
+                    Services.Notifier.Information(T("Media folder renamed"));
+                }
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Folder failed: {0}", exception.Message));
