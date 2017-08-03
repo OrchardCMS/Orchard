@@ -39,7 +39,7 @@ namespace Orchard.Workflows.Forms {
                         _FormValues: New.Textarea(
                             Id: "FormValues", Name: "FormValues",
                             Title: T("Form Values"),
-                            Description: T("For KeyValue, enter one line per key=value pair to submit when using the POST verb. For JSON, enter a string where the curly braces are replaced by double brackets e.g. { test: 'test' } becomes (( test: 'test' ))."),
+                            Description: T("For KeyValue, enter one line per key=value pair to submit when using the POST verb. For JSON, enter a string where the curly braces are replaced by double brackets e.g. { test: 'test' } becomes {{ test: 'test' }}."),
                             Classes: new[] {"tokenized"})
                         );
 
