@@ -97,6 +97,8 @@
             parent.remove();
             newList.append(list);
         }
+
+        assignPositions();
     });
 
     // toggle editor shapes
