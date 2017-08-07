@@ -9,13 +9,17 @@ using Orchard.Data;
 using Orchard.Taxonomies.Settings;
 using System;
 using System.Web.Routing;
+using Orchard.Localization.Models;
+using Orchard.Localization.Services;
+using System.Linq;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TaxonomyPartHandler : ContentHandler {
         public TaxonomyPartHandler(
             IRepository<TaxonomyPartRecord> repository,
             ITaxonomyService taxonomyService,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager,
+            ILocalizationService localizationService) {
 
             string previousName = null;
 
@@ -33,6 +37,19 @@ namespace Orchard.Taxonomies.Handlers {
                             if (field.FieldDefinition.Name == typeof(TaxonomyField).Name) {
 
                                 if (field.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy == previousName) {
+                                    //could either be a name change, or we could be publishing a translation
+                                    var locPart = part.ContentItem.As<LocalizationPart>();
+                                    if (locPart != null) {
+                                        var localizedTaxonomies = localizationService
+                                            .GetLocalizations(part.ContentItem) //versions in all cultures
+                                            .Where(pa => pa.ContentItem.Id != part.ContentItem.Id) //but not the one we are publishing
+                                            .Select(pa => {
+                                                var tax = pa.ContentItem.As<TaxonomyPart>(); //the TaxonomyPart
+                                                return tax == null ? string.Empty : tax.Name; //get its name (with sanity check)
+                                                });
+                                        if (localizedTaxonomies.Contains(previousName)) 
+                                            continue; //this is a new localization, so move along
+                                    }
                                     contentDefinitionManager.AlterPartDefinition(partDefinition.Name,
                                         cfg => cfg.WithField(field.Name,
                                             builder => builder.WithSetting("TaxonomyFieldSettings.Taxonomy", part.Name)));
