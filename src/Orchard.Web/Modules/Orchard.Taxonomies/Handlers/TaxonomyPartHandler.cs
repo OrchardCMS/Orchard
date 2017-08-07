@@ -1,17 +1,17 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using System.Linq;
+using System.Web.Routing;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
-using Orchard.Taxonomies.Fields;
-using Orchard.Taxonomies.Services;
-using Orchard.Taxonomies.Models;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Taxonomies.Settings;
-using System;
-using System.Web.Routing;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using System.Linq;
+using Orchard.Taxonomies.Fields;
+using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
+using Orchard.Taxonomies.Settings;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TaxonomyPartHandler : ContentHandler {
