@@ -41,7 +41,7 @@ namespace Orchard.Roles.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Assign specific roles to the current content item if it's a user.");  }
+            get { return T("Assign specific roles to the current content item if it's a user."); }
         }
 
         public override string Form {
@@ -49,7 +49,7 @@ namespace Orchard.Roles.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] {T("Done")};
+            return new[] { T("Done") };
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -59,7 +59,7 @@ namespace Orchard.Roles.Activities {
             if (user == null) {
                 user = _workContextAccessor.GetContext().CurrentUser.As<IUserRoles>();
             }
-            
+
             var roles = GetRoles(activityContext);
 
             if (user != null) {
@@ -67,7 +67,7 @@ namespace Orchard.Roles.Activities {
                     if (!user.Roles.Contains(role)) {
                         var roleRecord = _roleService.GetRoleByName(role);
                         if (roleRecord != null) {
-                            _repository.Create(new UserRolesPartRecord {UserId = user.Id, Role = roleRecord});
+                            _repository.Create(new UserRolesPartRecord { UserId = user.Id, Role = roleRecord });
                         }
                         else {
                             Logger.Debug("Role not found: {0}", role);
@@ -78,7 +78,7 @@ namespace Orchard.Roles.Activities {
 
             yield return T("Done");
         }
-        
+
         private IEnumerable<string> GetRoles(ActivityContext context) {
             var roles = context.GetState<string>("Roles");
 
@@ -86,7 +86,8 @@ namespace Orchard.Roles.Activities {
                 return Enumerable.Empty<string>();
             }
 
-            return roles.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            return roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
         }
     }
+
 }

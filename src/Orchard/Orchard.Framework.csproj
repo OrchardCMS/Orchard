@@ -43,6 +43,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <NoWarn>
     </NoWarn>
@@ -56,6 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
     <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -190,12 +192,16 @@
     <Compile Include="Recipes\Models\BuildContext.cs" />
     <Compile Include="Recipes\Services\IRecipeBuilder.cs" />
     <Compile Include="Recipes\Services\IRecipeBuilderStep.cs" />
+    <Compile Include="Recipes\Services\IRecipeBuilderStepResolver.cs" />
     <Compile Include="Recipes\Services\IRecipeExecutionStep.cs" />
+    <Compile Include="Recipes\Services\IRecipeExecutionStepResolver.cs" />
     <Compile Include="Recipes\Services\IRecipeExecutor.cs" />
     <Compile Include="Recipes\Services\IRecipeResultAccessor.cs" />
     <Compile Include="Recipes\Services\RecipeBuilder.cs" />
     <Compile Include="Recipes\Services\RecipeBuilderStep.cs" />
     <Compile Include="Recipes\Models\RecipeExecutionContext.cs" />
+    <Compile Include="Recipes\Services\RecipeExecutionStepResolver.cs" />
+    <Compile Include="Recipes\Services\RecipeBuilderStepResolver.cs" />
     <Compile Include="Recipes\Services\RecipeExecutionLogger.cs" />
     <Compile Include="Recipes\Services\RecipeExecutionStep.cs" />
     <Compile Include="Recipes\Services\RecipeExecutor.cs" />

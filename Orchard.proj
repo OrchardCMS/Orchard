@@ -129,11 +129,19 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
-      Targets="Build"/>
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+  </Target>
+  
+  <Target Name="BuildViews">
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">
@@ -167,11 +175,12 @@
   </Target>
 
   <Target Name="Spec" DependsOnTargets="Package-Stage">
-
-    <CreateItem Include="$(CompileFolder)\*.Specs.dll">
+    <!-- Running SpecFlow tests -->
+    <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageToolsFolder)" />
+    
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Specs.xml" />
   </Target>
 
   <!-- Packaging (Stage) -->

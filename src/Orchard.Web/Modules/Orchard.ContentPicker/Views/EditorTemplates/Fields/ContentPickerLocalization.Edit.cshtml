@@ -17,13 +17,18 @@
 
     //We will use a script to find the fieldset for the field we are currently processing.
     //The fieldset contains a span of class "hint". We will add tryTranslateMsg to it.
+    //We will check if the field exists in the page DOM, just in case a Placement.info suppresses it.
     string dataPartName = HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name);
     string dataFieldName = HttpUtility.JavaScriptStringEncode(Model.Field.PartFieldDefinition.Name);
 }
+<input type="hidden" id="@dataPartName-@dataFieldName-tryTranslateMsg" value="@tryTranslateMsg" />
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function () {
-            $("fieldset[data-part-name='@dataPartName'][data-field-name='@dataFieldName']").find("span.hint")[0].innerText += "@tryTranslateMsg";
+            var hint = $("fieldset[data-part-name='@dataPartName'][data-field-name='@dataFieldName']").find("span.hint")[0];
+            if (hint) {
+                hint.innerText += " " + $("#@dataPartName-@dataFieldName-tryTranslateMsg").val();
+            }
         });
         @foreach (var contentItem in Model.ContentItems) {
             var loc = contentItem.As<LocalizationPart>();

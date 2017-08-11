@@ -3,7 +3,7 @@ Path: ArchiveLater
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.1
+Version: 1.10.2
 OrchardVersion: 1.9
 Description: The ArchiveLater module introduces scheduled archiving functionality.
 FeatureDescription: Scheduled archiving.

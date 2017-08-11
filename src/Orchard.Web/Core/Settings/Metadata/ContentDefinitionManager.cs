@@ -189,7 +189,7 @@ namespace Orchard.Core.Settings.Metadata {
 
         private void Apply(ContentTypeDefinition model, ContentTypeDefinitionRecord record) {
             record.DisplayName = model.DisplayName;
-            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
 
             var toRemove = record.ContentTypePartDefinitionRecords
                 .Where(partDefinitionRecord => model.Parts.All(part => partDefinitionRecord.ContentPartDefinitionRecord.Name != part.PartDefinition.Name))
@@ -215,7 +215,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private void Apply(ContentPartDefinition model, ContentPartDefinitionRecord record) {
-            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
 
             var toRemove = record.ContentPartFieldDefinitionRecords
                 .Where(partFieldDefinitionRecord => model.Fields.All(partField => partFieldDefinitionRecord.Name != partField.Name))

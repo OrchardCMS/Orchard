@@ -71,7 +71,7 @@
                     continue;
                 }
                 //hmmm...I feel like I've done this before...
-                var lifecycleStatus = feature.Descriptor.Extension.LifecycleStatus;
+                var lifecycleStatus = feature.Descriptor.LifecycleStatus;
                 var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
                 var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
