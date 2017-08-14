@@ -82,10 +82,10 @@ namespace Orchard.MediaProcessing.Providers.Filters {
             string mode = context.State.Mode;
 
             switch (mode) {
-                case "pad": return T("Pad to {0}x{1}", context.State.Height, context.State.Width);
-                case "crop": return T("Crop to {0}x{1}", context.State.Height, context.State.Width);
-                case "stretch": return T("Stretch to {0}x{1}", context.State.Height, context.State.Width);
-                default: return T("Resize to {0}x{1}", context.State.Height, context.State.Width); 
+                case "pad": return T("Pad to {0} x {1}", context.State.Width, context.State.Height);
+                case "crop": return T("Crop to {0} x {1}", context.State.Width, context.State.Height);
+                case "stretch": return T("Stretch to {0} x {1}", context.State.Width, context.State.Height);
+                default: return T("Resize to {0} x {1}", context.State.Width, context.State.Height); 
 
             } 
         }
