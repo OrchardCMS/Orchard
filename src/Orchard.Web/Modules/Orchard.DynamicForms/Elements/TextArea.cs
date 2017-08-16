@@ -2,7 +2,7 @@
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
-    public class TextArea : LabeledFormElement {
+    public class TextArea : PlaceholderableFormElement {
         public int? Rows {
             get { return this.Retrieve(x => x.Rows); }
             set { this.Store(x => x.Rows, value); }
