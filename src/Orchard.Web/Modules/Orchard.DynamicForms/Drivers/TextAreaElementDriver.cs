@@ -15,7 +15,7 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override EditorResult OnBuildEditor(TextArea element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
-            var placeholderEditor = BuildForm(context, "Placeholder");
+            var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
             var textAreaEditor = BuildForm(context, "TextArea", "Properties:15");
             var textAreaValidation = BuildForm(context, "TextAreaValidation", "Validation:10");
 
