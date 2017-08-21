@@ -3,6 +3,7 @@ using Orchard.Email.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Messaging.Services;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -16,6 +17,7 @@ namespace Orchard.Email.Activities {
     public class EmailActivity : Task {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
+        public ILogger Logger { get; set; }
 
         public EmailActivity(
             IMessageService messageService,
@@ -23,13 +25,14 @@ namespace Orchard.Email.Activities {
             ) {
             _messageService = messageService;
             _jobsQueueService = jobsQueueService;
+            Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("Done") };
+            return new[] { T("Done"), T("Not Done") };
         }
 
         public override string Form {
@@ -68,6 +71,11 @@ namespace Orchard.Email.Activities {
                 {"CC", cc},
                 {"NotifyReadEmail",notifyReadEmail }
             };
+
+            if (string.IsNullOrWhiteSpace(recipients)) {
+                Logger.Error("Email message doesn't have any recipient for Workflow {0}", workflowContext.Record.WorkflowDefinitionRecord.Name);
+                yield return T("Not Done");
+            }
 
             var queued = activityContext.GetState<bool>("Queued");
 
