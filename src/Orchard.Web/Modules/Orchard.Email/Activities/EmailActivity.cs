@@ -75,7 +75,8 @@ namespace Orchard.Email.Activities {
             if (string.IsNullOrWhiteSpace(recipients)) {
                 Logger.Error("Email message doesn't have any recipient for Workflow {0}", workflowContext.Record.WorkflowDefinitionRecord.Name);
                 yield return T("Not Done");
-            }else {
+            }
+            else {
                 var queued = activityContext.GetState<bool>("Queued");
 
                 if (!queued) {
