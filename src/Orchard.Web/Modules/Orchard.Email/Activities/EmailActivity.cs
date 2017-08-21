@@ -75,19 +75,19 @@ namespace Orchard.Email.Activities {
             if (string.IsNullOrWhiteSpace(recipients)) {
                 Logger.Error("Email message doesn't have any recipient for Workflow {0}", workflowContext.Record.WorkflowDefinitionRecord.Name);
                 yield return T("Not Done");
-            }
+            }else {
+                var queued = activityContext.GetState<bool>("Queued");
 
-            var queued = activityContext.GetState<bool>("Queued");
+                if (!queued) {
+                    _messageService.Send(SmtpMessageChannel.MessageType, parameters);
+                }
+                else {
+                    var priority = activityContext.GetState<int>("Priority");
+                    _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = parameters }, priority);
+                }
 
-            if (!queued) {
-                _messageService.Send(SmtpMessageChannel.MessageType, parameters);
+                yield return T("Done");
             }
-            else {
-                var priority = activityContext.GetState<int>("Priority");
-                _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = parameters }, priority);
-            }
-
-            yield return T("Done");
         }
     }
 }
