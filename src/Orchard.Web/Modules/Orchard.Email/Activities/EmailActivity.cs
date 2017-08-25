@@ -32,7 +32,7 @@ namespace Orchard.Email.Activities {
         public Localizer T { get; set; }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("Done"), T("Not Done") };
+            return new[] { T("Done"), T("Failed") };
         }
 
         public override string Form {
@@ -74,7 +74,7 @@ namespace Orchard.Email.Activities {
 
             if (string.IsNullOrWhiteSpace(recipients)) {
                 Logger.Error("Email message doesn't have any recipient for Workflow {0}", workflowContext.Record.WorkflowDefinitionRecord.Name);
-                yield return T("Not Done");
+                yield return T("Failed");
             }
             else {
                 var queued = activityContext.GetState<bool>("Queued");
