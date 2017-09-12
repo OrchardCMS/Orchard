@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -59,8 +60,9 @@ namespace Orchard.MediaLibrary.Services {
             XRpcStruct file,
             UrlHelper url) {
 
-            var validationResult = _membershipService.ValidateUser(userName, password);
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageOwnMedia, validationResult.User, null)) {
+            List<LocalizedString> validationErrors;
+            var validationResult = _membershipService.ValidateUser(userName, password, out validationErrors);
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageOwnMedia, validationResult, null)) {
                 throw new OrchardCoreException(T("Access denied"));
             }
 
@@ -73,7 +75,7 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             // If the user only has access to his own folder, rewrite the folder name
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMediaContent, validationResult.User, null)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMediaContent, validationResult, null)) {
                 directoryName = Path.Combine(_mediaLibraryService.GetRootedFolderPath(directoryName));
             }
 

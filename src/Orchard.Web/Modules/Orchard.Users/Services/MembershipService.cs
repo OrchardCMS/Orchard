@@ -135,23 +135,25 @@ namespace Orchard.Users.Services {
             return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
-        public IUserIdentityResult ValidateUser(string userNameOrEmail, string password) {
+        public IUser ValidateUser(string userNameOrEmail, string password, out List<LocalizedString> validationErrors) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLowerInvariant();
-            List<string> errors = new List<string>();
+            validationErrors = new List<LocalizedString>();
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
             if (user == null)
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if (user == null || ValidatePassword(user.As<UserPart>(), password) == false)
-                return new IUserIdentityResult(null, new List<string>() { "The username or e-mail or password provided is incorrect." });
+            if (user == null || ValidatePassword(user.As<UserPart>(), password) == false) {
+                validationErrors.Add(T("The username or e-mail or password provided is incorrect."));
+                return null;
+            }
 
             if (user.EmailStatus != UserStatus.Approved)
-                errors.Add("You must verify your email");
+                validationErrors.Add(T("You must verify your email"));
 
             if (user.RegistrationStatus != UserStatus.Approved)
-                errors.Add("You must be approved before being able to login");
+                validationErrors.Add(T("You must be approved before being able to login"));
 
-            return new IUserIdentityResult(user, errors);
+            return user;
         }
 
         public bool PasswordIsExpired(IUser user, int days) {

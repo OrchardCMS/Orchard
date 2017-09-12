@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents;
@@ -147,12 +148,13 @@ namespace Orchard.PublishLater.Services {
         }
 
         private IUser ValidateUser(string userName, string password) {
-            IUserIdentityResult validationResult = _membershipService.ValidateUser(userName, password);
-            if (validationResult == null) {
-                throw new OrchardCoreException(T("The username or e-mail or password provided is incorrect."));
+            List<LocalizedString> validationErrors;
+            IUser user = _membershipService.ValidateUser(userName, password, out validationErrors);
+            if (validationErrors.Any()) {
+                throw new OrchardCoreException(validationErrors.FirstOrDefault());
             }
 
-            return validationResult.User;
+            return user;
         }
 
         public class XmlRpcDriver : IXmlRpcDriver {

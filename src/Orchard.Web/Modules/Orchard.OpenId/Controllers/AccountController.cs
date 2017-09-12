@@ -74,12 +74,12 @@ namespace Orchard.OpenId.Controllers {
             if (validationResult != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(validationResult.User, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = validationResult.User.UserName });
+                _membershipService.PasswordIsExpired(validationResult, membershipSettings.PasswordExpirationTimeInDays)) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = validationResult.UserName });
             }
 
-            _authenticationService.SignIn(validationResult.User, rememberMe);
-            _userEventHandler.LoggedIn(validationResult.User);
+            _authenticationService.SignIn(validationResult, rememberMe);
+            _userEventHandler.LoggedIn(validationResult);
 
             return this.RedirectLocal(returnUrl);
         }
@@ -146,7 +146,7 @@ namespace Orchard.OpenId.Controllers {
             return View();
         }
 
-        private IUserIdentityResult ValidateLogOn(string userNameOrEmail, string password) {
+        private IUser ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
 
             if (String.IsNullOrEmpty(userNameOrEmail)) {
@@ -161,7 +161,8 @@ namespace Orchard.OpenId.Controllers {
             if (!validate)
                 return null;
 
-            var user = _membershipService.ValidateUser(userNameOrEmail, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
             if (user == null) {
                 ModelState.AddModelError("password", T("The username or e-mail or password provided is incorrect."));
             }

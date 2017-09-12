@@ -290,11 +290,12 @@ namespace Orchard.Users.Controllers {
 
         private bool PasswordChangeIsSuccess(string currentPassword, string newPassword, string username) {
             try {
-                var validated = _membershipService.ValidateUser(username, currentPassword);
+                List<LocalizedString> validationErrors;
+                var validated = _membershipService.ValidateUser(username, currentPassword, out validationErrors);
 
                 if (validated != null) {
-                    _membershipService.SetPassword(validated.User, newPassword);
-                    _userEventHandler.ChangedPassword(validated.User);
+                    _membershipService.SetPassword(validated, newPassword);
+                    _userEventHandler.ChangedPassword(validated);
 
                     return true;
                 }
@@ -419,16 +420,17 @@ namespace Orchard.Users.Controllers {
             if (!validate)
                 return null;
 
-            var validationResult = _membershipService.ValidateUser(userNameOrEmail, password);
-            if (validationResult.User == null) {
+            List<LocalizedString> validationErrors;
+            var validationResult = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
+            if (validationResult == null) {
                 _userEventHandler.LogInFailed(userNameOrEmail, password);
             }
 
-            foreach (var error in validationResult.Errors) {
+            foreach (var error in validationErrors) {
                 ModelState.AddModelError("_FORM", error);
             }
 
-            return validationResult.User;
+            return validationResult;
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {

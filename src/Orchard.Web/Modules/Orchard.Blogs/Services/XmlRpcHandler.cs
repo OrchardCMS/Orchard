@@ -341,11 +341,12 @@ namespace Orchard.Blogs.Services {
         }
 
         private IUser ValidateUser(string userName, string password) {
-            IUserIdentityResult validationResult = _membershipService.ValidateUser(userName, password);
-            if (validationResult.Errors.Any()) {
-                throw new OrchardCoreException(T(validationResult.Errors.FirstOrDefault()));
+            List<LocalizedString> validationErrors;
+            IUser user = _membershipService.ValidateUser(userName, password,out validationErrors);
+            if (validationErrors.Any()) {
+                throw new OrchardCoreException(validationErrors.FirstOrDefault());
             }
-            return validationResult.User;
+            return user;
         }
 
         private static XRpcStruct CreateBlogStruct(
