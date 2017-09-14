@@ -209,7 +209,7 @@ namespace Orchard.Blogs.Services {
 
             //AutoroutePart
             dynamic dBlogPost = blogPost;
-            if (dBlogPost.AutoroutePart != null) {
+            if (dBlogPost.AutoroutePart!=null) {
                 dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 

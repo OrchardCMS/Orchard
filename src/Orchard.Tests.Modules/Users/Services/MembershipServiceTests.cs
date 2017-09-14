@@ -34,7 +34,8 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Users.Services {
+namespace Orchard.Tests.Modules.Users.Services 
+{
     [TestFixture]
     public class MembershipServiceTests {
         private IMembershipValidationService _membershipValidationService;

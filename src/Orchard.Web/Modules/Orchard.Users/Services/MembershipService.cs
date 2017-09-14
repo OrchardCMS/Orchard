@@ -74,12 +74,12 @@ namespace Orchard.Users.Services {
             user.CreatedUtc = _clock.UtcNow;
             SetPassword(user, createUserParams.Password);
 
-            if (registrationSettings != null) {
+            if ( registrationSettings != null) {
                 user.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
                 user.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
             }
 
-            if (createUserParams.IsApproved) {
+            if(createUserParams.IsApproved) {
                 user.RegistrationStatus = UserStatus.Approved;
                 user.EmailStatus = UserStatus.Approved;
             }
@@ -87,7 +87,7 @@ namespace Orchard.Users.Services {
             var userContext = new UserContext { User = user, Cancel = false, UserParameters = createUserParams };
             _userEventHandlers.Creating(userContext);
 
-            if (userContext.Cancel) {
+            if(userContext.Cancel) {
                 return null;
             }
 
@@ -98,15 +98,15 @@ namespace Orchard.Users.Services {
                 _userEventHandlers.Approved(user);
             }
 
-            if (registrationSettings != null
+            if ( registrationSettings != null
                 && registrationSettings.UsersAreModerated
                 && registrationSettings.NotifyModeration
                 && !createUserParams.IsApproved) {
                 var usernames = String.IsNullOrWhiteSpace(registrationSettings.NotificationsRecipients)
                                     ? new string[0]
-                                    : registrationSettings.NotificationsRecipients.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    : registrationSettings.NotificationsRecipients.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var userName in usernames) {
+                foreach ( var userName in usernames ) {
                     if (String.IsNullOrWhiteSpace(userName)) {
                         continue;
                     }

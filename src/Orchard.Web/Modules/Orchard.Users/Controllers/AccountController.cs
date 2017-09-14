@@ -313,7 +313,7 @@ namespace Orchard.Users.Controllers {
 
         [AlwaysAccessible]
         public ActionResult LostPassword(string nonce) {
-            if (_userService.ValidateLostPassword(nonce) == null) {
+            if ( _userService.ValidateLostPassword(nonce) == null) {
                 return RedirectToAction("LogOn");
             }
 
@@ -328,7 +328,7 @@ namespace Orchard.Users.Controllers {
         [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
-            if ((user = _userService.ValidateLostPassword(nonce)) == null) {
+            if ( (user = _userService.ValidateLostPassword(nonce)) == null) {
                 return Redirect("~/");
             }
 
@@ -376,7 +376,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChallengeEmail(string nonce) {
             var user = _userService.ValidateChallenge(nonce);
 
-            if (user != null) {
+            if ( user != null) {
                 _userEventHandler.ConfirmedEmail(user);
 
                 return RedirectToAction("ChallengeEmailSuccess");
@@ -387,7 +387,7 @@ namespace Orchard.Users.Controllers {
 
         #region Validation Methods
         private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword) {
-            if (String.IsNullOrEmpty(currentPassword)) {
+            if ( String.IsNullOrEmpty(currentPassword)) {
                 ModelState.AddModelError("currentPassword", T("You must specify a current password."));
             }
 
@@ -397,7 +397,7 @@ namespace Orchard.Users.Controllers {
 
             ValidatePassword(newPassword);
 
-            if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
+            if ( !String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
 

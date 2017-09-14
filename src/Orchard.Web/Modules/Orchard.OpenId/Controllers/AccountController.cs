@@ -16,7 +16,8 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Users.Events;
 
-namespace Orchard.OpenId.Controllers {
+namespace Orchard.OpenId.Controllers
+{
     [Themed]
     [AlwaysAccessible]
     [OrchardFeature("Orchard.OpenId")]
@@ -65,21 +66,21 @@ namespace Orchard.OpenId.Controllers {
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
             _userEventHandler.LoggingIn(userNameOrEmail, password);
 
-            var validationResult = ValidateLogOn(userNameOrEmail, password);
+            var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 return View(_openIdProviders);
             }
 
             var membershipSettings = _membershipService.GetSettings();
-            if (validationResult != null &&
+            if (user != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(validationResult, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = validationResult.UserName });
+                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
             }
 
-            _authenticationService.SignIn(validationResult, rememberMe);
-            _userEventHandler.LoggedIn(validationResult);
+            _authenticationService.SignIn(user, rememberMe);
+            _userEventHandler.LoggedIn(user);
 
             return this.RedirectLocal(returnUrl);
         }
@@ -170,7 +171,8 @@ namespace Orchard.OpenId.Controllers {
             return user;
         }
 
-        private string GetCallbackPath(WorkContext workContext) {
+        private string GetCallbackPath(WorkContext workContext) 
+            {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 

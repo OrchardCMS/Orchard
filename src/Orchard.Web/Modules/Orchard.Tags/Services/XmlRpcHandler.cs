@@ -90,8 +90,8 @@ namespace Orchard.Tags.Services {
                 return;
 
             List<LocalizedString> validationErrors;
-            var validationResult = _membershipService.ValidateUser(userName, password, out validationErrors);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, validationResult, null);
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var driver = new XmlRpcDriver(item => {
                 var post = item as XRpcStruct;
@@ -120,8 +120,8 @@ namespace Orchard.Tags.Services {
 
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
             List<LocalizedString> validationErrors;
-            var validationResult = _membershipService.ValidateUser(userName, password, out validationErrors);
-            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, validationResult, null);
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var array = new XRpcArray();
             foreach (var tag in _tagService.GetTags()) {
@@ -141,7 +141,7 @@ namespace Orchard.Tags.Services {
 
         private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
             List<LocalizedString> validationErrors;
-            var validationResult = _membershipService.ValidateUser(userName, password, out validationErrors);
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
 
             var rawTags = content.Optional<string>("mt_keywords");
             if (string.IsNullOrWhiteSpace(rawTags))
@@ -157,7 +157,7 @@ namespace Orchard.Tags.Services {
                 if (contentItem == null)
                     return;
 
-                _orchardServices.WorkContext.CurrentUser = validationResult;
+                _orchardServices.WorkContext.CurrentUser = user;
                 _tagService.UpdateTagsForContentItem(contentItem, tags);
             });
 
@@ -170,7 +170,7 @@ namespace Orchard.Tags.Services {
         public class XmlRpcDriver : IXmlRpcDriver {
             private readonly Action<object> _process;
 
-            public XmlRpcDriver(Action<object> process) {
+            public XmlRpcDriver(Action<object > process) {
                 _process = process;
             }
 
