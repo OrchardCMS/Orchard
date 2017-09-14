@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Orchard.Localization;
 
 namespace Orchard.Security {
     /// <summary>
@@ -23,7 +25,7 @@ namespace Orchard.Security {
             throw new NotImplementedException();
         }
 
-        public IUser ValidateUser(string userNameOrEmail, string password) {
+        public IUser ValidateUser(string userNameOrEmail, string password, out List<LocalizedString> validationErrors) {
             throw new NotImplementedException();
         }
 

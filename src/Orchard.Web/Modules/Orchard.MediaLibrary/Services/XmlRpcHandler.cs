@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -59,7 +60,8 @@ namespace Orchard.MediaLibrary.Services {
             XRpcStruct file,
             UrlHelper url) {
 
-            var user = _membershipService.ValidateUser(userName, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             if (!_authorizationService.TryCheckAccess(Permissions.ManageOwnMedia, user, null)) {
                 throw new OrchardCoreException(T("Access denied"));
             }

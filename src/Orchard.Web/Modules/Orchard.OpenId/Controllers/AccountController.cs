@@ -162,7 +162,8 @@ namespace Orchard.OpenId.Controllers
             if (!validate)
                 return null;
 
-            var user = _membershipService.ValidateUser(userNameOrEmail, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
             if (user == null) {
                 ModelState.AddModelError("password", T("The username or e-mail or password provided is incorrect."));
             }
@@ -170,8 +171,8 @@ namespace Orchard.OpenId.Controllers
             return user;
         }
 
-        private string GetCallbackPath(WorkContext workContext)
-        {
+        private string GetCallbackPath(WorkContext workContext) 
+            {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 
