@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.MediaLibrary.Fields;
 using Orchard.MediaLibrary.Models;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.MediaLibrary.Handlers {
     public class MediaLibraryPickerFieldHandler : ContentHandler {
@@ -37,7 +38,8 @@ namespace Orchard.MediaLibrary.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                localField._contentItems = new Lazy<IEnumerable<MediaPart>>(() => _contentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
+                localField._contentItems = new LazyField<IEnumerable<MediaPart>>();
+                localField._contentItems.Loader(() => _contentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
             }
         }
     }
