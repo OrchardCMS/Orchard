@@ -60,6 +60,11 @@ namespace Orchard.Comments.Services {
         public Localizer T { get; set; } 
         public ILogger Logger { get; set; }
 
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForContainer(int id) {
+            return GetComments()
+                .Where(c => c.CommentedOnContainer == id);
+        }
+
         public CommentPart GetComment(int id) {
             return _orchardServices.ContentManager.Get<CommentPart>(id);
         }
