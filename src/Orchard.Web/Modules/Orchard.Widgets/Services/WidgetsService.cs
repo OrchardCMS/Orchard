@@ -71,12 +71,12 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgetsWithEagerlyLoadedContainers(int[] layerIds) {
+        public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
-                .EagerlyLoadContainerContentItems(1).Result;
+                .List();
         }
 
         public IEnumerable<string> GetZones() {
