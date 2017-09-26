@@ -32,7 +32,8 @@ namespace Orchard.Core.Containers.Drivers {
 
                     IContentQuery<ContentItem> query = _contentManager
                         .Query(VersionOptions.Published)
-                        .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
+                        .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id)
+						.Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
 
                     if (part.Record.ApplyFilter)
                         query = query.Where(part.Record.FilterByProperty, part.Record.FilterByOperator, part.Record.FilterByValue);
