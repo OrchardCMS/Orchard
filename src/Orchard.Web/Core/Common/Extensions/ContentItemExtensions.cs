@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.ContentManagement
@@ -11,8 +8,7 @@ namespace Orchard.ContentManagement
 
     public class EagerlyLoadQueryResult<T>
     {
-        public EagerlyLoadQueryResult(IEnumerable<T> items, IContentManager contentManager)
-        {
+        public EagerlyLoadQueryResult(IEnumerable<T> items, IContentManager contentManager) {
             Result = items;
             ContentManager = contentManager;
         }
@@ -22,21 +18,18 @@ namespace Orchard.ContentManagement
     public static class ContentItemExtensions
     {
         const int MaxPageSize = 2000;
-        public static EagerlyLoadQueryResult<T> LoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
-        {
+        public static EagerlyLoadQueryResult<T> LoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent {
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(items, contentManager);
             return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent
-        {
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent{
             var manager = query.ContentManager;
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(query.List(), manager);
             return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent
-        {
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent {
 
             var containerIds = new HashSet<int>();
             var objectsToLoad = eagerlyLoadQueryResult.Result.ToList();
