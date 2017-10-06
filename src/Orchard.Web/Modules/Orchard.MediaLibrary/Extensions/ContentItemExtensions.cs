@@ -11,20 +11,20 @@ namespace Orchard.ContentManagement
 {
     public static class ContentItemExtensions
     {
-        public static EagerlyLoadQueryResult<T> EagerlyLoadMediaLibraryPickerFields<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> LoadMediaLibraryPickerFields<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
         {
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(items, contentManager);
-            return eagerlyLoadQueryResult.EagerlyLoadMediaLibraryPickerFields();
+            return eagerlyLoadQueryResult.IncludeMediaLibraryPickerFields();
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadMediaLibraryPickerFields<T>(this IContentQuery<T> query) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeMediaLibraryPickerFields<T>(this IContentQuery<T> query) where T : class, IContent
         {
             var manager = query.ContentManager;
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(query.List(), manager);
-            return eagerlyLoadQueryResult.EagerlyLoadMediaLibraryPickerFields();
+            return eagerlyLoadQueryResult.IncludeMediaLibraryPickerFields();
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadMediaLibraryPickerFields<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeMediaLibraryPickerFields<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult) where T : class, IContent
         {
             var containerIds = new HashSet<int>();
             foreach (var part in eagerlyLoadQueryResult.Result)

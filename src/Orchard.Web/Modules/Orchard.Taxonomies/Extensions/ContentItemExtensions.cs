@@ -13,23 +13,23 @@ namespace Orchard.ContentManagement
 {
     public static class ContentItemExtensions
     {
-        public static EagerlyLoadQueryResult<T> EagerlyLoadTaxonomyFields<T>(this IList<T> items, IContentManager contentManager, bool loadTermsContainter) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> LoadTaxonomyFields<T>(this IList<T> items, IContentManager contentManager, bool loadTermsContainter) where T : class, IContent
         {
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(items, contentManager);
-            return eagerlyLoadQueryResult.EagerlyLoadTaxonomyFields(loadTermsContainter);
+            return eagerlyLoadQueryResult.IncludeTaxonomyFields(loadTermsContainter);
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadTaxonomyFields<T>(this IContentQuery<T> query, bool loadTermsContainter) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeTaxonomyFields<T>(this IContentQuery<T> query, bool loadTermsContainter) where T : class, IContent
         {
             var manager = query.ContentManager;
             query = query.Join<TermsPartRecord>().WithQueryHints(new QueryHints().ExpandRecords("TermsPartRecord.Terms"));
 
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(query.List(), manager);
 
-            return eagerlyLoadQueryResult.EagerlyLoadTaxonomyFields(loadTermsContainter);
+            return eagerlyLoadQueryResult.IncludeTaxonomyFields(loadTermsContainter);
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadTaxonomyFields<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, bool loadTermsContainter) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeTaxonomyFields<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, bool loadTermsContainter) where T : class, IContent
         {
             var contentManager = eagerlyLoadQueryResult.ContentManager as DefaultContentManager;
             var session = contentManager.TransactionManager.GetSession();
@@ -122,7 +122,7 @@ namespace Orchard.ContentManagement
                 if (loadTermsContainter && termsDictionary.Any())
                 {
                     var pendingResults = new EagerlyLoadQueryResult<IContent>(termsDictionary.Values, eagerlyLoadQueryResult.ContentManager);
-                    pendingResults.EagerlyLoadContainerContentItems(1);
+                    pendingResults.IncludeContainerContentItems(1);
                 }
             }
 

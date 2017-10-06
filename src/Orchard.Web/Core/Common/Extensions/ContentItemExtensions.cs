@@ -22,20 +22,20 @@ namespace Orchard.ContentManagement
     public static class ContentItemExtensions
     {
         const int MaxPageSize = 2000;
-        public static EagerlyLoadQueryResult<T> EagerlyLoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> LoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
         {
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(items, contentManager);
-            return eagerlyLoadQueryResult.EagerlyLoadContainerContentItems(maximumLevel);
+            return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent
         {
             var manager = query.ContentManager;
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(query.List(), manager);
-            return eagerlyLoadQueryResult.EagerlyLoadContainerContentItems(maximumLevel);
+            return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> EagerlyLoadContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent
         {
 
             var containerIds = new HashSet<int>();
@@ -61,7 +61,7 @@ namespace Orchard.ContentManagement
             }
             if (maximumLevel > 0 && containersDictionary.Any())
             {
-                containersDictionary.Values.ToList().EagerlyLoadContainerContentItems(eagerlyLoadQueryResult.ContentManager, maximumLevel - 1);
+                containersDictionary.Values.ToList().LoadContainerContentItems(eagerlyLoadQueryResult.ContentManager, maximumLevel - 1);
             }
             return eagerlyLoadQueryResult;
         }

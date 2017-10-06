@@ -52,7 +52,7 @@ namespace Orchard.Widgets.Filters {
 
             var widgetParts = _widgetsService.GetWidgets(_layerEvaluationService.GetActiveLayerIds());
             widgetParts.Select(w => w.ContentItem).ToList()
-                        .EagerlyLoadContainerContentItems(_orchardServices.ContentManager, 1);
+                        .LoadContainerContentItems(_orchardServices.ContentManager, 1);
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
