@@ -7,5 +7,6 @@ namespace Orchard.DynamicForms.Services.Models {
         public Form Form { get; set; }
         public ModelStateDictionary ModelState { get; set; }
         public NameValueCollection PostedValues { get; set; }
+        public ContentItem CreatedContent { get; set; }
     }
 }
