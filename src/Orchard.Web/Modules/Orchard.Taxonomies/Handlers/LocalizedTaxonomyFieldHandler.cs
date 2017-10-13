@@ -99,7 +99,7 @@ namespace Orchard.Taxonomies.Handlers {
 
         protected override void UpdateEditorShape(UpdateEditorContext context) {
             // case contentitem without localization and taxonomyfield localized
-            if (context.ContentItem.As<LocalizationPart>() == null) {
+            if (context.ContentItem.As<LocalizationPart>() != null) {
                 return;
             }
             var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
