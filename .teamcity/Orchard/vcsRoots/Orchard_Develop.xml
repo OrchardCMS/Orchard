@@ -8,7 +8,7 @@
   <param name="ignoreKnownHosts" value="true" />
   <param name="submoduleCheckout" value="CHECKOUT" />
   <param name="teamcity:branchSpec" value="+:refs/heads/*" />
-  <param name="teamcitySshKey" value="Orchar_rsa" />
+  <param name="teamcitySshKey" value="Orchard_rsa" />
   <param name="url" value="git@github.com:aleksey-pyatlin/Orchard.git" />
   <param name="useAlternates" value="true" />
   <param name="usernameStyle" value="USERID" />
