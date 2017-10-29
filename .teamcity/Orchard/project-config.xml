@@ -5,7 +5,7 @@
   <project-extensions>
     <extension id="PROJECT_EXT_2" type="versionedSettings">
       <parameters>
-        <param name="buildSettings" value="PREFER_VCS" />
+        <param name="buildSettings" value="ALWAYS_USE_CURRENT" />
         <param name="enabled" value="true" />
         <param name="rootId" value="Orchard_Develop" />
         <param name="showChanges" value="false" />
