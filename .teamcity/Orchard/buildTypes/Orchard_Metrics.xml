@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="20e0f37b-07c3-4f24-ac32-ace119c349cd" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>Orchard_Metrics</name>
+  <description />
+  <settings>
+    <parameters>
+      <param name="dotnet_sdk" value="1.0.4" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_13" name="" type="dotnet-tools-inspectcode">
+        <parameters>
+          <param name="TargetDotNetFramework_4.5.2" value="true" />
+          <param name="dotnet-tools-inspectcode.project.filter" value="Orchard.Web" />
+          <param name="dotnet-tools-inspectcode.solution" value="src/Orchard.sln" />
+          <param name="dotnet-tools-inspectcodeCustomSettingsProfile" value="src/Orchard.5.0.ReSharper" />
+          <param name="jetbrains.resharper-clt.clt-path" value="%teamcity.tool.jetbrains.resharper-clt.DEFAULT%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_5" name="Build" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="build.cmd" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_12" name="Run All Tests With Coverage" type="NUnit">
+        <parameters>
+          <param name="dotNetCoverage.NCover.HTMLReport.File.Sort" value="0" />
+          <param name="dotNetCoverage.NCover.HTMLReport.File.Type" value="1" />
+          <param name="dotNetCoverage.NCover.platformBitness" value="x86" />
+          <param name="dotNetCoverage.NCover.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.NCover3.args" value="//ias .*" />
+          <param name="dotNetCoverage.NCover3.platformBitness" value="x86" />
+          <param name="dotNetCoverage.NCover3.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.NCover3.reporter.executable.args" value="//or FullCoverageReport:Html:{teamcity.report.path}" />
+          <param name="dotNetCoverage.PartCover.includes" value="[*]*" />
+          <param name="dotNetCoverage.PartCover.platformBitness" value="x86" />
+          <param name="dotNetCoverage.PartCover.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="dotNetCoverage.tool" value="dotcover" />
+          <param name="dotNetTestRunner.Type" value="NUnit" />
+          <param name="nunit_enabled" value="checked" />
+          <param name="nunit_environment" value="v4.0" />
+          <param name="nunit_include"><![CDATA[/src/Orchard.Tests.Modules/bin/Debug/Orchard.Tests.Modules.dll
+/src/Orchard.Core.Tests/bin/Debug/Orchard.Core.Tests.dll
+/src/Orchard.Web.Tests/bin/Debug/Orchard.Web.Tests]]></param>
+          <param name="nunit_platform" value="MSIL" />
+          <param name="nunit_version" value="NUnit-2.5.10" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Orchard_Develop" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter"><![CDATA[+:*
+-:feature/ci-setting]]></param>
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <cleanup />
+  </settings>
+</build-type>
+
