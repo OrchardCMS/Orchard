@@ -42,9 +42,7 @@
           <param name="dotNetTestRunner.Type" value="NUnit" />
           <param name="nunit_enabled" value="checked" />
           <param name="nunit_environment" value="v4.0" />
-          <param name="nunit_include"><![CDATA[/src/Orchard.Tests.Modules/bin/Debug/Orchard.Tests.Modules.dll
-/src/Orchard.Core.Tests/bin/Debug/Orchard.Core.Tests.dll
-/src/Orchard.Web.Tests/bin/Debug/Orchard.Web.Tests]]></param>
+          <param name="nunit_include" value="/src/Orchard.Core.Tests/bin/Debug/Orchard.Core.Tests.dll" />
           <param name="nunit_platform" value="MSIL" />
           <param name="nunit_version" value="NUnit-2.5.10" />
           <param name="teamcity.step.mode" value="default" />
