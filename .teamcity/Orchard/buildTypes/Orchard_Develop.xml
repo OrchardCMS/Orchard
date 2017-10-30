@@ -4,6 +4,7 @@
   <description />
   <settings>
     <parameters>
+      <param name="Configuration" value="Debug" />
       <param name="dotnet_sdk" value="1.0.4" />
     </parameters>
     <build-runners>
