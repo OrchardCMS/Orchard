@@ -3,7 +3,9 @@
   <name>Orchard_Metrics</name>
   <description />
   <settings>
-    <parameters />
+    <parameters>
+      <param name="Configuration" value="Debug" />
+    </parameters>
     <build-runners>
       <runner id="RUNNER_13" name="" type="dotnet-tools-inspectcode">
         <parameters>
