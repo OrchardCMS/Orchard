@@ -3,9 +3,7 @@
   <name>Orchard_Metrics</name>
   <description />
   <settings>
-    <parameters>
-      <param name="dotnet_sdk" value="1.0.4" />
-    </parameters>
+    <parameters />
     <build-runners>
       <runner id="RUNNER_13" name="" type="dotnet-tools-inspectcode">
         <parameters>
