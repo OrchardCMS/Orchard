@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="a1eff9e2-92dc-4432-9e54-2858b4aa7815" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/10.0/project-config.xsd">
+  <name>Orchard_Develop</name>
+  <description />
+  <settings>
+    <parameters>
+      <param name="Configuration" value="Debug" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_5" name="Build" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="build.cmd" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_12" name="Run Tests" type="NUnit">
+        <parameters>
+          <param name="dotNetCoverage.NCover.HTMLReport.File.Sort" value="0" />
+          <param name="dotNetCoverage.NCover.HTMLReport.File.Type" value="1" />
+          <param name="dotNetCoverage.NCover.platformBitness" value="x86" />
+          <param name="dotNetCoverage.NCover.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.NCover3.args" value="//ias .*" />
+          <param name="dotNetCoverage.NCover3.platformBitness" value="x86" />
+          <param name="dotNetCoverage.NCover3.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.NCover3.reporter.executable.args" value="//or FullCoverageReport:Html:{teamcity.report.path}" />
+          <param name="dotNetCoverage.PartCover.includes" value="[*]*" />
+          <param name="dotNetCoverage.PartCover.platformBitness" value="x86" />
+          <param name="dotNetCoverage.PartCover.platformVersion" value="v2.0" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="dotNetTestRunner.Type" value="NUnit" />
+          <param name="nunit_enabled" value="checked" />
+          <param name="nunit_environment" value="v4.0" />
+          <param name="nunit_include" value="/src/Orchard.Core.Tests/bin/%Configuration%/Orchard.Core.Tests.dll" />
+          <param name="nunit_platform" value="MSIL" />
+          <param name="nunit_version" value="NUnit-2.5.10" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Orchard_Develop" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:*" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_1" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="password" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="github_username" value="aleksey-pyatlin" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="secure:github_password" value="zxxa70075bc751d9d27eca19f64cb355703" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</build-type>
+
