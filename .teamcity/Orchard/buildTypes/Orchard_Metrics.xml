@@ -53,15 +53,7 @@
       <vcs-entry-ref root-id="Orchard_Develop" />
     </vcs-settings>
     <requirements />
-    <build-triggers>
-      <build-trigger id="vcsTrigger" type="vcsTrigger">
-        <parameters>
-          <param name="branchFilter" value="+:*" />
-          <param name="enableQueueOptimization" value="true" />
-          <param name="quietPeriodMode" value="DO_NOT_USE" />
-        </parameters>
-      </build-trigger>
-    </build-triggers>
+    <build-triggers />
     <cleanup />
   </settings>
 </build-type>
