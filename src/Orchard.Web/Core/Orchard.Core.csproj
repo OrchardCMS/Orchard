@@ -94,6 +94,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <PropertyGroup Condition="'$(StaticAnalysisEnabled)' == 'True'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(StaticAnalysisEnabled)' == 'True'">
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.1.0-beta004/analyzers/dotnet/cs/StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\SonarAnalyzer.CSharp.6.5.0.3766\analyzers\SonarAnalyzer.CSharp.dll" />
+    <Analyzer Include="..\..\packages\SonarAnalyzer.CSharp.6.5.0.3766\analyzers\Google.Protobuf.dll" />
+    <Analyzer Include="..\..\packages\SonarAnalyzer.CSharp.6.5.0.3766\analyzers\SonarAnalyzer.dll" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
