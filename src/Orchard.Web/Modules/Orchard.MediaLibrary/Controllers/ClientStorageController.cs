@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.FileSystems.Media;
+using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
-using Orchard.MediaLibrary.Models;
-using Orchard.Localization;
-using System.Linq;
-using Orchard.FileSystems.Media;
-using Orchard.Logging;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class ClientStorageController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IMimeTypeProvider _mimeTypeProvider;
+        private readonly IEnumerable<IContentHandler> _handlers;
 
         public ClientStorageController(
             IMediaLibraryService mediaManagerService,
             IOrchardServices orchardServices,
-            IMimeTypeProvider mimeTypeProvider) {
+            IMimeTypeProvider mimeTypeProvider,
+            IEnumerable<IContentHandler> handlers) {
             _mediaLibraryService = mediaManagerService;
             _mimeTypeProvider = mimeTypeProvider;
+            _handlers = handlers;
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -175,13 +179,19 @@ namespace Orchard.MediaLibrary.Controllers {
                     if (!replaceContentType.Equals(replaceMedia.TypeDefinition.Name, StringComparison.OrdinalIgnoreCase))
                         throw new Exception(T("Cannot replace {0} with {1}", replaceMedia.TypeDefinition.Name, replaceContentType).Text);
 
+                    // Raise update and publish events which will update relevant Media properties
+                    _handlers.Invoke(x => x.Updating(new UpdateContentContext(replaceMedia.ContentItem)), Logger);
+
                     _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
                     _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, file.InputStream);
                     replaceMedia.MimeType = mimeType;
 
-                    // Force a publish event which will update relevant Media properties
-                    replaceMedia.ContentItem.VersionRecord.Published = false;
-                    Services.ContentManager.Publish(replaceMedia.ContentItem);
+                    _handlers.Invoke(x => x.Updated(new UpdateContentContext(replaceMedia.ContentItem)), Logger);
+
+                    var publishedVersion = replaceMedia.ContentItem.Record.Versions.SingleOrDefault(v => v.Published);
+
+                    _handlers.Invoke(x => x.Publishing(new PublishContentContext(replaceMedia.ContentItem, publishedVersion)), Logger);
+                    _handlers.Invoke(x => x.Published(new PublishContentContext(replaceMedia.ContentItem, publishedVersion)), Logger);
 
                     statuses.Add(new {
                         id = replaceMedia.Id,
