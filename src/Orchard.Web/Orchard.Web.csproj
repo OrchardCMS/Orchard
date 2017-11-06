@@ -96,6 +96,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -297,5 +301,12 @@
 		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
 		<CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
 		-->
+  </Target>
+  <!-- Copying Roslyn tools and their dependencies to the output folder for Dynamic Compilation. -->
+  <Target Name="CopyRoslynFilesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <RoslynFiles Include="..\packages\Microsoft.Net.Compilers.*\tools\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(OutputPath)\roslyn" />
   </Target>
 </Project>
