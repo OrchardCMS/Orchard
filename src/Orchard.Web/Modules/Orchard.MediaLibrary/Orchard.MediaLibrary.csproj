@@ -34,9 +34,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,15 +45,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -130,16 +126,11 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Compile Include="Controllers\LocalizedMediaController.cs" />
-    <Compile Include="Drivers\MediaLibraryExplorerLocalizationExtensionsPartDriver.cs" />
     <Compile Include="Drivers\VectorImagePartDriver.cs" />
-    <Compile Include="Extensions\ContentItemExtensions.cs" />
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
-    <Compile Include="Handlers\MediaLibraryPickerFieldLocalizationExtensionHandler.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
     <Compile Include="Implementation\DefaultMediaUsername.cs" />
-    <Compile Include="MediaLocalizationMigrations.cs" />
     <Compile Include="Models\MediaLibrarySettingsPart.cs" />
     <Compile Include="Models\VectorImagePart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
@@ -159,10 +150,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
-      <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
-      <Name>Orchard.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
@@ -220,8 +207,6 @@
     <Compile Include="Services\MediaLibraryService.cs" />
     <Compile Include="Services\Shapes.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
-    <Compile Include="Settings\MediaLibraryPickerFieldLocalizationEditorEvents.cs" />
-    <Compile Include="Settings\MediaLibraryPickerFieldLocalizationSettings.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
     <Compile Include="Tokens\FieldTokens.cs" />
@@ -423,28 +408,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Image.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Audio.cshtml" />
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Document.cshtml" />
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-OEmbed.cshtml" />
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-VectorImage.cshtml" />
-    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Video.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Localization.ContentTranslations.SummaryAdmin.ForMedia.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\MediaLibraryPickerFieldLocalizationSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\MediaLibraryLocalization.Actions.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\LocalizedMedia\MediaItems.cshtml" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -486,7 +449,7 @@
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
-          <CustomServerUrl>https://github.com/OrchardCMS/Orchard</CustomServerUrl>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
