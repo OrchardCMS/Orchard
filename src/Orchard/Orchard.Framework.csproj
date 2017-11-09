@@ -43,7 +43,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <NoWarn>
     </NoWarn>
@@ -57,7 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
     <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -178,6 +178,8 @@
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
     <Compile Include="ContentManagement\IGlobalCriteriaProvider.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\DefaultPlacementParseMatchProviders.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\IPlacementParseMatchProvider.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />
