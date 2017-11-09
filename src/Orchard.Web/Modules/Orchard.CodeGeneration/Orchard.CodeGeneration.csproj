@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,7 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -103,14 +103,19 @@
     <Content Include="CodeGenerationTemplates\StaticFilesWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\Theme.png" />
     <Content Include="CodeGenerationTemplates\ThemeManifest.txt" />
-    <Content Include="Module.txt" />
+    <Content Include="CodeGenerationTemplates\ModuleRootWebConfig.txt" />
+    <Content Include="CodeGenerationTemplates\Placement.info" />
     <Content Include="CodeGenerationTemplates\Controller.txt" />
     <Content Include="CodeGenerationTemplates\DataMigration.txt" />
     <Content Include="CodeGenerationTemplates\ModuleAssemblyInfo.txt" />
     <Content Include="CodeGenerationTemplates\ModuleCsProj.txt" />
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
+    <Content Include="CodeGenerationTemplates\ModuleAssetsJson.txt" />
+    <Content Include="CodeGenerationTemplates\ModulePackagesConfig.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Module.txt" />
+    <Content Include="packages.config" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -126,18 +131,6 @@
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeGenerationTemplates\ModuleRootWebConfig.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeGenerationTemplates\Placement.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeGenerationTemplates\ModuleAssetsJson.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

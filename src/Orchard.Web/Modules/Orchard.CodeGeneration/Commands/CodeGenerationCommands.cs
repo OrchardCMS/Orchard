@@ -291,6 +291,8 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(modulePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
             content.Add(modulePath + "Styles\\Styles.min.css");
 
+            File.WriteAllText(modulePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+            content.Add(modulePath + "packages.config");
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -404,6 +406,9 @@ namespace Orchard.CodeGeneration.Commands {
 
             // create new csproj for the theme
             if (projectGuid != null) {
+                File.WriteAllText(themePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+                createdFiles.Add(themePath + "packages.config");
+
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
                 string projectText = CreateCsProject(themeName, projectGuid, itemGroup, null);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);
