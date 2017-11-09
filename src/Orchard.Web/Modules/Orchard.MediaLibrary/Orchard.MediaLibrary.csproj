@@ -133,6 +133,7 @@
     <Compile Include="Controllers\LocalizedMediaController.cs" />
     <Compile Include="Drivers\MediaLibraryExplorerLocalizationExtensionsPartDriver.cs" />
     <Compile Include="Drivers\VectorImagePartDriver.cs" />
+    <Compile Include="Extensions\ContentItemExtensions.cs" />
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
     <Compile Include="Handlers\MediaLibraryPickerFieldLocalizationExtensionHandler.cs" />
