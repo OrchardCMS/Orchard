@@ -25,7 +25,7 @@ namespace Orchard.Taxonomies.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
 
-                if (String.IsNullOrWhiteSpace(part.TermTypeName)) {
+                if (string.IsNullOrWhiteSpace(part.TermTypeName)) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }
