@@ -51,6 +51,10 @@
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -207,6 +211,14 @@
     -->
   </Target>
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <!--
+        During View Compilation, the ASP.NET compiler tries to locate Roslyn
+        at "bin\roslyn\csc.exe" (relative to the project folder). That's because
+        everything is now configured to use Roslyn (from NuGet) to be able to
+        support C# 6 and above for Dynamic Compilation and Razor IntelliSense.
+    -->
+    <Exec Command="rd &quot;bin\roslyn&quot;" />
+    <Exec Command="mklink /J &quot;bin\roslyn&quot; &quot;..\..\..\packages\Microsoft.Net.Compilers.2.4.0\tools&quot;" />
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
   </Target>
   <ProjectExtensions>
