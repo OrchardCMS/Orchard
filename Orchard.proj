@@ -201,7 +201,7 @@
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj;$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
-      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
+      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config;$(SrcFolder)\Orchard.Web\**\roslyn\*.config"/>
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
