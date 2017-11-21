@@ -38,7 +38,7 @@ namespace Orchard.Taxonomies.Handlers {
 
                                 if (field.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy == previousName) {
                                     //could either be a name change, or we could be publishing a translation
-                                    if (localizationService != null) {
+                                    if (localizationService != null) { //Localization feature may not be active
                                         var locPart = part.ContentItem.As<LocalizationPart>();
                                         if (locPart != null) {
                                             var localizedTaxonomies = localizationService
@@ -47,7 +47,7 @@ namespace Orchard.Taxonomies.Handlers {
                                                 .Select(pa => {
                                                     var tax = pa.ContentItem.As<TaxonomyPart>(); //the TaxonomyPart
                                                 return tax == null ? string.Empty : tax.Name; //get its name (with sanity check)
-                                                });
+                                            });
                                             if (localizedTaxonomies.Contains(previousName))
                                                 continue; //this is a new localization, so move along
                                         }

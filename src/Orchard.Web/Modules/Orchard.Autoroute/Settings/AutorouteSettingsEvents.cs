@@ -44,7 +44,7 @@ namespace Orchard.Autoroute.Settings {
             foreach (string culture in cultures) {
                 // Adding all existing patterns for the culture
                 newPatterns.AddRange(
-                        settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))
+                    settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))
                     );
 
                 // Adding a pattern for each culture if there is none

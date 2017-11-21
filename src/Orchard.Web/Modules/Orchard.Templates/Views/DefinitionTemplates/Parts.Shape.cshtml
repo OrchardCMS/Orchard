@@ -14,13 +14,6 @@
 
 <fieldset>
     <div>
-        @Html.LabelFor(m => m.Name, T("Name"))
-        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
-        <span class="hint">@T("The name of this template, which can be used to reference from code (as when using shape type names) and tokens.")</span>
-    </div>
-</fieldset>
-<fieldset>
-    <div>
         @Html.TextAreaFor(m => m.Template, new { @class = "text large code-editor" })
     </div>
 </fieldset>
