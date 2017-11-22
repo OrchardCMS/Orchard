@@ -102,7 +102,7 @@ namespace Orchard.Taxonomies.Handlers {
                 return;
             }
             var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
-            if (partFieldDefinitions == null) {
+            if (partFieldDefinitions == null || !partFieldDefinitions.Any()) {
                 return;
             }
             base.UpdateEditorShape(context);

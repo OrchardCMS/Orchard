@@ -246,7 +246,8 @@ namespace Orchard.Azure.Services.FileSystems {
                 }
 
                 if (blob is CloudBlobDirectory) {
-                    string foldername = blob.Uri.Segments.Last();
+                    var blobDir = (CloudBlobDirectory)blob;
+                    string foldername = blobDir.Prefix.Substring(blobDir.Parent.Prefix.Length);
                     string source = String.Concat(path, foldername);
                     string destination = String.Concat(newPath, foldername);
                     RenameFolder(source, destination);

@@ -9,6 +9,7 @@ namespace Orchard.DynamicForms.Tokens {
             context.For("FormSubmission", T("Dynamic Form submission"), T("Dynamic Form Submission tokens for use in workflows handling the Dynamic Form Submitted event."))
                 .Token("Field:*", T("Field:<field name>"), T("The posted field value to access."), "Text")
                 .Token("IsValid:*", T("IsValid:<field name>"), T("The posted field validation status."))
+                .Token("CreatedContent", T("CreatedContent"), T("Id of the Content Item created by the form."))
             ;
         }
 
@@ -16,7 +17,9 @@ namespace Orchard.DynamicForms.Tokens {
             context.For<FormSubmissionTokenContext>("FormSubmission")
                 .Token(token => token.StartsWith("Field:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Field:".Length) : null, GetFieldValue)
                 .Chain(FilterChainParam, "Text", GetFieldValue)
-                .Token(token => token.StartsWith("IsValid:", StringComparison.OrdinalIgnoreCase) ? token.Substring("IsValid:".Length) : null, GetFieldValidationStatus);
+                .Token(token => token.StartsWith("IsValid:", StringComparison.OrdinalIgnoreCase) ? token.Substring("IsValid:".Length) : null, GetFieldValidationStatus)
+                .Token("CreatedContent", GetCreatedContent)
+                .Chain("CreatedContent", "Content", GetCreatedContent);
         }
 
         private static Tuple<string, string> FilterChainParam(string token) {
@@ -34,6 +37,11 @@ namespace Orchard.DynamicForms.Tokens {
 
         private object GetFieldValidationStatus(string fieldName, FormSubmissionTokenContext context) {
             return context.ModelState.IsValidField(fieldName);
+        }
+
+        private object GetCreatedContent(FormSubmissionTokenContext context)
+        {
+            return context.CreatedContent;
         }
     }
 }

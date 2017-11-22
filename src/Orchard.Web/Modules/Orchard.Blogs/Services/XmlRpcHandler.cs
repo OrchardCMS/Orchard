@@ -18,6 +18,7 @@ using Orchard.Security;
 using Orchard.Blogs.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Core.Title.Models;
+using System.Linq;
 
 namespace Orchard.Blogs.Services {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
@@ -30,7 +31,7 @@ namespace Orchard.Blogs.Services {
         private readonly RouteCollection _routeCollection;
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
-            IAuthorizationService authorizationService, IMembershipService membershipService, 
+            IAuthorizationService authorizationService, IMembershipService membershipService,
             RouteCollection routeCollection) {
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -205,10 +206,10 @@ namespace Orchard.Blogs.Services {
             if (blogPost.Is<TitlePart>()) {
                 blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
             }
-            
+
             //AutoroutePart
             dynamic dBlogPost = blogPost;
-            if (dBlogPost.AutoroutePart!=null){
+            if (dBlogPost.AutoroutePart!=null) {
                 dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 
@@ -340,11 +341,11 @@ namespace Orchard.Blogs.Services {
         }
 
         private IUser ValidateUser(string userName, string password) {
-            IUser user = _membershipService.ValidateUser(userName, password);
-            if (user == null) {
-                throw new OrchardCoreException(T("The username or e-mail or password provided is incorrect."));
+            List<LocalizedString> validationErrors;
+            IUser user = _membershipService.ValidateUser(userName, password,out validationErrors);
+            if (validationErrors.Any()) {
+                throw new OrchardCoreException(validationErrors.FirstOrDefault());
             }
-
             return user;
         }
 
@@ -361,13 +362,13 @@ namespace Orchard.Blogs.Services {
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
                 .Set("title", HttpUtility.HtmlEncode(blogPostPart.Title))
-                
+
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
-            
+
             blogStruct.Set("wp_slug", blogPostPart.As<IAliasAspect>().Path);
-            
+
 
             if (blogPostPart.PublishedUtc != null) {
                 blogStruct.Set("dateCreated", blogPostPart.PublishedUtc);

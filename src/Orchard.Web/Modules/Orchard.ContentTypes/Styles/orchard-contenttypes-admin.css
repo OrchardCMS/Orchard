@@ -21,38 +21,38 @@
 
 .manage-part, .manage-field {
     margin-bottom: 0;
-    padding:0;
+    padding: 0;
     border-bottom: 1px solid #EAEAEA;
 }
 
-.manage-part h3,
-.manage-field h3 {
-    display: relative;
-    line-height: 1.4em;
-    padding-bottom: 0;
-    padding-top: 0;
-}
+    .manage-part h3,
+    .manage-field h3 {
+        display: relative;
+        line-height: 1.4em;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
 
-.manage-part h3,
-.manage-field h3,
-.manage-part h4,
-.manage-type .manage-field .details,
-.manage-type .manage-part .manage-field,
-.manage-type .manage-part .settings {
-    padding-left: 30px;
-    padding-right: 30px;
-}
+    .manage-part h3,
+    .manage-field h3,
+    .manage-part h4,
+    .manage-type .manage-field .details,
+    .manage-type .manage-part .manage-field,
+    .manage-type .manage-part .settings {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-.manage-part h3, .manage-field h3 {
-    margin: 1em 0 !important;
-    padding-left: 30px;
-    width: 90%;
-}
+    .manage-part h3, .manage-field h3 {
+        margin: 1em 0 !important;
+        padding-left: 30px;
+        width: 90%;
+    }
 
-.manage-part .expando-glyph, .manage-field .expando-glyph {
-    width:16px;
-    height:16px;
-}
+    .manage-part .expando-glyph, .manage-field .expando-glyph {
+        width: 16px;
+        height: 16px;
+    }
 
 .manage-type .manage-field .settings {
     padding-bottom: 10px;
@@ -176,38 +176,81 @@ fieldset.action {
 
 
 /* PLACEMENT EDITOR */
-
-#placement li {
-    margin-bottom: 10px;
-    padding: 0px;
-    border: 1px solid #eee;
+.tabdrag {
+    min-height: 20px;
 }
 
-    #placement li .shape-type {
-        cursor: move;
-        background-color: #eee;
-        background: #EEE url(images/move.gif) no-repeat 10px 15px;
-        height: 30px;
-        padding: 10px 0px 0px 30px;
+.zone-container {
+    border: 1px dotted #6F6F6F;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+    .zone-container li {
+        margin-bottom: 10px;
+        padding: 0px;
+        border: 1px solid #eee;
     }
 
-    #placement li .shape-editor {
-        padding: 10px;
-        background: white;
-    }
+#placement .zone-container h2 {
+    cursor: move;
+    margin-top: 0px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+}
+
+#placement .tab-container {
+    background: white url(images/move.gif) no-repeat 10px 15px;
+}
+
+.zone-container li .shape-type {
+    cursor: move;
+    background-color: #eee;
+    background: #EEE url(images/move.gif) no-repeat 10px 10px;
+    height: 30px;
+    padding: 5px 0px 0px 30px;
+}
+
+#placement #content-tab {
+    cursor: default;
+}
+
+.zone-container li .toggle {
+    float: right;
+    padding-top: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.zone-container li .shape-editor {
+    padding: 10px;
+    background: white;
+    display: none;
+}
 
 #save-message {
     display: none;
     margin-bottom: 10px;
 }
 
-#placement fieldset {
+.zone-container fieldset {
     float: inherit; /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
     height: auto;
+}
+
+.tab-placeholder {
+    background: #FDF5BC;
+    border: 1px solid #FDF5BC;
+    height: 100px;
 }
 
 .placement-placeholder {
     background: #FDF5BC;
     border: 1px solid #FDF5BC;
-    height: 100px;
+    height: 40px;
+}
+
+.zone-container .delete {
+    float: right;
+    cursor: pointer;
 }
