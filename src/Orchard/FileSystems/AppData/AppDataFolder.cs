@@ -128,13 +128,14 @@ namespace Orchard.FileSystems.AppData {
         }
 
         private static void WriteAllTextWithTempFileAndMove(string path, string content) {
-            // generate a temp filename
-            var tempPath = path + "." + Path.GetRandomFileName();
+            // generate a temp file
+            var tempPath = Path.GetTempFileName();
 
             // write the data to a temp file
-            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
-            using (var writer = new StreamWriter(tempFile)) {
-                writer.Write(content);
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough)) {
+                using (var writer = new StreamWriter(tempFile)) {
+                    writer.Write(content);
+                }
             }
 
             // move to destination
