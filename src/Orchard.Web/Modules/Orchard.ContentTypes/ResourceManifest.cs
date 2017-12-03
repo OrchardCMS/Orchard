@@ -4,6 +4,10 @@ namespace Orchard.ContentTypes {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             builder.Add().DefineStyle("ContentTypesAdmin").SetUrl("orchard-contenttypes-admin.css");
+
+            builder.Add().DefineScript("PlacementEditor")
+                .SetUrl("admin-placementeditor.js")
+                .SetDependencies("jQueryUI_Sortable");
         }
     }
 }
