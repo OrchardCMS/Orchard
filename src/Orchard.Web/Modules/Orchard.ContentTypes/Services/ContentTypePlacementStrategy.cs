@@ -29,7 +29,7 @@ namespace Orchard.ContentTypes.Services {
             var allPlacements = typeDefinitions.SelectMany(td => td.GetPlacement(PlacementType.Editor).Select(p => new TypePlacement { Placement = p, ContentType = td.Name }) );
             
             // group all placement settings by shape type
-            var shapePlacements = allPlacements.GroupBy(x => x.Placement.ShapeType).ToDictionary(x => x.Key, y=> y.ToList());
+            var shapePlacements = allPlacements.GroupBy(x => x.Placement.ShapeType).ToDictionary(x => x.Key, y=> y.ToList(), StringComparer.OrdinalIgnoreCase);
 
             // create a new predicate in a ShapeTableDescriptor has a custom placement
             foreach(var shapeType in shapeTable.Descriptors.Keys) {
