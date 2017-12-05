@@ -148,13 +148,26 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
+            var grouped = _placementService.GetEditorPlacement(id)
+                .OrderBy(x => x.PlacementInfo.GetPosition(), new FlatPositionComparer())
+                .ThenBy(x => x.PlacementSettings.ShapeType)
+                .Where(e => e.PlacementSettings.Zone == "Content")
+                .GroupBy(x => x.PlacementInfo.GetTab())
+                .ToDictionary(x => x.Key, y => y.ToList());
+
+            var content = grouped.ContainsKey("") ? grouped[""] : new List<DriverResultPlacement>();
+            var listPlacements = grouped.Values.SelectMany(e => e).ToList();
+
+            grouped.Remove("");
             var placementModel = new EditPlacementViewModel {
-                PlacementSettings = contentTypeDefinition.GetPlacement(PlacementType.Editor),
-                AllPlacements = _placementService.GetEditorPlacement(id).OrderBy(x => x.PlacementSettings.Position, new FlatPositionComparer()).ThenBy(x => x.PlacementSettings.ShapeType).ToList(), 
+                Content = content,
+                AllPlacements = listPlacements,
+                Tabs = grouped,
                 ContentTypeDefinition = contentTypeDefinition,
             };
 
             return View(placementModel);
+
         }
 
         [HttpPost, ActionName("EditPlacement")]
@@ -168,20 +181,10 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
-            var allPlacements = _placementService.GetEditorPlacement(id).ToList();
-            var result = new List<PlacementSettings>(contentTypeDefinition.GetPlacement(PlacementType.Editor));
-
             contentTypeDefinition.ResetPlacement(PlacementType.Editor);
 
-            foreach(var driverPlacement in viewModel.AllPlacements) {
-                // if the placement has changed, persist it
-                if (!allPlacements.Any(x => x.PlacementSettings.Equals(driverPlacement.PlacementSettings))) {
-                    result = result.Where(x => !x.IsSameAs(driverPlacement.PlacementSettings)).ToList();
-                    result.Add(driverPlacement.PlacementSettings);
-                }
-            }
-
-            foreach(var placementSetting in result) {
+            foreach (var placement in viewModel.AllPlacements) {
+                var placementSetting = placement.PlacementSettings;
                 contentTypeDefinition.Placement(PlacementType.Editor,
                                 placementSetting.ShapeType,
                                 placementSetting.Differentiator,
@@ -195,7 +198,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             _settingsManagerEventHandlers.Value.Invoke(x => x.Saved(_settings), Logger);
 
-            return RedirectToAction("EditPlacement", new {id});
+            return RedirectToAction("EditPlacement", new { id });
         }
 
         [HttpPost, ActionName("EditPlacement")]

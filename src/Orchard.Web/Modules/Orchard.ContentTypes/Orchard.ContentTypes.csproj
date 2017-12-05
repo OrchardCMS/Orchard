@@ -147,6 +147,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Scripts\admin-contenttypes.js" />
+    <Content Include="Scripts\admin-placementeditor.js" />
     <Content Include="Styles\Images\menu.contenttypes.png" />
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Styles\menu.contenttypes-admin.css" />
