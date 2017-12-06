@@ -39,9 +39,11 @@ namespace Orchard.Taxonomies.Handlers {
                 return;
             }
             base.UpdateEditorShape(context);
-            var existing = _taxonomyService.GetTermByName(part.TaxonomyId, part.Name);
-            if (existing != null && existing.Record != part.Record && existing.Container.ContentItem.Record == part.Container.ContentItem.Record) {
-                context.Updater.AddModelError("Name", T("The term {0} already exists at this level", part.Name));
+            if(context.Updater.TryUpdateModel(part, "Term", null, null)) {
+                var existing = _taxonomyService.GetTermByName(part.TaxonomyId, part.Name);
+                if (existing != null && existing.Record != part.Record && existing.Container.ContentItem.Record == part.Container.ContentItem.Record) {
+                    context.Updater.AddModelError("Name", T("The term {0} already exists at this level", part.Name));
+                }
             }
         }
     }
