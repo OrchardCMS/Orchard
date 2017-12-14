@@ -1089,15 +1089,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="BeforeBuild">
-    <!--
-      Copying Roslyn tools and their dependencies to "Orchard.Web\bin" for Dynamic Compilation.
-      Orchard.Framework is always built before the projects that require these tools
-      due to their dependency on this project, so locking on Roslyn-related DLLs is avoided this way.
-    -->
-    <ItemGroup>
-      <RoslynFiles Include="..\packages\Microsoft.Net.Compilers.*\tools\*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(ProjectDir)..\Orchard.Web\bin\roslyn" />
-  </Target>
 </Project>
