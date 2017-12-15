@@ -84,7 +84,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         private string AdjustElementName(string elementName) {
-            if (!string.IsNullOrEmpty(Prefix))
+            if (!string.IsNullOrEmpty(Prefix) && !elementName.StartsWith(Prefix + Separator))
                 return string.Join(Separator, Prefix, elementName);
             return elementName;
         }
