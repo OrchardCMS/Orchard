@@ -1,0 +1,24 @@
+﻿@model Upgrade.ViewModels.MigrateViewModel
+@{ Layout.Title = T("Updates projections index tables with fields' latest values.").ToString(); }
+@if (Model.ContentTypes.Count() > 0) {
+    using (Html.BeginFormAntiForgeryPost()) {
+        Html.ValidationSummary();
+        <h2>@T("The update will process fields data and will update their latest value into projections index tables.")</h2>
+        <div>
+            <span>@T("These types will be processed:")</span>
+            <ol>
+                @foreach (var contentTypeEntry in Model.ContentTypes) {
+                <li>
+                    @contentTypeEntry.ContentTypeName
+                </li>
+                }
+            </ol>
+        </div>
+        <fieldset>
+            <button type="submit">@T("Update")</button>
+        </fieldset>
+    }
+}
+else {
+    <h3>@T("There are no content types with custom fields, nothing to upgrade.")</h3>
+}
