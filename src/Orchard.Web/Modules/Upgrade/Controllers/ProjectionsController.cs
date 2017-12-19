@@ -6,6 +6,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Data;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -22,14 +23,17 @@ namespace Upgrade.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IFeatureManager _featureManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
+        private readonly ITransactionManager _transactionManager;
 
         public ProjectionsController(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
+            ITransactionManager transactionManager,
             IFeatureManager featureManager,
             Lazy<IEnumerable<IContentHandler>> handlers) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
+            _transactionManager = transactionManager;
             _featureManager = featureManager;
             _handlers = handlers;
             Logger = NullLogger.Instance;
@@ -69,6 +73,7 @@ namespace Upgrade.Controllers {
                 var contents = _orchardServices.ContentManager.HqlQuery().ForType(contentTypeWithFields.Name).ForVersion(VersionOptions.Latest).List();
                 foreach (var content in contents) {
                     _handlers.Value.Where(x => x.GetType() == typeof(FieldIndexPartHandler)).Invoke(handler => handler.Updated(new UpdateContentContext(content)), Logger);
+                    _transactionManager.RequireNew();
                 }
             }
             _orchardServices.Notifier.Information(T("Fields latest values were indexed successfully"));
