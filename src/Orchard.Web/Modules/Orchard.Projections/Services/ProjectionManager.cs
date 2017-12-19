@@ -202,7 +202,13 @@ namespace Orchard.Projections.Services {
             // pre-executing all groups 
             foreach (var group in queryRecord.FilterGroups) {
 
-                var contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+                IHqlQuery contentQuery;
+                if (queryRecord.VersionScope == QueryVersionScopeOptions.Latest) {
+                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Latest);
+                }
+                else {
+                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+                }
 
                 // iterate over each filter to apply the alterations to the query object
                 foreach (var filter in group.Filters) {

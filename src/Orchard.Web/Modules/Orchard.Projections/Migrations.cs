@@ -309,5 +309,10 @@ namespace Orchard.Projections {
 
             return 5;
         }
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("QueryPartRecord", table => table
+                .AddColumn<string>("VersionScope", c => c.WithLength(15)));
+            return 6;
+        }
     }
 }
