@@ -168,7 +168,8 @@ namespace Orchard.Projections.Services {
             foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position)) {
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
-                    State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                    State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                    VersionScope = queryRecord.VersionScope
                 };
 
                 string category = sortCriterion.Category;
