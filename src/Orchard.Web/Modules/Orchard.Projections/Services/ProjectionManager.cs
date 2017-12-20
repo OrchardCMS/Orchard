@@ -200,10 +200,11 @@ namespace Orchard.Projections.Services {
             }
 
             // pre-executing all groups 
+            var versionScope = queryRecord.VersionScope;
             foreach (var group in queryRecord.FilterGroups) {
 
                 IHqlQuery contentQuery;
-                if (queryRecord.VersionScope == QueryVersionScopeOptions.Latest) {
+                if (versionScope == QueryVersionScopeOptions.Latest) {
                     contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Latest);
                 }
                 else {
@@ -215,7 +216,8 @@ namespace Orchard.Projections.Services {
                     var tokenizedState = _tokenizer.Replace(filter.State, tokens);
                     var filterContext = new FilterContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(tokenizedState)
+                        State = FormParametersHelper.ToDynamic(tokenizedState),
+                        VersionScope = versionScope
                     };
 
                     string category = filter.Category;
@@ -241,7 +243,8 @@ namespace Orchard.Projections.Services {
                 foreach (var sortCriterion in sortCriteria.OrderBy(s => s.Position)) {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                        State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                        VersionScope = versionScope
                     };
 
                     string category = sortCriterion.Category;
