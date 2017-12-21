@@ -78,32 +78,42 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentPartDriver.Importing(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Importing(part, context);
+            }
         }
 
         void IContentPartDriver.Imported(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Imported(part, context);
+            }
         }
 
         void IContentPartDriver.ImportCompleted(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 ImportCompleted(part, context);
+            }
         }
 
         void IContentPartDriver.Exporting(ExportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Exporting(part, context);
+            }
         }
 
         void IContentPartDriver.Exported(ExportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Exported(part, context);
+            }
         }
 
         void IContentPartDriver.Cloning(CloneContentContext context) {
