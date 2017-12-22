@@ -9,7 +9,6 @@ using Orchard.Mvc.Filters;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Widgets.Services;
-using Orchard.ContentManagement;
 
 namespace Orchard.Widgets.Filters {
     public class WidgetFilter : FilterProvider, IResultFilter {
