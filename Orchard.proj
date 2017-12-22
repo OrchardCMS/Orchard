@@ -116,19 +116,12 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
-  </Target>
-  
-  <Target Name="BuildViews">
-    <MSBuild
-      Projects="$(Solution)"
-      Targets="Build"
-      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
+      Properties="Configuration=$(Configuration)" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">
@@ -188,6 +181,7 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+      <Stage-Roslyn Include="$(SrcFolder)\Orchard.Web\bin\roslyn\*" />
      
       <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
       <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
@@ -229,7 +223,7 @@
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
          only want to include the files that are _not_ already present in 
-         the "Orchard.Web\Bin" folder. -->
+         the "Orchard.Web\Bin" folder (except for "Orchard.Web\bin\roslyn"). -->
     <FilterModuleBinaries
       ModulesBinaries="@(Stage-Modules-Binaries)"
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
@@ -259,6 +253,7 @@
     <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Roslyn)" DestinationFolder="$(StageFolder)\bin\roslyn"/>
 
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>

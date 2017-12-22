@@ -37,7 +37,6 @@
     <PackageAsSingleFile>false</PackageAsSingleFile>
     <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +48,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
     <PackageAsSingleFile>false</PackageAsSingleFile>
-    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -72,7 +70,7 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -257,9 +255,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
-  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
-    <!-- Orchard.Web doesn't have views and trying to build its views yields an error, so just do nothing. -->
-  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -296,24 +291,17 @@
     <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
-  <Target Name="AfterBuild" DependsOnTargets="MvcBuildViews">
+  <Target Name="AfterBuild">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
     </PropertyGroup>
     <CallTarget Targets="ExcludeRootBinariesDeployment" />
-    <!-- If this is an area child project, uncomment the following line:
-		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
-		-->
-    <!-- If this is an area parent project, uncomment the following lines:
-		<CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
-		<CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
-		-->
   </Target>
-  <!-- Copying Roslyn tools and their dependencies to the output folder for Dynamic Compilation. -->
-  <Target Name="CopyRoslynFilesToOutput" AfterTargets="AfterBuild">
+  <Target Name="CopyRoslynFilesToOutputFolder" BeforeTargets="PrepareForBuild">
+    <!-- Copying Roslyn tools and their dependencies to the "bin" folder for Dynamic Compilation. -->
     <ItemGroup>
       <RoslynFiles Include="..\packages\Microsoft.Net.Compilers.*\tools\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(OutputPath)\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(ProjectDir)..\Orchard.Web\bin\roslyn" />
   </Target>
 </Project>
