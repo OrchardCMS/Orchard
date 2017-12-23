@@ -169,7 +169,7 @@
     <Compile Include="Models\NavigationQueryPartRecord.cs" />
     <Compile Include="Models\QueryPart.cs" />
     <Compile Include="Providers\Builders\MemberBindingsStep.cs" />
-    <Compile Include="Providers\Excutors\MemberBindingsStep.cs" />
+    <Compile Include="Providers\Executors\MemberBindingsStep.cs" />
     <Compile Include="Providers\Filters\ContentPartRecordsForm.cs" />
     <Compile Include="Providers\Filters\EagerFetchFilter.cs" />
     <Compile Include="Providers\Layouts\RawLayout.cs" />
