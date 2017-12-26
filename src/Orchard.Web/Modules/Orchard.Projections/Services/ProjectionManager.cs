@@ -169,7 +169,7 @@ namespace Orchard.Projections.Services {
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
                     State = FormParametersHelper.ToDynamic(sortCriterion.State),
-                    VersionScope = queryRecord.VersionScope
+                    QueryPartRecord = queryRecord
                 };
 
                 string category = sortCriterion.Category;
@@ -218,7 +218,7 @@ namespace Orchard.Projections.Services {
                     var filterContext = new FilterContext {
                         Query = contentQuery,
                         State = FormParametersHelper.ToDynamic(tokenizedState),
-                        VersionScope = versionScope
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = filter.Category;
@@ -245,7 +245,7 @@ namespace Orchard.Projections.Services {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
                         State = FormParametersHelper.ToDynamic(sortCriterion.State),
-                        VersionScope = versionScope
+                        QueryPartRecord= queryRecord
                     };
 
                     string category = sortCriterion.Category;

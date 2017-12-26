@@ -82,8 +82,8 @@ namespace Orchard.Projections.Providers.SortCriteria {
 
             // apply sort
             context.Query = ascending
-                ? context.Query.OrderBy(relationship, x => x.Asc(context.VersionScope == QueryVersionScopeOptions.Latest ? "LatestValue" : "Value"))
-                : context.Query.OrderBy(relationship, x => x.Desc(context.VersionScope == QueryVersionScopeOptions.Latest ? "LatestValue" : "Value"));
+                ? context.Query.OrderBy(relationship, x => x.Asc(context.GetSortColumnName()))
+                : context.Query.OrderBy(relationship, x => x.Desc(context.GetSortColumnName()));
         }
 
         public LocalizedString DisplaySortCriterion(SortCriterionContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition) {

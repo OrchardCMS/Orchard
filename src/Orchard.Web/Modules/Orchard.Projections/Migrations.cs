@@ -307,12 +307,9 @@ namespace Orchard.Projections {
             SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
             SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
 
-            return 5;
-        }
-        public int UpdateFrom5() {
             SchemaBuilder.AlterTable("QueryPartRecord", table => table
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
-            return 6;
+            return 5;
         }
     }
 }
