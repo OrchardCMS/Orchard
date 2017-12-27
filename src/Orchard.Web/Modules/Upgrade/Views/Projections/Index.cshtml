@@ -33,7 +33,7 @@ else {
                 $.ajax({
                     type: 'POST',
                     url: importUrl,
-                    async: false,
+                    async: true,
                     data: {
                         __RequestVerificationToken: antiForgeryToken,
                         id: startId // start at index 0
