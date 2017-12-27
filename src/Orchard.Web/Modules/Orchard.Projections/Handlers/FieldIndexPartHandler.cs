@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -48,38 +49,32 @@ namespace Orchard.Projections.Handlers {
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
             if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
-                foreach (var part in fieldIndexPart.ContentItem.Parts) {
-                    foreach (var field in part.PartDefinition.Fields) {
+                DescribeValuesToindex(fieldIndexPart, (localPart, localField, storageName, fieldValue, storageType) => {
+                    _draftFieldIndexService.Set(fieldIndexPart,
+                    localPart.PartDefinition.Name,
+                    localField.Name,
+                    storageName, fieldValue, storageType);
 
-                        // get all drivers for the current field type
-                        // the driver will describe what values of the field should be indexed
-                        var drivers = _contentFieldDrivers.Where(x => x.GetFieldInfo().Any(fi => fi.FieldTypeName == field.FieldDefinition.Name)).ToList();
-
-                        ContentPart localPart = part;
-                        ContentPartFieldDefinition localField = field;
-                        var membersContext = new DescribeMembersContext(
-                            (storageName, storageType, displayName, description) => {
-                                var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
-
-                                // fieldStorage.Get<T>(storageName)
-                                var getter = typeof(IFieldStorage).GetMethod("Get").MakeGenericMethod(storageType);
-                                var fieldValue = getter.Invoke(fieldStorage, new[] { storageName });
-                                _draftFieldIndexService.Set(fieldIndexPart,
-                                    localPart.PartDefinition.Name,
-                                    localField.Name,
-                                    storageName, fieldValue, storageType);
-                            });
-
-                        foreach (var driver in drivers) {
-                            driver.Describe(membersContext);
-                        }
-                    }
-                }
+                });
             }
         }
 
 
         public void Publishing(PublishContentContext context, FieldIndexPart fieldIndexPart) {
+            DescribeValuesToindex(fieldIndexPart, (localPart, localField, storageName, fieldValue, storageType) => {
+                _fieldIndexService.Set(fieldIndexPart,
+                localPart.PartDefinition.Name,
+                localField.Name,
+                storageName, fieldValue, storageType);
+
+            });
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldIndexPart"></param>
+        /// <param name="indexService"></param>
+        private void DescribeValuesToindex(FieldIndexPart fieldIndexPart, Action<ContentPart, ContentPartFieldDefinition, string, object, Type> indexService) {
             foreach (var part in fieldIndexPart.ContentItem.Parts) {
                 foreach (var field in part.PartDefinition.Fields) {
 
@@ -96,11 +91,7 @@ namespace Orchard.Projections.Handlers {
                             // fieldStorage.Get<T>(storageName)
                             var getter = typeof(IFieldStorage).GetMethod("Get").MakeGenericMethod(storageType);
                             var fieldValue = getter.Invoke(fieldStorage, new[] { storageName });
-
-                            _fieldIndexService.Set(fieldIndexPart,
-                                localPart.PartDefinition.Name,
-                                localField.Name,
-                                storageName, fieldValue, storageType);
+                            indexService(localPart, localField, storageName, fieldValue, storageType);
                         });
 
                     foreach (var driver in drivers) {

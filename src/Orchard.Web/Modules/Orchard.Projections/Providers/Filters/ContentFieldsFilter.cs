@@ -76,7 +76,7 @@ namespace Orchard.Projections.Providers.Filters {
 
             // generate the predicate based on the editor which has been used
             dynamic fullState = context.State;
-            fullState.VersionScope = context.VersionScope;
+            fullState.VersionScope = context.QueryPartRecord.VersionScope;
             Action<IHqlExpressionFactory> predicate = fieldTypeEditor.GetFilterPredicate(fullState);
 
             // combines the predicate with a filter on the specific property name of the storage, as implemented in FieldIndexService
