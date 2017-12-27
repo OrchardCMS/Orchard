@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
@@ -24,6 +25,8 @@ namespace Upgrade.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly ITransactionManager _transactionManager;
+
+        private const int BATCH = 50;
 
         public ProjectionsController(
             IContentDefinitionManager contentDefinitionManager,
@@ -62,23 +65,49 @@ namespace Upgrade.Controllers {
             return View(viewModel);
         }
 
-        [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
-            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to update fields' indexes.")))
-                return new HttpUnauthorizedResult();
+        //[HttpPost, ActionName("Index")]
+        //public ActionResult IndexPOST() {
+        //    if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to update fields' indexes.")))
+        //        return new HttpUnauthorizedResult();
 
-            // Get all ContentTypes with fields and Updates the LatestValue if necessary
-            var contentTypesWithFields = _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name).Where(w => w.Parts.Any(x => x.PartDefinition.Fields.Any()));
-            foreach (var contentTypeWithFields in contentTypesWithFields) {
-                var contents = _orchardServices.ContentManager.HqlQuery().ForType(contentTypeWithFields.Name).ForVersion(VersionOptions.Latest).List();
-                foreach (var content in contents) {
+        //    // Get all ContentTypes with fields and Updates the LatestValue if necessary
+        //    var contentTypesWithFields = _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name).Where(w => w.Parts.Any(x => x.PartDefinition.Fields.Any()));
+        //    foreach (var contentTypeWithFields in contentTypesWithFields) {
+        //        var contents = _orchardServices.ContentManager.HqlQuery().ForType(contentTypeWithFields.Name).ForVersion(VersionOptions.Latest).List();
+        //        foreach (var content in contents) {
+        //            _handlers.Value.Where(x => x.GetType() == typeof(FieldIndexPartHandler)).Invoke(handler => handler.Updated(new UpdateContentContext(content)), Logger);
+        //            _transactionManager.RequireNew();
+        //        }
+        //    }
+        //    _orchardServices.Notifier.Information(T("Fields latest values were indexed successfully"));
+
+        //    return RedirectToAction("Index");
+        //}
+
+        [HttpPost]
+        public JsonResult MigrateLatestValue(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+            var contentTypeNamesWithFields = _contentDefinitionManager.ListTypeDefinitions()
+                .Where(w => w.Parts.Any(x => x.PartDefinition.Fields.Any()))
+                .Select(x => x.Name)
+                .ToArray();
+
+            var contents = _orchardServices.ContentManager.HqlQuery().ForVersion(VersionOptions.Latest)
+                .Where(ci => ci.ContentItem(), cix => cix.Gt("Id", id))
+                .OrderBy(alias => alias.ContentItem(), order => order.Asc("Id"))
+                .Slice(0, BATCH).ToList();
+            var lastContentItemId = id;
+
+            foreach (var content in contents) {
+                if (contentTypeNamesWithFields.Contains(content.ContentType)) {
                     _handlers.Value.Where(x => x.GetType() == typeof(FieldIndexPartHandler)).Invoke(handler => handler.Updated(new UpdateContentContext(content)), Logger);
-                    _transactionManager.RequireNew();
                 }
+                lastContentItemId = content.Id;
             }
-            _orchardServices.Notifier.Information(T("Fields latest values were indexed successfully"));
 
-            return RedirectToAction("Index");
+            return new JsonResult { Data = lastContentItemId };
         }
+
     }
 }
