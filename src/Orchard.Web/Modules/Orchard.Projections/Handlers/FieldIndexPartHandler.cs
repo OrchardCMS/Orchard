@@ -49,23 +49,22 @@ namespace Orchard.Projections.Handlers {
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
             if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
-                DescribeValuesToindex(fieldIndexPart, (localPart, localField, storageName, fieldValue, storageType) => {
+                DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
                     _draftFieldIndexService.Set(fieldIndexPart,
-                    localPart.PartDefinition.Name,
-                    localField.Name,
-                    storageName, fieldValue, storageType);
-
+                    indexServiceContext.LocalPart.PartDefinition.Name,
+                    indexServiceContext.LocalField.Name,
+                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
                 });
             }
         }
 
 
         public void Publishing(PublishContentContext context, FieldIndexPart fieldIndexPart) {
-            DescribeValuesToindex(fieldIndexPart, (localPart, localField, storageName, fieldValue, storageType) => {
+            DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
                 _fieldIndexService.Set(fieldIndexPart,
-                localPart.PartDefinition.Name,
-                localField.Name,
-                storageName, fieldValue, storageType);
+                indexServiceContext.LocalPart.PartDefinition.Name,
+                indexServiceContext.LocalField.Name,
+                indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
 
             });
         }
@@ -74,7 +73,7 @@ namespace Orchard.Projections.Handlers {
         /// </summary>
         /// <param name="fieldIndexPart"></param>
         /// <param name="indexService"></param>
-        private void DescribeValuesToindex(FieldIndexPart fieldIndexPart, Action<ContentPart, ContentPartFieldDefinition, string, object, Type> indexService) {
+        private void DescribeValuesToindex(FieldIndexPart fieldIndexPart, Action<IndexServiceContext> indexService) {
             foreach (var part in fieldIndexPart.ContentItem.Parts) {
                 foreach (var field in part.PartDefinition.Fields) {
 
@@ -91,7 +90,12 @@ namespace Orchard.Projections.Handlers {
                             // fieldStorage.Get<T>(storageName)
                             var getter = typeof(IFieldStorage).GetMethod("Get").MakeGenericMethod(storageType);
                             var fieldValue = getter.Invoke(fieldStorage, new[] { storageName });
-                            indexService(localPart, localField, storageName, fieldValue, storageType);
+                            indexService(new IndexServiceContext {
+                                LocalPart = localPart,
+                                LocalField = localField,
+                                StorageName = storageName,
+                                FieldValue = fieldValue,
+                                StorageType = storageType });
                         });
 
                     foreach (var driver in drivers) {
@@ -99,6 +103,14 @@ namespace Orchard.Projections.Handlers {
                     }
                 }
             }
+        }
+        private class IndexServiceContext {
+            public ContentPart LocalPart { get; set; }
+            public ContentPartFieldDefinition LocalField { get; set; }
+            public string StorageName { get; set; }
+            public object FieldValue { get; set; }
+            public Type StorageType { get; set; }
+
         }
     }
 }
