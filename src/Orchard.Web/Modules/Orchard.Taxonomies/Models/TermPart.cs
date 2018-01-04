@@ -46,11 +46,21 @@ namespace Orchard.Taxonomies.Models {
             set { Store(x => x.Selectable, value); }
         }
 
+        /// <summary>
+        /// Property used to sort terms that have the same level or path
+        /// </summary>
         public int Weight {
             get { return Retrieve(x => x.Weight); }
             set { Store(x => x.Weight, value); }
         }
 
+        /// <summary>
+        /// This property is used to represent the lexicographic order of the term inside the taxonomy.
+        /// The term FullWeight is composed by his parent FullWeight and the lexicographic representation of the own term separated with a slash '/'.
+        /// The term is represented at the end of his FullWeight using the term Weight padded with zeros and the term Id separated with a point '.'.
+        /// e.g: Term1=> Id:144, Path:"/", Weight:-1, FullWeight: "-0000001.144/"
+        /// e.g: Term2=> Id:154, Path:"/144/", Weight:-1, FullWeight: "-0000001.144/-0000001.154/"
+        /// </summary>
         public string FullWeight {
             get { return Record.FullWeight; }
             set { Record.FullWeight = value; }
@@ -59,6 +69,11 @@ namespace Orchard.Taxonomies.Models {
         public string FullPath { get { return String.Concat(Path, Id); } }
 
         public static IEnumerable<TermPart> Sort(IEnumerable<TermPart> terms) {
+            return terms.OrderBy(term => term.FullWeight); 
+        }
+
+        [Obsolete]
+        public static IEnumerable<TermPart> SortObsolete(IEnumerable<TermPart> terms) {
             var list = terms.ToList();
             var index = list.ToDictionary(x => x.FullPath);
             return list.OrderBy(x => x, new TermsComparer(index));
@@ -74,7 +89,7 @@ namespace Orchard.Taxonomies.Models {
 
             public int Compare(TermPart x, TermPart y) {
 
-                // if two nodes have the same parent, then compare by weight, then by path 
+                // if two nodes have the same parent, then compare by weight, then by path  
                 // /1/2/3 vs /1/2/4 => 3 vs 4
                 if (x.Path == y.Path) {
                     var weight = y.Weight.CompareTo(x.Weight);
