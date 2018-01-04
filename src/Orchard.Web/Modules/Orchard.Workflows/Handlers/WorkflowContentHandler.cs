@@ -15,6 +15,12 @@ namespace Orchard.Workflows.Handlers {
                     context.ContentItem,
                     () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
+            OnUnpublished<ContentPart>(
+                (context, part) =>
+                    workflowManager.TriggerEvent("ContentUnpublished",
+                    context.ContentItem,
+                    () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
+
             OnRemoving<ContentPart>(
                 (context, part) =>
                     workflowManager.TriggerEvent("ContentRemoved",
