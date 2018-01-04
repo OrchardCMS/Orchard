@@ -83,7 +83,7 @@ namespace Upgrade.Controllers {
         public JsonResult MigrateTerms(int id) {
             var lastContentItemId = id;
             foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
-                foreach (var term in TermPart.Sort(_taxonomyService.GetTerms(taxonomy.Id))) {
+                foreach (var term in TermPart.SortObsolete(_taxonomyService.GetTerms(taxonomy.Id))) { 
                     term.FullWeight = "";
                     var container = term.Container.As<TermPart>();
                     for (int i = 0; i < term.Path.Count(x => x == '/')-1; i++) {
