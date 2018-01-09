@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
@@ -25,6 +26,9 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Length", length =>
                 part.Length = int.Parse(length)
             );
+        }
+        protected override void Cloning(AudioPart originalPart, AudioPart clonePart, CloneContentContext context) {
+            clonePart.Length = originalPart.Length;
         }
     }
 }

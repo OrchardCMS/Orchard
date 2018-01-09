@@ -183,8 +183,18 @@ namespace Orchard.MediaLibrary.Controllers {
                     // Raise update and publish events which will update relevant Media properties
                     _handlers.Invoke(x => x.Updating(new UpdateContentContext(replaceMedia.ContentItem)), Logger);
 
-                    _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
-                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, file.InputStream);
+                    var mediaItemsUsingTheFile = Services.ContentManager.Query<MediaPart, MediaPartRecord>()
+                                                                .ForVersion(VersionOptions.Latest)
+                                                                .Where(x => x.FolderPath == replaceMedia.FolderPath && x.FileName == replaceMedia.FileName)
+                                                                .Count();
+                    if (mediaItemsUsingTheFile == 1) { // if the file is referenced only by the deleted media content, the file too can be removed.
+                        _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                    }
+                    else {
+                        // it changes the media file name
+                        replaceMedia.FileName = filename;
+                    }
+                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, filename, file.InputStream);
                     replaceMedia.MimeType = mimeType;
 
                     _handlers.Invoke(x => x.Updated(new UpdateContentContext(replaceMedia.ContentItem)), Logger);

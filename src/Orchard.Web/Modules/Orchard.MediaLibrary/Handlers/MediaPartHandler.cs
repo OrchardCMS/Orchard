@@ -15,15 +15,18 @@ namespace Orchard.MediaLibrary.Handlers {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IStorageProvider _storageProvider;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IContentManager _contentManager;
 
         public MediaPartHandler(
             IStorageProvider storageProvider,
             IMediaLibraryService mediaLibraryService,
             IRepository<MediaPartRecord> repository,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager,
+            IContentManager contentManager) {
             _storageProvider = storageProvider;
             _mediaLibraryService = mediaLibraryService;
             _contentDefinitionManager = contentDefinitionManager;
+            _contentManager = contentManager;
 
             Filters.Add(StorageFilter.For(repository));
             Filters.Add(new ActivatingFilter<TitlePart>(contentType => {
@@ -113,7 +116,13 @@ namespace Orchard.MediaLibrary.Handlers {
 
         protected void RemoveMedia(MediaPart part) {
             if (!string.IsNullOrEmpty(part.FileName)) {
-                _mediaLibraryService.DeleteFile(part.FolderPath, part.FileName);
+                var mediaItemsUsingTheFile = _contentManager.Query<MediaPart, MediaPartRecord>()
+                                                            .ForVersion(VersionOptions.Latest)
+                                                            .Where(x => x.FolderPath == part.FolderPath && x.FileName == part.FileName)
+                                                            .Count();
+                if (mediaItemsUsingTheFile == 1) { // if the file is referenced only by the deleted media content, the file too can be removed.
+                    _mediaLibraryService.DeleteFile(part.FolderPath, part.FileName);
+                }
             }
         }
 

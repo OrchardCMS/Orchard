@@ -80,7 +80,8 @@ namespace Orchard.MediaLibrary.Services {
             return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, mediaType: mediaType, versionOptions: versionOptions)
                 .Count();
         }
-
+        
+        //TODO: extract the logic from MediaLibraryService and add a method definition into IMediaLibraryService in order to give a point of extension
         private static IContentQuery<MediaPart> BuildGetMediaContentItemsQuery(
             IContentManager contentManager, string folderPath = null, bool recursive = false, string order = null, string mediaType = null, VersionOptions versionOptions = null) {
 
