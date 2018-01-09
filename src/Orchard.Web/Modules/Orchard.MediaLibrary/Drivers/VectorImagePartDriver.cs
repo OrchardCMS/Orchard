@@ -1,8 +1,9 @@
 ﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
-    public class VectorImagePartDriver : ContentPartDriver<VectorImagePart> {
+    public class VectorImagePartDriver : ContentPartCloningDriver<VectorImagePart> {
 
         protected override DriverResult Display(VectorImagePart part, string displayType, dynamic shapeHelper) {
             return Combined(
@@ -11,6 +12,10 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_VectorImage", () => shapeHelper.Parts_VectorImage()),
                 ContentShape("Parts_VectorImage_SummaryAdmin", () => shapeHelper.Parts_VectorImage_SummaryAdmin())
             );
+        }
+
+        protected override void Cloning(VectorImagePart originalPart, VectorImagePart clonePart, CloneContentContext context) {
+            // nothing todo at the moment cause the part is only defined
         }
     }
 }

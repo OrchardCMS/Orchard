@@ -176,8 +176,18 @@ namespace Orchard.MediaLibrary.Controllers {
                     if (!replaceContentType.Equals(replaceMedia.TypeDefinition.Name, StringComparison.OrdinalIgnoreCase))
                         throw new Exception(T("Cannot replace {0} with {1}", replaceMedia.TypeDefinition.Name, replaceContentType).Text);
 
-                    _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
-                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, file.InputStream);
+                    var mediaItemsUsingTheFile = Services.ContentManager.Query<MediaPart, MediaPartRecord>()
+                                                                .ForVersion(VersionOptions.Latest)
+                                                                .Where(x => x.FolderPath == replaceMedia.FolderPath && x.FileName == replaceMedia.FileName)
+                                                                .Count();
+                    if (mediaItemsUsingTheFile == 1) { // if the file is referenced only by the deleted media content, the file too can be removed.
+                        _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                    }
+                    else {
+                        // it changes the media file name
+                        replaceMedia.FileName = filename;
+                    }
+                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, filename, file.InputStream);
                     replaceMedia.MimeType = mimeType;
 
                     // Force a publish event which will update relevant Media properties

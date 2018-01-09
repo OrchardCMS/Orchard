@@ -43,7 +43,7 @@
                         </div>
                         <div class="media-library-main-list-overlay">
                             <p class="title" data-bind="text: data.title, attr: { title: data.title }"></p>
-                            <p class="publication-status" data-bind="text: publicationStatus"></p>
+                            <p class="publication-status" data-bind="text: mediaInfos"></p>
                         </div>
                     </li>
                 </ul>
@@ -52,9 +52,12 @@
         <div id="media-library-main-editor">
             <div id="media-library-main-editor-focus" data-bind="with: focus">
                 <h1>@T("PROPERTIES")</h1>
-                <div class="summary" data-bind="html: summary">
-                    
-                </div>
+                <form>
+                    <div class="summary" data-bind="html: summary">
+
+                    </div>
+                    @Html.AntiForgeryTokenOrchard()
+                </form>
             </div>
             <article>
                 <header>
@@ -115,7 +118,7 @@ var mediaLibrarySettings = {
     <li>
         <div class="media-library-folder" data-bind="css: { 'in-progress': $root.pendingRequest() }">
             <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
-                <a href="#" class="media-library-navigation-folder-link"><i class="fa" data-bind="    css: {'fa-folder-open-o': isExpanded(), 'fa-folder-o': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
+                <a href="#" class="media-library-navigation-folder-link"><i class="fa" data-bind="css: {'fa-folder-open-o': isExpanded(), 'fa-folder-o': !isExpanded()}"></i><span data-bind="text: name"></span></a>
             </div>
             <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
             </ul>

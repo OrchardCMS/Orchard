@@ -1,0 +1,39 @@
+﻿
+<form style="display:inline" data-bind="submit: doCultureFilter">
+    <label for="filterLocalization">@T("Language")</label>
+    <select id="filterLocalization" name="FilterLocalization" data-bind="value: mediaCulture, event: { change: cultureFilterChanged }">
+        @Html.SelectOption("", true, T("Any (show all)").ToString())
+        @foreach (string culture in Model.Cultures) {
+            @Html.SelectOption(culture, false, culture)
+        }
+    </select>
+</form>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+    //<![CDATA[
+
+    var beforeCultureFilterVM = enhanceViewModel;
+    enhanceViewModel = function(viewModel) {
+        beforeCultureFilterVM(viewModel);
+        viewModel.mediaCulture = ko.observable();
+        viewModel.cultureFilterChanged = function (event) {
+            var culture = this.mediaCulture();
+            viewModel.doCultureFilter(culture);
+        }
+        viewModel.doCultureFilter = function (culture) {
+            var self = viewModel;
+
+            self.loadMediaItemsUrl = function (folderPath, skip, count, order, mediaType) {
+                var searchActionUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "LocalizedMedia", new {area = "Orchard.MediaLibrary"}))';
+                return searchActionUrl + '?folderPath=' + folderPath + '&skip=' + skip + '&count=' + count + '&order=' + order + '&mediaType=' + mediaType + '&culture=' + culture;
+            };
+
+            self.getMediaItems(20);
+        };
+    };
+    
+    //]]>
+</script>
+
+}
