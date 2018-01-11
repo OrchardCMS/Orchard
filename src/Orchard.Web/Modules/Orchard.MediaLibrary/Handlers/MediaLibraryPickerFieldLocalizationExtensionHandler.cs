@@ -60,6 +60,7 @@ namespace Orchard.MediaLibrary.Handlers {
                                     if (mediaCulture == null) {
                                         // The media has not a culture, so it takes the content culture
                                         _localizationServices.SetContentCulture(mediaItem, contentCulture);
+                                        mediaIds.Add(mediaItem.Id);
                                         _orchardServices.Notifier.Warning(T(
                                             "{0}: the media item {1} was culture neutral and it has been localized",
                                             field.DisplayName,
