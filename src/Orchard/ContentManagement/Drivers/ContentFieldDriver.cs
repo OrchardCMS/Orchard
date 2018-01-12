@@ -65,23 +65,38 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Importing(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Importing(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Imported(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => ImportCompleted(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                ImportCompleted(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exporting(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Exporting(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Exported(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Cloning(CloneContentContext context) {
