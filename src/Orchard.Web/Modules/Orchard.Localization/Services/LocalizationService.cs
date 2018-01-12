@@ -49,17 +49,11 @@ namespace Orchard.Localization.Services {
         }
 
         void ILocalizationService.SetContentCulture(IContent content, string culture) {
-            SetContentCulture(content, null, culture);
-        }
-        public void SetContentCulture(IContent content, IContent masterContent, string culture) {
             var localized = content.As<LocalizationPart>();
             if (localized == null)
                 return;
 
             localized.Culture = _cultureManager.GetCultureByName(culture);
-            if (masterContent != null) {
-                localized.MasterContentItem = masterContent;
-            }
         }
 
         IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content) {
