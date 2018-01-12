@@ -8,7 +8,6 @@ namespace Orchard.Localization.Services {
         LocalizationPart GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions);
         string GetContentCulture(IContent content);
         void SetContentCulture(IContent content, string culture);
-        void SetContentCulture(IContent content, IContent masterContent, string culture);
         IEnumerable<LocalizationPart> GetLocalizations(IContent content);
         IEnumerable<LocalizationPart> GetLocalizations(IContent content, VersionOptions versionOptions);
     }
