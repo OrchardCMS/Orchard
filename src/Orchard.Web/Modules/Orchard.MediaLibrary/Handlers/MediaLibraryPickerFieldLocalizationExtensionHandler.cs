@@ -81,7 +81,11 @@ namespace Orchard.MediaLibrary.Handlers {
                                             if (!settings.RemoveItemsWithoutLocalization) {
                                                 // The media supports translations but have not a localized version, so it will be cloned in the right language
                                                 var clonedMedia = _contentManager.Clone(mediaItem);
-                                                _localizationServices.SetContentCulture(clonedMedia, contentCulture);
+                                                var mediaLocalizationPart = mediaItem.As<LocalizationPart>();
+                                                if (mediaLocalizationPart != null) {
+                                                    _localizationServices.SetContentCulture(clonedMedia, contentCulture);
+                                                    clonedMedia.As<LocalizationPart>().MasterContentItem = mediaLocalizationPart.MasterContentItem == null ? mediaItem : mediaLocalizationPart.MasterContentItem;
+                                                }
                                                 clonedMedia.As<LocalizationPart>().MasterContentItem = mediaItem;
                                                 _contentManager.Publish(clonedMedia);
                                                 mediaIds.Add(clonedMedia.Id);
