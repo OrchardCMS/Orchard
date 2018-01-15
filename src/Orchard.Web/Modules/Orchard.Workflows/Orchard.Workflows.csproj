@@ -133,6 +133,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Activities\LoggingActivity.cs" />
+    <Compile Include="Activities\UnpublishActivity.cs" />
     <Compile Include="Forms\LoggingActivityForms.cs" />
     <Compile Include="Helpers\OutcomeSerializerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

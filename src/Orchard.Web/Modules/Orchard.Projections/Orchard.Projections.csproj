@@ -170,6 +170,8 @@
     <Compile Include="Models\NavigationQueryPart.cs" />
     <Compile Include="Models\NavigationQueryPartRecord.cs" />
     <Compile Include="Models\QueryPart.cs" />
+    <Compile Include="Providers\Builders\MemberBindingsStep.cs" />
+    <Compile Include="Providers\Executors\MemberBindingsStep.cs" />
     <Compile Include="Providers\Filters\ContentPartRecordsForm.cs" />
     <Compile Include="Providers\Filters\EagerFetchFilter.cs" />
     <Compile Include="Providers\Layouts\RawLayout.cs" />
@@ -179,6 +181,9 @@
     <Compile Include="Providers\Layouts\ShapeLayoutForms.cs" />
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
+    <Compile Include="QueryVersionScopeOptions.cs" />
+    <Compile Include="Services\DraftFieldIndexService.cs" />
+    <Compile Include="Services\IDraftFieldIndexService.cs" />
     <Compile Include="Services\IProjectionManagerExtension.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
@@ -282,6 +287,7 @@
     <Compile Include="ViewModels\LayoutAddViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditViewModel.cs" />
     <Compile Include="ViewModels\ProjectionPartEditViewModel.cs" />
+    <Compile Include="ViewModels\QueryViewModel.cs" />
     <Compile Include="ViewModels\SortCriteriaAddViewModel.cs" />
     <Compile Include="ViewModels\SortCriteriaEditViewModel.cs" />
     <Compile Include="ViewModels\FilterAddViewModel.cs" />
@@ -324,6 +330,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\QueryPart_Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
