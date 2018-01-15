@@ -86,7 +86,6 @@ namespace Orchard.MediaLibrary.Handlers {
                                                     _localizationServices.SetContentCulture(clonedMedia, contentCulture);
                                                     clonedMedia.As<LocalizationPart>().MasterContentItem = mediaLocalizationPart.MasterContentItem == null ? mediaItem : mediaLocalizationPart.MasterContentItem;
                                                 }
-                                                clonedMedia.As<LocalizationPart>().MasterContentItem = mediaItem;
                                                 _contentManager.Publish(clonedMedia);
                                                 mediaIds.Add(clonedMedia.Id);
                                                 _orchardServices.Notifier.Warning(T(
