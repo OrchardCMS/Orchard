@@ -24,7 +24,7 @@
                                 <br />
                                 <div>
                                     <h4>@recipe.Name.CamelFriendly() - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Modules", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
-                                    <p>@(!string.IsNullOrEmpty(recipe.Description) ? recipe.Description : T("No description").ToString())</p>
+                                    <p style="white-space: pre-line">@(!string.IsNullOrEmpty(recipe.Description) ? recipe.Description : T("No description").ToString())</p>
                                 </div>
                             }
                         </div>
