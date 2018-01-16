@@ -115,11 +115,11 @@ namespace Orchard.MediaLibrary.Handlers {
                                 }
                             }
                         }
-                        if (mediaIds.Count > 0) {
-                            field.Ids = mediaIds.Distinct().ToArray();
-                        }
-                        else if (fieldSettings.Required) {
-                            context.Updater.AddModelError("Id", T("The {0} field is required.", field.DisplayName)); 
+
+                        field.Ids = mediaIds.Distinct().ToArray();
+
+                        if (field.Ids.Length == 0 && fieldSettings.Required) {
+                            context.Updater.AddModelError("Id", T("The {0} field is required.", field.DisplayName));
                         }
                     }
                 }
