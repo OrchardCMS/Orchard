@@ -27,6 +27,7 @@ namespace Orchard.Users.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserEventHandler _userEventHandler;
         private readonly IClock _clock;
+        private readonly IAccountValidationService _accountValidationService;
 
         public AccountController(
             IAuthenticationService authenticationService,
@@ -34,7 +35,8 @@ namespace Orchard.Users.Controllers {
             IUserService userService,
             IOrchardServices orchardServices,
             IUserEventHandler userEventHandler,
-            IClock clock) {
+            IClock clock,
+            IAccountValidationService accountValidationService) {
 
             _authenticationService = authenticationService;
             _membershipService = membershipService;
@@ -42,6 +44,7 @@ namespace Orchard.Users.Controllers {
             _orchardServices = orchardServices;
             _userEventHandler = userEventHandler;
             _clock = clock;
+            _accountValidationService = accountValidationService;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -349,12 +352,12 @@ namespace Orchard.Users.Controllers {
                 return false;
             }
 
-            return false;
-        }
+                return false;
+            }
 
         [AlwaysAccessible]
         public ActionResult LostPassword(string nonce) {
-            if (_userService.ValidateLostPassword(nonce) == null) {
+            if ( _userService.ValidateLostPassword(nonce) == null) {
                 return RedirectToAction("LogOn");
             }
 
@@ -372,7 +375,7 @@ namespace Orchard.Users.Controllers {
         [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
-            if ((user = _userService.ValidateLostPassword(nonce)) == null) {
+            if ( (user = _userService.ValidateLostPassword(nonce)) == null) {
                 return Redirect("~/");
             }
 
@@ -433,7 +436,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChallengeEmail(string nonce) {
             var user = _userService.ValidateChallenge(nonce);
 
-            if (user != null) {
+            if ( user != null) {
                 _userEventHandler.ConfirmedEmail(user);
 
                 return RedirectToAction("ChallengeEmailSuccess");
@@ -490,35 +493,26 @@ namespace Orchard.Users.Controllers {
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
-            bool validate = true;
 
-            if (string.IsNullOrEmpty(userName)) {
-                ModelState.AddModelError("username", T("You must specify a username."));
-                validate = false;
-            }
-            else {
-                if (userName.Length >= UserPart.MaxUserNameLength) {
-                    ModelState.AddModelError("username", T("The username you provided is too long."));
-                    validate = false;
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
                 }
             }
 
-            if (string.IsNullOrEmpty(email)) {
-                ModelState.AddModelError("email", T("You must specify an email address."));
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
-            else if (email.Length >= UserPart.MaxEmailLength) {
-                ModelState.AddModelError("email", T("The email address you provided is too long."));
-                validate = false;
-            }
-            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                ModelState.AddModelError("email", T("You must specify a valid email address."));
-                validate = false;
-            }
-
+            
             if (!validate)
                 return false;
+
 
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
@@ -529,15 +523,19 @@ namespace Orchard.Users.Controllers {
             if (!string.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
+
             return ModelState.IsValid;
         }
 
         private void ValidatePassword(string password) {
-            if (!_userService.PasswordMeetsPolicies(password, out IDictionary<string, LocalizedString> validationErrors)) {
+            IDictionary<string, LocalizedString> validationErrors;
+
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
                 foreach (var error in validationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
             }
+            
         }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
