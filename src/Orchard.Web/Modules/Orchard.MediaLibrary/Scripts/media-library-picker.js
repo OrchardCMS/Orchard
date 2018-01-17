@@ -103,7 +103,7 @@
                             .replace(/\{title\}/g, selectedData[i].title)
                             .replace(/\{editLink\}/g, selectedData[i].editLink);
                         var content = $(tmpl);
-                        element.find('.media-library-picker.items ul').append(content);
+                        element.find('.media-library-picker.items ul.media-items').append(content);
                     }
                     
                     refreshIds();
