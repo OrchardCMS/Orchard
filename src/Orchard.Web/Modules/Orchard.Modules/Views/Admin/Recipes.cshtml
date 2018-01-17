@@ -23,8 +23,8 @@
                             @foreach (var recipe in moduleEntry.Recipes) {
                                 <br />
                                 <div>
-                                    <h4>@recipe.Name.CamelFriendly() - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Modules", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
-                                    <p style="white-space: pre-line">@(!string.IsNullOrEmpty(recipe.Description) ? recipe.Description : T("No description").ToString())</p>
+                                    <h4>@T(recipe.Name).Text - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Modules", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
+                                    <p style="white-space: pre-line">@(!string.IsNullOrEmpty(recipe.Description) ? T(recipe.Description).Text : T("No description").ToString())</p>
                                 </div>
                             }
                         </div>
