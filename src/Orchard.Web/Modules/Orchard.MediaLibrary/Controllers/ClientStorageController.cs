@@ -176,6 +176,9 @@ namespace Orchard.MediaLibrary.Controllers {
                     if (!replaceContentType.Equals(replaceMedia.TypeDefinition.Name, StringComparison.OrdinalIgnoreCase))
                         throw new Exception(T("Cannot replace {0} with {1}", replaceMedia.TypeDefinition.Name, replaceContentType).Text);
 
+                    // Raise update and publish events which will update relevant Media properties
+                    _handlers.Invoke(x => x.Updating(new UpdateContentContext(replaceMedia.ContentItem)), Logger);
+
                     var mediaItemsUsingTheFile = Services.ContentManager.Query<MediaPart, MediaPartRecord>()
                                                                 .ForVersion(VersionOptions.Latest)
                                                                 .Where(x => x.FolderPath == replaceMedia.FolderPath && x.FileName == replaceMedia.FileName)
