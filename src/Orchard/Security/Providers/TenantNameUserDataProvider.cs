@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Orchard.Environment.Configuration;
+﻿using Orchard.Environment.Configuration;
 
 namespace Orchard.Security.Providers {
     public class TenantNameUserDataProvider : BaseUserDataProvider {
