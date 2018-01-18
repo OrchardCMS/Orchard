@@ -61,10 +61,6 @@ namespace Orchard.Security.Providers {
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
 
-            //// The cookie user data is "{userName.Base64};{tenant}".
-            //// The username is encoded to Base64 to prevent collisions with the ';' seprarator.
-            //var userData = String.Concat(user.UserName.ToBase64(), ";", _settings.Name);
-
             var userDataDictionary = new Dictionary<string, string>();
             userDataDictionary.Add("UserName", user.UserName);
             foreach (var userDataProvider in _userDataProviders) {
@@ -168,35 +164,9 @@ namespace Orchard.Security.Providers {
             // 2. Check the other stuff from the dictionary
             var validLogin = _userDataProviders.All(udp => udp.IsValid(_signedInUser, userDataDictionary));
             if (!validLogin) {
+                _signedInUser = null;
                 return null;
             }
-
-            //// The cookie user data is {userName.Base64};{tenant}.
-            //var userDataSegments = userData.Split(';');
-
-            //if (userDataSegments.Length < 2) {
-            //    return null;
-            //}
-
-            //var userDataName = userDataSegments[0];
-            //var userDataTenant = userDataSegments[1];
-
-            //try {
-            //    userDataName = userDataName.FromBase64();
-            //}
-            //catch {
-            //    return null;
-            //}
-
-            //if (!String.Equals(userDataTenant, _settings.Name, StringComparison.Ordinal)) {
-            //    return null;
-            //}
-
-            //_signedInUser = _membershipService.GetUser(userDataName);
-            //if (_signedInUser == null || !_membershipValidationService.CanAuthenticateWithCookie(_signedInUser)) {
-            //    _isNonOrchardUser = true;
-            //    return null;
-            //}
 
             _isAuthenticated = true;
             return _signedInUser;
