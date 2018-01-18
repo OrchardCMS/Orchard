@@ -21,6 +21,7 @@ namespace Orchard.Security.Providers {
         private readonly ISslSettingsProvider _sslSettingsProvider;
         private readonly IMembershipValidationService _membershipValidationService;
         private readonly IEnumerable<IUserDataProvider> _userDataProviders;
+        private readonly ISecurityService _securityService;
 
         private IUser _signedInUser;
         private bool _isAuthenticated;
@@ -39,7 +40,8 @@ namespace Orchard.Security.Providers {
             IHttpContextAccessor httpContextAccessor,
             ISslSettingsProvider sslSettingsProvider,
             IMembershipValidationService membershipValidationService,
-            IEnumerable<IUserDataProvider> userDataProviders) {
+            IEnumerable<IUserDataProvider> userDataProviders,
+            ISecurityService securityService) {
 
             _settings = settings;
             _clock = clock;
@@ -48,10 +50,11 @@ namespace Orchard.Security.Providers {
             _sslSettingsProvider = sslSettingsProvider;
             _membershipValidationService = membershipValidationService;
             _userDataProviders = userDataProviders;
+            _securityService = securityService;
 
             Logger = NullLogger.Instance;
 
-            ExpirationTimeSpan = TimeSpan.FromDays(30);
+            ExpirationTimeSpan = _securityService.GetAuthenticationCookieLifeSpan();
         }
 
         public ILogger Logger { get; set; }
