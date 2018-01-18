@@ -34,7 +34,7 @@
     <label @if (required) { <text> class="required" </text>    }>@displayName</label>
     <div class="message message-Warning media-library-picker-message">@T("You need to save your changes.")</div>
     <div class="items media-library-picker" summary="@displayName">
-        <ul>
+        <ul class="media-items">
             @foreach (var contentItem in contentItems) {
                 var editRouteValues = contentManager.GetItemMetadata(contentItem).EditorRouteValues;
                 var editUrl = Url.Action(
