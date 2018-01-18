@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
@@ -29,11 +30,12 @@ namespace Orchard.Localization.Services {
             if (localized == null)
                 return null;
 
+            var masterContent = content.ContentItem.As<LocalizationPart>().MasterContentItem != null ? content.ContentItem.As<LocalizationPart>().MasterContentItem : content;
             // Warning: Returns only the first of same culture localizations.
             return _contentManager
                 .Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType)
                 .Where<LocalizationPartRecord>(l =>
-                (l.Id == content.ContentItem.Id || l.MasterContentItemId == content.ContentItem.Id)
+                (l.Id == masterContent.Id || l.MasterContentItemId == masterContent.Id)
                 && l.CultureId == cultureRecord.Id)
                 .Slice(1)
                 .FirstOrDefault();
@@ -92,5 +94,6 @@ namespace Orchard.Localization.Services {
             // Warning: May contain more than one localization of the same culture.
             return query.List().ToList();
         }
+
     }
 }

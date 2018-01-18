@@ -11,3 +11,8 @@ Features:
         Description: Provides enhanced Media management tools.
         Dependencies: Title, Orchard.ContentTypes, Orchard.MediaProcessing, Orchard.Tokens, Orchard.Resources
         Category: Media
+    Orchard.MediaLibrary.LocalizationExtensions:
+		Name: Media Library Localization Extensions
+		Description: Provides settings to enable advanced localization behaviours for Media Library and Media Library Picker Field.
+        Dependencies: Orchard.MediaLibrary, Orchard.Localization
+        Category: Media

@@ -1,11 +1,11 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaPartDriver : ContentPartDriver<MediaPart> {
-
         protected override string Prefix {
             get { return "MediaPart"; }
         }
@@ -27,7 +27,7 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override DriverResult Editor(MediaPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, new[] {"Caption", "AlternateText"}, null);
+            updater.TryUpdateModel(part, Prefix, new[] { "Caption", "AlternateText" }, null);
             return Editor(part, shapeHelper);
         }
 
@@ -73,6 +73,15 @@ namespace Orchard.MediaLibrary.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("FolderPath", part.FolderPath);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FileName", part.FileName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("LogicalType", part.LogicalType);
+        }
+
+        protected override void Cloning(MediaPart originalPart, MediaPart clonePart, CloneContentContext context) {
+            clonePart.Caption = originalPart.Caption;
+            clonePart.FileName = originalPart.FileName;
+            clonePart.FolderPath = originalPart.FolderPath;
+            clonePart.LogicalType = originalPart.LogicalType;
+            clonePart.AlternateText = originalPart.AlternateText;
+            clonePart.MimeType = originalPart.MimeType;
         }
     }
 }
