@@ -11,6 +11,10 @@ namespace Orchard.Security.Providers {
             _settings = settings;
         }
 
+        public override string Key {
+            get { return "TenantName"; }
+        }
+
         protected override string Value(IUser user) {
             return _settings.Name;
         }
