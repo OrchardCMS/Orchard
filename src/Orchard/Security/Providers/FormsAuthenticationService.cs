@@ -53,13 +53,14 @@ namespace Orchard.Security.Providers {
             _securityService = securityService;
 
             Logger = NullLogger.Instance;
-
-            ExpirationTimeSpan = _securityService.GetAuthenticationCookieLifeSpan();
+            
         }
 
         public ILogger Logger { get; set; }
 
-        public TimeSpan ExpirationTimeSpan { get; set; }
+        public TimeSpan ExpirationTimeSpan {
+            get { return _securityService.GetAuthenticationCookieLifeSpan(); }
+        }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
