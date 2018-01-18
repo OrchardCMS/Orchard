@@ -1,12 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Security.Providers;
+using Orchard.Settings;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
     public class PasswordChangedDateUserDataProvider : BaseUserDataProvider {
-        public PasswordChangedDateUserDataProvider() : base(false) {
+
+
+        private readonly ISiteService _siteService;
+
+        public PasswordChangedDateUserDataProvider(
+            ISiteService siteService) : base(true) {
+            // By calling base(true) we set DefaultValid to true. This means that cookies whose
+            // UserData dictionary does not contain the entry from this provider will be valid.
+
+            _siteService = siteService;
+        }
+
+        protected override bool DefaultValid {
+            get {
+                return !_siteService
+                    .GetSiteSettings()
+                    .As<SecuritySettingsPart>()
+                    .ShouldInvalidateAuthOnPasswordChanged;
+            }
+        }
+
+        public override bool IsValid(IUser user, IDictionary<string, string> userData) {
+            
+            return DefaultValid || base.IsValid(user, userData);
         }
 
         protected override string Value(IUser user) {

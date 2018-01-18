@@ -8,4 +8,10 @@
         @Html.ValidationMessageFor(m => m.AuthCookieLifeSpan)
         <p class="hint">@T("The time after signing in after which authentication cookies will be invalidated, in standard TimeSpan format (dd.hh:mm:ss).")</p>
     </div>
+    <div>
+        @Html.CheckBoxFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShouldInvalidateAuthOnPasswordChanged)">@T("Invalidate authentication cookies on password change")</label>
+        @Html.ValidationMessageFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
+        <p class="hint">@T("Select this flag if you want that changing a user's password will require them to sign in anew from all clients.")</p>
+    </div>
 </fieldset>

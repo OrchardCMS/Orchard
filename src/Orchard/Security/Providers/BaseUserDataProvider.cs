@@ -27,9 +27,12 @@ namespace Orchard.Security.Providers {
 
         /// <summary>
         /// Tells whether this provider should return true for validation when there is no
-        /// element for it in the UserData dictionary.
+        /// element for it in the UserData dictionary. Setting this value to false means that
+        /// if a new provider is added (e.g. if the feature that contains it is enabled) extant
+        /// authentication cookies will be invalidated, because their UserData dictionary does
+        /// not contain the element for the new provider.
         /// </summary>
-        protected bool DefaultValid;
+        protected virtual bool DefaultValid { get; set; }
 
         /// <summary>
         /// This is the key that will be used in the UserData dictionary
@@ -41,7 +44,8 @@ namespace Orchard.Security.Providers {
         /// <summary>
         /// This is the value that this provider will compute for the given user. This is 
         /// used both to generate the element of the dictionary for this provider, and to
-        /// validate a given dictionary;
+        /// validate a given dictionary, unless ComputeUserDataElement and IsValid are being
+        /// overridden as well.
         /// </summary>
         protected abstract string Value(IUser user);
 
@@ -51,7 +55,7 @@ namespace Orchard.Security.Providers {
 
         public virtual bool IsValid(IUser user, IDictionary<string, string> userData) {
             if (userData.ContainsKey(Key)) {
-                return userData[Key].Equals(Value(user), StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(userData[Key], Value(user), StringComparison.Ordinal);
             }
             return DefaultValid;
         }
