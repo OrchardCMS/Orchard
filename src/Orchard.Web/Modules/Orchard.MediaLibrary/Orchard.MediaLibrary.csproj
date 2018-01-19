@@ -161,10 +161,6 @@
       <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
       <Name>Orchard.Localization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
-      <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
-      <Name>Orchard.Localization</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
