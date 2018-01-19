@@ -134,7 +134,6 @@
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
     <Compile Include="Handlers\MediaLibraryPickerFieldLocalizationExtensionHandler.cs" />
-    <Compile Include="Handlers\MediaLibraryPickerFieldLocalizationExtensionHandler.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
     <Compile Include="Implementation\DefaultMediaUsername.cs" />
     <Compile Include="MediaLocalizationMigrations.cs" />
