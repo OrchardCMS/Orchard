@@ -297,11 +297,15 @@
     </PropertyGroup>
     <CallTarget Targets="ExcludeRootBinariesDeployment" />
   </Target>
-  <Target Name="CopyRoslynFilesToOutputFolder" BeforeTargets="PrepareForBuild">
+  <Target Name="CopyRoslynFilesToOutputFolder" AfterTargets="AfterBuild">
     <!-- Copying Roslyn tools and their dependencies to the "bin" folder for Dynamic Compilation. -->
+    <PropertyGroup>
+      <RoslynFilesDestination>$(ProjectDir)bin\roslyn\</RoslynFilesDestination>
+    </PropertyGroup>
     <ItemGroup>
       <RoslynFiles Include="..\packages\Microsoft.Net.Compilers.*\tools\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(ProjectDir)..\Orchard.Web\bin\roslyn" />
+    <Message Text="$(RoslynFilesDestination)" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(RoslynFilesDestination)" Condition="!Exists('$(RoslynFilesDestination)csc.exe')" />
   </Target>
 </Project>
