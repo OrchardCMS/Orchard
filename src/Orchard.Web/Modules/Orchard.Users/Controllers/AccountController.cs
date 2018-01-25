@@ -28,6 +28,7 @@ namespace Orchard.Users.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserEventHandler _userEventHandler;
         private readonly IClock _clock;
+        private readonly IAccountValidationService _accountValidationService;
 
         public AccountController(
             IAuthenticationService authenticationService,
@@ -35,7 +36,8 @@ namespace Orchard.Users.Controllers {
             IUserService userService,
             IOrchardServices orchardServices,
             IUserEventHandler userEventHandler,
-            IClock clock) {
+            IClock clock,
+            IAccountValidationService accountValidationService) {
 
             _authenticationService = authenticationService;
             _membershipService = membershipService;
@@ -43,6 +45,7 @@ namespace Orchard.Users.Controllers {
             _orchardServices = orchardServices;
             _userEventHandler = userEventHandler;
             _clock = clock;
+            _accountValidationService = accountValidationService;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -434,35 +437,26 @@ namespace Orchard.Users.Controllers {
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
-            bool validate = true;
 
-            if (String.IsNullOrEmpty(userName)) {
-                ModelState.AddModelError("username", T("You must specify a username."));
-                validate = false;
-            }
-            else {
-                if (userName.Length >= UserPart.MaxUserNameLength) {
-                    ModelState.AddModelError("username", T("The username you provided is too long."));
-                    validate = false;
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
                 }
             }
 
-            if (String.IsNullOrEmpty(email)) {
-                ModelState.AddModelError("email", T("You must specify an email address."));
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
-            else if (email.Length >= UserPart.MaxEmailLength) {
-                ModelState.AddModelError("email", T("The email address you provided is too long."));
-                validate = false;
-            }
-            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                ModelState.AddModelError("email", T("You must specify a valid email address."));
-                validate = false;
-            }
-
+            
             if (!validate)
                 return false;
+
 
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
@@ -473,17 +467,19 @@ namespace Orchard.Users.Controllers {
             if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
+
             return ModelState.IsValid;
         }
 
         private void ValidatePassword(string password) {
             IDictionary<string, LocalizedString> validationErrors;
 
-            if (!_userService.PasswordMeetsPolicies(password, out validationErrors)) {
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
                 foreach (var error in validationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
             }
+            
         }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
