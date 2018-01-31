@@ -96,7 +96,7 @@ namespace Orchard.Users.Services {
             _orchardServices.ContentManager.Create(user);
 
             _userEventHandlers.Created(userContext);
-            if (user.RegistrationStatus == UserStatus.Approved) {
+            if (user.RegistrationStatus == UserStatus.Approved && user.EmailStatus == UserStatus.Approved) {
                 _userEventHandlers.Approved(user);
             }
 
