@@ -19,6 +19,8 @@ namespace Orchard.OpenId.Services {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMembershipValidationService _membershipValidationService;
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
+        private readonly IEnumerable<IUserDataProvider> _userDataProviders;
+        private readonly ISecurityService _securityService;
 
         private IUser _localAuthenticationUser;
 
@@ -26,7 +28,7 @@ namespace Orchard.OpenId.Services {
         private IAuthenticationService FallbackAuthenticationService {
             get {
                 if (_fallbackAuthenticationService == null)
-                    _fallbackAuthenticationService = new FormsAuthenticationService(_settings, _clock, _membershipService, _httpContextAccessor, _sslSettingsProvider, _membershipValidationService);
+                    _fallbackAuthenticationService = new FormsAuthenticationService(_settings, _clock, _membershipService, _httpContextAccessor, _sslSettingsProvider, _membershipValidationService, _userDataProviders, _securityService);
 
                 return _fallbackAuthenticationService;
             }
@@ -39,7 +41,9 @@ namespace Orchard.OpenId.Services {
             ISslSettingsProvider sslSettingsProvider,
             IHttpContextAccessor httpContextAccessor,
             IMembershipValidationService membershipValidationService,
-            IEnumerable<IOpenIdProvider> openIdProviders) {
+            IEnumerable<IOpenIdProvider> openIdProviders,
+            IEnumerable<IUserDataProvider> userDataProviders,
+            ISecurityService securityService) {
 
             _httpContextAccessor = httpContextAccessor;
             _membershipService = membershipService;
@@ -48,6 +52,8 @@ namespace Orchard.OpenId.Services {
             _sslSettingsProvider = sslSettingsProvider;
             _membershipValidationService = membershipValidationService;
             _openIdProviders = openIdProviders;
+            _userDataProviders = userDataProviders;
+            _securityService = securityService;
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {

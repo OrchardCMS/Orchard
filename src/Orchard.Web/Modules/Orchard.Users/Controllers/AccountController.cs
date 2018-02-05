@@ -227,6 +227,10 @@ namespace Orchard.Users.Controllers {
             var membershipSettings = _membershipService.GetSettings();
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
 
+            ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
+                        .CurrentSite.As<SecuritySettingsPart>()
+                        .ShouldInvalidateAuthOnPasswordChanged;
+
             return View();
         }
 
@@ -238,7 +242,10 @@ namespace Orchard.Users.Controllers {
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {
             var membershipSettings = _membershipService.GetSettings();
-            ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength(); ;
+            ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
+            ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
+                       .CurrentSite.As<SecuritySettingsPart>()
+                       .ShouldInvalidateAuthOnPasswordChanged;
 
             if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
                 return View();
@@ -296,7 +303,13 @@ namespace Orchard.Users.Controllers {
                 if (validated != null) {
                     _membershipService.SetPassword(validated, newPassword);
                     _userEventHandler.ChangedPassword(validated);
+                    // if security settings tell to invalidate on password change fire the LoggedOut event
+                    if (_orchardServices.WorkContext
+                        .CurrentSite.As<SecuritySettingsPart>()
+                        .ShouldInvalidateAuthOnPasswordChanged) {
 
+                        _userEventHandler.LoggedOut(validated);
+                    }
                     return true;
                 }
 
@@ -354,6 +367,9 @@ namespace Orchard.Users.Controllers {
 
         [AlwaysAccessible]
         public ActionResult ChangePasswordSuccess() {
+            ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
+                       .CurrentSite.As<SecuritySettingsPart>()
+                       .ShouldInvalidateAuthOnPasswordChanged;
             return View();
         }
 
