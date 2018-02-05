@@ -176,29 +176,37 @@ namespace Orchard.Security.Providers {
             }
 
             // Upgrade old cookies
-            if (formsIdentity.Ticket.Version == 3) {
-                CreateAndAddAuthCookie(_signedInUser, formsIdentity.Ticket.IsPersistent);
+            if (formsIdentity.Ticket.Version < 4) {
+                UpgradeAndAddAuthCookie(_signedInUser, formsIdentity.Ticket);
             }
 
             _isAuthenticated = true;
             return _signedInUser;
         }
 
+        private HttpCookie UpgradeAndAddAuthCookie(IUser user, FormsAuthenticationTicket oldTicket) {
+            var ticket = UpgradeAuthenticationTicket(user, oldTicket);
+
+            var cookie = CreateCookieFromTicket(ticket);
+
+            var httpContext = _httpContextAccessor.Current();
+            httpContext.Response.Cookies.Add(cookie);
+
+            return cookie;
+        }
+
         private HttpCookie CreateAndAddAuthCookie(IUser user, bool createPersistentCookie) {
+            var ticket = NewAuthenticationTicket(user, createPersistentCookie);
 
-            var now = _clock.UtcNow.ToLocalTime();
+            var cookie = CreateCookieFromTicket(ticket);
 
-            var userData = ComputeUserData(user);
+            var httpContext = _httpContextAccessor.Current();
+            httpContext.Response.Cookies.Add(cookie);
 
-            var ticket = new FormsAuthenticationTicket(
-                _cookieVersion,
-                user.UserName,
-                now,
-                now.Add(GetExpirationTimeSpan()),
-                createPersistentCookie,
-                userData,
-                FormsAuthentication.FormsCookiePath);
+            return cookie;
+        }
 
+        private HttpCookie CreateCookieFromTicket(FormsAuthenticationTicket ticket) {
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
@@ -217,13 +225,39 @@ namespace Orchard.Security.Providers {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
 
-            if (createPersistentCookie) {
+            if (ticket.IsPersistent) {
                 cookie.Expires = ticket.Expiration;
             }
 
-            httpContext.Response.Cookies.Add(cookie);
-
             return cookie;
+        }
+
+        private FormsAuthenticationTicket NewAuthenticationTicket(IUser user, bool createPersistentCookie) {
+            var now = _clock.UtcNow.ToLocalTime();
+
+            var userData = ComputeUserData(user);
+
+            return new FormsAuthenticationTicket(
+                _cookieVersion,
+                user.UserName,
+                now,
+                now.Add(GetExpirationTimeSpan()),
+                createPersistentCookie,
+                userData,
+                FormsAuthentication.FormsCookiePath);
+        }
+
+        private FormsAuthenticationTicket UpgradeAuthenticationTicket(IUser user, FormsAuthenticationTicket oldTicket) {
+            var userData = ComputeUserData(user);
+
+            return new FormsAuthenticationTicket(
+                _cookieVersion,
+                user.UserName,
+                oldTicket.IssueDate,
+                oldTicket.Expiration,
+                oldTicket.IsPersistent,
+                userData,
+                FormsAuthentication.FormsCookiePath);
         }
 
         private Dictionary<string, string> ComputeUserDataDictionary(IUser user) {
