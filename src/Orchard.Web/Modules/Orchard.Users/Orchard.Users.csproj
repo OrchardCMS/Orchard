@@ -134,7 +134,6 @@
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
     <Compile Include="Services\PasswordChangedDateUserDataProvider.cs" />
-    <Compile Include="Services\SecurityService.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />

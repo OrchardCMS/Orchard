@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using Newtonsoft.Json;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -54,12 +55,28 @@ namespace Orchard.Security.Providers {
 
             Logger = NullLogger.Instance;
 
+            ExpirationTimeSpan = TimeSpan.Zero;
         }
 
         public ILogger Logger { get; set; }
 
         public TimeSpan ExpirationTimeSpan {
-            get { return _securityService.GetAuthenticationCookieLifeSpan(); }
+            get; set;
+            // The public setter allows injecting this from Sites.MyTenant.Config or Sites.config, by using
+            // an AutoFac component 
+        }
+
+        public TimeSpan GetExpirationTimeSpan() {
+            if (ExpirationTimeSpan != TimeSpan.Zero) {
+                // Basically here we are checking whether a value has been injected. If that is the case
+                // that takes priority over possible services. The idea is to make the existence of those
+                // services not-breaking, so that the introduction of new ones will not affect tenants where
+                // the value from the Sites.Config file has been used. Implementers of those services should
+                // take care of noting this in whatever UI they provide for their configuration, for the sake
+                // of clarity towards whoever handles the tenant's configuration.
+                return ExpirationTimeSpan;
+            }
+            return _securityService.GetAuthenticationCookieLifeSpan();
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
@@ -132,8 +149,13 @@ namespace Orchard.Security.Providers {
                 userDataDictionary.Add("UserName", userDataName);
                 userDataDictionary.Add("TenantName", userDataTenant);
             }
-            else {
-                userDataDictionary = DeserializeUserData(userData);
+            else { //we assume that the version here will be 4
+                try {
+                    userDataDictionary = DeserializeUserData(userData);
+                }
+                catch (Exception) {
+                    return null;
+                }
             }
 
             // 1. Take the username
@@ -153,6 +175,11 @@ namespace Orchard.Security.Providers {
                 return null;
             }
 
+            // Upgrade old cookies
+            if (formsIdentity.Ticket.Version == 3) {
+                CreateAndAddAuthCookie(_signedInUser, formsIdentity.Ticket.IsPersistent);
+            }
+
             _isAuthenticated = true;
             return _signedInUser;
         }
@@ -167,7 +194,7 @@ namespace Orchard.Security.Providers {
                 _cookieVersion,
                 user.UserName,
                 now,
-                now.Add(ExpirationTimeSpan),
+                now.Add(GetExpirationTimeSpan()),
                 createPersistentCookie,
                 userData,
                 FormsAuthentication.FormsCookiePath);
@@ -229,34 +256,13 @@ namespace Orchard.Security.Providers {
         }
 
         #region Serialization of UserData Dictionary
-        // both keys and values are converted to base64 strings.
-        // the key and value of a pair are separated by a pipe character "|"
-        // pairs are separated by a semicolon ";"
-        // These custome methopds are to avoid a dependency 
+        // Use Newtonsoft.Json to handle this
         private string SerializeUserDataDictionary(IDictionary<string, string> userDataDictionary) {
-
-            return string.Join(";", userDataDictionary
-                .Where(kvp => kvp.Key != null && kvp.Value != null)
-                .Select(kvp =>
-                    string.Join("|", kvp.Key.ToBase64(), kvp.Value.ToBase64())));
+            return JsonConvert.SerializeObject(userDataDictionary, Formatting.None);
         }
 
         private Dictionary<string, string> DeserializeUserData(string userData) {
-            var dictionary = new Dictionary<string, string>();
-
-            var serializedPairs = userData.Split(';');
-            foreach (var sKvp in serializedPairs) {
-                var elements = sKvp.Split('|');
-                if (elements.Length != 2) {
-                    continue;
-                }
-                if (dictionary.ContainsKey(elements[0])) {
-                    continue; // keys should be unique
-                }
-                dictionary.Add(elements[0].FromBase64(), elements[1].FromBase64());
-            }
-
-            return dictionary;
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(userData);
         }
 
         #endregion
