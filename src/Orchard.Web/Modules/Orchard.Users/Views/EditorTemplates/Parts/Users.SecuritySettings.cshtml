@@ -3,12 +3,6 @@
 <fieldset>
     <legend>@T("Security settings")</legend>
     <div>
-        <label>@T("Life span of authentication cookies")</label>
-        @Html.TextBoxFor(m => m.AuthCookieLifeSpan, new { @class = "text medium" })
-        @Html.ValidationMessageFor(m => m.AuthCookieLifeSpan)
-        <p class="hint">@T("The time after signing in after which authentication cookies will be invalidated, in standard the following format: dd.hh:mm:ss.")</p>
-    </div>
-    <div>
         @Html.CheckBoxFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShouldInvalidateAuthOnPasswordChanged)">@T("Invalidate authentication cookies on password change")</label>
         @Html.ValidationMessageFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
