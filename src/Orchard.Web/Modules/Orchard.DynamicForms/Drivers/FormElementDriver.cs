@@ -7,7 +7,6 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Services;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -24,14 +23,14 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITokenizer _tokenizer;
 
         public FormElementDriver(
-            IFormManager formManager, 
+            IFormsBasedElementServices formsServices, 
             IContentDefinitionManager contentDefinitionManager, 
             IFormService formService, 
             ICurrentControllerAccessor currentControllerAccessor, 
             ICultureAccessor cultureAccessor, 
             ITokenizer tokenizer)
 
-            : base(formManager) {
+            : base(formsServices) {
             _contentDefinitionManager = contentDefinitionManager;
             _formService = formService;
             _currentControllerAccessor = currentControllerAccessor;
@@ -83,7 +82,6 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "HtmlEncode",
                         Title: "Html Encode",
                         Value: "true",
-                        Checked: true,
                         Description: T("Check this option to automatically HTML encode submitted values to prevent code injection.")),
                     _CreateContent: shape.Checkbox(
                         Id: "CreateContent",
@@ -139,7 +137,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Form element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Form element, ElementDisplayingContext context) {
             var controller = _currentControllerAccessor.CurrentController;
             var modelState = controller != null ? controller.FetchModelState(element) : default(ModelStateDictionary);
 

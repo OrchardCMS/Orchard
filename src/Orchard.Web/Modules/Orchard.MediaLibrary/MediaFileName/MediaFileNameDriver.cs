@@ -39,7 +39,7 @@ namespace Orchard.MediaLibrary.MediaFileName
                 "Parts_Media_Edit_FileName",
                 () => {
                     var currentUser = _authenticationService.GetAuthenticatedUser();
-                    if (!_authorizationService.TryCheckAccess(Permissions.ManageMediaContent, currentUser, part)) {
+                    if (!_authorizationService.TryCheckAccess(Permissions.EditMediaContent, currentUser, part)) {
                         return null;
                     }
 
@@ -62,7 +62,7 @@ namespace Orchard.MediaLibrary.MediaFileName
                                     _mediaLibraryService.RenameFile(part.FolderPath, priorFileName, model.FileName);
                                     part.FileName = model.FileName;
                                     
-                                    _notifier.Add(NotifyType.Information, T("File '{0}' was renamed to '{1}'", priorFileName, model.FileName));
+                                    _notifier.Add(NotifyType.Success, T("File '{0}' was renamed to '{1}'", priorFileName, model.FileName));
                                 }
                                 catch (Exception) {
                                     updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file"));
@@ -70,6 +70,7 @@ namespace Orchard.MediaLibrary.MediaFileName
                             }
                         }
                     }
+
                     return model;
                 });
         }

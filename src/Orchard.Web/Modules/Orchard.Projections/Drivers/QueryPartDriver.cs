@@ -7,9 +7,10 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Forms.Services;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
+using Orchard.Projections.ViewModels;
 
 namespace Orchard.Projections.Drivers {
-    
+
     public class QueryPartDriver : ContentPartDriver<QueryPart> {
         private readonly IProjectionManager _projectionManager;
         private readonly IFormManager _formManager;
@@ -18,13 +19,25 @@ namespace Orchard.Projections.Drivers {
             _projectionManager = projectionManager;
             _formManager = formManager;
         }
-
-        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if(updater == null) {
-                return null;
+        protected override string Prefix {
+            get {
+                return "Query_Part";
             }
-
-            return null;
+        }
+        protected override DriverResult Editor(QueryPart part, dynamic shapeHelper) {
+            return Editor(part, null, shapeHelper);
+        }
+        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var model = new QueryViewModel { VersionScope = part.VersionScope };
+            if (updater != null) {
+                if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                    part.VersionScope = model.VersionScope;
+                }
+            }
+            return ContentShape("Parts_QueryPart_Edit",
+                                () => {
+                                    return shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPart_Edit", Model: model, Prefix: Prefix);
+                                });
         }
 
         protected override void Exporting(QueryPart part, ExportContentContext context) {
@@ -65,12 +78,12 @@ namespace Orchard.Projections.Drivers {
                         }
 
                         return new XElement("SortCriterion",
-                                            new XAttribute("Category", sortCriterion.Category ?? ""),
-                                            new XAttribute("Description", sortCriterion.Description ?? ""),
-                                            new XAttribute("Position", sortCriterion.Position),
-                                            new XAttribute("State", state ?? ""),
-                                            new XAttribute("Type", sortCriterion.Type ?? "")
-                            );
+                            new XAttribute("Category", sortCriterion.Category ?? ""),
+                            new XAttribute("Description", sortCriterion.Description ?? ""),
+                            new XAttribute("Position", sortCriterion.Position),
+                            new XAttribute("State", state ?? ""),
+                            new XAttribute("Type", sortCriterion.Type ?? "")
+                        );
                     })
                 ),
                 new XElement("Layouts",
@@ -83,20 +96,20 @@ namespace Orchard.Projections.Drivers {
                         }
 
                         return new XElement("Layout",
-                                            // Attributes
-                                            new XAttribute("Category", layout.Category ?? ""),
-                                            new XAttribute("Description", layout.Description ?? ""),
-                                            new XAttribute("State", state ?? ""),
-                                            new XAttribute("Display", layout.Display),
-                                            new XAttribute("DisplayType", layout.DisplayType ?? ""),
-                                            new XAttribute("Type", layout.Type ?? ""),
+                            // Attributes
+                            new XAttribute("Category", layout.Category ?? ""),
+                            new XAttribute("Description", layout.Description ?? ""),
+                            new XAttribute("State", state ?? ""),
+                            new XAttribute("Display", layout.Display),
+                            new XAttribute("DisplayType", layout.DisplayType ?? ""),
+                            new XAttribute("Type", layout.Type ?? ""),
 
-                                            // Properties
-                                            new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
+                            // Properties
+                            new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
 
-                                            // Group
-                                            new XElement("Group", GetPropertyXml(layout.GroupProperty))
-                            );
+                            // Group
+                            new XElement("Group", GetPropertyXml(layout.GroupProperty))
+                        );
                     })
                 )
             );
@@ -114,16 +127,16 @@ namespace Orchard.Projections.Drivers {
             foreach (var item in queryElement.Element("FilterGroups").Elements("FilterGroup").Select(filterGroup =>
                 new FilterGroupRecord {
                     Filters = filterGroup.Elements("Filter").Select(filter => {
-                        
+
                         var category = filter.Attribute("Category").Value;
                         var type = filter.Attribute("Type").Value;
                         var state = filter.Attribute("State").Value;
-                        
+
                         var descriptor = _projectionManager.GetFilter(category, type);
                         if (descriptor != null) {
                             state = _formManager.Import(descriptor.Form, state, context);
                         }
-                        
+
                         return new FilterRecord {
                             Category = category,
                             Description = filter.Attribute("Description").Value,
@@ -171,7 +184,6 @@ namespace Orchard.Projections.Drivers {
                 }
 
                 return new LayoutRecord {
-
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),
@@ -187,7 +199,7 @@ namespace Orchard.Projections.Drivers {
         }
 
         private XElement GetPropertyXml(PropertyRecord property) {
-            if(property == null) {
+            if (property == null) {
                 return null;
             }
 
@@ -227,7 +239,7 @@ namespace Orchard.Projections.Drivers {
         }
 
         private PropertyRecord GetProperty(XElement property) {
-            if(property == null) {
+            if (property == null) {
                 return null;
             }
 

@@ -1,6 +1,6 @@
 ﻿.orchard-contenttypes #main h2 {
-    margin:42px 0 0;
-    border-bottom:1px solid #ccc;
+    margin: 42px 0 0;
+    border-bottom: 1px solid #ccc;
 }
 
 .orchard-contenttypes .summary .properties h3 {
@@ -12,67 +12,100 @@
 }
 
 #main .properties p {
-    margin:0;
+    margin: 0;
 }
 
 .manage.add-to-type {
-    margin-top:-32px;
+    margin-top: -32px;
 }
-.manage-part {
-    margin-bottom:1em;
+
+.manage-part, .manage-field {
+    margin-bottom: 0;
+    padding: 0;
+    border-bottom: 1px solid #EAEAEA;
 }
-.manage-part h3,
-.manage-field h3 {
-    border-bottom:1px solid #EAEAEA;
-    display:relative;
-    line-height:1.4em;
-    padding-bottom:0;
-    padding-top:0;
-}
-.manage-part h3,
-.manage-field h3,
-.manage-part h4,
-.manage-type .manage-field .details,
-.manage-type .manage-part .manage-field,
-.manage-type .manage-part .settings {
-    padding-left:20px;
-}
+
+    .manage-part h3,
+    .manage-field h3 {
+        display: relative;
+        line-height: 1.4em;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .manage-part h3,
+    .manage-field h3,
+    .manage-part h4,
+    .manage-type .manage-field .details,
+    .manage-type .manage-part .manage-field,
+    .manage-type .manage-part .settings {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .manage-part h3, .manage-field h3 {
+        margin: 1em 0 !important;
+        padding-left: 30px;
+        width: 90%;
+    }
+
+    .manage-part .expando-glyph, .manage-field .expando-glyph {
+        width: 16px;
+        height: 16px;
+    }
+
 .manage-type .manage-field .settings {
-    padding-bottom:10px;
-    padding-left:0;
+    padding-bottom: 10px;
+    padding-left: 0;
 }
+
 .manage-part h4 {
-    padding-left:0;
+    padding-left: 0;
 }
+
 .manage-part .manage-field h4 {
-    line-height:1.8em;
-    padding-bottom:0;
-    padding-left:15px;
+    line-height: 1.8em;
+    padding-bottom: 0;
+    padding-left: 15px;
 }
+
+.manage-part .settings #content {
+    margin-bottom: 15px;
+}
+
 .manage-type .manage-part .manage,
 .manage-type .manage-field .manage,
 .manage-part .manage-field .manage {
-    margin-top:-2.4em;
+    margin-top: -2.9em;
+    padding-right: 20px;
+    position: relative;
+    z-index: 999;
 }
+
 .manage-field .details,
 .manage-part .details {
-    overflow:auto;
+    overflow: auto;
+    margin-top: 20px;
 }
+
 .manage-part .manage.minor {
-    margin:0 0 -1.2em;
+    margin: 0 0 -1.2em;
 }
+
 .manage-part label,
 .manage-field label {
-    font-weight:normal;
+    font-weight: normal;
 }
+
 .manage-field fieldset,
 .manage-part fieldset {
-    margin:.5em 0 1em;
-    padding:0;
+    margin: .5em 0 1em;
+    padding: 0;
 }
+
 .manage-field .settings {
-    margin:0 0 0 15px;
-    padding-left:0;
+    margin: 0 0 0 15px;
+    padding-left: 0;
 }
 
 .manage-part .description {
@@ -82,48 +115,56 @@
 }
 
 .manage-part .settings {
-    overflow:auto;
-}
-.manage-part .settings fieldset {
-    padding-left:0;
+    overflow: auto;
 }
 
+    .manage-part .settings fieldset {
+        padding-left: 0;
+    }
+
 fieldset.action {
-    margin-top:2em;
+    margin-top: 2em;
 }
 
 /* should pull this back into the base admin theme css, w/out the .manage-part of course */
 .manage-part dl {
-    margin:0 0 1em;
-    overflow:auto;
-    padding:6px 0 0;
+    margin: 0 0 1em;
+    overflow: auto;
+    padding: 6px 0 0;
 }
+
 .manage-part dt,
 .manage-part dd {
-    float:left;
+    float: left;
 }
+
 .manage-part dt {
-    clear:left;
+    clear: left;
 }
-.manage-part dt::after {
-    content:":";
-}
+
+    .manage-part dt::after {
+        content: ":";
+    }
+
 .manage-part dd {
-    font-style:italic;
-    padding-left:.5em;
+    font-style: italic;
+    padding-left: .5em;
 }
+
 .manage-part dl dl {
-    font-size:1em;
-    margin:0;
-    padding:0;
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
 }
+
 .manage-part dd dt {
-    clear:left;
-    float:left;
+    clear: left;
+    float: left;
 }
+
 .manage-part dd dd {
-    float:left;
-    padding-left:.5em;
+    float: left;
+    padding-left: .5em;
 }
 
 .available-parts .part.hint {
@@ -135,39 +176,81 @@ fieldset.action {
 
 
 /* PLACEMENT EDITOR */
-
-#placement li {
-    margin-bottom: 10px;
-    padding: 0px;
-    border: 1px solid #eee;
+.tabdrag {
+    min-height: 20px;
 }
 
-    #placement li .shape-type {
-        cursor: move;
-        background-color: #eee;
-        background: #EEE url(images/move.gif) no-repeat 10px 15px;
-        height: 30px;
-        padding: 10px 0px 0px 30px; 
+.zone-container {
+    border: 1px dotted #6F6F6F;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+    .zone-container li {
+        margin-bottom: 10px;
+        padding: 0px;
+        border: 1px solid #eee;
     }
 
-    #placement li .shape-editor {
-        padding: 10px;
-        background: white;
-    }
+#placement .zone-container h2 {
+    cursor: move;
+    margin-top: 0px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+}
+
+#placement .tab-container {
+    background: white url(images/move.gif) no-repeat 10px 15px;
+}
+
+.zone-container li .shape-type {
+    cursor: move;
+    background-color: #eee;
+    background: #EEE url(images/move.gif) no-repeat 10px 10px;
+    height: 30px;
+    padding: 5px 0px 0px 30px;
+}
+
+#placement #content-tab {
+    cursor: default;
+}
+
+.zone-container li .toggle {
+    float: right;
+    padding-top: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.zone-container li .shape-editor {
+    padding: 10px;
+    background: white;
+    display: none;
+}
 
 #save-message {
     display: none;
     margin-bottom: 10px;
 }
 
-#placement fieldset 
-{
-    float: inherit;  /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
+.zone-container fieldset {
+    float: inherit; /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
     height: auto;
+}
+
+.tab-placeholder {
+    background: #FDF5BC;
+    border: 1px solid #FDF5BC;
+    height: 100px;
 }
 
 .placement-placeholder {
     background: #FDF5BC;
     border: 1px solid #FDF5BC;
-    height: 100px;
+    height: 40px;
+}
+
+.zone-container .delete {
+    float: right;
+    cursor: pointer;
 }

@@ -2,6 +2,7 @@ using System.Xml.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
     public class ExportContentContext : ContentContextBase {
+        public string Prefix { get; set; }
         public XElement Data { get; set; }
 
         /// <summary>
@@ -9,12 +10,17 @@ namespace Orchard.ContentManagement.Handlers {
         /// </summary>
         public bool Exclude { get; set; }
 
+        private readonly string Separator = @".";
+
         public ExportContentContext(ContentItem contentItem, XElement data)
             : base(contentItem) {
             Data = data;
         }
 
         public XElement Element(string elementName) {
+            if (!string.IsNullOrEmpty(Prefix))
+                elementName = string.Join(Separator, Prefix, elementName);
+
             var element = Data.Element(elementName);
             if (element == null) {
                 element = new XElement(elementName);

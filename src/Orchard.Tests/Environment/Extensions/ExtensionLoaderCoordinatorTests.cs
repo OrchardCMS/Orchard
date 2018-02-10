@@ -114,6 +114,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
+            public bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+                throw new NotImplementedException();
+            }
+
             #endregion
         }
 
@@ -206,7 +210,7 @@ Features:
         Category: Content types
     AnotherWiki Editor:
         Description: A rich editor for wiki contents.
-        Dependencies: TinyMCE, AnotherWiki
+        Dependencies: TinyMce, AnotherWiki
         Category: Input methods
     AnotherWiki DistributionList:
         Description: Sends e-mail alerts when wiki contents gets published.
@@ -241,7 +245,7 @@ Features:
                         Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
-                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMCE"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMce"));
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         break;
                     case "AnotherWiki DistributionList":
@@ -287,7 +291,7 @@ Category: Content types
 Features:
     AnotherWiki Editor:
         Description: A rich editor for wiki contents.
-        Dependencies: TinyMCE, AnotherWiki
+        Dependencies: TinyMce, AnotherWiki
         Category: Input methods
     AnotherWiki DistributionList:
         Description: Sends e-mail alerts when wiki contents gets published.
@@ -323,7 +327,7 @@ Features:
                         Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
-                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMCE"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMce"));
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         break;
                     case "AnotherWiki DistributionList":

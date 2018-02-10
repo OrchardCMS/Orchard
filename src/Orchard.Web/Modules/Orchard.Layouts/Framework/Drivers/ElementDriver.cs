@@ -17,8 +17,16 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnUpdateEditor((TElement)context.Element, context);
         }
 
-        public void Displaying(ElementDisplayContext context) {
+        public void CreatingDisplay(ElementCreatingDisplayShapeContext context) {
+            OnCreatingDisplay((TElement)context.Element, context);
+        }
+
+        public void Displaying(ElementDisplayingContext context) {
             OnDisplaying((TElement) context.Element, context);
+        }
+
+        public void Displayed(ElementDisplayedContext context) {
+            OnDisplayed((TElement)context.Element, context);
         }
 
         public void LayoutSaving(ElementSavingContext context) {
@@ -33,8 +41,20 @@ namespace Orchard.Layouts.Framework.Drivers {
             OnExporting((TElement)context.Element, context);
         }
 
+        public void Exported(ExportElementContext context) {
+            OnExported((TElement)context.Element, context);
+        }
+
         public void Importing(ImportElementContext context) {
             OnImporting((TElement)context.Element, context);
+        }
+
+        public void Imported(ImportElementContext context) {
+            OnImported((TElement)context.Element, context);
+        }
+
+        public void ImportCompleted(ImportElementContext context) {
+            OnImportCompleted((TElement)context.Element, context);
         }
 
         protected virtual EditorResult OnBuildEditor(TElement element, ElementEditorContext context) {
@@ -45,7 +65,13 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnBuildEditor(element, context);
         }
 
-        protected virtual void OnDisplaying(TElement element, ElementDisplayContext context) {
+        protected virtual void OnCreatingDisplay(TElement element, ElementCreatingDisplayShapeContext context) {
+        }
+
+        protected virtual void OnDisplaying(TElement element, ElementDisplayingContext context) {
+        }
+
+        protected virtual void OnDisplayed(TElement element, ElementDisplayedContext context) {
         }
 
         protected virtual void OnLayoutSaving(TElement element, ElementSavingContext context) {
@@ -57,7 +83,16 @@ namespace Orchard.Layouts.Framework.Drivers {
         protected virtual void OnExporting(TElement element, ExportElementContext context) {
         }
 
+        protected virtual void OnExported(TElement element, ExportElementContext context) {
+        }
+
         protected virtual void OnImporting(TElement element, ImportElementContext context) {
+        }
+
+        protected virtual void OnImported(TElement element, ImportElementContext context) {
+        }
+
+        protected virtual void OnImportCompleted(TElement element, ImportElementContext context) {
         }
 
         protected EditorResult Editor(ElementEditorContext context, params dynamic[] editorShapes) {

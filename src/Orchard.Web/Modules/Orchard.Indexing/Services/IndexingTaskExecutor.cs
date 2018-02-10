@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
@@ -21,7 +20,6 @@ namespace Orchard.Indexing.Services {
     /// This class is synchronized using a lock file as both command line and web workers can potentially use it,
     /// and singleton locks would not be shared accross those two.
     /// </remarks>
-    [UsedImplicitly]
     public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider
     {
         private readonly IRepository<IndexingTaskRecord> _taskRepository;
@@ -162,6 +160,9 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(versionRecord => versionRecord.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
+                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
+                        // We need to filter out such records, otherwise they will crash the ContentManager.
+                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
                         .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
                         .Distinct()
                         .ToList();
@@ -222,6 +223,9 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(x => x.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
+                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
+                        // We need to filter out such records, otherwise they will crash the ContentManager.
+                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
                         .GroupBy(x => x.ContentItemRecord.Id)
                     .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
                         .OrderBy(x => x.TaskId)
@@ -290,18 +294,18 @@ namespace Orchard.Indexing.Services {
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while adding a document to the index");
+                Logger.Warning(ex, "An error occurred while adding a document to the index");
             }
 
             // removing documents from the index
             try {
                 if (deleteFromIndex.Count > 0) {
                     _indexProvider.Delete(indexName, deleteFromIndex);
-                    Logger.Information("Added content items to index: {0}", addToIndex.Count);
+                    Logger.Information("Deleted content items from index: {0}",  deleteFromIndex.Count);
                 }
             }
             catch (Exception ex) {
-                Logger.Warning(ex, "An error occured while removing a document from the index");
+                Logger.Warning(ex, "An error occurred while removing a document from the index");
             }
 
             return true;
@@ -334,7 +338,7 @@ namespace Orchard.Indexing.Services {
         }
 
         /// <summary>
-        /// Creates a IDocumentIndex instance for a specific content item id. If the content 
+        /// Creates a IDocumentIndex instance for a specific content item id. If the content
         /// item is no more published, it returns null.
         /// </summary>
         private IDocumentIndex ExtractDocumentIndex(ContentItem contentItem) {

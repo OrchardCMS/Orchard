@@ -1,0 +1,15 @@
+﻿@model Orchard.MediaLibrary.Settings.MediaLibraryPickerFieldLocalizationSettings
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.TryToLocalizeMedia)
+    <label for="@Html.FieldIdFor(m => m.TryToLocalizeMedia)" class="forcheckbox">@T("Try to replace selected media items with their correct localization.")</label>
+    <span class="hint">@T("Check to attempt to replace media items selected in this field with their translation in the main ContentItem's culture. This only applies if the main ContentItem has a LocalizationPart.")</span>
+    <div data-controllerid="@Html.FieldIdFor(m => m.TryToLocalizeMedia)">
+        @Html.CheckBoxFor(m => m.RemoveItemsWithoutLocalization)
+        <label for="@Html.FieldIdFor(m => m.RemoveItemsWithoutLocalization)" class="forcheckbox">@T("Remove items that do not have the correct translation.")</label>
+        <span class="hint">@T("Check to remove media items from the MediaLibraryPickerField when the items selected do not have a version in the correct culture (they have a LocalizationPart, but not a translation in the main ContentItem's culture').")</span>
+        @Html.CheckBoxFor(m => m.RemoveItemsWithNoLocalizationPart)
+        <label for="@Html.FieldIdFor(m => m.RemoveItemsWithNoLocalizationPart)" class="forcheckbox">@T("Remove items that cannot be localized.")</label>
+        <span class="hint">@T("Check to remove media items from the MediaLibraryPickerField when the items selected cannot be localized (do not have a LocalizationPart).")</span>
+    </div>
+</fieldset>

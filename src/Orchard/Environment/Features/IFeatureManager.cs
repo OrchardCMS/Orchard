@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Environment.Features {
     public delegate void FeatureDependencyNotificationHandler(string messageFormat, string featureId, IEnumerable<string> featureIds);
@@ -18,6 +19,12 @@ namespace Orchard.Environment.Features {
         /// </summary>
         /// <returns>An enumeration of feature descriptors for the enabled features.</returns>
         IEnumerable<FeatureDescriptor> GetEnabledFeatures();
+
+        /// <summary>
+        /// Retrieves the disabled features.
+        /// </summary>
+        /// <returns>An enumeration of feature descriptors for the disabled features.</returns>
+        IEnumerable<FeatureDescriptor> GetDisabledFeatures();
 
         /// <summary>
         /// Enables a list of features.
@@ -55,5 +62,12 @@ namespace Orchard.Environment.Features {
         /// <param name="featureId">ID of the feature to check.</param>
         /// <returns>An enumeration with dependent feature IDs.</returns>
         IEnumerable<string> GetDependentFeatures(string featureId);
+
+        /// <summary>
+        /// Checks whether the feature's extension has a loadee, i.e. a suitable <see cref="IExtensionLoader"/> can be found.
+        /// </summary>
+        /// <param name="featureId">ID of the feature to check.</param>
+        /// <returns><c>True</c> if a suitable <see cref="IExtensionLoader"/> can be found.</returns>
+        bool HasLoader(string featureId);
     }
 }

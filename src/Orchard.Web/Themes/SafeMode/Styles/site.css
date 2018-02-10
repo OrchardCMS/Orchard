@@ -239,7 +239,7 @@ button:hover, .button:hover, a.button:hover {
      background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
-button:active, .buton:active, a.button:active {
+button:active, .button:active, a.button:active {
     text-decoration:none; 
     background:#6a7b42;
     border:1px solid #487328;
@@ -315,10 +315,15 @@ span.message {
     background:#e68585; /* red */
     color:#fff;
 }
-.message-Information {
+.message-Success {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
     color:#062232;
+}
+.message-Information {
+    background:#d9edf7; /* blue */
+    border:1px solid #bce8f1;
+    color:#31708f;
 }
 .message-Warning {
     background:#fdf5bc; /* yellow */

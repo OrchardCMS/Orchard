@@ -234,5 +234,8 @@ namespace Orchard.ContentManagement {
         public static bool HasPublished(this IContent content) {
             return content.IsPublished() || content.ContentItem.ContentManager.Get(content.ContentItem.Id, VersionOptions.Published) != null;
         }
+        public static bool IsNew(this IContent content) {
+            return content.ContentItem.VersionRecord == null;
+        }
     }
 }

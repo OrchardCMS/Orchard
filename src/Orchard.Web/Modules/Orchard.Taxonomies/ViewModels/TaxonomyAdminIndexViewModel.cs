@@ -5,6 +5,7 @@ namespace Orchard.Taxonomies.ViewModels {
     public class TaxonomyAdminIndexViewModel {
         public IList<TaxonomyEntry> Taxonomies { get; set; }
         public TaxonomiesAdminIndexBulkAction BulkAction { get; set; }
+        public dynamic Pager { get; set; }
     }
 
     public class TaxonomyEntry {
@@ -13,6 +14,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public string Name { get; set; }
         public ContentItem ContentItem { get; set; }
         public bool IsChecked { get; set; }
+        public bool HasDraft { get; set; }
     }
 
     public enum TaxonomiesAdminIndexBulkAction {

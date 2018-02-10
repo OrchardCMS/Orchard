@@ -1,8 +1,8 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -20,19 +20,12 @@
             this.htmlUnsafe = html;
         }
 
+        var baseToObject = this.toObject;
         this.toObject = function () {
-            return {
-                "type": "Content"
-            };
-        };
-
-        this.toObject = function () {
-            var result = this.elementToObject();
-            result.contentType = this.contentType;
+            var result = baseToObject();
             result.contentTypeLabel = this.contentTypeLabel;
             result.contentTypeClass = this.contentTypeClass;
             result.html = this.html;
-            result.hasEditor = hasEditor;
             return result;
         };
 
@@ -50,7 +43,8 @@
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };

@@ -11,10 +11,12 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class CoreExtensionLoader : ExtensionLoaderBase {
         private const string CoreAssemblyName = "Orchard.Core";
         private readonly IAssemblyLoader _assemblyLoader;
+        private readonly IDependenciesFolder _dependenciesFolder;
 
-        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
+        public CoreExtensionLoader(IAssemblyLoader assemblyLoader, IDependenciesFolder dependenciesFolder)
             : base(dependenciesFolder) {
             _assemblyLoader = assemblyLoader;
+            _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
         }
@@ -57,6 +59,15 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
             };
+        }
+
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                return _assemblyLoader.Load(CoreAssemblyName) != null;
+            }
+
+            return false;
         }
 
         private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {

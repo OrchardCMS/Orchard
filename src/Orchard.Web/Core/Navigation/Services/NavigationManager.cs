@@ -46,7 +46,7 @@ namespace Orchard.Core.Navigation.Services {
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Merge(sources), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
+            return FinishMenu(Reduce(Filter(Merge(sources)), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
@@ -76,7 +76,7 @@ namespace Orchard.Core.Navigation.Services {
 
         private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
             IEnumerable<MenuItem> result = menuItems;
-            foreach(var filter in _navigationFilters) {
+            foreach (var filter in _navigationFilters) {
                 result = filter.Filter(result);
             }
 
@@ -93,16 +93,15 @@ namespace Orchard.Core.Navigation.Services {
             var schemes = new[] { "http", "https", "tel", "mailto" };
             if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
                 !(url.StartsWith("/") || schemes.Any(scheme => url.StartsWith(scheme + ":")))) {
-                if (url.StartsWith("~/")) {
-
-                    if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
-                        url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
-                    }
-                    else {
-                        url = url.Substring(2);
-                    }
-                }
                 if (!url.StartsWith("#")) {
+                    if (url.StartsWith("~/")) {
+                        if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                            url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
+                        }
+                        else {
+                            url = url.Substring(2);
+                        }
+                    }
                     var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
                     if (appPath == "/")
                         appPath = "";

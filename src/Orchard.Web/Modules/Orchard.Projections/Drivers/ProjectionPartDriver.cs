@@ -24,7 +24,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Projections.Drivers {
     public class ProjectionPartDriver : ContentPartDriver<ProjectionPart> {
         private readonly IRepository<QueryPartRecord> _queryRepository;
-        private readonly IProjectionManager _projectionManager;
+        private readonly IProjectionManagerExtension _projectionManager;
         private readonly IFeedManager _feedManager;
         private readonly ITokenizer _tokenizer;
         private readonly IDisplayHelperFactory _displayHelperFactory;
@@ -34,7 +34,7 @@ namespace Orchard.Projections.Drivers {
         public ProjectionPartDriver(
             IOrchardServices services,
             IRepository<QueryPartRecord> queryRepository,
-            IProjectionManager projectionManager,
+            IProjectionManagerExtension projectionManager,
             IFeedManager feedManager,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory,
@@ -110,7 +110,7 @@ namespace Orchard.Projections.Drivers {
                     _feedManager.Register(metaData.DisplayText, "rss", new RouteValueDictionary { { "projection", part.Id } });
 
                     // execute the query
-                    var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + part.Record.Skip, pager.PageSize).ToList();
+                    var contentItems = _projectionManager.GetContentItems(query.Id, part, pager.GetStartIndex() + part.Record.Skip, pager.PageSize).ToList();
 
                     // sanity check so that content items with ProjectionPart can't be added here, or it will result in an infinite loop
                     contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
@@ -122,7 +122,7 @@ namespace Orchard.Projections.Drivers {
 
                     // create pager shape
                     if (part.Record.DisplayPager) {
-                        var contentItemsCount = _projectionManager.GetCount(query.Id) - part.Record.Skip;
+                        var contentItemsCount = _projectionManager.GetCount(query.Id, part) - part.Record.Skip;
                         contentItemsCount = Math.Max(0, contentItemsCount);
                         pagerShape.TotalItemCount(contentItemsCount);
                     }
@@ -307,23 +307,22 @@ namespace Orchard.Projections.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "DisplayPager", x => part.Record.DisplayPager = Boolean.Parse(x));
         }
 
-        protected override void Imported(ProjectionPart part, ImportContentContext context) {
-            // assign the query only when everythin is imported
+        protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
+            // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
                 int layoutIndexValue;
-                if (layoutIndex != null 
+                if (layoutIndex != null
                     && Int32.TryParse(layoutIndex, out layoutIndexValue)
                     && layoutIndexValue >= 0
-                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue)
-                {
+                    && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
                 }
             }
         }
-        
+
         protected override void Exporting(ProjectionPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Items", part.Record.Items);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsPerPage", part.Record.ItemsPerPage);
@@ -340,6 +339,17 @@ namespace Orchard.Projections.Drivers {
                     context.Element(part.PartDefinition.Name).SetAttributeValue("LayoutIndex", part.Record.QueryPartRecord.Layouts.IndexOf(part.Record.LayoutRecord));
                 }
             }
+        }
+
+        protected override void Cloning(ProjectionPart originalPart, ProjectionPart clonePart, CloneContentContext context) {
+            clonePart.Record.Items = originalPart.Record.Items;
+            clonePart.Record.ItemsPerPage = originalPart.Record.ItemsPerPage;
+            clonePart.Record.Skip = originalPart.Record.Skip;
+            clonePart.Record.PagerSuffix = originalPart.Record.PagerSuffix;
+            clonePart.Record.MaxItems = originalPart.Record.MaxItems;
+            clonePart.Record.DisplayPager = originalPart.Record.DisplayPager;
+            clonePart.Record.QueryPartRecord = originalPart.Record.QueryPartRecord;
+            clonePart.Record.LayoutRecord = originalPart.Record.LayoutRecord;
         }
 
         private class ViewDataContainer : IViewDataContainer {

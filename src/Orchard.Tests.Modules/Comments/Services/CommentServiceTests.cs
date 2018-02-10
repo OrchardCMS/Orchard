@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -187,7 +186,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
     }
 
-    [UsedImplicitly]
     public class CommentedItemHandler : ContentHandler {
         public CommentedItemHandler() {
             Filters.Add(new ActivatingFilter<CommentedItem>("commentedItem"));
@@ -204,6 +202,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
     }
 
     public class ProcessingEngineStub : IProcessingEngine {
+
+        public void Initialize() { }
 
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string messageName, Dictionary<string, object> parameters) {
             return "";

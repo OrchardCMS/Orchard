@@ -1,9 +1,7 @@
-﻿using Orchard.ContentManagement;
-using System.Text.RegularExpressions;
-using Orchard.Utility.Extensions;
-using System;
-using System.Text;
+﻿using System;
 using System.Globalization;
+using System.Text;
+using Orchard.ContentManagement;
 
 namespace Orchard.Autoroute.Services {
 
@@ -86,6 +84,5 @@ namespace Orchard.Autoroute.Services {
         public string Slugify(string text) {
             return Slugify(new FillSlugContext(null, text));
         }
-       
     }
 }

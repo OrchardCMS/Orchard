@@ -14,5 +14,7 @@
                 $allCheckboxes.prop("checked", false);
             }
         });
+
+        $('input[name=DataProvider]:checked').click();
     });
 })(jQuery);

@@ -10,15 +10,15 @@ using Orchard.Validation;
 
 namespace Orchard.Alias.Implementation.Storage {
     public interface IAliasStorage : IDependency {
-        void Set(string path, IDictionary<string, string> routeValues, string source);
+        void Set(string path, IDictionary<string, string> routeValues, string source, bool isManaged);
         IDictionary<string, string> Get(string aliasPath);
         void Remove(Expression<Func<AliasRecord, bool>> filter);
         void Remove(string path);
         void Remove(string path, string aliasSource);
         void RemoveBySource(string aliasSource);
-        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(Expression<Func<AliasRecord, bool>> predicate);
-        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List();
-        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(string sourceStartsWith);
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(Expression<Func<AliasRecord, bool>> predicate);
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List();
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(string sourceStartsWith);
     }
 
     public class AliasStorage : IAliasStorage {
@@ -31,7 +31,7 @@ namespace Orchard.Alias.Implementation.Storage {
             _aliasHolder = aliasHolder;
         }
 
-        public void Set(string path, IDictionary<string, string> routeValues, string source) {
+        public void Set(string path, IDictionary<string, string> routeValues, string source, bool isManaged) {
             if (path == null) {
                 throw new ArgumentNullException("path");
             }
@@ -66,6 +66,7 @@ namespace Orchard.Alias.Implementation.Storage {
 
             aliasRecord.RouteValues = values.ToString();
             aliasRecord.Source = source;
+            aliasRecord.IsManaged = isManaged;
             if (aliasRecord.Action.Id == 0 || aliasRecord.Id == 0) {
                 if (aliasRecord.Action.Id == 0) {
                     _actionRepository.Create(aliasRecord.Action);
@@ -78,15 +79,28 @@ namespace Orchard.Alias.Implementation.Storage {
             }
             // Transform and push into AliasHolder
             var dict = ToDictionary(aliasRecord);
-            _aliasHolder.SetAlias(new AliasInfo { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3 });
+            _aliasHolder.SetAlias(new AliasInfo { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3, IsManaged = dict.Item6 });
         }
 
         public IDictionary<string, string> Get(string path) {
-            return _aliasRepository
-                .Fetch(r => r.Path == path, o => o.Asc(r => r.Id), 0, 1)
-                .Select(ToDictionary)
-                .Select(item => item.Item3)
-                .SingleOrDefault();
+            
+            // All aliases are already in memory, and updated. We don't need to query the 
+            // database to lookup an alias by path.
+
+            AliasInfo alias;
+
+            // Optimized code path on Contents as it's the main provider of aliases
+            if (_aliasHolder.GetMap("Contents").TryGetAlias(path, out alias)) {
+                return alias.RouteValues;
+            }
+            
+            foreach (var map in _aliasHolder.GetMaps()) {
+                 if(map.TryGetAlias(path, out alias)) {
+                    return alias.RouteValues;
+                }
+            }
+
+            return null;
         }
 
         public void Remove(string path) {
@@ -109,15 +123,15 @@ namespace Orchard.Alias.Implementation.Storage {
                 // Bulk updates might go wrong if we don't flush.
                 _aliasRepository.Flush();
                 var dict = ToDictionary(aliasRecord);
-                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3 });
+                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3, IsManaged = dict.Item6 });
             }
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List() {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List() {
             return List((Expression<Func<AliasRecord, bool>>)null);
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(Expression<Func<AliasRecord, bool>> predicate) {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(Expression<Func<AliasRecord, bool>> predicate) {
             var table = _aliasRepository.Table;
 
             if (predicate != null) {
@@ -127,11 +141,11 @@ namespace Orchard.Alias.Implementation.Storage {
             return table.OrderBy(a => a.Id).Select(ToDictionary).ToList();
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(string sourceStartsWith) {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int, bool>> List(string sourceStartsWith) {
             return List(a => a.Source.StartsWith(sourceStartsWith));
         }
 
-        private static Tuple<string, string, IDictionary<string, string>, string, int> ToDictionary(AliasRecord aliasRecord) {
+        private static Tuple<string, string, IDictionary<string, string>, string, int, bool> ToDictionary(AliasRecord aliasRecord) {
             IDictionary<string, string> routeValues = new Dictionary<string, string>();
             if (aliasRecord.Action.Area != null) {
                 routeValues.Add("area", aliasRecord.Action.Area);
@@ -147,7 +161,7 @@ namespace Orchard.Alias.Implementation.Storage {
                     routeValues.Add(attr.Name.LocalName, attr.Value);
                 }
             }
-            return Tuple.Create(aliasRecord.Path, aliasRecord.Action.Area, routeValues, aliasRecord.Source, aliasRecord.Id);
+            return Tuple.Create(aliasRecord.Path, aliasRecord.Action.Area, routeValues, aliasRecord.Source, aliasRecord.Id, aliasRecord.IsManaged);
         }
     }
 }

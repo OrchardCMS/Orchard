@@ -37,7 +37,7 @@ namespace Orchard.DynamicForms.Drivers {
 
             var bindingsEditor = context.ShapeFactory.EditorTemplate(TemplateName: "FormBindings", Model: viewModel);
 
-            bindingsEditor.Metadata.Position = "Bindings:10";
+            bindingsEditor.Metadata.Position = "Bindings:20";
             
             return Editor(context, bindingsEditor);
         }

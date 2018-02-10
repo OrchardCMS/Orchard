@@ -20,7 +20,7 @@ namespace Orchard.Core.Navigation {
 
             ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
                 .WithPart("MenuPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("CommonPart")
                 .DisplayedAs("Custom Link")
                 .WithSetting("Description", "Represents a simple custom link with a text and an url.")
@@ -34,7 +34,7 @@ namespace Orchard.Core.Navigation {
 
             ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("WidgetPart")
                 .WithPart("MenuWidgetPart")
                 .WithSetting("Stereotype", "Widget")
@@ -52,7 +52,7 @@ namespace Orchard.Core.Navigation {
                 .WithPart("MenuPart")
                 .WithPart("BodyPart")
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .DisplayedAs("Html Menu Item")
                 .WithSetting("Description", "Renders some custom HTML in the menu.")
                 .WithSetting("BodyPartSettings.FlavorDefault", "html")
@@ -92,7 +92,7 @@ namespace Orchard.Core.Navigation {
             ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
                 .WithPart("MenuPart")
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .DisplayedAs("Custom Link")
                 .WithSetting("Description", "Represents a simple custom link with a text and an url.")
                 .WithSetting("Stereotype", "MenuItem") // because we declare a new stereotype, the Shape MenuItem_Edit is needed
@@ -115,7 +115,7 @@ namespace Orchard.Core.Navigation {
 
             ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("WidgetPart")
                 .WithPart("MenuWidgetPart")
                 .WithSetting("Stereotype", "Widget")
@@ -130,7 +130,7 @@ namespace Orchard.Core.Navigation {
                 .WithPart("MenuPart")
                 .WithPart("BodyPart")
                 .WithPart("CommonPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .DisplayedAs("Html Menu Item")
                 .WithSetting("Description", "Renders some custom HTML in the menu.")
                 .WithSetting("BodyPartSettings.FlavorDefault", "html")
@@ -172,10 +172,18 @@ namespace Orchard.Core.Navigation {
 
         public int UpdateFrom5() {
             ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
-                .WithPart("IdentityPart")
+                .WithIdentity()
             );
 
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem", cfg => cfg
+                .WithIdentity()
+            );
+
+            return 7;
         }
     }
 }

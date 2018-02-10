@@ -22,8 +22,12 @@
     </ToolsOptionsCategory>
     <ToolsOptionsCategory name="TextEditor">
       <ToolsOptionsSubCategory name="CSharp-Specific">
+        <PropertyValue name="AddImport_SuggestForTypesInNuGetPackages">1</PropertyValue>
+        <PropertyValue name="AddImport_SuggestForTypesInReferenceAssemblies">1</PropertyValue>
         <PropertyValue name="AutoComment">1</PropertyValue>
-        <PropertyValue name="ClosedFileDiagnostics">1</PropertyValue>
+        <PropertyValue name="AutoInsertAsteriskForNewLinesOfBlockComments">1</PropertyValue>
+        <PropertyValue name="CSharpClosedFileDiagnostics">-1</PropertyValue>
+        <PropertyValue name="ClosedFileDiagnostics">-1</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_IndentBase">1</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_IndentOffset">2</PropertyValue>
         <PropertyValue name="CodeDefinitionWindow_DocumentationComment_WrapLength">80</PropertyValue>
@@ -42,6 +46,7 @@
         <PropertyValue name="Indent_FlushLabelsLeft">0</PropertyValue>
         <PropertyValue name="Indent_UnindentLabels">1</PropertyValue>
         <PropertyValue name="NewLines_AnonymousTypeInitializer_EachMember">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Accessor">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousMethod">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousTypeInitializer">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ArrayInitializer">0</PropertyValue>
@@ -50,6 +55,7 @@
         <PropertyValue name="NewLines_Braces_LambdaExpressionBody">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Method">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ObjectInitializer">0</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Property">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Type">0</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Catch">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Else">1</PropertyValue>
@@ -90,7 +96,7 @@
         <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInMemberAccess">1</PropertyValue>
         <PropertyValue name="Style_QualifyMemberAccessWithThisOrMe">0</PropertyValue>
         <PropertyValue name="Style_UseVarWhenDeclaringLocals">1</PropertyValue>
-        <PropertyValue name="WarnOnBuildErrors">1</PropertyValue>
+        <PropertyValue name="WarnOnBuildErrors">0</PropertyValue>
         <PropertyValue name="WarnWhenMembersCauseCompilerGeneratedReferences">1</PropertyValue>
         <PropertyValue name="Wrapping_IgnoreSpacesAroundBinaryOperators">0</PropertyValue>
         <PropertyValue name="Wrapping_IgnoreSpacesAroundVariableDeclaration">0</PropertyValue>
@@ -128,12 +134,19 @@
         <PropertyValue name="AutoIndentOnTab">false</PropertyValue>
         <PropertyValue name="ColorizeInactiveBlocksDifferently">true</PropertyValue>
         <PropertyValue name="DisableBrowsingUpToDateCheck">true</PropertyValue>
+        <PropertyValue name="DisableCreateDeclDefnScan">false</PropertyValue>
         <PropertyValue name="DisableErrorReporting">false</PropertyValue>
         <PropertyValue name="DisableIntelliSenseErrorsInErrorList">false</PropertyValue>
+        <PropertyValue name="EnableChangeSignature">false</PropertyValue>
+        <PropertyValue name="EnableExpandPrecedence">false</PropertyValue>
+        <PropertyValue name="EnableExpandScopes">false</PropertyValue>
+        <PropertyValue name="EnableExtractFunction">false</PropertyValue>
+        <PropertyValue name="EnableSQLiteStoreEngine">false</PropertyValue>
         <PropertyValue name="EnableSingleFileISense">true</PropertyValue>
         <PropertyValue name="EnableSingleFileISenseSquiggles">false</PropertyValue>
         <PropertyValue name="EnumerateCommentTasks">false</PropertyValue>
         <PropertyValue name="GroupBrackets">true</PropertyValue>
+        <PropertyValue name="HideExperimentalAd">true</PropertyValue>
         <PropertyValue name="HighlightMatchingTokens">true</PropertyValue>
         <PropertyValue name="IndentAccessSpecifiers">false</PropertyValue>
         <PropertyValue name="IndentBlockContents">true</PropertyValue>
@@ -145,6 +158,8 @@
         <PropertyValue name="IndentNamespaceContents">true</PropertyValue>
         <PropertyValue name="IndentPreprocessor">2</PropertyValue>
         <PropertyValue name="IndentationReference">2</PropertyValue>
+        <PropertyValue name="MemberListDotToArrow">false</PropertyValue>
+        <PropertyValue name="MemberListFilterHeuristic">false</PropertyValue>
         <PropertyValue name="NewlineControlBlockBrace">0</PropertyValue>
         <PropertyValue name="NewlineEmptyFunctionCloseBrace">true</PropertyValue>
         <PropertyValue name="NewlineEmptyTypeCloseBrace">true</PropertyValue>
@@ -200,6 +215,7 @@
         <PropertyValue name="SpaceWithinFunctionParentheses">false</PropertyValue>
         <PropertyValue name="SpaceWithinInitListBraces">true</PropertyValue>
         <PropertyValue name="SpaceWithinLambdaBrackets">false</PropertyValue>
+        <PropertyValue name="SuspendNewSingleFileISenseDuringDebugging">false</PropertyValue>
         <PropertyValue name="TrimSpaceAroundScope">true</PropertyValue>
         <PropertyValue name="TrimSpaceUnaryOperator">true</PropertyValue>
       </ToolsOptionsSubCategory>
@@ -225,6 +241,9 @@
         <PropertyValue name="ShowVirtualProjectsInSolutionExplorerWhenSolutionOpen">false</PropertyValue>
         <PropertyValue name="UseAMDCodeGenerationForModulesThatAreNotPartOfAProject">false</PropertyValue>
         <PropertyValue name="UseCommonJSCodeGenerationForModulesThatAreNotPartOfAProject">false</PropertyValue>
+        <PropertyValue name="UseES2015CodeGenerationForModulesThatAreNotPartOfAProject">false</PropertyValue>
+        <PropertyValue name="UseJsxPreserveForFilesThatAreNotPartOfAProject">false</PropertyValue>
+        <PropertyValue name="UseJsxReactForFilesThatAreNotPartOfAProject">false</PropertyValue>
         <PropertyValue name="UseSystemCodeGenerationForModulesThatAreNotPartOfAProject">false</PropertyValue>
         <PropertyValue name="UseUMDCodeGenerationForModulesThatAreNotPartOfAProject">false</PropertyValue>
       </ToolsOptionsSubCategory>
@@ -233,8 +252,10 @@
         <PropertyValue name="EnableValidation">true</PropertyValue>
         <PropertyValue name="ErrorsAsWarnings">true</PropertyValue>
         <PropertyValue name="FormatOnPaste">true</PropertyValue>
+        <PropertyValue name="IdentifyHelpfulExtensions">true</PropertyValue>
         <PropertyValue name="InsertAttributeValueQuotes">true</PropertyValue>
         <PropertyValue name="InsertClosingTag">true</PropertyValue>
+        <PropertyValue name="SuggestHelpfulExtensions">false</PropertyValue>
         <PropertyValue name="XHtmlCodingStyle">true</PropertyValue>
       </ToolsOptionsSubCategory>
     </ToolsOptionsCategory>

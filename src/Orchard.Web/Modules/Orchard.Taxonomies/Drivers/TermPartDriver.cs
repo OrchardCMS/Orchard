@@ -13,6 +13,7 @@ using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.Taxonomies.Settings;
 using Orchard.UI.Navigation;
+using System.Text;
 
 namespace Orchard.Taxonomies.Drivers {
     public class TermPartDriver : ContentPartDriver<TermPart> {
@@ -42,7 +43,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Display(TermPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_TermPart_Feed", () => {
-                    
+
                     // generates a link to the RSS feed for this term
                     _feedManager.Register(part.Name, "rss", new RouteValueDictionary { { "term", part.Id } });
                     return null;
@@ -53,7 +54,7 @@ namespace Orchard.Taxonomies.Drivers {
                     if (httpContext != null) {
                         pagerParameters.Page = Convert.ToInt32(httpContext.Request.QueryString["page"]);
                     }
-                    
+
                     var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
                     var taxonomy = _taxonomyService.GetTaxonomy(part.TaxonomyId);
                     var totalItemCount = _taxonomyService.GetContentItemsCount(part);
@@ -93,11 +94,21 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
-                if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
-                    updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
-                }
+            updater.TryUpdateModel(termPart, Prefix, null, null);
+            StringBuilder fullWeightBuilder = new StringBuilder();
+            string parentOldFullWeight = termPart.FullWeight == null ? termPart.FullWeight : "";
+            TermPart containerTerm = termPart;
+
+            for (int i = 0; i < termPart.Path.Count(x => x == '/') - 1; i++) {
+                containerTerm = containerTerm.Container.As<TermPart>();
+                fullWeightBuilder.Insert(0, containerTerm.Weight.ToString("D6") + "." + containerTerm.Id.ToString() + "/");
+            }
+            fullWeightBuilder.Append(termPart.Weight.ToString("D6") + "." + "/");
+
+            termPart.FullWeight = fullWeightBuilder.ToString();
+
+            foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
+                childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
             }
 
             return Editor(termPart, shapeHelper);
@@ -107,14 +118,15 @@ namespace Orchard.Taxonomies.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Selectable", part.Selectable);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FullWeight", part.FullWeight);
 
             var taxonomy = _contentManager.Get(part.TaxonomyId);
             var identity = _contentManager.GetItemMetadata(taxonomy).Identity.ToString();
             context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", identity);
 
             var identityPaths = new List<string>();
-            foreach(var pathPart in part.Path.Split('/')) {
-                if(String.IsNullOrEmpty(pathPart)) {
+            foreach (var pathPart in part.Path.Split('/')) {
+                if (String.IsNullOrEmpty(pathPart)) {
                     continue;
                 }
 
@@ -134,21 +146,37 @@ namespace Orchard.Taxonomies.Drivers {
             part.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
             part.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
             part.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
+            context.ImportAttribute(part.PartDefinition.Name, "FullWeight", s => part.FullWeight = s);
+            bool createFullWeigth = string.IsNullOrWhiteSpace(part.FullWeight);
 
             var identity = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
             var contentItem = context.GetItemFromSession(identity);
-            
+
             if (contentItem == null) {
                 throw new OrchardException(T("Unknown taxonomy: {0}", identity));
-            } 
-            
+            }
+
             part.TaxonomyId = contentItem.Id;
             part.Path = "/";
 
-            foreach(var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)) {
+            foreach (var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
+                if (createFullWeigth) {
+                    part.FullWeight = part.FullWeight + pathContentItem.As<TermPart>().Weight.ToString("D6") + "." + pathContentItem.Id.ToString() + "/";
+                }
             }
+            if (createFullWeigth) {
+                part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "." + part.Id + "/";
+            }
+        }
+
+        protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
+            clonePart.Count = originalPart.Count;
+            clonePart.Selectable = originalPart.Selectable;
+            clonePart.Weight = originalPart.Weight;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.Path = originalPart.Path;
         }
     }
 }

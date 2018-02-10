@@ -24,7 +24,12 @@ namespace Orchard.Services {
         public string ClientHostAddressHeaderName { get; set; }
 
         public string GetClientAddress() {
-            var request = _wca.GetContext().HttpContext.Request;
+            var workContext = _wca.GetContext();
+
+            if (workContext == null || workContext.HttpContext == null)
+                return string.Empty;
+
+            var request = workContext.HttpContext.Request;
 
             if (EnableClientHostAddressHeader && !String.IsNullOrWhiteSpace(ClientHostAddressHeaderName)) {
                 var headerName = ClientHostAddressHeaderName.Trim();

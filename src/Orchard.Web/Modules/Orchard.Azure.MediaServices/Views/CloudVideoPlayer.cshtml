@@ -6,12 +6,12 @@
 @{
     Style.Include("cloudmedia-videoplayer.css", "cloudmedia-videoplayer.min.css");
     
-    Script.Require("JQuery").AtFoot();    
-    Script.Include("Lib/swfobject.js", "Lib/swfobject.min.js").AtFoot();
-    Script.Include("Lib/dash.all.js", "Lib/dash.all.min.js").AtFoot();
-    Script.Include("Lib/uri.js", "Lib/uri.min.js").AtFoot();
-    Script.Include("Lib/underscore.js", "Lib/underscore.min.js").AtFoot();
-    Script.Include("Lib/moment.js", "Lib/moment.min.js").AtFoot();
+    Script.Require("jQuery").AtFoot();    
+    Script.Include("Lib/swfobject.js").AtFoot();
+    Script.Include("Lib/dash.all.js").AtFoot();
+    Script.Require("Uri").AtFoot();
+    Script.Require("Underscore").AtFoot();
+    Script.Require("Moment").AtFoot();
     Script.Include("Lib/console-shim.js", "Lib/console-shim.min.js").AtFoot();
     Script.Include("cloudmedia-videoplayer-data.js", "cloudmedia-videoplayer-data.min.js").AtFoot();
     Script.Include("cloudmedia-videoplayer-injectors.js", "cloudmedia-videoplayer-injectors.min.js").AtFoot();

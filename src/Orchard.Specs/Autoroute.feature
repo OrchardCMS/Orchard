@@ -9,7 +9,7 @@ Scenario: I can create and publish a new Page with international characters in i
         And I fill in
             | name | value |
             | Title.Title | Χελλο |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "Χελλο"
     Then I should see "<h1[^>]*>.*?Χελλο.*?</h1>"
 
@@ -19,8 +19,8 @@ Scenario: I can create and publish a new Home Page
         And I fill in
             | name | value |
             | Title.Title | Foo |
-			| Autoroute.PromoteToHomePage | True |
-        And I hit "Publish Now"
+            | AutoroutePart.PromoteToHomePage | True |
+        And I hit "Publish"
         And I go to "/"
     Then I should see "<h1[^>]*>.*?Foo.*?</h1>"
     When I go to "/welcome-to-orchard"

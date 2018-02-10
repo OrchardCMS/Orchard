@@ -12,5 +12,4 @@ namespace Orchard.MediaLibrary.ViewModels {
         public MediaPart MediaPart { get; set; }
         public dynamic Shape { get; set; }
     }
-
 }

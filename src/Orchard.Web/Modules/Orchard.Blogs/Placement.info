@@ -19,6 +19,7 @@
     <!-- default positioning -->
     <Match ContentType="Blog">
         <Match DisplayType="Detail">
+            <Place Parts_Common_Metadata="-"/>
             <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" /> but...
                  ...placing it in in the Content zone as it's currently implemented to light up the RSS feed for the blog... -->
             <!-- Parts_Blogs_RemotePublishing is made available with the "Remote Blog Publishing" feature -->

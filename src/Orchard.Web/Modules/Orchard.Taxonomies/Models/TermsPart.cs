@@ -10,7 +10,10 @@ namespace Orchard.Taxonomies.Models {
     /// </summary>
     public class TermsPart : ContentPart<TermsPartRecord> {
         public IList<TermContentItem> Terms { get { return Record.Terms; } }
-        internal LazyField<IEnumerable<TermContentItemPart>> _termParts; 
-        public IEnumerable<TermContentItemPart> TermParts { get { return _termParts.Value; } }
+        internal LazyField<IEnumerable<TermContentItemPart>> _termParts;
+        public IEnumerable<TermContentItemPart> TermParts {
+            get { return _termParts.Value; }
+            set { _termParts.Value = value; }
+        }
     }
 }

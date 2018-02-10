@@ -2,7 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Containers.Services;
 using Orchard.Core.Containers.Settings;
 using Orchard.UI.Navigation;
@@ -70,12 +70,6 @@ namespace Orchard.Core.Containers.Models {
         public int ItemCount {
             get { return Record.ItemCount; }
             set { Record.ItemCount = value; }
-        }
-
-        public PagerParameters PagerParameters { get; set; }
-
-        public ContainerPart() {
-            PagerParameters = new PagerParameters();
         }
     }
 

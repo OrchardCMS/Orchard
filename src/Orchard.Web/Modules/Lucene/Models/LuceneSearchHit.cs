@@ -14,7 +14,7 @@ namespace Lucene.Models {
             _score = score;
         }
 
-        public int ContentItemId { get { return int.Parse(GetString("id")); } }
+        public int ContentItemId { get { return GetInt("id"); } }
 
         public int GetInt(string name) {
             var field = _doc.GetField(name);

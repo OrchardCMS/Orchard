@@ -33,7 +33,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(Image element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Image element, ElementDisplayingContext context) {
             var imageId = element.MediaId;
             var image = imageId != null ? GetImage(imageId.Value) : default(ImagePart);
             context.ElementShape.ImagePart = image;

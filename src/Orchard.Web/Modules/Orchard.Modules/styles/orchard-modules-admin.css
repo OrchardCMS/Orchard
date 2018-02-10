@@ -6,19 +6,22 @@ html.dyn #main ul.features button { display:none; }
 .features.detail-view .category > ul {
     border:1px solid #EAEAEA;
     margin-bottom:2em;
+	display: flex;
+	flex-direction: column;
 }
 .features.summary-view .category {
-    overflow:hidden;
     padding-bottom:1em;
 }
+
+.features.summary-view .category > ul {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 .features.summary-view .feature {
     border:1px solid #EAEAEA;
-    display:block;
-    float:left;
-    height:6em;
     margin:0 .5% 1% .5%;
-    position:relative;
-    width:32.2%;
+    width:32%;
 }
 
 .features.summary-view .missingDependencies{
@@ -128,6 +131,10 @@ html.dyn #main ul.features button { display:none; }
 .features .missingdependencies li:last-child::after {
     content:"";
 }
+.features .feature {
+    position:relative;
+    padding-bottom: 1em;
+}
 .features .feature .actions {
     position:absolute;
     right:.4em;
@@ -139,6 +146,29 @@ html.dyn #main ul.features button { display:none; }
 .features .feature .actions form.inline.link,
 .features .feature .actions a {
     margin-left:.5em;
+}
+.features .feature .lifecycle-status {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    line-height: 1em;
+    height: 1em;
+    color: #3c763d;
+    font-size: 0.923em;
+    padding: 0.5em;
+    text-transform: lowercase;
+}
+
+.features .feature .lifecycle-status.lifecycle-status-production {
+    color: #3c763d;
+}
+
+.features .feature .lifecycle-status.lifecycle-status-preview {
+    color: #31708f;
+}
+
+.features .feature .lifecycle-status.lifecycle-status-deprecated {
+    color: #a94442;
 }
 
 /***Recently installed**/

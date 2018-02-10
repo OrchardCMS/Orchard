@@ -54,7 +54,7 @@ namespace Orchard.AuditTrail.Controllers {
             var restoredContentItem = _contentManager.Restore(contentItem, VersionOptions.Restore(version, publish: !draftable));
             var restoredContentItemTitle = _contentManager.GetItemMetadata(restoredContentItem).DisplayText;
 
-            _notifier.Information(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
+            _notifier.Success(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
 
             return this.RedirectReturn(returnUrl, () => Url.Action("Index", "Admin"));
         }

@@ -91,8 +91,15 @@
             $("form:first").trigger("orchard-admin-contentpicker-open", {
                 types: $("#listManagement").data("itemtypes"),
                 callback: function(data) {
-                    var id = parseInt(data.id);
-                    insertItem(id);
+                    if (Array.isArray && Array.isArray(data)) {
+                        data.forEach(function (item) {
+                            var id = parseInt(item.id);
+                            insertItem(id);
+                        });
+                    } else {
+                        var id = parseInt(data.id);
+                        insertItem(id);
+                    }
                 },
                 baseUrl: $("#listManagement").data("baseurl")
             });

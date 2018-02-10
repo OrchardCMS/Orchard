@@ -1,0 +1,26 @@
+﻿.coll-exp-control {
+    width: 100%;
+    cursor: pointer;
+}
+
+.coll-exp-button {
+    font-weight: bold;
+    font-weight: bold;
+    padding: 3px;
+    background: white;
+    color: black;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+}
+
+.coll-exp-button:hover {
+    background: #f0f0f0;
+    color: black;
+}
+
+.coll-exp-area {
+    display: none;
+    background: #f9f9f9;
+    padding: 3px 7px;
+}

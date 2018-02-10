@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
@@ -29,7 +30,8 @@ namespace Orchard.UI.Resources {
         };
 
         private string _basePath;
-        private readonly Dictionary<RequireSettings, string> _urlResolveCache = new Dictionary<RequireSettings, string>();
+        private string _physicalPath;
+        private string _physicalPathDebug;
 
         public ResourceDefinition(ResourceManifest manifest, string type, string name) {
             Manifest = manifest;
@@ -63,7 +65,7 @@ namespace Orchard.UI.Resources {
             _resourceTypeDirectories.TryGetValue(resourceType, out path);
             return path ?? "";
         }
-
+        
         private static string Coalesce(params string[] strings) {
             foreach (var str in strings) {
                 if (!String.IsNullOrEmpty(str)) {
@@ -81,6 +83,11 @@ namespace Orchard.UI.Resources {
         public string Name { get; private set; }
         public string Type { get; private set; }
         public string Version { get; private set; }
+        public string Url { get; private set; }
+        public string UrlDebug { get; private set; }
+        public string UrlCdn { get; private set; }
+        public string UrlCdnDebug { get; private set; }
+
         public string BasePath {
             get {
                 if (!String.IsNullOrEmpty(_basePath)) {
@@ -93,10 +100,25 @@ namespace Orchard.UI.Resources {
                 return basePath ?? "";
             }
         }
-        public string Url { get; private set; }
-        public string UrlDebug { get; private set; }
-        public string UrlCdn { get; private set; }
-        public string UrlCdnDebug { get; private set; }
+
+        public string PhysicalPath {
+            get {
+                if (!String.IsNullOrEmpty(_physicalPath)) {
+                    return _physicalPath;
+                }
+                return GetPhysicalPath(Url);
+            }
+        }
+
+        public string PhysicalPathDebug {
+            get {
+                if (!String.IsNullOrEmpty(_physicalPathDebug)) {
+                    return _physicalPathDebug;
+                }
+                return GetPhysicalPath(UrlDebug);
+            }
+        }
+
         public string[] Cultures { get; private set; }
         public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
@@ -152,6 +174,24 @@ namespace Orchard.UI.Resources {
             if (cdnSupportsSsl.HasValue) {
                 CdnSupportsSsl = cdnSupportsSsl.Value;
             }
+            else {
+                CdnSupportsSsl = cdnUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+            }
+            return this;
+        }
+
+        public ResourceDefinition SetPhysicalPath(string physicalPath) {
+            return SetPhysicalPath(physicalPath, null);
+        }
+
+        public ResourceDefinition SetPhysicalPath(string physicalPath, string physicalPathDebug) {
+            if (String.IsNullOrEmpty(physicalPath)) {
+                throw new ArgumentNullException("physicalPath");
+            }
+            _physicalPath = physicalPath;
+            if (physicalPathDebug != null) {
+                _physicalPathDebug = physicalPathDebug;
+            }
             return this;
         }
 
@@ -174,21 +214,36 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        public string ResolveUrl(RequireSettings settings, string applicationPath) {
+        public string ResolveUrl(RequireSettings settings, string applicationPath, IResourceFileHashProvider resourceFileHashProvider) {
+            return ResolveUrl(settings, applicationPath, false, resourceFileHashProvider);
+        }
+
+        public string ResolveUrl(RequireSettings settings, string applicationPath, bool ssl, IResourceFileHashProvider resourceFileHashProvider) {
             string url;
-            if (_urlResolveCache.TryGetValue(settings, out url)) {
-                return url;
-            }
+            string physicalPath = null;
             // Url priority:
-            if (settings.DebugMode) {
-                url = settings.CdnMode
-                    ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
-                    : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
+            if (!ssl || (ssl && CdnSupportsSsl)) { //Not ssl or ssl and cdn supports it
+                if (settings.DebugMode) {
+                    url = settings.CdnMode
+                        ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
+                        : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
+                }
+                else {
+                    url = settings.CdnMode
+                        ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
+                        : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
+                }
             }
-            else {
-                url = settings.CdnMode
-                    ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
-                    : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
+            else { //ssl and cdn does not support it, only evaluate non-cdn url's
+                url = settings.DebugMode
+                    ? Coalesce(UrlDebug, Url)
+                    : Coalesce(Url, UrlDebug);
+            }
+            if (url == UrlDebug) {
+                physicalPath = PhysicalPathDebug;
+            }
+            else if (url == Url) {
+                physicalPath = PhysicalPath;
             }
             if (String.IsNullOrEmpty(url)) {
                 return null;
@@ -204,13 +259,17 @@ namespace Orchard.UI.Resources {
                 url = VirtualPathUtility.Combine(BasePath, url);
             }
             if (VirtualPathUtility.IsAppRelative(url)) {
-                url = VirtualPathUtility.ToAbsolute(url, applicationPath);
+                url = applicationPath != null 
+                    ? VirtualPathUtility.ToAbsolute(url, applicationPath) 
+                    : VirtualPathUtility.ToAbsolute(url);
             }
-            _urlResolveCache[settings] = url;
+            if (settings.FileHashMode && !String.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath)) {
+                url = AddQueryStringValue(url, "fileHash", resourceFileHashProvider.GetResourceFileHash(physicalPath));
+            }
             return url;
         }
 
-        public string FindNearestCulture(string culture) {
+        private string FindNearestCulture(string culture) {
             // go for an exact match
             if (Cultures == null) {
                 return null;
@@ -245,5 +304,34 @@ namespace Orchard.UI.Resources {
             return (Name ?? "").GetHashCode() ^ (Type ?? "").GetHashCode();
         }
 
+        private string GetPhysicalPath(string url) {
+            if (!String.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute) && !url.StartsWith("//")) {
+                if (VirtualPathUtility.IsAbsolute(url) || VirtualPathUtility.IsAppRelative(url)) {
+                    return HostingEnvironment.MapPath(url);
+                }
+                if (!String.IsNullOrEmpty(BasePath)) {
+                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url));
+                }
+            }
+            return null;
+        }
+
+        private string AddQueryStringValue(string url, string name, string value) {
+            if (String.IsNullOrEmpty(url)) {
+                return null;
+            }
+            var encodedValue = HttpUtility.UrlEncode(value);
+            if (url.Contains("?")) {
+                if (url.EndsWith("&")) {
+                    return String.Format("{0}{1}={2}", url, name, encodedValue);
+                }
+                else {
+                    return String.Format("{0}&{1}={2}", url, name, encodedValue);
+                }
+            }
+            else {
+                return String.Format("{0}?{1}={2}", url, name, encodedValue);
+            }
+        }
     }
 }

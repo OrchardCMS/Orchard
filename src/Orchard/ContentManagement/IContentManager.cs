@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
@@ -85,6 +86,12 @@ namespace Orchard.ContentManagement {
         void Remove(ContentItem contentItem);
 
         /// <summary>
+        /// Deletes the draft version of the content item permanently.
+        /// </summary>
+        /// <param name="contentItem">The content item of which the draft version will be deleted.</param>
+        void DiscardDraft(ContentItem contentItem);
+
+        /// <summary>
         /// Permanently deletes the specified content item, including all of its content part records.
         /// </summary>
         void Destroy(ContentItem contentItem);
@@ -92,6 +99,7 @@ namespace Orchard.ContentManagement {
 
         XElement Export(ContentItem contentItem);
         void Import(XElement element, ImportContentSession importContentSession);
+        void CompleteImport(XElement element, ImportContentSession importContentSession);
 
         /// <summary>
         /// Clears the current referenced content items

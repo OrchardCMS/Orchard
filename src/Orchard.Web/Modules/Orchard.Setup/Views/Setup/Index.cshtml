@@ -1,9 +1,25 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
+@using Orchard.Recipes.Models;
+@using Orchard.Setup.ViewModels
 @{
-	Script.Require("jQuery");
+    Script.Require("jQuery");
     Script.Require("ShapesBase");
     Script.Include("setup.js");
 }
+@{ 
+    var groupedRecipes = Model.Recipes.Where(x => !String.IsNullOrWhiteSpace(x.Category)).GroupBy(x => x.Category);
+    var unspecifiedCategoryRecipes = Model.Recipes.Where(x => String.IsNullOrWhiteSpace(x.Category)).ToList();
+    var groupCount = groupedRecipes.Count() + unspecifiedCategoryRecipes.Count();
+}
+@helper RenderRecipeOptions(IEnumerable<Recipe> recipes) {
+        foreach (var recipe in recipes) {
+        var optionAttributes = new RouteValueDictionary {{ "data-recipe-description", recipe.Description }};
+            if (Model.Recipe == null && recipe.Name == "Default") {
+                optionAttributes["selected"] = "selected";
+            }
+            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, optionAttributes)
+        }
+    }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -30,49 +46,61 @@
 if (!Model.DatabaseIsPreconfigured) {
 <fieldset class="data">
     <legend>@T("How would you like to store your data?")</legend>
-        @Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage")
+        @Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage.")
     <div>
-        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.Builtin.ToString(), new { id = "builtin" })
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, SetupDatabaseType.Builtin.ToString(), new { id = "builtin" })
         <label for="builtin" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
     </div>
     <div>
-        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.SqlServer.ToString(), new { id = "sqlserver" })
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, SetupDatabaseType.SqlServer.ToString(), new { id = "sqlserver" })
         <label for="sqlserver" class="forcheckbox">@T("Use an existing SQL Server, SQL Express database")</label>
     </div>
     <div>
-        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.MySql.ToString(), new { id = "mysql" })
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, SetupDatabaseType.MySql.ToString(), new { id = "mysql" })
         <label for="mysql" class="forcheckbox">@T("Use an existing MySql database")</label>
+    </div>
+    <div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, SetupDatabaseType.PostgreSql.ToString(), new { id = "postgresql" })
+        <label for="postgresql" class="forcheckbox">@T("Use an existing PostgreSQL database")</label>
     </div>
     <div data-controllerid="builtin" data-defaultstate="hidden">
         <label for="DatabaseConnectionString">@T("Connection string")</label>
         @Html.EditorFor(svm => svm.DatabaseConnectionString)
-            
         <span data-controllerid="sqlserver" class="hint databaseTypeHint">
-            @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+            @T("Data Source=sqlServerName;Initial Catalog=dbName;User ID=userName;Password=password")
         </span>
-
         <span data-controllerid="mysql" class="hint databaseTypeHint">
             @T("Data Source=serverName;Database=dbName;User Id=userName;Password=password")
         </span>
-
+        <span data-controllerid="postgresql" class="hint databaseTypeHint">
+            @T("Server=serverName;Port=5432;Database=dbName;User Id=userName;Password=password")
+        </span>
         <br /><br />
         <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
         @Html.EditorFor(svm => svm.DatabaseTablePrefix)
     </div>
-
 </fieldset>
 }
 <fieldset>
-	<legend>@T("Choose an Orchard Recipe")</legend>
-	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
-	<div>
+    <legend>@T("Choose an Orchard Recipe")</legend>
+    <div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box.")</div>	
+    <div>
         <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
-        @foreach(var recipe in Model.Recipes) {
-            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
+                @foreach (var recipeGroup in groupedRecipes.OrderBy(x => x.Key)) {
+                    if (groupCount > 1) {
+            <optgroup label="@recipeGroup.Key"></optgroup>
+            }
+            @RenderRecipeOptions(recipeGroup.OrderBy(x => x.Name))
+        }
+        @if (unspecifiedCategoryRecipes.Any()) {
+                    if (groupCount > 1) {
+            <optgroup label="@T("Unspecified")"></optgroup>
+            }
+            @RenderRecipeOptions(unspecifiedCategoryRecipes.OrderBy(x => x.Name))
         }
         </select>
     </div>
-	<div id="recipedescription">@Model.RecipeDescription</div>
+    <div id="recipedescription">@Model.RecipeDescription</div>
 </fieldset>
 <div id="throbber">
     <div class="curtain"></div>
@@ -85,7 +113,6 @@ if (!Model.DatabaseIsPreconfigured) {
         </div>
     </div>
 </div>
-    
 <fieldset>
     <button class="primaryAction setupButton" type="submit">@T("Finish Setup")</button>
 </fieldset>

@@ -3,7 +3,7 @@
 
 <fieldset>
     <div>
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
+        <label for="@Html.FieldIdFor(m => m.TargetMode)">@T("Target")</label>    
         <select id="@Html.FieldIdFor(m => m.TargetMode)" name="@Html.FieldNameFor(m => m.TargetMode)">
             @Html.SelectOption(TargetMode.None, Model.TargetMode == TargetMode.None, T("No target").ToString())
             @Html.SelectOption(TargetMode.NewWindow, Model.TargetMode == TargetMode.NewWindow, T("Open link in new window").ToString())
@@ -21,7 +21,7 @@
 </fieldset>
 <fieldset>
     <div>
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
+        <label for="@Html.FieldIdFor(m => m.LinkTextMode)">@T("Link text")</label>    
         <select id="@Html.FieldIdFor(m => m.LinkTextMode)" name="@Html.FieldNameFor(m => m.LinkTextMode)">
             @Html.SelectOption(LinkTextMode.Optional, Model.LinkTextMode == LinkTextMode.Optional, T("Optional").ToString())
             @Html.SelectOption(LinkTextMode.Required, Model.LinkTextMode == LinkTextMode.Required, T("Required").ToString())
@@ -42,5 +42,37 @@
         @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
         <span class="hint">@T("The help text is written under the field.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.UrlPlaceholder)">@T("Watermark (placeholder) for the url")</label>
+        @Html.TextBoxFor(m => m.UrlPlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.UrlPlaceholder)
+        <span class="hint">@T("A hint to display when the input of url is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.TextPlaceholder)">@T("Watermark (placeholder) for the text of the link")</label>
+        @Html.TextBoxFor(m => m.TextPlaceholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.TextPlaceholder)
+        <span class="hint">@T("A hint to display when the input of text is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
+        <span class="hint">@T("A valid url proposed  when creating a content item, i.e. http://orchardproject.net, /content/file.pdf, ... (optional)")</span>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.TextDefaultValue)">@T("Link text default value")</label>
+        @Html.TextBoxFor(m => m.TextDefaultValue, new { @class = "text large" })
+        <span class="hint">@T("The default link text proposed when creating a content item. (optional)")</span>
+        @Html.ValidationMessageFor(m => m.TextDefaultValue)
     </div>
 </fieldset>

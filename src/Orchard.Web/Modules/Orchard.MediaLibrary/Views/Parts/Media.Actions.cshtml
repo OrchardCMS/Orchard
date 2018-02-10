@@ -4,10 +4,12 @@
 @{
     ContentItem contentItem = Model.ContentItem;
     var draftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+    var media = contentItem.As<Orchard.MediaLibrary.Models.MediaPart>();
+    var mediaService = WorkContext.Resolve<Orchard.MediaLibrary.Services.IMediaLibraryService>();
 }
 
 <div id="media-actions">
-    @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+    @if (mediaService.CheckMediaFolderPermission(Orchard.MediaLibrary.Permissions.EditMediaContent, media.FolderPath)) {
         @Html.Link(T("Edit").Text, Url.ItemEditUrl(contentItem), new { @class = "button", id = "edit-media-link" })
     }
     @if (Authorizer.Authorize(Permissions.PublishContent, contentItem) && draftable) {        
@@ -27,7 +29,9 @@
         var self = $(this);
         var href = self.attr('href');
         var containsQueryString = href.indexOf("?") >= 0;
+        if (href.indexOf("returnUrl") == -1) {
         var returnUrl = href + (containsQueryString ? "&" : "?") + "returnUrl=" + encodeURIComponent(window.location);
+        }
         self.attr('href', returnUrl);
     });
     //]]>

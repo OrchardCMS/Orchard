@@ -47,7 +47,8 @@ namespace Orchard.OutputCache.Controllers {
                 // Right now, ignore generic routes.
                 if (routeProvider.Value is StandardExtensionRouteProvider) continue;
 
-                var routes = routeProvider.Value.GetRoutes();
+                var routes = new List<RouteDescriptor>();
+                routeProvider.Value.GetRoutes(routes);
                 var feature = routeProvider.Metadata["Feature"] as Orchard.Environment.Extensions.Models.Feature;
 
                 // If there is no feature, skip route.
@@ -87,8 +88,10 @@ namespace Orchard.OutputCache.Controllers {
                 DefaultCacheDuration = settings.DefaultCacheDuration,
                 DefaultCacheGraceTime = settings.DefaultCacheGraceTime,
                 DefaultMaxAge = settings.DefaultMaxAge,
+                VaryByQueryStringIsExclusive = settings.VaryByQueryStringIsExclusive,
                 VaryByQueryStringParameters = settings.VaryByQueryStringParameters,
                 VaryByRequestHeaders = settings.VaryByRequestHeaders,
+                VaryByRequestCookies = settings.VaryByRequestCookies,
                 IgnoredUrls = settings.IgnoredUrls,
                 IgnoreNoCache = settings.IgnoreNoCache,
                 VaryByCulture = settings.VaryByCulture,
@@ -114,8 +117,10 @@ namespace Orchard.OutputCache.Controllers {
                 settings.DefaultCacheDuration = model.DefaultCacheDuration;
                 settings.DefaultCacheGraceTime = model.DefaultCacheGraceTime;
                 settings.DefaultMaxAge = model.DefaultMaxAge;
+                settings.VaryByQueryStringIsExclusive = model.VaryByQueryStringIsExclusive;
                 settings.VaryByQueryStringParameters = model.VaryByQueryStringParameters;
                 settings.VaryByRequestHeaders = model.VaryByRequestHeaders;
+                settings.VaryByRequestCookies = model.VaryByRequestCookies;
                 settings.IgnoredUrls = model.IgnoredUrls;
                 settings.IgnoreNoCache = model.IgnoreNoCache;
                 settings.VaryByCulture = model.VaryByCulture;
@@ -127,7 +132,7 @@ namespace Orchard.OutputCache.Controllers {
                 _signals.Trigger(CacheSettings.CacheKey);
                 _cacheService.SaveRouteConfigs(model.RouteConfigs);
 
-                Services.Notifier.Information(T("Output cache settings saved successfully."));
+                Services.Notifier.Success(T("Output cache settings saved successfully."));
             }
             else {
                 Services.Notifier.Error(T("Could not save output cache settings."));

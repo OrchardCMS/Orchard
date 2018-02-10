@@ -1,5 +1,6 @@
 @model Orchard.Users.Models.RegistrationSettingsPart
 @using Orchard.Messaging.Services;
+@using System.Web.Security;
 
 @{
     var messageManager = WorkContext.Resolve<IMessageManager>();
@@ -9,13 +10,69 @@
 <fieldset>
     <legend>@T("Users")</legend>
     <div>
-        @Html.EditorFor(m => m.UsersCanRegister) 
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
+        @Html.EditorFor(m => m.UsersCanRegister)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
+    <div>
+        @Html.EditorFor(m => m.EnableCustomPasswordPolicy)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)">@T("Passwords must meet custom requirements")</label>
+        <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)" style="margin-left: 30px;">
+            <div>
+                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordLowercaseRequirement)"
+                       name="@Html.FieldNameFor(m => m.EnablePasswordLowercaseRequirement)" @(Model.EnablePasswordLowercaseRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
+                <input name="@Html.FieldNameFor(m => m.EnablePasswordLowercaseRequirement)" type="hidden" value="false">
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordLowercaseRequirement)">@T("Password must contain at least one lower case letter (a-z)")</label>
+            </div>
+            <div>
+                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordUppercaseRequirement)"
+                       name="@Html.FieldNameFor(m => m.EnablePasswordUppercaseRequirement)" @(Model.EnablePasswordUppercaseRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
+                <input name="@Html.FieldNameFor(m => m.EnablePasswordUppercaseRequirement)" type="hidden" value="false">
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordUppercaseRequirement)">@T("Password must contain at least one upper case letter (A-Z)")</label>
+            </div>
+            <div>
+                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordNumberRequirement)"
+                       name="@Html.FieldNameFor(m => m.EnablePasswordNumberRequirement)" @(Model.EnablePasswordNumberRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
+                <input name="@Html.FieldNameFor(m => m.EnablePasswordNumberRequirement)" type="hidden" value="false">
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordNumberRequirement)">@T("Password must contain at least one number (0-9)")</label>
+            </div>
+            <div>
+                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordSpecialRequirement)"
+                       name="@Html.FieldNameFor(m => m.EnablePasswordSpecialRequirement)" @(Model.EnablePasswordSpecialRequirement && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
+                <input name="@Html.FieldNameFor(m => m.EnablePasswordSpecialRequirement)" type="hidden" value="false">
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordSpecialRequirement)">@T("Password must contain at least one special character")</label>
+            </div>
+            <div>
+                <label for="@Html.FieldIdFor(m => m.MinimumPasswordLength)">@T("Minimum Password length")</label>
+                @Html.TextBoxFor(m => m.MinimumPasswordLength, new { @class = "text medium", @Value = Model.MinimumPasswordLength })
+                @Html.ValidationMessage("MinimumPasswordLength", "*")
+            </div>
+            <div>
+                <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnablePasswordExpiration)"
+                       name="@Html.FieldNameFor(m => m.EnablePasswordExpiration)" @(Model.EnablePasswordExpiration && Model.EnableCustomPasswordPolicy ? "checked=\"checked\"" : "") />
+                <input name="@Html.FieldNameFor(m => m.EnablePasswordExpiration)" type="hidden" value="false">
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnablePasswordExpiration)">@T("Password expires after a time period (30 days by default)")</label>
+            </div>
+            <div data-controllerid="@Html.FieldIdFor(m => m.EnablePasswordExpiration)" style="margin-left: 30px;">
+                <label for="@Html.FieldIdFor(m => m.PasswordExpirationTimeInDays)">@T("Password expiration period in days")</label>
+                @Html.TextBoxFor(m => m.PasswordExpirationTimeInDays, new { @class = "text medium", @Value = Model.PasswordExpirationTimeInDays })
+                @Html.ValidationMessage("PasswordExpirationTimeInDays", "*")
+            </div>
+            <div>
+                <label for="@Html.FieldIdFor(m => m.PasswordFormat)">@T("Password format")</label>
+                @Html.DropDownListFor(m => m.PasswordFormat, new SelectList(new[]
+                {
+                    new SelectListItem { Text = T("Clear").Text, Value = MembershipPasswordFormat.Clear.ToString() },
+                    new SelectListItem { Text = T("Hashed").Text, Value = MembershipPasswordFormat.Hashed.ToString(), Selected = true },
+                    new SelectListItem { Text = T("Encrypted").Text, Value = MembershipPasswordFormat.Encrypted.ToString() }
+                }, "Value", "Text"))
+            </div>
+        </div>
+    </div>
+
     <div>
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnableLostPassword)" name="@Html.FieldNameFor(m => m.EnableLostPassword)" @(Model.EnableLostPassword ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <input name="@Html.FieldNameFor(m => m.EnableLostPassword)" type="hidden" value="false">
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
         
         @if(!emailEnabled) {
             <div class="message message-Warning">@T("This option is available when an email module is activated.")</div>
@@ -24,31 +81,31 @@
     <div>
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.UsersMustValidateEmail)" name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" @(Model.UsersMustValidateEmail ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
         <input name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" type="hidden" value="false">
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
 
         @if(!emailEnabled) {
             <div class="message message-Warning">@T("This option is available when an email module is activated.")</div>
         }
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">
-        <label for="@Html.FieldIdFor( m => m.ValidateEmailRegisteredWebsite)">@T("Website public name")</label>
+        <label for="@Html.FieldIdFor(m => m.ValidateEmailRegisteredWebsite)">@T("Website public name")</label>
         @Html.TextBoxFor(m => m.ValidateEmailRegisteredWebsite, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailRegisteredWebsite", "*")
         <span class="hint">@T("The name of your website as it will appear in the verification e-mail.")</span>
         
-        <label for="@Html.FieldIdFor( m => m.ValidateEmailContactEMail)">@T("Contact Us E-Mail address")</label>
+        <label for="@Html.FieldIdFor(m => m.ValidateEmailContactEMail)">@T("Contact Us E-Mail address")</label>
         @Html.TextBoxFor(m => m.ValidateEmailContactEMail, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailContactEMail", "*")
         <span class="hint">@T("The e-mail address displayed in the verification e-mail for a Contact Us link. Leave empty for no link.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.UsersAreModerated)
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersAreModerated)">@T("Users must be approved before they can log in")</label>
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UsersAreModerated)">@T("Users must be approved before they can log in")</label>
     </div>    
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersAreModerated)">
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.NotifyModeration)" name="@Html.FieldNameFor(m => m.NotifyModeration)" @(Model.NotifyModeration ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <input name="@Html.FieldNameFor(m => m.NotifyModeration)" type="hidden" value="false">
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.NotifyModeration)">@T("Send a notification when a user needs moderation")</label>
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.NotifyModeration)">@T("Send a notification when a user needs moderation")</label>
 
         @if(!emailEnabled) {
             <div class="message message-Warning">@T("This option is available when an email module is activated.")</div>
@@ -56,7 +113,7 @@
 
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
-        <label for="@Html.FieldIdFor( m => m.NotificationsRecipients)">@T("Moderators")</label>
+        <label for="@Html.FieldIdFor(m => m.NotificationsRecipients)">@T("Moderators")</label>
         @Html.TextBoxFor(m => m.NotificationsRecipients, new { @class = "text medium" } )
         @Html.ValidationMessage("NotificationsRecipients", "*")
         <span class="hint">@T("The usernames to send the notifications to (e.g., \"admin, user1, ...\").")</span>

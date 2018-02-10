@@ -10,7 +10,7 @@ using Orchard.Localization;
 
 namespace Orchard.Email.Forms {
 
-    [OrchardSuppressDependency("Orchard.Email.Workflows")]
+    [OrchardFeature("Orchard.Email.Workflows")]
     public class EmailForm : Component, IFormProvider {
         private readonly IFeatureManager _featureManager;
         protected dynamic New { get; set; }
@@ -63,7 +63,12 @@ namespace Orchard.Email.Forms {
                                 Id: "Body", Name: "Body",
                                 Title: T("Body"),
                                 Description: T("The body of the email message."),
-                                Classes: new[] {"tokenized"})
+                                Classes: new[] {"tokenized"}),
+                            _NotifyReadEmail: New.Checkbox(
+                                Id: "NotifyReadEmail", Name: "NotifyReadEmail",
+                                Title: T("Notify email read"),
+                                Checked: false, Value: "true",
+                                Description: T("Notify when email sent gets read by the recipient."))
                             ));
 
                     if (jobsQueueEnabled) {

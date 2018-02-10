@@ -6,10 +6,10 @@
     Style.Include("cloudmedia-admin-settings.css", "cloudmedia-admin-settings.min.css");
     Style.Include("cloudmedia-tabs.css", "cloudmedia-tabs.min.css");
 
-    Script.Require("JQuery").AtFoot();
+    
     Script.Require("jQueryUI").AtFoot();
     Script.Require("jQueryUI_Tabs").AtFoot();
-    Script.Include("~/Modules/Orchard.MediaLibrary/Scripts/knockout-2.3.0.js").AtFoot();
+    Script.Require("Knockout").AtFoot();
     Script.Include("cloudmedia-admin-settings.js", "cloudmedia-admin-settings.min.js").AtFoot();
 
     Layout.Title = T("Microsoft Azure Media Settings");

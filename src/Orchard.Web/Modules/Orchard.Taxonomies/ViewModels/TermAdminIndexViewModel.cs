@@ -8,6 +8,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public TermsAdminIndexBulkAction BulkAction { get; set; }
         public TaxonomyPart Taxonomy { get; set; }
         public int TaxonomyId { get; set; }
+        public dynamic Pager { get; set; }
     }
 
     public class TermEntry {
@@ -19,6 +20,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public int Weight { get; set; }
         public bool IsChecked { get; set; }
         public ContentItem ContentItem { get; set; }
+        public bool HasDraft { get; set; }
     }
 
     public enum TermsAdminIndexBulkAction {

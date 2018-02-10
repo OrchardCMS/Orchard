@@ -78,7 +78,25 @@
     });
 
     $(".check-all").change(function () {
-        $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
+        $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
+    });
+
+    //Prevent multi submissions on forms
+    $("body").on("submit", "form.no-multisubmit", function (e) {
+        var submittingClass = "submitting";
+        form = $(this);
+
+        if (form.hasClass(submittingClass)) {
+            e.preventDefault();
+            return;
+        }
+
+        form.addClass(submittingClass);
+
+        // safety-nest in case the form didn't refresh the page
+        setTimeout(function () {
+            form.removeClass(submittingClass);
+        }, 5000);
     });
 
     // Handle keypress events in bulk action fieldsets that are part of a single form.

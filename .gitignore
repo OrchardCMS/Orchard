@@ -68,6 +68,9 @@ ipch/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 
+# CodeRush is a .NET coding add-in
+.cr*/
+
 # TeamCity is a build add-in
 _TeamCity*
 
@@ -172,7 +175,7 @@ profiling/
 src/Orchard.Web/Modules-temp/*
 src/Backup/*
 src/packages/*
-src/node_modules
+src/**/node_modules
 src/UpgradeLog.*
 *.itrace.csdef
 *.build.csdef
@@ -186,5 +189,6 @@ src/Orchard.Web/Properties/PublishProfiles
 src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 
 #enable all /lib artifacts
-!lib/*/*.*
-*/.vs/*
+!lib/**/*.*
+**/.vs/*
+src/Rebracer.xml

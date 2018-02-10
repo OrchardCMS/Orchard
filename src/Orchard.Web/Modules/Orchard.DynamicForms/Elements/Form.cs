@@ -33,7 +33,7 @@ namespace Orchard.DynamicForms.Elements {
         }
 
         public bool HtmlEncode {
-            get { return this.Retrieve(x => x.HtmlEncode, () => true); }
+            get { return this.Retrieve(x => x.HtmlEncode); }
             set { this.Store(x => x.HtmlEncode, value); }
         }
 

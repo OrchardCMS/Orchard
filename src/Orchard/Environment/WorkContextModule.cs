@@ -19,10 +19,6 @@ namespace Orchard.Environment {
                 .As<WorkContext>()
                 .InstancePerMatchingLifetimeScope("work");
 
-            builder.RegisterType<WorkContextProperty<HttpContextBase>>()
-                .As<WorkContextProperty<HttpContextBase>>()
-                .InstancePerMatchingLifetimeScope("work");
-
             builder.RegisterGeneric(typeof(WorkValues<>))
                 .InstancePerMatchingLifetimeScope("work");
 

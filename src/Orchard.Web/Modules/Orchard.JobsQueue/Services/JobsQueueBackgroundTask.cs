@@ -8,7 +8,7 @@ namespace Orchard.JobsQueue.Services {
         }
 
         public void Sweep() {
-            _jobsQueueProcessor.ProcessQueue();
+            _jobsQueueProcessor.ProcessQueue(1, uint.MaxValue);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Orchard.Modules.Services {
         public void EnableFeatures(IEnumerable<string> featureIds, bool force) {
             foreach (string featureId in _featureManager.EnableFeatures(featureIds, force)) {
                 var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
-                Services.Notifier.Information(T("{0} was enabled", featureName));
+                Services.Notifier.Success(T("{0} was enabled", featureName));
             }
         }
 
@@ -93,7 +93,7 @@ namespace Orchard.Modules.Services {
         public void DisableFeatures(IEnumerable<string> featureIds, bool force) {
             foreach (string featureId in _featureManager.DisableFeatures(featureIds, force)) {
                 var featureName = _featureManager.GetAvailableFeatures().Single(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
-                Services.Notifier.Information(T("{0} was disabled", featureName));
+                Services.Notifier.Success(T("{0} was disabled", featureName));
             }
         }
 

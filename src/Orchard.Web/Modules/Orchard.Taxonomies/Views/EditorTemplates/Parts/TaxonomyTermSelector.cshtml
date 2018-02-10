@@ -1,0 +1,41 @@
+﻿@model Orchard.Taxonomies.ViewModels.AssociateTermTypeViewModel
+@using Orchard.Taxonomies.ViewModels;
+
+<fieldset class="term-selector">
+    @if (Model.ContentItem.ContentItem.Id == 0) {
+        <legend>@T("Term type to use")</legend>
+        <div>
+            @Html.RadioButtonFor(m => m.TermCreationAction, TermCreationOptions.CreateLocalized.ToString(), new { id = "localizedTerm" })
+            <label for="localizedTerm" class="forcheckbox">@T("Create a new localized Term type")</label>
+        </div>
+        <div>
+            @Html.RadioButtonFor(m => m.TermCreationAction, TermCreationOptions.CreateCultureNeutral.ToString(), new { id = "cultureNeutralTerm" })
+            <label for="cultureNeutralTerm" class="forcheckbox">@T("Create a new culture neutral Term type")</label>
+        </div>
+        if (Model.TermTypes.Count() > 0) {
+            <div>
+                @Html.RadioButtonFor(m => m.TermCreationAction, TermCreationOptions.UseExisting.ToString(), new { id = "existingTerm" })
+                <label for="existingTerm" class="forcheckbox">@T("Use an existing Term type")</label>
+            </div>
+        }
+    }
+    @if (Model.TermTypes.Count() > 0) {
+        <div class="options">
+            <span data-controllerid="existingTerm">
+                <label>@T("Term type")</label>
+                @Html.DropDownListFor(m => m.SelectedTermTypeId, new SelectList(Model.TermTypes.OrderBy(o => o.DisplayName), "Name", "DisplayName"), Model.ContentItem.ContentItem.Id != 0 ? new { @disabled = "disabled" } as object : new { } as object)
+                <span class="hint">@T("The content type of the terms used by this Taxonomy")</span>
+            </span>
+        </div>
+    }
+</fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+                $('input[name="@Html.FieldNameFor(m => m.TermCreationAction)"]:checked').click();
+            });
+        })(jQuery);
+    </script>
+}

@@ -13,23 +13,27 @@
     var command = (string)ViewBag.Command;
     var titleFormat = (string)ViewBag.TitleFormat;
 }
-@Html.ValidationSummary()
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { session = Model.SessionKey, area = "Orchard.Layouts" }))) {
-    @Html.HiddenFor(m => m.TypeName)
-    @Html.HiddenFor(m => m.ElementData)
-    foreach (var tab in Model.Tabs) {
-        var id = String.Format("element-{0}", tab.ToLowerInvariant());
-        <div id="@id" class="tab-view">
-            @foreach (var editor in Model.EditorResult.Editors) {
-                var position = ShapePosition.Parse((String)editor.Metadata.Position);
-                if (position.Name == tab) {
-                    @Display(editor)
-                }
-            }
-        </div>
-    }
+@* Only render the editor shapes if the dialog is not closing. *@
+@if (Model.Submitted != true) {
+    @Html.ValidationSummary()
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new {session = Model.SessionKey, area = "Orchard.Layouts"}))) {
+        foreach (var tab in Model.Tabs) {
+            var orderedEditorsInTab = Model.EditorResult.Editors
+                .Where(editor => ShapePosition.Parse((String)editor.Metadata.Position).Name == tab)
+                .OrderBy(editor => ShapePosition.Parse((String)editor.Metadata.Position).Position);
+            var id = String.Format("element-{0}", tab.ToLowerInvariant());
+         <div id="@id" class="tab-view">
+             @foreach (var editor in orderedEditorsInTab) {
+                @Display(editor)
+             }
+         </div>
+     }
+  }
 }
-@if (Model.Submitted) {
+else {
+    // See Layout-Dialog.cshtml for more information.
+    Layout.DialogClosing = true;
+
     using (Script.Foot()) {
         <script type="text/javascript">
             jQuery(function () {
@@ -54,7 +58,7 @@
 <div class="dialog-settings">
     <div class="title">@T(titleFormat, Model.DisplayText)</div>
     <div class="buttons">
-        <a href="#" class="button save" data-command="save">@T("Save")</a>
+        <a href="#" class="button save" data-command="save">@T("OK")</a>
         <a href="#" class="button cancel" data-command="cancel">@T("Cancel")</a>
     </div>
 </div>

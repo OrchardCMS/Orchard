@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Localization;
@@ -11,7 +11,6 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 
 namespace Orchard.Media.Services {
-    [UsedImplicitly]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
@@ -57,7 +56,8 @@ namespace Orchard.Media.Services {
             XRpcStruct file,
             UrlHelper url) {
 
-            var user = _membershipService.ValidateUser(userName, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user, null)) {
                 throw new OrchardCoreException(T("Access denied"));
             }

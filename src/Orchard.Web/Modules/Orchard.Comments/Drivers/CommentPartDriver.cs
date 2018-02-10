@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -12,7 +11,6 @@ using Orchard.Comments.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -55,7 +53,7 @@ namespace Orchard.Comments.Drivers {
             else {
                 return ContentShape("Parts_Comment_Edit", 
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
-	        }
+            }
         }
 
         // POST
@@ -70,7 +68,7 @@ namespace Orchard.Comments.Drivers {
             if (!string.IsNullOrEmpty(name) && String.Equals(name, "moderate", StringComparison.OrdinalIgnoreCase)) {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment"))) {
                     _commentService.UnapproveComment(part.Id);
-                    _orchardServices.Notifier.Information(T("Comment successfully moderated."));
+                    _orchardServices.Notifier.Success(T("Comment successfully moderated."));
                     return Editor(part, shapeHelper);
                 }
             }
@@ -78,7 +76,7 @@ namespace Orchard.Comments.Drivers {
             if (!string.IsNullOrEmpty(name) && String.Equals(name, "approve", StringComparison.OrdinalIgnoreCase)) {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't approve comment"))) {
                     _commentService.ApproveComment(part.Id);
-                    _orchardServices.Notifier.Information(T("Comment approved."));
+                    _orchardServices.Notifier.Success(T("Comment approved."));
                     return Editor(part, shapeHelper);
                 }
             }
@@ -86,14 +84,14 @@ namespace Orchard.Comments.Drivers {
             if (!string.IsNullOrEmpty(name) && String.Equals(name, "delete", StringComparison.OrdinalIgnoreCase)) {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment"))) {
                     _commentService.DeleteComment(part.Id);
-                    _orchardServices.Notifier.Information(T("Comment successfully deleted."));
+                    _orchardServices.Notifier.Success(T("Comment successfully deleted."));
                     return Editor(part, shapeHelper);
                 }
             }
 
             // if editing from the admin, don't update the owner or the status
             if (!string.IsNullOrEmpty(name) && String.Equals(name, "save", StringComparison.OrdinalIgnoreCase)) {
-                _orchardServices.Notifier.Information(T("Comment saved."));
+                _orchardServices.Notifier.Success(T("Comment saved."));
                 return Editor(part, shapeHelper);
             }
 

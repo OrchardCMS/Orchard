@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+    <Recipe>
+        <Name>Duplicate Steps</Name>
+    </Recipe>
+
+    <Recipes />
+    <Recipes />
+    <Recipes />
+
+</Orchard>
+

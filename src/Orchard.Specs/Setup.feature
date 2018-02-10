@@ -6,8 +6,8 @@ Feature: Setup
 Scenario: Root request shows setup form
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
-            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
+            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.Resources, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp, Orchard.Conditions |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/"
     Then I should see "Welcome to Orchard"
@@ -17,8 +17,8 @@ Scenario: Root request shows setup form
 Scenario: Setup folder also shows setup form
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
-            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
+            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.Resources, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp, Orchard.Conditions |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
@@ -28,8 +28,8 @@ Scenario: Setup folder also shows setup form
 Scenario: Some of the initial form values are required
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
-            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
+            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.Resources, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp, Orchard.Conditions |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/Setup"
         And I hit "Finish Setup"
@@ -40,8 +40,8 @@ Scenario: Some of the initial form values are required
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
-            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
+            | Module | Orchard.Setup, Orchard.Layouts, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.Resources, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp, Orchard.Conditions |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode, TheAdmin, TheThemeMachine |
         And I am on "/Setup"
     When I fill in 

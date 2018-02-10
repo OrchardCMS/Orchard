@@ -1,12 +1,17 @@
-﻿@using Orchard.Tags.Models
-<ul class="tag-cloud">
-@foreach (TagCount tagCount in Model.TagCounts) {
-    <li class="tag-cloud-tag tag-cloud-tag-@tagCount.Bucket">
-        @Html.ActionLink(tagCount.TagName, "Search", "Home", new {
-                area = "Orchard.Tags",
-                tagName = tagCount.TagName
-            }, null
-        )
-    </li>
+@using Orchard.Tags.Models
+@if (((IEnumerable<object>)Model.TagCounts).Any()) {
+    <ul class="tag-cloud">
+        @foreach (TagCount tagCount in Model.TagCounts) {
+            <li class="tag-cloud-tag tag-cloud-tag-@tagCount.Bucket">
+                @Html.ActionLink(tagCount.TagName, "Search", "Home", new {
+                       area = "Orchard.Tags",
+                       tagName = tagCount.TagName
+                   }, null
+                  )
+            </li>
+        }
+    </ul>
 }
-</ul>
+else {
+    <p>@T("There are no tags to display.")</p>
+}

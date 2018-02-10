@@ -1,0 +1,18 @@
+﻿.dashboard h2 {
+    font-size: 16px;
+    background: #f1f1f2;
+    line-height: 2em;
+    padding: 0 20px 0 8px;
+}
+
+.dashboard h2 i.fa {
+    font-size: 28px;
+    position: relative;
+    top: 4px;
+    color: #545454;
+    margin-right: 5px;
+}
+
+.dashboard img {
+    max-width: 100%;
+}

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Web.Routing;
-using JetBrains.Annotations;
 
 namespace Orchard.Themes.Services {
-    [UsedImplicitly]
     public class SiteThemeSelector : IThemeSelector {
         private readonly ISiteThemeService _siteThemeService;
 

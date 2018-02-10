@@ -51,12 +51,8 @@ namespace Orchard.Tests.Environment {
                 _routes = routes;
             }
 
-            public IEnumerable<RouteDescriptor> GetRoutes() {
-                return _routes;
-            }
-
             public void GetRoutes(ICollection<RouteDescriptor> routes) {
-                foreach (var routeDescriptor in GetRoutes())
+                foreach (var routeDescriptor in _routes)
                     routes.Add(routeDescriptor);
             }
         }

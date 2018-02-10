@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
@@ -10,7 +9,6 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Scheduling.Services {
-    [UsedImplicitly]
     public class ScheduledTaskManager : IScheduledTaskManager {
         private readonly IContentManager _contentManager;
         private readonly IRepository<ScheduledTaskRecord> _repository;

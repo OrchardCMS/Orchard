@@ -22,6 +22,10 @@ namespace Orchard.Environment.State {
             _entries = new ContextState<IList<Entry>>("DefaultProcessingEngine.Entries", () => new List<Entry>());
         }
 
+        public void Initialize() {
+            _entries.SetState(new List<Entry>());
+        }
+
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string eventName, Dictionary<string, object> parameters) {
 
             var entry = new Entry {
@@ -68,7 +72,7 @@ namespace Orchard.Environment.State {
 
         private void Execute(Entry entry) {
             // Force reloading extensions if there were extensions installed
-            // See http://orchard.codeplex.com/workitem/17465
+            // See https://github.com/OrchardCMS/Orchard/issues/1294
             if (entry.MessageName == "IRecipeSchedulerEventHandler.ExecuteWork") {
                 var ctx = _orchardHost().GetShellContext(entry.ShellSettings);
             }

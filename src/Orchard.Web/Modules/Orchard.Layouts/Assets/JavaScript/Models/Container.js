@@ -6,6 +6,7 @@
         this.allowedChildTypes = allowedChildTypes;
         this.children = children;
         this.isContainer = true;
+        this.containerTemplateStyles = {};
 
         var self = this;
 
@@ -27,6 +28,13 @@
             });
         };
 
+        var _baseSetIsFocused = this.setIsFocused;
+        this.setIsFocused = function () {
+            if (this.getIsSealed())
+                return;
+            _baseSetIsFocused.call(this);
+        };
+
         this.addChild = function (child) {
             if (!_(this.children).contains(child) && (_(this.allowedChildTypes).contains(child.type) || child.isContainable))
                 this.children.push(child);
@@ -39,6 +47,7 @@
             var index = _(this.children).indexOf(child);
             if (index >= 0) {
                 this.children.splice(index, 1);
+                this.editor.recycleBin.add(child);
                 if (child.getIsActive())
                     this.editor.activeElement = null;
                 if (child.getIsFocused()) {
@@ -130,6 +139,17 @@
             }
             else if (!!this.parent)
                 this.parent.pasteChild(child);
+        }
+
+        this.getContainerTemplateStyles = function () {
+            var styles = this.containerTemplateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
         }
     };
 

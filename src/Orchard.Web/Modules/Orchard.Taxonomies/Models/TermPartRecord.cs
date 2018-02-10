@@ -9,5 +9,6 @@ namespace Orchard.Taxonomies.Models {
         public virtual int Count { get; set; }
         public virtual bool Selectable { get; set; }
         public virtual int Weight { get; set; }
+        public virtual string FullWeight { get; set; }
     }
 }

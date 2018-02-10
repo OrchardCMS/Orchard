@@ -1,12 +1,13 @@
 ﻿using Orchard.ContentManagement.MetaData;
-using Orchard.Data.Migration;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data.Migration;
+using System;
 
 namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("UserPartRecord", 
+            SchemaBuilder.CreateTable("UserPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("UserName")
@@ -19,15 +20,49 @@ namespace Orchard.Users {
                     .Column<string>("RegistrationStatus", c => c.WithDefault("Approved"))
                     .Column<string>("EmailStatus", c => c.WithDefault("Approved"))
                     .Column<string>("EmailChallengeToken")
+                    .Column<DateTime>("CreatedUtc")
+                    .Column<DateTime>("LastLoginUtc")
+                    .Column<DateTime>("LastLogoutUtc")
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
                 );
 
-            return 1;
+            ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
+
+            return 5;
         }
 
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("CreatedUtc");
+                    table.AddColumn<DateTime>("LastLoginUtc");
+                });
+
+            return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("LastLogoutUtc");
+                });
+
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)));
+                });
+
+            return 5;
         }
     }
 }

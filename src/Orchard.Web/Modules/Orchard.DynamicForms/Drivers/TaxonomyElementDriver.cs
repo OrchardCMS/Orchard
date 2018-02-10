@@ -5,10 +5,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
@@ -19,15 +19,15 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
 
-        public TaxonomyElementDriver(IFormManager formManager, ITaxonomyService taxonomyService, ITokenizer tokenizer)
-            : base(formManager) {
+        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+            : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(Taxonomy element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var enumerationEditor = BuildForm(context, "TaxonomyForm");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var enumerationEditor = BuildForm(context, "TaxonomyForm", "Properties:15");
             var checkBoxValidation = BuildForm(context, "TaxonomyValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
@@ -67,6 +67,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
                         Classes: new[] { "text", "large", "tokenized" }),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this query field.")),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -120,14 +126,21 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Taxonomy element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Taxonomy element, ElementDisplayingContext context) {
             var taxonomyId = element.TaxonomyId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
 
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
+
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.TermOptions = GetTermOptions(element, context.DisplayType, taxonomyId, tokenData).ToArray();
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
@@ -150,8 +163,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             var projection = terms.Select(x => {
                 var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var value = _tokenizer.Replace(valueExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 return new SelectListItem {
                     Text = text,

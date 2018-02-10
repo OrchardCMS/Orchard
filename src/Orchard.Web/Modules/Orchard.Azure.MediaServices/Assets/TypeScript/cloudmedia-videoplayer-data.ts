@@ -1,5 +1,7 @@
 ﻿module Orchard.Azure.MediaServices.VideoPlayer.Data {
 
+    import Duration = moment.Duration;
+
     export interface IAssetData {
         VideoAssets: IVideoAsset[];
         DynamicVideoAssets: IDynamicVideoAsset[];

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -130,10 +131,10 @@ namespace Orchard.Packaging.Controllers {
                 PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, MapAppRoot());
 
                 if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                    Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
                 } 
                 else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The module has been successfully installed."));
+                    Services.Notifier.Success(T("The module has been successfully installed."));
 
                     IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
                     IPackage package = packageRepository.FindPackage(packageId);
@@ -174,10 +175,10 @@ namespace Orchard.Packaging.Controllers {
                 System.IO.File.Delete(fullFileName);
 
                 if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
-                    Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                    Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
                 }
                 else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
-                    Services.Notifier.Information(T("The module has been successfully installed."));
+                    Services.Notifier.Success(T("The module has been successfully installed."));
 
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
@@ -253,11 +254,13 @@ namespace Orchard.Packaging.Controllers {
                     // Enable the features and its dependencies using recipes, so that they are run after the module's recipes
 
                     var recipe = new Recipe {
+                        Name = "Test",
                         RecipeSteps = featureIds.Select(
-                            x => new RecipeStep {
-                                Name = "Feature",
-                                Step = new XElement("Feature", new XAttribute("enable", x))
-                            })
+                            (i,x) => new RecipeStep(
+                                id: i.ToString(CultureInfo.InvariantCulture),
+                                recipeName: "Test",
+                                name: "Feature",
+                                step: new XElement("Feature", new XAttribute("enable", x))))
                     };
 
                     _recipeManager.Execute(recipe);
@@ -278,7 +281,7 @@ namespace Orchard.Packaging.Controllers {
                 return Redirect(!String.IsNullOrEmpty(retryUrl) ? retryUrl : returnUrl);
             }
 
-            Services.Notifier.Information(T("Uninstalled package \"{0}\"", id));
+            Services.Notifier.Success(T("Uninstalled package \"{0}\"", id));
             return this.RedirectLocal(returnUrl, "~/");
         }
 

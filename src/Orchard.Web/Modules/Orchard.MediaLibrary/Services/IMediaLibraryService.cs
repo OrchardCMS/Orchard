@@ -13,14 +13,16 @@ namespace Orchard.MediaLibrary.Services {
         IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems(VersionOptions versionOptions = null);
         IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
         IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
+        IEnumerable<MediaPart> GetMediaContentItemsRecursive(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
         int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null);
         int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null);
+        int GetMediaContentItemsCountRecursive(string folderPath, string mediaType, VersionOptions versionOptions = null);
         MediaPart ImportMedia(string relativePath, string filename);
         MediaPart ImportMedia(string relativePath, string filename, string contentType);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename, string contentType);
         IMediaFactory GetMediaFactory(Stream stream, string mimeType, string contentType);
-
+        bool CheckMediaFolderPermission(Orchard.Security.Permissions.Permission permission, string folderPath);
         /// <summary>
         /// Creates a unique filename to prevent filename collisions.
         /// </summary>
@@ -38,6 +40,8 @@ namespace Orchard.MediaLibrary.Services {
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
         IMediaFolder GetRootMediaFolder();
+
+        IMediaFolder GetUserMediaFolder();
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -131,9 +135,17 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="inputStream">The stream with the file's contents.</param>
         /// <returns>The path to the uploaded file.</returns>
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream);
+
+        /// <summary>
+        /// Combines two paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
+        string Combine(string path1, string path2);
     }
 
-    public static class MediaLibrayServiceExtensions {
+    public static class MediaLibraryServiceExtensions {
         public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
             // The current user can manage a media if he has access to the whole hierarchy
             // or the media is under his personal storage folder.
@@ -143,8 +155,8 @@ namespace Orchard.MediaLibrary.Services {
                 return true;
             }
 
-            var mediaPath = folderPath + "\\";
-            var rootPath = rootMediaFolder.MediaPath + "\\";
+            var mediaPath = service.Combine(folderPath, " ").Trim();
+            var rootPath = service.Combine(rootMediaFolder.MediaPath, " ").Trim();
 
             return mediaPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
@@ -152,10 +164,31 @@ namespace Orchard.MediaLibrary.Services {
         public static string GetRootedFolderPath(this IMediaLibraryService service, string folderPath) {
             var rootMediaFolder = service.GetRootMediaFolder();
             if (rootMediaFolder != null) {
-                return Path.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
+                return service.Combine(rootMediaFolder.MediaPath, folderPath ?? "");
             }
 
             return folderPath;
+        }
+
+        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType) {
+            var mediaFactory = service.GetMediaFactory(stream, mimeType, contentType);
+            if (mediaFactory == null)
+                return null;
+
+            switch (mediaFactory.GetType().Name) {
+                case "ImageFactory":
+                    return "Image";
+                case "AudioFactory":
+                    return "Audio";
+                case "DocumentFactory":
+                    return "Document";
+                case "VectorImageFactory":
+                    return "VectorImage";
+                case "VideoFactory":
+                    return "Video";
+                default:
+                    return null;
+            }
         }
     }
 }

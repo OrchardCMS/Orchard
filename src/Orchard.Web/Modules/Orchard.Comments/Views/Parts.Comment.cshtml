@@ -1,15 +1,22 @@
-﻿@using Orchard.Comments.Models
-@using Orchard.ContentManagement
+﻿@using Orchard.ContentManagement
+@using Orchard.Comments
+@using Orchard.Comments.Models
 
 @{
     CommentPart comment = Model.ContentPart;
     CommentsPart comments = comment.CommentedOnContentItem.As<CommentsPart>();
-
+    var isAuthorized = AuthorizedFor(Permissions.AddComment, Model.ContentItem);
+    
     var children = New.List(Items: Model.Items);
     children.Classes.Add("comments");
 
+    if (Model.Items.Count > 0) {
+        Model.Classes.Add("has-replies");
+    }
+    
     Model.Classes.Add("comment");
-    Model.Classes.Add("comment-"+comment.Id);
+
+    Model.Id = "comment-" + comment.Id;
     var tag = Tag(Model, "article");
 }
 @tag.StartElement
@@ -17,13 +24,15 @@
         <h4>
             <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
             <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
-            @if (comments.ThreadedComments) {
-                <span class="reply">@Display.CommentReplyButton(ContentPart: comment)</span>
-            }
         </h4>
     </header>
 
     @Display.CommentText(ContentPart: Model.ContentPart, ContentItem: Model.ContentItem)
+
+    @if (comments.ThreadedComments && comments.CommentsActive && isAuthorized) {
+        <div>@Display.CommentReplyButton(ContentPart: comment)</div>
+        <div class="comment-reply-form-beacon" data-contentitem-id="@comment.CommentedOnContentItem.Id" data-id="@comment.ContentItem.Id"></div>
+    }
 
     @Display(children)
 @tag.EndElement

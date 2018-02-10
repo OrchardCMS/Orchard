@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -12,9 +11,9 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Services;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
         private readonly RequestContext _requestContext;
@@ -75,6 +74,10 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override void Exporting(BodyPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
+        }
+
+        protected override void Cloning(BodyPart originalPart, BodyPart clonePart, CloneContentContext context) {
+            clonePart.Text = originalPart.Text;
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {

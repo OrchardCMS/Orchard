@@ -41,8 +41,6 @@ namespace Lucene.Services {
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
             _basePath = _appDataFolder.Combine("Sites", shellSettings.Name, "Indexes");
 
-            Logger = NullLogger.Instance;
-
             // Ensures the directory exists
             EnsureDirectoryExists();
 
@@ -170,7 +168,7 @@ namespace Lucene.Services {
                         writer.DeleteDocuments(query);
                     }
                     catch (Exception ex) {
-                        Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                        Logger.Error(ex, "An unexpected error occurred while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
                     }
                 }
             }

@@ -10,10 +10,9 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class BlueprintElementHarvester : Component, ElementHarvester {
+    public class BlueprintElementHarvester : Component, IElementHarvester {
         private readonly Work<IElementBlueprintService> _elementBlueprintService;
         private readonly Work<IElementManager> _elementManager;
-        private bool _isHarvesting;
 
         public BlueprintElementHarvester(Work<IElementBlueprintService> elementBlueprintService, Work<IElementManager> elementManager) {
             _elementBlueprintService = elementBlueprintService;
@@ -21,15 +20,14 @@ namespace Orchard.Layouts.Providers {
         }
 
         public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
-            if (_isHarvesting)
+            if (context.IsHarvesting)
                 return Enumerable.Empty<ElementDescriptor>();
 
-            _isHarvesting = true;
             var blueprints = _elementBlueprintService.Value.GetBlueprints().ToArray();
 
             var query =
                 from blueprint in blueprints
-                let describeContext = new DescribeElementsContext {Content = context.Content, CacheVaryParam = "Blueprints"}
+                let describeContext = new DescribeElementsContext {Content = context.Content, CacheVaryParam = "Blueprints", IsHarvesting = true }
                 let baseElementDescriptor = _elementManager.Value.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName)
                 let baseElement = _elementManager.Value.ActivateElement(baseElementDescriptor)
                 select new ElementDescriptor(
@@ -41,16 +39,14 @@ namespace Orchard.Layouts.Providers {
                         EnableEditorDialog = false,
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
-                        Display = displayContext => Displaying(displayContext, baseElement),
+                        Displaying = displayContext => Displaying(displayContext, baseElement),
                         StateBag = new Dictionary<string, object> {
                             {"Blueprint", true},
                             {"ElementTypeName", baseElement.Descriptor.TypeName}
                         }
                     };
 
-            var descriptors = query.ToArray();
-            _isHarvesting = false;
-            return descriptors;
+            return query.ToArray();
         }
 
         private static string GetCategory(ElementBlueprint blueprint) {
@@ -62,11 +58,15 @@ namespace Orchard.Layouts.Providers {
             context.Element.Data = bluePrintState;
         }
 
-        private void Displaying(ElementDisplayContext context, Element element) {
+        private void Displaying(ElementDisplayingContext context, Element element) {
             var drivers = _elementManager.Value.GetDrivers(element);
 
             foreach (var driver in drivers) {
                 driver.Displaying(context);
+            }
+
+            if (element.Descriptor.Displaying != null) {
+                element.Descriptor.Displaying(context);
             }
         }
     }

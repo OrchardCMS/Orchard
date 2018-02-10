@@ -1,11 +1,9 @@
 using System;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsContainerPartDriver : ContentPartDriver<CommentsContainerPart> {
         private readonly ICommentService _commentService;
 
@@ -15,7 +13,7 @@ namespace Orchard.Comments.Drivers {
 
         protected override DriverResult Display(CommentsContainerPart part, string displayType, dynamic shapeHelper) {
 
-            var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
+            var commentsForCommentedContent = _commentService.GetCommentsForContainer(part.ContentItem.Id);
             Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
             Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
             

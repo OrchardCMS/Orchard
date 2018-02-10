@@ -1,5 +1,6 @@
-using System.Web.Security;
 using Orchard.ContentManagement.Records;
+using System;
+using System.Web.Security;
 
 namespace Orchard.Users.Models {
     public class UserPartRecord : ContentPartRecord {
@@ -15,5 +16,9 @@ namespace Orchard.Users.Models {
         public virtual UserStatus RegistrationStatus { get; set; }
         public virtual UserStatus EmailStatus { get; set; }
         public virtual string EmailChallengeToken { get; set; }
+        public virtual DateTime? CreatedUtc { get; set; }
+        public virtual DateTime? LastLoginUtc { get; set; }
+        public virtual DateTime? LastLogoutUtc { get; set; }
+        public virtual DateTime? LastPasswordChangeUtc { get; set; }
     }
 }

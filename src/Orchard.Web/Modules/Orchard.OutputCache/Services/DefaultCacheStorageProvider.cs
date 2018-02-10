@@ -16,6 +16,7 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void Set(string key, CacheItem cacheItem) {
+            _workContext.HttpContext.Cache.Remove(key);
             _workContext.HttpContext.Cache.Add(
                 key,
                 cacheItem,
@@ -27,7 +28,8 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void Remove(string key) {
-            _workContext.HttpContext.Cache.Remove(key);
+            if (_workContext.HttpContext != null)
+                _workContext.HttpContext.Cache.Remove(key);
         }
 
         public void RemoveAll() {

@@ -44,31 +44,67 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
-                DriverResult result = Editor(part, field, context.Updater, context.New);
+                // Checking if the editor needs to be updated (e.g. if any of the shapes were not hidden).
+                DriverResult editor = Editor(part, field, context.New);
+                IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
                 
-                if (result != null) {
-                    result.ContentPart = part;
-                    result.ContentField = field;
+                if (contentShapeResults.Any(contentShapeResult =>
+                    contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
+                    DriverResult result = Editor(part, field, context.Updater, context.New);
+
+                    if (result != null) {
+                        result.ContentPart = part;
+                        result.ContentField = field;
+                    }
+
+                    return result;
                 }
-                
-                return result;
+
+                return editor;
             }, context.Logger);
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Importing(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Importing(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Imported(part, field, context);
+                }, context.Logger);
+        }
+
+        void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                ImportCompleted(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exporting(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Exporting(part, field, context);
+                }, context.Logger);
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
+            Process(context.ContentItem, (part, field) => {
+                context.Prefix = part.PartDefinition.Name;
+                Exported(part, field, context);
+                }, context.Logger);
+        }
+
+        void IContentFieldDriver.Cloning(CloneContentContext context) {
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context);
+        }
+
+        void IContentFieldDriver.Cloned(CloneContentContext context) {
+            ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context);
         }
 
         void IContentFieldDriver.Describe(DescribeMembersContext context) {
@@ -78,6 +114,22 @@ namespace Orchard.ContentManagement.Drivers {
         void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
+        }
+
+        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, CloneContentContext context) {
+            var occurences = originalItem
+                .Parts
+                .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
+                .Join(cloneItem
+                    .Parts
+                    .SelectMany(part => 
+                        part
+                        .Fields
+                        .OfType<TField>()
+                        .Where(fi => 
+                            string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name)), 
+                    original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField } );
+            occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), context.Logger);
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
@@ -110,8 +162,11 @@ namespace Orchard.ContentManagement.Drivers {
         
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
+        protected virtual void Cloning(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
+        protected virtual void Cloned(ContentPart part, TField originalField, TField cloneField, CloneContentContext context) { }
 
         protected virtual void Describe(DescribeMembersContext context) { }
 
@@ -132,7 +187,21 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx, differentiator)).Differentiator(differentiator);
+            var result = new ContentShapeResult(shapeType, Prefix, ctx => {
+                var shape = shapeBuilder(ctx);
+
+                if (shape == null) {
+                    return null;
+                }
+
+                return AddAlternates(shape, ctx, differentiator);
+            });
+
+            if (result == null) {
+                return null;
+            }
+
+            return result.Differentiator(differentiator);
         }
 
         private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator) {

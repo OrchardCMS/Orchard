@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement
+@{
+    var widget = (ContentItem)Model.Widget;
+}
+<div class="layout-placeholder">
+    @if (widget != null) {
+        @T("{0} - {1}", Html.ItemDisplayText(widget), widget.TypeDefinition.DisplayName)
+    }
+    else {
+        @T("Widget Not Found");
+    }
+</div>

@@ -1,0 +1,20 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.CustomStepsViewModel
+@if (Model.CustomSteps.Any()) {
+    <fieldset>
+        <legend>@T("Choose the custom steps to execute in the export file:")</legend>
+        <ol>
+            @for (var customStepIndex = 0; customStepIndex < Model.CustomSteps.Count; customStepIndex++) {
+                var closureIndex = customStepIndex;
+                <li>
+                    <input type="hidden" value="@Model.CustomSteps[customStepIndex].CustomStep" name="@Html.NameFor(m => m.CustomSteps[closureIndex].CustomStep)" />
+                    <input type="checkbox" value="true" name="@Html.NameFor(m => m.CustomSteps[closureIndex].IsChecked)" id="@Html.NameFor(m => m.CustomSteps[closureIndex].IsChecked)" />
+                    <label class="forcheckbox" for="@Html.NameFor(m => m.CustomSteps[closureIndex].IsChecked)">@Model.CustomSteps[closureIndex].CustomStep.CamelFriendly()</label>
+                </li>
+            }
+        </ol>
+    </fieldset>
+}
+else {
+    <p>@T("There are no additional export steps available.")</p>
+}
