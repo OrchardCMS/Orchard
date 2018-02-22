@@ -17,6 +17,7 @@
         font-size: inherit;
         text-align: inherit;
         width: inherit;
+        height: inherit;
     }
 
     .dialog-wrapper .dialog {
