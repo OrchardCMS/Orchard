@@ -20,6 +20,7 @@ namespace Orchard.Web {
         }
 
         protected void Application_Start() {
+            MvcHandler.DisableMvcResponseHeader = true; // remove X-AspNetMvc-Version header
             RegisterRoutes(RouteTable.Routes);
             _starter = new Starter<IOrchardHost>(HostInitialization, HostBeginRequest, HostEndRequest);
             _starter.OnApplicationStart(this);
@@ -31,6 +32,9 @@ namespace Orchard.Web {
 
         protected void Application_EndRequest() {
             _starter.OnEndRequest(this);
+        }
+        protected void Application_PreSendRequestHeaders() {
+            Response.Headers.Remove("Server"); // remove Server header
         }
 
         private static void HostBeginRequest(HttpApplication application, IOrchardHost host) {
