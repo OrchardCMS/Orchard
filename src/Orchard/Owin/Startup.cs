@@ -8,7 +8,7 @@ namespace Orchard.Owin {
     public class Startup {
         public void Configuration(IAppBuilder app) {
             app.Use((context, next) => {
-                context.Response.Headers.Append("X-Generator", "Orchard");
+                // context.Response.Headers.Append("X-Generator", "Orchard"); // commenting this removes the X-Generator header
                 return next();
             });
         }
