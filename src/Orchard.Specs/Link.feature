@@ -51,7 +51,7 @@ Scenario: Creating and using Link fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                             | value                         |
-            | Fields[0].LinkFieldSettings.Hint | Enter the url of the web site |
+            | Fields[SiteUrl].LinkFieldSettings.Hint | Enter the url of the web site |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Enter the url of the web site"
@@ -60,7 +60,7 @@ Scenario: Creating and using Link fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                 | value |
-            | Fields[0].LinkFieldSettings.Required | true |
+            | Fields[SiteUrl].LinkFieldSettings.Required | true |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -73,7 +73,7 @@ Scenario: Creating and using Link fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value                         |
-            | Fields[0].LinkFieldSettings.DefaultValue | http://www.orchardproject.net |
+            | Fields[SiteUrl].LinkFieldSettings.DefaultValue | http://www.orchardproject.net |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "value=\"http://www.orchardproject.net\""
@@ -82,7 +82,7 @@ Scenario: Creating and using Link fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value |
-            | Fields[0].LinkFieldSettings.Required     | true  |
+            | Fields[SiteUrl].LinkFieldSettings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
@@ -91,7 +91,7 @@ Scenario: Creating and using Link fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value |
-            | Fields[0].LinkFieldSettings.Required     | false |
+            | Fields[SiteUrl].LinkFieldSettings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""
