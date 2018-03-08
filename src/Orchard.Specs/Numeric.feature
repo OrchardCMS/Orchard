@@ -48,7 +48,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                | value                 |
-            | Fields[0].NumericFieldSettings.Hint | Please enter a number |
+            | Fields[Guests].NumericFieldSettings.Hint | Please enter a number |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Please enter a number"
@@ -57,7 +57,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                    | value |
-            | Fields[0].NumericFieldSettings.Required | true  |
+            | Fields[Guests].NumericFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -70,8 +70,8 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].NumericFieldSettings.Minimum | -10   |
-            | Fields[0].NumericFieldSettings.Maximum | 100   |
+            | Fields[Guests].NumericFieldSettings.Minimum | -10   |
+            | Fields[Guests].NumericFieldSettings.Maximum | 100   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "min=\"-10\"" 
@@ -92,8 +92,8 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].NumericFieldSettings.Minimum | a     |
-            | Fields[0].NumericFieldSettings.Maximum | b     |
+            | Fields[Guests].NumericFieldSettings.Minimum | a     |
+            | Fields[Guests].NumericFieldSettings.Maximum | b     |
         And I hit "Save"
     Then I should see "The value &#39;a&#39; is not valid for Minimum."
         And I should see "The value &#39;b&#39; is not valid for Maximum."
@@ -110,7 +110,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.DefaultValue | 1234  |
+            | Fields[Guests].NumericFieldSettings.DefaultValue | 1234  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "value=\"1234\""
@@ -119,7 +119,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | true  |
+            | Fields[Guests].NumericFieldSettings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
@@ -128,7 +128,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | false |
+            | Fields[Guests].NumericFieldSettings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

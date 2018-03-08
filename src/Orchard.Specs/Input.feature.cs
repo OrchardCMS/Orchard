@@ -132,7 +132,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Hint",
+                        "Fields[Contact].InputFieldSettings.Hint",
                         "Enter the contact email address"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
@@ -149,7 +149,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Type",
+                        "Fields[Contact].InputFieldSettings.Type",
                         "Email"});
 #line 54
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -166,7 +166,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Title",
+                        "Fields[Contact].InputFieldSettings.Title",
                         "Enter an email address"});
 #line 63
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -183,7 +183,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.AutoFocus",
+                        "Fields[Contact].InputFieldSettings.AutoFocus",
                         "true"});
 #line 72
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -200,7 +200,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.AutoComplete",
+                        "Fields[Contact].InputFieldSettings.AutoComplete",
                         "true"});
 #line 81
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
@@ -217,7 +217,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Placeholder",
+                        "Fields[Contact].InputFieldSettings.Placeholder",
                         "email@domain.com"});
 #line 90
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
@@ -234,7 +234,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.MaxLength",
+                        "Fields[Contact].InputFieldSettings.MaxLength",
                         "100"});
 #line 99
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
@@ -251,7 +251,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Required",
+                        "Fields[Contact].InputFieldSettings.Required",
                         "true"});
 #line 108
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
@@ -304,7 +304,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.DefaultValue",
+                        "Fields[Contact].InputFieldSettings.DefaultValue",
                         "contact@orchardproject.net"});
 #line 134
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
@@ -321,7 +321,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table14.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Required",
+                        "Fields[Contact].InputFieldSettings.Required",
                         "true"});
 #line 143
         testRunner.And("I fill in", ((string)(null)), table14, "And ");
@@ -338,7 +338,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table15.AddRow(new string[] {
-                        "Fields[0].InputFieldSettings.Required",
+                        "Fields[Contact].InputFieldSettings.Required",
                         "false"});
 #line 152
         testRunner.And("I fill in", ((string)(null)), table15, "And ");

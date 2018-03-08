@@ -132,7 +132,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Options",
+                        "Fields[Location].EnumerationFieldSettings.Options",
                         "Seattle"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
@@ -174,7 +174,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Hint",
+                        "Fields[Location].EnumerationFieldSettings.Hint",
                         "Please select a location"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -191,7 +191,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Dropdown"});
 #line 67
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -208,7 +208,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Radiobutton"});
 #line 76
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
@@ -226,7 +226,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Listbox"});
 #line 85
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
@@ -244,7 +244,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Checkbox"});
 #line 94
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
@@ -261,7 +261,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Required",
+                        "Fields[Location].EnumerationFieldSettings.Required",
                         "true"});
 #line 103
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
@@ -280,13 +280,13 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table11.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Options",
+                        "Fields[Location].EnumerationFieldSettings.Options",
                         "Seattle"});
             table11.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Dropdown"});
             table11.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.DefaultValue",
+                        "Fields[Location].EnumerationFieldSettings.DefaultValue",
                         "Seattle"});
 #line 113
         testRunner.And("I fill in", ((string)(null)), table11, "And ");
@@ -303,10 +303,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table12.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Required",
+                        "Fields[Location].EnumerationFieldSettings.Required",
                         "true"});
             table12.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Listbox"});
 #line 124
         testRunner.And("I fill in", ((string)(null)), table12, "And ");
@@ -323,10 +323,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.Required",
+                        "Fields[Location].EnumerationFieldSettings.Required",
                         "false"});
             table13.AddRow(new string[] {
-                        "Fields[0].EnumerationFieldSettings.ListMode",
+                        "Fields[Location].EnumerationFieldSettings.ListMode",
                         "Listbox"});
 #line 134
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
