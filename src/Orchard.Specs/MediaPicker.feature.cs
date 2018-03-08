@@ -198,7 +198,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "ext-Fields[0].MediaPickerFieldSettings",
+                        "ext-Fields[File].MediaPickerFieldSettings",
                         "true"});
             table7.AddRow(new string[] {
                         "Fields[File].MediaPickerFieldSettings.AllowedExtensions",

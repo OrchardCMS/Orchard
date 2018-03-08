@@ -69,7 +69,7 @@ Scenario: Creating and using media fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                 | value |
-            | ext-Fields[0].MediaPickerFieldSettings               | true  |
+            | ext-Fields[File].MediaPickerFieldSettings               | true  |
             | Fields[File].MediaPickerFieldSettings.AllowedExtensions | jpg   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
