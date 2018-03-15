@@ -61,7 +61,7 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                 | value                       |
-            | Fields[0].DateTimeFieldSettings.Hint | Enter the date of the event |
+            | Fields[EventDate].DateTimeFieldSettings.Hint | Enter the date of the event |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Enter the date of the event"
@@ -70,7 +70,7 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                    | value    |
-            | Fields[0].DateTimeFieldSettings.Display | DateOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Display | DateOnly |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -80,7 +80,7 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                    | value    |
-            | Fields[0].DateTimeFieldSettings.Display | TimeOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Display | TimeOnly |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Time"
@@ -90,8 +90,8 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value       |
-            | Fields[0].DateTimeFieldSettings.Display  | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Required | true        |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -119,8 +119,8 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value    |
-            | Fields[0].DateTimeFieldSettings.Display  | DateOnly |
-            | Fields[0].DateTimeFieldSettings.Required | true     |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true     |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -131,8 +131,8 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value    |
-            | Fields[0].DateTimeFieldSettings.Display  | TimeOnly |
-            | Fields[0].DateTimeFieldSettings.Required | true     |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | TimeOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true     |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -143,9 +143,9 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value       |
-            | Fields[0].DateTimeFieldSettings.Display     | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Editor.Date | 01/31/2016  |
-            | Fields[0].DateTimeFieldSettings.Editor.Time | 10:00 AM    |
+            | Fields[EventDate].DateTimeFieldSettings.Display     | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Editor.Date | 01/31/2016  |
+            | Fields[EventDate].DateTimeFieldSettings.Editor.Time | 10:00 AM    |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -190,8 +190,8 @@ Scenario: Creating and using date time fields in another culture
         And I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value       |
-            | Fields[0].DateTimeFieldSettings.Display  | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Required | true        |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
     When I go to "Admin/Contents/Create/Event"
         And I fill in 
