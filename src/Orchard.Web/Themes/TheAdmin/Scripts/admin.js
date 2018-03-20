@@ -62,9 +62,10 @@
         $(this).closest("form").find(".apply-bulk-actions-auto:first").click();
     });
 
-    $("body").on("click", "[itemprop~='RemoveUrl']", function () {
+    $("body").on("click", "[itemprop~='RemoveUrl']", function (e) {
         // don't show the confirm dialog if the link is also UnsafeUrl, as it will already be handled in base.js
         if ($(this).filter("[itemprop~='UnsafeUrl']").length == 1) {
+            e.preventDefault();
             return;
         }
 
