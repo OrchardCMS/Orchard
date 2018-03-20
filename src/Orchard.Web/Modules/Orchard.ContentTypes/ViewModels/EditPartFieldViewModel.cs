@@ -19,7 +19,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public int Index { get; set; }
-        public string Prefix { get { return "Fields[" + Index + "]"; } }
+        public string Prefix { get { return "Fields[" + Name + "]"; } }
         public EditPartViewModel Part { get; set; }
 
         public string Name { get; set; }

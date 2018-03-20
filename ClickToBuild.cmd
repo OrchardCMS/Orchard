@@ -1,11 +1,15 @@
 @echo off
 
+REM Necessary for the InstallDir variable to work inside the MsBuild-finding loop below.
+SETLOCAL ENABLEDELAYEDEXPANSION
+
 for /f "usebackq tokens=1* delims=: " %%i in (`lib\vswhere\vswhere -latest -version "[15.0,16.0)" -requires Microsoft.Component.MSBuild`) do (
   if /i "%%i"=="installationPath" (
 	set InstallDir=%%j
-	if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+	echo !InstallDir!
+	if exist "!InstallDir!\MSBuild\15.0\Bin\MSBuild.exe" (
 		echo "Using MSBuild from Visual Studio 2017"
-		set msbuild="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
+		set msbuild="!InstallDir!\MSBuild\15.0\Bin\MSBuild.exe"
 		goto build
 	)
   )

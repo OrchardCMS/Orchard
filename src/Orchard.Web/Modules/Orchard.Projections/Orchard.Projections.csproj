@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,11 +47,14 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -134,12 +136,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
@@ -168,6 +170,8 @@
     <Compile Include="Models\NavigationQueryPart.cs" />
     <Compile Include="Models\NavigationQueryPartRecord.cs" />
     <Compile Include="Models\QueryPart.cs" />
+    <Compile Include="Providers\Builders\MemberBindingsStep.cs" />
+    <Compile Include="Providers\Executors\MemberBindingsStep.cs" />
     <Compile Include="Providers\Filters\ContentPartRecordsForm.cs" />
     <Compile Include="Providers\Filters\EagerFetchFilter.cs" />
     <Compile Include="Providers\Layouts\RawLayout.cs" />
@@ -177,6 +181,9 @@
     <Compile Include="Providers\Layouts\ShapeLayoutForms.cs" />
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
+    <Compile Include="QueryVersionScopeOptions.cs" />
+    <Compile Include="Services\DraftFieldIndexService.cs" />
+    <Compile Include="Services\IDraftFieldIndexService.cs" />
     <Compile Include="Services\IProjectionManagerExtension.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
@@ -280,6 +287,7 @@
     <Compile Include="ViewModels\LayoutAddViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditViewModel.cs" />
     <Compile Include="ViewModels\ProjectionPartEditViewModel.cs" />
+    <Compile Include="ViewModels\QueryViewModel.cs" />
     <Compile Include="ViewModels\SortCriteriaAddViewModel.cs" />
     <Compile Include="ViewModels\SortCriteriaEditViewModel.cs" />
     <Compile Include="ViewModels\FilterAddViewModel.cs" />
@@ -323,6 +331,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\QueryPart_Edit.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -347,7 +358,7 @@
     -->
   </Target>
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
-    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>

@@ -43,7 +43,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <NoWarn>
     </NoWarn>
@@ -57,7 +56,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
     <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -176,6 +174,8 @@
   <ItemGroup>
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\DefaultPlacementParseMatchProviders.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\IPlacementParseMatchProvider.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />
@@ -1087,11 +1087,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
