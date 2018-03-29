@@ -59,15 +59,15 @@ namespace Orchard.OutputCache.Services {
                 var hash = GetCacheItemFileHash(key);
 
                 lock (String.Intern(hash)) {
-                    using (var stream = SerializeContent(cacheItem)) {
-                        var filename = _appDataFolder.Combine(_content, hash);
-                        using (var fileStream = _appDataFolder.CreateFile(filename)) {
-                            stream.CopyTo(fileStream);
+                    var filename = _appDataFolder.Combine(_content, hash);
+                    using (var fileStream = _appDataFolder.CreateFile(filename)) {
+                        using (var writer = new BinaryWriter(fileStream)) {
+                            fileStream.Write(cacheItem.Output, 0, cacheItem.Output.Length);
                         }
                     }
 
                     using (var stream = SerializeMetadata(cacheItem)) {
-                        var filename = _appDataFolder.Combine(_metadata, hash);
+                        filename = _appDataFolder.Combine(_metadata, hash);
                         using (var fileStream = _appDataFolder.CreateFile(filename)) {
                             stream.CopyTo(fileStream);
                         }
@@ -145,8 +145,10 @@ namespace Orchard.OutputCache.Services {
                             return null;
                         }
 
-                        var content = DeserializeContent(stream);
-                        cacheItem.Output = content;
+                        using(var ms = new MemoryStream()) {
+                            stream.CopyTo(ms);
+                            cacheItem.Output = ms.ToArray();
+                        }
                     }
 
                     return cacheItem;
@@ -187,20 +189,6 @@ namespace Orchard.OutputCache.Services {
                 var b64 = Convert.ToBase64String(hashedBytes);
                 return String.Join("-", b64.Split(InvalidPathChars, StringSplitOptions.RemoveEmptyEntries));
             }
-        }
-
-        internal static MemoryStream SerializeContent(CacheItem item) {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            var memoryStream = new MemoryStream();
-            binaryFormatter.Serialize(memoryStream, item.Output);
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            return memoryStream;
-        }
-
-        internal static byte[] DeserializeContent(Stream stream) {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            var result = (byte[])binaryFormatter.Deserialize(stream);
-            return result;
         }
 
         internal static MemoryStream SerializeMetadata(CacheItem item) {
