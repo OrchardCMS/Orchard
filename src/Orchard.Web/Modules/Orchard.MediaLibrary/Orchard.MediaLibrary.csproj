@@ -128,13 +128,17 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Controllers\LocalizedMediaController.cs" />
+    <Compile Include="Drivers\MediaLibraryExplorerLocalizationExtensionsPartDriver.cs" />
     <Compile Include="Drivers\VectorImagePartDriver.cs" />
     <Compile Include="Extensions\ContentItemExtensions.cs" />
     <Compile Include="Extensions\MediaMetaDataExtensions.cs" />
     <Compile Include="Factories\VectorImageFactory.cs" />
     <Compile Include="Handlers\MediaItemHandler.cs" />
+    <Compile Include="Handlers\MediaLibraryPickerFieldLocalizationExtensionHandler.cs" />
     <Compile Include="Handlers\MediaLibrarySettingsPartHandler.cs" />
     <Compile Include="Implementation\DefaultMediaUsername.cs" />
+    <Compile Include="MediaLocalizationMigrations.cs" />
     <Compile Include="Models\MediaLibrarySettingsPart.cs" />
     <Compile Include="Models\VectorImagePart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
@@ -158,6 +162,10 @@
     <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
       <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
       <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
+      <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
+      <Name>Orchard.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
@@ -215,6 +223,8 @@
     <Compile Include="Services\MediaLibraryService.cs" />
     <Compile Include="Services\Shapes.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
+    <Compile Include="Settings\MediaLibraryPickerFieldLocalizationEditorEvents.cs" />
+    <Compile Include="Settings\MediaLibraryPickerFieldLocalizationSettings.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
     <Compile Include="Tokens\FieldTokens.cs" />
@@ -415,6 +425,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Image.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Audio.cshtml" />
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Document.cshtml" />
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-OEmbed.cshtml" />
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-VectorImage.cshtml" />
+    <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin-Video.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Localization.ContentTranslations.SummaryAdmin.ForMedia.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaLibraryPickerFieldLocalizationSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\MediaLibraryLocalization.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LocalizedMedia\MediaItems.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

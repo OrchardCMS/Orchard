@@ -222,8 +222,12 @@
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Mvc\Html\LinkExtensions.cs" />
+    <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
+    <Compile Include="Security\IUserDataProvider.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
+    <Compile Include="Security\Providers\BaseUserDataProvider.cs" />
+    <Compile Include="Security\Providers\DefaultSecurityService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
@@ -428,6 +432,7 @@
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
+    <Compile Include="Security\Providers\TenantNameUserDataProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />

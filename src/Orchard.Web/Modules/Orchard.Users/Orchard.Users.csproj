@@ -114,6 +114,7 @@
     <Compile Include="Forms\SignInUserForm.cs" />
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />
+    <Compile Include="Handlers\SecuritySettingsPartHandler.cs" />
     <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Migrations.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Events\IUserEventHandler.cs" />
     <Compile Include="Models\MessageTypes.cs" />
     <Compile Include="Models\RegistrationSettingsPart.cs" />
+    <Compile Include="Models\SecuritySettingsPart.cs" />
     <Compile Include="Models\UserPart.cs" />
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
+    <Compile Include="Services\PasswordChangedDateUserDataProvider.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
@@ -248,6 +251,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\ChangeExpiredPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Users.SecuritySettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

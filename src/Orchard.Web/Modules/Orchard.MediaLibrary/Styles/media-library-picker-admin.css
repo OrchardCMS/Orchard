@@ -42,15 +42,19 @@
     text-align: right;
     font-size: 12px;
     opacity: 0.6;
+    height: 40px;
 }
 
 .overlay h3 {
     padding-right:5px;
     font-size: 12px;
-    height: 40px;
     overflow: hidden;
 }
 
+.overlay .publication-status {
+    padding-right:5px;
+    overflow: hidden;
+}
 .media-thumbnail {
     width: 120px;
     height: 120px;

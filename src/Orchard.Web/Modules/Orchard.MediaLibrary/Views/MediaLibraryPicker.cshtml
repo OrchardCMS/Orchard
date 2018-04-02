@@ -1,4 +1,5 @@
 ﻿@using Orchard.ContentManagement
+@using Orchard.Localization.Models;
 @using Orchard.Utility.Extensions;
 
 @{
@@ -8,12 +9,12 @@
     Script.Require("jQueryColorBox").AtFoot();
     Script.Include("media-library-picker.js").AtFoot();
 
-    var fieldName = (string) Model.FieldName;
-    var displayName = (string) Model.DisplayName;
+    var fieldName = (string)Model.FieldName;
+    var displayName = (string)Model.DisplayName;
     var multiple = (bool)(Model.Multiple ?? false);
     var required = (bool)(Model.Required ?? false);
-    var hint = (string) Model.Hint;
-    var promptOnNavigate = (bool) (Model.PromptOnNavigate ?? true);
+    var hint = (string)Model.Hint;
+    var promptOnNavigate = (bool)(Model.PromptOnNavigate ?? true);
     var showSaveWarning = (bool)(Model.ShowSaveWarning);
     var contentItems = (IEnumerable<ContentItem>)Model.ContentItems ?? Enumerable.Empty<ContentItem>();
     var contentManager = WorkContext.Resolve<IContentManager>();
@@ -31,10 +32,10 @@
           data-return-url="@HttpUtility.JavaScriptStringEncode(Request.RawUrl)"
           data-prompt-on-navigate="@promptOnNavigate.ToString().ToLower()"
           data-show-save-warning="@showSaveWarning.ToString().ToLower()">
-    <label @if (required) { <text> class="required" </text>    }>@displayName</label>
+    <label @if (required) { <text> class="required" </text>       }>@displayName</label>
     <div class="message message-Warning media-library-picker-message">@T("You need to save your changes.")</div>
     <div class="items media-library-picker" summary="@displayName">
-        <ul>
+        <ul class="media-items">
             @foreach (var contentItem in contentItems) {
                 var editRouteValues = contentManager.GetItemMetadata(contentItem).EditorRouteValues;
                 var editUrl = Url.Action(
@@ -46,6 +47,15 @@
                             @Display(BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
                                 <h3>@Html.ItemDisplayText(contentItem)</h3>
+                                <p class="publication-status" data-bind="text: mediaInfos">
+                                    @(contentItem.IsPublished() ? "" : T("Draft").Text)
+                                    @{
+                                        var localizationPart = contentItem.As<LocalizationPart>();
+                                        if (localizationPart != null && localizationPart.Culture != null) {
+                                            @(string.Format(" ({0})", localizationPart.Culture.Culture))
+                                        }
+                                    }
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -58,7 +68,7 @@
                         </li>
                     </ul>
                 </li>
-            }
+                                        }
         </ul>
     </div>
     <div>
