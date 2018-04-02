@@ -18,13 +18,18 @@ namespace Orchard.Workflows {
 
             manifest.DefineStyle("WorkflowsAdmin").SetUrl("orchard-workflows-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
 
-            var activityNames = _activitiesManager.Value.GetActivities().Select(x => "WorkflowsActivity-" + x.Name).ToArray();
+            var activities = _activitiesManager.Value.GetActivities().ToArray();//.Select(x => "WorkflowsActivity-" + x.Name).ToArray();
 
-            foreach (var activityName in activityNames) {
-                manifest.DefineStyle(activityName).SetUrl(activityName.HtmlClassify()).SetDependencies("WorkflowsAdmin");
+            foreach (var activity in activities) {
+                var assemblyName = activity.GetType().Assembly.GetName().Name;
+                var styleName = "WorkflowsActivity-" + activity.Name;
+                manifest.DefineStyle(styleName)
+                    .SetBasePath(VirtualPathUtility.AppendTrailingSlash("~/Modules/"+assemblyName+"/styles/"))
+                    .SetUrl(styleName.HtmlClassify()+".css")
+                    .SetDependencies("WorkflowsAdmin");
             }
 
-            manifest.DefineStyle("WorkflowsActivities").SetUrl("workflows-activity.css").SetDependencies(activityNames);
+            manifest.DefineStyle("WorkflowsActivities").SetUrl("workflows-activity.css").SetDependencies(activities.Select(x => "WorkflowsActivity-" + x.Name).ToArray());
 
             manifest.DefineScript("jsPlumb").SetUrl("jquery.jsPlumb-1.4.1-all-min.js").SetDependencies("jQueryUI");
         }
