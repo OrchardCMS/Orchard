@@ -13,6 +13,9 @@
         dataColumns.Add(Model.Submissions.Columns[i]);
     }
 }
+<div class="manage">
+    @Html.ActionLink(T("Export").Text, "Export", "SubmissionAdmin", new { id = Model.FormName, area = "Orchard.DynamicForms" }, new { @class = "button primaryAction" })
+</div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
