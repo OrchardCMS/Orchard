@@ -32,6 +32,9 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Tests.ContentManagement;
 using Orchard.Services;
+using Orchard.Settings;
+using Orchard.Core.Settings.Handlers;
+using Orchard.Core.Settings.Services;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
@@ -42,6 +45,8 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISession _session;
         private IContainer _container;
         private StubClock _clock;
+        private Mock<WorkContext> _workContext;
+
         [TestFixtureSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -73,7 +78,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
-            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
+            //builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterAutoMocking(MockBehavior.Loose);
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
@@ -85,12 +90,27 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<InfosetHandler>().As<IContentHandler>();
 
+            builder.RegisterType<SiteService>().As<ISiteService>();
+            builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
+            builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
+
+            _session = _sessionFactory.OpenSession();
+            builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
+
+            _workContext = new Mock<WorkContext>();
+            _workContext.Setup(w => w.GetState<ISite>(It.Is<string>(s => s == "CurrentSite"))).Returns(() => { return _container.Resolve<ISiteService>().GetSiteSettings(); });
+
+            var _workContextAccessor = new Mock<IWorkContextAccessor>();
+            _workContextAccessor.Setup(w => w.GetContext()).Returns(_workContext.Object);
+            builder.RegisterInstance(_workContextAccessor.Object).As<IWorkContextAccessor>();
+
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
 
             _container = builder.Build();
             _membershipValidationService = _container.Resolve<IMembershipValidationService>();
             _membershipService = _container.Resolve<IMembershipService>();
+
         }
 
         [TearDown]
