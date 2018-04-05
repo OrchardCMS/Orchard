@@ -50,11 +50,10 @@ namespace Orchard.Users.Drivers{
                             var actUser = _membershipService.GetUser(part.UserName);
                             _membershipService.SetPassword(actUser, editModel.Password);
                         }
-                    }
-
-                    IDictionary<string, LocalizedString> validationErrors;
-                    if (!_userService.PasswordMeetsPolicies(editModel.Password, out validationErrors)) {
-                        updater.AddModelErrors(validationErrors);
+                   	IDictionary<string, LocalizedString> validationErrors;
+                   	if (!_userService.PasswordMeetsPolicies(editModel.Password, out validationErrors)) {
+                        	updater.AddModelErrors(validationErrors);
+                    	}
                     }
                 }
             }
