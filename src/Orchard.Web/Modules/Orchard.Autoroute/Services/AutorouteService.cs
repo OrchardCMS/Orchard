@@ -13,6 +13,7 @@ using Orchard.Localization.Services;
 using Orchard.Mvc;
 using System.Web;
 using Orchard.ContentManagement.Aspects;
+using System.Collections.Concurrent;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : Component, IAutorouteService {
@@ -25,6 +26,9 @@ namespace Orchard.Autoroute.Services {
         private readonly ICultureManager _cultureManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AliasSource = "Autoroute:View";
+
+        //This object is used to synchronize concurrent calls in the ProcessPath method
+        private static readonly ConcurrentDictionary<string, List<int>> _displayAliasVersions = new ConcurrentDictionary<string, List<int>>();
 
         public AutorouteService(
             IAliasService aliasService,
@@ -42,6 +46,8 @@ namespace Orchard.Autoroute.Services {
             _routeEvents = routeEvents;
             _cultureManager = cultureManager;
             _httpContextAccessor = httpContextAccessor;
+
+            
         }
 
         public string GenerateAlias(AutoroutePart part) {
@@ -206,22 +212,39 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool ProcessPath(AutoroutePart part) {
-            var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
-
-            // Don't include *this* part in the list
-            // of slugs to consider for conflict detection.
-            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
-
-            if (pathsLikeThis.Any()) {
-                var originalPath = part.Path;
-                var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
-                part.DisplayAlias = newPath;
-
-                if (originalPath != newPath)
-                    return false;
+            bool returnValue = true;
+            
+            var baseAlias = GenerateAlias(part);
+            lock (_displayAliasVersions) {
+                if (_displayAliasVersions.TryAdd(baseAlias, new List<int>())) {
+                    //we had not searched for this path yet
+                    //get the versions out of the db
+                    _displayAliasVersions[baseAlias].AddRange(
+                        GetSimilarPaths(baseAlias)
+                        .Select(ap => new Tuple<int, int?>(ap.ContentItem.Id, GetSlugVersion(baseAlias, ap.Path)))
+                        .Where(tup => tup.Item2.HasValue)
+                        .OrderBy(tup => tup.Item2) //ascending
+                        .Select(tup => tup.Item1) //get the Ids
+                    );
+                }
             }
 
-            return true;
+            lock (_displayAliasVersions[baseAlias]) {
+                if (_displayAliasVersions[baseAlias].Count == 0) {
+                    _displayAliasVersions[baseAlias].Add(part.ContentItem.Id); //first ever part with this Alias
+                    returnValue = true;
+                }
+                else if (_displayAliasVersions[baseAlias].Contains(part.ContentItem.Id)) {
+                    //this part has already been processed
+                    returnValue = true;
+                }
+                else {
+                    _displayAliasVersions[baseAlias].Add(part.ContentItem.Id);
+                    part.DisplayAlias = string.Format("{0}-{1}", baseAlias, _displayAliasVersions[baseAlias].Count);
+                    returnValue = false;
+                }
+            }
+            return returnValue;
         }
 
         private SettingsDictionary GetTypePartSettings(string contentType) {
