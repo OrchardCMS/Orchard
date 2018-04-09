@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,13 +7,13 @@ using Orchard.Alias;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Settings;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.Tokens;
 using Orchard.Localization.Services;
+using Orchard.Locking;
 using Orchard.Mvc;
-using System.Web;
-using Orchard.ContentManagement.Aspects;
+using Orchard.Tokens;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : Component, IAutorouteService {
@@ -24,7 +25,12 @@ namespace Orchard.Autoroute.Services {
         private readonly IRouteEvents _routeEvents;
         private readonly ICultureManager _cultureManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILockingProvider _lockingProvider;
         private const string AliasSource = "Autoroute:View";
+
+        //This object is used to synchronize concurrent calls in the ProcessPath method
+        private static readonly ConcurrentDictionary<string, List<int>> _displayAliasVersions = 
+            new ConcurrentDictionary<string, List<int>>();
 
         public AutorouteService(
             IAliasService aliasService,
@@ -33,7 +39,8 @@ namespace Orchard.Autoroute.Services {
             IContentManager contentManager,
             IRouteEvents routeEvents,
             ICultureManager cultureManager,
-            IHttpContextAccessor httpContextAccessor) {
+            IHttpContextAccessor httpContextAccessor,
+            ILockingProvider lockingProvider) {
 
             _aliasService = aliasService;
             _tokenizer = tokenizer;
@@ -42,6 +49,7 @@ namespace Orchard.Autoroute.Services {
             _routeEvents = routeEvents;
             _cultureManager = cultureManager;
             _httpContextAccessor = httpContextAccessor;
+            _lockingProvider = lockingProvider;
         }
 
         public string GenerateAlias(AutoroutePart part) {
@@ -206,22 +214,45 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool ProcessPath(AutoroutePart part) {
-            var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
+            var returnValue = true;
 
-            // Don't include *this* part in the list
-            // of slugs to consider for conflict detection.
-            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
+            var baseAlias = GenerateAlias(part);
 
-            if (pathsLikeThis.Any()) {
-                var originalPath = part.Path;
-                var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
-                part.DisplayAlias = newPath;
+            _lockingProvider.Lock(_displayAliasVersions,
+                () => {
+                    if (_displayAliasVersions.TryAdd(baseAlias, new List<int>())) {
+                        // We had not queryed for this path yet, so we now get the versions out 
+                        // of the db
+                        _displayAliasVersions[baseAlias].AddRange(
+                                GetSimilarPaths(baseAlias)
+                                    .Select(ap => new Tuple<int, int?>(ap.ContentItem.Id, GetSlugVersion(baseAlias, ap.Path)))
+                                    .Where(tup => tup.Item2.HasValue)
+                                    .OrderBy(tup => tup.Item2) // ascending
+                                    .Select(tup => tup.Item1) // get the Ids
+                            );
+                    }
+                });
 
-                if (originalPath != newPath)
-                    return false;
-            }
+            _lockingProvider.Lock(_displayAliasVersions[baseAlias],
+                () => {
+                    if (!_displayAliasVersions[baseAlias].Any()) {
+                        // We are processing the first ever part with this alias
+                        _displayAliasVersions[baseAlias].Add(part.ContentItem.Id);
+                        returnValue = true;
+                    }
+                    else if (_displayAliasVersions[baseAlias].Contains(part.ContentItem.Id)) {
+                        // This part has already been processed
+                        returnValue = true;
+                    }
+                    else {
+                        // Some parts have this alias already
+                        _displayAliasVersions[baseAlias].Add(part.ContentItem.Id);
+                        part.DisplayAlias = string.Format("{0}-{1}", baseAlias, _displayAliasVersions[baseAlias].Count);
+                        returnValue = false;
+                    }
+                });
 
-            return true;
+            return returnValue;
         }
 
         private SettingsDictionary GetTypePartSettings(string contentType) {
