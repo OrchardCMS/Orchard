@@ -19,8 +19,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         void Lock(
             object lockOn,
             Action criticalCode,
@@ -42,8 +44,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         void Lock(
             string lockOn,
             Action criticalCode,
@@ -67,8 +71,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
             object lockOn,
             Action criticalCode,
@@ -91,8 +97,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
             string lockOn,
             Action criticalCode,
@@ -120,8 +128,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
            object lockOn,
            TimeSpan timeout,
@@ -150,8 +160,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
             string lockOn,
             TimeSpan timeout,
@@ -179,8 +191,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
             object lockOn,
             int millisecondsTimeout,
@@ -208,8 +222,10 @@ namespace Orchard.Locking {
         /// critical code. Unlike the implementation of lock(obj){}, this implementation allows handling of
         /// exceptions both while holding and after releasing the lock on the object. The default behaviour 
         /// if both the Actions to handle exceptions are null, this method is the same as calling 
-        /// lock(obj){criticalCode();}. This is because by default the method will do nothing with the exceptions,
-        /// and will not even bubble them outward.</remarks>
+        /// lock(obj){criticalCode();}, meaning that it will bubble out the exception while holding the lock, and
+        /// only release it afterwards. If an innerHandler is provided, but outerHandler is null, an exception will
+        /// bubble out after the lock is released. To prevent exceptions from being thrown, both innerHandler and
+        /// outerHandler should be provided.</remarks>
         bool TryLock(
             string lockOn,
             int millisecondsTimeout,
