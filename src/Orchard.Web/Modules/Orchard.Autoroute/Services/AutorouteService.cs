@@ -13,6 +13,10 @@ using Orchard.Localization.Services;
 using Orchard.Mvc;
 using System.Web;
 using Orchard.ContentManagement.Aspects;
+using System.Web.Routing;
+using System.Reflection;
+using System.Collections;
+using System.Configuration;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : Component, IAutorouteService {
@@ -194,11 +198,9 @@ namespace Orchard.Autoroute.Services {
                 : part.Path;
         }
 
-        public IEnumerable<AutoroutePart> GetSimilarPaths(string path) {
+        public IEnumerable<Tuple<string, RouteValueDictionary>> GetSimilarPaths(string path) {
             return
-                _contentManager.Query<AutoroutePart, AutoroutePartRecord>()
-                    .Where(part => part.DisplayAlias != null && part.DisplayAlias.StartsWith(path))
-                    .List();
+                _aliasService.List().Where(x => x.Item1 != null && x.Item1.StartsWith(path) && x.Item2["area"].ToString() == "Contents").ToList();
         }
 
         public bool IsPathValid(string slug) {
@@ -210,11 +212,11 @@ namespace Orchard.Autoroute.Services {
 
             // Don't include *this* part in the list
             // of slugs to consider for conflict detection.
-            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
+            pathsLikeThis = pathsLikeThis.Where(p => Convert.ToInt32(p.Item2["Id"]) != part.ContentItem.Id).ToArray();
 
             if (pathsLikeThis.Any()) {
                 var originalPath = part.Path;
-                var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
+                var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Item1));
                 part.DisplayAlias = newPath;
 
                 if (originalPath != newPath)
