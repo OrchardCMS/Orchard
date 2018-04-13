@@ -54,8 +54,7 @@ namespace Orchard.Autoroute.Services {
 
             // If we are editing an existing content item.
             if (part.Record.Id != 0) {
-                ContentItem contentItem = _contentManager.Get(part.Record.ContentItemRecord.Id);
-                var aspect = contentItem.As<ILocalizableAspect>();
+                var aspect = part.As<ILocalizableAspect>();
 
                 if (aspect != null) {
                     itemCulture = aspect.Culture;
@@ -195,7 +194,6 @@ namespace Orchard.Autoroute.Services {
         }
 
         public IEnumerable<Tuple<string, RouteValueDictionary>> GetSimilarPaths(string path) {
-
             return
                 _aliasService.List().Where(x => x.Item1 != null && x.Item1.StartsWith(path) && x.Item2["area"].ToString() == "Contents").ToList();
         }

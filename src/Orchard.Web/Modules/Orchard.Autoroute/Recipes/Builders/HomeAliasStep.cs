@@ -32,14 +32,13 @@ namespace Orchard.Autoroute.Recipes.Builders {
         public override void Build(BuildContext context) {
             var homeAliasRoute = _homeAliasService.GetHomeRoute() ?? new RouteValueDictionary();
             var root = new XElement("HomeAlias");
-            var homePage = _homeAliasService.GetHomePage(VersionOptions.Latest);
+            var homePageId = _homeAliasService.GetHomePageId();
 
             // If the home alias points to a content item, store its identifier in addition to the routevalues,
             // so we can publish the home page alias during import where the ID primary key value of the home page might have changed,
             // so we can't rely on the route values in that case.
-            if (homePage != null) {
-                var homePageIdentifier = _contentManager.GetItemMetadata(homePage).Identity.ToString();
-                root.Attr("Id", homePageIdentifier);
+            if (homePageId != null) {
+                root.Attr("Id", homePageId);
             }
             else {
                 // The alias does not point to a content item, so export the route values instead.

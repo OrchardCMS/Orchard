@@ -31,28 +31,13 @@ namespace Orchard.Autoroute.Services {
             return _homeAliasRoute;
         }
 
-        public int? GetHomePageId(VersionOptions version = null) {
-            var homePage = GetHomePage(version);
-            return homePage != null ? homePage.Id : default(int?);
+        public int? GetHomePageId() {
+            int? homePageId = Convert.ToInt32(GetHomeRoute().Last().Value);
+            return homePageId;
         }
 
-        public IContent GetHomePage(VersionOptions version = null) {
-            var homePageRoute = GetHomeRoute();
-            
-            if (homePageRoute == null)
-                return null;
-            
-            var alias = LookupAlias(homePageRoute);
-
-            if (alias == null)
-                return null;
-
-            var homePage = _contentManager.Query<AutoroutePart, AutoroutePartRecord>(version).Where(x => x.DisplayAlias == alias).Slice(0, 1).FirstOrDefault();
-            return homePage;
-        }
-
-        public bool IsHomePage(IContent content, VersionOptions homePageVersion = null) {
-            var homePageId = GetHomePageId(homePageVersion);
+        public bool IsHomePage(IContent content) {
+            var homePageId = GetHomePageId();
             return content.Id == homePageId;
         }
 

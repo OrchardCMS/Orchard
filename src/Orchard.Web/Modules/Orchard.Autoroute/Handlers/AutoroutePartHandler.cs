@@ -60,9 +60,9 @@ namespace Orchard.Autoroute.Handlers {
             // Should it become the home page?
             if (part.PromoteToHomePage) {
                 // Get the current homepage an unmark it as the homepage.
-                var currentHomePage = _homeAliasService.GetHomePage(VersionOptions.Latest);
-                if(currentHomePage != null && currentHomePage.Id != part.Id) {
-                    var autoroutePart = currentHomePage.As<AutoroutePart>();
+                var currentHomePageId = _homeAliasService.GetHomePageId();
+                if(currentHomePageId != part.Id) {
+                    var autoroutePart = part.As<AutoroutePart>();
 
                     if (autoroutePart != null) {
                         autoroutePart.PromoteToHomePage = false;
@@ -100,7 +100,7 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         void RemoveAlias(AutoroutePart part) {
-            var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
+            var homePageId = _homeAliasService.GetHomePageId();
 
             // Is this the current home page?
             if (part.ContentItem.Id == homePageId) {
