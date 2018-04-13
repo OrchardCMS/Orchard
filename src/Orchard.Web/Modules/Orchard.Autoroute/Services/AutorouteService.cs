@@ -11,12 +11,8 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Tokens;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
-using System.Web;
 using Orchard.ContentManagement.Aspects;
 using System.Web.Routing;
-using System.Reflection;
-using System.Collections;
-using System.Configuration;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : Component, IAutorouteService {
@@ -199,6 +195,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public IEnumerable<Tuple<string, RouteValueDictionary>> GetSimilarPaths(string path) {
+
             return
                 _aliasService.List().Where(x => x.Item1 != null && x.Item1.StartsWith(path) && x.Item2["area"].ToString() == "Contents").ToList();
         }
