@@ -56,7 +56,7 @@ namespace Orchard.Tags.Services {
         }
 
         public TagRecord CreateTag(string tagName) {
-            var result = _tagRepository.Get(x => x.TagName == tagName);
+            var result = _tagRepository.Table.Where(x => x.TagName == tagName).FirstOrDefault();
             if (result == null) {
                 result = new TagRecord { TagName = tagName };
                 _tagRepository.Create(result);
