@@ -7,7 +7,7 @@
 }
 <ul class="pageStatus">
     @* Published or not *@
-    @if (publishLaterPart.HasPublished()) {
+    @if (publishLaterPart.IsPublished()) {
         <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> </li>
         <li>@T("Published")&nbsp;&#124;&nbsp;</li>
     }
