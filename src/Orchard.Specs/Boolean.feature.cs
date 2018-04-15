@@ -157,7 +157,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.Hint",
+                        "Fields[Active].BooleanFieldSettings.Hint",
                         "Check if the event is active"});
 #line 49
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -174,7 +174,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.DefaultValue",
+                        "Fields[Active].BooleanFieldSettings.DefaultValue",
                         "True"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -191,7 +191,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.Optional",
+                        "Fields[Active].BooleanFieldSettings.Optional",
                         "false"});
 #line 67
         testRunner.And("I fill in", ((string)(null)), table6, "And ");

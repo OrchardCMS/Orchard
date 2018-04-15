@@ -157,7 +157,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Hint",
+                        "Fields[Guests].NumericFieldSettings.Hint",
                         "Please enter a number"});
 #line 49
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -174,7 +174,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
+                        "Fields[Guests].NumericFieldSettings.Required",
                         "true"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -202,10 +202,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Minimum",
+                        "Fields[Guests].NumericFieldSettings.Minimum",
                         "-10"});
             table7.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Maximum",
+                        "Fields[Guests].NumericFieldSettings.Maximum",
                         "100"});
 #line 71
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
@@ -252,10 +252,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Minimum",
+                        "Fields[Guests].NumericFieldSettings.Minimum",
                         "a"});
             table10.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Maximum",
+                        "Fields[Guests].NumericFieldSettings.Maximum",
                         "b"});
 #line 93
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
@@ -287,7 +287,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table12.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
+                        "Fields[Guests].NumericFieldSettings.DefaultValue",
                         "1234"});
 #line 111
         testRunner.And("I fill in", ((string)(null)), table12, "And ");
@@ -304,7 +304,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
+                        "Fields[Guests].NumericFieldSettings.Required",
                         "true"});
 #line 120
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
@@ -321,7 +321,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table14.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
+                        "Fields[Guests].NumericFieldSettings.Required",
                         "false"});
 #line 129
         testRunner.And("I fill in", ((string)(null)), table14, "And ");

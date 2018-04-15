@@ -166,7 +166,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Hint",
+                        "Fields[SiteUrl].LinkFieldSettings.Hint",
                         "Enter the url of the web site"});
 #line 52
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -183,7 +183,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
                         "true"});
 #line 61
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -211,7 +211,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.DefaultValue",
+                        "Fields[SiteUrl].LinkFieldSettings.DefaultValue",
                         "http://www.orchardproject.net"});
 #line 74
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
@@ -228,7 +228,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
                         "true"});
 #line 83
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
@@ -245,7 +245,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
                         "false"});
 #line 92
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
