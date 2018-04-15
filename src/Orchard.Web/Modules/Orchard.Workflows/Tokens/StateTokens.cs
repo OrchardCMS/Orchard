@@ -9,12 +9,14 @@ namespace Orchard.Workflows.Tokens {
         public void Describe(DescribeContext context) {
             context.For("Workflow", T("Workflow"), T("Workflow tokens."))
                 .Token("State:*", T("State:<workflowcontext path>"), T("The workflow context state to access. Workflow.State:MyData.MyProperty.SubProperty"))
+                .Token("Token:*", T("Token:<token name>"), T("The workflow context token to access. Workflow.Token:MyToken"))
             ;
         }
 
         public void Evaluate(EvaluateContext context) {
             context.For<WorkflowContext>("Workflow")
-                .Token(token => token.StartsWith("State:", StringComparison.OrdinalIgnoreCase) ? token.Substring("State:".Length) : null, ParseState);
+                .Token(token => token.StartsWith("State:", StringComparison.OrdinalIgnoreCase) ? token.Substring("State:".Length) : null, ParseState)
+                .Token(token => token.StartsWith("Token:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Token:".Length) : null, ParseToken);
         }
 
         /// <summary>
@@ -33,6 +35,13 @@ namespace Orchard.Workflows.Tokens {
             }
 
             return obj;
+        }
+
+        /// <summary>
+        /// Returns the specified token from the token dictionary stored as part of the workflow context.
+        /// </summary>
+        private object ParseToken(string tokenName, WorkflowContext workflowContext) {
+            return workflowContext.Tokens.ContainsKey(tokenName) ? workflowContext.Tokens[tokenName] : null;
         }
     }
 }
