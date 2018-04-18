@@ -79,24 +79,29 @@ namespace Orchard.Autoroute.Handlers {
         }
 
         private void ProcessAlias(AutoroutePart part) {
-            // Generate an alias if one as not already been entered.
-            if (String.IsNullOrWhiteSpace(part.DisplayAlias)) {
-                part.DisplayAlias = _autorouteService.Value.GenerateAlias(part);
-            }
+            if (!part.HasDraft())
+            {
+                // Generate an alias if one as not already been entered.
+                if (String.IsNullOrWhiteSpace(part.DisplayAlias))
+                {
+                    part.DisplayAlias = _autorouteService.Value.GenerateAlias(part);
+                }
 
-            // If the generated alias is empty, compute a new one.
-            if (String.IsNullOrWhiteSpace(part.DisplayAlias)) {
-                _autorouteService.Value.ProcessPath(part);
-                _orchardServices.Notifier.Warning(T("The permalink could not be generated, a new slug has been defined: \"{0}\"", part.Path));
-                return;
-            }
+                // If the generated alias is empty, compute a new one.
+                if (String.IsNullOrWhiteSpace(part.DisplayAlias))
+                {
+                    _autorouteService.Value.ProcessPath(part);
+                    _orchardServices.Notifier.Warning(T("The permalink could not be generated, a new slug has been defined: \"{0}\"", part.Path));
+                    return;
+                }
 
-            // Check for permalink conflict, unless we are trying to set the home page.
-            var previous = part.Path;
-            if (!_autorouteService.Value.ProcessPath(part))
-                _orchardServices.Notifier.Warning(
-                    T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"", 
-                                                previous, part.Path, part.ContentItem.ContentType));
+                // Check for permalink conflict, unless we are trying to set the home page.
+                var previous = part.Path;
+                if (!_autorouteService.Value.ProcessPath(part))
+                    _orchardServices.Notifier.Warning(
+                        T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
+                                                    previous, part.Path, part.ContentItem.ContentType));
+            }
         }
 
         void RemoveAlias(AutoroutePart part) {
