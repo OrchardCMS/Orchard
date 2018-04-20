@@ -8,9 +8,11 @@ using Orchard.Workflows.Services;
 namespace Orchard.Workflows {
     public class ResourceManifest : IResourceManifestProvider {
         private readonly Work<IActivitiesManager> _activitiesManager;
+        private readonly IHostEnvironment _hostEnviroment;
 
-        public ResourceManifest(Work<IActivitiesManager> activitiesManager) {
+        public ResourceManifest(Work<IActivitiesManager> activitiesManager, IHostEnvironment hostEnviroment) {
             _activitiesManager = activitiesManager;
+            _hostEnviroment = hostEnviroment;
         }
 
         public void BuildManifests(ResourceManifestBuilder builder) {
@@ -23,10 +25,13 @@ namespace Orchard.Workflows {
             foreach (var activity in activities) {
                 var assemblyName = activity.GetType().Assembly.GetName().Name;
                 var styleName = "WorkflowsActivity-" + activity.Name;
-                manifest.DefineStyle(styleName)
-                    .SetBasePath(VirtualPathUtility.AppendTrailingSlash("~/Modules/"+assemblyName+"/styles/"))
-                    .SetUrl(styleName.HtmlClassify()+".css")
-                    .SetDependencies("WorkflowsAdmin");
+                var basePath = VirtualPathUtility.AppendTrailingSlash("~/Modules/" + assemblyName + "/styles/");
+                var styleFile = styleName.HtmlClassify() + ".css";
+                if (File.Exists(_hostEnviroment.MapPath(basePath) + styleFile))
+                    manifest.DefineStyle(styleName)
+                        .SetBasePath(basePath)
+                        .SetUrl(styleFile)
+                        .SetDependencies("WorkflowsAdmin");
             }
 
             manifest.DefineStyle("WorkflowsActivities").SetUrl("workflows-activity.css").SetDependencies(activities.Select(x => "WorkflowsActivity-" + x.Name).ToArray());
