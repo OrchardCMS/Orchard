@@ -76,31 +76,37 @@ namespace Orchard.Autoroute.Handlers
 
         private void PublishAlias(AutoroutePart part)
         {
-            ProcessAlias(part);
-
-            // Should it become the home page?
-            if (part.PromoteToHomePage)
-            {
-                // Get the current homepage an unmark it as the homepage.
-                var currentHomePageId = _homeAliasService.GetHomePageId();
-                if (currentHomePageId != part.Id)
-                {
-                    var autoroutePart = part.As<AutoroutePart>();
-
-                    if (autoroutePart != null)
-                    {
-                        autoroutePart.PromoteToHomePage = false;
-                        if (autoroutePart.IsPublished())
-                            _orchardServices.ContentManager.Publish(autoroutePart.ContentItem);
-                    }
-                }
-
-                // Update the home alias to point to this item being published.
-                _homeAliasService.PublishHomeAlias(part);
-            }
-
+            // Lock this portion of the code to prevent race conditions where we are reading the aliases to compute
+            // stuff for a content, while another content is publishing. 
+            // If the generated alias is empty, compute a new one.
             _lockingProvider.Lock(LockString,
-                () => { _autorouteService.Value.PublishAlias(part); });
+                () =>
+                {
+                    ProcessAlias(part);
+
+                    // Should it become the home page?
+                    if (part.PromoteToHomePage)
+                    {
+                        // Get the current homepage an unmark it as the homepage.
+                        var currentHomePageId = _homeAliasService.GetHomePageId();
+                        if (currentHomePageId != part.Id)
+                        {
+                            var autoroutePart = part.As<AutoroutePart>();
+
+                            if (autoroutePart != null)
+                            {
+                                autoroutePart.PromoteToHomePage = false;
+                                if (autoroutePart.IsPublished())
+                                    _orchardServices.ContentManager.Publish(autoroutePart.ContentItem);
+                            }
+                        }
+
+                        // Update the home alias to point to this item being published.
+                        _homeAliasService.PublishHomeAlias(part);
+                    }
+
+                    _autorouteService.Value.PublishAlias(part);
+                });
 
         }
 
@@ -117,26 +123,19 @@ namespace Orchard.Autoroute.Handlers
                     part.DisplayAlias = _autorouteService.Value.GenerateAlias(part);
                 }
 
-                _lockingProvider.Lock(LockString,
-                    () =>
-                    {
-                    // Lock this portion of the code to prevent race conditions where we are reading the aliases to compute
-                    // stuff for a content, while another content is publishing. 
-                    // If the generated alias is empty, compute a new one.
-                    if (String.IsNullOrWhiteSpace(part.DisplayAlias))
-                        {
-                            _autorouteService.Value.ProcessPath(part);
-                            message = T("The permalink could not be generated, a new slug has been defined: \"{0}\"", part.Path);
-                            return;
-                        }
+                if (String.IsNullOrWhiteSpace(part.DisplayAlias))
+                {
+                    _autorouteService.Value.ProcessPath(part);
+                    message = T("The permalink could not be generated, a new slug has been defined: \"{0}\"", part.Path);
+                    return;
+                }
 
-                    // Check for permalink conflict, unless we are trying to set the home page.
-                    var previous = part.Path;
-                        if (!_autorouteService.Value.ProcessPath(part))
-                            message =
-                                T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                            previous, part.Path, part.ContentItem.ContentType);
-                    });
+                // Check for permalink conflict, unless we are trying to set the home page.
+                var previous = part.Path;
+                if (!_autorouteService.Value.ProcessPath(part))
+                    message =
+                        T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
+                                                    previous, part.Path, part.ContentItem.ContentType);
 
                 if (message != null)
                 {
