@@ -20,7 +20,7 @@ namespace Orchard.Workflows {
 
             manifest.DefineStyle("WorkflowsAdmin").SetUrl("orchard-workflows-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
 
-            var activities = _activitiesManager.Value.GetActivities().ToArray();//.Select(x => "WorkflowsActivity-" + x.Name).ToArray();
+            var activities = _activitiesManager.Value.GetActivities().ToArray();
 
             foreach (var activity in activities) {
                 var assemblyName = activity.GetType().Assembly.GetName().Name;
