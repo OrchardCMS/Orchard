@@ -105,7 +105,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(string), T("Ids"), T("A formatted list of the ids, e.g., {1},{42}"));
+                .Member("Ids", typeof(string), T("Ids"), T("A formatted list of the ids, e.g., {1},{42}"));
         }
     }
 }
