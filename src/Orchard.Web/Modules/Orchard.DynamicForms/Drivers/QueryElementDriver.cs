@@ -180,7 +180,7 @@ namespace Orchard.DynamicForms.Drivers {
             if (element.QueryId == null)
                 return;
             var queryIdentityPart = _contentManager.Get<IdentityPart>(element.QueryId.Value);
-            context.Element.Data.Add("QueryElementIdentity", queryIdentityPart.Identifier);
+            context.Element.Data.Add("QueryElementIdentity", _contentManager.GetItemMetadata(queryContentItem).Identity.ToString());
         }
 
         protected override void OnImported(Query element, ImportElementContext context) {
@@ -188,11 +188,10 @@ namespace Orchard.DynamicForms.Drivers {
             if (!context.Element.Data.Keys.Contains("QueryElementIdentity"))
                 return;
             var queryIdentifier = context.Element.Data["QueryElementIdentity"];
-            var queryIdentityPart = _contentManager.Query<IdentityPart>()
-                .Where<IdentityPartRecord>(record => record.Identifier == queryIdentifier).List().FirstOrDefault();
+            var queryContentItem = context.Session.GetItemFromSession(queryIdentity).Content;
             if (queryIdentityPart == null)
                 return;
-            element.QueryId = queryIdentityPart.ContentItem.Id;
+            element.QueryId = queryContentItem.ContentItem.Id;
             if (!context.Element.Data.Keys.Contains("QueryId"))
                 return;
             context.Element.Data["QueryId"] = element.QueryId.ToString();
