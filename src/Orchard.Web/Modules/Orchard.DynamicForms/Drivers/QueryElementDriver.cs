@@ -174,5 +174,28 @@ namespace Orchard.DynamicForms.Drivers {
             var runtimeValue = element.RuntimeValue;
             return runtimeValue != null ? runtimeValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
         }
+        
+        protected override void OnExporting(Query element, ExportElementContext context) {
+            base.OnExporting(element, context);
+            if (element.QueryId == null)
+                return;
+            var queryIdentityPart = _contentManager.Get<IdentityPart>(element.QueryId.Value);
+            context.Element.Data.Add("QueryElementIdentity", queryIdentityPart.Identifier);
+        }
+
+        protected override void OnImported(Query element, ImportElementContext context) {
+            base.OnImported(element, context);
+            if (!context.Element.Data.Keys.Contains("QueryElementIdentity"))
+                return;
+            var queryIdentifier = context.Element.Data["QueryElementIdentity"];
+            var queryIdentityPart = _contentManager.Query<IdentityPart>()
+                .Where<IdentityPartRecord>(record => record.Identifier == queryIdentifier).List().FirstOrDefault();
+            if (queryIdentityPart == null)
+                return;
+            element.QueryId = queryIdentityPart.ContentItem.Id;
+            if (!context.Element.Data.Keys.Contains("QueryId"))
+                return;
+            context.Element.Data["QueryId"] = element.QueryId.ToString();
+        }
     }
 }
