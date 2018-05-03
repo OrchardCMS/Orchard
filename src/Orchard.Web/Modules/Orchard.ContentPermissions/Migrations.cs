@@ -24,12 +24,5 @@ namespace Orchard.ContentPermissions {
             // auto-upgrade to 3 as UpdateFrom1 is incorrectly returning 2
             return 3;
         }
-        //TODO: Extend CreateContent Permission to all roles having EditOwnContent Permission
-        //public int UpdateFrom3() {
-
-        //    // extend CreateContent permission to all roles having EditOwnContent Permission
-
-        //    return 4;
-        //}
     }
 }
