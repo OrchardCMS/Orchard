@@ -393,7 +393,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Couldn't clone content")))
                 return new HttpUnauthorizedResult();
 
             try {
