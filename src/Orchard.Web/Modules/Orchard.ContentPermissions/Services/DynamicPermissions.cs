@@ -20,7 +20,6 @@ namespace Orchard.ContentPermissions.Services {
         private static readonly Permission ViewOwnContent = new Permission { Description = "View own {0}", Name = "ViewOwn_{0}", ImpliedBy = new[] { ViewContent, Orchard.Core.Contents.Permissions.ViewOwnContent } };
         private static readonly Permission PreviewContent = new Permission { Description = "Preview {0} by others", Name = "Preview_{0}", ImpliedBy = new[] { EditContent, Orchard.Core.Contents.Permissions.PreviewContent } };
         private static readonly Permission PreviewOwnContent = new Permission { Description = "Preview own {0}", Name = "PreviewOwn_{0}", ImpliedBy = new[] { PreviewContent, Orchard.Core.Contents.Permissions.PreviewOwnContent } };
-        private static readonly Permission CreateContent = new Permission { Description = "Create {0}", Name = "Create_{0}", ImpliedBy = new[] { Orchard.Core.Contents.Permissions.CreateContent } };
 
 
         public static readonly Dictionary<string, Permission> PermissionTemplates = new Dictionary<string, Permission> {
@@ -33,8 +32,7 @@ namespace Orchard.ContentPermissions.Services {
             {Orchard.Core.Contents.Permissions.ViewContent.Name, ViewContent},
             {Orchard.Core.Contents.Permissions.ViewOwnContent.Name, ViewOwnContent},
             {Orchard.Core.Contents.Permissions.PreviewContent.Name, PreviewContent},
-            {Orchard.Core.Contents.Permissions.PreviewOwnContent.Name, PreviewOwnContent},
-            {Orchard.Core.Contents.Permissions.CreateContent.Name, CreateContent}
+            {Orchard.Core.Contents.Permissions.PreviewOwnContent.Name, PreviewOwnContent}
         };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
