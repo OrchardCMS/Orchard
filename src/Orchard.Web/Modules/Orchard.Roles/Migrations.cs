@@ -79,19 +79,22 @@ namespace Orchard.Roles {
             foreach (var typeDefinition in securableTypes) {
                 dynContentPermissions.Add(new {
                     Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.EditContent.Name], typeDefinition),
-                    DynamicCreatablePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
+                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
                 });
                 dynContentPermissions.Add(new {
                     Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.EditOwnContent.Name], typeDefinition),
-                    DynamicCreatablePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
+                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
                 });
             }
             var roles = _roleService.GetRoles();
             foreach (var role in roles) {
                 var existingPermissionsNames = role.RolesPermissions.Select(x => x.Permission.Name).ToList();
-                var simulation = UserSimulation.Create(role.Name);
                 var checkForDynamicPermissions = true;
                 var updateRole = false;
+                if (existingPermissionsNames.Any(x => x == Core.Contents.Permissions.CreateContent.Name)) {
+                    continue; // Skipping this role cause it already has the Create content permission
+                }
+                var simulation = UserSimulation.Create(role.Name);
                 foreach (var contentEditPermission in contentEditPermissions) {
                     if (_authorizationService.TryCheckAccess(contentEditPermission, simulation, null)) {
                         existingPermissionsNames.Add(Core.Contents.Permissions.CreateContent.Name);
@@ -102,9 +105,11 @@ namespace Orchard.Roles {
                 }
                 if (checkForDynamicPermissions) {
                     foreach (var dynContentPermission in dynContentPermissions) {
-                        if (_authorizationService.TryCheckAccess(((dynamic)dynContentPermission).Permission, simulation, null)) {
-                            existingPermissionsNames.Add(((dynamic)dynContentPermission).DynamicCreatablePermission.Name);
-                            updateRole = true;
+                        if (!existingPermissionsNames.Contains(((dynamic)dynContentPermission).CreatePermission.Name)) { // Skipping this permission cause it already has the Create content variation
+                            if (_authorizationService.TryCheckAccess(((dynamic)dynContentPermission).Permission, simulation, null)) {
+                                existingPermissionsNames.Add(((dynamic)dynContentPermission).CreatePermission.Name);
+                                updateRole = true;
+                            }
                         }
                     }
                 }
