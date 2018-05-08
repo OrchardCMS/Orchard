@@ -1,5 +1,6 @@
 ﻿using Orchard.Taxonomies.Models;
 using System;
+using Orchard.ContentManagement;
 using Orchard.Taxonomies.ViewModels;
 using System.Linq;
 
@@ -22,7 +23,8 @@ namespace Orchard.Taxonomies.Helpers {
                 Path = term.Path,
                 Weight = term.Weight,
                 IsChecked = false,
-                ContentItem = term.ContentItem
+                ContentItem = term.ContentItem,
+                HasDraft = term.ContentItem.HasDraft()
             };
         }
     }

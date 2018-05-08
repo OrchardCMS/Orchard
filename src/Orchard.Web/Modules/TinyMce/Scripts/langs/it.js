@@ -173,7 +173,7 @@ tinymce.addI18n('it',{
 "Edit": "Modifica",
 "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help": "Rich Text Area. Premi ALT-F9 per il men\u00f9. Premi ALT-F10 per la barra degli strumenti. Premi ALT-0 per l'aiuto.",
 "Tools": "Strumenti",
-"View": "Visualiza",
+"View": "Visualizza",
 "Table": "Tabella",
 "Format": "Formato"
 });

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -25,7 +26,7 @@ namespace Orchard.Taxonomies.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
 
-                if (part.TermTypeName == null) {
+                if (String.IsNullOrWhiteSpace(part.TermTypeName)) {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }

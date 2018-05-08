@@ -1,13 +1,15 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Models;
+using System.Linq;
 
 namespace Orchard.Localization {
     public class Migrations : DataMigrationImpl {
-
         public int Create() {
-            SchemaBuilder.CreateTable("LocalizationPartRecord", 
+            SchemaBuilder.CreateTable("LocalizationPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<int>("CultureId")

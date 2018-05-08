@@ -1,8 +1,9 @@
 ﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
-    public class VideoPartDriver : ContentPartDriver<VideoPart> {
+    public class VideoPartDriver : ContentPartCloningDriver<VideoPart> {
         protected override DriverResult Display(VideoPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Video_Metadata", () => shapeHelper.Parts_Video_Metadata()),
@@ -25,6 +26,10 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Length", length =>
                 part.Length = int.Parse(length)
             );
+        }
+
+        protected override void Cloning(VideoPart originalPart, VideoPart clonePart, CloneContentContext context) {
+            clonePart.Length = originalPart.Length;
         }
     }
 }

@@ -98,6 +98,8 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
     <Compile Include="Controllers\AdminCultureSelectorController.cs" />
+    <Compile Include="Extensions\MetaDataExtensions.cs" />
+    <Compile Include="Handlers\LocalizationCultureNeutralityHandler.cs" />
     <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\ContentLocalizationTokens.cs" />
@@ -124,6 +126,8 @@
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
     <Compile Include="Events\TransliterationSlugEventHandler.cs" />
+    <Compile Include="Settings\LocalizationCultureNeutralityEditorEvents.cs" />
+    <Compile Include="Settings\LocalizationCultureNeutralitySettings.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="ViewModels\CreateTransliterationViewModel.cs" />
@@ -138,9 +142,6 @@
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\Translate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Localization.ContentTranslations.Edit.cshtml" />
@@ -201,6 +202,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\LocalizationCultureNeutralitySettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

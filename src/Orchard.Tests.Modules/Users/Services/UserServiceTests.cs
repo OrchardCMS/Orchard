@@ -35,6 +35,9 @@ using Orchard.Services;
 using Orchard.Tests.Messaging;
 using Orchard.Tests.Modules.Stubs;
 using Orchard.Tests.ContentManagement;
+using Orchard.Settings;
+using Orchard.Core.Settings.Services;
+using Orchard.Core.Settings.Handlers;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
@@ -47,6 +50,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISession _session;
         private IContainer _container;
         private CultureInfo _currentCulture;
+        private Mock<WorkContext> _workContext;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -92,6 +96,18 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<InfosetHandler>().As<IContentHandler>();
+            builder.RegisterType<SiteService>().As<ISiteService>();
+            builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
+            builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
+
+            _workContext = new Mock<WorkContext>();
+            _workContext
+                .Setup(w => w.GetState<ISite>(It.Is<string>(s => s == "CurrentSite")))
+                .Returns(() => { return _container.Resolve<ISiteService>().GetSiteSettings(); });
+
+            var _workContextAccessor = new Mock<IWorkContextAccessor>();
+            _workContextAccessor.Setup(w => w.GetContext()).Returns(_workContext.Object);
+            builder.RegisterInstance(_workContextAccessor.Object).As<IWorkContextAccessor>();
 
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());

@@ -128,7 +128,7 @@ namespace Orchard.Autoroute.Settings {
                 cultures.AddRange(settings.SiteCultures);
 
                 //If there is no pattern for some culture create a default one
-                List<RoutePattern> newPatterns = new List<RoutePattern>();
+                var newPatterns = new List<RoutePattern>();
                 int current = 0;
                 foreach (string culture in cultures) {
                     if (settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {

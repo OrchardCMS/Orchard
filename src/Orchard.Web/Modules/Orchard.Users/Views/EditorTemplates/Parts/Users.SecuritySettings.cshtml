@@ -1,0 +1,11 @@
+﻿@model Orchard.Users.Models.SecuritySettingsPart
+
+<fieldset>
+    <legend>@T("Security settings")</legend>
+    <div>
+        @Html.CheckBoxFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShouldInvalidateAuthOnPasswordChanged)">@T("Invalidate authentication cookies on password change")</label>
+        @Html.ValidationMessageFor(m => m.ShouldInvalidateAuthOnPasswordChanged)
+        <p class="hint">@T("When checked, the user will be disconnected from all clients when their password is changed.")</p>
+    </div>
+</fieldset>

@@ -118,8 +118,10 @@ $(function () {
                 return css;
             });
 
-            self.publicationStatus = ko.computed(function() {
-                return self.data.published ? "" : draftText;
+            self.mediaInfos = ko.computed(function () {
+                var pubStatus = self.data.published ? "" : draftText;
+                var localization = (self.data.localization != "" ? "(" + self.data.localization + ")" : "");
+                return pubStatus + " " + localization;
             });
 
             // operations

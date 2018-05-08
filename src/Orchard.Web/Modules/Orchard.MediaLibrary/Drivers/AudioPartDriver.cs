@@ -1,8 +1,9 @@
 ﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
-    public class AudioPartDriver : ContentPartDriver<AudioPart> {
+    public class AudioPartDriver : ContentPartCloningDriver<AudioPart> {
         protected override DriverResult Display(AudioPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Audio_Metadata", () => shapeHelper.Parts_Audio_Metadata()),
@@ -25,6 +26,9 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Length", length =>
                 part.Length = int.Parse(length)
             );
+        }
+        protected override void Cloning(AudioPart originalPart, AudioPart clonePart, CloneContentContext context) {
+            clonePart.Length = originalPart.Length;
         }
     }
 }

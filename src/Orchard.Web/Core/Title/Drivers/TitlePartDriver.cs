@@ -52,5 +52,6 @@ namespace Orchard.Core.Title.Drivers {
         protected override void Exporting(TitlePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
         }
+
     }
 }

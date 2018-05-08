@@ -6,5 +6,6 @@ namespace Orchard.PublishLater.Services {
     public interface IPublishLaterService : IDependency {
         DateTime? GetScheduledPublishUtc(PublishLaterPart publishLaterPart);
         void Publish(ContentItem contentItem, DateTime scheduledPublishUtc);
+        void RemovePublishLaterTasks(ContentItem contentItem);
     }
 }

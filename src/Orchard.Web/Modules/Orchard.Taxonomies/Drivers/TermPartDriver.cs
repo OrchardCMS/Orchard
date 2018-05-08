@@ -93,12 +93,14 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
-                if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
-                    updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
-                }
-            }
+            //Moved to TermPartHandler to work also with Taxonomy Localization feature
+
+            //if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
+            //    var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
+            //    if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
+            //        updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
+            //    }
+            //}
 
             return Editor(termPart, shapeHelper);
         }

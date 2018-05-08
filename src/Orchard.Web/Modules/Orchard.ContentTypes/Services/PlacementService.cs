@@ -18,6 +18,7 @@ using Orchard.UI.Zones;
 namespace Orchard.ContentTypes.Services {
 
     public class DriverResultPlacement {
+        public PlacementInfo PlacementInfo { get; set; }
         public PlacementSettings PlacementSettings { get; set; }
         public DriverResult ShapeResult { get; set; }
         public dynamic Shape { get; set; }
@@ -201,6 +202,7 @@ namespace Orchard.ContentTypes.Services {
 
 
                 yield return new DriverResultPlacement {
+                    PlacementInfo = placement,
                     Shape = itemShape.Content,
                     ShapeResult = contentShapeResult,
                     PlacementSettings = new PlacementSettings {

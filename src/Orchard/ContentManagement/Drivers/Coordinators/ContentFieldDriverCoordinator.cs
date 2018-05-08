@@ -109,5 +109,51 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 contentFieldDriver.Exported(context);
             }
         }
+
+        public override void Cloning(CloneContentContext context) {
+            context.Logger = Logger;
+            var dGroups = _drivers.GroupBy(cfd => cfd.GetFieldInfo().FirstOrDefault().FieldTypeName);
+            foreach (var driverGroup in dGroups) {
+                //if no driver implements Cloning, run the fallback for the field
+                var cloningDrivers = driverGroup.Select(cfd => cfd as IContentFieldCloningDriver).Where(cfd => cfd != null);
+                if (cloningDrivers.Any()) {
+                    foreach (var contentFieldDriver in cloningDrivers) {
+                        contentFieldDriver.Cloning(context);
+                    }
+                }
+                else {
+                    //fallback
+                    var ecc = new ExportContentContext(context.ContentItem, new System.Xml.Linq.XElement(System.Xml.XmlConvert.EncodeLocalName(context.ContentItem.ContentType)));
+                    ecc.Logger = Logger;
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Exporting(ecc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Exported(ecc);
+                    }
+                    var importContentSession = new ImportContentSession(context.ContentManager);
+                    var copyId = context.CloneContentItem.Id.ToString();
+                    importContentSession.Set(copyId, ecc.Data.Name.LocalName);
+                    var icc = new ImportContentContext(context.CloneContentItem, ecc.Data, importContentSession);
+                    icc.Logger = Logger;
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Importing(icc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.Imported(icc);
+                    }
+                    foreach (var contentFieldDriver in driverGroup) {
+                        contentFieldDriver.ImportCompleted(icc);
+                    }
+                }
+            }
+        }
+
+        public override void Cloned(CloneContentContext context) {
+            context.Logger = Logger;
+            foreach (var contentFieldDriver in _drivers.Select(cfd => cfd as IContentFieldCloningDriver).Where(cfd => cfd != null)) {
+                contentFieldDriver.Cloned(context);
+            }
+        }
     }
 }
