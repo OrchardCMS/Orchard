@@ -5,11 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using NHibernate;
 using NHibernate.SqlCommand;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Data {
     public class NoLockInterceptor : EmptyInterceptor, ISessionInterceptor {
 
-        public NoLockInterceptor() {
+        private readonly ShellSettings _shellSettings;
+
+        public NoLockInterceptor(
+            ShellSettings shellSettings) {
+
+            _shellSettings = shellSettings;
             // allow injecting through autofac config.
             AllTableNames = "Orchard_Framework_ContentItemVersionRecord, Orchard_Framework_ContentItemRecord, Title_TitlePartRecord";
             // TODO: add providers that would inject tablenames and move the autofac injection to one of them
@@ -19,9 +25,17 @@ namespace Orchard.Data {
             get {
                 return AllTableNames
                   .Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                  .Select(s => s.Trim())
+                  .Select(s => GetPrefixedTableName(s.Trim()))
                   .ToList();
             }
+        }
+
+        private string GetPrefixedTableName(string tableName) {
+            if (string.IsNullOrWhiteSpace(_shellSettings.DataTablePrefix)) {
+                return tableName;
+            }
+
+            return _shellSettings.DataTablePrefix + "_" + tableName;
         }
 
         public string AllTableNames { get; set; }
