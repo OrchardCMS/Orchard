@@ -6,7 +6,7 @@
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
-    var userCanCreateContent = true;
+    var userCanCreateContent = false;
     IAuthorizationService _authorizationService;
     WorkContext.TryResolve<IAuthorizationService>(out _authorizationService);
 
@@ -14,8 +14,8 @@
         pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
         createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
         var permission = DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.CreateContent.Name], Model.ContentType);
-        if (!_authorizationService.TryCheckAccess(permission, WorkContext.CurrentUser, null)) {
-            userCanCreateContent = false;
+        if (_authorizationService.TryCheckAccess(permission, WorkContext.CurrentUser, null)) {
+            userCanCreateContent = true;
         }
     }
 
