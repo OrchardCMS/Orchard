@@ -17,7 +17,7 @@ namespace Orchard.Data {
 
             _shellSettings = shellSettings;
             // allow injecting through autofac config.
-            AllTableNames = "Orchard_Framework_ContentItemVersionRecord, Orchard_Framework_ContentItemRecord, Title_TitlePartRecord";
+            AllTableNames = "Orchard_Framework_ContentItemVersionRecord, Title_TitlePartRecord";
             // TODO: add providers that would inject tablenames and move the autofac injection to one of them
         }
 
