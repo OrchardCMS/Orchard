@@ -48,6 +48,8 @@ namespace Orchard.Data {
                     if (tableItem != null) {
                         // the table is involved in this statement
                         var tableIndex = parts.IndexOf(tableItem);
+                        // recompute whereIndex in case we added stuff to parts
+                        whereIndex = whereItem != null ? parts.IndexOf(whereItem) : parts.Count;
                         if (tableIndex > fromIndex && tableIndex < whereIndex) { // sanity check
                             // if before the table name we have "," or "FROM", this is not a join, but rather
                             // something like "FROM tableName alias ..."
