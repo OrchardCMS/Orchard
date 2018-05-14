@@ -109,9 +109,10 @@ namespace Orchard.MultiTenancy.Services {
             var sqlStatementProviders = environment.Resolve<IEnumerable<ISqlStatementProvider>>();
             var transactionManager = environment.Resolve<ITransactionManager>();
             var session = transactionManager.GetSession();
+            var tenants = GetTenants().Where(x => x.Name != shellSettings.Name);
 
             string command = null;
-            IList<string> result = null;
+            IEnumerable<string> result = null;
 
             foreach (var sqlStatementProvider in sqlStatementProviders) {
                 if (!String.Equals(sqlStatementProvider.DataProvider, shellSettings.DataProvider)) {
@@ -122,9 +123,19 @@ namespace Orchard.MultiTenancy.Services {
             }
 
             if (command != null) {
-                result = session.CreateSQLQuery(command).List<string>();
+                var tableNames = session.CreateSQLQuery(command).List<string>();
+
+                if (string.IsNullOrWhiteSpace(shellSettings.DataTablePrefix)) {
+                    // If current tenant doesn't has table prefix, then exclude all tables which have prefixes for other tenants
+                    result = tableNames.Where(table => !tenants.Any(tenant => table.StartsWith(tenant.DataTablePrefix + "_")));
+                }
+                else {
+                    // If current tenant has table prefix, then filter tables which have the right prefix
+                    result = tableNames.Where(table => table.StartsWith(shellSettings.DataTablePrefix + "_"));
+                }
             }
-            return (result ?? Enumerable.Empty<string>()).OrderBy(x => x);
+
+            return (result ?? Enumerable.Empty<string>()).OrderBy(x => x).ToList();
         }
 
         private void DropTenantDatabaseTables(IWorkContextScope environment) {
