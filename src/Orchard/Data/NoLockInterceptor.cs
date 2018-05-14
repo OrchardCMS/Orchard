@@ -29,6 +29,7 @@ namespace Orchard.Data {
                     _tableNames = new List<string>(
                         _noLockTableProviders
                             .SelectMany(nltp => nltp.GetTableNames())
+                            .Distinct(StringComparer.OrdinalIgnoreCase)
                             .Select(n => GetPrefixedTableName(n.Trim())));
                 }
                 return _tableNames;
