@@ -5,28 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using NHibernate;
 using NHibernate.SqlCommand;
+using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Data {
     public class NoLockInterceptor : EmptyInterceptor, ISessionInterceptor {
 
         private readonly ShellSettings _shellSettings;
+        private readonly IEnumerable<INoLockTableProvider> _noLockTableProviders;
 
         public NoLockInterceptor(
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IEnumerable<INoLockTableProvider> noLockTableProviders) {
 
             _shellSettings = shellSettings;
-            // allow injecting through autofac config.
-            AllTableNames = "Orchard_Framework_ContentItemVersionRecord, Title_TitlePartRecord";
-            // TODO: add providers that would inject tablenames and move the autofac injection to one of them
+            _noLockTableProviders = noLockTableProviders;
         }
 
+        private List<string> _tableNames;
         public List<string> TableNames {
             get {
-                return AllTableNames
-                  .Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                  .Select(s => GetPrefixedTableName(s.Trim()))
-                  .ToList();
+                if (_tableNames == null) {
+                    _tableNames = new List<string>(
+                        _noLockTableProviders
+                            .SelectMany(nltp => nltp.GetTableNames())
+                            .Select(n => GetPrefixedTableName(n.Trim())));
+                }
+                return _tableNames;
             }
         }
 
@@ -37,9 +42,7 @@ namespace Orchard.Data {
 
             return _shellSettings.DataTablePrefix + "_" + tableName;
         }
-
-        public string AllTableNames { get; set; }
-
+        
         // based on https://stackoverflow.com/a/39518098/2669614
         public override SqlString OnPrepareStatement(SqlString sql) {
 
@@ -86,7 +89,7 @@ namespace Orchard.Data {
                         }
                     }
                 }
-                
+
                 // MUST use SqlString.Parse() method instead of new SqlString()
                 sql = SqlString.Parse(string.Join(" ", parts));
             }
