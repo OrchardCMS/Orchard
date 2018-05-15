@@ -19,7 +19,7 @@ namespace Orchard.Data.Providers {
                 </properties>
             </component>
              */
-            TableNames = "Orchard_Framework_ContentItemVersionRecord, Title_TitlePartRecord";
+            TableNames = "Orchard_Framework_ContentItemVersionRecord, Title_TitlePartRecord, Orchard_Framework_ContentItemRecord";
         }
 
         public string TableNames { get; set; }
