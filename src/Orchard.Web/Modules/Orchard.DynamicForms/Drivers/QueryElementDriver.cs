@@ -179,9 +179,7 @@ namespace Orchard.DynamicForms.Drivers {
             base.OnExporting(element, context);
             if (element.QueryId == null)
                 return;
-            var queryContentItem = _contentManager.Get<QueryPart>(element.QueryId.Value);
-            if (queryContentItem == null)
-                return;
+            var queryIdentityPart = _contentManager.Get<IdentityPart>(element.QueryId.Value);
             context.Element.Data.Add("QueryElementIdentity", _contentManager.GetItemMetadata(queryContentItem).Identity.ToString());
         }
 
