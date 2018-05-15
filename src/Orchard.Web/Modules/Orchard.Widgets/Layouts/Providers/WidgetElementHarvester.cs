@@ -12,6 +12,7 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
+using Orchard.Security;
 using Orchard.Widgets.Layouts.Elements;
 using Orchard.Widgets.ViewModels;
 using ContentItem = Orchard.ContentManagement.ContentItem;
@@ -20,9 +21,11 @@ namespace Orchard.Widgets.Layouts.Providers {
     [OrchardFeature("Orchard.Widgets.Elements")]
     public class WidgetElementHarvester : Component, IElementHarvester {
         private readonly Work<IContentManager> _contentManager;
+        private readonly IAuthorizer _authorizer;
 
-        public WidgetElementHarvester(Work<IContentManager> contentManager) {
+        public WidgetElementHarvester(Work<IContentManager> contentManager, IAuthorizer authorizer) {
             _contentManager = contentManager;
+            _authorizer = authorizer;
         }
 
         public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
@@ -55,6 +58,10 @@ namespace Orchard.Widgets.Layouts.Providers {
             var widget = widgetId != null
                 ? _contentManager.Value.Get(widgetId.Value, versionOptions)
                 : _contentManager.Value.New(contentTypeName);
+
+            if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, widget)) {
+                return;
+            }
 
             var widgetShape = widget != null ? _contentManager.Value.BuildDisplay(widget, context.DisplayType) : default(dynamic);
             context.ElementShape.Widget = widget;

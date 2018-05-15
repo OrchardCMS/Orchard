@@ -81,9 +81,9 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             var query = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
-
+            ContentTypeDefinition contentTypeDefinition = null;
             if (!string.IsNullOrEmpty(model.TypeName)) {
-                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
+                contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
                     return HttpNotFound();
 
@@ -134,7 +134,7 @@ namespace Orchard.Core.Contents.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            var viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel(ContentType: contentTypeDefinition)
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .Options(model.Options)
@@ -145,7 +145,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes(bool andContainable) {
             return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
-                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
+                Services.Authorizer.Authorize(Permissions.CreateContent, _contentManager.New(ctd.Name)) &&
                 ctd.Settings.GetModel<ContentTypeSettings>().Creatable &&
                 (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
@@ -247,7 +247,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot create content")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
             if (containerId.HasValue && contentItem.Is<ContainablePart>()) {
@@ -396,7 +396,7 @@ namespace Orchard.Core.Contents.Controllers {
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(originalContentItem.ContentType);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("Couldn't create clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContent, dummyContent, T("Couldn't create clone content")))
                 return new HttpUnauthorizedResult();
 
             var cloneContentItem = _contentManager.Clone(originalContentItem);
