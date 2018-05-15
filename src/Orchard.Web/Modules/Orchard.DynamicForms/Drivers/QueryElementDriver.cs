@@ -185,13 +185,13 @@ namespace Orchard.DynamicForms.Drivers {
             context.Element.Data.Add("QueryElementIdentity", _contentManager.GetItemMetadata(queryContentItem).Identity.ToString());
         }
 
-        protected override void OnImported(Query element, ImportElementContext context) {
+        protected override void OnImportCompleted(Query element, ImportElementContext context) {
             base.OnImported(element, context);
             if (!context.Element.Data.Keys.Contains("QueryElementIdentity"))
                 return;
             var queryIdentifier = context.Element.Data["QueryElementIdentity"];
-            var queryContentItem = context.Session.GetItemFromSession(queryIdentity).Content;
-            if (queryIdentityPart == null)
+            var queryContentItem = context.Session.GetItemFromSession(queryIdentifier).Content;
+            if (queryContentItem == null)
                 return;
             element.QueryId = queryContentItem.ContentItem.Id;
             if (!context.Element.Data.Keys.Contains("QueryId"))
