@@ -132,7 +132,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor",
                         "Large"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
@@ -149,7 +149,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
                         "true"});
 #line 45
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -177,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint",
                         "Subject of the event"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -215,7 +215,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
                         "Orchard Harvest 2016"});
 #line 78
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
@@ -232,7 +232,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
                         "true"});
 #line 87
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
@@ -249,7 +249,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
                         "false"});
 #line 96
         testRunner.And("I fill in", ((string)(null)), table10, "And ");

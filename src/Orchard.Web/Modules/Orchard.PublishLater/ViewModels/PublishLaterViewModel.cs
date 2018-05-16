@@ -26,10 +26,6 @@ namespace Orchard.PublishLater.ViewModels {
             }
         }
 
-        public bool HasPublished {
-            get { return IsPublished || ContentItem.ContentManager.Get(ContentItem.Id, VersionOptions.Published) != null; }
-        }
-
         public DateTimeEditor Editor { get; set; }
     }
 }

@@ -186,7 +186,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Hint",
+                        "Fields[EventDate].DateTimeFieldSettings.Hint",
                         "Enter the date of the event"});
 #line 62
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -203,7 +203,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "DateOnly"});
 #line 71
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
@@ -222,7 +222,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "TimeOnly"});
 #line 81
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
@@ -241,10 +241,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "DateAndTime"});
             table9.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
+                        "Fields[EventDate].DateTimeFieldSettings.Required",
                         "true"});
 #line 91
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
@@ -309,10 +309,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "DateOnly"});
             table13.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
+                        "Fields[EventDate].DateTimeFieldSettings.Required",
                         "true"});
 #line 120
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
@@ -333,10 +333,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table14.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "TimeOnly"});
             table14.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
+                        "Fields[EventDate].DateTimeFieldSettings.Required",
                         "true"});
 #line 132
         testRunner.And("I fill in", ((string)(null)), table14, "And ");
@@ -357,13 +357,13 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table15.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "DateAndTime"});
             table15.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Date",
+                        "Fields[EventDate].DateTimeFieldSettings.Editor.Date",
                         "01/31/2016"});
             table15.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Editor.Time",
+                        "Fields[EventDate].DateTimeFieldSettings.Editor.Time",
                         "10:00 AM"});
 #line 144
         testRunner.And("I fill in", ((string)(null)), table15, "And ");
@@ -461,10 +461,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table18.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Display",
+                        "Fields[EventDate].DateTimeFieldSettings.Display",
                         "DateAndTime"});
             table18.AddRow(new string[] {
-                        "Fields[0].DateTimeFieldSettings.Required",
+                        "Fields[EventDate].DateTimeFieldSettings.Required",
                         "true"});
 #line 191
         testRunner.And("I fill in", ((string)(null)), table18, "And ");

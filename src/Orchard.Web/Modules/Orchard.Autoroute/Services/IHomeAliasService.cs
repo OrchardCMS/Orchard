@@ -5,9 +5,8 @@ namespace Orchard.Autoroute.Services {
     
     public interface IHomeAliasService : IDependency {
         RouteValueDictionary GetHomeRoute();
-        int? GetHomePageId(VersionOptions version = null);
-        IContent GetHomePage(VersionOptions version = null);
-        bool IsHomePage(IContent content, VersionOptions homePageVersion = null);
+        int? GetHomePageId();
+        bool IsHomePage(IContent content);
         void PublishHomeAlias(IContent content);
         void PublishHomeAlias(string route);
         void PublishHomeAlias(RouteValueDictionary route);

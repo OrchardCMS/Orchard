@@ -1,30 +1,38 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
+using Orchard.Locking;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 
-namespace Orchard.Core.Navigation.Drivers {
-    public class MenuPartDriver : ContentPartDriver<MenuPart> {
+namespace Orchard.Core.Navigation.Drivers
+{
+    public class MenuPartDriver : ContentPartDriver<MenuPart>
+    {
         private readonly IAuthorizationService _authorizationService;
         private readonly INavigationManager _navigationManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IMenuService _menuService;
+        private readonly ILockingProvider _lockingProvider;
 
         public MenuPartDriver(
-            IAuthorizationService authorizationService, 
-            INavigationManager navigationManager, 
+            IAuthorizationService authorizationService,
+            INavigationManager navigationManager,
             IOrchardServices orchardServices,
-            IMenuService menuService) {
+            IMenuService menuService,
+            ILockingProvider lockingProvider)
+        {
             _authorizationService = authorizationService;
             _navigationManager = navigationManager;
             _orchardServices = orchardServices;
             _menuService = menuService;
+            _lockingProvider = lockingProvider;
             T = NullLocalizer.Instance;
         }
 
@@ -36,14 +44,28 @@ namespace Orchard.Core.Navigation.Drivers {
             }
         }
 
-        protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
-            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
+        protected override DriverResult Editor(MenuPart part, dynamic shapeHelper)
+        {
+            var lockString = string.Join(".",
+                    _orchardServices.WorkContext?.CurrentSite?.BaseUrl ?? "",
+                    _orchardServices.WorkContext?.CurrentSite?.SiteName ?? "",
+                    "MenuPartDriver");
+
+            IEnumerable<ContentItem> allowedMenus = null;
+
+            _lockingProvider.Lock(lockString,
+            () =>
+            {
+                allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
+            });
 
             if (!allowedMenus.Any())
                 return null;
 
-            return ContentShape("Parts_Navigation_Menu_Edit", () => {
-                var model = new MenuPartViewModel {
+            return ContentShape("Parts_Navigation_Menu_Edit", () =>
+            {
+                var model = new MenuPartViewModel
+                {
                     CurrentMenuId = part.Menu == null ? -1 : part.Menu.Id,
                     ContentItem = part.ContentItem,
                     Menus = allowedMenus,
@@ -55,10 +77,12 @@ namespace Orchard.Core.Navigation.Drivers {
             });
         }
 
-        protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var model = new MenuPartViewModel();
 
-            if(updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null))
+            {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
 
                 if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
@@ -67,10 +91,12 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuText = model.MenuText;
                 part.Menu = menu;
 
-                if (string.IsNullOrEmpty(part.MenuPosition) && menu != null) {
+                if (string.IsNullOrEmpty(part.MenuPosition) && menu != null)
+                {
                     part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
 
-                    if (string.IsNullOrEmpty(part.MenuText)) {
+                    if (string.IsNullOrEmpty(part.MenuText))
+                    {
                         updater.AddModelError("MenuText", T("The MenuText field is required"));
                     }
                 }
@@ -79,9 +105,11 @@ namespace Orchard.Core.Navigation.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(MenuPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(MenuPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -93,17 +121,21 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuPosition = position
             );
 
-            context.ImportAttribute(part.PartDefinition.Name, "Menu", menuIdentity => {
+            context.ImportAttribute(part.PartDefinition.Name, "Menu", menuIdentity =>
+            {
                 var menu = context.GetItemFromSession(menuIdentity);
-                if (menu != null) {
+                if (menu != null)
+                {
                     part.Menu = menu;
                 }
             });
         }
 
-        protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context)
+        {
             // is it on a menu ?
-            if(part.Menu == null) {
+            if (part.Menu == null)
+            {
                 return;
             }
 

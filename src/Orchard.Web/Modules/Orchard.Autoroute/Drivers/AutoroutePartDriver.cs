@@ -115,7 +115,7 @@ namespace Orchard.Autoroute.Drivers {
             };
 
             // Retrieve home page.
-            var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
+            var homePageId = _homeAliasService.GetHomePageId();
             var isHomePage = part.Id == homePageId;
 
             viewModel.IsHomePage = isHomePage;
