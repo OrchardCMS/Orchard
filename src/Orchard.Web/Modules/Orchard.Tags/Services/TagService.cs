@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
+using Orchard.Locking;
 
 namespace Orchard.Tags.Services {
     public class TagService : ITagService {
@@ -18,19 +19,24 @@ namespace Orchard.Tags.Services {
         private readonly IAuthorizationService _authorizationService;
         private readonly IOrchardServices _orchardServices;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly ILockingProvider _lockingProvider;
 
         public TagService(IRepository<TagRecord> tagRepository,
                           IRepository<ContentTagRecord> contentTagRepository,
                           INotifier notifier,
                           IAuthorizationService authorizationService,
                           IOrchardServices orchardServices,
-                          ISessionFactoryHolder sessionFactoryHolder) {
+                          ISessionFactoryHolder sessionFactoryHolder,
+                          ILockingProvider lockingProvider) {
+
             _tagRepository = tagRepository;
             _contentTagRepository = contentTagRepository;
             _notifier = notifier;
             _authorizationService = authorizationService;
             _orchardServices = orchardServices;
             _sessionFactoryHolder = sessionFactoryHolder;
+            _lockingProvider = lockingProvider;
+
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -56,11 +62,23 @@ namespace Orchard.Tags.Services {
         }
 
         public TagRecord CreateTag(string tagName) {
-            var result = _tagRepository.Get(x => x.TagName == tagName);
-            if (result == null) {
-                result = new TagRecord { TagName = tagName };
-                _tagRepository.Create(result);
-            }
+            TagRecord result = null;
+
+            var lockString = string.Join(".",
+                _orchardServices.WorkContext?.CurrentSite?.BaseUrl ?? "",
+                _orchardServices.WorkContext?.CurrentSite?.SiteName ?? "",
+                "TagService.CreateTag",
+                tagName);
+
+            _lockingProvider.Lock(lockString,
+                () => {
+                    result = _tagRepository.Get(x => x.TagName == tagName);
+                    if (result == null) {
+                        result = new TagRecord { TagName = tagName };
+                        _tagRepository.Create(result);
+                    }
+                });
+
             return result;
         }
 
