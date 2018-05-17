@@ -8,6 +8,8 @@
             switch (command) {
                 case "random":
                     return "newid()";
+                case "table_names":
+                    return "select name from sys.tables";
             }
 
             return null;
