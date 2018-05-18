@@ -187,7 +187,7 @@ namespace Orchard.MediaLibrary.Controllers {
                         // it changes the media file name
                         replaceMedia.FileName = filename;
                     }
-                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, filename, file.InputStream);
+                    _mediaLibraryService.UploadMediaFile(replaceMedia.FolderPath, replaceMedia.FileName, file.InputStream);
                     replaceMedia.MimeType = mimeType;
 
                     // Force a publish event which will update relevant Media properties
