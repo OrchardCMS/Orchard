@@ -371,7 +371,9 @@ namespace Orchard.Workflows.Controllers {
                 workflowDefinitionRecord.WorkflowRecords.Clear();
             }
             else {
+                var removeWorkflows = new List<WorkflowRecord>();
                 foreach (var workflowRecord in workflowDefinitionRecord.WorkflowRecords) {
+                    var removeAwaitingActivites = new List<AwaitingActivityRecord>();
                     // Update any awaiting activity records with the new activity record.
                     foreach (var awaitingActivityRecord in workflowRecord.AwaitingActivities) {
                         var clientId = awaitingActivityRecord.ActivityRecord.GetClientId();
@@ -379,14 +381,28 @@ namespace Orchard.Workflows.Controllers {
                             awaitingActivityRecord.ActivityRecord = activitiesIndex[clientId];
                         }
                         else {
-                            workflowRecord.AwaitingActivities.Remove(awaitingActivityRecord);
+                             removeAwaitingActivites.Add(awaitingActivityRecord);
+                            //workflowRecord.AwaitingActivities.Remove(awaitingActivityRecord);
                         }
                     }
+                    
+                    foreach (var item in removeAwaitingActivites)
+                    {
+                        workflowRecord.AwaitingActivities.Remove(item);
+                    }
+                    
                     // Remove any workflows with no awaiting activities.
                     if (!workflowRecord.AwaitingActivities.Any()) {
-                        workflowDefinitionRecord.WorkflowRecords.Remove(workflowRecord);
+                        removeWorkflows.Add(workflowRecord);
+                        //workflowDefinitionRecord.WorkflowRecords.Remove(workflowRecord);
                     }
                 }
+                
+                foreach (var item in removeWorkflows)
+                {
+                    workflowDefinitionRecord.WorkflowRecords.Remove(item);
+                }
+                
             }
 
             Services.Notifier.Success(T("Workflow saved successfully"));
