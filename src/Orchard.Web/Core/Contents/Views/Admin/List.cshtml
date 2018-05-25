@@ -12,6 +12,7 @@
     WorkContext.TryResolve<IAuthorizationService>(out _authorizationService);
 
     if (!showCreateContentButton) {
+        // being here it means there is a specific type we are considering
         pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
         createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
         var permission = DynamicPermissions
