@@ -175,7 +175,7 @@
             if (controller.is(":checkbox")) {
                 controller.click($(this).toggleWhatYouControl).each($(this).toggleWhatYouControl);
             } else if (controller.is(":radio")) {
-                $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); });
+                $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); }).each($(this).toggleWhatYouControl);
             }
             else if (controller.is("option")) {
                 controller.parent().change(function() {
