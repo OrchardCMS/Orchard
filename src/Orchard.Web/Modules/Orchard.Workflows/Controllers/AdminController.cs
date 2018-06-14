@@ -382,7 +382,6 @@ namespace Orchard.Workflows.Controllers {
                         }
                         else {
                              removeAwaitingActivites.Add(awaitingActivityRecord);
-                            //workflowRecord.AwaitingActivities.Remove(awaitingActivityRecord);
                         }
                     }
                     
@@ -394,7 +393,6 @@ namespace Orchard.Workflows.Controllers {
                     // Remove any workflows with no awaiting activities.
                     if (!workflowRecord.AwaitingActivities.Any()) {
                         removeWorkflows.Add(workflowRecord);
-                        //workflowDefinitionRecord.WorkflowRecords.Remove(workflowRecord);
                     }
                 }
                 
