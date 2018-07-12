@@ -20,12 +20,7 @@ namespace Orchard.Fields.Settings {
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             if (definition.FieldDefinition.Name == "DateTimeField") {
                 var model = definition.Settings.GetModel<DateTimeFieldSettings>();
-                model.Editor = new DateTimeEditor() {
-                    ShowDate = true,
-                    ShowTime = true,
-                    Date = _dateLocalizationServices.ConvertToLocalizedDateString(model.DefaultValue),
-                    Time = _dateLocalizationServices.ConvertToLocalizedTimeString(model.DefaultValue),
-                };
+                model.Editor = InitialDateTimeEditor(model.DefaultValue);
                 yield return DefinitionTemplate(model);
             }
         }
@@ -44,9 +39,23 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("DateTimeFieldSettings.TimePlaceholder", model.TimePlaceholder);
                 model.DefaultValue = model.Editor == null ? model.DefaultValue : _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                 builder.WithSetting("DateTimeFieldSettings.DefaultValue", model.DefaultValue.HasValue ? model.DefaultValue.Value.ToString(CultureInfo.InvariantCulture) : String.Empty);
-
+                model.Editor = InitialDateTimeEditor(model.DefaultValue, model.Display);
                 yield return DefinitionTemplate(model);
             }
+        }
+        
+        private DateTimeEditor InitialDateTimeEditor(DateTime? value,  DateTimeFieldDisplays displays = DateTimeFieldDisplays.DateAndTime)
+        {
+            var showDate = displays == DateTimeFieldDisplays.DateAndTime || displays == DateTimeFieldDisplays.DateOnly;
+            var showTime = displays == DateTimeFieldDisplays.DateAndTime || displays == DateTimeFieldDisplays.TimeOnly;
+            var editor = new DateTimeEditor()
+            {
+                ShowDate = showDate,
+                ShowTime = showTime,
+                Date = value != null ? _dateLocalizationServices.ConvertToLocalizedDateString(value) : null,
+                Time = value != null ? _dateLocalizationServices.ConvertToLocalizedTimeString(value) : null
+            };
+            return editor;
         }
     }
 }
