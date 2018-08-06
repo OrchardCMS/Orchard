@@ -129,7 +129,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
             MenuPart menuPart = _menuService.Get(id);
             int? menuId = null;
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, (menuPart != null) ? _menuService.GetMenu(menuPart.Menu.Id):null, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, (menuPart != null) ? _menuService.GetMenu(menuPart.Menu.Id) : null, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             if (menuPart != null) {
@@ -203,32 +203,23 @@ namespace Orchard.Core.Navigation.Controllers {
         public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
-
             var menuPart = Services.ContentManager.New<MenuPart>(id);
-
             if (menuPart == null)
                 return HttpNotFound();
-
             // load the menu
             var menu = Services.ContentManager.Get(menuId);
-
             if (menu == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(menuPart, this);
-
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
             menuPart.Menu = menu;
-
+            var model = Services.ContentManager.UpdateEditor(menuPart, this);
+            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
             Services.ContentManager.Create(menuPart);
-
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
-
             Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
-
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
     }
