@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="Services\CreateUpdateIndexTaskService.cs" />
     <Compile Include="Services\ICreateUpdateIndexTaskService.cs" />
+    <Compile Include="Services\IndexingNoLockTableProvider.cs" />
     <Compile Include="Services\UpdateIndexScheduler.cs" />
     <Compile Include="Services\IIndexingTaskExecutor.cs" />
     <Compile Include="Services\IUpdateIndexScheduler.cs" />
