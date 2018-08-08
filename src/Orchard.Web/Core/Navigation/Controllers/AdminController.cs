@@ -88,7 +88,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, (menuId.HasValue) ? _menuService.GetMenu(menuId.Value) : null, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             // See https://github.com/OrchardCMS/Orchard/issues/948
@@ -126,11 +126,11 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
-                return new HttpUnauthorizedResult();
 
             MenuPart menuPart = _menuService.Get(id);
             int? menuId = null;
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, (menuPart != null) ? _menuService.GetMenu(menuPart.Menu.Id) : null, T("Couldn't manage the main menu")))
+                return new HttpUnauthorizedResult();
 
             if (menuPart != null) {
                 menuId = menuPart.Menu.Id;
@@ -141,7 +141,7 @@ namespace Orchard.Core.Navigation.Controllers {
                     .Select(x => x.As<MenuPart>())
                     .ToList();
 
-                foreach (var menuItem in menuItems.Concat(new [] {menuPart})) {
+                foreach (var menuItem in menuItems.Concat(new[] { menuPart })) {
                     // if the menu item is a concrete content item, don't delete it, just unreference the menu
                     if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
                         menuPart.Menu = null;
@@ -173,25 +173,25 @@ namespace Orchard.Core.Navigation.Controllers {
 
             if (menuPart == null)
                 return HttpNotFound();
-            
+
             // load the menu
             var menu = Services.ContentManager.Get(menuId);
 
             if (menu == null)
                 return HttpNotFound();
-            
+
             try {
                 // filter the content items for this specific menu
                 menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                
+                menuPart.Menu = menu;
                 var model = Services.ContentManager.BuildEditor(menuPart);
-                
+
                 return View(model);
             }
             catch (Exception exception) {
                 if (exception.IsFatal()) {
                     throw;
-                } 
+                }
 
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Creating menu item failed: {0}", exception.Message));
@@ -203,32 +203,23 @@ namespace Orchard.Core.Navigation.Controllers {
         public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
-
             var menuPart = Services.ContentManager.New<MenuPart>(id);
-
             if (menuPart == null)
                 return HttpNotFound();
-
             // load the menu
             var menu = Services.ContentManager.Get(menuId);
-
             if (menu == null)
                 return HttpNotFound();
-            
-            var model = Services.ContentManager.UpdateEditor(menuPart, this);
 
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
             menuPart.Menu = menu;
-
+            var model = Services.ContentManager.UpdateEditor(menuPart, this);
+            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
             Services.ContentManager.Create(menuPart);
-
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
-
             Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
-
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
     }
