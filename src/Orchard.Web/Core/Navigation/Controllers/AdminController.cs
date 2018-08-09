@@ -15,6 +15,12 @@ using System;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 using Orchard.Exceptions;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Utility.Extensions;
+using Orchard.Mvc.Html;
+using Orchard.Core.Contents.Settings;
+using Orchard.Data;
+using System.Web.Routing;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
@@ -23,13 +29,19 @@ namespace Orchard.Core.Navigation.Controllers {
         private readonly INavigationManager _navigationManager;
         private readonly IEnumerable<IContentHandler> _handlers;
         private readonly IMenuManager _menuManager;
+        private readonly IContentManager _contentManager;
+        private readonly ITransactionManager _transactionManager;
 
         public AdminController(
             IOrchardServices orchardServices,
+            IContentManager contentManager,
+            ITransactionManager transactionManager,
             IMenuService menuService,
             IMenuManager menuManager,
             INavigationManager navigationManager,
             IEnumerable<IContentHandler> handlers) {
+            _contentManager = contentManager;
+            _transactionManager = transactionManager;
             _menuService = menuService;
             _menuManager = menuManager;
             _navigationManager = navigationManager;
@@ -221,6 +233,67 @@ namespace Orchard.Core.Navigation.Controllers {
             }
             Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+        }
+
+        public ActionResult Edit(int id) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, contentItem.Content.MenuPart.Menu, T("Couldn't manage the main menu")))
+                return new HttpUnauthorizedResult();
+
+            var model = _contentManager.BuildEditor(contentItem);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Save")]
+        public ActionResult EditPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
+        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+            var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
+
+            if (contentItem == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageMenus, contentItem.Content.MenuPart.Menu, T("Couldn't manage the main menu")))
+                return new HttpUnauthorizedResult();
+
+            string previousRoute = null;
+            if (contentItem.Has<IAliasAspect>()
+                && !string.IsNullOrWhiteSpace(returnUrl)
+                && Request.IsLocalUrl(returnUrl)
+                // only if the original returnUrl is the content itself
+                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase)
+                ) {
+                previousRoute = contentItem.As<IAliasAspect>().Path;
+            }
+
+            var model = _contentManager.UpdateEditor(contentItem, this);
+            if (!ModelState.IsValid) {
+                _transactionManager.Cancel();
+                return View("Edit", model);
+            }
+
+            conditionallyPublish(contentItem);
+
+            if (!string.IsNullOrWhiteSpace(returnUrl)
+                && previousRoute != null
+                && !String.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
+                returnUrl = Url.ItemDisplayUrl(contentItem);
+            }
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("Your content has been saved.")
+                : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
     }
 }
