@@ -437,8 +437,9 @@ namespace Orchard.CodeGeneration.Commands {
                     var projectConfiguationPlatforms = string.Format("\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\t", projectGuid);
                     var solutionText = File.ReadAllText(solutionPath);
                     solutionText = solutionText.Insert(solutionText.LastIndexOf("EndProject\r\n"), projectReference);
+                    solutionText = AppendProjectSection(solutionText, "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Orchard.Web\"", "ProjectDependencies", string.Format("\t{{{0}}} = {{{0}}}\r\n\t", projectGuid));
                     solutionText = AppendGlobalSection(solutionText, "ProjectConfigurationPlatforms", projectConfiguationPlatforms);
-                    solutionText = AppendGlobalSection(solutionText, "NestedProjects", "\t{" + projectGuid + "} = {" + solutionFolderGuid + "}\r\n\t");
+                    solutionText = AppendGlobalSection(solutionText, "NestedProjects", string.Format("\t{{{0}}} = {{{1}}}\r\n\t", projectGuid, solutionFolderGuid));
                     File.WriteAllText(solutionPath, solutionText);
                     TouchSolution(output);
                 }
@@ -448,6 +449,13 @@ namespace Orchard.CodeGeneration.Commands {
         private string AppendGlobalSection(string solutionText, string sectionName, string content) {
             var sectionStart = solutionText.IndexOf(string.Format("GlobalSection({0})", sectionName));
             var sectionEnd = solutionText.IndexOf("EndGlobalSection", sectionStart);
+            return solutionText.Insert(sectionEnd, content);
+        }
+
+        private string AppendProjectSection(string solutionText, string projectNode, string sectionName, string content) {
+            var projectStart = solutionText.IndexOf(projectNode);
+            var sectionStart = solutionText.IndexOf(string.Format("ProjectSection({0})", sectionName), projectStart);
+            var sectionEnd = solutionText.IndexOf("EndProjectSection", sectionStart);
             return solutionText.Insert(sectionEnd, content);
         }
 
