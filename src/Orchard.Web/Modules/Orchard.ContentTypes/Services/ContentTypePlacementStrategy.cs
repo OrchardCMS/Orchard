@@ -7,6 +7,7 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.ContentTypes.Extensions;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
+using Orchard.UI.Admin;
 
 namespace Orchard.ContentTypes.Services {
     public class TypePlacement {
@@ -16,9 +17,12 @@ namespace Orchard.ContentTypes.Services {
 
     public class ContentTypePlacementStrategy : IShapeTableEventHandler {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public ContentTypePlacementStrategy(Work<IContentDefinitionManager> contentDefinitionManager) {
+        public ContentTypePlacementStrategy(Work<IContentDefinitionManager> contentDefinitionManager,
+            IWorkContextAccessor workContextAccessor) {
             _contentDefinitionManager = contentDefinitionManager;
+            _workContextAccessor = workContextAccessor;
         }
         
         public virtual Feature Feature { get; set; }
@@ -44,8 +48,11 @@ namespace Orchard.ContentTypes.Services {
                     }
 
                     descriptor.Placement = ctx => {
-                        if(ctx.DisplayType == null) {
-                            foreach(var customPlacement in customPlacements) {
+                        var workContext = _workContextAccessor.GetContext(); 
+                        if (ctx.DisplayType == null &&
+                            AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) { // Tests if it's executing in admin in order to override placement.info for editors in back-end only
+
+                            foreach (var customPlacement in customPlacements) {
                                 
                                 var type = customPlacement.ContentType;
                                 var differentiator = customPlacement.Placement.Differentiator;
