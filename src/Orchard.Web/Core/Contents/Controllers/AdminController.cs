@@ -242,6 +242,9 @@ namespace Orchard.Core.Contents.Controllers {
             if (string.IsNullOrEmpty(id))
                 return CreatableTypeList(containerId);
 
+            if (contentItem.TypeDefinition.Settings.First(x => x.Key == "ContentTypeSettings.Creatable").Value.ToLower() == "false")
+                return new HttpUnauthorizedResult();
+
             if (_contentDefinitionManager.GetTypeDefinition(id) == null) {
                 return RedirectToAction("Create", new { id = "" });
             }
@@ -286,6 +289,9 @@ namespace Orchard.Core.Contents.Controllers {
 
         private ActionResult CreatePOST(string id, string returnUrl, Func<ContentItem, bool> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
+
+            if (contentItem.TypeDefinition.Settings.First(x => x.Key == "ContentTypeSettings.Creatable").Value.ToLower() == "false")
+                return new HttpUnauthorizedResult();
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("You do not have permission to edit content.")))
                 return new HttpUnauthorizedResult();
