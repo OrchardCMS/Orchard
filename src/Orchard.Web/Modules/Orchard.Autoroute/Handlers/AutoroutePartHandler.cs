@@ -124,7 +124,7 @@ namespace Orchard.Autoroute.Handlers {
             }
         }
 
-        void RemoveAlias(AutoroutePart part, bool isUnpublishing) {
+        void RemoveAlias(AutoroutePart part, bool includeUnpublished) {
             var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
 
             // Is this the current home page?
@@ -132,7 +132,7 @@ namespace Orchard.Autoroute.Handlers {
                 _orchardServices.Notifier.Warning(T("You removed the content item that served as the site's home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" page will be displayed. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
             }
 
-            if (part.IsPublished() || isUnpublishing)
+            if (part.IsPublished() || includeUnpublished)
             {
                 _lockingProvider.Lock(LockString, () => {
                     _autorouteService.Value.RemoveAliases(part);
