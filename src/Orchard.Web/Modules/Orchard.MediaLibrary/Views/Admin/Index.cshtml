@@ -105,6 +105,7 @@ var mediaLibrarySettings = {
     cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
     replaceConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to replace this media item ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
+    unauthorizedMessage: '@HttpUtility.JavaScriptStringEncode(T("Access denied").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
     childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
 };

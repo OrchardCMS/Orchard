@@ -37,17 +37,15 @@ namespace Orchard.Autoroute.Settings {
             List<RoutePattern> newPatterns = new List<RoutePattern>();
 
             // Adding a null culture for the culture neutral pattern
-            List<string> cultures = new List<string>();
+            var cultures = new List<string>();
             cultures.Add(null);
             cultures.AddRange(settings.SiteCultures);
-
-            int current = 0;
+            
             foreach (string culture in cultures) {
                 // Adding all existing patterns for the culture
-                foreach (RoutePattern routePattern in settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                    newPatterns.Add(settings.Patterns[current]);
-                    current++;
-                }
+                newPatterns.AddRange(
+                    settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))
+                    );
 
                 // Adding a pattern for each culture if there is none
                 if (!settings.Patterns.Where(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)).Any()) {
@@ -58,7 +56,7 @@ namespace Orchard.Autoroute.Settings {
                 newPatterns.Add(new RoutePattern { Culture = culture, Name = null, Description = null, Pattern = null });
 
                 // If the content type has no defaultPattern for autoroute, assign one
-                bool defaultPatternExists = false;
+                var defaultPatternExists = false;
                 if (String.IsNullOrEmpty(culture))
                     defaultPatternExists = settings.DefaultPatterns.Any(x => String.IsNullOrEmpty(x.Culture));
                 else
@@ -102,7 +100,7 @@ namespace Orchard.Autoroute.Settings {
                 //TODO need to add validations client and/or server side here
 
                 // If some default pattern is an empty pattern set it to the first pattern for the language
-                List<DefaultPattern> newDefaultPatterns = new List<DefaultPattern>();
+                var newDefaultPatterns = new List<DefaultPattern>();
 
                 foreach (var defaultPattern in settings.DefaultPatterns) {
                     RoutePattern correspondingPattern = null;
@@ -125,7 +123,7 @@ namespace Orchard.Autoroute.Settings {
                 patterns.RemoveAll(p => String.IsNullOrWhiteSpace(p.Name) && String.IsNullOrWhiteSpace(p.Pattern) && String.IsNullOrWhiteSpace(p.Description));
 
                 // Adding a null culture for the culture neutral pattern
-                List<string> cultures = new List<string>();
+                var cultures = new List<string>();
                 cultures.Add(null);
                 cultures.AddRange(settings.SiteCultures);
 

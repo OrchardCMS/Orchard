@@ -48,7 +48,7 @@ Scenario: Creating and using Boolean fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                | value                        |
-            | Fields[0].BooleanFieldSettings.Hint | Check if the event is active |
+            | Fields[Active].BooleanFieldSettings.Hint | Check if the event is active |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
@@ -57,7 +57,7 @@ Scenario: Creating and using Boolean fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].BooleanFieldSettings.DefaultValue | True  |
+            | Fields[Active].BooleanFieldSettings.DefaultValue | True  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "checked=\"checked\""
@@ -66,7 +66,7 @@ Scenario: Creating and using Boolean fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].BooleanFieldSettings.Optional     | false |
+            | Fields[Active].BooleanFieldSettings.Optional     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 

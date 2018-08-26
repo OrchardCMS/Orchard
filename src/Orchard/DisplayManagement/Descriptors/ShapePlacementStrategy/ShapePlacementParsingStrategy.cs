@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -15,14 +14,17 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IPlacementFileParser _placementFileParser;
+        private readonly IEnumerable<IPlacementParseMatchProvider> _placementParseMatchProviders;
 
         public ShapePlacementParsingStrategy(
             IExtensionManager extensionManager,
             ShellDescriptor shellDescriptor,
-            IPlacementFileParser placementFileParser) {
+            IPlacementFileParser placementFileParser,
+            IEnumerable<IPlacementParseMatchProvider> placementParseMatchProviders) {
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
             _placementFileParser = placementFileParser;
+            _placementParseMatchProviders = placementParseMatchProviders;
         }
 
         public void Discover(ShapeTableBuilder builder) {
@@ -125,37 +127,20 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             }
         }
 
-        public static Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
-            var expression = term.Value;
-            switch (term.Key) {
-                case "ContentPart":
-                        return ctx => ctx.Content != null 
-                            && ctx.Content.ContentItem.Parts.Any(part => part.PartDefinition.Name == expression) 
-                            && predicate(ctx);
-                case "ContentType":
-                    if (expression.EndsWith("*")) {
-                        var prefix = expression.Substring(0, expression.Length - 1);
-                        return ctx => ((ctx.ContentType ?? "").StartsWith(prefix) || (ctx.Stereotype ?? "").StartsWith(prefix)) && predicate(ctx);
-                    }
-                    return ctx => ((ctx.ContentType == expression) || (ctx.Stereotype == expression)) && predicate(ctx);
-                case "DisplayType":
-                    if (expression.EndsWith("*")) {
-                        var prefix = expression.Substring(0, expression.Length - 1);
-                        return ctx => (ctx.DisplayType ?? "").StartsWith(prefix) && predicate(ctx);
-                    }
-                    return ctx => (ctx.DisplayType == expression) && predicate(ctx);
-                case "Path":
-                    var normalizedPath = VirtualPathUtility.IsAbsolute(expression)
-                                             ? VirtualPathUtility.ToAppRelative(expression)
-                                             : VirtualPathUtility.Combine("~/", expression);
+        private Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate,
+                KeyValuePair<string, string> term) {
+            return BuildPredicate(predicate, term, _placementParseMatchProviders);
+        }
 
-                    if (normalizedPath.EndsWith("*")) {
-                        var prefix = normalizedPath.Substring(0, normalizedPath.Length - 1);
-                        return ctx => VirtualPathUtility.ToAppRelative(String.IsNullOrEmpty(ctx.Path) ? "/" : ctx.Path).StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
-                    }
+        public static Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, 
+                KeyValuePair<string, string> term, IEnumerable<IPlacementParseMatchProvider> placementMatchProviders) {
 
-                    normalizedPath = VirtualPathUtility.AppendTrailingSlash(normalizedPath);
-                    return ctx => (ctx.Path.Equals(normalizedPath, StringComparison.OrdinalIgnoreCase)) && predicate(ctx);
+            if (placementMatchProviders != null) {
+                var providersForTerm = placementMatchProviders.Where(x => x.Key.Equals(term.Key));
+                if (providersForTerm.Any()) {
+                    var expression = term.Value;
+                    return ctx => providersForTerm.Any(x => x.Match(ctx, expression)) && predicate(ctx);
+                }
             }
             return predicate;
         }

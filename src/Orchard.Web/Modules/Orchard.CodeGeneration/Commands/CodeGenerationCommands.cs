@@ -291,6 +291,8 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(modulePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
             content.Add(modulePath + "Styles\\Styles.min.css");
 
+            File.WriteAllText(modulePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+            content.Add(modulePath + "packages.config");
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -330,22 +332,22 @@ namespace Orchard.CodeGeneration.Commands {
 @"<ProjectReference Include=""..\..\..\Orchard\Orchard.Framework.csproj"">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include=""..\..\Core\Orchard.Core.csproj"">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>" :
 @"<Reference Include=""Orchard.Core"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Core.dll</HintPath>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </Reference>
     <Reference Include=""Orchard.Framework"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Framework.dll</HintPath>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </Reference>";
         }
 
@@ -404,6 +406,9 @@ namespace Orchard.CodeGeneration.Commands {
 
             // create new csproj for the theme
             if (projectGuid != null) {
+                File.WriteAllText(themePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+                createdFiles.Add(themePath + "packages.config");
+
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
                 string projectText = CreateCsProject(themeName, projectGuid, itemGroup, null);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);

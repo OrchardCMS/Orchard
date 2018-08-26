@@ -35,12 +35,12 @@ namespace Orchard.MediaLibrary.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index(string folderPath, string type, int? replaceId = null) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.SelectMediaContent, folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
             // Check permission
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -62,12 +62,12 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost]
         public ActionResult Upload(string folderPath, string type) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
             // Check permission
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -135,7 +135,8 @@ namespace Orchard.MediaLibrary.Controllers {
                 return HttpNotFound();
 
             // Check permission
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, replaceMedia.FolderPath) && _mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, replaceMedia.FolderPath)) 
+                && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
