@@ -296,7 +296,7 @@
       <RoslynFilesDestination>$(ProjectDir)bin\roslyn\</RoslynFilesDestination>
     </PropertyGroup>
     <ItemGroup>
-      <RoslynFiles Include="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.*\tools\Roslyn45\*" />
+      <RoslynFiles Include="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.*\tools\RoslynLatest\*" />
     </ItemGroup>
     <Message Text="$(RoslynFilesDestination)" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(RoslynFilesDestination)" Condition="!Exists('$(RoslynFilesDestination)csc.exe')" />
