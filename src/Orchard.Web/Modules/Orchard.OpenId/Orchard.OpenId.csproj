@@ -227,6 +227,7 @@
     <Compile Include="Providers\Google.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AzureActiveDirectory\IAzureActiveDirectoryService.cs" />
+    <Compile Include="Services\IOpenIdAuthenticationService.cs" />
     <Compile Include="Services\Twitter\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\MissingSettingsBanner.cs" />
     <Compile Include="Services\AzureActiveDirectory\InMemoryCache.cs" />

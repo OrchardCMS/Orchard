@@ -12,7 +12,7 @@ using Orchard.Services;
 
 namespace Orchard.OpenId.Services {
     [OrchardFeature("Orchard.OpenId")]
-    public class OpenIdAuthenticationService : IAuthenticationService {
+    public class OpenIdAuthenticationService : IAuthenticationService, IOpenIdAuthenticationService {
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
         private readonly IMembershipService _membershipService;
@@ -103,7 +103,7 @@ namespace Orchard.OpenId.Services {
             return _localAuthenticationUser = localUser;
         }
 
-        private bool IsLocalUser() {
+        public bool IsLocalUser() {
             var httpContext = _httpContextAccessor.Current();
 
             if (httpContext.IsBackgroundContext()) {
