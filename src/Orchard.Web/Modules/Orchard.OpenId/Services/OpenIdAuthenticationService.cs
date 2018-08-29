@@ -5,6 +5,7 @@ using System.Web.Security;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Services;
@@ -103,7 +104,13 @@ namespace Orchard.OpenId.Services {
         }
 
         private bool IsLocalUser() {
-            var anyClaim = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Claims.FirstOrDefault();
+            var httpContext = _httpContextAccessor.Current();
+
+            if (httpContext.IsBackgroundContext()) {
+                return true;
+            }
+
+            var anyClaim = httpContext.GetOwinContext().Authentication.User.Claims.FirstOrDefault();
 
             if (anyClaim == null || anyClaim.Issuer == Constants.General.LocalIssuer || anyClaim.Issuer == Constants.General.FormsIssuer) {
                 return true;
