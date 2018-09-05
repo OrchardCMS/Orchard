@@ -45,11 +45,14 @@ namespace Orchard.Taxonomies.Controllers {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
-
+            
             var allTerms = _taxonomyService.GetTermsQuery(taxonomyId).OrderBy(x => x.FullWeight);
+
+            var totalItemCount = allTerms.Count();
+
             var termsPage = pager.PageSize > 0 ? allTerms.Slice(pager.GetStartIndex(), pager.PageSize) : allTerms.Slice(0, 0);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
+            var pagerShape = Shape.Pager(pager).TotalItemCount(totalItemCount);
 
             var entries = termsPage
                     .Select(term => term.CreateTermEntry())
