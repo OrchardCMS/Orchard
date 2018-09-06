@@ -18,7 +18,7 @@ namespace Orchard.MediaLibrary.Fields {
 
         public IEnumerable<MediaPart> MediaParts { 
             get {
-                return _contentItems != null ? _contentItems.Value : Enumerable.Empty<MediaPart>();
+                return _contentItems != null ? (_contentItems.Value ?? Enumerable.Empty<MediaPart>()) : Enumerable.Empty<MediaPart>();
             }
             set { _contentItems.Value = value; }
         }
