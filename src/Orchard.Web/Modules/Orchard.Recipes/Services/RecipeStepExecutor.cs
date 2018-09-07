@@ -5,6 +5,7 @@ using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Recipes.Services {
     public class RecipeStepExecutor : Component, IRecipeStepExecutor {
@@ -12,17 +13,20 @@ namespace Orchard.Recipes.Services {
         private readonly IEnumerable<IRecipeHandler> _recipeHandlers;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
         private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRepository;
+        private readonly ShellSettings _shellSettings;
 
         public RecipeStepExecutor(
             IRecipeStepQueue recipeStepQueue,
             IEnumerable<IRecipeHandler> recipeHandlers,
             IRecipeExecuteEventHandler recipeExecuteEventHandler,
-            IRepository<RecipeStepResultRecord> recipeStepResultRepository) {
+            IRepository<RecipeStepResultRecord> recipeStepResultRepository,
+            ShellSettings shellSettings) {
 
             _recipeStepQueue = recipeStepQueue;
             _recipeHandlers = recipeHandlers;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
             _recipeStepResultRepository = recipeStepResultRepository;
+            _shellSettings = shellSettings;
         }
 
         public bool ExecuteNextStep(string executionId) {
@@ -49,16 +53,16 @@ namespace Orchard.Recipes.Services {
             }
             catch (Exception ex) {
                 UpdateStepResultRecord(executionId, nextRecipeStep.RecipeName, nextRecipeStep.Id, nextRecipeStep.Name, isSuccessful: false, errorMessage: ex.Message);
-                Logger.Error(ex, "Recipe execution failed because the step '{0}' failed.", nextRecipeStep.Name);
+                Logger.Error(ex, "Recipe execution for Tenant {0} failed because the step '{1}' failed.", _shellSettings.Name, nextRecipeStep.Name);
                 while (_recipeStepQueue.Dequeue(executionId) != null);
-                var message = T("Recipe execution with ID {0} failed because the step '{1}' failed to execute. The following exception was thrown:\n{2}\nRefer to the error logs for more information.", executionId, nextRecipeStep.Name, ex.Message);
+                var message = T("Recipe execution with ID {0} for Tenant {1} failed because the step '{2}' failed to execute. The following exception was thrown:\n{3}\nRefer to the error logs for more information.", executionId, _shellSettings.Name , nextRecipeStep.Name, ex.Message);
                 throw new OrchardCoreException(message);
             }
 
             if (!recipeContext.Executed) {
-                Logger.Error("Recipe execution failed because no matching handler for recipe step '{0}' was found.", recipeContext.RecipeStep.Name);
+                Logger.Error("Recipe execution for Tenant {0} failed because no matching handler for recipe step '{1}' was found.", _shellSettings.Name, recipeContext.RecipeStep.Name);
                 while (_recipeStepQueue.Dequeue(executionId) != null);
-                var message = T("Recipe execution with ID {0} failed because no matching handler for recipe step '{1}' was found. Refer to the error logs for more information.", executionId, nextRecipeStep.Name);
+                var message = T("Recipe execution with ID {0} for Tenant {1} failed because no matching handler for recipe step '{2}' was found. Refer to the error logs for more information.", executionId, _shellSettings.Name, nextRecipeStep.Name);
                 throw new OrchardCoreException(message);
             }
 
