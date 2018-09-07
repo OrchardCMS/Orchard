@@ -88,7 +88,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     AuthenticationFailed = context => {
                         context.HandleResponse();
                         context.Response.Redirect(Constants.General.AuthenticationErrorUrl);
-
+                        Logger.Debug(context.Exception, "AAD authentication failed.");
                         return Task.FromResult(0);
                     }
                 }
