@@ -14,12 +14,12 @@ namespace Orchard.Glimpse.Tabs.Parts {
             return messages;
         }
 
-        public override string Name => "Parts";
+        public override string Name { get { return "Parts"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<PartMessage>();
         }
 
-        public string Key => "glimpse_orchard_parts";
+        public string Key { get { return "glimpse_orchard_parts"; } }
     }
 }

@@ -12,8 +12,8 @@ namespace Orchard.Glimpse.Models {
             _glimpseService = glimpseService;
             OriginalDriverResult = originalDriverResult;
 
-            ContentField = originalDriverResult?.ContentField;
-            ContentPart = originalDriverResult?.ContentPart;
+            ContentField = originalDriverResult == null ? null : originalDriverResult.ContentField;
+            ContentPart = originalDriverResult == null ? null : originalDriverResult.ContentPart;
         }
         public DriverResult OriginalDriverResult { get; set; }
 
@@ -23,7 +23,7 @@ namespace Orchard.Glimpse.Models {
                 ContentName = context.ContentItem.GetContentName(),
                 ContentType = context.ContentItem.ContentType,
                 DisplayType = context.DisplayType,
-                PartDefinition = context.ContentPart?.PartDefinition,
+                PartDefinition = context.ContentPart == null ? null : context.ContentPart.PartDefinition,
                 Duration = t.Duration
             }, TimelineCategories.Parts, "Display Part: " + (ContentPart == null ? context.ContentItem.ContentType : ContentPart.PartDefinition.Name), context.ContentItem.GetContentName());
         }

@@ -23,7 +23,7 @@ namespace Orchard.Glimpse.AlternateImplementation {
                     Key = key,
                     Result = r == null ? "Miss" : "Hit",
                     Value = r
-                }, TimelineCategories.Cache, r => $"Get ({(r == null ? "Miss" : "Hit")})", r => key).ActionResult;
+                }, TimelineCategories.Cache, r => string.Format("Get ({0})", (r == null ? "Miss" : "Hit")), r => key).ActionResult;
         }
 
         public void Put<T>(string key, T value) {

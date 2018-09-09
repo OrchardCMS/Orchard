@@ -161,7 +161,7 @@ namespace Orchard.Glimpse.AlternateImplementation {
                     TechnicalName = widgetPart.Name,
                     EditUrl = GlimpseHelpers.AppendReturnUrl(_urlHelper.ItemAdminUrl(content), _urlHelper),
                     Duration = t.Duration
-                }, TimelineCategories.Widgets, $"Build Display: {widgetPart.ContentItem.ContentType}", widgetPart.Title).ActionResult;
+                }, TimelineCategories.Widgets, string.Format("Build Display: {0}", widgetPart.ContentItem.ContentType), widgetPart.Title).ActionResult;
         }
 
         public dynamic BuildEditor(IContent content, string groupId = "") {

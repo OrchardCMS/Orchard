@@ -13,7 +13,7 @@ namespace Orchard.Glimpse.Tabs.Parts {
                     .Column(message.ContentId)
                     .Column(message.ContentName)
                     .Column(message.ContentType.CamelFriendly())
-                    .Column(message.PartDefinition?.Name.CamelFriendly())
+                    .Column(message.PartDefinition == null ? null : message.PartDefinition.Name.CamelFriendly())
                     .Column(message.DisplayType)
                     .Column(message.Duration.ToTimingString());
             }

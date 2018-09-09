@@ -8,7 +8,7 @@ namespace Orchard.Glimpse.Extensions {
         }
 
         public static string ToTimingString(this double milliseconds) {
-            return $"{milliseconds:0,0.00} ms";
+            return string.Format("{0} ms", milliseconds.ToString("0,0.00"));
         }
 
         public static string ToReadableString(this TimeSpan span) {
@@ -23,7 +23,7 @@ namespace Orchard.Glimpse.Extensions {
         }
 
         private static string GetTimeSpanSegment(int value, string unit) {
-            return value > 0 ? $"{value:0} {unit}{(value == 1 ? string.Empty : "s")}" : null;
+            return value > 0 ? string.Format("{0} {1}{2}", value.ToString("0"), unit, (value == 1 ? string.Empty : "s")) : null;
         }
     }
 }

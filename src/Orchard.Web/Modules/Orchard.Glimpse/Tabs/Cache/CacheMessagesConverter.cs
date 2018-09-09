@@ -10,7 +10,7 @@ namespace Orchard.Glimpse.Tabs.Cache {
             foreach (var message in messages) {
                 root.AddRow()
                     .Column(message.Action)
-                    .Column(message.ValidFor?.ToReadableString())
+                    .Column(message.ValidFor == null ? null : message.ValidFor.Value.ToReadableString())
                     .Column(message.Key)
                     .Column(message.Result)
                     .Column(message.Value)

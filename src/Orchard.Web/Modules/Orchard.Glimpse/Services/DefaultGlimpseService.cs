@@ -123,19 +123,31 @@ namespace Orchard.Glimpse.Services {
 
             _messageInterceptors.Invoke(i => i.MessageReceived(message), Logger);
 
-            broker?.Publish(message);
+            if (broker != null) broker.Publish(message);
         }
 
         private IExecutionTimer GetTimer() {
             var context = HttpContext.Current;
 
-            return ((GlimpseRuntime) context?.Application.Get("__GlimpseRuntime"))?.Configuration.TimerStrategy.Invoke();
+            if (context != null) {
+                GlimpseRuntime glimpseRuntime = (GlimpseRuntime)context.Application.Get("__GlimpseRuntime");
+
+                if (glimpseRuntime != null) return glimpseRuntime.Configuration.TimerStrategy.Invoke();
+            }
+
+            return null;
         }
 
         private IMessageBroker GetMessageBroker() {
             var context = HttpContext.Current;
 
-            return ((GlimpseRuntime) context?.Application.Get("__GlimpseRuntime"))?.Configuration.MessageBroker;
+            if (context != null) {
+                GlimpseRuntime glimpseRuntime = (GlimpseRuntime)context.Application.Get("__GlimpseRuntime");
+
+                if (glimpseRuntime != null) return glimpseRuntime.Configuration.MessageBroker;
+            }
+
+            return null;
         }
     }
 

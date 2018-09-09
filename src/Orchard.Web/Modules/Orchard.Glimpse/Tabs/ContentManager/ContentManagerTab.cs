@@ -14,14 +14,14 @@ namespace Orchard.Glimpse.Tabs.ContentManager {
             return messages;
         }
 
-        public override string Name => "Content Manager";
+        public override string Name { get { return "Content Manager"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<ContentManagerGetMessage>();
         }
 
-        public string Key => "glimpse_orchard_contentmanager";
+        public string Key { get { return "glimpse_orchard_contentmanager"; } }
 
-        public bool KeysHeadings => false;
+        public bool KeysHeadings { get { return false; } }
     }
 }

@@ -18,6 +18,6 @@ namespace Orchard.Glimpse.GlimpseExtensions {
             return whitelistedIpAddresses.Contains(request.UserHostAddress) ? RuntimePolicy.On : RuntimePolicy.Off;
         }
 
-        public RuntimeEvent ExecuteOn => RuntimeEvent.EndRequest | RuntimeEvent.ExecuteResource;
+        public RuntimeEvent ExecuteOn { get { return RuntimeEvent.EndRequest | RuntimeEvent.ExecuteResource; } }
     }
 }

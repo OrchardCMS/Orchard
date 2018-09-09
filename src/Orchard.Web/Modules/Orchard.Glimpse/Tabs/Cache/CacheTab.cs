@@ -14,14 +14,14 @@ namespace Orchard.Glimpse.Tabs.Cache {
             return messages;
         }
 
-        public override string Name => "Cache Service";
+        public override string Name { get { return "Cache Service"; } }
 
         public void Setup(ITabSetupContext context) {
             context.PersistMessages<CacheMessage>();
         }
 
-        public string Key => "glimpse_orchard_cache";
+        public string Key { get { return "glimpse_orchard_cache"; } }
 
-        public bool KeysHeadings => false;
+        public bool KeysHeadings { get { return false; } }
     }
 }
