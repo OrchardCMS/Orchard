@@ -122,6 +122,9 @@ namespace Orchard.Projections.Drivers {
 
                     // create pager shape
                     if (part.Record.DisplayPager) {
+                        // why not use 
+                        // var contentItemsCount = contentItems.Count() - part.Record.Skip; 
+                        // can this count be different? if so, should that be allowed?
                         var contentItemsCount = _projectionManager.GetCount(query.Id, part) - part.Record.Skip;
                         contentItemsCount = Math.Max(0, contentItemsCount);
                         pagerShape.TotalItemCount(contentItemsCount);

@@ -122,7 +122,7 @@ namespace Orchard.Projections.Services {
 
             // aggregate the result for each group query
             return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens)
-                .Sum(contentQuery => contentQuery.Count());
+                .SelectMany(contentQuery => contentQuery.List().Select(x => x.Id)).Distinct().Count();
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
@@ -188,7 +188,7 @@ namespace Orchard.Projections.Services {
                 groupQuery = sortCriterionContext.Query;
             }
 
-            return groupQuery.Slice(skip, count);
+            return groupQuery.Slice(0, count);
         }
 
         public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, IEnumerable<SortCriterionRecord> sortCriteria, Dictionary<string, object> tokens) {
