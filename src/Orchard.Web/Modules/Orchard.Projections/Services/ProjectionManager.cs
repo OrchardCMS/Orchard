@@ -200,17 +200,23 @@ namespace Orchard.Projections.Services {
                 tokens = new Dictionary<string, object>();
             }
 
-            // pre-executing all groups 
             var versionScope = queryRecord.VersionScope;
-            foreach (var group in queryRecord.FilterGroups) {
+            VersionOptions version;
+            switch (versionScope) {
+                case QueryVersionScopeOptions.Latest:
+                    version = VersionOptions.Latest;
+                    break;
+                case QueryVersionScopeOptions.Draft:
+                    version = VersionOptions.Draft;
+                    break;
+                default:
+                    version = VersionOptions.Published;
+                    break;
+            }
 
-                IHqlQuery contentQuery;
-                if (versionScope == QueryVersionScopeOptions.Latest) {
-                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Latest);
-                }
-                else {
-                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
-                }
+            // pre-executing all groups
+            foreach (var group in queryRecord.FilterGroups) {
+                var contentQuery = _contentManager.HqlQuery().ForVersion(version);
 
                 // iterate over each filter to apply the alterations to the query object
                 foreach (var filter in group.Filters) {
