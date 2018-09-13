@@ -11,8 +11,8 @@ namespace Orchard.Projections.Models {
         }
 
         public QueryVersionScopeOptions VersionScope {
-            get { return this.Retrieve(x => x.VersionScope); }
-            set { this.Store(x => x.VersionScope, value); }
+            get { return Retrieve(x => x.VersionScope); }
+            set { Store(x => x.VersionScope, value); }
         }
         public IList<SortCriterionRecord> SortCriteria {
             get { return Record.SortCriteria; }

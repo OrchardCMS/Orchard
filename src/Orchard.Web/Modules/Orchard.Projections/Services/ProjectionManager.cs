@@ -4,11 +4,11 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Forms.Services;
-using Orchard.Projections.Descriptors;
 using Orchard.Localization;
-using Orchard.Projections.Descriptors.Property;
+using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
+using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
@@ -200,19 +200,7 @@ namespace Orchard.Projections.Services {
                 tokens = new Dictionary<string, object>();
             }
 
-            var versionScope = queryRecord.VersionScope;
-            VersionOptions version;
-            switch (versionScope) {
-                case QueryVersionScopeOptions.Latest:
-                    version = VersionOptions.Latest;
-                    break;
-                case QueryVersionScopeOptions.Draft:
-                    version = VersionOptions.Draft;
-                    break;
-                default:
-                    version = VersionOptions.Published;
-                    break;
-            }
+            var version = queryRecord.VersionScope.ToVersionOptions();
 
             // pre-executing all groups
             foreach (var group in queryRecord.FilterGroups) {
@@ -251,7 +239,7 @@ namespace Orchard.Projections.Services {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
                         State = FormParametersHelper.ToDynamic(sortCriterion.State),
-                        QueryPartRecord= queryRecord
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = sortCriterion.Category;
