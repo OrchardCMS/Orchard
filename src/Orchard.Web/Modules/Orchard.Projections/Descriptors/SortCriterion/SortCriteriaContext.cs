@@ -14,7 +14,7 @@ namespace Orchard.Projections.Descriptors.SortCriterion {
 
         public QueryPartRecord QueryPartRecord { get; set; }
         public string GetSortColumnName() {
-            return QueryPartRecord != null && QueryPartRecord.VersionScope == QueryVersionScopeOptions.Latest ? "LatestValue" : "Value";
+            return QueryPartRecord.GetVersionedFieldIndexColumnName();
         }
     }
 }

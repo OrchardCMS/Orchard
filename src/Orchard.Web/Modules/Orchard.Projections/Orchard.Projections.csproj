@@ -128,6 +128,8 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Extensions\QueryPartRecordExtensions.cs" />
+    <Compile Include="Extensions\QueryVersionScopeOptionsExtensions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
