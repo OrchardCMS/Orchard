@@ -44,6 +44,8 @@ namespace Orchard.Projections.Drivers {
 
             var element = context.Element(part.PartDefinition.Name);
 
+            element.SetAttributeValue("VersionScope", part.VersionScope);
+
             element.Add(
                 new XElement("FilterGroups",
                     part.FilterGroups.Select(filterGroup =>
@@ -120,6 +122,8 @@ namespace Orchard.Projections.Drivers {
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "VersionScope", scope => part.VersionScope = (QueryVersionScopeOptions)Enum.Parse(typeof(QueryVersionScopeOptions), scope));
 
             var queryElement = context.Data.Element(part.PartDefinition.Name);
 
