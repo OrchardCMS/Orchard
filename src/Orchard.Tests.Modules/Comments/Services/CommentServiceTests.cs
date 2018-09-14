@@ -203,6 +203,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
     public class ProcessingEngineStub : IProcessingEngine {
 
+        public void Initialize() { }
+
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string messageName, Dictionary<string, object> parameters) {
             return "";
         }

@@ -29,7 +29,7 @@ namespace Orchard.Projections.FieldTypeEditors {
         }
 
         public Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState) {
-            return DateTimeFilterForm.GetFilterPredicate(formState, "Value", _clock.UtcNow, true);
+            return DateTimeFilterForm.GetFilterPredicate(formState, formState.VersionScope == QueryVersionScopeOptions.Latest ? "LatestValue" : "Value", _clock.UtcNow, true);
         }
 
         public LocalizedString DisplayFilter(string fieldName, string storageName, dynamic formState) {

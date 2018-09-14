@@ -45,7 +45,7 @@ namespace Orchard.Scripting.CSharp.Forms {
         }
 
         public void Validating(ValidatingContext context) {
-            if (context.FormName == "ActionDecision") {
+            if (context.FormName == "ActivityActionDecision") {
                 if (context.ValueProvider.GetValue("Script").AttemptedValue == string.Empty) {
                     context.ModelState.AddModelError("Script", T("You must provide a Script").Text);
                 }

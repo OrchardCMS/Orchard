@@ -175,7 +175,7 @@ profiling/
 src/Orchard.Web/Modules-temp/*
 src/Backup/*
 src/packages/*
-src/node_modules
+src/**/node_modules
 src/UpgradeLog.*
 *.itrace.csdef
 *.build.csdef
@@ -190,5 +190,5 @@ src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
 
 #enable all /lib artifacts
 !lib/**/*.*
-*/.vs/*
+**/.vs/*
 src/Rebracer.xml

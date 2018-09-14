@@ -40,13 +40,14 @@ namespace Orchard.Mvc {
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
 
-            var baseUrl = new Func<string>(() => 
-                siteService.GetSiteSettings().BaseUrl
-                ?? "http://localhost" /* When Setup is running from the command line, no BaseUrl exists yet. */);
+            var baseUrl = new Func<string>(() => {
+                var s = siteService.GetSiteSettings().BaseUrl;
 
-            var httpContextBase = new HttpContextPlaceholder(baseUrl);
+                // When Setup is running from the command line, no BaseUrl exists yet.
+                return string.IsNullOrEmpty(s) ? "http://localhost" : s;
+            });
 
-            return httpContextBase;
+            return new HttpContextPlaceholder(baseUrl);
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {

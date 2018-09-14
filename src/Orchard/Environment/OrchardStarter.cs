@@ -12,13 +12,13 @@ using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Descriptor;
 using Orchard.Events;
 using Orchard.Exceptions;
 using Orchard.FileSystems.AppData;
@@ -33,10 +33,9 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
+using Orchard.UI.Resources;
 using Orchard.WebApi;
 using Orchard.WebApi.Filters;
-using System.Linq;
-using System.Web.Configuration;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -74,6 +73,7 @@ namespace Orchard.Environment {
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
+            builder.RegisterType<ResourceFileHashProvider>().As<IResourceFileHashProvider>().SingleInstance();
             //builder.RegisterType<RazorTemplateCache>().As<IRazorTemplateProvider>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);

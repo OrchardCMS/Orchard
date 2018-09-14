@@ -26,6 +26,7 @@ namespace Orchard.Users.Drivers {
             part.PasswordSalt = context.Attribute(part.PartDefinition.Name, "PasswordSalt");
             part.RegistrationStatus = (UserStatus)Enum.Parse(typeof(UserStatus), context.Attribute(part.PartDefinition.Name, "RegistrationStatus"));
             part.UserName = context.Attribute(part.PartDefinition.Name, "UserName");
+            part.LastPasswordChangeUtc = DateTime.Parse(context.Attribute(part.PartDefinition.Name, "LastPasswordChangeUtc"));
         }
 
         protected override void Exporting(UserPart part, ContentManagement.Handlers.ExportContentContext context) {
@@ -39,6 +40,7 @@ namespace Orchard.Users.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("PasswordSalt", part.PasswordSalt);
             context.Element(part.PartDefinition.Name).SetAttributeValue("RegistrationStatus", part.RegistrationStatus);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.UserName);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LastPasswordChangeUtc", part.LastPasswordChangeUtc);
         }
     }
 }

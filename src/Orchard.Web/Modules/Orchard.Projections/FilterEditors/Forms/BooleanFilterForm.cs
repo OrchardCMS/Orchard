@@ -21,6 +21,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 shape => {
 
                     var f = Shape.Form(
+                        Id: "BooleanFilter",
                         _Options: Shape.Fieldset(
                             _ValueUndefined: Shape.Radio(
                                 Id: "value-undefined", Name: "Value",

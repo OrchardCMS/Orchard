@@ -118,8 +118,10 @@ $(function () {
                 return css;
             });
 
-            self.publicationStatus = ko.computed(function() {
-                return self.data.published ? "" : draftText;
+            self.mediaInfos = ko.computed(function () {
+                var pubStatus = self.data.published ? "" : draftText;
+                var localization = (self.data.localization != "" ? "(" + self.data.localization + ")" : "");
+                return pubStatus + " " + localization;
             });
 
             // operations
@@ -383,7 +385,8 @@ $(function () {
                 $.ajax({
                     type: "GET",
                     url: url,
-                    cache: false
+                    cache: false,
+                    dataType: 'json'
                 }).done(function (data) {
                     var newChildFolders = data.childFolders;
 
@@ -586,6 +589,7 @@ $(function () {
                     viewModel.clearSelection();
                 } else {
                     console.log('failed to delete media items');
+                    alert(settings.unauthorizedMessage);
                 }
                 return false;
             });
@@ -620,6 +624,7 @@ $(function () {
                     viewModel.getMediaItems(viewModel.pageCount);
                 } else {
                     console.log('failed to clone media items');
+                    alert(settings.unauthorizedMessage);
                 }
                 return false;
             });

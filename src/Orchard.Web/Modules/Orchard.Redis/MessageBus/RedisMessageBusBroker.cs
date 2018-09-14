@@ -14,7 +14,7 @@ namespace Orchard.Redis.MessageBus {
     public class RedisMessageBusBroker : Component, IMessageBroker {
 
         private readonly IRedisConnectionProvider _redisConnectionProvider;
-        
+        private readonly ConnectionMultiplexer _connectionMultiplexer;
         public const string ConnectionStringKey = "Orchard.Redis.MessageBus";
         private readonly string _connectionString;
 
@@ -23,15 +23,19 @@ namespace Orchard.Redis.MessageBus {
         public RedisMessageBusBroker(ShellSettings shellSettings, IRedisConnectionProvider redisConnectionProvider) {
             _redisConnectionProvider = redisConnectionProvider;
             _connectionString = _redisConnectionProvider.GetConnectionString(ConnectionStringKey);
+            _connectionMultiplexer = _redisConnectionProvider.GetConnection(_connectionString);
         }
 
         public IDatabase Database {
             get {
-                return _redisConnectionProvider.GetConnection(_connectionString).GetDatabase();
+                return _connectionMultiplexer.GetDatabase();
             }
         }
 
         public void Subscribe(string channel, Action<string, string> handler) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
 
             try {
                 var channelHandlers = _handlers.GetOrAdd(channel, c => {
@@ -68,6 +72,10 @@ namespace Orchard.Redis.MessageBus {
         }
 
         public void Publish(string channel, string message) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             Database.Publish(channel, GetHostName() + "/" + message);
         }
 

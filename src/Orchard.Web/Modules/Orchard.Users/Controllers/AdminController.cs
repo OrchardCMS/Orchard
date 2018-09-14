@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,16 +9,15 @@ using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
+using Orchard.Settings;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
-using Orchard.Mvc.Extensions;
-using System;
-using Orchard.Settings;
-using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Users.Controllers {
@@ -35,6 +35,7 @@ namespace Orchard.Users.Controllers {
             IShapeFactory shapeFactory,
             IUserEventHandler userEventHandlers,
             ISiteService siteService) {
+
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
@@ -189,6 +190,12 @@ namespace Orchard.Users.Controllers {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
+            IDictionary<string, LocalizedString> validationErrors;
+
+            if (!_userService.PasswordMeetsPolicies(createModel.Password, out validationErrors)) {
+                ModelState.AddModelErrors(validationErrors);
+            }
+
             var user = Services.ContentManager.New<IUser>("User");
             if (ModelState.IsValid) {
                 user = _membershipService.CreateUser(new CreateUserParams(
@@ -210,7 +217,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("User created"));
+            Services.Notifier.Success(T("User created"));
             return RedirectToAction("Index");
         }
 
@@ -276,7 +283,7 @@ namespace Orchard.Users.Controllers {
 
             Services.ContentManager.Publish(user.ContentItem);
 
-            Services.Notifier.Information(T("User information updated"));
+            Services.Notifier.Success(T("User information updated"));
             return RedirectToAction("Index");
         }
 
@@ -298,7 +305,7 @@ namespace Orchard.Users.Controllers {
             }
             else {
                 Services.ContentManager.Remove(user.ContentItem);
-                Services.Notifier.Information(T("User {0} deleted", user.UserName));
+                    Services.Notifier.Success(T("User {0} deleted", user.UserName));
             }
 
             return RedirectToAction("Index");
@@ -321,8 +328,7 @@ namespace Orchard.Users.Controllers {
             }
 
             _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
-            Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
-
+                Services.Notifier.Success(T("Challenge email sent to {0}", user.UserName));
 
             return RedirectToAction("Index");
         }
@@ -338,7 +344,7 @@ namespace Orchard.Users.Controllers {
                 return HttpNotFound();
 
             user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
-            Services.Notifier.Information(T("User {0} approved", user.UserName));
+                Services.Notifier.Success(T("User {0} approved", user.UserName));
             _userEventHandlers.Approved(user);
 
             return RedirectToAction("Index");
@@ -359,7 +365,7 @@ namespace Orchard.Users.Controllers {
             }
             else {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
-                Services.Notifier.Information(T("User {0} disabled", user.UserName));
+                    Services.Notifier.Success(T("User {0} disabled", user.UserName));
             }
 
             return RedirectToAction("Index");

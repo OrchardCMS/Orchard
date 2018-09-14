@@ -68,31 +68,31 @@ namespace Orchard.Fields.Drivers {
 
                 if (String.IsNullOrWhiteSpace(viewModel.Value)) {
                     if (settings.Required) {
-                        updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                        updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                     }
                 }
                 else if (!Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number.", T(field.DisplayName)));
                 }
                 else {
 
                     field.Value = value;
 
                     if (settings.Minimum.HasValue && value < settings.Minimum.Value) {
-                        updater.AddModelError(GetPrefix(field, part), T("The value must be greater than {0}", settings.Minimum.Value));
+                        updater.AddModelError(GetPrefix(field, part), T("The value must be greater than {0}.", settings.Minimum.Value));
                     }
 
                     if (settings.Maximum.HasValue && value > settings.Maximum.Value) {
-                        updater.AddModelError(GetPrefix(field, part), T("The value must be less than {0}", settings.Maximum.Value));
+                        updater.AddModelError(GetPrefix(field, part), T("The value must be less than {0}.", settings.Maximum.Value));
                     }
 
                     // checking the number of decimals
                     if (Math.Round(value, settings.Scale) != value) {
                         if (settings.Scale == 0) {
-                            updater.AddModelError(GetPrefix(field, part), T("The field {0} must be an integer", T(field.DisplayName)));
+                            updater.AddModelError(GetPrefix(field, part), T("The {0} field must be an integer.", T(field.DisplayName)));
                         }
                         else {
-                            updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}", T(field.DisplayName), settings.Scale));
+                            updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}.", T(field.DisplayName), settings.Scale));
                         }
                     }
                 }
@@ -107,6 +107,10 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Exporting(ContentPart part, NumericField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", !field.Value.HasValue ? String.Empty : field.Value.Value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        protected override void Cloning(ContentPart part, NumericField originalField, NumericField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
         }
 
         protected override void Describe(DescribeMembersContext context) {

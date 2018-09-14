@@ -1,0 +1,43 @@
+﻿@using (Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            var $name = $("#CommonFormElement #InputName");
+            var $displayName = $("#AutoLabel #Label");
+            var jsonUrl = "@Url.Action("GetTechnicalName", "Admin", new { Area = "Orchard.DynamicForms" } )";
+            var version = 0;
+
+            var nameAltered;
+            $name.keypress(function () {
+                nameAltered = true;
+            });
+
+            var compute = function () {
+                // Stop processing automatically if altered by the user.
+                if (nameAltered) {
+                    return true;
+                }
+
+                $.post(jsonUrl, {
+                    displayName: $displayName.val(),
+                    version: ++version,
+                    __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
+                },
+                function (data) {
+                    if (version == data.version) {
+                        $name.val(data.result);
+                    }
+                },
+                "json"
+                );
+            };
+
+            // Pull technical name input from tab order.
+            $name.attr("tabindex", -1);
+
+            $displayName.keyup(compute);
+            $displayName.blur(compute);
+        })
+        //]]>
+    </script>
+}

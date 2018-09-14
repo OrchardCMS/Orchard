@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentPicker.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using Orchard.ContentPicker.Fields;
 
 namespace Orchard.ContentPicker.Drivers {
     public class ContentPickerFieldDriver : ContentFieldDriver<Fields.ContentPickerField> {
@@ -68,7 +69,7 @@ namespace Orchard.ContentPicker.Drivers {
             }
 
             if (settings.Required && field.Ids.Length == 0) {
-                updater.AddModelError("Id", T("The field {0} is mandatory", field.Name.CamelFriendly()));
+                updater.AddModelError("Id", T("The {0} field is required.", field.Name.CamelFriendly()));
             }
 
             return Editor(part, field, shapeHelper);
@@ -96,6 +97,10 @@ namespace Orchard.ContentPicker.Drivers {
 
                 context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("ContentItems", string.Join(",", contentItemIds));
             }
+        }
+
+        protected override void Cloning(ContentPart part, ContentPickerField originalField, ContentPickerField cloneField, CloneContentContext context) {
+            cloneField.Ids = originalField.Ids;
         }
 
         protected override void Describe(DescribeMembersContext context) {

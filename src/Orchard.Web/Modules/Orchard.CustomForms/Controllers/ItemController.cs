@@ -171,7 +171,7 @@ namespace Orchard.CustomForms.Controllers {
             // writes a confirmation message
             if (customForm.CustomMessage) {
                 if (!String.IsNullOrWhiteSpace(customForm.Message)) {
-                    Services.Notifier.Information(T(customForm.Message));
+                    Services.Notifier.Success(T(customForm.Message));
                 }
             }
 

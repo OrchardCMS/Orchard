@@ -55,7 +55,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}.", T(field.DisplayName)));
                 }
                 else if (!String.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
@@ -78,6 +78,12 @@ namespace Orchard.Fields.Drivers {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Text);
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Url", field.Value);
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Target", field.Target);
+        }
+
+        protected override void Cloning(ContentPart part, LinkField originalField, LinkField cloneField, CloneContentContext context) {
+            cloneField.Text = originalField.Text;
+            cloneField.Value = originalField.Value;
+            cloneField.Target = originalField.Target;
         }
 
         protected override void Describe(DescribeMembersContext context) {

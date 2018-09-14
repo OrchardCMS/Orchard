@@ -4,11 +4,12 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.MediaLibrary.Models;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.MediaLibrary.Fields {
     public class MediaLibraryPickerField : ContentField {
         private static readonly char[] separator = {'{', '}', ','};
-        internal Lazy<IEnumerable<MediaPart>> _contentItems;
+        internal LazyField<IEnumerable<MediaPart>> _contentItems = new LazyField<IEnumerable<MediaPart>>();
  
         public int[] Ids {
             get { return DecodeIds(Storage.Get<string>()); }
@@ -17,8 +18,9 @@ namespace Orchard.MediaLibrary.Fields {
 
         public IEnumerable<MediaPart> MediaParts { 
             get {
-                return _contentItems != null ? _contentItems.Value : Enumerable.Empty<MediaPart>();
+                return _contentItems != null ? (_contentItems.Value ?? Enumerable.Empty<MediaPart>()) : Enumerable.Empty<MediaPart>();
             }
+            set { _contentItems.Value = value; }
         }
 
         /// <summary>

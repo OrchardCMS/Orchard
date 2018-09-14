@@ -318,6 +318,10 @@ namespace Orchard.Specs.Bindings {
                        ?? _doc.DocumentNode
                             .SelectSingleNode(string.Format("//a[@title='{0}']", submitText));
 
+                if (submit == null) {
+                    throw new ArgumentException("Text not found: " + submitText);
+                }
+
                 urlPath = HttpUtility.HtmlDecode(submit.Attributes["href"].Value);
             }
 

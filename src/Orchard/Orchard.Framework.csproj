@@ -43,7 +43,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <NoWarn>
     </NoWarn>
@@ -57,7 +56,6 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
     <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -86,17 +84,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
@@ -129,6 +125,7 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.Transactions" />
@@ -176,6 +173,12 @@
   <ItemGroup>
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
+    <Compile Include="ContentManagement\IGlobalCriteriaProvider.cs" />
+    <Compile Include="Data\NoLockInterceptor.cs" />
+    <Compile Include="Data\Providers\DefaultNoLockTableProvider.cs" />
+    <Compile Include="Data\Providers\INoLockTableProvider.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\DefaultPlacementParseMatchProviders.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\IPlacementParseMatchProvider.cs" />
     <Compile Include="Environment\Configuration\ExtensionLocations.cs" />
     <Compile Include="DisplayManagement\IPositioned.cs" />
     <Compile Include="DisplayManagement\PositionWrapper.cs" />
@@ -183,6 +186,8 @@
     <Compile Include="Data\Migration\Schema\DropUniqueConstraintCommand.cs" />
     <Compile Include="Environment\Extensions\Models\LifecycleStatus.cs" />
     <Compile Include="Environment\ShellBuilders\ICompositionStrategy.cs" />
+    <Compile Include="Locking\ILockingProvider.cs" />
+    <Compile Include="Locking\LockingProvider.cs" />
     <Compile Include="Mvc\Updater.cs" />
     <Compile Include="Recipes\Models\ConfigurationContext.cs" />
     <Compile Include="Recipes\Models\RecipeBuilderStepConfigurationContext.cs" />
@@ -215,12 +220,17 @@
     <Compile Include="Reports\Services\ReportsCoordinator.cs" />
     <Compile Include="Reports\Services\ReportsManager.cs" />
     <Compile Include="Reports\Services\ReportsPersister.cs" />
+    <Compile Include="Security\IMembershipSettings.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Mvc\Html\LinkExtensions.cs" />
+    <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
+    <Compile Include="Security\IUserDataProvider.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
+    <Compile Include="Security\Providers\BaseUserDataProvider.cs" />
+    <Compile Include="Security\Providers\DefaultSecurityService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
     <Compile Include="Security\Providers\DefaultMembershipValidationService.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
@@ -425,6 +435,7 @@
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
+    <Compile Include="Security\Providers\TenantNameUserDataProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />
@@ -451,7 +462,9 @@
     <Compile Include="UI\Navigation\NavigationHelper.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
+    <Compile Include="UI\Resources\IResourceFileHashProvider.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
+    <Compile Include="UI\Resources\ResourceFileHashProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
@@ -947,7 +960,6 @@
     <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEventHandler.cs" />
-    <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
@@ -1087,11 +1099,4 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

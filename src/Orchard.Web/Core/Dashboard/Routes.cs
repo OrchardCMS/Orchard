@@ -6,28 +6,23 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Core.Dashboard {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
+            var routeDescriptor = new RouteDescriptor {
+                Priority = -5,
+                Route = new Route(
+                    "Admin",
+                    new RouteValueDictionary {
+                        {"area", "Dashboard"},
+                        {"controller", "admin"},
+                        {"action", "index"}
+                    },
+                    new RouteValueDictionary(),
+                    new RouteValueDictionary {
+                        {"area", "Dashboard"}
+                    },
+                    new MvcRouteHandler())
+            };
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                             new RouteDescriptor {
-                                                     Priority = -5,
-                                                     Route = new Route(
-                                                         "Admin",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Dashboard"},
-                                                                                      {"controller", "admin"},
-                                                                                      {"action", "index"}
-                                                                                  },
-                                                         new RouteValueDictionary(),
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Dashboard"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 }
-                         };
+            routes.Add(routeDescriptor);
         }
     }
 }

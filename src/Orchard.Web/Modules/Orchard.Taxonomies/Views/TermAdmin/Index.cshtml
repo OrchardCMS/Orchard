@@ -16,7 +16,7 @@
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Delete, T("Delete").ToString())
             @Html.SelectOption(Model.BulkAction, TermsAdminIndexBulkAction.Move, T("Move").ToString())
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
@@ -44,6 +44,9 @@
                         @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) { <span class="gap">&nbsp;</span> }
                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
                         @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
+                        @if (termEntry.HasDraft) {
+                            <text>@T(" (Draft)")</text>
+                        }
                     </td>
                     <td>
                         @if (Authorizer.Authorize(Permissions.EditTerm)) {

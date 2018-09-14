@@ -26,7 +26,7 @@ Scenario: I can create a new list
             | name                               | value  |
             | Title.Title                        | MyList |
             | Container.SelectedItemContentTypes | Event  |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "Your List has been created"
     When I go to "Admin/Lists"

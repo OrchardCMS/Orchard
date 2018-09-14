@@ -6,13 +6,13 @@
         Parts_Contents_Publish_SummaryAdmin
     -->
     <!-- edit "shape" -->
-    <Place Content_PublishButton="Sidebar:24"/>
     <Place Content_SaveButton="Sidebar:23"/>
+    <Place Content_PublishButton="Sidebar:24"/>
+    <Place Content_CancelButton="Sidebar:26"/>
     <Match DisplayType="Detail">
         <Place Parts_Contents_Publish="Content:5"/>
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Contents_Publish_SummaryAdmin="Actions:5"
-               Parts_Contents_Clone_SummaryAdmin="Actions:6"/>
+        <Place Parts_Contents_Publish_SummaryAdmin="Actions:5"/>
     </Match>
 </Placement>

@@ -9,7 +9,9 @@ namespace Orchard.DynamicForms.ValidationRules {
     public class EmailAddress : ValidationRule {
         public EmailAddress() {
             RegexOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
-            Pattern = @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$";
+            // From https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
+            // Retrieved 2018-07-28
+            Pattern = @"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
         }
 
         public string Pattern { get; set; }

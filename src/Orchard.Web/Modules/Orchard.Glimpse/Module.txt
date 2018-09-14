@@ -1,0 +1,53 @@
+﻿Name: Orchard.Glimpse
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.10.1
+Description: Brings Orchard specific tabs to the Glimpse panel.
+Path: Glimpse
+Features:
+    Orchard.Glimpse:
+		Name: Glimpse for Orchard
+        Description: Brings Orchard specific tabs to the Glimpse panel.
+		Category: Diagnostics
+    Orchard.Glimpse.Authorizer:
+		Name: Glimpse for Orchard Authorizer
+        Description: Adds Glimpse instrumentation to your Authorizer service.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse
+    Orchard.Glimpse.Cache:
+		Name: Glimpse for Orchard Cache Service
+        Description: Adds Glimpse instrumentation to your current Cache Service.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse, Orchard.Caching
+    Orchard.Glimpse.ContentManager:
+		Name: Glimpse for Orchard Content Manager
+        Description: Adds Glimpse instrumentation to your current Content Manager.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse
+    Orchard.Glimpse.Layers:
+		Name: Glimpse for Orchard Layers
+        Description: Adds Glimpse instrumentation to your current Layer Rule evalution.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse, Orchard.Widgets
+    Orchard.Glimpse.Parts:
+		Name: Glimpse for Orchard Content Parts
+        Description: Adds Glimpse instrumentation to the Build Display events of each of your Content Part Drivers.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse
+    Orchard.Glimpse.Shapes:
+		Name: Glimpse for Orchard Shapes
+        Description: Adds Glimpse instrumentation to your Shapes.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse
+    Orchard.Glimpse.SQL:
+		Name: Glimpse for Orchard SQL
+        Description: Adds Glimpse instrumentation to your database calls.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse
+    Orchard.Glimpse.Widgets:
+		Name: Glimpse for Orchard Widgets
+        Description: Adds Glimpse instrumentation to your Widgets.
+		Category: Diagnostics
+		Dependencies: Orchard.Glimpse, Orchard.Widgets

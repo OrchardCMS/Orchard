@@ -49,7 +49,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                    updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
@@ -62,6 +62,10 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Exporting(ContentPart part, InputField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+        }
+
+        protected override void Cloning(ContentPart part, InputField originalField, InputField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
         }
 
         protected override void Describe(DescribeMembersContext context) {

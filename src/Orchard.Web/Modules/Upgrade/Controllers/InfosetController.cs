@@ -278,8 +278,8 @@ namespace Upgrade.Controllers {
                 _upgradeService.ExecuteReader("DROP TABLE " + blogTable, null);
             }
             #endregion
-            
-            _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
+
+            _orchardServices.Notifier.Success(T("Site Settings migrated successfully"));
 
             return View();
         }

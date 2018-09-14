@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -110,11 +111,11 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
             }
 
-            if(model.Options.ContentsStatus == ContentsStatus.Owner) {
+            if (model.Options.ContentsStatus == ContentsStatus.Owner) {
                 query = query.Where<CommonPartRecord>(cr => cr.OwnerId == Services.WorkContext.CurrentUser.Id);
             }
 
@@ -193,7 +194,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Publish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully published."));
+                        Services.Notifier.Success(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in checkedContentItems) {
@@ -204,7 +205,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Unpublish(item);
                         }
-                        Services.Notifier.Information(T("Content successfully unpublished."));
+                        Services.Notifier.Success(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in checkedContentItems) {
@@ -215,7 +216,7 @@ namespace Orchard.Core.Contents.Controllers {
 
                             _contentManager.Remove(item);
                         }
-                        Services.Notifier.Information(T("Content successfully removed."));
+                        Services.Notifier.Success(T("Content successfully removed."));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -264,10 +265,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(string id, string returnUrl) {
-            return CreatePOST(id, returnUrl, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                    _contentManager.Publish(contentItem);
-            });
+            return CreatePOST(id, returnUrl, contentItem => { return false; });
         }
 
         [HttpPost, ActionName("Create")]
@@ -277,16 +275,19 @@ namespace Orchard.Core.Contents.Controllers {
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, dummyContent, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, dummyContent, T("You do not have permission to publish content.")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return CreatePOST(id, returnUrl, contentItem => {
+                _contentManager.Publish(contentItem);
+                return true;
+            });
         }
 
-        private ActionResult CreatePOST(string id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult CreatePOST(string id, string returnUrl, Func<ContentItem, bool> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("You do not have permission to edit content.")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
@@ -298,14 +299,23 @@ namespace Orchard.Core.Contents.Controllers {
                 return View(model);
             }
 
-            conditionallyPublish(contentItem);
+            var contentWasPublished = conditionallyPublish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
-                ? T("Your content has been created.")
-                : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
+            if (contentWasPublished) {
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("The content has been created and published.")
+                    : T("The {0} has been created and published.", contentItem.TypeDefinition.DisplayName));
+            }
+            else {
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("The content has been created as a draft.")
+                    : T("The {0} has been created as a draft.", contentItem.TypeDefinition.DisplayName));
+            }
+
             if (!string.IsNullOrEmpty(returnUrl)) {
                 return this.RedirectLocal(returnUrl);
             }
+
             var adminRouteValues = _contentManager.GetItemMetadata(contentItem).AdminRouteValues;
             return RedirectToRoute(adminRouteValues);
         }
@@ -316,7 +326,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("You do not have permission to edit content.")))
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.BuildEditor(contentItem);
@@ -326,10 +336,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
-            return EditPOST(id, returnUrl, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                    _contentManager.Publish(contentItem);
-            });
+            return EditPOST(id, returnUrl, contentItem => { return false; });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -340,19 +347,22 @@ namespace Orchard.Core.Contents.Controllers {
             if (content == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, content, T("Couldn't publish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, content, T("You do not have permission to publish content.")))
                 return new HttpUnauthorizedResult();
 
-            return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return EditPOST(id, returnUrl, contentItem => {
+                _contentManager.Publish(contentItem);
+                return true;
+            });
         }
 
-        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult EditPOST(int id, string returnUrl, Func<ContentItem, bool> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("You do not have permission to edit content.")))
                 return new HttpUnauthorizedResult();
 
             string previousRoute = null;
@@ -371,7 +381,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return View("Edit", model);
             }
 
-            conditionallyPublish(contentItem);
+            var contentWasPublished = conditionallyPublish(contentItem);
 
             if (!string.IsNullOrWhiteSpace(returnUrl)
                 && previousRoute != null
@@ -379,49 +389,83 @@ namespace Orchard.Core.Contents.Controllers {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
-                ? T("Your content has been saved.")
-                : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
+            if (contentWasPublished) {
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("The content has been published.")
+                    : T("The {0} has been published.", contentItem.TypeDefinition.DisplayName));
+            }
+            else {
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("The content has been saved as a draft.")
+                    : T("The {0} has been saved as a draft.", contentItem.TypeDefinition.DisplayName));
+            }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
         [HttpPost]
-        public ActionResult Clone(int id, string returnUrl) {
-            var contentItem = _contentManager.GetLatest(id);
+        public ActionResult Clone(int id) {
+            var originalContentItem = _contentManager.GetLatest(id);
 
-            if (contentItem == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, originalContentItem, T("You do not have permission to view existing content.")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                Services.ContentManager.Clone(contentItem);
-            }
-            catch (InvalidOperationException) {
-                Services.Notifier.Warning(T("Could not clone the content item."));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
-            }
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(originalContentItem.ContentType);
 
-            Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("You do not have permission to edit (or create) content.")))
+                return new HttpUnauthorizedResult();
 
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            var cloneContentItem = _contentManager.Clone(originalContentItem);
+
+            Services.Notifier.Success(string.IsNullOrWhiteSpace(originalContentItem.TypeDefinition.DisplayName)
+                ? T("The content has been cloned as a draft.")
+                : T("The {0} has been cloned as a draft.", originalContentItem.TypeDefinition.DisplayName));
+
+            var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
 
         [HttpPost]
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("You do not have permission to delete content.")))
                 return new HttpUnauthorizedResult();
 
             if (contentItem != null) {
                 _contentManager.Remove(contentItem);
-                Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
-                    ? T("That content has been removed.")
-                    : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
+                Services.Notifier.Success(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("The content has been removed.")
+                    : T("The {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
+
+        [HttpPost]
+        public ActionResult DiscardDraft(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null) {
+                return HttpNotFound();
+            }
+
+            if (!contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable
+                || !contentItem.HasPublished()
+                || contentItem.IsPublished()) {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("You do not have permission to delete content (or discard draft content)."))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            _contentManager.DiscardDraft(contentItem);
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("The draft content has been removed.")
+                : T("The draft {0} has been removed.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
@@ -432,12 +476,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("You do not have permission to publish content.")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("The content has been published.")
+                : T("The {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
@@ -448,12 +494,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("You do not have permission to publish (or unpublish) content.")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("The content has been unpublished.")
+                : T("The {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }

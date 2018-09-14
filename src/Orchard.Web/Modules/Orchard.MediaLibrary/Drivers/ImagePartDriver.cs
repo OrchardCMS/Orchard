@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
@@ -32,6 +33,11 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Width", width =>
                 part.Width = int.Parse(width)
             );
+        }
+
+        protected override void Cloning(ImagePart originalPart, ImagePart clonePart, CloneContentContext context) {
+            clonePart.Height = originalPart.Height;
+            clonePart.Width = originalPart.Width;
         }
     }
 }

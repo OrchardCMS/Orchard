@@ -12,8 +12,16 @@
         <p class="pageStatus">@Html.ActionLink(T("Create New {0}", Html.Raw(Model.DisplayName)).Text, "Create", new {area = "Contents", id = Model.Name})</p>
         }
     </div>
-    <div class="related">@if (creatable) {
-        @Html.ActionLink(T("List Items").ToString(), "List", new {area = "Contents", id = Model.Name})@T(" | ")}
-        @Html.ActionLink(T("Edit").ToString(), "Edit", new {area = "Orchard.ContentTypes", id = Model.Name})
+    <div class="related">
+        <ul class="action-links">
+            @if (creatable) {
+                <li class="action-link">
+                    @Html.ActionLink(T("List Items").ToString(), "List", new { area = "Contents", id = Model.Name })
+                </li>
+            }
+            <li class="action-link">
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new { area = "Orchard.ContentTypes", id = Model.Name })
+            </li>
+        </ul>
     </div>
 </div>

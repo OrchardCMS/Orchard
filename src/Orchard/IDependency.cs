@@ -27,6 +27,13 @@ namespace Orchard {
     public interface ITransientDependency : IDependency {
     }
 
+    /// <summary>
+    /// Indicates that a service should be registered as a decorator.
+    /// </summary>
+    /// <typeparam name="T">The type that this service decorates. Must be <see cref="IDependency"/>, and this service must also implement this type.</typeparam>
+    public interface IDecorator<T> where T : IDependency {
+    }
+
 
     public abstract class Component : IDependency {
         protected Component() {

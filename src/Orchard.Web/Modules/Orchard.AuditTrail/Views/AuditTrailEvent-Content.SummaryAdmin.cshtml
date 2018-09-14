@@ -1,11 +1,11 @@
-﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Helpers
 @using Orchard.AuditTrail.Services.Models
 @using Orchard.ContentManagement
 @{
     var descriptor = (AuditTrailEventDescriptor)Model.Descriptor;
     var eventData = (IDictionary<string, object>) Model.EventData;
     var eventPastTense = descriptor.Name.Text.ToLower();
-    var contentItemId = (int)Model.ContentItemId;
+    var contentItemId = (int?)Model.ContentItemId;
     var contentItem = (ContentItem) Model.ContentItem;
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublishedEvent = eventData.Get<bool>("Published");
@@ -18,14 +18,13 @@
         var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
         var isRemoved = !contentItem.VersionRecord.Latest && !contentItem.VersionRecord.Published;
         if (isPublishedEvent || isLatest) {
-            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), isRemoved ? Html.Raw("<strong>" + title + "</strong>") : Html.ItemEditLink(title, contentItemId), eventPastTense)
+            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId.Value, version = eventVersionNumber }, null), contentType.ToLower(), isRemoved ? Html.Raw("<strong>" + title + "</strong>") : Html.ItemEditLink(title, contentItemId.Value), eventPastTense)
         }
         else if (isRemoved) {
             @T("The {0} <strong>{1}</strong> was {2}.", contentType.ToLower(), title, eventPastTense)
         }
         else {
-            @T("The {0} {1} was {2}.", contentType.ToLower(), Html.ItemEditLink(title, contentItemId), eventPastTense)
-
+            @T("The {0} {1} was {2}.", contentType.ToLower(), Html.ItemEditLink(title, contentItemId.Value), eventPastTense)
         }
     }
     else {

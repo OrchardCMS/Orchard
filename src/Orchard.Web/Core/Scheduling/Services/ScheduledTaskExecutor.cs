@@ -54,6 +54,9 @@ namespace Orchard.Core.Scheduling.Services {
                     // removing record first helps avoid concurrent execution
                     _repository.Delete(taskRecord);
 
+                    // persisting the change so it takes effect in the other async operations
+                    _repository.Flush();
+
                     var context = new ScheduledTaskContext {
                         Task = new Task(_contentManager, taskRecord)
                     };

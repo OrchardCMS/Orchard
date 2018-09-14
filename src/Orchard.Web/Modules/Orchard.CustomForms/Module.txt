@@ -1,7 +1,7 @@
 Name: Custom Forms
 AntiForgery: enabled
 Author: The Orchard Team
-Website: https://github.com/OrchardCMS/Orchard
+Website: http://www.orchardproject.net
 Version: 1.10.2
 OrchardVersion: 1.9
 LifecycleStatus: Deprecated

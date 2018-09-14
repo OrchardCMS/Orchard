@@ -291,6 +291,8 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(modulePath + "Styles\\Styles.min.css", File.ReadAllText(_codeGenTemplatePath + "ModuleStylesMinCss.txt"));
             content.Add(modulePath + "Styles\\Styles.min.css");
 
+            File.WriteAllText(modulePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+            content.Add(modulePath + "packages.config");
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -330,22 +332,22 @@ namespace Orchard.CodeGeneration.Commands {
 @"<ProjectReference Include=""..\..\..\Orchard\Orchard.Framework.csproj"">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
     <ProjectReference Include=""..\..\Core\Orchard.Core.csproj"">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </ProjectReference>" :
 @"<Reference Include=""Orchard.Core"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Core.dll</HintPath>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </Reference>
     <Reference Include=""Orchard.Framework"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Orchard.Framework.dll</HintPath>
-      <Private>false</Private>
+      <Private>$(MvcBuildViews)</Private>
     </Reference>";
         }
 
@@ -404,6 +406,9 @@ namespace Orchard.CodeGeneration.Commands {
 
             // create new csproj for the theme
             if (projectGuid != null) {
+                File.WriteAllText(themePath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModulePackagesConfig.txt"));
+                createdFiles.Add(themePath + "packages.config");
+
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
                 string projectText = CreateCsProject(themeName, projectGuid, itemGroup, null);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);
@@ -431,18 +436,31 @@ namespace Orchard.CodeGeneration.Commands {
                     var projectReference = string.Format("EndProject\r\nProject(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"{0}\", \"Orchard.Web\\{2}\\{0}\\{0}.csproj\", \"{{{1}}}\"\r\n", projectName, projectGuid, containingFolder);
                     var projectConfiguationPlatforms = string.Format("\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\t", projectGuid);
                     var solutionText = File.ReadAllText(solutionPath);
+                    solutionText = NormalizeLineEndings(solutionText);
                     solutionText = solutionText.Insert(solutionText.LastIndexOf("EndProject\r\n"), projectReference);
+                    solutionText = AppendProjectSection(solutionText, "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Orchard.Web\"", "ProjectDependencies", string.Format("\t{{{0}}} = {{{0}}}\r\n\t", projectGuid));
                     solutionText = AppendGlobalSection(solutionText, "ProjectConfigurationPlatforms", projectConfiguationPlatforms);
-                    solutionText = AppendGlobalSection(solutionText, "NestedProjects", "\t{" + projectGuid + "} = {" + solutionFolderGuid + "}\r\n\t");
+                    solutionText = AppendGlobalSection(solutionText, "NestedProjects", string.Format("\t{{{0}}} = {{{1}}}\r\n\t", projectGuid, solutionFolderGuid));
                     File.WriteAllText(solutionPath, solutionText);
                     TouchSolution(output);
                 }
             }
         }
 
+        private string NormalizeLineEndings(string input) {
+            return input.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
+        }
+
         private string AppendGlobalSection(string solutionText, string sectionName, string content) {
             var sectionStart = solutionText.IndexOf(string.Format("GlobalSection({0})", sectionName));
             var sectionEnd = solutionText.IndexOf("EndGlobalSection", sectionStart);
+            return solutionText.Insert(sectionEnd, content);
+        }
+
+        private string AppendProjectSection(string solutionText, string projectNode, string sectionName, string content) {
+            var projectStart = solutionText.IndexOf(projectNode);
+            var sectionStart = solutionText.IndexOf(string.Format("ProjectSection({0})", sectionName), projectStart);
+            var sectionEnd = solutionText.IndexOf("EndProjectSection", sectionStart);
             return solutionText.Insert(sectionEnd, content);
         }
 

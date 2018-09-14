@@ -332,7 +332,7 @@
                         if (arg.getFormat().match(/\.\*/) && typeof args[key+1] != 'undefined') { return args[key+1]; }
                         else if (typeof args[key] != 'undefined') { return args[key]; }
                         else { return key; }
-                    break;
+                    //break; // Daniel Stolt 2017-01-13: Commented out to resolve compile error TS7027: Unreachable code detected.
                 }
                 return '{'+key+'}';
             },

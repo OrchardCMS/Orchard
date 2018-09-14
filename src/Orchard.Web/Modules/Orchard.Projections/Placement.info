@@ -5,7 +5,7 @@
 
   <Place Parts_NavigationQueryPart_Edit="Content:5"/>
   <Place Parts_NavigationQueryPart="-"/>
-
+  <Place Parts_QueryPart_Edit="Content:5" />
   <Match DisplayType="Detail" ContentType="ProjectionPage">
     <Place Parts_Common_Metadata="-" />
   </Match>

@@ -11,7 +11,7 @@
             <label for="publishActions">@T("Actions:")</label>
             <select id="publishActions" name="Options.BulkAction">
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
-                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+                @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.PublishNow, T("Publish").ToString())
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
             </select>

@@ -72,5 +72,9 @@ namespace Orchard.Taxonomies.Drivers {
 
             part.TermTypeName = context.Attribute(part.PartDefinition.Name, "TermTypeName");
         }
+
+        protected override void Cloning(TaxonomyPart originalPart, TaxonomyPart clonePart, CloneContentContext context) {
+            clonePart.TermTypeName = originalPart.TermTypeName;
+        }
     }
 }

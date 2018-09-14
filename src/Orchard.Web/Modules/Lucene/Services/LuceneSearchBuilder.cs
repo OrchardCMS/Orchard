@@ -22,6 +22,7 @@ namespace Lucene.Services {
         private readonly Directory _directory;
         private string _indexName;
         private Analyzer _analyzer;
+        private ILuceneAnalyzerProvider _analyzerProvider;
 
         private readonly List<BooleanClause> _clauses;
         private readonly List<BooleanClause> _filters;
@@ -47,7 +48,9 @@ namespace Lucene.Services {
             string indexName) {
             _directory = directory;
             _indexName = indexName;
+            _analyzerProvider = analyzerProvider;
             _analyzer = analyzerProvider.GetAnalyzer(_indexName);
+
 
             Logger = NullLogger.Instance;
 
@@ -84,6 +87,18 @@ namespace Lucene.Services {
                 _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzer).Parse(query);
             }
 
+            return this;
+        }
+
+        public ISearchBuilder WithGroup(Action<ISearchBuilder> grouping)
+        {
+            CreatePendingClause();
+
+            // a group is essentially a SearchBuilder                
+            var groupSearchBuilder = new LuceneSearchBuilder(null, _analyzerProvider, _indexName);
+            grouping(groupSearchBuilder);
+
+            _query = groupSearchBuilder.CreateQuery();
             return this;
         }
 

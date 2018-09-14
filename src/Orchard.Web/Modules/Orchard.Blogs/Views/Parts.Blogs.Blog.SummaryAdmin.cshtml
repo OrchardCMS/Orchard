@@ -1,10 +1,15 @@
 ﻿@using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
 @using Orchard.ContentManagement;
-@using Orchard.Utility.Extensions;
 @{
     ContentItem contentItem = Model.ContentItem;
     BlogPart blog = (BlogPart)contentItem.Get(typeof(BlogPart));
 }
-<a href="@Url.BlogForAdmin(blog)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
-<a href="@Url.BlogPostCreate(blog)" title="@T("New Post")">@T("New Post")</a>@T(" | ")
+<ul class="action-links">
+    <li class="action-link">
+        <a href="@Url.BlogForAdmin(blog)" title="@T("List Posts")">@T("List Posts")</a>
+    </li>
+    <li class="action-link">
+        <a href="@Url.BlogPostCreate(blog)" title="@T("New Post")">@T("New Post")</a>
+    </li>
+</ul>

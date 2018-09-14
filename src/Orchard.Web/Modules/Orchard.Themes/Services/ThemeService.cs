@@ -95,7 +95,7 @@ namespace Orchard.Themes.Services {
                 foreach (var featureId in _featureManager.EnableFeatures(new[] { themeId }, true)) {
                     if (themeId != featureId) {
                         var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
-                        Services.Notifier.Information(T("{0} was enabled", featureName));
+                        Services.Notifier.Success(T("{0} was enabled", featureName));
                     }
                 }
             }
@@ -194,7 +194,7 @@ namespace Orchard.Themes.Services {
         public void DisablePreviewFeatures(IEnumerable<string> features) {
              foreach (var featureId in _featureManager.DisableFeatures(features,true)) {
                  var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
-                        Services.Notifier.Information(T("{0} was disabled", featureName));
+                        Services.Notifier.Success(T("{0} was disabled", featureName));
              }
         }
     }

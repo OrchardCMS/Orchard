@@ -34,7 +34,7 @@ namespace Orchard.Projections.Tests.Services {
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<FieldIndexService>().As<IFieldIndexService>();
-
+            builder.RegisterType<DraftFieldIndexService>().As<IDraftFieldIndexService>();
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
             builder.RegisterType<FieldIndexPartHandler>().As<IContentHandler>();
             builder.RegisterType<InfosetStorageProvider>().As<IFieldStorageProvider>();

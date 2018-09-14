@@ -252,7 +252,7 @@ namespace Orchard.Rules.Controllers {
                 rule.Name = viewModel.Name;
                 rule.Enabled = viewModel.Enabled;
 
-                Services.Notifier.Information(T("Rule Saved"));
+                Services.Notifier.Success(T("Rule Saved"));
                 return RedirectToAction("Edit", new { id = rule.Id });
             }
 
@@ -275,7 +275,7 @@ namespace Orchard.Rules.Controllers {
 
             if (rule != null) {
                 _rulesServices.DeleteRule(id);
-                Services.Notifier.Information(T("Rule {0} deleted", rule.Name));
+                Services.Notifier.Success(T("Rule {0} deleted", rule.Name));
             }
 
             return RedirectToAction("Index");
@@ -289,7 +289,7 @@ namespace Orchard.Rules.Controllers {
 
             if (rule != null) {
                 rule.Enabled = true;
-                Services.Notifier.Information(T("Rule enabled"));
+                Services.Notifier.Success(T("Rule enabled"));
             }
 
             return RedirectToAction("Index");
@@ -303,7 +303,7 @@ namespace Orchard.Rules.Controllers {
 
             if (rule != null) {
                 rule.Enabled = false;
-                Services.Notifier.Information(T("Rule disabled"));
+                Services.Notifier.Success(T("Rule disabled"));
             }
 
             return RedirectToAction("Index");

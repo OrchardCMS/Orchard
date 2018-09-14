@@ -1,38 +1,37 @@
 ﻿@model Orchard.Comments.Models.CommentPart
-
-
 @if (WorkContext.CurrentUser == null) {
     <fieldset class="who">
-        <legend id="add-comment">@T("Add a Comment")</legend>
+        <legend class="add-comment">@T("Add a Comment")</legend>
         <ol>
             <li>
-                @Html.LabelFor(m => m.Author, T("Name"))
-                @Html.TextBoxFor(m => m.Author)
+                @Html.LabelFor(m => m.Author, T("Name").Text, new { id = string.Format("Comments_Author_{0}", Model.CommentedOn) })
+                @Html.TextBoxFor(m => m.Author, new { id = string.Format("Comments_Author_{0}", Model.CommentedOn) })
             </li>
             <li>
-                @Html.LabelFor(m => m.Email, T("Email"))
-                @Html.TextBoxFor(m => m.Email)
+                @Html.LabelFor(m => m.Email, T("Email").Text, new { id = string.Format("Comments_Email_{0}", Model.CommentedOn) })
+                @Html.TextBoxFor(m => m.Email, new { id = string.Format("Comments_Email_{0}", Model.CommentedOn) })
             </li>
             <li>
-                @Html.LabelFor(m => m.SiteName, T("Url"))
-                @Html.TextBoxFor(m => m.SiteName)
+                @Html.LabelFor(m => m.SiteName, T("Url").Text, new { id = string.Format("Comments_Url_{0}", Model.CommentedOn) })
+                @Html.TextBoxFor(m => m.SiteName, new { id = string.Format("Comments_Url_{0}", Model.CommentedOn) })
             </li>
         </ol>
     </fieldset>
 }
 else {
-    @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
-    @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
+    @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "", new { id = string.Empty })
+    @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "", new { id = string.Empty })
 }
-
-@if (WorkContext.CurrentUser != null) { <h2 id="commenter">@if (WorkContext.CurrentUser != null) { @T("Hi, {0}!", Convert.ToString(Html.ItemDisplayText(WorkContext.CurrentUser)))}</h2> }
+@if (WorkContext.CurrentUser != null) {
+    <h2 class="commenter">@if (WorkContext.CurrentUser != null) { @T("Hi, {0}!", Convert.ToString(Html.ItemDisplayText(WorkContext.CurrentUser)))}</h2>
+}
 <fieldset class="what">
     <ol>
         <li>
-            @Html.LabelFor(m => m.CommentText, T("Comment"))
-            @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
+            @Html.LabelFor(m => m.CommentText, T("Comment").Text, new { id = string.Format("Comments_CommenText_{0}", Model.CommentedOn) })
+            @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text", id = string.Format("Comments_CommenText_{0}", Model.CommentedOn) })
         </li>
     </ol>
-    @Html.HiddenFor(m => m.CommentedOn)
-    @Html.HiddenFor(m => m.RepliedOn)
+    @Html.HiddenFor(m => m.CommentedOn, new { id = string.Empty })
+    @Html.HiddenFor(m => m.RepliedOn, new { @class = "comments-repliedon", data_contentitem_id = Model.CommentedOn, id = string.Empty })
 </fieldset>

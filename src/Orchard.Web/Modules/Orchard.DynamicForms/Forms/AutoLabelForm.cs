@@ -20,8 +20,8 @@ namespace Orchard.DynamicForms.Forms {
                         Name: "Label",
                         Title: "Label",
                         Classes: new[] { "text", "large", "tokenized" },
-                        Description: T("The label text to render."),
-                        EnabledBy: "ShowLabel"));
+                        Description: T("The label text to render.")),
+                    _AutoLabelScript: shape.AutoLabelScript());
 
                 return form;
             });

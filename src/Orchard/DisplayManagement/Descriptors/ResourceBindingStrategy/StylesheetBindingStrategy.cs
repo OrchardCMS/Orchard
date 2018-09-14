@@ -85,18 +85,19 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                 var featureDescriptors = hit.extensionDescriptor.Features.Where(fd => fd.Id == hit.extensionDescriptor.Id);
                 foreach (var featureDescriptor in featureDescriptors) {
                     builder.Describe(iter.shapeType)
-                        .From(new Feature {Descriptor = featureDescriptor})
+                        .From(new Feature { Descriptor = featureDescriptor })
                         .BoundAs(
                             hit.fileVirtualPath,
                             shapeDescriptor => displayContext => {
-                                                   var shape = ((dynamic) displayContext.Value);
-                                                   var output = displayContext.ViewContext.Writer;
-                                                   ResourceDefinition resource = shape.Resource;
-                                                   string condition = shape.Condition;
-                                                   Dictionary<string, string> attributes = shape.TagAttributes;
-                                                   ResourceManager.WriteResource(output, resource, hit.fileVirtualPath, condition, attributes);
-                                                   return null;
-                                               });
+                                var shape = ((dynamic)displayContext.Value);
+                                var output = displayContext.ViewContext.Writer;
+                                ResourceDefinition resource = shape.Resource;
+                                string url = shape.Url;
+                                string condition = shape.Condition;
+                                Dictionary<string, string> attributes = shape.TagAttributes;
+                                ResourceManager.WriteResource(output, resource, url ?? hit.fileVirtualPath, condition, attributes);
+                                return null;
+                            });
                 }
             }
         }

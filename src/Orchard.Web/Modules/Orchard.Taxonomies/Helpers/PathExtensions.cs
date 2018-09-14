@@ -1,7 +1,8 @@
-﻿using Orchard.Taxonomies.Models;
-using System;
-using Orchard.Taxonomies.ViewModels;
+﻿using System;
 using System.Linq;
+using Orchard.ContentManagement;
+using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.ViewModels;
 
 namespace Orchard.Taxonomies.Helpers {
     public static class TermExtensions {
@@ -22,7 +23,8 @@ namespace Orchard.Taxonomies.Helpers {
                 Path = term.Path,
                 Weight = term.Weight,
                 IsChecked = false,
-                ContentItem = term.ContentItem
+                ContentItem = term.ContentItem,
+                HasDraft = term.ContentItem.HasDraft()
             };
         }
     }

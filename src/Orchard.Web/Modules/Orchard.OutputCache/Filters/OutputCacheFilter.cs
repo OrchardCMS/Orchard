@@ -20,7 +20,6 @@ using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.Services;
-using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
 
@@ -33,14 +32,13 @@ namespace Orchard.OutputCache.Filters {
         // Dependencies.
         private readonly ICacheManager _cacheManager;
         private readonly IOutputCacheStorageProvider _cacheStorageProvider;
-        private readonly ITagCache _tagCache;
-        private readonly IDisplayedContentItemHandler _displayedContentItemHandler;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IThemeManager _themeManager;
         private readonly IClock _clock;
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private readonly IEnumerable<ICacheTagProvider> _cacheTagProviders;
+        private readonly ICachingEventHandler _cachingEvents;
         private bool _isDisposed = false;
 
         public ILogger Logger { get; set; }
@@ -48,25 +46,23 @@ namespace Orchard.OutputCache.Filters {
         public OutputCacheFilter(
             ICacheManager cacheManager,
             IOutputCacheStorageProvider cacheStorageProvider,
-            ITagCache tagCache,
-            IDisplayedContentItemHandler displayedContentItemHandler,
             IWorkContextAccessor workContextAccessor,
-            IThemeManager themeManager,
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IEnumerable<ICacheTagProvider> cacheTagProviders,
+            ICachingEventHandler cachingEvents) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
-            _tagCache = tagCache;
-            _displayedContentItemHandler = displayedContentItemHandler;
             _workContextAccessor = workContextAccessor;
-            _themeManager = themeManager;
             _clock = clock;
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
+            _cacheTagProviders = cacheTagProviders;
+            _cachingEvents = cachingEvents;
 
             Logger = NullLogger.Instance;
         }
@@ -203,8 +199,17 @@ namespace Orchard.OutputCache.Filters {
                 var cacheDuration = _cacheRouteConfig != null && _cacheRouteConfig.Duration.HasValue ? _cacheRouteConfig.Duration.Value : CacheSettings.DefaultCacheDuration;
                 var cacheGraceTime = _cacheRouteConfig != null && _cacheRouteConfig.GraceTime.HasValue ? _cacheRouteConfig.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
 
-                // Include each content item ID as tags for the cache entry.
-                var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+                // Get the tags for this cache item from.
+                var cacheItemTags = new List<string>();
+
+                foreach (var cacheTagProvider in _cacheTagProviders) {
+                    try {
+                        cacheItemTags.AddRange(cacheTagProvider.GetTags());
+                    }
+                    catch (Exception ex) {
+                        Logger.Warning(ex, "Cache tags from provider {0} will not be added to the cached item ({1}) because the provider threw an exception when asked to provide tags.", cacheTagProvider.GetType().FullName, _cacheKey);
+                    }
+                }
 
                 // Capture the response output using a custom filter stream.
                 var response = filterContext.HttpContext.Response;
@@ -245,7 +250,7 @@ namespace Orchard.OutputCache.Filters {
                                 Url = filterContext.HttpContext.Request.Url.AbsolutePath,
                                 Tenant = scope.Resolve<ShellSettings>().Name,
                                 StatusCode = response.StatusCode,
-                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray(),
+                                Tags = new[] { _invariantCacheKey }.Union(cacheItemTags.Distinct()).ToArray(),
                                 ETag = etag
                             };
 
@@ -385,8 +390,17 @@ namespace Orchard.OutputCache.Filters {
             // Vary by configured query string parameters.
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             foreach (var key in queryString.AllKeys) {
-                if (key == null || (CacheSettings.VaryByQueryStringParameters != null && !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                if (key == null)
                     continue;
+
+                // In exclusive mode, don't vary if the key matches
+                if (CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters != null && CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
+                // In inclusive mode, don't vary if the key doesn't match
+                if(!CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters == null || !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
                 result[key] = queryString[key];
             }
 
@@ -544,13 +558,13 @@ namespace Orchard.OutputCache.Filters {
                     maxAge = TimeSpan.Zero;
                 }
                 response.Cache.SetCacheability(HttpCacheability.Public);
+                response.Cache.SetOmitVaryStar(true);
                 response.Cache.SetMaxAge(maxAge);
             }
 
             // Keeping this example for later usage.
             // response.DisableUserCache();
             // response.DisableKernelCache();
-            // response.Cache.SetOmitVaryStar(true);
 
             if (CacheSettings.VaryByQueryStringParameters == null) {
                 response.Cache.VaryByParams["*"] = true;
@@ -615,6 +629,9 @@ namespace Orchard.OutputCache.Filters {
                     keyBuilder.AppendFormat("{0}={1};", pair.Key.ToLowerInvariant(), Convert.ToString(pair.Value).ToLowerInvariant());
                 }
             }
+
+            //make CacheKey morphable by external modules
+            _cachingEvents.KeyGenerated(keyBuilder);
 
             return keyBuilder.ToString();
         }

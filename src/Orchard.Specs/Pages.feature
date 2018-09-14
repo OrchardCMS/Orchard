@@ -15,7 +15,7 @@ Scenario: In the admin (menu) there is a link to create a Page
             | name | value |
             | Title.Title | Super Duper |
             | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super", "hasEditor": true } |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "super-duper"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
         And I should see "This is super."
@@ -26,7 +26,7 @@ Scenario: In the admin (menu) there is a link to create a Page
             | name | value |
             | Title.Title | Super Duper |
             | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "super-duper-2"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
         And I should see "This is super number two."
@@ -37,7 +37,7 @@ Scenario: In the admin (menu) there is a link to create a Page
             | name | value |
             | Title.Title | Another |
             | AutoroutePart.PromoteToHomePage | true |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "/"
     Then I should see "<h1>Another</h1>"
     When I go to "another"
@@ -49,6 +49,6 @@ Scenario: In the admin (menu) there is a link to create a Page
             | name | value |
             | Title.Title | Drafty |
             | AutoroutePart.PromoteToHomePage | true |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I go to "/"
     Then I should see "<h1>Another</h1>"
