@@ -120,9 +120,12 @@ namespace Orchard.Projections.Services {
                 tokens.Add("Content", part.ContentItem);
             }
 
-            // aggregate the result for each group query
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens)
-                .SelectMany(contentQuery => contentQuery.ListIds()).Distinct().Count();
+            var contentQueries = GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens);
+
+            if (queryRecord.FilterGroups.Count <= 1)
+                return contentQueries.Sum(contentQuery => contentQuery.Count());
+            else 
+                return contentQueries.SelectMany(contentQuery => contentQuery.ListIds()).Distinct().Count();
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
