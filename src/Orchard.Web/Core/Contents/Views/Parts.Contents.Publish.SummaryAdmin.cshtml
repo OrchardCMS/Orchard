@@ -4,38 +4,76 @@
 
 @{
     Script.Require("ShapesBase");
-    ContentPart contentPart = Model.ContentPart;
+    ContentItem contentItem = Model.ContentItem;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var hasPublished = contentItem.HasPublished();
+    var hasDraft = contentItem.HasDraft();
+    var isPublished = contentItem.IsPublished();
+    var authorizedToEdit = Authorizer.Authorize(Permissions.EditContent, contentItem);
+    var authorizedToDelete = Authorizer.Authorize(Permissions.DeleteContent, contentItem);
+    var authorizedToPublish = Authorizer.Authorize(Permissions.PublishContent, contentItem);
 }
-@if (contentPart.HasPublished()) {
-    @Html.ItemDisplayLink(T("View").Text, (ContentItem)Model.ContentPart.ContentItem)
-    @T(" | ")
 
-    if (contentPart.HasDraft()) {
-        if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
-            @T(" | ")
+<ul class="action-links action-links-item">
+    <li class="action-label">
+        @T("Item:")
+    </li>
+    @if (hasPublished) {
+        <li class="action-link">
+            @Html.ItemDisplayLink(T("View").Text, contentItem)
+        </li>
+    }
+    @if (authorizedToEdit) {
+        if (hasPublished) {
+            if (!hasDraft) { 
+                <li class="action-link">
+                    @Html.ItemEditLink(T("Edit").Text, contentItem)
+                </li>
+            }
+            <li class="action-link">
+                @Html.ActionLink(T("Clone").Text, "Clone", "Admin", new { Id = contentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" }, new { itemprop = "UnsafeUrl" })
+            </li>
         }
 
-        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
-            @Html.ActionLink(T("Preview").Text, "Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new { })
-            @T(" | ")
+        if (hasPublished && authorizedToPublish) {
+            <li class="action-link">
+                @Html.ActionLink(T("Unpublish").Text, "Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" })
+            </li>
+        }
+
+        if (authorizedToDelete) {
+            <li class="action-link">
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new { returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+            </li>
         }
     }
+</ul>
 
-    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-        @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
-        @T(" | ")
-    }
-} else {
-    if (contentPart.HasDraft()) {
-        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
-            @Html.ActionLink(T("Preview").Text, "Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new { })
-            @T(" | ")
+@if ((!isPublished || hasDraft) && authorizedToEdit) {
+    <ul class="action-links action-links-draft">
+        <li class="action-label">
+            @T("Draft:")
+        </li>
+        @if (!isPublished && Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+            <li class="action-link">
+                @Html.ActionLink(T("View").Text, "Display", "Item", new { area = "Contents", id = contentItem.Id, version = contentItem.Version }, new { })
+            </li>
         }
-    }
 
-    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-        @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
-        @T(" | ")
-    }
+        <li class="action-link">
+            @Html.ItemEditLink(T("Edit").Text, contentItem)
+        </li>
+
+        @if (hasDraft && authorizedToPublish) {
+            <li class="action-link">
+                @Html.ActionLink(T("Publish").Text, "Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "UnsafeUrl" })
+            </li>
+        }
+
+        @if (!isPublished && hasPublished && authorizedToDelete) {
+            <li class="action-link">
+                @Html.ActionLink(T("Discard").Text, "DiscardDraft", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }, new { itemprop = "RemoveUrl UnsafeUrl" })
+            </li>
+        }
+    </ul>
 }

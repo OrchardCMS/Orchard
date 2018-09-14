@@ -46,9 +46,9 @@ Scenario: Creating and using Enumeration fields
     When I fill in 
             | name                 | value   |
             | Event.Location.Value | Seattle |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as a draft."
     When I go to "Admin/Contents/List"
     Then I should see "Location:" 
         And I should see "Seattle"
@@ -105,8 +105,8 @@ Scenario: Creating and using Enumeration fields
             | Fields[0].EnumerationFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I hit "Save"
-    Then I should see "The field Location is mandatory."
+        And I hit "Save Draft"
+    Then I should see "The Location field is required."
     
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"

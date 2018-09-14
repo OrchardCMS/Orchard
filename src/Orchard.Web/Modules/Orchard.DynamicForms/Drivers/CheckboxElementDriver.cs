@@ -16,8 +16,8 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override EditorResult OnBuildEditor(CheckBox element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var checkBoxEditor = BuildForm(context, "CheckBox");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var checkBoxEditor = BuildForm(context, "CheckBox", "Properties:15");
             var checkBoxValidation = BuildForm(context, "CheckBoxValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, checkBoxEditor, checkBoxValidation);

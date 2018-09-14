@@ -57,5 +57,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public virtual IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             return Enumerable.Empty<string>();
         }
+
+        public abstract bool LoaderIsSuitable(ExtensionDescriptor descriptor);
     }
 }

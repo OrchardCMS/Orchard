@@ -29,8 +29,8 @@ namespace Orchard.Azure.MediaServices.Controllers {
         private readonly IAuthorizer _authorizer;
 
         public MediaController(
-            IOrchardServices services, 
-            IAssetManager assetManager, 
+            IOrchardServices services,
+            IAssetManager assetManager,
             ITransactionManager transactionManager) {
 
             _contentManager = services.ContentManager;
@@ -124,7 +124,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
             Logger.Debug("User requested to save cloud video item with ID {0}.", part.Id);
 
             var editorShape = _contentManager.UpdateEditor(part, this);
-            
+
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
 
@@ -148,13 +148,13 @@ namespace Orchard.Azure.MediaServices.Controllers {
                     _contentManager.Publish(mediaPart.ContentItem);
 
                 Logger.Information("Cloud video item with ID {0} was saved.", part.Id);
-                _notifier.Information(notification);
+                _notifier.Success(notification);
             }
             catch (Exception ex) {
                 _transactionManager.Cancel();
 
-                Logger.Error(ex, "Error while saving cloud video item with ID {0}.", part.Id);                
-                _notifier.Error(T("Ar error occurred while saving the cloud video item:\n{1}", ex.Message));
+                Logger.Error(ex, "Error while saving cloud video item with ID {0}.", part.Id);
+                _notifier.Error(T("An error occurred while saving the cloud video item:\n{1}", ex.Message));
             }
 
             return RedirectToAction("Edit", new { id = part.Id });

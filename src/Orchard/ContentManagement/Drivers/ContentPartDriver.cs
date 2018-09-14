@@ -78,32 +78,56 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentPartDriver.Importing(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Importing(part, context);
+            }
         }
 
         void IContentPartDriver.Imported(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Imported(part, context);
+            }
         }
 
         void IContentPartDriver.ImportCompleted(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 ImportCompleted(part, context);
+            }
         }
 
         void IContentPartDriver.Exporting(ExportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Exporting(part, context);
+            }
         }
 
         void IContentPartDriver.Exported(ExportContentContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null)
+            if (part != null) {
+                context.Prefix = string.Empty;
                 Exported(part, context);
+            }
+        }
+
+        void IContentPartDriver.Cloning(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloning(originalPart, clonePart, context);
+        }
+
+        void IContentPartDriver.Cloned(CloneContentContext context) {
+            var originalPart = context.ContentItem.As<TContent>();
+            var clonePart = context.CloneContentItem.As<TContent>();
+            if (originalPart != null && clonePart != null)
+                Cloned(originalPart, clonePart, context);
         }
 
         protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { }
@@ -174,6 +198,10 @@ namespace Orchard.ContentManagement.Drivers {
             return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
         }
 
+        protected virtual void Cloning(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
+        protected virtual void Cloned(TContent originalPart, TContent clonePart, CloneContentContext context) { }
+
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
@@ -237,6 +265,5 @@ namespace Orchard.ContentManagement.Drivers {
 
             return contentPartInfo;
         }
-
     }
 }

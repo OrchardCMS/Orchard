@@ -1,0 +1,7 @@
+﻿@model Orchard.Taxonomies.Settings.TaxonomyFieldLocalizationSettings
+<fieldset>
+    <label>@T("Localization")</label>
+    @Html.CheckBoxFor(m => m.TryToLocalize)
+    <label for="@Html.FieldIdFor(m => m.TryToLocalize)" class="forcheckbox">@T("Try to translate the selected terms")</label>
+    <span class="hint">@T("Check to attempt to replace the selected terms with their translation in the main content culture when saving. This only applies if the main content has a LocalizationPart. If term as not translation on content culture then term will be removed.")</span>
+</fieldset>

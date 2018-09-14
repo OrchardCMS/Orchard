@@ -187,7 +187,7 @@ License:      Apache Software Foundation License 2.0
 
 Lucene.net
 -----
-Website:      http://incubator.apache.org/projects/lucene.net.html
+Website:      https://lucenenet.apache.org/
 Copyright:    Copyright (c) 2009 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
 

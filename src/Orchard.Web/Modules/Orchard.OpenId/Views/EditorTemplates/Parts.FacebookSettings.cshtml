@@ -1,0 +1,15 @@
+﻿@model Orchard.OpenId.Models.FacebookSettingsPart
+@using Orchard.OpenId.Constants
+
+<h2>Facebook Settings</h2>
+<fieldset>
+    <label for="@Html.IdFor(m => m.AppId)">@T("App Id")</label>
+    @Html.TextBoxFor(m => m.AppId, new { @class = "text large" })
+    <span class="hint">@T("Facebook's App Id obtained from your facebook developer dashboard (e.g. {0})", Facebook.DefaultAppId)</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.IdFor(m => m.AppSecret)">@T("App Secret")</label>
+    @Html.TextBoxFor(m => m.AppSecret, new { @class = "text large" })
+    <span class="hint">@T("Facebook's App Secret obtained from your facebook developer dashboard (e.g. {0})", Facebook.DefaultAppSecret)</span>
+</fieldset>
+<hr />

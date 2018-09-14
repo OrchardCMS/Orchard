@@ -54,6 +54,10 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Set(string key, CacheItem cacheItem) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             if (cacheItem == null) {
                 throw new ArgumentNullException("cacheItem");
             }
@@ -70,14 +74,26 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void Remove(string key) {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public void RemoveAll() {
+            if (_connectionMultiplexer == null) {
+                return;
+            }
+
             Database.KeyDelete(GetPrefixedKeys().Select(key => (RedisKey)key).ToArray());
         }
 
         public CacheItem GetCacheItem(string key) {
+            if (_connectionMultiplexer == null) {
+                return null;
+            }
+
             var value = Database.StringGet(GetLocalizedKey(key));
 
             if (value.IsNullOrEmpty) {
@@ -106,6 +122,10 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public int GetCacheItemsCount() {
+            if (_connectionMultiplexer == null) {
+                return 0;
+            }
+
             return GetPrefixedKeys().Count();
         }
 
@@ -123,6 +143,10 @@ namespace Orchard.Redis.OutputCache {
         /// </summary>
         /// <returns>The keys for the current tenant.</returns>
         private IEnumerable<string> GetAllKeys() {
+            if (_connectionMultiplexer == null) {
+                return new string[0];
+            }
+
             var prefix = GetLocalizedKey("");
             return GetPrefixedKeys().Select(x => x.Substring(prefix.Length));
         }

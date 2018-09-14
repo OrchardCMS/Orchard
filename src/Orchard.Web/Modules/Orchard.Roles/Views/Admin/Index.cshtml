@@ -7,7 +7,7 @@
     Layout.Title = T("Roles").ToString();
 }
 
-@using(Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary();
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -26,21 +26,26 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th scope="col"><input type="checkbox" class="check-all"/></th>
+                    <th scope="col"><input type="checkbox" class="check-all" /></th>
                     <th scope="col">@T("Name")</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             @foreach (var row in Model.Rows) {
                 <tr>
-                    <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
+                    <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
                     <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
                     <td>
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
-                        @if (row.Name != "Administrator") {
-                            @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
-                        }
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                            </li>
+                            @if (row.Name != "Administrator") {
+                                <li class="action-link">
+                                    <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                </li>
+                            }
+                        </ul>
                     </td>
                 </tr>
             }

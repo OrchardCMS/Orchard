@@ -172,7 +172,7 @@ namespace Orchard.Warmup.Services {
                                 }
                             }
                             catch (Exception e) {
-                                Logger.Error(e, "Could not extract warmup page content for: ", url);
+                                Logger.Error(e, "Could not extract warmup page content for: {0}", url);
                             }
                         }
                     }

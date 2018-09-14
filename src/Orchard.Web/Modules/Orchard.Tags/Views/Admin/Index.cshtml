@@ -43,8 +43,14 @@
                     @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new {id = tagEntry.Tag.Id})
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id}) @T(" | ")
-                    <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    <ul class="action-links">
+                        <li class="action-link">
+                            @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = tagEntry.Tag.Id })
+                        </li>
+                        <li class="action-link">
+                            <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                        </li>
+                    </ul>
                 </td>
             </tr>
             tagIndex = tagIndex + 1;

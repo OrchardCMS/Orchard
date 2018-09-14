@@ -8,6 +8,7 @@
     attributes.Add("min", Model.Settings.Minimum.HasValue ? Model.Settings.Minimum.Value : 0);
     attributes.Add("max", Model.Settings.Maximum.HasValue ? Model.Settings.Maximum.Value : 1000000);
     attributes.Add("step", Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture));
+    attributes.Add("placeholder", Model.Settings.Placeholder);
 
     if (Model.Settings.Required) {
         attributes.Add("required", "required");

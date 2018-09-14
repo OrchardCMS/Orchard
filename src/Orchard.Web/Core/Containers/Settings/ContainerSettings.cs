@@ -118,7 +118,8 @@ namespace Orchard.Core.Containers.Settings {
                 yield break;
 
             var viewModel = new ContainerTypePartSettingsViewModel {
-                AvailableItemContentTypes = _containerService.GetContainableTypes().ToList()
+                AvailableItemContentTypes = _containerService.GetContainableTypes().ToList(),
+                ListViewProviders = _listViewService.Providers.ToList()
             };
             updateModel.TryUpdateModel(viewModel, "ContainerTypePartSettingsViewModel", null, new[] { "AvailableItemContentTypes" });
             builder.WithSetting("ContainerTypePartSettings.ItemsShownDefault", viewModel.ItemsShownDefault.ToString());

@@ -1,9 +1,8 @@
 ﻿@using Orchard.ContentManagement;
-@using Orchard.Core.Contents
+@using Orchard.Core.Contents;
 @using Orchard.Utility.Extensions;
 @{
     ContentItem contentItem = Model.ContentItem;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
@@ -18,12 +17,6 @@
     </div>
     <div class="related">
         @Display(Model.Actions)
-        @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
-            @Html.ItemEditLink(T("Edit").Text, contentItem)@T(" | ")
-        }
-        @if (Authorizer.Authorize(Permissions.DeleteContent, contentItem)) {
-            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(contentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
-        }
     </div>
     @if (Model.Content != null) {
     <div class="primary">@Display(Model.Content)</div>

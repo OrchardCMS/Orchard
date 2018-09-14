@@ -41,9 +41,15 @@
 </fieldset>
 <fieldset>
     <div class="editor-field">
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
-        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
-        <span class="hint">@T("A valid number proposed when creating a content item. Make sure to set the Scale property if the value is not an integer. (optional)")</span>
+        <label for="@Html.FieldIdFor(m => m.Placeholder)">@T("Watermark (placeholder)")</label>
+        @Html.TextBoxFor(m => m.Placeholder, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.Placeholder)
+        <span class="hint">@T("A hint to display when the input is empty. (optional)")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div class="editor-field">
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
         @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>

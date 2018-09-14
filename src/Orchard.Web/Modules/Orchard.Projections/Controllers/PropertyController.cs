@@ -66,7 +66,7 @@ namespace Orchard.Projections.Controllers {
             property.LayoutRecord.Properties.Remove(property);
             _repository.Delete(property);
 
-            Services.Notifier.Information(T("Property deleted"));
+            Services.Notifier.Success(T("Property deleted"));
 
             return RedirectToAction("Edit", "Layout", new { id });
         }

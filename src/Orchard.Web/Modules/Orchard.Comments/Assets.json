@@ -1,0 +1,8 @@
+﻿[
+    {
+        "inputs": [
+            "Assets/Scripts/Orchard.Comments.Threaded.js"
+        ],
+        "output": "Scripts/Orchard.Comments.Threaded.js"
+    }
+]

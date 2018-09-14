@@ -8,34 +8,39 @@
     bool canStillCommentOn = Model.CanStillComment;
     var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
     var isAuthorized = AuthorizedFor(Permissions.AddComment, Model.ContentItem);
+    var activeCommentId = TempData.ContainsKey("Comments.RepliedOn") ? TempData["Comments.RepliedOn"] : "root";
 }
 @if (!Model.ContentPart.CommentsActive || !canStillCommentOn) {
     if (Model.ContentPart.Comments.Count > 0) {
-    <div id="comments">
-        <p class="comment-disabled">@T("Comments have been disabled for this content.")</p>
-    </div>
+        <div class="comments-disabled">
+            <p class="comment-disabled">@T("Comments have been disabled for this content.")</p>
+        </div>
     }
 }
 else if ((settings.MustBeAuthenticated || !isAuthorized) && WorkContext.CurrentUser == null) {
     <p class="info message">@T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn",
-                            new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))</p>
+                            new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#comments_{1}", Context.Request.RawUrl, commentsPart.ContentItem.Id) }))</p>
 }
 else if (WorkContext.CurrentUser != null && !isAuthorized) {
-    <div id="comments">
+    <div class="comments-disabled">
         <p class="comment-disabled">@T("You are not authorized to add a comment.")</p>
     </div>
 }
 else if (isAuthorized) {
+    if (Model.ContentPart.ThreadedComments && Model.ContentPart.CommentsActive) {
+        <div><a class="comment-reply-button" href="#" data-contentitem-id="@commentsPart.ContentItem.Id" data-id="root">@T("Start A New Thread")</a></div>
+        <div class="comment-reply-form-beacon" data-contentitem-id="@commentsPart.ContentItem.Id" data-id="root"></div>
+        <div class="comment-reply-form-settings" data-contentitem-id="@commentsPart.ContentItem.Id" data-active-comment-id="@activeCommentId"></div>
+    }
     @Html.ValidationSummary() 
-    <span id="comment-form-beacon"></span>
-    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "comment-form" })) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "comment-form", data_contentitem_id = commentsPart.ContentItem.Id })) {
         if (TempData.ContainsKey("Comments.InvalidCommentEditorShape")) {
             @Display(TempData["Comments.InvalidCommentEditorShape"]);
         }
         else {
             @Display(Model.EditorShape)
         }
-    <button class="primaryAction" type="submit">@T("Submit Comment")</button>
+        <button class="primaryAction" type="submit">@T("Submit Comment")</button>
     }
-
+    
 }

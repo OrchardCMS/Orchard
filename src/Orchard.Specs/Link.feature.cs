@@ -148,11 +148,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 40
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
 #line 43
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 44
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 45
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 46
     testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 47
@@ -201,7 +201,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 66
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
 #line 69
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 70
     testRunner.Then("I should see \"Url is required for Site Url.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 73

@@ -45,12 +45,12 @@ namespace Orchard.ImageEditor.Controllers {
 
         [Themed(false)]
         public ActionResult Edit(string folderPath, string filename) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, folderPath))
                 return new HttpUnauthorizedResult();
 
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
@@ -84,7 +84,7 @@ namespace Orchard.ImageEditor.Controllers {
 
             // Check permission.
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
+            if (!Services.Authorizer.Authorize(Permissions.ImportMediaContent) && !_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 

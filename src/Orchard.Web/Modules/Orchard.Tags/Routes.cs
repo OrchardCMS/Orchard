@@ -6,15 +6,9 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Tags {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                new RouteDescriptor {
-                    Priority = 5,
-                    Route = new Route(
+            var routeDescriptor = new RouteDescriptor {
+                Priority = 5,
+                Route = new Route(
                         "Tags/{tagName}",
                         new RouteValueDictionary {
                             {"area", "Orchard.Tags"},
@@ -26,8 +20,9 @@ namespace Orchard.Tags {
                             {"area", "Orchard.Tags"}
                         },
                         new MvcRouteHandler())
-                }
             };
+
+            routes.Add(routeDescriptor);
         }
     }
 }

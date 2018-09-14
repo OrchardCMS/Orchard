@@ -6,13 +6,7 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Lists {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
-                routes.Add(routeDescriptor);
-            }
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
+            var routeDescriptors = new[] {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
@@ -90,6 +84,10 @@ namespace Orchard.Lists {
                         new MvcRouteHandler())
                 },
             };
+
+            foreach (var routeDescriptor in routeDescriptors) {
+                routes.Add(routeDescriptor);
+            }
         }
     }
 }

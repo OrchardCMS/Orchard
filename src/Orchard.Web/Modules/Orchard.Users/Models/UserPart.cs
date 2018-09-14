@@ -1,7 +1,7 @@
-﻿using System;
-using System.Web.Security;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Security;
+using System;
+using System.Web.Security;
 
 namespace Orchard.Users.Models {
     public sealed class UserPart : ContentPart<UserPartRecord>, IUser {
@@ -75,6 +75,11 @@ namespace Orchard.Users.Models {
         public DateTime? LastLogoutUtc {
             get { return Retrieve(x => x.LastLogoutUtc); }
             set { Store(x => x.LastLogoutUtc, value); }
+        }
+
+        public DateTime? LastPasswordChangeUtc {
+            get { return Retrieve(x => x.LastPasswordChangeUtc); }
+            set { Store(x => x.LastPasswordChangeUtc, value); }
         }
     }
 }

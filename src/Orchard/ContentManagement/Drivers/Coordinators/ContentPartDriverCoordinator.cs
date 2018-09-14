@@ -95,5 +95,17 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 contentPartDriver.Exported(context);
             }
         }
+
+        public override void Cloning(CloneContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Cloning(context);
+            }
+        }
+
+        public override void Cloned(CloneContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Cloned(context);
+            }
+        }
     }
 }

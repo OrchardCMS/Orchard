@@ -1,0 +1,39 @@
+﻿Name: OpenId Connect
+AntiForgery: enabled
+Author: Tha'er Al-Ajlouni, Avertra Corp. (http://www.avertra.com)
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.10.1
+Description: Enables Orchard to authenticate users using OpenId
+Category: OpenId Providers
+Features:
+    Orchard.OpenId:
+        Description: Enables Orchard to authenticate users using OpenId
+		Category: Authentication
+		Name: OpenId
+		Dependencies: Orchard.Users
+    Orchard.OpenId.Facebook:
+        Description: Enables Orchard to authenticate users using their Facebook Accounts
+		Category: Authentication
+		Name: Facebook
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.Google:
+        Description: Enables Orchard to authenticate users using their Google Accounts
+		Category: Authentication
+		Name: Google
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.Twitter:
+        Description: Enables Orchard to authenticate users using their Twitter Accounts
+		Category: Authentication
+		Name: Twitter
+		Dependencies: Orchard.OpenId, Orchard.Resources
+    Orchard.OpenId.AzureActiveDirectory:
+        Description: Enables Orchard to authenticate users using their Azure AD Accounts
+		Category: Authentication
+		Name: Azure Active Directory (AAD)
+		Dependencies: Orchard.OpenId
+    Orchard.OpenId.ActiveDirectoryFederationServices:
+        Description: Enables Orchard to authenticate users using their ADFS Accounts
+		Category: Authentication
+		Name: Active Directory Federation Services (ADFS)
+		Dependencies: Orchard.OpenId

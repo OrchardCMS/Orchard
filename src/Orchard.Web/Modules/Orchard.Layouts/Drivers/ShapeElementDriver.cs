@@ -37,7 +37,7 @@ namespace Orchard.Layouts.Drivers {
                         Id: "shapeType",
                         Name: "ShapeType",
                         Title: T("Shape Type"),
-                        Description: T("The shape type name to dislay."),
+                        Description: T("The shape type name to display."),
                         Classes: new[] { "text", "large", "tokenized" }));
 
                 return form;

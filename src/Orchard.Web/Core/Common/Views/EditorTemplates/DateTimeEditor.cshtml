@@ -5,13 +5,13 @@
 }
 
 @if (Model.ShowDate) {
-    <label class="forpicker" for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
-    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = T("Date").Text })</span>
+    <label for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
+    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = Model.DatePlaceholder ?? T("Date").Text })</span>
 }
 
 @if (Model.ShowTime) {
-    <label class="forpicker" for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
-    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = T("Time").Text })</span>
+    <label for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
+    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = Model.TimePlaceholder ?? T("Time").Text })</span>
 }
 
 @if (Model.ShowDate) { <text>@Html.ValidationMessageFor(m => m.Date)</text> }

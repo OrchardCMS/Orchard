@@ -47,5 +47,8 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.Child.Add(New.PlaceChildContent(Source: context.ElementShape));
         }
 
+        protected override EditorResult OnBuildEditor(FormElement element, ElementEditorContext context) {
+            return Editor(context, BuildForm(context, "CommonFormElement", "Properties:10"));
+        }
     }
 }

@@ -11,3 +11,8 @@ Features:
         Description: Categorize a content item.
         Category: Content
         Dependencies: Orchard.Autoroute, Title, Contents, Orchard.Tokens
+	Orchard.Taxonomies.LocalizationExtensions
+		Name: Taxonomies Localization Extensions
+        Description: Adds localization support to taxonomies
+        Category: Content
+		Dependencies: Orchard.Taxonomies, Orchard.Localization

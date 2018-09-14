@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
+using Orchard.Data.Providers;
 using Orchard.Data;
 using Orchard.Logging;
 
@@ -104,14 +105,37 @@ namespace Orchard.MultiTenancy.Services {
         }
 
         private IEnumerable<string> GetTenantDatabaseTableNames(IWorkContextScope environment) {
-            var sessionFactoryHolder = environment.Resolve<ISessionFactoryHolder>();
-            var configuration = sessionFactoryHolder.GetConfiguration();
+            var shellSettings = environment.Resolve<ShellSettings>();
+            var sqlStatementProviders = environment.Resolve<IEnumerable<ISqlStatementProvider>>();
+            var transactionManager = environment.Resolve<ITransactionManager>();
+            var session = transactionManager.GetSession();
+            var tenants = GetTenants().Where(x => x.Name != shellSettings.Name);
 
-            var result =
-                from mapping in configuration.ClassMappings
-                select mapping.Table.Name;
+            string command = null;
+            IEnumerable<string> result = null;
 
-            return result.ToArray();
+            foreach (var sqlStatementProvider in sqlStatementProviders) {
+                if (!String.Equals(sqlStatementProvider.DataProvider, shellSettings.DataProvider)) {
+                    continue;
+                }
+
+                command = sqlStatementProvider.GetStatement("table_names") ?? command;
+            }
+
+            if (command != null) {
+                var tableNames = session.CreateSQLQuery(command).List<string>();
+
+                if (string.IsNullOrWhiteSpace(shellSettings.DataTablePrefix)) {
+                    // If current tenant doesn't has table prefix, then exclude all tables which have prefixes for other tenants
+                    result = tableNames.Where(table => !tenants.Any(tenant => table.StartsWith(tenant.DataTablePrefix + "_")));
+                }
+                else {
+                    // If current tenant has table prefix, then filter tables which have the right prefix
+                    result = tableNames.Where(table => table.StartsWith(shellSettings.DataTablePrefix + "_"));
+                }
+            }
+
+            return (result ?? Enumerable.Empty<string>()).OrderBy(x => x).ToList();
         }
 
         private void DropTenantDatabaseTables(IWorkContextScope environment) {

@@ -7,6 +7,11 @@ namespace Orchard.Environment.State
     public interface IProcessingEngine
     {
         /// <summary>
+        /// Init a new tasks list in the http context or in a new logical context.
+        /// </summary>
+        void Initialize();
+
+        /// <summary>
         /// Queue an event to fire inside of an explicitly decribed shell context
         /// </summary>        
         string AddTask(

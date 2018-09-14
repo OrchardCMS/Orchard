@@ -8,10 +8,12 @@ using Orchard.Logging;
 namespace Orchard.Environment.Extensions.Loaders {
     public class RawThemeExtensionLoader : ExtensionLoaderBase {
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IDependenciesFolder _dependenciesFolder;
 
         public RawThemeExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider)
             : base(dependenciesFolder) {
             _virtualPathProvider = virtualPathProvider;
+            _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
         }
@@ -26,12 +28,12 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             // Temporary - theme without own project should be under ~/themes
-            if (descriptor.Location.StartsWith("~/Themes",StringComparison.InvariantCultureIgnoreCase)) {
+            if (descriptor.Location.StartsWith("~/Themes", StringComparison.InvariantCultureIgnoreCase)) {
                 string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
                                            descriptor.Id + ".csproj");
 
                 // ignore themes including a .csproj in this loader
-                if ( _virtualPathProvider.FileExists(projectPath) ) {
+                if (_virtualPathProvider.FileExists(projectPath)) {
                     return null;
                 }
 
@@ -39,7 +41,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                                                 descriptor.Id + ".dll");
 
                 // ignore themes with /bin in this loader
-                if ( _virtualPathProvider.FileExists(assemblyPath) )
+                if (_virtualPathProvider.FileExists(assemblyPath))
                     return null;
 
                 return new ExtensionProbeEntry {
@@ -63,6 +65,15 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Assembly = GetType().Assembly,
                 ExportedTypes = new Type[0]
             };
+        }
+
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                return true;
+            }
+
+            return false;
         }
     }
 }

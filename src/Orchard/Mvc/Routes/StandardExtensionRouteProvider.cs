@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -14,7 +14,7 @@ namespace Orchard.Mvc.Routes {
             _blueprint = blueprint;
         }
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
             var displayPathsPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
                 x => x.Feature.Descriptor.Extension);
@@ -37,7 +37,7 @@ namespace Orchard.Mvc.Routes {
                         Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);
 
 
-                        yield return new RouteDescriptor {
+                        routes.Add(new RouteDescriptor {
                             Priority = -10,
                             SessionState = defaultSessionState, 
                             Route = new Route(
@@ -53,9 +53,9 @@ namespace Orchard.Mvc.Routes {
                                     {"area", areaName}
                                 },
                                 new MvcRouteHandler())
-                        };
+                        });
 
-                        yield return new RouteDescriptor {
+                        routes.Add(new RouteDescriptor {
                             Priority = -10,
                             SessionState = defaultSessionState,
                             Route = new Route(
@@ -71,15 +71,10 @@ namespace Orchard.Mvc.Routes {
                                     {"area", areaName}
                                 },
                                 new MvcRouteHandler())
-                        };
+                        });
                     }
                 }
             }
-        }
-
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Orchard.Core.Common.Drivers {
                 field.Value = viewModel.Text;
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
+                    updater.AddModelError("Text", T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
@@ -85,6 +85,10 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+        }
+
+        protected override void Cloning(ContentPart part, TextField originalField, TextField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
         }
 
         protected override void Describe(DescribeMembersContext context) {

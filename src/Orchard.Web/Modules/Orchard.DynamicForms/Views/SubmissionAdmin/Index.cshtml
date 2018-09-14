@@ -2,7 +2,6 @@
 @using Orchard.Utility.Extensions
 @model Orchard.DynamicForms.ViewModels.SubmissionsIndexViewModel
 @{
-    Style.Include("forms-admin.css", "forms-admin.min.css"); // TODO: Shouldn't this be a Style.Require()?
     Script.Require("ShapesBase");
     Layout.Title = T("Submissions for {0}", Model.FormName);
 }
@@ -42,8 +41,14 @@
                         <td>@dataRow[dataColumn]</td>
                     }
                     <td>
-                        @Html.ActionLink(T("Details").Text, "Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, null) @T(" | ")
-                        @Html.ActionLink(T("Remove").Text, "Delete", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.ActionLink(T("Details").Text, "Details", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, null)
+                            </li>
+                            <li class="action-link">
+                                @Html.ActionLink(T("Delete").Text, "Delete", "SubmissionAdmin", new { id = id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                            </li>
+                        </ul>
                     </td>
                 </tr>
             }

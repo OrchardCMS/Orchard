@@ -85,12 +85,10 @@ namespace Orchard.Data.Migration {
             // Ensure the distributed lock record schema exists.
             var schemaBuilder = new SchemaBuilder(_dataMigrationInterpreter);
             var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
-            if (!distributedLockSchemaBuilder.SchemaExists())
-            {
+            if (!distributedLockSchemaBuilder.SchemaExists()) {
 
                 // Workaround to avoid some Transaction issue for PostgreSQL.
-                if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase))
-                {
+                if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase)) {
                     _transactionManager.RequireNew();
                     distributedLockSchemaBuilder.CreateSchema();
                     return;

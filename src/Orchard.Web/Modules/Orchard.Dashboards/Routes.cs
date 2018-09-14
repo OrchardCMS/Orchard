@@ -6,29 +6,25 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Dashboards {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
+            var routeDescriptors = new[] {
+                new RouteDescriptor {
+                    Priority = -4,
+                    Route = new Route(
+                        "Admin",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Dashboards"},
+                            {"controller", "Dashboard"},
+                            {"action", "Display"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Dashboards"}
+                        },
+                        new MvcRouteHandler())
+                },
 
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            yield return new RouteDescriptor {
-                Priority = -4,
-                Route = new Route(
-                    "Admin",
-                    new RouteValueDictionary {
-                        {"area", "Orchard.Dashboards"},
-                        {"controller", "Dashboard"},
-                        {"action", "Display"}
-                    },
-                    new RouteValueDictionary(),
-                    new RouteValueDictionary {
-                        {"area", "Orchard.Dashboards"}
-                    },
-                    new MvcRouteHandler())
-            };
-
-            yield return new RouteDescriptor {
-                Route = new Route(
+                new RouteDescriptor {
+                    Route = new Route(
                     "Admin/Dashboards/Settings",
                     new RouteValueDictionary {
                         {"area", "Orchard.Dashboards"},
@@ -40,10 +36,10 @@ namespace Orchard.Dashboards {
                         {"area", "Orchard.Dashboards"}
                     },
                     new MvcRouteHandler())
-            };
+                },
 
-            yield return new RouteDescriptor {
-                Route = new Route(
+                new RouteDescriptor {
+                    Route = new Route(
                     "Admin/Dashboards/List",
                     new RouteValueDictionary {
                         {"area", "Orchard.Dashboards"},
@@ -55,7 +51,11 @@ namespace Orchard.Dashboards {
                         {"area", "Orchard.Dashboards"}
                     },
                     new MvcRouteHandler())
+                }
             };
+
+            foreach (var routeDescriptor in routeDescriptors)
+                routes.Add(routeDescriptor);
         }
     }
 }

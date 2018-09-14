@@ -16,7 +16,7 @@ Orchard is a free, open source, community-focused **Content Management System** 
 
 Orchard is built on a modern architecture that puts extensibility up-front, as its number one concern. All components in Orchard can be replaced or extended. Content is built from easily composable building blocks. Modules extend the system in a very decoupled fashion, where a commenting module for example can as easily apply to pages, blog posts, photos or products. A rich UI composition system completes the picture and ensures that you can get the exact presentation that you need for your content.
 
-Orchard is delivered under the [.NET Foundation](http://www.dotnetfoundation.org/orchard). It is licensed under a [New BSD license](http://www.opensource.org/licenses/bsd-license.php), which is approved by the OSI.
+Orchard is delivered under the [.NET Foundation](https://dotnetfoundation.org/orchard-cms). It is licensed under a [New BSD license](http://www.opensource.org/licenses/bsd-license.php), which is approved by the OSI.
 
 Our mission is to empower our users and foster a dedicated and diverse community that builds the CMS that we all want to use.
 
@@ -28,7 +28,7 @@ We invite participation by the developer community in shaping the project’s di
 All our releases are available on our [Releases](https://github.com/OrchardCMS/Orchard/releases) page, and it's easy to [Install Orchard using the Web Platform Installer](http://docs.orchardproject.net/Documentation/Installing-Orchard) as well. We encourage interested developers to check out the source code on the Orchard GitHub site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
-* [Feature roadmap](http://docs.orchardproject.net/Documentation/feature-roadmap)
+* [Feature roadmap](http://docs.orchardproject.net/Documentation/Feature-roadmap)
 * [Docs and designs/specs](http://www.orchardproject.net/docs)
 * [About us](http://www.orchardproject.net/about)
 * [Contact us](mailto:ofeedbk@microsoft.com)

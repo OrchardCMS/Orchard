@@ -50,11 +50,12 @@ namespace Orchard.DynamicForms.Handlers {
             var contentItem = default(ContentItem);
             if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType)) {
                 contentItem = formService.CreateContentItem(form, context.ValueProvider);
+                formTokenContext.CreatedContent = contentItem;
             }
 
             // Notifiy.
             if (!String.IsNullOrWhiteSpace(form.Notification))
-                _notifier.Information(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
+                _notifier.Success(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
 
             // Trigger workflow event.
             _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => tokenData);

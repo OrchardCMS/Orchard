@@ -353,7 +353,7 @@ namespace Orchard.Taxonomies.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("The terms have been imported successfully."));
+            Services.Notifier.Success(T("The terms have been imported successfully."));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = id });
         }
@@ -365,6 +365,7 @@ namespace Orchard.Taxonomies.Controllers {
                 IsInternal = taxonomy.IsInternal,
                 ContentItem = taxonomy.ContentItem,
                 IsChecked = false,
+                HasDraft = taxonomy.ContentItem.HasDraft(),
             };
         }
 
