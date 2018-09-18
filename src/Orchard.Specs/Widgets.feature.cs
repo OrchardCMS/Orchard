@@ -92,7 +92,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 12
     testRunner.When("I fill in", ((string)(null)), table1, "When ");
 #line 15
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 17
@@ -135,11 +135,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 26
     testRunner.When("I fill in", ((string)(null)), table2, "When ");
 #line 30
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 31
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 32
-    testRunner.Then("I should see \"The Layer has been created as draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"Your Layer has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 33
         testRunner.And("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">For awesome stuff</" +
                     "option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -197,16 +197,14 @@ this.ScenarioSetup(scenarioInfo);
 #line 49
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
 #line 52
-        testRunner.And("I hit \"Show\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Then("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 53
-    testRunner.Then("I should see \"<option[^>]*selected[^>]*>Disabled\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 54
     testRunner.When("I follow \"Add\" where href has \"zone=Header\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 55
+#line 54
     testRunner.Then("I should see \"<h1[^>]*>Choose A Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 56
+#line 55
     testRunner.When("I follow \"<h2>Html Widget</h2>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 57
+#line 56
     testRunner.Then("I should see \"<h1[^>]*>Add Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -218,17 +216,17 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "Body.Text",
                         "<p><blink>hi</blink></p>"});
-#line 58
+#line 57
     testRunner.When("I fill in", ((string)(null)), table4, "When ");
+#line 61
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 62
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 63
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 64
+#line 63
     testRunner.Then("I should see \"Your Html Widget has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 64
+        testRunner.And("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 65
-        testRunner.And("I should see \"<option[^>]*selected[^>]*>Disabled\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 66
         testRunner.And("I should see \"<li[^>]*class=\"[^\"]*widgets-this-layer[^\"]*\"[^>]*>\\s*<form[^>]*>\\s*" +
                     "<h3[^>]*>\\s*<a[^>]*>Flashy HTML Widget</a>\\s*</h3>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

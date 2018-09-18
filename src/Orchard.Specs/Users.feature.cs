@@ -218,12 +218,16 @@ this.ScenarioSetup(scenarioInfo);
 #line 63
     testRunner.Then("I should see \"The Email field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 64
-    testRunner.Then("I should see \"The Password field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I should see \"You must specify a valid email address.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 65
-    testRunner.Then("I should see \"The ConfirmPassword field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The Password field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 66
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.Then("I should see \"The ConfirmPassword field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 67
+ testRunner.Then("I should see \"The password can&#39;t be empty.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 68
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 69
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -241,11 +245,11 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "ConfirmPassword",
                         "a123456!"});
-#line 68
+#line 70
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
-#line 74
+#line 76
         testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 75
+#line 77
     testRunner.Then("I should see \"Password confirmation must match\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -258,14 +262,16 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can edit an existing user", new string[] {
                         "management"});
-#line 78
-this.ScenarioSetup(scenarioInfo);
-#line 79
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 80
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
 #line 81
-        testRunner.And("I follow \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 82
+ testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 83
+    testRunner.Then("I should see \"Users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 84
+    testRunner.When("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -282,13 +288,13 @@ this.ScenarioSetup(scenarioInfo);
             table5.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 82
+#line 85
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
-#line 88
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 89
+#line 91
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 92
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 90
+#line 93
     testRunner.Then("I should see \"User created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -297,13 +303,13 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "Options.Search",
                         "user1"});
-#line 91
-    testRunner.When("I fill in", ((string)(null)), table6, "When ");
 #line 94
+    testRunner.When("I fill in", ((string)(null)), table6, "When ");
+#line 97
         testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 95
+#line 98
     testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 96
+#line 99
     testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
@@ -315,17 +321,17 @@ this.ScenarioSetup(scenarioInfo);
             table7.AddRow(new string[] {
                         "Email",
                         "user2@domain.com"});
-#line 97
+#line 100
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
-#line 101
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 102
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 103
-    testRunner.Then("I should see \"User information updated\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 104
-        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 105
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 106
+    testRunner.Then("I should see \"User information updated\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 107
+        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 108
         testRunner.And("I should see \"user2@domain.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -338,13 +344,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should not be able to reuse an existing username or email", new string[] {
                         "management"});
-#line 108
+#line 111
 this.ScenarioSetup(scenarioInfo);
-#line 109
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 110
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 112
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 113
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 115
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
@@ -362,13 +368,13 @@ this.ScenarioSetup(scenarioInfo);
             table8.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 113
+#line 116
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 119
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 120
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 122
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 123
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 125
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
@@ -386,15 +392,15 @@ this.ScenarioSetup(scenarioInfo);
             table9.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 123
+#line 126
         testRunner.And("I fill in", ((string)(null)), table9, "And ");
-#line 129
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 130
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 131
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 132
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 133
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 134
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 135
         testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
@@ -403,13 +409,13 @@ this.ScenarioSetup(scenarioInfo);
             table10.AddRow(new string[] {
                         "Options.Search",
                         "user1"});
-#line 134
-    testRunner.When("I fill in", ((string)(null)), table10, "When ");
 #line 137
+    testRunner.When("I fill in", ((string)(null)), table10, "When ");
+#line 140
         testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 138
+#line 141
     testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 139
+#line 142
     testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
@@ -421,11 +427,11 @@ this.ScenarioSetup(scenarioInfo);
             table11.AddRow(new string[] {
                         "Email",
                         "user1@domain.com"});
-#line 140
+#line 143
         testRunner.And("I fill in", ((string)(null)), table11, "And ");
-#line 144
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 145
+#line 147
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 148
     testRunner.Then("I should see \"User with that username and/or email already exists.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
@@ -437,11 +443,11 @@ this.ScenarioSetup(scenarioInfo);
             table12.AddRow(new string[] {
                         "Email",
                         "user2@domain.com"});
-#line 146
+#line 149
     testRunner.When("I fill in", ((string)(null)), table12, "When ");
-#line 150
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 151
+#line 153
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 154
     testRunner.Then("I should see \"User with that username and/or email already exists.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -449,20 +455,18 @@ this.ScenarioSetup(scenarioInfo);
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I should be able to remove an existing user")]
-        [NUnit.Framework.IgnoreAttribute()]
         [NUnit.Framework.CategoryAttribute("management")]
         public virtual void IShouldBeAbleToRemoveAnExistingUser()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should be able to remove an existing user", new string[] {
-                        "management",
-                        "ignore"});
-#line 155
-this.ScenarioSetup(scenarioInfo);
-#line 156
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                        "management"});
 #line 157
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
+#line 158
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 159
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 161
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
@@ -480,13 +484,13 @@ this.ScenarioSetup(scenarioInfo);
             table13.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 160
+#line 162
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
-#line 166
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 167
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 168
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 169
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 170
     testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
@@ -495,19 +499,19 @@ this.ScenarioSetup(scenarioInfo);
             table14.AddRow(new string[] {
                         "Options.Search",
                         "user1"});
-#line 170
+#line 172
     testRunner.When("I fill in", ((string)(null)), table14, "When ");
-#line 173
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 174
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 175
-    testRunner.When("I follow \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 176
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 177
-    testRunner.Then("I should see \"User user1 deleted\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 178
+  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 179
+    testRunner.Then("I should see \"User user1 deleted\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 180
         testRunner.And("I should not see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -520,13 +524,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should not be able to filter users by name", new string[] {
                         "filtering"});
-#line 181
-this.ScenarioSetup(scenarioInfo);
-#line 182
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 183
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
+#line 184
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 185
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 187
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
@@ -544,13 +548,13 @@ this.ScenarioSetup(scenarioInfo);
             table15.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 186
+#line 188
         testRunner.And("I fill in", ((string)(null)), table15, "And ");
-#line 192
+#line 194
         testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 193
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 195
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 197
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
@@ -568,15 +572,15 @@ this.ScenarioSetup(scenarioInfo);
             table16.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 196
+#line 198
         testRunner.And("I fill in", ((string)(null)), table16, "And ");
-#line 202
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 203
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 204
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 205
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 206
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 207
         testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
@@ -585,15 +589,15 @@ this.ScenarioSetup(scenarioInfo);
             table17.AddRow(new string[] {
                         "Options.Search",
                         "user1"});
-#line 206
+#line 208
     testRunner.When("I fill in", ((string)(null)), table17, "When ");
-#line 209
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 210
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 211
-        testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 212
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 213
+        testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 214
         testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
@@ -602,15 +606,15 @@ this.ScenarioSetup(scenarioInfo);
             table18.AddRow(new string[] {
                         "Options.Search",
                         "user1@domain.com"});
-#line 213
+#line 215
     testRunner.When("I fill in", ((string)(null)), table18, "When ");
-#line 216
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 217
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 218
-        testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 219
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 220
+        testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 221
         testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
@@ -619,15 +623,15 @@ this.ScenarioSetup(scenarioInfo);
             table19.AddRow(new string[] {
                         "Options.Search",
                         "@domain.com"});
-#line 220
+#line 222
     testRunner.When("I fill in", ((string)(null)), table19, "When ");
-#line 223
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 224
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 225
-        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 226
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 227
+        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 228
         testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -640,13 +644,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should be able to filter users by status", new string[] {
                         "filtering"});
-#line 229
-this.ScenarioSetup(scenarioInfo);
-#line 230
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 231
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
+#line 232
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 233
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 235
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
@@ -664,13 +668,13 @@ this.ScenarioSetup(scenarioInfo);
             table20.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 234
+#line 236
         testRunner.And("I fill in", ((string)(null)), table20, "And ");
-#line 240
+#line 242
         testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 241
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 243
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 245
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
@@ -688,15 +692,15 @@ this.ScenarioSetup(scenarioInfo);
             table21.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 244
+#line 246
         testRunner.And("I fill in", ((string)(null)), table21, "And ");
-#line 250
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 251
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 252
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 253
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 254
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 255
         testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
@@ -705,17 +709,17 @@ this.ScenarioSetup(scenarioInfo);
             table22.AddRow(new string[] {
                         "Options.Search",
                         "user1"});
-#line 254
+#line 256
     testRunner.When("I fill in", ((string)(null)), table22, "When ");
-#line 257
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 258
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 259
-    testRunner.When("I hit \"Disable\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 260
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 261
+    testRunner.When("I hit \"Disable\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 262
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 263
     testRunner.Then("I should see \"User user1 disabled\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table23 = new TechTalk.SpecFlow.Table(new string[] {
@@ -727,15 +731,15 @@ this.ScenarioSetup(scenarioInfo);
             table23.AddRow(new string[] {
                         "Options.Filter",
                         "Pending"});
-#line 262
+#line 264
     testRunner.When("I fill in", ((string)(null)), table23, "When ");
-#line 266
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 267
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 268
-        testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 269
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 270
+        testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 271
         testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table24 = new TechTalk.SpecFlow.Table(new string[] {
@@ -747,15 +751,15 @@ this.ScenarioSetup(scenarioInfo);
             table24.AddRow(new string[] {
                         "Options.Filter",
                         "EmailPending"});
-#line 270
+#line 272
     testRunner.When("I fill in", ((string)(null)), table24, "When ");
-#line 274
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 275
-    testRunner.Then("I should not see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 276
-        testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 277
+    testRunner.Then("I should not see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 278
+        testRunner.And("I should not see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 279
         testRunner.And("I should not see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table25 = new TechTalk.SpecFlow.Table(new string[] {
@@ -767,15 +771,15 @@ this.ScenarioSetup(scenarioInfo);
             table25.AddRow(new string[] {
                         "Options.Filter",
                         "Approved"});
-#line 278
+#line 280
     testRunner.When("I fill in", ((string)(null)), table25, "When ");
-#line 282
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 283
-    testRunner.Then("I should not see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 284
-        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 285
+    testRunner.Then("I should not see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 286
+        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 287
         testRunner.And("I should see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table26 = new TechTalk.SpecFlow.Table(new string[] {
@@ -787,15 +791,15 @@ this.ScenarioSetup(scenarioInfo);
             table26.AddRow(new string[] {
                         "Options.Filter",
                         "All"});
-#line 286
+#line 288
     testRunner.When("I fill in", ((string)(null)), table26, "When ");
-#line 290
-        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 291
-    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 292
-        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Filter\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 293
+    testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 294
+        testRunner.And("I should see \"<a[^>]*>user2</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 295
         testRunner.And("I should see \"<a[^>]*>admin</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -808,13 +812,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should not be able to add users with invalid email addresses", new string[] {
                         "email"});
-#line 295
-this.ScenarioSetup(scenarioInfo);
-#line 296
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 297
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
 #line 298
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 299
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 300
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table27 = new TechTalk.SpecFlow.Table(new string[] {
@@ -832,11 +836,11 @@ this.ScenarioSetup(scenarioInfo);
             table27.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 299
+#line 301
         testRunner.And("I fill in", ((string)(null)), table27, "And ");
-#line 305
+#line 307
         testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 306
+#line 308
     testRunner.Then("I should see \"You must specify a valid email address.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -849,13 +853,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should be able to add users with valid email addresses", new string[] {
                         "email"});
-#line 308
-this.ScenarioSetup(scenarioInfo);
-#line 309
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 310
-    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+this.ScenarioSetup(scenarioInfo);
 #line 311
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 312
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 313
         testRunner.And("I follow \"Add a new user\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table28 = new TechTalk.SpecFlow.Table(new string[] {
@@ -873,13 +877,13 @@ this.ScenarioSetup(scenarioInfo);
             table28.AddRow(new string[] {
                         "ConfirmPassword",
                         "a12345!"});
-#line 312
+#line 314
         testRunner.And("I fill in", ((string)(null)), table28, "And ");
-#line 318
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 319
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 320
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 321
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 322
     testRunner.Then("I should see \"User created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

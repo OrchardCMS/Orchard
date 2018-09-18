@@ -95,7 +95,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 15
         testRunner.And("I hit \"Create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 17
+  testRunner.Then("I should see \"The \\\"Event\\\" content type has been created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 18
+  testRunner.When("I go to \"Admin/ContentTypes/AddPartsTo/event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -103,42 +107,18 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "PartSelections[5].IsSelected",
                         "True"});
-#line 17
-        testRunner.And("I fill in", ((string)(null)), table2, "And ");
-#line 20
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
-        testRunner.And("I go to \"Admin/ContentTypes/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 19
+  testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 22
-    testRunner.Then("I should see \"Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 23
+  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
-    testRunner.When("I go to \"Admin/Contents/Create/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table3.AddRow(new string[] {
-                        "Title.Title",
-                        "MyList"});
-            table3.AddRow(new string[] {
-                        "Container.SelectedItemContentTypes",
-                        "Event"});
+  testRunner.Then("I should see \"The \\\"ContainablePart\\\" part has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 25
-        testRunner.And("I fill in", ((string)(null)), table3, "And ");
-#line 29
-        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
-    testRunner.Then("I should see \"Your List has been created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 32
-    testRunner.When("I go to \"Admin/Lists\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 33
-    testRunner.Then("I should see \"MyList\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
-    testRunner.When("I follow \"Contained Items (0)\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 35
-    testRunner.Then("I should see \"\'MyList\' has no content items\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.When("I go to \"Admin/ContentTypes/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 26
+    testRunner.Then("I should see \"Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
