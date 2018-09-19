@@ -130,12 +130,25 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+  </Target>
+  
+  <Target Name="BuildViews">
+    <!-- To make sure that Roslyn tools are available, even if the Compile task was not called before this. -->
+    <MSBuild
+      Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
+      Targets="CopyRoslynFilesToOutputFolder"
       Properties="Configuration=$(Configuration)" />
+    <!-- The actual compilation with views also compiled. -->
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
   
   <Target Name="BuildViews">
