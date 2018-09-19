@@ -403,11 +403,6 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
-
-    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
-      XPath="/configuration/system.web/trust/@level"
-      Value="Full" />
-
   </Target>
 
   <Target Name="Profiling-Setup">
