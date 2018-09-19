@@ -67,9 +67,8 @@ namespace Orchard.Layouts.Services {
             return context.Shape;
         }
 
-        private IEnumerable<IContentPartDriver> GetPartDrivers(string partName) {
-            return _contentPartDrivers.Where(x => GetPartOfDriver(x.GetType().BaseType).Name == partName);
-        }
+        private IEnumerable<IContentPartDriver> GetPartDrivers(string partName) =>
+            _contentPartDrivers.Where(x => GetPartOfDriver(x.GetType()?.BaseType)?.Name == partName);
 
         private Type GetPartOfDriver(Type type) {
             var baseType = type;
