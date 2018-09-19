@@ -39,7 +39,7 @@ Scenario: Creating and using Text fields
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large | 
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-    Then I should see ""Event" settings have been saved."
+    Then I should see "\"Event\" settings have been saved."
 
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
@@ -48,7 +48,7 @@ Scenario: Creating and using Text fields
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
 		And I am redirected
-		Then I should see ""Event" settings have been saved."
+		Then I should see "\"Event\" settings have been saved."
         When I go to "Admin/Contents/Create/Event"
         And I fill in
             | name               | value |
@@ -63,7 +63,7 @@ Scenario: Creating and using Text fields
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
 		And I am redirected
-		Then I should see ""Event" settings have been saved."
+		Then I should see "\"Event\" settings have been saved."
 		When I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
 

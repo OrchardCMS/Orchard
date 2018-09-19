@@ -17,7 +17,7 @@ Scenario: Creating and using Boolean fields
             | Name        | Event |
         And I hit "Create"
 		And I am redirected
-		Then I should see "The "Event" content type has been created."
+		Then I should see "The \"Event\" content type has been created."
         When I go to "Admin/ContentTypes/"
     Then I should see "Event"
 
