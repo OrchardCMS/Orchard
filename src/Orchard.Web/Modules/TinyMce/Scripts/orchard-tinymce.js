@@ -13,11 +13,7 @@ tinyMCE.init({
     theme: "modern",
     schema: "html5",
     plugins: [
-        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-        "searchreplace wordcount visualblocks visualchars code fullscreen",
-        "insertdatetime media nonbreaking table contextmenu directionality",
-        "emoticons template paste textcolor colorpicker textpattern",
-        "fullscreen autoresize" + mediaPlugins
+        "advlist, anchor, autolink, autoresize, charmap, code, colorpicker, contextmenu, directionality, emoticons, fullscreen, hr, image, insertdatetime, link, lists, media, nonbreaking, pagebreak, paste, preview, print, searchreplace, table, template, textcolor, textpattern, visualblocks, visualchars, wordcount" + mediaPlugins
     ],
     toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | " + mediaPlugins + " link unlink charmap | code fullscreen",
     convert_urls: false,
