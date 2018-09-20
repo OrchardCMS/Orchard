@@ -40,14 +40,13 @@ tinyMCE.init({
         // There is a built-in fixed_toolbar_container option in the TinyMCE, but we can't use it, because it is only
         // available if the selector is a DIV with inline mode.
 
-        editor.on('focus', function () {
+        editor.on("focus", function () {
             var $contentArea = $(this.contentAreaContainer.parentElement);
             stickyToolbar($contentArea);
         });
 
-        editor.on('blur', function () {
+        editor.on("blur", function () {
             var $contentArea = $(this.contentAreaContainer.parentElement);
-            var isAdded = false;
             $contentArea.prepend($contentArea.find("div.mce-toolbar-grp"));
             $contentArea.prepend($contentArea.find("div.mce-menubar"));
             $("#stickyContainer").remove();
