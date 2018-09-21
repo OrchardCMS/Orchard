@@ -108,23 +108,21 @@ Scenario: Creating and using Enumeration fields
         And I hit "Save Draft"
     Then I should see "The Location field is required."
     
-   # # The default value should be proposed on creation
-   # When I go to "Admin/ContentTypes/Edit/Event"
-   #     And I fill in 
-   #         | name												     | value    |
-   #         | Fields[Location].EnumerationFieldSettings.Options      | Seattle  |
-   #         | Fields[Location].EnumerationFieldSettings.Options		 | TH       |	
-			#| Fields[Location].EnumerationFieldSettings.Options	     | BKK      |	
-   #         | Fields[Location].EnumerationFieldSettings.ListMode     | Dropdown |
-   #         | Fields[Location].EnumerationFieldSettings.DefaultValue | TH       |
-   #     And I hit "Save"
-   #     And I go to "Admin/Contents/Create/Event"
-   # Then I should see "selected=\"selected\">TH"
+	# The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                                   | value         |
+            | Fields[Location].EnumerationFieldSettings.Options      | Seattle       |
+            | Fields[Location].EnumerationFieldSettings.ListMode     | Dropdown List |
+            | Fields[Location].EnumerationFieldSettings.DefaultValue | Seattle       |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "selected=\"selected">Seattle"
 	
     # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                            | value   |
+            | name													 | value   |
             | Fields[Location].EnumerationFieldSettings.Required     | true    |
             | Fields[Location].EnumerationFieldSettings.ListMode     | Listbox |
         And I hit "Save"

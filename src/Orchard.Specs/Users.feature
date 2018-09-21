@@ -79,6 +79,13 @@ Scenario: I can create a new user
 @management
 Scenario: I can edit an existing user
     Given I have installed Orchard
+	When I go to "Admin/ContentTypes/Edit/User"
+		And I fill in
+		| name                                   | value |
+		| ContentTypeSettingsViewModel.Draftable | true  |
+		And I hit "Save"
+		And I am redirected
+	Then I should see "\"User\" settings have been saved."
 	When I go to "admin/users"
     Then I should see "Users"
     When I follow "Add a new user"
@@ -88,7 +95,7 @@ Scenario: I can edit an existing user
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Publish"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "User created"
     When I fill in
@@ -101,7 +108,7 @@ Scenario: I can edit an existing user
         | name | value |
         | UserName | user2 |
         | Email | user2@domain.com |
-        And I hit "Publish"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "User information updated"
         And I should see "<a[^>]*>user2</a>"
@@ -144,13 +151,13 @@ Scenario: I should not be able to reuse an existing username or email
         | name | value |
         | UserName | user2 |
         | Email | user1@domain.com |
-        And I hit "Publish"
+        And I hit "Save Draft"
     Then I should see "User with that username and/or email already exists."
     When I fill in
         | name | value |
         | UserName | user1 |
         | Email | user2@domain.com |
-        And I hit "Publish"
+        And I hit "Save Draft"
     Then I should see "User with that username and/or email already exists."
 
 @management
