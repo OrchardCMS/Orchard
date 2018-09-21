@@ -66,6 +66,63 @@ namespace Orchard.Specs
         }
         
         [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can edit a default layer")]
+        public virtual void ICanEditADefaultLayer()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can edit a default layer", ((string[])(null)));
+#line 6
+this.ScenarioSetup(scenarioInfo);
+#line 7
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 8
+ testRunner.When("I go to \"Admin/ContentTypes/Edit/Layer\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table1.AddRow(new string[] {
+                        "ContentTypeSettingsViewModel.Draftable",
+                        "true"});
+#line 9
+  testRunner.And("I fill in", ((string)(null)), table1, "And ");
+#line 12
+  testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 13
+  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
+ testRunner.Then("I should see \"\\\"Layer\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 15
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 16
+    testRunner.Then("I should see \"<h1[^>]*>Widgets[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 17
+    testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 18
+    testRunner.Then("I should see \"<input[^>]*name=\"LayerPart.Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table2.AddRow(new string[] {
+                        "LayerPart.Description",
+                        "This is the default layer."});
+#line 19
+    testRunner.When("I fill in", ((string)(null)), table2, "When ");
+#line 22
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 23
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 24
+    testRunner.Then("I should see \"Your Layer has been saved\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 25
+    testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 26
+    testRunner.Then("I should see \"<textarea[^>]*>\\s*This is the default layer.\\s*</textarea>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I can add a new layer and that layer is active when I\'m redirected to the widget " +
             "management page")]
         public virtual void ICanAddANewLayerAndThatLayerIsActiveWhenIMRedirectedToTheWidgetManagementPage()
@@ -79,14 +136,14 @@ this.ScenarioSetup(scenarioInfo);
 #line 30
  testRunner.When("I go to \"Admin/ContentTypes/Edit/Layer\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "ContentTypeSettingsViewModel.Draftable",
                         "true"});
 #line 31
-  testRunner.And("I fill in", ((string)(null)), table1, "And ");
+  testRunner.And("I fill in", ((string)(null)), table3, "And ");
 #line 34
   testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 35
@@ -100,17 +157,17 @@ this.ScenarioSetup(scenarioInfo);
 #line 39
     testRunner.Then("I should see \"<h1[^>]*>Add Layer</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table2.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "LayerPart.Name",
                         "For awesome stuff"});
-            table2.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "LayerPart.LayerRule",
                         "url \"~/awesome*\""});
 #line 40
-    testRunner.When("I fill in", ((string)(null)), table2, "When ");
+    testRunner.When("I fill in", ((string)(null)), table4, "When ");
 #line 44
         testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 45
@@ -165,14 +222,14 @@ this.ScenarioSetup(scenarioInfo);
 #line 62
  testRunner.When("I go to \"Admin/ContentTypes/Edit/HtmlWidget\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table3.AddRow(new string[] {
+            table5.AddRow(new string[] {
                         "ContentTypeSettingsViewModel.Draftable",
                         "true"});
 #line 63
-  testRunner.And("I fill in", ((string)(null)), table3, "And ");
+  testRunner.And("I fill in", ((string)(null)), table5, "And ");
 #line 66
   testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 67
@@ -182,14 +239,14 @@ this.ScenarioSetup(scenarioInfo);
 #line 69
     testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table4.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "layerId",
                         "Disabled"});
 #line 70
-        testRunner.And("I fill in", ((string)(null)), table4, "And ");
+        testRunner.And("I fill in", ((string)(null)), table6, "And ");
 #line 73
     testRunner.Then("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 74
@@ -201,17 +258,17 @@ this.ScenarioSetup(scenarioInfo);
 #line 77
     testRunner.Then("I should see \"<h1[^>]*>Add Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table5.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "WidgetPart.Title",
                         "Flashy HTML Widget"});
-            table5.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "Body.Text",
                         "<p><blink>hi</blink></p>"});
 #line 78
-    testRunner.When("I fill in", ((string)(null)), table5, "When ");
+    testRunner.When("I fill in", ((string)(null)), table7, "When ");
 #line 82
         testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 83
