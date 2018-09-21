@@ -117,6 +117,13 @@ Scenario: I can edit an existing user
 @management
 Scenario: I should not be able to reuse an existing username or email
     Given I have installed Orchard
+	When I go to "Admin/ContentTypes/Edit/User"
+		And I fill in
+		| name                                   | value |
+		| ContentTypeSettingsViewModel.Draftable | true  |
+		And I hit "Save"
+		And I am redirected
+	Then I should see "\"User\" settings have been saved."
     When I go to "admin/users"
 # create user1
         And I follow "Add a new user"
