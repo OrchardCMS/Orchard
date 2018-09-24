@@ -5,13 +5,6 @@
 
 Scenario: I can edit a default layer
     Given I have installed Orchard
-	When I go to "Admin/ContentTypes/Edit/Layer"
-		And I fill in
-		| name                                   | value |
-		| ContentTypeSettingsViewModel.Draftable | true  |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "\"Layer\" settings have been saved."
     When I go to "Admin/Widgets"
     Then I should see "<h1[^>]*>Widgets[^>]*>"
     When I follow "Edit"
