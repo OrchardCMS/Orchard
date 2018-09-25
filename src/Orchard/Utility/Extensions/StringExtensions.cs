@@ -191,6 +191,18 @@ namespace Orchard.Utility.Extensions {
         }
 
         /// <summary>
+        /// Compares two strings after converting them to valid technical names.
+        /// </summary>
+        public static bool SafeNameEquals(this string name, string otherName) =>
+            name.ToSafeName() == otherName.ToSafeName();
+
+        /// <summary>
+        /// Compares two strings using a string comparison option after converting them to valid technical names.
+        /// </summary>
+        public static bool SafeNameEquals(this string name, string otherName, StringComparison comparisonType) =>
+            string.Equals(name.ToSafeName(), otherName.ToSafeName(), comparisonType);
+
+        /// <summary>
         /// Generates a valid Html name.
         /// </summary>
         /// <remarks>
