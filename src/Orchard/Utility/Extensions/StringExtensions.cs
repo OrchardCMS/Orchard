@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Orchard.Localization;
 using System.Web;
+using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
@@ -15,8 +15,8 @@ namespace Orchard.Utility.Extensions {
 
             var sb = new StringBuilder(camel);
 
-            for (int i = camel.Length-1; i>0; i--) {
-                if(char.IsUpper(sb[i])) {
+            for (int i = camel.Length - 1; i > 0; i--) {
+                if (char.IsUpper(sb[i])) {
                     sb.Insert(i, ' ');
                 }
             }
@@ -31,13 +31,13 @@ namespace Orchard.Utility.Extensions {
         public static string Ellipsize(this string text, int characterCount, string ellipsis, bool wordBoundary = false) {
             if (String.IsNullOrWhiteSpace(text))
                 return "";
-            
+
             if (characterCount < 0 || text.Length <= characterCount)
                 return text;
 
             // search beginning of word
             var backup = characterCount;
-            while (characterCount > 0 && text[characterCount-1].IsLetter()) {
+            while (characterCount > 0 && text[characterCount - 1].IsLetter()) {
                 characterCount--;
             }
 
@@ -47,7 +47,7 @@ namespace Orchard.Utility.Extensions {
             }
 
             // if it was the last word, recover it, unless boundary is requested
-            if(characterCount == 0 && !wordBoundary) {
+            if (characterCount == 0 && !wordBoundary) {
                 characterCount = backup;
             }
 
@@ -69,9 +69,9 @@ namespace Orchard.Utility.Extensions {
                 char current = friendlier[i];
                 if (IsLetter(current) || (Char.IsDigit(current) && cursor > 0)) {
                     if (previousIsNotLetter && i != 0 && cursor > 0) {
-                        result[cursor++] = '-';    
+                        result[cursor++] = '-';
                     }
-                    
+
                     result[cursor++] = Char.ToLowerInvariant(current);
                     previousIsNotLetter = false;
                 }
@@ -100,8 +100,8 @@ namespace Orchard.Utility.Extensions {
             var inside = false;
             for (var i = 0; i < html.Length; i++) {
                 char current = html[i];
-                
-                switch(current) {
+
+                switch (current) {
                     case '<':
                         inside = true;
                         continue;
@@ -172,7 +172,7 @@ namespace Orchard.Utility.Extensions {
                 return String.Empty;
 
             name = RemoveDiacritics(name);
-            name = name.Strip(c => 
+            name = name.Strip(c =>
                 !c.IsLetter()
                 && !Char.IsDigit(c)
                 );
@@ -256,7 +256,7 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string Strip(this string subject, params char[] stripped) {
-            if(stripped == null || stripped.Length == 0 || String.IsNullOrEmpty(subject)) {
+            if (stripped == null || stripped.Length == 0 || String.IsNullOrEmpty(subject)) {
                 return subject;
             }
 
@@ -308,7 +308,7 @@ namespace Orchard.Utility.Extensions {
                 return true;
             }
 
-            if(chars == null || chars.Length == 0) {
+            if (chars == null || chars.Length == 0) {
                 return false;
             }
 
