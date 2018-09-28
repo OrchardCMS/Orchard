@@ -367,5 +367,14 @@ namespace Orchard.Utility.Extensions {
         public static string FromBase64(this string value) {
             return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
+
+        /// <summary>
+        /// A strict string split operation that removes empty entries and trims the remaining values.
+        /// </summary>
+        public static string[] StrictlySplit(this string text, params char[] separators) {
+            if (!separators.Any()) separators = new char[] { ',' };
+
+            return text.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Trim()).ToArray();
+        }
     }
 }

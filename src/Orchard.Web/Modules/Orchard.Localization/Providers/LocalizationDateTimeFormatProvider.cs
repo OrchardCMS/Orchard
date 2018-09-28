@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Localization.Providers {
 
@@ -22,47 +23,24 @@ namespace Orchard.Localization.Providers {
 
         public Localizer T { get; set; }
 
-        public string[] MonthNames {
-            get {
-                return T("January, February, March, April, May, June, July, August, September, October, November, December").Text.Split(new string[] {", "}, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
+        public string[] MonthNames =>
+            T("January, February, March, April, May, June, July, August, September, October, November, December").Text.StrictlySplit();
 
-        public virtual string[] MonthNamesGenitive {
-            get {
-                return MonthNames;
-            }
-        }
+        public virtual string[] MonthNamesGenitive => MonthNames;
 
-        public string[] MonthNamesShort {
-            get {
-                return T("Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
+        public string[] MonthNamesShort =>
+            T("Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec").Text.StrictlySplit();
 
-        public virtual string[] MonthNamesShortGenitive {
-            get {
-                return MonthNamesShort;
-            }
-        }
+        public virtual string[] MonthNamesShortGenitive => MonthNamesShort;
 
-        public string[] DayNames {
-            get {
-                return T("Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
+        public string[] DayNames =>
+            T("Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday").Text.StrictlySplit();
 
-        public string[] DayNamesShort {
-            get {
-                return T("Sun, Mon, Tue, Wed, Thu, Fri, Sat").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
+        public string[] DayNamesShort =>
+            T("Sun, Mon, Tue, Wed, Thu, Fri, Sat").Text.StrictlySplit();
 
-        public string[] DayNamesMin {
-            get {
-                return T("Su, Mo, Tu, We, Th, Fr, Sa").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
+        public string[] DayNamesMin =>
+            T("Su, Mo, Tu, We, Th, Fr, Sa").Text.StrictlySplit();
 
         public string ShortDateFormat {
             get {
