@@ -225,6 +225,12 @@ namespace Orchard.Forms.Shapes {
         }
 
         [Shape]
+        public IHtmlString Numberbox(dynamic Display, dynamic Shape) {
+            Shape.Classes.Add("number");
+            return DisplayShapeAsInput(Display, Shape, "number");
+        }
+
+        [Shape]
         public IHtmlString Password(dynamic Display, dynamic Shape) {
             Shape.Classes.Add("password");
             return DisplayShapeAsInput(Display, Shape, "password");
