@@ -235,24 +235,24 @@ namespace Orchard.Forms.Shapes {
             TextWriter Output,
             dynamic Display,
             dynamic Shape, string Name, string Value, int Size = 0, int Rows = 0) {
-            var select = (TagBuilder)_tagBuilderFactory.Create(Shape, "textarea");
-            select.AddCssClass("text");
+            var textarea = (TagBuilder)_tagBuilderFactory.Create(Shape, "textarea");
+            textarea.AddCssClass("text");
 
             if (Name != null) {
-                select.MergeAttribute("name", Name, false);
+                textarea.MergeAttribute("name", Name, false);
             }
 
             if (Size > 0) {
-                select.MergeAttribute("size", Size.ToString(), false);
+                textarea.MergeAttribute("size", Size.ToString(), false);
             }
 
             if (Rows > 0) {
-                select.MergeAttribute("rows", Rows.ToString(), false);
+                textarea.MergeAttribute("rows", Rows.ToString(), false);
             }
 
-            Output.Write(select.ToString(TagRenderMode.StartTag));
+            Output.Write(textarea.ToString(TagRenderMode.StartTag));
             Output.Write(Value);
-            Output.WriteLine(select.ToString(TagRenderMode.EndTag));
+            Output.WriteLine(textarea.ToString(TagRenderMode.EndTag));
         }
 
         [Shape]
