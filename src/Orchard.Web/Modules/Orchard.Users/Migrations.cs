@@ -20,15 +20,9 @@ namespace Orchard.Users {
                     .Column<string>("RegistrationStatus", c => c.WithDefault("Approved"))
                     .Column<string>("EmailStatus", c => c.WithDefault("Approved"))
                     .Column<string>("EmailChallengeToken")
-                    .Column<DateTime>("CreatedUtc")
-                    .Column<DateTime>("LastLoginUtc")
-                    .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
-
-            return 5;
+            return 1;
         }
 
         public int UpdateFrom1() {
