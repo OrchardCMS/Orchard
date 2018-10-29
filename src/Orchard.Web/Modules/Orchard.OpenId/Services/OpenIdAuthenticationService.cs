@@ -80,9 +80,9 @@ namespace Orchard.OpenId.Services {
                 return FallbackAuthenticationService.GetAuthenticatedUser();
             }
 
-            var user = _httpContextAccessor.Current().GetOwinContext().Authentication.User;
+            var userIdentity = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Identity;
 
-            if (!user.Identity.IsAuthenticated) {
+            if (string.IsNullOrEmpty(userIdentity.Name?.Trim()) || !userIdentity.IsAuthenticated) {
                 return null;
             }
 
@@ -91,7 +91,7 @@ namespace Orchard.OpenId.Services {
                 return _localAuthenticationUser;
             }
 
-            var userName = user.Identity.Name.Trim();
+            var userName = userIdentity.Name.Trim();
 
             //Get the local user, if local user account doesn't exist, create it 
             var localUser =
