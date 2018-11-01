@@ -20,7 +20,7 @@ namespace Orchard.OutputCache.Services {
         }
         
         public void Tag(string tag, params string[] keys) {
-            EnsureInitialized()
+            EnsureInitialized();
                 
             var set = _dictionary.GetOrAdd(tag, x => new HashSet<string>());
 
@@ -32,7 +32,7 @@ namespace Orchard.OutputCache.Services {
         }
 
         public IEnumerable<string> GetTaggedItems(string tag) {
-            EnsureInitialized()
+            EnsureInitialized();
                 
             HashSet<string> set;
             if (_dictionary.TryGetValue(tag, out set)) {
