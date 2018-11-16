@@ -11,6 +11,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
+using Orchard.Mvc.Html;
 
 namespace Orchard.Layouts.Providers {
     public class ContentFieldElementHarvester : Component, IElementHarvester {
@@ -44,7 +45,7 @@ namespace Orchard.Layouts.Providers {
                 var field = tuple.Item2;
                 var name = String.Format("{0}.{1}", part.Name, field.Name);
                 var displayName = field.DisplayName;
-                yield return new ElementDescriptor(elementType, name, T(displayName), T(field.DisplayName), contentFieldElement.Category) {
+                yield return new ElementDescriptor(elementType, name, T.Encode(displayName), T.Encode(field.DisplayName), contentFieldElement.Category) {
                     Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2"
                 };
