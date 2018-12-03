@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -200,7 +201,16 @@ namespace Orchard.MediaLibrary.Controllers {
                     if(!_mediaLibraryService.CheckMediaFolderPermission(Permissions.DeleteMediaContent, media.FolderPath)) {
                         return new HttpUnauthorizedResult();
                     }
+
+                    var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
                     var uniqueFilename = _mediaLibraryService.GetUniqueFilename(folderPath, media.FileName);
+
+                    // skip file if the allowed extensions is defined and doesn't match
+                    if (!settings.IsFileAllowed(Path.GetFileName(uniqueFilename))) {
+                        continue;
+                    }
+
                     _mediaLibraryService.MoveFile(media.FolderPath, media.FileName, folderPath, uniqueFilename);
                     media.FileName = uniqueFilename;
                 }

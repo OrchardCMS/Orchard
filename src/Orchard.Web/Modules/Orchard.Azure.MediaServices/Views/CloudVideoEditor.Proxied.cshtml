@@ -11,7 +11,7 @@
     <fieldset data-upload-accept-file-types="@acceptFileTypes"
               data-upload-fallback-url="@Url.Action("Upload", "Media", new { area = "Orchard.Azure.MediaServices" })"
               data-generate-asset-url="@Url.Action("GenerateWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices" })">
-        <label>@T(caption)</label>
+        <label>@T.Encode(caption)</label>
         <input type="hidden" name="@String.Format("{0}.OriginalFileName", prefix)" value="@tempFileViewModel.OriginalFileName" />
         <input type="hidden" name="@String.Format("{0}.TemporaryFileName", prefix)" value="@tempFileViewModel.TemporaryFileName" />
         <input type="hidden" name="@String.Format("{0}.FileSize", prefix)" value="@tempFileViewModel.FileSize" />
@@ -36,7 +36,7 @@
 
 @helper ThumbnailUpload(string caption) {
     <fieldset>
-        <label>@T(caption)</label>
+        <label>@T.Encode(caption)</label>
         <input class="sync-upload-input" name="ThumbnailFile.Proxied" type="file" />
     </fieldset>
 }
