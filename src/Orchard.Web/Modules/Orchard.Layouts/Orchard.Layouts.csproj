@@ -500,7 +500,6 @@
     <Compile Include="Framework\Harvesters\IElementHarvester.cs" />
     <Compile Include="Services\ILayoutSerializer.cs" />
     <Compile Include="Helpers\ElementDataHelper.cs" />
-    <Compile Include="Models\ElementInstance.cs" />
     <Compile Include="Elements\Column.cs" />
     <Compile Include="Services\LayoutSerializer.cs" />
     <Compile Include="Providers\SnippetElementHarvester.cs" />
