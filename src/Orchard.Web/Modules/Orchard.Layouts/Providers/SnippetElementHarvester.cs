@@ -73,22 +73,18 @@ namespace Orchard.Layouts.Providers {
             var snippetElement = (Snippet)_elementFactory.Value.Activate(elementType);
 
             foreach (var shapeDescriptor in shapeDescriptors) {
-                var snippetDescriptor = ParseSnippetManifest(shapeDescriptor.Value, snippetElement);
-
-                if (snippetDescriptor == null) continue;
-
+                var snippetDescriptor = CreateSnippetDescriptor(shapeDescriptor.Value, snippetElement);
                 var shapeType = shapeDescriptor.Value.ShapeType;
 
                 yield return new ElementDescriptor(elementType, shapeType, snippetDescriptor.DisplayName, snippetDescriptor.Description, snippetDescriptor.Category) {
                     Displaying = displayContext => Displaying(displayContext, shapeDescriptor.Value, snippetDescriptor),
                     ToolboxIcon = snippetDescriptor.ToolboxIcon,
                     EnableEditorDialog = snippetDescriptor.Fields.Any(),
-                    Editor = ctx => Editor(snippetDescriptor ?? DescribeSnippet(shapeType, snippetElement), ctx),
-                    UpdateEditor = ctx => UpdateEditor(snippetDescriptor ?? DescribeSnippet(shapeType, snippetElement), ctx)
+                    Editor = ctx => Editor(snippetDescriptor, ctx),
+                    UpdateEditor = ctx => UpdateEditor(snippetDescriptor, ctx)
                 };
             }
         }
-
 
         private void Editor(SnippetDescriptor descriptor, ElementEditorContext context) {
             UpdateEditor(descriptor, context);
@@ -146,31 +142,57 @@ namespace Orchard.Layouts.Providers {
             context.ElementShape.Snippet = shape;
         }
 
-        private SnippetDescriptor ParseSnippetManifest(ShapeDescriptor shape, Snippet snippetElement) {
+        private SnippetDescriptor CreateSnippetDescriptor(ShapeDescriptor shapeDescriptor, Snippet snippetElement) {
             // Initializing and checking access to the Snippet manifest file.
-            var physicalSourcePath = _wca.GetContext().HttpContext.Server.MapPath(shape.BindingSource);
+            var physicalSourcePath = _wca.GetContext().HttpContext.Server.MapPath(shapeDescriptor.BindingSource);
             var fullPath = Path.Combine(
                 Path.GetDirectoryName(physicalSourcePath) ?? "",
                 Path.GetFileNameWithoutExtension(physicalSourcePath) + ".txt");
 
-            if (!File.Exists(fullPath)) return null;
+            SnippetDescriptor descriptor;
+            // Reading and parsing the manifest if it exists.
+            if (File.Exists(fullPath)) {
+                var deserializer = new DeserializerBuilder()
+                    .IgnoreUnmatchedProperties()
+                    .WithTypeConverter(new LocalizedStringYamlConverter())
+                    .Build();
 
-            // Reading and parsing the manifest.
-            var deserializer = new DeserializerBuilder()
-                .IgnoreUnmatchedProperties()
-                .WithTypeConverter(new LocalizedStringYamlConverter())
-                .Build();
-            var descriptor = deserializer.Deserialize<SnippetDescriptor>(File.OpenText(fullPath));
+                descriptor = deserializer.Deserialize<SnippetDescriptor>(File.OpenText(fullPath));
+            }
+            // Otherwise extract the Fields from the Snippet shape template.
+            else {
+                var shape = (dynamic)_shapeFactory.Value.Create(shapeDescriptor.ShapeType);
+                shape.Element = snippetElement;
+
+                descriptor = new SnippetDescriptor();
+
+                shape.DescriptorRegistrationCallback = (Action<SnippetFieldDescriptor>)(fieldDescriptor => {
+                    // Not using Dictionary, as that will break rendering the view for some obscure reason.
+                    var existingFieldDescriptor = descriptor.Fields.SingleOrDefault(field => field.Name == fieldDescriptor.Name);
+
+                    if (existingFieldDescriptor == null)
+                        descriptor.Fields.Add(fieldDescriptor);
+
+                    if (fieldDescriptor.DisplayName == null)
+                        fieldDescriptor.DisplayName = new LocalizedString(fieldDescriptor.Name);
+                });
+
+                using (_currentThemeShapeBindingResolver.Value.Enable()) {
+                    _shapeDisplay.Value.Display(shape);
+                }
+
+                shape.SnippetDescriptor = descriptor;
+            }
 
             // Checking the validity of the parsed values, include those of the Snippet's Fields.
             if (string.IsNullOrEmpty(descriptor.Category))
                 descriptor.Category = snippetElement.Category;
 
             if (string.IsNullOrEmpty(descriptor.Description?.Text))
-                descriptor.Description = T("An element that renders the {0} shape.", shape.ShapeType);
+                descriptor.Description = T("An element that renders the {0} shape.", shapeDescriptor.ShapeType);
 
             if (string.IsNullOrEmpty(descriptor.DisplayName?.Text)) {
-                var fileName = Path.GetFileNameWithoutExtension(shape.BindingSource) ?? "";
+                var fileName = Path.GetFileNameWithoutExtension(shapeDescriptor.BindingSource) ?? "";
                 var lastIndex = fileName.IndexOf(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase);
                 descriptor.DisplayName = T(fileName.Substring(0, lastIndex).CamelFriendly());
             }
@@ -180,34 +202,6 @@ namespace Orchard.Layouts.Providers {
 
             descriptor.Fields = descriptor.Fields.Where(field => field.IsValid).ToList();
 
-            return descriptor;
-        }
-
-        private SnippetDescriptor DescribeSnippet(string shapeType, Snippet element) {
-            var shape = (dynamic)_shapeFactory.Value.Create(shapeType);
-            shape.Element = element;
-            return DescribeSnippet(shape);
-        }
-
-        private SnippetDescriptor DescribeSnippet(dynamic shape) {
-            // Execute the shape and intercept calls to the Html.SnippetField method.
-            var descriptor = new SnippetDescriptor();
-            shape.DescriptorRegistrationCallback = (Action<SnippetFieldDescriptor>)(fieldDescriptor => {
-                // Not using Dictionary, as that will break rendering the view for some obscure reason.
-                var existingDescriptor = descriptor.Fields.SingleOrDefault(x => x.Name == fieldDescriptor.Name);
-
-                if (existingDescriptor == null)
-                    descriptor.Fields.Add(fieldDescriptor);
-
-                if (fieldDescriptor.DisplayName == null)
-                    fieldDescriptor.DisplayName = new LocalizedString(fieldDescriptor.Name);
-            });
-
-            using (_currentThemeShapeBindingResolver.Value.Enable()) {
-                _shapeDisplay.Value.Display(shape);
-            }
-
-            shape.SnippetDescriptor = descriptor;
             return descriptor;
         }
     }
