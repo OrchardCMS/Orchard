@@ -7,6 +7,6 @@ namespace Orchard.Layouts.Models {
         public LocalizedString DisplayName { get; set; }
         public LocalizedString Description { get; set; }
 
-        public bool IsValid => !(string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Type));
+        public bool IsValid => !string.IsNullOrEmpty(Name);
     }
 }

@@ -363,6 +363,7 @@
     <Compile Include="Helpers\SnippetHtmlExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Serialization\LocalizedStringYamlConverter.cs" />
     <Compile Include="Services\FormElementServices.cs" />
     <Compile Include="Services\ICurrentThemeShapeBindingResolver.cs" />
     <Compile Include="Services\CurrentThemeShapeBindingResolver.cs" />
