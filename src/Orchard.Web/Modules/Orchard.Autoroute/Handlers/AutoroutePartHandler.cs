@@ -11,6 +11,7 @@ namespace Orchard.Autoroute.Handlers {
     public class AutoroutePartHandler : ContentHandler {
 
         private readonly Lazy<IAutorouteService> _autorouteService;
+        private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IHomeAliasService _homeAliasService;
 
@@ -19,11 +20,13 @@ namespace Orchard.Autoroute.Handlers {
         public AutoroutePartHandler(
             IRepository<AutoroutePartRecord> autoroutePartRepository,
             Lazy<IAutorouteService> autorouteService,
+            IContentManager contentManager,
             IOrchardServices orchardServices, 
             IHomeAliasService homeAliasService) {
 
             Filters.Add(StorageFilter.For(autoroutePartRepository));
             _autorouteService = autorouteService;
+            _contentManager = contentManager;
             _orchardServices = orchardServices;
             _homeAliasService = homeAliasService;
 
@@ -40,8 +43,8 @@ namespace Orchard.Autoroute.Handlers {
 
             // Remove alias if destroyed, removed or unpublished
             OnRemoving<AutoroutePart>((ctx, part) => RemoveAlias(part));
-            OnDestroyed<AutoroutePart>((ctx, part) => RemoveAlias(part));
-            OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnDestroying<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnUnpublishing<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
             // Register alias as identity
             OnGetContentItemMetadata<AutoroutePart>((ctx, part) => {
@@ -106,7 +109,9 @@ namespace Orchard.Autoroute.Handlers {
             if (part.ContentItem.Id == homePageId) {
                 _orchardServices.Notifier.Warning(T("You removed the content item that served as the site's home page. \nMost possibly this means that instead of the home page a \"404 Not Found\" page will be displayed. \n\nTo prevent this you can e.g. publish a content item that has the \"Set as home page\" checkbox ticked."));
             }
-            _autorouteService.Value.RemoveAliases(part);
+
+            var publishedPart = _contentManager.Get<AutoroutePart>(part.ContentItem.Id, VersionOptions.Published);
+            _autorouteService.Value.RemoveAliases(publishedPart);
         }
     }
 }
