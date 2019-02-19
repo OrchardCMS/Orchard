@@ -565,7 +565,6 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Clone(ContentItem contentItem) {
-            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
             var element = Export(contentItem);
 
             // If a handler prevents this element from being exported, it can't be cloned.
