@@ -1,6 +1,6 @@
 ﻿Name: SafeMode
 Author: Jonathan Wall
 Description: The Orchard Theme for setup and failure conditions.
-Version: 1.10.2
+Version: 1.10.3
 Tags: hidden
 Website: http://www.orchardproject.net

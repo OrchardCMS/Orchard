@@ -1,5 +1,5 @@
 ﻿Name: The Admin
-Version: 1.10.2
+Version: 1.10.3
 Author: Jon Wall
 Tags: hidden, admin
 Description: The Orchard admin theme.

@@ -2,8 +2,8 @@ Name: Secure Sockets Layer
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.2
-OrchardVersion: 1.9
+Version: 1.10.3
+OrchardVersion: 1.10.3
 Description: This module will ensure SSL is used when accessing specific parts of the website like the dashboard, authentication pages or custom pages.
 FeatureName: Secure Sockets Layer
 Category: Security
