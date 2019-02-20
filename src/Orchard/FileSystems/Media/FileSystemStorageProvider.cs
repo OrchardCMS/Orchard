@@ -245,7 +245,6 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be deleted.</param>
         /// <exception cref="ArgumentException">If the file doesn't exist.</exception>
         public void DeleteFile(string path) {
-
             FileInfo fileInfo = new FileInfo(MapStorage(path));
             if (!fileInfo.Exists) {
                 throw new ArgumentException(T("File {0} does not exist", path).ToString());
@@ -253,7 +252,7 @@ namespace Orchard.FileSystems.Media {
 
             fileInfo.Delete();
 
-            lock (String.Intern(path)) {
+            lock (string.Intern(path)) {
                 var ListProfileFileInfo = ListProfiles(path);
                 foreach (var profileFileInfo in ListProfileFileInfo) {
                     if (profileFileInfo.Exists) {
@@ -277,11 +276,12 @@ namespace Orchard.FileSystems.Media {
             var fileLocation = urlpath.Substring(0, urlpath.Length - filenameWithExtension.Length);
             var hashpath = fileLocation.GetHashCode().ToString("x").ToLowerInvariant();
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage("_Profiles"));
-            if (!directoryInfo.Exists) {
-                return null;
-            }
-            var fileinfos = directoryInfo.GetFiles(filenameWithExtension, SearchOption.AllDirectories);
-            return fileinfos.Where(x => x.Directory.Name.Equals(hashpath));
+
+            return directoryInfo.Exists ?
+                directoryInfo
+                    .GetFiles(filenameWithExtension, SearchOption.AllDirectories)
+                    .Where(x => x.Directory.Name.Equals(hashpath)) :
+                Enumerable.Empty<FileInfo>();
         }
 
         /// <summary>
