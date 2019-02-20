@@ -30,7 +30,7 @@ namespace Orchard.Localization.Drivers {
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin", () => {
                     var siteCultures = _cultureManager.ListCultures();
 
-                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
+                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures, ContentPart: part);
                 })
                 );
         }

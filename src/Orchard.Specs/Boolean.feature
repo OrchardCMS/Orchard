@@ -71,7 +71,7 @@ Scenario: Creating and using Boolean fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                              | value         |
-            | Fields[Active].BooleanFieldSettings.Optional      | True          |
+            | Fields[Active].BooleanFieldSettings.Optional     | false |
             | Fields[Active].BooleanFieldSettings.SelectionMode | Dropdown list |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"

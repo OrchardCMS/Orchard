@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Projections.Models;
@@ -12,10 +11,7 @@ namespace Orchard.Projections.Providers.Executors {
 
         public MemberBindingsStep(IRepository<MemberBindingRecord> repository, RecipeExecutionLogger logger) : base(logger) {
             _repository = repository;
-            Logger = NullLogger.Instance;
         }
-
-        public ILogger Logger { get; set; }
 
         public override string Name {
             get { return "MemberBindings"; }

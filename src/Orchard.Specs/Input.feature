@@ -44,7 +44,7 @@ Scenario: Creating and using Input fields
     #When I go to "Admin/ContentTypes/Edit/Event"
     #	And I fill in
     #        | name                                 | value       |
-    #        | Fields[0].InputFieldSettings.Pattern | [^@]*@[^@]* |
+    #        | Fields[Contact].InputFieldSettings.Pattern | [^@]*@[^@]* |
     #	And I hit "Save"
     #	And I go to "Admin/Contents/Create/Event"
     #Then I should see "pattern=\"[^@]*@[^@]*\""

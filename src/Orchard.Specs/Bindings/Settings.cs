@@ -4,8 +4,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents;
 using Orchard.Data;
-using Orchard.Roles.Models;
-using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Specs.Hosting.Orchard.Web;

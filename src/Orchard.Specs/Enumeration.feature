@@ -66,7 +66,7 @@ Scenario: Creating and using Enumeration fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                               | value         |
-            | Fields[Location].EnumerationFieldSettings.ListMode | Dropdown list |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Dropdown |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "select id=\"Event_Location_Value\" name=\"Event.Location.Value\""
@@ -75,7 +75,7 @@ Scenario: Creating and using Enumeration fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                               | value             |
-            | Fields[Location].EnumerationFieldSettings.ListMode | Radio button list |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Radiobutton |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "input id=\"Event_Location_Value\" name=\"Event.Location.Value\" type=\"radio\""
@@ -112,9 +112,9 @@ Scenario: Creating and using Enumeration fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                   | value         |
-            | Fields[Location].EnumerationFieldSettings.Options      | Seattle       |
-            | Fields[Location].EnumerationFieldSettings.ListMode     | Dropdown List |
-            | Fields[Location].EnumerationFieldSettings.DefaultValue | Seattle       |
+            | Fields[Location].EnumerationFieldSettings.Options      | Seattle  |
+            | Fields[Location].EnumerationFieldSettings.ListMode     | Dropdown |
+            | Fields[Location].EnumerationFieldSettings.DefaultValue | Seattle  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "selected=\"selected">Seattle"

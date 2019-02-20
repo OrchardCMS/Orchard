@@ -36,7 +36,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                                             | value |
-            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large | 
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "\"Event\" settings have been saved."

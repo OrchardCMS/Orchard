@@ -8,12 +8,14 @@ using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Localization;
+using Orchard.MediaLibrary.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 
 namespace Orchard.MediaLibrary.Services {
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMediaLibraryService _mediaLibraryService;
@@ -24,13 +26,14 @@ namespace Orchard.MediaLibrary.Services {
             IAuthorizationService authorizationService,
             IMediaLibraryService mediaLibraryService,
             RouteCollection routeCollection,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IOrchardServices orchardServices) {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
             _mediaLibraryService = mediaLibraryService;
             _routeCollection = routeCollection;
             _contentManager = contentManager;
-
+            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -80,21 +83,30 @@ namespace Orchard.MediaLibrary.Services {
                 directoryName = Path.Combine(_mediaLibraryService.GetRootedFolderPath(directoryName));
             }
 
+            var filename = Path.GetFileName(name);
+
             try {
                 // delete the file if it already exists, e.g. an updated image in a blog post
                 // it's safe to delete the file as each content item gets a specific folder
-                _mediaLibraryService.DeleteFile(directoryName, Path.GetFileName(name));
+                _mediaLibraryService.DeleteFile(directoryName, filename);
             }
             catch {
                 // current way to delete a file if it exists
             }
 
-            string publicUrl = _mediaLibraryService.UploadMediaFile(directoryName, Path.GetFileName(name), bits);
-            var mediaPart = _mediaLibraryService.ImportMedia(directoryName, Path.GetFileName(name));
-            try {
-                _contentManager.Create(mediaPart);
-            }
-            catch {
+            string publicUrl = _mediaLibraryService.UploadMediaFile(directoryName, filename, bits);
+            
+            var settings = _orchardServices.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
+            // skip file if the allowed extensions is defined and doesn't match
+            if (settings.IsFileAllowed(filename)) {
+                var mediaPart = _mediaLibraryService.ImportMedia(directoryName, filename);
+
+                try {
+                    _contentManager.Create(mediaPart);
+                }
+                catch {
+                }
             }
 
             return new XRpcStruct() // Some clients require all optional attributes to be declared Wordpress responds in this way as well.
