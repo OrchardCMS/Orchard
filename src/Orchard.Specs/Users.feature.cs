@@ -218,13 +218,13 @@ this.ScenarioSetup(scenarioInfo);
 #line 63
     testRunner.Then("I should see \"The Email field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 64
- testRunner.Then("I should see \"You must specify a valid email address.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"You must specify a valid email address.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 65
     testRunner.Then("I should see \"The Password field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 66
     testRunner.Then("I should see \"The ConfirmPassword field is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 67
- testRunner.Then("I should see \"The password can&#39;t be empty.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"The password can&#39;t be empty.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 68
     testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 69
@@ -267,7 +267,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 81
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 82
- testRunner.When("I go to \"Admin/ContentTypes/Edit/User\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/User\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -276,15 +276,15 @@ this.ScenarioSetup(scenarioInfo);
                         "ContentTypeSettingsViewModel.Draftable",
                         "true"});
 #line 83
-  testRunner.And("I fill in", ((string)(null)), table5, "And ");
+        testRunner.And("I fill in", ((string)(null)), table5, "And ");
 #line 86
-  testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 87
-  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 88
- testRunner.Then("I should see \"\\\"User\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"\\\"User\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 89
- testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 90
     testRunner.Then("I should see \"Users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 91
@@ -366,7 +366,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 119
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 120
- testRunner.When("I go to \"Admin/ContentTypes/Edit/User\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/User\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -375,13 +375,13 @@ this.ScenarioSetup(scenarioInfo);
                         "ContentTypeSettingsViewModel.Draftable",
                         "true"});
 #line 121
-  testRunner.And("I fill in", ((string)(null)), table9, "And ");
+        testRunner.And("I fill in", ((string)(null)), table9, "And ");
 #line 124
-  testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 125
-  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 126
- testRunner.Then("I should see \"\\\"User\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"\\\"User\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 127
     testRunner.When("I go to \"admin/users\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 129
@@ -540,9 +540,9 @@ this.ScenarioSetup(scenarioInfo);
 #line 190
     testRunner.Then("I should see \"<a[^>]*>user1</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 191
-  testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 192
-  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 193
     testRunner.Then("I should see \"User user1 deleted\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 194

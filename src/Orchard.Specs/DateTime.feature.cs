@@ -254,7 +254,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Event.EventDate.Editor.Date",
                         "01/31/2012"});
 #line 95
-  testRunner.And("I fill in", ((string)(null)), table9, "And ");
+        testRunner.And("I fill in", ((string)(null)), table9, "And ");
 #line 98
         testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 99
@@ -346,7 +346,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 140
     testRunner.Then("I should see \"Event.EventDate.Editor.Date\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 141
- testRunner.And("I should see \"Event.EventDate.Editor.Time\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("I should see \"Event.EventDate.Editor.Time\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 142
     testRunner.When("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 143

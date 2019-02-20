@@ -95,11 +95,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 15
         testRunner.And("I hit \"Create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
-  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 17
-  testRunner.Then("I should see \"The \\\"Event\\\" content type has been created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should see \"The \\\"Event\\\" content type has been created\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 18
-  testRunner.When("I go to \"Admin/ContentTypes/AddPartsTo/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.When("I go to \"Admin/ContentTypes/AddPartsTo/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -108,13 +108,13 @@ this.ScenarioSetup(scenarioInfo);
                         "PartSelections[5].IsSelected",
                         "True"});
 #line 19
-  testRunner.And("I fill in", ((string)(null)), table2, "And ");
+        testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 22
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 23
-  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
-  testRunner.Then("I should see \"The \\\"ContainablePart\\\" part has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.Then("I should see \"The \\\"ContainablePart\\\" part has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 25
         testRunner.When("I go to \"Admin/ContentTypes/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 26

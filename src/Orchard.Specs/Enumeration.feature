@@ -108,7 +108,7 @@ Scenario: Creating and using Enumeration fields
         And I hit "Save Draft"
     Then I should see "The Location field is required."
     
-	# The default value should be proposed on creation
+    # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                   | value         |
@@ -118,7 +118,7 @@ Scenario: Creating and using Enumeration fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "selected=\"selected">Seattle"
-	
+    
     # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
@@ -128,7 +128,7 @@ Scenario: Creating and using Enumeration fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
-	
+    
     # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 

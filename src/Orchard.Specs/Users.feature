@@ -61,10 +61,10 @@ Scenario: I can create a new user
         And I hit "Publish"
     Then I should see "The UserName field is required."
     Then I should see "The Email field is required."
-	Then I should see "You must specify a valid email address."
+    Then I should see "You must specify a valid email address."
     Then I should see "The Password field is required."
     Then I should see "The ConfirmPassword field is required."
-	Then I should see "The password can&#39;t be empty."
+    Then I should see "The password can&#39;t be empty."
     When I go to "admin/users"
         And I follow "Add a new user"
         And I fill in
@@ -79,14 +79,14 @@ Scenario: I can create a new user
 @management
 Scenario: I can edit an existing user
     Given I have installed Orchard
-	When I go to "Admin/ContentTypes/Edit/User"
-		And I fill in
-		| name                                   | value |
-		| ContentTypeSettingsViewModel.Draftable | true  |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "\"User\" settings have been saved."
-	When I go to "admin/users"
+    When I go to "Admin/ContentTypes/Edit/User"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"User\" settings have been saved."
+    When I go to "admin/users"
     Then I should see "Users"
     When I follow "Add a new user"
         And I fill in
@@ -117,13 +117,13 @@ Scenario: I can edit an existing user
 @management
 Scenario: I should not be able to reuse an existing username or email
     Given I have installed Orchard
-	When I go to "Admin/ContentTypes/Edit/User"
-		And I fill in
-		| name                                   | value |
-		| ContentTypeSettingsViewModel.Draftable | true  |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "\"User\" settings have been saved."
+    When I go to "Admin/ContentTypes/Edit/User"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"User\" settings have been saved."
     When I go to "admin/users"
 # create user1
         And I follow "Add a new user"
@@ -188,8 +188,8 @@ Scenario: I should be able to remove an existing user
         | Options.Search | user1 |
         And I hit "Filter"
     Then I should see "<a[^>]*>user1</a>"
-		When I hit "Delete"
-		And I am redirected
+        When I hit "Delete"
+        And I am redirected
     Then I should see "User user1 deleted"
         And I should not see "<a[^>]*>user1</a>"
 

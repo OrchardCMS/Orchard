@@ -47,8 +47,8 @@ Scenario: Creating and using Text fields
             | name                                                         | value |
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
-		And I am redirected
-		Then I should see "\"Event\" settings have been saved."
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
         When I go to "Admin/Contents/Create/Event"
         And I fill in
             | name               | value |
@@ -62,9 +62,9 @@ Scenario: Creating and using Text fields
             | name														     | value                |
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
-		And I am redirected
-		Then I should see "\"Event\" settings have been saved."
-		When I go to "Admin/Contents/Create/Event"
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
+        When I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
 
     # Creating an Event content item
@@ -84,7 +84,7 @@ Scenario: Creating and using Text fields
             | name                                                                   | value                |
             | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
         And I hit "Save"
-		And I am redirected
+        And I am redirected
         And I go to "Admin/Contents/Create/Event"
     Then I should see "value=\"Orchard Harvest 2016\""
 

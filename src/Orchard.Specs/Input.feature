@@ -115,7 +115,7 @@ Scenario: Creating and using Input fields
             | Event.Contact.Value |       |
         And I hit "Save Draft"
     Then I should see "Contact"
-	And I should not see "The event has been created as a draft."
+    And I should not see "The event has been created as a draft."
 
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"

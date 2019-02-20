@@ -273,7 +273,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 117
     testRunner.Then("I should see \"Contact\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 118
- testRunner.And("I should not see \"The event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("I should not see \"The event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 121
     testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 122

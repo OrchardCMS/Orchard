@@ -13,15 +13,15 @@ Scenario: I can create a new list
             | DisplayName | Event |
             | Name        | Event |
         And I hit "Create"
-		And I am redirected
-		Then I should see "The \"Event\" content type has been created"
-		When I go to "Admin/ContentTypes/AddPartsTo/Event"
-		And I fill in
+        And I am redirected
+        Then I should see "The \"Event\" content type has been created"
+        When I go to "Admin/ContentTypes/AddPartsTo/Event"
+        And I fill in
             | name                          | value |
             | PartSelections[5].IsSelected  | True  |
         And I hit "Save"
-		And I am redirected
-		Then I should see "The \"ContainablePart\" part has been added."
+        And I am redirected
+        Then I should see "The \"ContainablePart\" part has been added."
         When I go to "Admin/ContentTypes/"
     Then I should see "Event"
 

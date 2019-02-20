@@ -16,8 +16,8 @@ Scenario: Creating and using Boolean fields
             | DisplayName | Event |
             | Name        | Event |
         And I hit "Create"
-		And I am redirected
-		Then I should see "The \"Event\" content type has been created."
+        And I am redirected
+        Then I should see "The \"Event\" content type has been created."
         When I go to "Admin/ContentTypes/"
     Then I should see "Event"
 
@@ -52,7 +52,7 @@ Scenario: Creating and using Boolean fields
             | name                                     | value                        |
             | Fields[Active].BooleanFieldSettings.Hint | Check if the event is active |
         And I hit "Save"
-		And I am redirected
+        And I am redirected
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
 
@@ -62,8 +62,8 @@ Scenario: Creating and using Boolean fields
             | name                                             | value |
             | Fields[Active].BooleanFieldSettings.DefaultValue | True  |
         And I hit "Save"
-		And I am redirected
-		Then I should see "\"Event\" settings have been saved."
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
         When I go to "Admin/Contents/Create/Event" 
     Then I should see "checked=\"checked\""
 

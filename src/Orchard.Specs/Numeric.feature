@@ -64,8 +64,8 @@ Scenario: Creating and using numeric fields
             | name               | value |
             | Event.Guests.Value |       |
         And I hit "Save Draft"
-		Then I should see "Guests"
-		And I should see "Owner"
+        Then I should see "Guests"
+        And I should see "Owner"
 
     # The value should be bound
     When I go to "Admin/ContentTypes/Edit/Event"

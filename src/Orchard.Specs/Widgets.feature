@@ -20,13 +20,13 @@ Scenario: I can edit a default layer
 
 Scenario: I can add a new layer and that layer is active when I'm redirected to the widget management page
     Given I have installed Orchard
-	When I go to "Admin/ContentTypes/Edit/Layer"
-		And I fill in
-		| name                                   | value |
-		| ContentTypeSettingsViewModel.Draftable | true  |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "\"Layer\" settings have been saved."
+    When I go to "Admin/ContentTypes/Edit/Layer"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"Layer\" settings have been saved."
     When I go to "Admin/Widgets"
         And I follow "Add a new layer..."
     Then I should see "<h1[^>]*>Add Layer</h1>"
@@ -52,13 +52,13 @@ Scenario: I can delete a layer
 
 Scenario: I can add a widget to a specific zone in a specific layer
     Given I have installed Orchard
-	When I go to "Admin/ContentTypes/Edit/HtmlWidget"
-		And I fill in
-		| name                                   | value |
-		| ContentTypeSettingsViewModel.Draftable | true  |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "\"Html Widget\" settings have been saved."
+    When I go to "Admin/ContentTypes/Edit/HtmlWidget"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"Html Widget\" settings have been saved."
     When I go to "Admin/Widgets"
         And I fill in
             | name | value |

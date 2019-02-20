@@ -192,7 +192,7 @@ this.ScenarioSetup(scenarioInfo);
                         "value"});
             table6.AddRow(new string[] {
                         "Fields[Location].EnumerationFieldSettings.ListMode",
-                        "Dropdown list"});
+                        "Dropdown"});
 #line 67
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
 #line 70
@@ -209,7 +209,7 @@ this.ScenarioSetup(scenarioInfo);
                         "value"});
             table7.AddRow(new string[] {
                         "Fields[Location].EnumerationFieldSettings.ListMode",
-                        "Radio button list"});
+                        "Radiobutton"});
 #line 76
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
 #line 79
@@ -284,7 +284,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Seattle"});
             table11.AddRow(new string[] {
                         "Fields[Location].EnumerationFieldSettings.ListMode",
-                        "Dropdown List"});
+                        "Dropdown"});
             table11.AddRow(new string[] {
                         "Fields[Location].EnumerationFieldSettings.DefaultValue",
                         "Seattle"});

@@ -92,7 +92,7 @@ Scenario: Creating and using Date fields
             | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-		And I fill in
+        And I fill in
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
         And I hit "Save Draft"
@@ -138,7 +138,7 @@ Scenario: Creating and using Date fields
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
-	And  I should see "Event.EventDate.Editor.Time"
+    And  I should see "Event.EventDate.Editor.Time"
     When I hit "Save Draft"
         And I am redirected
     Then I should see "The Event has been created."
