@@ -392,7 +392,7 @@
       <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
     </ReadLinesFromFile>
 
-    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
+    <Exec Command="&quot;$(ProfilingFolder)\bin\Orchard.exe&quot; %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
   <!-- Gallery Packaging -->
