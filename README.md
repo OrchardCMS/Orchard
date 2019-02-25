@@ -28,8 +28,8 @@ We invite participation by the developer community in shaping the project’s di
 All our releases are available on our [Releases](https://github.com/OrchardCMS/Orchard/releases) page, and we encourage interested developers to check out the source code on the Orchard GitHub site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
-* [Feature roadmap](http://docs.orchardproject.net/en/latest/Documentation/Feature-roadmap/)
-* [Docs and designs/specs](http://docs.orchardproject.net)
+* [Feature roadmap](https://docs.orchardproject.net/en/latest/Documentation/Feature-roadmap/)
+* [Docs and designs/specs](https://docs.orchardproject.net)
 
 ## How To Get Involved
 
@@ -43,7 +43,7 @@ There are many ways you can contribute to Orchard:
 * [Propose a feature idea](https://github.com/OrchardCMS/Orchard/issues/new)
 * [Ask and answer questions on Stack Overflow](https://stackoverflow.com/questions/tagged/orchardcms)
 * [Participate in our gitter.im chatroom](https://gitter.im/OrchardCMS/Orchard)
-* [Submit a pull request](http://docs.orchardproject.net/en/latest/Documentation/Contributing-patches/)
+* [Submit a pull request](https://docs.orchardproject.net/en/latest/Documentation/Contributing-patches/)
 * [Translate Orchard](https://crowdin.com/project/orchard-cms)
 * [Contribute modules and themes to our gallery](https://gallery.orchardproject.net/)
 
