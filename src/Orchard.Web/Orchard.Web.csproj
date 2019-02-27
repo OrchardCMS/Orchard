@@ -300,7 +300,6 @@
     <ItemGroup>
       <RoslynFiles Include="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\tools\RoslynLatest\*" />
     </ItemGroup>
-    <Message Text="$(RoslynFilesDestination)" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(RoslynFilesDestination)" Condition="!Exists('$(RoslynFilesDestination)csc.exe')" />
   </Target>
 </Project>
