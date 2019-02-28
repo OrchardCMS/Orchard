@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using NHibernate;
 using NHibernate.Engine;
 using NHibernate.Hql.Ast.ANTLR;
@@ -552,6 +553,39 @@ namespace Orchard.ContentManagement {
             Criterion = HqlRestrictions.InG(propertyName, values);
         }
 
+        public void InSubquery(string propertyName, string subquery, Dictionary<string, object> parameters) {
+            string subqueryWithParameters = "";
+
+            Regex re = new Regex(@"(?<![^\s]):[^\s]+");
+            subqueryWithParameters = re.Replace(subquery, x => {
+                object param;
+
+                if (parameters.TryGetValue(x.ToString().TrimStart(':'), out param)) {
+                    var typeCode = Type.GetTypeCode(param.GetType());
+                    switch (typeCode) {
+                        case TypeCode.String:
+                        case TypeCode.DateTime:
+                            return HqlRestrictions.FormatValue(param);
+                        case TypeCode.UInt16:
+                        case TypeCode.UInt32:
+                        case TypeCode.UInt64:
+                        case TypeCode.Int16:
+                        case TypeCode.Int32:
+                        case TypeCode.Int64:
+                        case TypeCode.Decimal:
+                        case TypeCode.Double:
+                            return FormatNumber(param);
+                        default:
+                            return "";
+                    }
+                }
+
+                return "";
+            });
+
+            InSubquery(propertyName, subqueryWithParameters);
+        }
+
         public void IsNull(string propertyName) {
             Criterion = HqlRestrictions.IsNull(propertyName);
         }
@@ -640,6 +674,21 @@ namespace Orchard.ContentManagement {
 
         public void NaturalId() {
             Criterion = HqlRestrictions.NaturalId();
+        }
+
+        private IHqlCriterion InSubquery(string propertyName, string subquery) {
+            if (string.IsNullOrWhiteSpace(subquery)) {
+                throw new ArgumentException("Subquery can't be empty", "subquery");
+            }
+            return new BinaryExpression("in", propertyName, "(" + subquery + ")");
+        }
+
+        private string FormatNumber(object value) {
+            decimal num;
+            if (Decimal.TryParse(value.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out num))
+                return HqlRestrictions.FormatValue(value);
+            else
+                return "";
         }
     }
 
