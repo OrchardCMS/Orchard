@@ -17,6 +17,13 @@ namespace Orchard.ContentManagement {
         void In(string propertyName, object[] values);
         void In(string propertyName, ICollection values);
         void InG<T>(string propertyName, ICollection<T> values);
+        /// <summary>Search inside the results of a parameterized query.</summary>
+        /// <param name="propertyName">The property to compare.</param>
+        /// <param name="subquery">The subquery to evaluate. It can contain parameters.
+        /// A parameter is expressed as a word starting with ':' and no other character before.
+        /// (i.e. SELECT * FROM table WHERE column = :param)</param>
+        /// <param name="parameters">A dictionary containing the parameter names (without ':') as keys and their values.</param>
+        void InSubquery(string propertyName, string subquery, Dictionary<string, object> parameters);
         void IsNull(string propertyName);
         void EqProperty(string propertyName, string otherPropertyName);
         void NotEqProperty(string propertyName, string otherPropertyName);
