@@ -101,11 +101,7 @@ namespace Orchard.Users.Controllers {
             return this.RedirectLocal(returnUrl);
         }
 
-        int MinPasswordLength {
-            get {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
-            }
-        }
+        int MinPasswordLength => _membershipService.GetSettings().MinRequiredPasswordLength;
 
         [AlwaysAccessible]
         public ActionResult Register() {
@@ -293,22 +289,27 @@ namespace Orchard.Users.Controllers {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult RegistrationPending() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailSent() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailSuccess() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailFail() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmail(string nonce) {
             var user = _userService.ValidateChallenge(nonce);
 
