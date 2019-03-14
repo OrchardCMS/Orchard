@@ -253,7 +253,7 @@ namespace Orchard.FileSystems.Media {
 
             fileInfo.Delete();
 
-            lock (String.Intern(path)) {
+            lock (string.Intern(path)) {
                 var ListProfileFileInfo = ListProfiles(path);
                 foreach (var profileFileInfo in ListProfileFileInfo) {
                     if (profileFileInfo.Exists) {
@@ -272,16 +272,18 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be deleted.</param>
         /// <returns></returns>
         private IEnumerable<FileInfo> ListProfiles(string path) {
+            var directoryInfo = new DirectoryInfo(MapStorage("_Profiles"));
+
+            if (!directoryInfo.Exists) return Enumerable.Empty<FileInfo>();
+
             var filenameWithExtension = Path.GetFileName(path) ?? "";
             var urlpath = GetPublicUrl(path);
             var fileLocation = urlpath.Substring(0, urlpath.Length - filenameWithExtension.Length);
             var hashpath = fileLocation.GetHashCode().ToString("x").ToLowerInvariant();
-            DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage("_Profiles"));
-            if (!directoryInfo.Exists) {
-                return null;
-            }
-            var fileinfos = directoryInfo.GetFiles(filenameWithExtension, SearchOption.AllDirectories);
-            return fileinfos.Where(x => x.Directory.Name.Equals(hashpath));
+
+            return directoryInfo
+                .GetFiles(filenameWithExtension, SearchOption.AllDirectories)
+                .Where(x => x.Directory.Name.Equals(hashpath));
         }
 
         /// <summary>

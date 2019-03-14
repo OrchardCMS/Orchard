@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData.Models;
@@ -12,6 +13,7 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
+using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Widgets.Layouts.Elements;
 using Orchard.Widgets.ViewModels;
@@ -34,7 +36,7 @@ namespace Orchard.Widgets.Layouts.Providers {
             return contentTypeDefinitions.Select(contentTypeDefinition => {
                 var settings = contentTypeDefinition.Settings;
                 var description = settings.ContainsKey("Description") ? settings["Description"] : contentTypeDefinition.DisplayName;
-                return new ElementDescriptor(typeof (Widget), contentTypeDefinition.Name, T(contentTypeDefinition.DisplayName), T(description), category: "Widgets") {
+                return new ElementDescriptor(typeof (Widget), contentTypeDefinition.Name, T.Encode(contentTypeDefinition.DisplayName), T.Encode(description), category: "Widgets") {
                     Displaying = Displaying,
                     Editor = Editor,
                     UpdateEditor = UpdateEditor,

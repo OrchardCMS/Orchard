@@ -73,9 +73,6 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var statuses = new List<object>();
             var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
-            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => x.StartsWith("."));
 
             // Loop through each file in the request
             for (int i = 0; i < HttpContext.Request.Files.Count; i++) {
@@ -89,14 +86,12 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 // skip file if the allowed extensions is defined and doesn't match
-                if (allowedExtensions.Any()) {
-                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
-                        statuses.Add(new {
-                            error = T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text,
-                            progress = 1.0,
-                        });
-                        continue;
-                    }
+                if (!settings.IsFileAllowed(filename)) {
+                    statuses.Add(new {
+                        error = T("This file is not allowed: {0}", filename).Text,
+                        progress = 1.0,
+                    });
+                    continue;
                 }
 
                 try {
@@ -143,10 +138,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var statuses = new List<object>();
 
             var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
-            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => x.StartsWith("."));
-
+            
             // Loop through each file in the request
             for (int i = 0; i < HttpContext.Request.Files.Count; i++) {
                 // Pointer to file
@@ -159,14 +151,12 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 // skip file if the allowed extensions is defined and doesn't match
-                if (allowedExtensions.Any()) {
-                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
-                        statuses.Add(new {
-                            error = T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text,
-                            progress = 1.0,
-                        });
-                        continue;
-                    }
+                if (!settings.IsFileAllowed(filename)) {
+                    statuses.Add(new {
+                        error = T("This file is not allowed: {0}", filename).Text,
+                        progress = 1.0,
+                    });
+                    continue;
                 }
 
                 try {

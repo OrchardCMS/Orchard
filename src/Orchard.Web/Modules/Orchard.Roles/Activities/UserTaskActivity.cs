@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Workflows.Models;
@@ -38,7 +40,7 @@ namespace Orchard.Roles.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return GetActions(activityContext).Select(action => T(action));
+            return GetActions(activityContext).Select(action => T.Encode(action));
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -48,7 +50,7 @@ namespace Orchard.Roles.Activities {
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
 
             if (ActionIsValid(workflowContext, activityContext) && UserIsInRole(activityContext)) {
-                yield return T(workflowContext.Tokens["UserTask.Action"].ToString());
+                yield return T.Encode(workflowContext.Tokens["UserTask.Action"].ToString());
             }
         }
 

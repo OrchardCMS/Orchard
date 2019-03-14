@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.2
-OrchardVersion: 1.9
+Version: 1.10.3
+OrchardVersion: 1.10.3
 Description: Description for the module
 Features:
     Orchard.Scripting.CSharp:

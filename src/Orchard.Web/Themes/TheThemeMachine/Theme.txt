@@ -1,7 +1,7 @@
 ﻿Name: The Theme Machine
 Author: jowall, mibach, loudej, heskew
 Description: Orchard Theme Machine is a flexible multi-zone theme that provides a solid foundation to build your site. It features 20 collapsible widget zones and is flexible enough to cover a wide range of layouts.
-Version: 1.10.2
+Version: 1.10.3
 Tags: Awesome
 Website: http://orchardproject.net
 Zones: Header, Navigation, Featured, BeforeMain, AsideFirst, Messages, BeforeContent, Content, AfterContent, AsideSecond, AfterMain, TripelFirst, TripelSecond, TripelThird, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, FooterQuadFourth, Footer
