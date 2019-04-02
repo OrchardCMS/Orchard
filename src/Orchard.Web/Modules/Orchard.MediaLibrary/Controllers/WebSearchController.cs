@@ -3,14 +3,13 @@ using System.IO;
 using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.FileSystems.Media;
+using Orchard.Localization;
+using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
-using Orchard.FileSystems.Media;
-using Orchard.MediaLibrary.Models;
-using System.Linq;
-using Orchard.Localization;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
@@ -71,18 +70,13 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
-            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => x.StartsWith("."));
 
             try {
                 var filename = Path.GetFileName(url);
 
                 // skip file if the allowed extensions is defined and doesn't match
-                if (allowedExtensions.Any()) {
-                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
-                        throw new Exception(T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text);
-                    }
+                if (!settings.IsFileAllowed(filename)) {
+                    throw new Exception(T("This file is not allowed: {0}", filename).Text);
                 }
 
                 var buffer = new WebClient().DownloadData(url);
@@ -115,18 +109,13 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
-            var allowedExtensions = (settings.UploadAllowedFileTypeWhitelist ?? "")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => x.StartsWith("."));
 
             try {
                 var filename = Path.GetFileName(url);
 
                 // skip file if the allowed extensions is defined and doesn't match
-                if (allowedExtensions.Any()) {
-                    if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
-                        throw new Exception(T("This file type is not allowed: {0}", Path.GetExtension(filename)).Text);
-                    }
+                if (!settings.IsFileAllowed(filename)) {
+                    throw new Exception(T("This file is not allowed: {0}", filename).Text);
                 }
 
                 var buffer = new WebClient().DownloadData(url);

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Orchard.Projections.Models {
+﻿namespace Orchard.Projections.Models {
     public abstract class FieldIndexRecord {
         public virtual int Id { get; set; }
         public virtual string PropertyName { get; set; }
@@ -25,5 +23,4 @@ namespace Orchard.Projections.Models {
         public virtual decimal? Value { get; set; }
         public virtual decimal? LatestValue { get; set; }
     }
-
 }
