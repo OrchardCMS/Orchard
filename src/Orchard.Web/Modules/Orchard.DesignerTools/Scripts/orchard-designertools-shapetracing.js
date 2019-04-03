@@ -155,7 +155,7 @@ jQuery(function ($) {
         _this
             .nextUntil('[end-of="' + shapeNode.id + '"]') // all elements between the script beacons
             .find(':not(.shape-tracing-wrapper)') // all children but not inner beacons
-            .andSelf() // add the first level items
+            .addBack() // add the first level items
             .attr('shape-id', shapeNode.id) // add the shape-id attribute
             .each(function () {
                 // assign a shapeNode instance to the DOM element
@@ -298,7 +298,7 @@ jQuery(function ($) {
 
         var lastExpanded = null;
         // open the tree until the selected element
-        $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
+        $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').addBack().find('> .expando-glyph-container').each(function () {
             openExpando($(this));
         }).each(function () {
             shapeTracingWindowTree.scrollTo(this, 0, { margin: true });
