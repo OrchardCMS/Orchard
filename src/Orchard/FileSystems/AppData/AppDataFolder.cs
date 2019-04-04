@@ -141,6 +141,12 @@ namespace Orchard.FileSystems.AppData {
             // move to destination
             // will throw exception if destination exists
             File.Move(tempPath, path);
+            
+            // Modify file's access control to inherit permissions from parent directory. When files are moved they do not inherit
+            // permissions from the parent directory by default
+            System.Security.AccessControl.FileSecurity fileSecurity = File.GetAccessControl(path);
+            fileSecurity.SetAccessRuleProtection(false, false);
+            File.SetAccessControl(path, fileSecurity);
         }
 
         public Stream CreateFile(string path) {
