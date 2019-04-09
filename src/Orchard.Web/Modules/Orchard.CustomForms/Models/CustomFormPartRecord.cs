@@ -6,6 +6,7 @@ namespace Orchard.CustomForms.Models {
     public class CustomFormPartRecord : ContentPartRecord {
         [StringLength(255)]
         public virtual string ContentType { get; set; }
+        public virtual bool UseContentTypePermissions { get; set; }
 
         [StringLengthMax]
         public virtual string Message { get; set; }

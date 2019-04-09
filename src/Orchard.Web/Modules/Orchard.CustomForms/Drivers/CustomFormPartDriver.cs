@@ -33,7 +33,28 @@ namespace Orchard.CustomForms.Drivers {
         protected override DriverResult Display(CustomFormPart part, string displayType, dynamic shapeHelper) {
             // this method is used by the widget to render the form when it is displayed
 
-            var contentItem = _orchardServices.ContentManager.New(part.ContentType);
+            int contentId = 0;
+            var queryString = _orchardServices.WorkContext.HttpContext.Request.QueryString;
+
+            if (queryString.AllKeys.Contains("contentId")) {
+                int.TryParse(queryString["contentId"], out contentId);
+            }
+
+            ContentItem contentItem;
+            if (contentId > 0) {
+                contentItem = _orchardServices.ContentManager.Get(contentId);
+
+                if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
+                    return null;
+            } else {
+                contentItem = _orchardServices.ContentManager.New(part.ContentType);
+
+                if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.CreateContent, contentItem))
+                    return null;
+            }
+
+            if (contentItem == null || contentItem.ContentType != part.ContentType)
+                return null;
 
             if (!contentItem.Has<ICommonPart>()) {
                 return null;
@@ -87,6 +108,7 @@ namespace Orchard.CustomForms.Drivers {
             }
 
             context.ImportAttribute(part.PartDefinition.Name, "ContentType", x => part.Record.ContentType = x);
+            context.ImportAttribute(part.PartDefinition.Name, "UseContentTypePermissions", x => part.Record.UseContentTypePermissions = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "SaveContentItem", x => part.Record.SaveContentItem = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "CustomMessage", x => part.Record.CustomMessage = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "Message", x => part.Record.Message = x);
@@ -97,6 +119,7 @@ namespace Orchard.CustomForms.Drivers {
         
         protected override void Exporting(CustomFormPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.Record.ContentType);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UseContentTypePermissions", part.Record.UseContentTypePermissions);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SaveContentItem", part.Record.SaveContentItem);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomMessage", part.Record.CustomMessage);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Record.Message);
