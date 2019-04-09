@@ -25,7 +25,9 @@ namespace Orchard.Projections.FieldTypeEditors {
         }
 
         public Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState) {
-            return BooleanFilterForm.GetFilterPredicate(formState, ((QueryVersionScopeOptions)formState.VersionScope).ToVersionedFieldIndexColumnName());
+            return BooleanFilterForm.GetFilterPredicate(
+                formState,
+                this.GetQueryVersionScope((string)formState.VersionScope).ToVersionedFieldIndexColumnName());
         }
 
         public LocalizedString DisplayFilter(string fieldName, string storageName, dynamic formState) {
