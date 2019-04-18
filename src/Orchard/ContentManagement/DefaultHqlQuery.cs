@@ -574,7 +574,7 @@ namespace Orchard.ContentManagement {
                 return "";
             });
 
-            InSubquery(propertyName, subqueryWithParameters);
+            Criterion = InSubquery(propertyName, subqueryWithParameters);
         }
 
         public void IsNull(string propertyName) {
