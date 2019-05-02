@@ -84,7 +84,7 @@
             var _this = $(this);
             var firstError = _this.find(".input-validation-error").first();
             // try to focus the first error on the page
-            if (firstError.size() === 1) {
+            if (firstError.length === 1) {
                 firstError.focus();
                 return _this;
             }

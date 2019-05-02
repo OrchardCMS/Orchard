@@ -1,172 +1,326 @@
-/* ========================================================================
- * Bootstrap: scrollspy.js v3.3.5
- * http://getbootstrap.com/javascript/#scrollspy
- * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+/**
+ * --------------------------------------------------------------------------
+ * Bootstrap (v4.3.1): scrollspy.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * ======================================================================== */
+ * --------------------------------------------------------------------------
+ */
 
+import $ from 'jquery'
+import Util from './util'
 
-+function ($) {
-  'use strict';
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
 
-  // SCROLLSPY CLASS DEFINITION
-  // ==========================
+const NAME               = 'scrollspy'
+const VERSION            = '4.3.1'
+const DATA_KEY           = 'bs.scrollspy'
+const EVENT_KEY          = `.${DATA_KEY}`
+const DATA_API_KEY       = '.data-api'
+const JQUERY_NO_CONFLICT = $.fn[NAME]
 
-  function ScrollSpy(element, options) {
-    this.$body          = $(document.body)
-    this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
-    this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
-    this.selector       = (this.options.target || '') + ' .nav li > a'
-    this.offsets        = []
-    this.targets        = []
-    this.activeTarget   = null
-    this.scrollHeight   = 0
+const Default = {
+  offset : 10,
+  method : 'auto',
+  target : ''
+}
 
-    this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+const DefaultType = {
+  offset : 'number',
+  method : 'string',
+  target : '(string|element)'
+}
+
+const Event = {
+  ACTIVATE      : `activate${EVENT_KEY}`,
+  SCROLL        : `scroll${EVENT_KEY}`,
+  LOAD_DATA_API : `load${EVENT_KEY}${DATA_API_KEY}`
+}
+
+const ClassName = {
+  DROPDOWN_ITEM : 'dropdown-item',
+  DROPDOWN_MENU : 'dropdown-menu',
+  ACTIVE        : 'active'
+}
+
+const Selector = {
+  DATA_SPY        : '[data-spy="scroll"]',
+  ACTIVE          : '.active',
+  NAV_LIST_GROUP  : '.nav, .list-group',
+  NAV_LINKS       : '.nav-link',
+  NAV_ITEMS       : '.nav-item',
+  LIST_ITEMS      : '.list-group-item',
+  DROPDOWN        : '.dropdown',
+  DROPDOWN_ITEMS  : '.dropdown-item',
+  DROPDOWN_TOGGLE : '.dropdown-toggle'
+}
+
+const OffsetMethod = {
+  OFFSET   : 'offset',
+  POSITION : 'position'
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Class Definition
+ * ------------------------------------------------------------------------
+ */
+
+class ScrollSpy {
+  constructor(element, config) {
+    this._element       = element
+    this._scrollElement = element.tagName === 'BODY' ? window : element
+    this._config        = this._getConfig(config)
+    this._selector      = `${this._config.target} ${Selector.NAV_LINKS},` +
+                          `${this._config.target} ${Selector.LIST_ITEMS},` +
+                          `${this._config.target} ${Selector.DROPDOWN_ITEMS}`
+    this._offsets       = []
+    this._targets       = []
+    this._activeTarget  = null
+    this._scrollHeight  = 0
+
+    $(this._scrollElement).on(Event.SCROLL, (event) => this._process(event))
+
     this.refresh()
-    this.process()
+    this._process()
   }
 
-  ScrollSpy.VERSION  = '3.3.5'
+  // Getters
 
-  ScrollSpy.DEFAULTS = {
-    offset: 10
+  static get VERSION() {
+    return VERSION
   }
 
-  ScrollSpy.prototype.getScrollHeight = function () {
-    return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+  static get Default() {
+    return Default
   }
 
-  ScrollSpy.prototype.refresh = function () {
-    var that          = this
-    var offsetMethod  = 'offset'
-    var offsetBase    = 0
+  // Public
 
-    this.offsets      = []
-    this.targets      = []
-    this.scrollHeight = this.getScrollHeight()
+  refresh() {
+    const autoMethod = this._scrollElement === this._scrollElement.window
+      ? OffsetMethod.OFFSET : OffsetMethod.POSITION
 
-    if (!$.isWindow(this.$scrollElement[0])) {
-      offsetMethod = 'position'
-      offsetBase   = this.$scrollElement.scrollTop()
+    const offsetMethod = this._config.method === 'auto'
+      ? autoMethod : this._config.method
+
+    const offsetBase = offsetMethod === OffsetMethod.POSITION
+      ? this._getScrollTop() : 0
+
+    this._offsets = []
+    this._targets = []
+
+    this._scrollHeight = this._getScrollHeight()
+
+    const targets = [].slice.call(document.querySelectorAll(this._selector))
+
+    targets
+      .map((element) => {
+        let target
+        const targetSelector = Util.getSelectorFromElement(element)
+
+        if (targetSelector) {
+          target = document.querySelector(targetSelector)
+        }
+
+        if (target) {
+          const targetBCR = target.getBoundingClientRect()
+          if (targetBCR.width || targetBCR.height) {
+            // TODO (fat): remove sketch reliance on jQuery position/offset
+            return [
+              $(target)[offsetMethod]().top + offsetBase,
+              targetSelector
+            ]
+          }
+        }
+        return null
+      })
+      .filter((item) => item)
+      .sort((a, b) => a[0] - b[0])
+      .forEach((item) => {
+        this._offsets.push(item[0])
+        this._targets.push(item[1])
+      })
+  }
+
+  dispose() {
+    $.removeData(this._element, DATA_KEY)
+    $(this._scrollElement).off(EVENT_KEY)
+
+    this._element       = null
+    this._scrollElement = null
+    this._config        = null
+    this._selector      = null
+    this._offsets       = null
+    this._targets       = null
+    this._activeTarget  = null
+    this._scrollHeight  = null
+  }
+
+  // Private
+
+  _getConfig(config) {
+    config = {
+      ...Default,
+      ...typeof config === 'object' && config ? config : {}
     }
 
-    this.$body
-      .find(this.selector)
-      .map(function () {
-        var $el   = $(this)
-        var href  = $el.data('target') || $el.attr('href')
-        var $href = /^#./.test(href) && $(href)
+    if (typeof config.target !== 'string') {
+      let id = $(config.target).attr('id')
+      if (!id) {
+        id = Util.getUID(NAME)
+        $(config.target).attr('id', id)
+      }
+      config.target = `#${id}`
+    }
 
-        return ($href
-          && $href.length
-          && $href.is(':visible')
-          && [[$href[offsetMethod]().top + offsetBase, href]]) || null
-      })
-      .sort(function (a, b) { return a[0] - b[0] })
-      .each(function () {
-        that.offsets.push(this[0])
-        that.targets.push(this[1])
-      })
+    Util.typeCheckConfig(NAME, config, DefaultType)
+
+    return config
   }
 
-  ScrollSpy.prototype.process = function () {
-    var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
-    var scrollHeight = this.getScrollHeight()
-    var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
-    var offsets      = this.offsets
-    var targets      = this.targets
-    var activeTarget = this.activeTarget
-    var i
+  _getScrollTop() {
+    return this._scrollElement === window
+      ? this._scrollElement.pageYOffset : this._scrollElement.scrollTop
+  }
 
-    if (this.scrollHeight != scrollHeight) {
+  _getScrollHeight() {
+    return this._scrollElement.scrollHeight || Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    )
+  }
+
+  _getOffsetHeight() {
+    return this._scrollElement === window
+      ? window.innerHeight : this._scrollElement.getBoundingClientRect().height
+  }
+
+  _process() {
+    const scrollTop    = this._getScrollTop() + this._config.offset
+    const scrollHeight = this._getScrollHeight()
+    const maxScroll    = this._config.offset +
+      scrollHeight -
+      this._getOffsetHeight()
+
+    if (this._scrollHeight !== scrollHeight) {
       this.refresh()
     }
 
     if (scrollTop >= maxScroll) {
-      return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      const target = this._targets[this._targets.length - 1]
+
+      if (this._activeTarget !== target) {
+        this._activate(target)
+      }
+      return
     }
 
-    if (activeTarget && scrollTop < offsets[0]) {
-      this.activeTarget = null
-      return this.clear()
+    if (this._activeTarget && scrollTop < this._offsets[0] && this._offsets[0] > 0) {
+      this._activeTarget = null
+      this._clear()
+      return
     }
 
-    for (i = offsets.length; i--;) {
-      activeTarget != targets[i]
-        && scrollTop >= offsets[i]
-        && (offsets[i + 1] === undefined || scrollTop < offsets[i + 1])
-        && this.activate(targets[i])
+    const offsetLength = this._offsets.length
+    for (let i = offsetLength; i--;) {
+      const isActiveTarget = this._activeTarget !== this._targets[i] &&
+          scrollTop >= this._offsets[i] &&
+          (typeof this._offsets[i + 1] === 'undefined' ||
+              scrollTop < this._offsets[i + 1])
+
+      if (isActiveTarget) {
+        this._activate(this._targets[i])
+      }
     }
   }
 
-  ScrollSpy.prototype.activate = function (target) {
-    this.activeTarget = target
+  _activate(target) {
+    this._activeTarget = target
 
-    this.clear()
+    this._clear()
 
-    var selector = this.selector +
-      '[data-target="' + target + '"],' +
-      this.selector + '[href="' + target + '"]'
+    const queries = this._selector
+      .split(',')
+      .map((selector) => `${selector}[data-target="${target}"],${selector}[href="${target}"]`)
 
-    var active = $(selector)
-      .parents('li')
-      .addClass('active')
+    const $link = $([].slice.call(document.querySelectorAll(queries.join(','))))
 
-    if (active.parent('.dropdown-menu').length) {
-      active = active
-        .closest('li.dropdown')
-        .addClass('active')
+    if ($link.hasClass(ClassName.DROPDOWN_ITEM)) {
+      $link.closest(Selector.DROPDOWN).find(Selector.DROPDOWN_TOGGLE).addClass(ClassName.ACTIVE)
+      $link.addClass(ClassName.ACTIVE)
+    } else {
+      // Set triggered link as active
+      $link.addClass(ClassName.ACTIVE)
+      // Set triggered links parents as active
+      // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
+      $link.parents(Selector.NAV_LIST_GROUP).prev(`${Selector.NAV_LINKS}, ${Selector.LIST_ITEMS}`).addClass(ClassName.ACTIVE)
+      // Handle special case when .nav-link is inside .nav-item
+      $link.parents(Selector.NAV_LIST_GROUP).prev(Selector.NAV_ITEMS).children(Selector.NAV_LINKS).addClass(ClassName.ACTIVE)
     }
 
-    active.trigger('activate.bs.scrollspy')
+    $(this._scrollElement).trigger(Event.ACTIVATE, {
+      relatedTarget: target
+    })
   }
 
-  ScrollSpy.prototype.clear = function () {
-    $(this.selector)
-      .parentsUntil(this.options.target, '.active')
-      .removeClass('active')
+  _clear() {
+    [].slice.call(document.querySelectorAll(this._selector))
+      .filter((node) => node.classList.contains(ClassName.ACTIVE))
+      .forEach((node) => node.classList.remove(ClassName.ACTIVE))
   }
 
+  // Static
 
-  // SCROLLSPY PLUGIN DEFINITION
-  // ===========================
-
-  function Plugin(option) {
+  static _jQueryInterface(config) {
     return this.each(function () {
-      var $this   = $(this)
-      var data    = $this.data('bs.scrollspy')
-      var options = typeof option == 'object' && option
+      let data = $(this).data(DATA_KEY)
+      const _config = typeof config === 'object' && config
 
-      if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
-      if (typeof option == 'string') data[option]()
+      if (!data) {
+        data = new ScrollSpy(this, _config)
+        $(this).data(DATA_KEY, data)
+      }
+
+      if (typeof config === 'string') {
+        if (typeof data[config] === 'undefined') {
+          throw new TypeError(`No method named "${config}"`)
+        }
+        data[config]()
+      }
     })
   }
+}
 
-  var old = $.fn.scrollspy
+/**
+ * ------------------------------------------------------------------------
+ * Data Api implementation
+ * ------------------------------------------------------------------------
+ */
 
-  $.fn.scrollspy             = Plugin
-  $.fn.scrollspy.Constructor = ScrollSpy
+$(window).on(Event.LOAD_DATA_API, () => {
+  const scrollSpys = [].slice.call(document.querySelectorAll(Selector.DATA_SPY))
+  const scrollSpysLength = scrollSpys.length
 
-
-  // SCROLLSPY NO CONFLICT
-  // =====================
-
-  $.fn.scrollspy.noConflict = function () {
-    $.fn.scrollspy = old
-    return this
+  for (let i = scrollSpysLength; i--;) {
+    const $spy = $(scrollSpys[i])
+    ScrollSpy._jQueryInterface.call($spy, $spy.data())
   }
+})
 
+/**
+ * ------------------------------------------------------------------------
+ * jQuery
+ * ------------------------------------------------------------------------
+ */
 
-  // SCROLLSPY DATA-API
-  // ==================
+$.fn[NAME] = ScrollSpy._jQueryInterface
+$.fn[NAME].Constructor = ScrollSpy
+$.fn[NAME].noConflict = () => {
+  $.fn[NAME] = JQUERY_NO_CONFLICT
+  return ScrollSpy._jQueryInterface
+}
 
-  $(window).on('load.bs.scrollspy.data-api', function () {
-    $('[data-spy="scroll"]').each(function () {
-      var $spy = $(this)
-      Plugin.call($spy, $spy.data())
-    })
-  })
-
-}(jQuery);
+export default ScrollSpy
