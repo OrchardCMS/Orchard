@@ -135,6 +135,7 @@
     <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
     <Compile Include="LocalizedTaxonomyMigration.cs" />
     <Compile Include="Models\MoveTermsContext.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\ITaxonomyExtensionsService.cs" />
     <Compile Include="Services\ITaxonomySource.cs" />
     <Compile Include="Services\LocalizedTaxonomySource.cs" />
