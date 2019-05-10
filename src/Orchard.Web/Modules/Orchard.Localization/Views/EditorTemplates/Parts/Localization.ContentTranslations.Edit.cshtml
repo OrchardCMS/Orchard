@@ -28,7 +28,7 @@
             }
 
             if (Model.MissingCultures.Any()) {
-                var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
+                var contentItemId = Model.ContentItem.Id;
                 if (returnUrl != "") {
                     <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId, ReturnUrl = returnUrl }, new { itemprop = "UnsafeUrl" })</div>
                 }
@@ -39,14 +39,14 @@
 
             @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
         }
-        else if (Model.MasterContentItem != null) {
+        else {
             @T("This is the <em>{0}</em> variation of {1}",
                     BuildSelectedCultureList(
                         Html.FieldIdFor(m => m.SelectedCulture),
                         Html.FieldNameFor(m => m.SelectedCulture),
                         Model.MissingCultures,
                         Model.SelectedCulture),
-                    Html.ItemEditLink(Model.MasterContentItem))
+                    Html.ItemEditLink(Model.MasterContentItem != null?Model.MasterContentItem:Model.ContentLocalizations.Localizations.FirstOrDefault()))
 
             if (Model.ContentLocalizations.Localizations.Any()) {
                 <dl class="content-localization">
@@ -64,14 +64,7 @@
                 </dl>
             }
         }
-        else {
-            @T("This is the <em>{0}</em> variation of the content",
-                BuildSelectedCultureList(
-                    Html.FieldIdFor(m => m.SelectedCulture),
-                    Html.FieldNameFor(m => m.SelectedCulture),
-                    Model.MissingCultures,
-                    Model.SelectedCulture))
-        }
+        
     </div>
 </fieldset>
 

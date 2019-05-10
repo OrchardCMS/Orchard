@@ -70,20 +70,21 @@ namespace Orchard.Taxonomies.Handlers {
             if (partFieldDefinitions == null)
                 return; // contentitem without taxonomy
             base.BuildEditorShape(context);
-            var missingCultures = localizationPart.HasTranslationGroup ?
-                RetrieveMissingCultures(localizationPart.MasterContentItem.As<LocalizationPart>(), true) :
-                RetrieveMissingCultures(localizationPart, localizationPart.Culture != null);
+            var missingCultures = RetrieveMissingCultures(localizationPart, localizationPart.Culture != null);
             foreach (var partFieldDefinition in partFieldDefinitions) {
                 if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize) {
-                    var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.As<LocalizationPart>().MasterContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
+                    var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
                     var newTermParts = new List<TermPart>();
                     foreach (var originalTermPart in originalTermParts) {
                         var masterTermPart = _taxonomyExtensionsService.GetMasterItem(originalTermPart.ContentItem);
                         if (masterTermPart != null) {
                             foreach (var missingCulture in missingCultures) {
                                 var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
-                                if (newTerm != null)
-                                    newTermParts.Add(newTerm.ContentItem.As<TermPart>());
+                                if (newTerm != null) {
+                                    if (!newTermParts.Contains(newTerm.ContentItem.As<TermPart>())) { //Prevent duplicates
+                                        newTermParts.Add(newTerm.ContentItem.As<TermPart>());
+                                    }
+                                }
                                 else
                                     _notifier.Add(NotifyType.Warning, T("Term {0} can't be localized on {1}, term has been removed on this language", originalTermPart.ContentItem.As<TitlePart>().Title, missingCulture));
                             }
