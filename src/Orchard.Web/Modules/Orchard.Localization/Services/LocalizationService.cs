@@ -30,15 +30,10 @@ namespace Orchard.Localization.Services {
             if (localized == null)
                 return null;
 
-            var masterContent = content.ContentItem.As<LocalizationPart>().MasterContentItem != null ? content.ContentItem.As<LocalizationPart>().MasterContentItem : content;
-            // Warning: Returns only the first of same culture localizations.
-            return _contentManager
-                .Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType)
-                .Where<LocalizationPartRecord>(l =>
-                (l.Id == masterContent.Id || l.MasterContentItemId == masterContent.Id)
-                && l.CultureId == cultureRecord.Id)
-                .Slice(1)
-                .FirstOrDefault();
+            if (localized.Culture.Culture == culture)
+                return localized;
+
+            return ((ILocalizationService)this).GetLocalizations(content, versionOptions).FirstOrDefault(x=>x.Culture.Id == cultureRecord.Id); 
         }
 
         string ILocalizationService.GetContentCulture(IContent content) {
@@ -92,7 +87,7 @@ namespace Orchard.Localization.Services {
             }
 
             // Warning: May contain more than one localization of the same culture.
-            return query.List().ToList();
+            return query.List();
         }
 
     }
