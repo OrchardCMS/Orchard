@@ -40,25 +40,14 @@
             @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
         }
         else {
-            var masterContent = Model.MasterContentItem != null ? Model.MasterContentItem : Model.ContentLocalizations.Localizations.FirstOrDefault();
-            if (masterContent != null) {
-                @T("This is the <em>{0}</em> variation of {1}",
-                        BuildSelectedCultureList(
-                            Html.FieldIdFor(m => m.SelectedCulture),
-                            Html.FieldNameFor(m => m.SelectedCulture),
-                            Model.MissingCultures,
-                            Model.SelectedCulture),
-                        Html.ItemEditLink(masterContent));
-            }
-            else {
-                @T("This is the <em>{0}</em> variation of the content",
-                        BuildSelectedCultureList(
-                            Html.FieldIdFor(m => m.SelectedCulture),
-                            Html.FieldNameFor(m => m.SelectedCulture),
-                            Model.MissingCultures,
-                            Model.SelectedCulture));
-            }
-        
+            @T("This is the <em>{0}</em> variation of {1}",
+                    BuildSelectedCultureList(
+                        Html.FieldIdFor(m => m.SelectedCulture),
+                        Html.FieldNameFor(m => m.SelectedCulture),
+                        Model.MissingCultures,
+                        Model.SelectedCulture),
+                    Html.ItemEditLink(Model.MasterContentItem != null?Model.MasterContentItem:Model.ContentLocalizations.Localizations.FirstOrDefault()))
+
             if (Model.ContentLocalizations.Localizations.Any()) {
                 <dl class="content-localization">
                     <dt>@T("Other translations:")</dt>
