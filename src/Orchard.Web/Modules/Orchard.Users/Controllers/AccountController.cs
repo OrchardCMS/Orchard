@@ -1,4 +1,6 @@
 using Orchard.ContentManagement;
+using System.Text.RegularExpressions;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -62,8 +64,6 @@ namespace Orchard.Users.Controllers {
                 return new ShapeResult(this, shape);
             }
 
-            //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
-            //Suggestion: Could instead use the new AccessDenined IUserEventHandler method and let modules decide if they want to log this event?
             Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
 
             _userEventHandler.AccessDenied(currentUser);
@@ -120,6 +120,7 @@ namespace Orchard.Users.Controllers {
             return this.RedirectLocal(returnUrl);
         }
 
+        int MinPasswordLength => _membershipService.GetSettings().MinRequiredPasswordLength;
         [AlwaysAccessible]
         public ActionResult Register() {
             // ensure users can register
@@ -313,6 +314,8 @@ namespace Orchard.Users.Controllers {
                     return true;
                 }
 
+            }
+            catch {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
 
                 return false;
@@ -326,7 +329,7 @@ namespace Orchard.Users.Controllers {
 
         [AlwaysAccessible]
         public ActionResult LostPassword(string nonce) {
-            if ( _userService.ValidateLostPassword(nonce) == null) {
+            if (_userService.ValidateLostPassword(nonce) == null) {
                 return RedirectToAction("LogOn");
             }
 
@@ -341,7 +344,7 @@ namespace Orchard.Users.Controllers {
         [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
-            if ( (user = _userService.ValidateLostPassword(nonce)) == null) {
+            if ((user = _userService.ValidateLostPassword(nonce)) == null) {
                 return Redirect("~/");
             }
 
@@ -373,26 +376,31 @@ namespace Orchard.Users.Controllers {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult RegistrationPending() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailSent() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailSuccess() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmailFail() {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult ChallengeEmail(string nonce) {
             var user = _userService.ValidateChallenge(nonce);
 
-            if ( user != null) {
+            if (user != null) {
                 _userEventHandler.ConfirmedEmail(user);
 
                 return RedirectToAction("ChallengeEmailSuccess");
@@ -403,7 +411,7 @@ namespace Orchard.Users.Controllers {
 
         #region Validation Methods
         private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword) {
-            if ( String.IsNullOrEmpty(currentPassword)) {
+            if (String.IsNullOrEmpty(currentPassword)) {
                 ModelState.AddModelError("currentPassword", T("You must specify a current password."));
             }
 
@@ -413,7 +421,7 @@ namespace Orchard.Users.Controllers {
 
             ValidatePassword(newPassword);
 
-            if ( !String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
+            if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
 

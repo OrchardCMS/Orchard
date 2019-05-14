@@ -63,8 +63,14 @@ namespace Orchard.ContentTypes.Services {
                                     if (!String.IsNullOrEmpty(customPlacement.Placement.Position)) {
                                         location = String.Concat(location, ":", customPlacement.Placement.Position);
                                     }
-
-                                    return new PlacementInfo { Location = location };
+                                    // clone the identified Placement.info into a new one in order to keep original informations like Wrappers and Alternates
+                                    var originalPlacementInfo = placement(ctx);
+                                    return new PlacementInfo {
+                                        Location = location,
+                                        Alternates = originalPlacementInfo.Alternates,
+                                        ShapeType = originalPlacementInfo.ShapeType,
+                                        Wrappers = originalPlacementInfo.Wrappers
+                                    };
                                 }
                             }
                         }

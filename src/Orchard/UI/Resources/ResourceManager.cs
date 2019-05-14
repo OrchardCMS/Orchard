@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,10 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
+using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Mvc;
+using Orchard.Settings;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager, IUnitOfWorkDependency {
@@ -20,6 +24,8 @@ namespace Orchard.UI.Resources {
         };
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
+        private readonly Work<WorkContext> _workContext;
+        private readonly Work<IHttpContextAccessor> _httpContextAccessor;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
@@ -95,8 +101,13 @@ namespace Orchard.UI.Resources {
             }
         }
 
-        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders) {
+        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders,
+            Work<WorkContext> workContext,
+            Work<IHttpContextAccessor> httpContextAccessor
+            ) {
             _providers = resourceProviders;
+            _workContext = workContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IEnumerable<IResourceManifest> ResourceProviders {
@@ -353,5 +364,28 @@ namespace Orchard.UI.Resources {
             _metas[index] = meta;
         }
 
+        private string GetResourceKey(string releasePath, string debugPath) {
+            bool debugMode;
+            var site = _workContext.Value.CurrentSite;
+            switch (site.ResourceDebugMode) {
+                case ResourceDebugMode.Enabled:
+                    debugMode = true;
+                    break;
+                case ResourceDebugMode.Disabled:
+                    debugMode = false;
+                    break;
+                default:
+                    Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
+                    var context = _httpContextAccessor.Value.Current();
+                    debugMode = context != null && context.IsDebuggingEnabled;
+                    break;
+            }
+            if (debugMode && !string.IsNullOrWhiteSpace(debugPath)) {
+                return debugPath;
+            }
+            else {
+                return releasePath;
+            }
+        }
     }
 }
