@@ -92,14 +92,27 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                                 var shape = ((dynamic)displayContext.Value);
                                 var output = displayContext.ViewContext.Writer;
                                 ResourceDefinition resource = shape.Resource;
-                                string url = shape.Url;
+                                var url = GetResourceUrl(shape.Url, hit.fileVirtualPath);
                                 string condition = shape.Condition;
                                 Dictionary<string, string> attributes = shape.TagAttributes;
-                                ResourceManager.WriteResource(output, resource, url ?? hit.fileVirtualPath, condition, attributes);
+                                ResourceManager.WriteResource(output, resource, url, condition, attributes);
                                 return null;
                             });
                 }
             }
+        }
+
+        private string GetResourceUrl(string shapeUrl, string fileVirtualPath) {
+            if (string.IsNullOrEmpty(shapeUrl)) return fileVirtualPath;
+
+            return GetPathFromRelativeUrl(shapeUrl) == GetPathFromRelativeUrl(fileVirtualPath) ? shapeUrl : fileVirtualPath;
+        }
+
+        private string GetPathFromRelativeUrl(string url) {
+            var path = url.TrimStart('~');
+            var indexOfQueryString = path.IndexOf('?');
+
+            return indexOfQueryString >= 0 ? path.Substring(0, indexOfQueryString) : path;
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {
