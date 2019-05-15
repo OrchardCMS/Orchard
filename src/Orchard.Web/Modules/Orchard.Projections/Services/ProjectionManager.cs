@@ -14,7 +14,7 @@ using Orchard.Projections.Models;
 using Orchard.Tokens;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManagerExtension {
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
