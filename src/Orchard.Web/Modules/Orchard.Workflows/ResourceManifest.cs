@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using Orchard.Environment;
+using Orchard.Environment.Extensions;
 using Orchard.UI.Resources;
 using Orchard.Utility.Extensions;
 using Orchard.Workflows.Services;
@@ -10,10 +11,12 @@ namespace Orchard.Workflows {
     public class ResourceManifest : IResourceManifestProvider {
         private readonly Work<IActivitiesManager> _activitiesManager;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly IExtensionManager _extensionManager;
 
-        public ResourceManifest(Work<IActivitiesManager> activitiesManager, IHostEnvironment hostEnvironment) {
+        public ResourceManifest(Work<IActivitiesManager> activitiesManager, IHostEnvironment hostEnvironment, IExtensionManager extensionManager) {
             _activitiesManager = activitiesManager;
             _hostEnvironment = hostEnvironment;
+            _extensionManager = extensionManager;
         }
 
         public void BuildManifests(ResourceManifestBuilder builder) {
@@ -25,11 +28,13 @@ namespace Orchard.Workflows {
 
             foreach (var activity in _activitiesManager.Value.GetActivities()) {
                 var assemblyName = activity.GetType().Assembly.GetName().Name;
-                var basePath = VirtualPathUtility.AppendTrailingSlash("~/Modules/" + assemblyName + "/styles/");
+                var descriptor = _extensionManager.GetExtension(assemblyName);
+                if (descriptor == null) continue;
+
                 var resourceName = "WorkflowsActivity-" + activity.Name;
                 var filename = resourceName.HtmlClassify() + ".css";
 
-                if (File.Exists(_hostEnvironment.MapPath(basePath) + filename)) {
+                if (File.Exists(_hostEnvironment.MapPath(descriptor.VirtualPath + "/Styles/") + filename)) {
                     resourceNames.Add(resourceName);
 
                     manifest.DefineStyle(resourceName).SetUrl(filename).SetDependencies("WorkflowsAdmin");
