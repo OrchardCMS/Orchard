@@ -135,6 +135,7 @@
     <Content Include="Styles\Web.config" />
     <Compile Include="Extensions\QueryPartRecordExtensions.cs" />
     <Compile Include="Extensions\QueryVersionScopeOptionsExtensions.cs" />
+    <Compile Include="FieldIndexRecordVersionOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -189,8 +190,6 @@
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
     <Compile Include="QueryVersionScopeOptions.cs" />
-    <Compile Include="Services\DraftFieldIndexService.cs" />
-    <Compile Include="Services\IDraftFieldIndexService.cs" />
     <Compile Include="Services\IProjectionManagerExtension.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />

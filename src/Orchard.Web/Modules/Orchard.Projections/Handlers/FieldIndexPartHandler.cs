@@ -17,13 +17,11 @@ namespace Orchard.Projections.Handlers {
         private readonly IFieldIndexService _fieldIndexService;
         private readonly IFieldStorageProvider _fieldStorageProvider;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
-        private readonly IDraftFieldIndexService _draftFieldIndexService;
 
         public FieldIndexPartHandler(
             IContentDefinitionManager contentDefinitionManager,
             IRepository<FieldIndexPartRecord> repository,
             IFieldIndexService fieldIndexService,
-            IDraftFieldIndexService draftFieldIndexService,
             IFieldStorageProvider fieldStorageProvider,
             IEnumerable<IContentFieldDriver> contentFieldDrivers) {
             Filters.Add(StorageFilter.For(repository));
@@ -31,7 +29,6 @@ namespace Orchard.Projections.Handlers {
             _fieldIndexService = fieldIndexService;
             _fieldStorageProvider = fieldStorageProvider;
             _contentFieldDrivers = contentFieldDrivers;
-            _draftFieldIndexService = draftFieldIndexService;
             OnUpdated<FieldIndexPart>(Updated);
             OnPublishing<FieldIndexPart>(Publishing);
         }
@@ -50,10 +47,11 @@ namespace Orchard.Projections.Handlers {
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
             if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
                 DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
-                    _draftFieldIndexService.Set(fieldIndexPart,
+                    _fieldIndexService.Set(fieldIndexPart,
                     indexServiceContext.LocalPart.PartDefinition.Name,
                     indexServiceContext.LocalField.Name,
-                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
+                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType,
+                    FieldIndexRecordVersionOptions.LatestValue);
                 });
             }
         }
