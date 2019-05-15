@@ -32,9 +32,7 @@ namespace Orchard.Workflows {
                 if (File.Exists(_hostEnvironment.MapPath(basePath) + filename)) {
                     resourceNames.Add(resourceName);
 
-                    manifest.DefineStyle(resourceName)
-                        .SetUrl(filename)
-                        .SetDependencies("WorkflowsAdmin");
+                    manifest.DefineStyle(resourceName).SetUrl(filename).SetDependencies("WorkflowsAdmin");
                 }
             }
 
