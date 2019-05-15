@@ -1,5 +1,4 @@
 ﻿@model Orchard.Fields.Settings.NumericFieldSettings
-@using Orchard.Fields.Settings;
 
 <fieldset>
     <div>
@@ -50,6 +49,8 @@
 <fieldset>
     <div class="editor-field">
         <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized ui-autocomplete-input" })
+        <span class="hint">@T("The default value for the field. It must be a number, and if not it will not be shown. Make sure to set the Scale property if the value is not an integer. You can use tokens in this field. (optional)")</span>
         @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>
