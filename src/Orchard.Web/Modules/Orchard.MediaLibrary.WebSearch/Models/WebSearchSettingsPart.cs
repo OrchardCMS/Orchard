@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
-namespace Orchard.MediaLibrary.Models {
+namespace Orchard.MediaLibrary.WebSearch.Models {
     public class WebSearchSettingsPart : ContentPart {
 
         public string ApiKey {

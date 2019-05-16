@@ -122,7 +122,6 @@
     <Content Include="Styles\Images\processing.gif" />
     <Content Include="Styles\orchard-clientstorage-admin.css" />
     <Content Include="Styles\Images\ajax-loader.gif" />
-    <Content Include="Styles\orchard-websearch-admin.css" />
     <Content Include="Styles\orchard-mediaproviders-admin.css" />
     <Content Include="Styles\orchard-medialibrary-admin.css" />
     <Content Include="Web.config">
@@ -182,7 +181,6 @@
     <Compile Include="Controllers\ClientStorageController.cs" />
     <Compile Include="Controllers\OEmbedController.cs" />
     <Compile Include="Controllers\FolderController.cs" />
-    <Compile Include="Controllers\WebSearchController.cs" />
     <Compile Include="Drivers\AudioPartDriver.cs" />
     <Compile Include="Drivers\OEmbedPartDriver.cs" />
     <Compile Include="Drivers\MediaLibraryPickerFieldDriver.cs" />
@@ -200,14 +198,12 @@
     <Compile Include="Handlers\MediaLibraryPickerFieldHandler.cs" />
     <Compile Include="Handlers\MediaPartHandler.cs" />
     <Compile Include="Drivers\MediaPartDriver.cs" />
-    <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AudioPart.cs" />
     <Compile Include="Models\FolderHierarchy.cs" />
     <Compile Include="Models\MediaFile.cs" />
     <Compile Include="Models\MediaFolder.cs" />
     <Compile Include="Models\MediaLibraryExplorerPart.cs" />
-    <Compile Include="Models\WebSearchSettingsPart.cs" />
     <Compile Include="Models\ImagePart.cs" />
     <Compile Include="Models\DocumentPart.cs" />
     <Compile Include="Models\VideoPart.cs" />
@@ -217,7 +213,6 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Providers\ClientStorageMenu.cs" />
     <Compile Include="Providers\OEmbedMenu.cs" />
-    <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
@@ -254,9 +249,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Import.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\WebSearch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Folder\Create.cshtml" />
@@ -376,9 +368,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media-OEmbed.Thumbnail.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\WebSearch.WebSearchSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media.Raw.cshtml" />

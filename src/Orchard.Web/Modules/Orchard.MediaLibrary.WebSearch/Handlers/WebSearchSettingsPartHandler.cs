@@ -1,9 +1,9 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.MediaLibrary.Models;
+using Orchard.MediaLibrary.WebSearch.Models;
 
-namespace Orchard.MediaLibrary.Handlers {
+namespace Orchard.MediaLibrary.WebSearch.Handlers {
     public class WebSearchSettingsPartHandler : ContentHandler {
         public WebSearchSettingsPartHandler() {
             T = NullLocalizer.Instance;

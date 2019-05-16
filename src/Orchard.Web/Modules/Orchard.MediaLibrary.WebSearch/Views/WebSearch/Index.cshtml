@@ -2,7 +2,7 @@
 
 @using System.Text
 @using Orchard.ContentManagement
-@using Orchard.MediaLibrary.Models
+@using Orchard.MediaLibrary.WebSearch.Models
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -46,10 +46,10 @@
         </form>
 
         <ul id="websearch-results" data-bind="foreach: results">
-            <li data-bind="style: { backgroundImage: 'url(' + data.Thumbnail.MediaUrl + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+            <li data-bind="style: { backgroundImage: 'url(' + data.previewURL + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
                 <div class="overlay">
                     <p class="filename" data-bind="text: getFilename()"></p>
-                    <p class="dimensions" data-bind="text: data.Width + ' x ' +  data.Height + ' - ' + Math.round(data.FileSize/1024) + ' KB'"></p>
+                    <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
                 </div>
             </li>
         </ul>
@@ -58,13 +58,13 @@
     <div id="websearch-properties">
         <article data-bind="with: focus">
             <h1>@T("PROPERTIES")</h1>
-            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.Thumbnail.MediaUrl + ')' }"></div>
-            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.Width + ' x ' +  data.Height"></span></div>
+            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.previewURL + ')' }"></div>
+            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight"></span></div>
             <div class="filename"><em>@T("Filename:")</em> <span data-bind="text: getFilename()"></span></div>
-            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.FileSize/1024) + ' KB'"></span></div>
+            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.imageSize/1024) + ' KB'"></span></div>
             <div class="actions">
-                <a class="source button" data-bind="attr: {href: data.SourceUrl}" target="_blank">@T("Page")</a>
-                <a class="media button" data-bind="attr: {href: data.MediaUrl}" target="_blank">@T("Open")</a>
+                <a class="source button" data-bind="attr: {href: data.largeImageURL}" target="_blank">@T("Page")</a>
+                <a class="media button" data-bind="attr: {href: data.largeImageURL}" target="_blank">@T("Open")</a>
             </div>
         </article>
         
@@ -73,7 +73,7 @@
             <button id="button-import">@if (Model.Replace == null) { <text>@T("Import")</text> } else { <text>@T("Replace")</text> } </button>
             <ul data-bind="foreach: selection">
                 <li>
-                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.Thumbnail.MediaUrl + ')' }">
+                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.previewURL + ')' }">
                         <div class="selection-overlay">
                             <div class="selection-progress" data-bind="css: status(), attr: { 'title': tooltip() == '' ? null : tooltip() }"></div>
                         </div>
@@ -82,7 +82,7 @@
             </ul>
         </div>
     </div>    
-
+    l
     @using(Script.Foot()) {
     <script type="text/javascript">
         //<![CDATA[
@@ -103,12 +103,12 @@
                 };
 
                 self.getFilename = function () {
-                    var value = self.data.MediaUrl;
+                    var value = self.data.largeImageURL;
                     return value.substr(value.lastIndexOf('/') + 1);
                 };
 
                 self.kilobytes = function () {
-                    return Math.round(self.data.FileSize / 1024);
+                    return Math.round(self.data.imageSize / 1024);
                 };
             }
 
@@ -126,14 +126,13 @@
 
                 self.doSearch = function () {
                     var query = $('#query > input').val();
-                    var url = 'https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query=%27' + encodeURIComponent(query) + '%27';
+                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@apiKey';
 
                     $.ajax({
-                        type: "POST",
-                        url: url,
-                        headers: { "Authorization": "Basic @Convert.ToBase64String(Encoding.ASCII.GetBytes(":" + @apiKey))" }
+                        type: "GET",
+                        url: url                        
                     }).done(function (msg) {
-                        var results = msg.d.results;
+                        var results = msg.hits;
                         self.clearSelection();
                         self.results([]);
                         for (var i = 0; i < results.length; i++) {
@@ -215,7 +214,7 @@
 
             $("#button-import").on("click", function (e) {
                 viewModel.selection().forEach(function (item) {
-                    var url = item.data.MediaUrl;
+                    var url = item.data.largeImageURL;
                     item.status('uploading');
                     item.tooltip('');
                     @if (Model.Replace == null) {
