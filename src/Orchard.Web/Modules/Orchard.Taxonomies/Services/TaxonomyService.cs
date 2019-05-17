@@ -60,7 +60,7 @@ namespace Orchard.Taxonomies.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().List();
+            return GetTaxonomiesQuery().List();
         }
 
         public TaxonomyPart GetTaxonomy(int id) {
@@ -68,12 +68,12 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
-            if (String.IsNullOrWhiteSpace(name)) {
+            if (string.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentNullException("name");
             }
 
             // include the record in the query to optimize the query plan
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>()
+            return GetTaxonomiesQuery()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
                 .List()
@@ -81,12 +81,11 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomyBySlug(string slug) {
-            if (String.IsNullOrWhiteSpace(slug)) {
+            if (string.IsNullOrWhiteSpace(slug)) {
                 throw new ArgumentNullException("slug");
             }
 
-            return _contentManager
-                .Query<TaxonomyPart, TaxonomyPartRecord>()
+            return GetTaxonomiesQuery()
                 .Join<TitlePartRecord>()
                 .Join<AutoroutePartRecord>()
                 .Where(r => r.DisplayAlias == slug)
@@ -121,8 +120,13 @@ namespace Orchard.Taxonomies.Services {
                 DeleteTerm(term);
             }
 
-            if (_contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().Where(x => x.Id != taxonomy.Id && x.TermTypeName == taxonomy.TermTypeName).Count() == 0)
+            if (_contentManager
+                .Query<TaxonomyPart, TaxonomyPartRecord>()
+                .Where(x => x.Id != taxonomy.Id && x.TermTypeName == taxonomy.TermTypeName)
+                .Count() == 0) {
+
                 _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
+            }
         }
 
         public string GenerateTermTypeName(string taxonomyName) {
@@ -165,8 +169,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
-            var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .Where(x => x.TaxonomyId == taxonomyId)
+            var result = GetTermsQuery(taxonomyId)
                 .OrderBy(x => x.FullWeight)
                 .List();
 
@@ -174,8 +177,8 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
-            var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .Where(x => x.TaxonomyId == taxonomyId && x.Path == "/")
+            var result = GetTermsQuery(taxonomyId)
+                .Where(x => x.Path == "/")
                 .OrderBy(x => x.FullWeight)
                 .List();
 
@@ -183,7 +186,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart GetTermByPath(string path) {
-            return _contentManager.Query<TermPart, TermPartRecord>()
+            return GetTermsQuery()
                 .Join<AutoroutePartRecord>()
                 .Where(rr => rr.DisplayAlias == path)
                 .List()
@@ -191,8 +194,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetAllTerms() {
-            var result = _contentManager
-                .Query<TermPart, TermPartRecord>()
+            var result = GetTermsQuery()
                 .OrderBy(x=>x.TaxonomyId)
                 .OrderBy(x=>x.FullWeight)
                 .List();
@@ -200,29 +202,34 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public int GetTermsCount(int taxonomyId) {
-            return _contentManager.Query<TermPart, TermPartRecord>()
-                .Where(x => x.TaxonomyId == taxonomyId)
+            return GetTermsQuery(taxonomyId)
                 .Count();
         }
 
         public TermPart GetTerm(int id) {
-            return _contentManager
-                .Query<TermPart, TermPartRecord>()
+            return GetTermsQuery()
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
 
-        public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null, VersionOptions versionOptions = null) {
-            var termIds = String.IsNullOrEmpty(field)
-                ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => t.TermRecord.Id).ToArray()
-                : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => t.TermRecord.Id).ToArray();
+        public IEnumerable<TermPart> GetTermsForContentItem(
+            int contentItemId, string field = null, VersionOptions versionOptions = null) {
 
-            return _contentManager.GetMany<TermPart>(termIds, versionOptions ?? VersionOptions.Published, QueryHints.Empty);
+            var termIds = string.IsNullOrEmpty(field)
+                ? _termContentItemRepository
+                    .Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId)
+                    .Select(t => t.TermRecord.Id)
+                    .ToArray()
+                : _termContentItemRepository
+                    .Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field)
+                    .Select(t => t.TermRecord.Id)
+                    .ToArray();
+
+            return _contentManager
+                .GetMany<TermPart>(termIds, versionOptions ?? VersionOptions.Published, QueryHints.Empty);
         }
 
         public TermPart GetTermByName(int taxonomyId, string name) {
-            return _contentManager
-                .Query<TermPart, TermPartRecord>()
-                .Where(t => t.TaxonomyId == taxonomyId)
+            return GetTermsQuery(taxonomyId)
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
                 .List()
@@ -431,11 +438,18 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>();
+            return _contentManager
+                .Query<TaxonomyPart, TaxonomyPartRecord>();
+        }
+
+        protected IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+            return _contentManager
+                .Query<TermPart, TermPartRecord>();
         }
 
         public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId) {
-            return _contentManager.Query<TermPart, TermPartRecord>().Where(x => x.TaxonomyId == taxonomyId);
+            return GetTermsQuery()
+                .Where(x => x.TaxonomyId == taxonomyId);
         }
     }
 }
