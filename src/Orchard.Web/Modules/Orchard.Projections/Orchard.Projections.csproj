@@ -191,7 +191,6 @@
     <Compile Include="QueryVersionScopeOptions.cs" />
     <Compile Include="Services\DraftFieldIndexService.cs" />
     <Compile Include="Services\IDraftFieldIndexService.cs" />
-    <Compile Include="Services\IProjectionManagerExtension.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />
