@@ -340,7 +340,7 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent) {
             var rootPath = term.FullPath + "/";
 
-            var result = _contentManager.Query<TermPart, TermPartRecord>()
+            var result = GetTermsQuery()
                 .Where(x => x.Path.StartsWith(rootPath))
                 .OrderBy(x=>x.FullWeight)
                 .List();
@@ -364,8 +364,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<string> GetTermPaths() {
-            return _contentManager
-                .Query<TermPart, TermPartRecord>()
+            return GetTermsQuery()
                 .List()
                 .Select(t => t.Slug);
         }
@@ -442,7 +441,7 @@ namespace Orchard.Taxonomies.Services {
                 .Query<TaxonomyPart, TaxonomyPartRecord>();
         }
 
-        protected IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        public IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
             return _contentManager
                 .Query<TermPart, TermPartRecord>();
         }
@@ -450,6 +449,85 @@ namespace Orchard.Taxonomies.Services {
         public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId) {
             return GetTermsQuery()
                 .Where(x => x.TaxonomyId == taxonomyId);
+        }
+
+        public string ComputeFullWeight(TermPart part) {
+            if (part == null) {
+                throw new ArgumentNullException("part");
+            }
+            // A TermPart's FullWeight property should be a string that univocally
+            // allows the tree-like ordering of all terms in a taxonomy. For a given
+            // TermPart, it should include information on its weight and its name.
+            // Another factor to account is the TermPart's path, or more precisely the
+            // hierarchy of terms "above" it. The order of terms resulting from a
+            // OrderBy on the FullWeight:
+            //  - Parents come before children.
+            //  - For terms at a same level, the ones with higher Weight come first.
+            //  - For terms at the same level and with the same Weight, we use the
+            //    alphabetical order of their titles.
+            // Additional factors:
+            //  - We don't know beforehand how many terms are there in each level of
+            //    a taxonomy.
+            //  - We don't know beforehand how deep a taxonomy can go.
+            // These latter two factors mean we should consider ways to make the FullWeight
+            // string shorter. To make the strings shorter, we use the hex representation
+            // of integers; we set that to a fixed lenght so that the number of
+            // characters does not affect our ordering.
+            // (1048575).ToString("X5") = "FFFFF"
+            // The maximum lenght of the string in the db poses an hard limit on the
+            // number of characters for the FullWeight, hence on the number of levels
+            // in the hierarchy.
+
+            // parent comes before child, so we will append a child's weight to
+            // its parent's
+            var parent = part.Container.As<TermPart>();
+            var parentWeight = parent == null
+                ? string.Empty
+                : parent.FullWeight;
+            // descending order of assigned weight. A "normal" OrderBy in SQL gives
+            // results sorted in ascending order. Terms in Orchard have always been
+            // order by descending weight. This needs to be a fixed length.
+            var partWeight = (1048575 - part.Weight).ToString("X5");
+            var weightTime = DateTime.Now;
+            // siblings weight: this is a "comparative" term to include alphabetical
+            // ordering of the titles. This needs to be a fixed length, just like for
+            // the string for the weight assigned to the part.
+            // Siblings in a taxonomy are those TermParts that have the same Path.
+            var siblingsIds = OrderedSiblings(part)
+                .Select(tp => tp.Id)
+                .ToArray();
+            var siblingsWeight = string.Empty;
+            for (int i = 0; i < siblingsIds.Length; i++) {
+                if (siblingsIds[i]==part.Id) {
+                    siblingsWeight = i.ToString("X5");
+                    break;
+                }
+            }
+            var siblingsTime = DateTime.Now;
+            // the part's Id ensures that no two FullWeight strings will be the same.
+            // This is the only variable length portion of a TermPart's own weight. We
+            // should never rely on this component of the order for anything: its main
+            // point is to make sure each string is unique.
+            Logger.Error($"Times: siblings = {siblingsTime-weightTime}");
+            return $"{parentWeight}{partWeight}.{siblingsWeight}.{part.Id}/";
+            // The length of the portion of weight for a given term is
+            // 5 + 1 + 5 + 1 + x + 1 = x + 13, where x is the number of characters of the Id.
+        }
+
+        private Dictionary<string, IEnumerable<TermPart>> _termFamilies;
+        public IEnumerable<TermPart> OrderedSiblings(TermPart part) {
+            if (_termFamilies == null) {
+                _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
+            }
+            var key = part.TaxonomyId + part.Path;
+            if (!_termFamilies.ContainsKey(key)) {
+                _termFamilies.Add(key, GetTermsQuery(part.TaxonomyId)
+                    .Where(tpr => tpr.Path == part.Path)
+                    .Join<TitlePartRecord>()
+                    .OrderBy(tpr => tpr.Title)
+                    .List());
+            }
+            return _termFamilies[key];
         }
     }
 }

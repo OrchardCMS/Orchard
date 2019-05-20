@@ -94,30 +94,14 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(termPart, Prefix, null, null);
-            StringBuilder fullWeightBuilder = new StringBuilder();
-            string parentOldFullWeight = termPart.FullWeight == null ? termPart.FullWeight : "";
-            TermPart containerTerm = termPart;
+            if(updater.TryUpdateModel(termPart, Prefix, null, null)) {
+                //termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
 
-            for (int i = 0; i < termPart.Path.Count(x => x == '/') - 1; i++) {
-                containerTerm = containerTerm.Container.As<TermPart>();
-                fullWeightBuilder.Insert(0, containerTerm.Weight.ToString("D6") + "." + containerTerm.Id.ToString() + "/");
+                //foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
+                //    childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
+                //}
+
             }
-            fullWeightBuilder.Append(termPart.Weight.ToString("D6") + "." + "/");
-
-            termPart.FullWeight = fullWeightBuilder.ToString();
-
-            foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
-                childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
-            }
-
-            //if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-            //    var existing = _taxonomyService.GetTermByName(termPart.TaxonomyId, termPart.Name);
-            //    if (existing != null && existing.Record != termPart.Record && existing.Container.ContentItem.Record == termPart.Container.ContentItem.Record) {
-            //        updater.AddModelError("Name", T("The term {0} already exists at this level", termPart.Name));
-            //    }
-            //}
-
             return Editor(termPart, shapeHelper);
         }
 
@@ -176,6 +160,14 @@ namespace Orchard.Taxonomies.Drivers {
             if (createFullWeigth) {
                 part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "." + part.Id + "/";
             }
+        }
+
+        protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
+            clonePart.Count = originalPart.Count;
+            clonePart.Selectable = originalPart.Selectable;
+            clonePart.Weight = originalPart.Weight;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.Path = originalPart.Path;
         }
     }
 }
