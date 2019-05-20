@@ -128,7 +128,11 @@
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ContentPreview.Button.cshtml" />
   </ItemGroup>

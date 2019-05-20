@@ -1,12 +1,12 @@
 $(function () {
     $(document)
-        .on('input', '.content-preview-text', function () {
+        .on('input', '#Title_Title', function () {
             $(document).trigger('contentpreview:render');
         })
-        .on('propertychange', '.content-preview-text', function () {
+        .on('propertychange', '#Title_Title', function () {
             $(document).trigger('contentpreview:render');
         })
-        .on('keyup', '.content-preview-text', function (event) {
+        .on('keyup', '#Title_Title', function (event) {
             // handle backspace
             if (event.keyCode == 46 || event.ctrlKey) {
                 $(document).trigger('contentpreview:render');
