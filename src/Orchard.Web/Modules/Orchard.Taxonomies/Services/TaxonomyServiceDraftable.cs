@@ -66,7 +66,7 @@ namespace Orchard.Taxonomies.Services {
             return base.GetTaxonomiesQuery().ForVersion(VersionOptions.Latest);
         }
 
-        new protected IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        new public IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
             return base.GetTermsQuery().ForVersion(VersionOptions.Latest);
         }
     }

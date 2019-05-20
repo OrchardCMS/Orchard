@@ -79,22 +79,26 @@ namespace Upgrade.Controllers {
             return RedirectToAction("Index");
         }
 
+        private const int BATCH = 50;
         [HttpPost]
         public JsonResult MigrateTerms(int id) {
-            var lastContentItemId = id;
-            foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
-                foreach (var term in TermPart.SortObsolete(_taxonomyService.GetTerms(taxonomy.Id))) { 
-                    term.FullWeight = "";
-                    var container = term.Container.As<TermPart>();
-                    for (int i = 0; i < term.Path.Count(x => x == '/')-1; i++) {
-                        term.FullWeight = container.Weight.ToString("D6") + "." + container.Id + "/" + term.FullWeight;
-                        container = container.Container.As<TermPart>();
-                    }
-                    term.FullWeight = term.FullWeight + term.Weight.ToString("D6") + "." + term.Id + "/";
-                    lastContentItemId = term.Id;
-                }
+            var lastCount = id;
+
+            var thisBatch = _taxonomyService
+                .GetTermsQuery()
+                .OrderBy(x => x.TaxonomyId)
+                .OrderBy(tpr => tpr.Path)
+                .Slice(lastCount, BATCH);
+            foreach (var term in thisBatch) {
+                term.FullWeight = _taxonomyService.ComputeFullWeight(term);
             }
-            return new JsonResult { Data = lastContentItemId };
+            if (thisBatch.Any()) {
+                // ajax stops calling once it is returned the same number it sent
+                lastCount += BATCH;
+            }
+
+
+            return new JsonResult { Data = lastCount };
         }
 
     }
