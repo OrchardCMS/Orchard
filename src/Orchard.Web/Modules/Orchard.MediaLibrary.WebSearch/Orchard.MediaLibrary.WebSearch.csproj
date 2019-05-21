@@ -99,15 +99,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\WebSearchController.cs" />
+    <Compile Include="Handlers\BingWebSearchSettingsPartHandler.cs" />
+    <Compile Include="Handlers\PixabayWebSearchSettingsPartHandler.cs" />
     <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
-    <Compile Include="Models\WebSearchSettingsPart.cs" />
+    <Compile Include="Models\PixabayWebSearchSettingsPart.cs" />
+    <Compile Include="Models\BingWebSearchSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="Providers\WebSearchProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets.json" />
-    <Content Include="Assets\Styles.less" />
     <Content Include="Styles\orchard-websearch-admin.css" />
     <Content Include="Styles\Styles.css" />
     <Content Include="Styles\Styles.min.css" />
@@ -137,7 +138,10 @@
     <Content Include="Views\WebSearch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\WebSearch.WebSearchSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\WebSearch.PixabayWebSearchSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\WebSearch.BingWebSearchSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

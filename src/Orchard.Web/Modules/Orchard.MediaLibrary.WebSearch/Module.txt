@@ -9,3 +9,9 @@ Features:
     Orchard.MediaLibrary.WebSearch:
         Description: Description for feature Orchard.MediaLibrary.WebSearch.
         Dependencies: Orchard.MediaLibrary
+    Orchard.MediaLibrary.WebSearch.Bing:
+        Description: Description for feature Orchard.MediaLibrary.WebSearch.Bing.
+        Dependencies: Orchard.MediaLibrary.WebSearch
+    Orchard.MediaLibrary.WebSearch.Pixabay:
+        Description: Description for feature Orchard.MediaLibrary.WebSearch.Pixabay.
+        Dependencies: Orchard.MediaLibrary.WebSearch

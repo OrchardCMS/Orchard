@@ -3,6 +3,8 @@
 @using System.Text
 @using Orchard.ContentManagement
 @using Orchard.MediaLibrary.WebSearch.Models
+@using Orchard.MediaLibrary.WebSearch.Providers
+@using System.Linq
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -10,7 +12,7 @@
     @{
         Script.Require("jQuery").AtFoot();
         Script.Require("Knockout").AtFoot();
-        
+
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-websearch-admin.css");
         Style.Require("FontAwesome");
@@ -20,16 +22,21 @@
     @Display.HeadScripts()
     @Display.HeadLinks()
     @Display.StyleSheetLinks()
-    
+
     @{
-        var apiKey = WorkContext.CurrentSite.As<WebSearchSettingsPart>().ApiKey;
+        var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
+
+        var pixabayApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Pixabay")?.ApiKey ?? "";
+        var bingApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Bing")?.ApiKey ?? "";
+        var apiNames = webSearchProviders.Select(provider => provider.Name);
     }
 </head>
-<body >
+<body>
     <div id="websearch-main">
         <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
-        
-        @if (String.IsNullOrWhiteSpace(apiKey)) {
+
+        @if (String.IsNullOrWhiteSpace(pixabayApiKey))
+        {
             <div id="message-api">
                 @T("You need to define an API Key in the Media settings before being able to use this feature.")
             </div>
@@ -37,16 +44,19 @@
         <form data-bind="submit: doSearch">
             <div class="query-container">
                 <div id="icon">
-                    <button type="submit" class="fa fa-search"></button>    
+                    <button type="submit" class="fa fa-search"></button>
                 </div>
                 <div id="query">
-                    <input type="text" autofocus placeholder="@T("search")"/>
+                    <input type="text" autofocus=autofocus placeholder="@T("search")" />
+                </div>
+                <div id="selectSearchApi">
+                    @Html.DropDownList("ApiNames", new SelectList(apiNames))
                 </div>
             </div>
         </form>
 
         <ul id="websearch-results" data-bind="foreach: results">
-            <li data-bind="style: { backgroundImage: 'url(' + data.previewURL + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+            <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
                 <div class="overlay">
                     <p class="filename" data-bind="text: getFilename()"></p>
                     <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
@@ -58,22 +68,25 @@
     <div id="websearch-properties">
         <article data-bind="with: focus">
             <h1>@T("PROPERTIES")</h1>
-            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.previewURL + ')' }"></div>
+            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }"></div>
             <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight"></span></div>
             <div class="filename"><em>@T("Filename:")</em> <span data-bind="text: getFilename()"></span></div>
             <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.imageSize/1024) + ' KB'"></span></div>
             <div class="actions">
-                <a class="source button" data-bind="attr: {href: data.largeImageURL}" target="_blank">@T("Page")</a>
-                <a class="media button" data-bind="attr: {href: data.largeImageURL}" target="_blank">@T("Open")</a>
+                <a class="source button" data-bind="attr: {href: data.imageUrl}" target="_blank">@T("Page")</a>
+                <a class="media button" data-bind="attr: {href: data.imageUrl}" target="_blank">@T("Open")</a>
             </div>
         </article>
-        
+
         <div id="websearch-properties-selection" data-bind="visible: selection().length">
             <h1>@T("SELECTION")</h1>
-            <button id="button-import">@if (Model.Replace == null) { <text>@T("Import")</text> } else { <text>@T("Replace")</text> } </button>
+            <button id="button-import">@if (Model.Replace == null)
+            {<text>@T("Import")</text> }
+        else
+        { <text>@T("Replace")</text>} </button>
             <ul data-bind="foreach: selection">
                 <li>
-                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.previewURL + ')' }">
+                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.backgroundImage + ')' }">
                         <div class="selection-overlay">
                             <div class="selection-progress" data-bind="css: status(), attr: { 'title': tooltip() == '' ? null : tooltip() }"></div>
                         </div>
@@ -81,10 +94,11 @@
                 </li>
             </ul>
         </div>
-    </div>    
+    </div>
     l
-    @using(Script.Foot()) {
-    <script type="text/javascript">
+    @using (Script.Foot())
+    {
+        <script type="text/javascript">
         //<![CDATA[
         $(function () {
             function SearchResult(data) {
@@ -97,13 +111,16 @@
                 self.status = ko.observable('');
                 self.tooltip = ko.observable('');
 
+                self.data.imageUrl = self.data.largeImageURL || self.data.contentUrl;
+                self.data.backgroundImage = self.data.previewURL || self.data.thumbnailUrl;
+
                 // operations
                 self.setData = function (value) {
                     self.data = value;
                 };
 
                 self.getFilename = function () {
-                    var value = self.data.largeImageURL;
+                    var value = self.data.imageUrl;
                     return value.substr(value.lastIndexOf('/') + 1);
                 };
 
@@ -126,11 +143,43 @@
 
                 self.doSearch = function () {
                     var query = $('#query > input').val();
-                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@apiKey';
+
+                    var selectedApi = $('#selectSearchApi select').val();
+                    switch (selectedApi) {
+                        case "Pixabay":
+                            self.doPixabaySearch(query);
+                            break;
+                        case "Bing":
+                            self.doBingSearch(query);
+                            break;
+                        default:
+                    }
+                };
+
+                self.doBingSearch = function (query) {
+                    var url = 'https://api.cognitive.microsoft.com/bing/v7.0/search?q=' + encodeURIComponent(query);
+                    var header = { "Ocp-Apim-Subscription-Key": "@bingApiKey" };
 
                     $.ajax({
-                        type: "GET",
-                        url: url                        
+                        type: 'GET',
+                        url: url,
+                        headers: header,
+                    }).done(function (msg) {
+                        var results = msg.images.value;
+                        self.clearSelection();
+                        self.results([]);
+                        for (var i = 0; i < results.length; i++) {
+                            self.results.push(new SearchResult(results[i]));
+                        }
+                    });
+                };
+
+                self.doPixabaySearch = function (query) {
+                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@pixabayApiKey';
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
                     }).done(function (msg) {
                         var results = msg.hits;
                         self.clearSelection();
@@ -214,7 +263,7 @@
 
             $("#button-import").on("click", function (e) {
                 viewModel.selection().forEach(function (item) {
-                    var url = item.data.largeImageURL;
+                    var url = item.data.imageUrl;
                     item.status('uploading');
                     item.tooltip('');
                     @if (Model.Replace == null) {
@@ -260,9 +309,9 @@
             });
         })
         //]]>
-    </script>
+        </script>
     }
-    
-@Display.FootScripts()
+
+    @Display.FootScripts()
 </body>
 </html>
