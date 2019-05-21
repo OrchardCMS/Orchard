@@ -48,8 +48,6 @@ namespace Orchard.Taxonomies.Services {
         void DeleteTerm(TermPart termPart);
         void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm);
         void ProcessPath(TermPart term);
-        void ProcessFullWeight(TermPart term, TermPart parentTerm);
-        string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight);
 
         IContentQuery<TermPart, TermPartRecord> GetTermsQuery();
         IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId);
@@ -98,7 +96,7 @@ namespace Orchard.Taxonomies.Services {
         string ComputeFullWeight(TermPart part);
         /// <summary>
         /// Returns all siblings of the given TermPart, ordered in ascending alphabetical
-        /// order of their Name property.
+        /// order of their Name property. This IEnumerable also includes the part.
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
