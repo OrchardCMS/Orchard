@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
@@ -44,9 +46,9 @@ namespace Orchard.Core.Contents {
                         var createRouteValues = cim.CreateRouteValues;
                         // review: the display name should be a LocalizedString
                         if (createRouteValues.Any())
-                            menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues)
-                                // Apply "PublishOwn" permission for the content type
-                                .Permission(DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.PublishOwnContent.Name], contentTypeDefinition)));
+                            menu.Add(T.Encode(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues)
+                                // Apply "CreateContent" permission for the content type
+                                .Permission(DynamicPermissions.CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.CreateContent.Name], contentTypeDefinition)));
                     }
                 });
             }

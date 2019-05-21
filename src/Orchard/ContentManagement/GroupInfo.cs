@@ -3,8 +3,6 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class GroupInfo {
-        private string _position = "5";
-
         public GroupInfo(LocalizedString name) {
             Id = name.TextHint.ToSafeName();
             Name = name;
@@ -12,9 +10,6 @@ namespace Orchard.ContentManagement {
 
         public string Id { get; set; }
         public LocalizedString Name { get; set; }
-        public string Position {
-            get { return _position; }
-            set { _position = value; }
-        }
+        public string Position { get; set; } = "5";
     }
 }

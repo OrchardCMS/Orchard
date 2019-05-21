@@ -10,7 +10,11 @@
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublishedEvent = eventData.Get<bool>("Published");
     var itemDisplayText = contentItem != null ? Html.ItemDisplayText(contentItem) : default(IHtmlString);
-    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title") ?? "[untitled]";
+    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title");
+    if (string.IsNullOrEmpty(title))
+    {
+        title = "[untitled]";
+    }
 }
 <section class="audittrail-content-eventsummary">
     @if (contentItem != null) {

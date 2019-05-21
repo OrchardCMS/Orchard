@@ -206,21 +206,26 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool ProcessPath(AutoroutePart part) {
-            var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
+            var parthWithSamePath = _contentManager.Query<AutoroutePart, AutoroutePartRecord>()
+                .Where(p => p.DisplayAlias != null && p.DisplayAlias.Equals(part.Path, StringComparison.InvariantCultureIgnoreCase)
+                && p.ContentItemRecord.Id != part.Id)
+                .Count();
+            if (parthWithSamePath > 0) {
+                var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
 
-            // Don't include *this* part in the list
-            // of slugs to consider for conflict detection.
-            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
+                // Don't include *this* part in the list
+                // of slugs to consider for conflict detection.
+                pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
 
-            if (pathsLikeThis.Any()) {
-                var originalPath = part.Path;
-                var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
-                part.DisplayAlias = newPath;
+                if (pathsLikeThis.Any()) {
+                    var originalPath = part.Path;
+                    var newPath = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
+                    part.DisplayAlias = newPath;
 
-                if (originalPath != newPath)
-                    return false;
+                    if (originalPath != newPath)
+                        return false;
+                }
             }
-
             return true;
         }
 

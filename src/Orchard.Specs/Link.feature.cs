@@ -136,124 +136,116 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "Event.SiteUrl.Value",
                         "http://www.orchardproject.net"});
+            table3.AddRow(new string[] {
+                        "Event.SiteUrl.Text",
+                        "Orchard"});
 #line 37
     testRunner.When("I fill in", ((string)(null)), table3, "When ");
+#line 41
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 42
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 43
+    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 44
+    testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 45
+    testRunner.Then("I should see \"Site Url:\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 46
+        testRunner.And("I should see \"<a href=\\\"http://www.orchardproject.net\\\">Orchard</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 49
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Event.SiteUrl.Text",
-                        "Orchard"});
-#line 40
+                        "Fields[SiteUrl].LinkFieldSettings.Hint",
+                        "Enter the url of the web site"});
+#line 50
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
-#line 43
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 44
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
-    testRunner.Then("I should see \"The Event has been created as a draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 46
-    testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 47
-    testRunner.Then("I should see \"Site Url:\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 48
-        testRunner.And("I should see \"<a href=\\\"http://www.orchardproject.net\\\">Orchard</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 51
+#line 53
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 54
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 55
+    testRunner.Then("I should see \"Enter the url of the web site\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 58
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Hint",
-                        "Enter the url of the web site"});
-#line 52
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
+                        "true"});
+#line 59
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
-#line 55
+#line 62
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 56
+#line 63
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 57
-    testRunner.Then("I should see \"Enter the url of the web site\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 60
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
-                        "true"});
-#line 61
-        testRunner.And("I fill in", ((string)(null)), table6, "And ");
+                        "Event.SiteUrl.Value",
+                        ""});
 #line 64
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 65
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I fill in", ((string)(null)), table6, "And ");
+#line 67
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 70
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Event.SiteUrl.Value",
-                        ""});
-#line 66
+                        "Fields[SiteUrl].LinkFieldSettings.DefaultValue",
+                        "http://www.orchardproject.net"});
+#line 71
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
-#line 69
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 70
-    testRunner.Then("I should see \"Url is required for Site Url.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 73
+#line 74
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 75
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 76
+    testRunner.Then("I should see \"value=\\\"http://www.orchardproject.net\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 79
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.DefaultValue",
-                        "http://www.orchardproject.net"});
-#line 74
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
+                        "true"});
+#line 80
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 77
+#line 83
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 78
+#line 84
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 79
-    testRunner.Then("I should see \"value=\\\"http://www.orchardproject.net\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 82
+#line 85
+    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 88
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
-                        "true"});
-#line 83
-        testRunner.And("I fill in", ((string)(null)), table9, "And ");
-#line 86
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 87
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 88
-    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 91
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table10.AddRow(new string[] {
-                        "Fields[0].LinkFieldSettings.Required",
+                        "Fields[SiteUrl].LinkFieldSettings.Required",
                         "false"});
+#line 89
+        testRunner.And("I fill in", ((string)(null)), table9, "And ");
 #line 92
-        testRunner.And("I fill in", ((string)(null)), table10, "And ");
-#line 95
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 96
+#line 93
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 97
+#line 94
     testRunner.Then("I should not see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

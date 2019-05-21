@@ -24,7 +24,7 @@ Scenario: I can create a new blog and blog post
             | Body.Text | Hi there. |
         And I hit "Publish"
         And I am redirected
-    Then I should see "The Blog Post has been created and published."
+    Then I should see "Your Blog Post has been created."
     When I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post.*?</h1>"

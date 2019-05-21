@@ -12,7 +12,7 @@ Scenario: I can edit a default layer
     When I fill in
             | name | value |
             | LayerPart.Description | This is the default layer. |
-        And I hit "Save Draft"
+        And I hit "Publish"
         And I am redirected
     Then I should see "Your Layer has been saved"
     When I follow "Edit"
@@ -20,6 +20,13 @@ Scenario: I can edit a default layer
 
 Scenario: I can add a new layer and that layer is active when I'm redirected to the widget management page
     Given I have installed Orchard
+    When I go to "Admin/ContentTypes/Edit/Layer"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"Layer\" settings have been saved."
     When I go to "Admin/Widgets"
         And I follow "Add a new layer..."
     Then I should see "<h1[^>]*>Add Layer</h1>"
@@ -29,7 +36,7 @@ Scenario: I can add a new layer and that layer is active when I'm redirected to 
             | LayerPart.LayerRule | url "~/awesome*" |
         And I hit "Save Draft"
         And I am redirected
-    Then I should see "The Layer has been created as draft."
+    Then I should see "Your Layer has been created."
         And I should see "<option[^>]+selected="selected"[^>]+value="\d+">For awesome stuff</option>"
 
 Scenario: I can delete a layer
@@ -45,12 +52,18 @@ Scenario: I can delete a layer
 
 Scenario: I can add a widget to a specific zone in a specific layer
     Given I have installed Orchard
+    When I go to "Admin/ContentTypes/Edit/HtmlWidget"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"Html Widget\" settings have been saved."
     When I go to "Admin/Widgets"
         And I fill in
             | name | value |
             | layerId | Disabled |
-        And I hit "Show"
-    Then I should see "<option[^>]*selected[^>]*>Disabled"
+    Then I should see "<option[^>]+selected="selected"[^>]+value="\d+">Default</option>"
     When I follow "Add" where href has "zone=Header"
     Then I should see "<h1[^>]*>Choose A Widget</h1>"
     When I follow "<h2>Html Widget</h2>"
@@ -62,5 +75,5 @@ Scenario: I can add a widget to a specific zone in a specific layer
         And I hit "Save Draft"
         And I am redirected
     Then I should see "Your Html Widget has been added."
-        And I should see "<option[^>]*selected[^>]*>Disabled"
+        And I should see "<option[^>]+selected="selected"[^>]+value="\d+">Default</option>"
         And I should see "<li[^>]*class="[^"]*widgets-this-layer[^"]*"[^>]*>\s*<form[^>]*>\s*<h3[^>]*>\s*<a[^>]*>Flashy HTML Widget</a>\s*</h3>"

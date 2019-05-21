@@ -43,7 +43,7 @@ namespace Orchard.Core.Settings.State {
             };
         }
         private ShellStateRecord GetExistingOrNewShellStateRecord() {
-            //Fix for https://orchard.codeplex.com/workitem/21176 / https://github.com/OrchardCMS/Orchard/issues/6075 change to get ensure ShellState record only retrieved once.
+            //Fix for https://github.com/OrchardCMS/Orchard/issues/6075 change to get ensure ShellState record only retrieved once.
             var shellStateRecordId = _cacheManager.Get("ShellStateRecordId", ctx => {
                 var shellState = _shellStateRepository.Table.FirstOrDefault();
 

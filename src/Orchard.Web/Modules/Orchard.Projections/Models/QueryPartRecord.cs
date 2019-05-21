@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
@@ -26,6 +25,5 @@ namespace Orchard.Projections.Models {
         [CascadeAllDeleteOrphan, Aggregate]
         [XmlArray("Layouts")]
         public virtual IList<LayoutRecord> Layouts { get; set; }
-
     }
 }

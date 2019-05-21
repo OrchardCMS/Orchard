@@ -15,6 +15,12 @@
 </fieldset>
 
 <fieldset>
+    @Html.EditorFor(m => m.CustomFormPart.UseContentTypePermissions)
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.UseContentTypePermissions)" class="forcheckbox">@T("Use Content Type permissions")</label>
+    <span class="hint">@T("Check if you want to verify the content type permissions for the user when creating or editing content items through the form.")</span>
+</fieldset>
+
+<fieldset>
     @Html.EditorFor(m => m.CustomFormPart.SaveContentItem)
     <label for="@Html.FieldIdFor(m => m.CustomFormPart.SaveContentItem)" class="forcheckbox">@T("Save the content item once the form is submitted")</label>
     <span class="hint">@T("Check if you want to save the content item associated to the form. Leave empty if you just want to trigger an action on the event.")</span>

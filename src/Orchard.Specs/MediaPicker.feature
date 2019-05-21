@@ -6,7 +6,7 @@
 Scenario: Creating and using media fields
 
     # Creating an Event content type
-    Given I have installed Orchard
+    Given I have installed Orchard 
         And I have installed "Orchard.Media"
         And I have installed "Orchard.MediaPicker"
 
@@ -47,7 +47,7 @@ Scenario: Creating and using media fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                    | value                |
-            | Fields[0].MediaPickerFieldSettings.Hint | Please select a file |
+            | Fields[File].MediaPickerFieldSettings.Hint | Please select a file |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Please select a file"
@@ -56,7 +56,7 @@ Scenario: Creating and using media fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                        | value |
-            | Fields[0].MediaPickerFieldSettings.Required | true  |
+            | Fields[File].MediaPickerFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in
@@ -69,8 +69,8 @@ Scenario: Creating and using media fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                                 | value |
-            | ext-Fields[0].MediaPickerFieldSettings               | true  |
-            | Fields[0].MediaPickerFieldSettings.AllowedExtensions | jpg   |
+            | ext-Fields[File].MediaPickerFieldSettings               | true  |
+            | Fields[File].MediaPickerFieldSettings.AllowedExtensions | jpg   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     And I fill in

@@ -1,4 +1,5 @@
-﻿Feature: Text Field
+﻿#1 skip case
+Feature: Text Field
     In order to add Text content to my types
     As an administrator
     I want to create, edit and publish Text fields
@@ -34,32 +35,36 @@ Scenario: Creating and using Text fields
     # The display option should be effective
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                                       | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
+            | name                                                             | value |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-    Then I should see "class=\"text large\""
+    Then I should see "\"Event\" settings have been saved."
 
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                                         | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required | true  |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
+        When I go to "Admin/Contents/Create/Event"
         And I fill in
             | name               | value |
             | Event.Subject.Text |       |
         And I hit "Save Draft"
-    Then I should see "The Subject field is required."
+   ######## Then I should see "Please fill out this field."
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                                     | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
+            | name														     | value                |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
+        When I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
 
     # Creating an Event content item
@@ -76,17 +81,18 @@ Scenario: Creating and using Text fields
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                                             | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
+            | name                                                                   | value                |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
         And I hit "Save"
+        And I am redirected
         And I go to "Admin/Contents/Create/Event"
     Then I should see "value=\"Orchard Harvest 2016\""
 
     # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                                             | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
+            | name																     | value |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
@@ -94,8 +100,8 @@ Scenario: Creating and using Text fields
     # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                                             | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | false |
+            | name                                                                   | value |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

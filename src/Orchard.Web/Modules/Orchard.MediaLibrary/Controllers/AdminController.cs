@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -285,6 +286,13 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
 
                 var newFileName = _mediaLibraryService.GetUniqueFilename(media.FolderPath, media.FileName);
+
+                var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
+                // skip file if the allowed extensions is defined and doesn't match
+                if (!settings.IsFileAllowed(Path.GetFileName(newFileName))) {
+                    return Json(false);
+                }
 
                 _mediaLibraryService.CopyFile(media.FolderPath, media.FileName, media.FolderPath, newFileName);
 

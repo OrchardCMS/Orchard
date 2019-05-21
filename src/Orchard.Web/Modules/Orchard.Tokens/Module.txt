@@ -2,8 +2,8 @@ Name: Tokens
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://www.orchardproject.net
-Version: 1.10.2
-OrchardVersion: 1.9
+Version: 1.10.3
+OrchardVersion: 1.10.3
 Description: Provides a system for performing string replacements with common site values.
 Features:
     Orchard.Tokens:

@@ -4,17 +4,17 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Forms.Services;
-using Orchard.Projections.Descriptors;
 using Orchard.Localization;
-using Orchard.Projections.Descriptors.Property;
+using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
+using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManagerExtension {
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
@@ -203,17 +203,11 @@ namespace Orchard.Projections.Services {
                 tokens = new Dictionary<string, object>();
             }
 
-            // pre-executing all groups 
-            var versionScope = queryRecord.VersionScope;
-            foreach (var group in queryRecord.FilterGroups) {
+            var version = queryRecord.VersionScope.ToVersionOptions();
 
-                IHqlQuery contentQuery;
-                if (versionScope == QueryVersionScopeOptions.Latest) {
-                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Latest);
-                }
-                else {
-                    contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
-                }
+            // pre-executing all groups
+            foreach (var group in queryRecord.FilterGroups) {
+                var contentQuery = _contentManager.HqlQuery().ForVersion(version);
 
                 // iterate over each filter to apply the alterations to the query object
                 foreach (var filter in group.Filters) {
@@ -248,7 +242,7 @@ namespace Orchard.Projections.Services {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
                         State = FormParametersHelper.ToDynamic(sortCriterion.State),
-                        QueryPartRecord= queryRecord
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = sortCriterion.Category;

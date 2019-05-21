@@ -92,8 +92,11 @@ namespace Orchard.OpenId.OwinMiddlewares {
                         return Task.FromResult(0);
                     }
                 }
-
             };
+
+            // Allowing login from all AAD tenants (so with any Microsoft ID). We'd need to list all possible AAD tenants 
+            // here otherwise.
+            openIdOptions.TokenValidationParameters.ValidateIssuer = false;
 
             if (azureWebSiteProtectionEnabled) {
                 middlewares.Add(new OwinMiddlewareRegistration {

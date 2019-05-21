@@ -286,6 +286,11 @@ namespace Orchard.ContentManagement {
         }
 
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
+            if (!ids.Any()) {
+                // since there are no ids, I have to get no item, so it makes
+                // sense to not do anything at all
+                return Enumerable.Empty<T>();
+            }
             var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) => {
                 contentItemCriteria.Add(Restrictions.In("Id", ids.ToArray()));
                 if (options.IsPublished) {
@@ -318,6 +323,11 @@ namespace Orchard.ContentManagement {
 
 
         public IEnumerable<ContentItem> GetManyByVersionId(IEnumerable<int> versionRecordIds, QueryHints hints) {
+            if (!versionRecordIds.Any()) {
+                // since there are no ids, I have to get no item, so it makes
+                // sense to not do anything at all
+                return Enumerable.Empty<ContentItem>();
+            }
             var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) =>
                 contentItemVersionCriteria.Add(Restrictions.In("Id", versionRecordIds.ToArray())));
 

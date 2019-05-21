@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -49,12 +49,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -174,16 +175,30 @@
     <Content Include="Scripts\langs\zh_TW.js" />
     <Content Include="Scripts\license.txt" />
     <Content Include="Scripts\orchard-tinymce.js" />
+    <Content Include="Scripts\plugins\advlist\plugin.js" />
     <Content Include="Scripts\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\plugins\anchor\plugin.js" />
     <Content Include="Scripts\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\plugins\autolink\plugin.js" />
     <Content Include="Scripts\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\plugins\autoresize\plugin.js" />
     <Content Include="Scripts\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\plugins\autosave\plugin.js" />
     <Content Include="Scripts\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\plugins\bbcode\plugin.js" />
     <Content Include="Scripts\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\plugins\charmap\plugin.js" />
     <Content Include="Scripts\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\plugins\codesample\css\prism.css" />
+    <Content Include="Scripts\plugins\codesample\plugin.js" />
+    <Content Include="Scripts\plugins\codesample\plugin.min.js" />
+    <Content Include="Scripts\plugins\code\plugin.js" />
     <Content Include="Scripts\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\plugins\colorpicker\plugin.js" />
     <Content Include="Scripts\plugins\colorpicker\plugin.min.js" />
+    <Content Include="Scripts\plugins\contextmenu\plugin.js" />
     <Content Include="Scripts\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\plugins\directionality\plugin.js" />
     <Content Include="Scripts\plugins\directionality\plugin.min.js" />
     <Content Include="Scripts\plugins\emoticons\img\smiley-cool.gif" />
     <Content Include="Scripts\plugins\emoticons\img\smiley-cry.gif" />
@@ -201,19 +216,30 @@
     <Content Include="Scripts\plugins\emoticons\img\smiley-undecided.gif" />
     <Content Include="Scripts\plugins\emoticons\img\smiley-wink.gif" />
     <Content Include="Scripts\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\plugins\emoticons\plugin.js" />
     <Content Include="Scripts\plugins\emoticons\plugin.min.js" />
-    <Content Include="Scripts\plugins\example\dialog.html" />
-    <Content Include="Scripts\plugins\example\plugin.min.js" />
-    <Content Include="Scripts\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullpage\plugin.js" />
     <Content Include="Scripts\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullscreen\plugin.js" />
     <Content Include="Scripts\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\plugins\help\img\logo.png" />
+    <Content Include="Scripts\plugins\help\plugin.js" />
+    <Content Include="Scripts\plugins\help\plugin.min.js" />
+    <Content Include="Scripts\plugins\hr\plugin.js" />
     <Content Include="Scripts\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\plugins\imagetools\plugin.js" />
+    <Content Include="Scripts\plugins\imagetools\plugin.min.js" />
+    <Content Include="Scripts\plugins\image\plugin.js" />
     <Content Include="Scripts\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\plugins\importcss\plugin.js" />
     <Content Include="Scripts\plugins\importcss\plugin.min.js" />
+    <Content Include="Scripts\plugins\insertdatetime\plugin.js" />
     <Content Include="Scripts\plugins\insertdatetime\plugin.min.js" />
-    <Content Include="Scripts\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\plugins\legacyoutput\plugin.js" />
     <Content Include="Scripts\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\plugins\link\plugin.js" />
     <Content Include="Scripts\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\plugins\lists\plugin.js" />
     <Content Include="Scripts\plugins\lists\plugin.min.js" />
     <Content Include="Scripts\plugins\medialibrary\plugin.js" />
     <Content Include="Scripts\plugins\medialibrary\plugin.min.js">
@@ -223,26 +249,47 @@
     <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
       <DependentUpon>plugin.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\plugins\media\plugin.js" />
     <Content Include="Scripts\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\plugins\nonbreaking\plugin.js" />
     <Content Include="Scripts\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\plugins\noneditable\plugin.js" />
     <Content Include="Scripts\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\plugins\pagebreak\plugin.js" />
     <Content Include="Scripts\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\plugins\paste\plugin.js" />
     <Content Include="Scripts\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\plugins\preview\plugin.js" />
     <Content Include="Scripts\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\plugins\print\plugin.js" />
     <Content Include="Scripts\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\plugins\save\plugin.js" />
     <Content Include="Scripts\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\plugins\searchreplace\plugin.js" />
     <Content Include="Scripts\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\plugins\spellchecker\plugin.js" />
     <Content Include="Scripts\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\plugins\tabfocus\plugin.js" />
     <Content Include="Scripts\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\plugins\table\plugin.js" />
     <Content Include="Scripts\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\plugins\template\plugin.js" />
     <Content Include="Scripts\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\plugins\textcolor\plugin.js" />
     <Content Include="Scripts\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\plugins\textpattern\plugin.js" />
     <Content Include="Scripts\plugins\textpattern\plugin.min.js" />
+    <Content Include="Scripts\plugins\toc\plugin.js" />
+    <Content Include="Scripts\plugins\toc\plugin.min.js" />
     <Content Include="Scripts\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\plugins\visualblocks\plugin.js" />
     <Content Include="Scripts\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\plugins\visualchars\plugin.js" />
     <Content Include="Scripts\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\plugins\wordcount\plugin.js" />
     <Content Include="Scripts\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\skins\lightgray\content.mobile.min.css" />
+    <Content Include="Scripts\skins\lightgray\skin.mobile.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
@@ -260,10 +307,15 @@
     <Content Include="Scripts\skins\lightgray\img\loader.gif" />
     <Content Include="Scripts\skins\lightgray\img\object.gif" />
     <Content Include="Scripts\skins\lightgray\img\trans.gif" />
-    <Content Include="Scripts\skins\lightgray\skin.ie7.min.css" />
     <Content Include="Scripts\skins\lightgray\skin.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
+    <Content Include="Scripts\themes\inlite\theme.js" />
+    <Content Include="Scripts\themes\inlite\theme.min.js" />
+    <Content Include="Scripts\themes\mobile\theme.js" />
+    <Content Include="Scripts\themes\mobile\theme.min.js" />
+    <Content Include="Scripts\themes\modern\theme.js" />
     <Content Include="Scripts\themes\modern\theme.min.js" />
+    <Content Include="Scripts\tinymce.js" />
     <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +325,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\orchard-tinymce.css" />
+    <Content Include="Styles\orchard-tinymce.min.css" />
     <Content Include="Views\Body-Html.Editor.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +382,9 @@
     <Content Include="Assets.json" />
     <Content Include="Assets\Less\orchard-tinymce.less" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-mobile.woff" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -367,16 +423,10 @@
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
-          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <CustomServerUrl>https://github.com/OrchardCMS/Orchard</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
-  </Target>
 </Project>

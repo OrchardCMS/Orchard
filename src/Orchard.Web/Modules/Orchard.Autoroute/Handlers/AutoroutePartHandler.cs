@@ -12,6 +12,7 @@ namespace Orchard.Autoroute.Handlers {
     public class AutoroutePartHandler : ContentHandler {
 
         private readonly Lazy<IAutorouteService> _autorouteService;
+        private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IHomeAliasService _homeAliasService;
         private readonly ILockingProvider _lockingProvider;
@@ -21,12 +22,14 @@ namespace Orchard.Autoroute.Handlers {
         public AutoroutePartHandler(
             IRepository<AutoroutePartRecord> autoroutePartRepository,
             Lazy<IAutorouteService> autorouteService,
+            IContentManager contentManager,
             IOrchardServices orchardServices,
             IHomeAliasService homeAliasService,
             ILockingProvider lockingProvider) {
 
             Filters.Add(StorageFilter.For(autoroutePartRepository));
             _autorouteService = autorouteService;
+            _contentManager = contentManager;
             _orchardServices = orchardServices;
             _homeAliasService = homeAliasService;
             _lockingProvider = lockingProvider;
@@ -44,8 +47,8 @@ namespace Orchard.Autoroute.Handlers {
 
             // Remove alias if destroyed, removed or unpublished
             OnRemoving<AutoroutePart>((ctx, part) => RemoveAlias(part));
-            OnDestroyed<AutoroutePart>((ctx, part) => RemoveAlias(part));
-            OnUnpublished<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnDestroying<AutoroutePart>((ctx, part) => RemoveAlias(part));
+            OnUnpublishing<AutoroutePart>((ctx, part) => RemoveAlias(part));
 
             // Register alias as identity
             OnGetContentItemMetadata<AutoroutePart>((ctx, part) => {
@@ -133,7 +136,8 @@ namespace Orchard.Autoroute.Handlers {
             }
 
             _lockingProvider.Lock(LockString, () => {
-                _autorouteService.Value.RemoveAliases(part);
+                var publishedPart = _contentManager.Get<AutoroutePart>(part.ContentItem.Id, VersionOptions.Published);
+                _autorouteService.Value.RemoveAliases(publishedPart);
             });
         }
     }

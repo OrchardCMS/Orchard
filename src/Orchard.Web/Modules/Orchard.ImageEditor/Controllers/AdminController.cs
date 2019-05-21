@@ -94,6 +94,13 @@ namespace Orchard.ImageEditor.Controllers {
                 return HttpNotFound();
             }
 
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
+            // skip file if the allowed extensions is defined and doesn't match
+            if (!settings.IsFileAllowed(Path.GetFileName(media.FileName))) {
+                return Json(false);
+            }
+
             var image = media.As<ImagePart>();
 
             content = content.Substring(signature.Length);

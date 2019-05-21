@@ -120,7 +120,7 @@ for (int i = index; i < Model.MenuItemEntries.Count; i++) {
                         @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
                     </span>
                     <span class="action-link">
-                        @Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })
+			@Html.Link(T("Delete").Text, Url.ItemRemoveUrl(menuPartEntry.ContentItem,null), new { itemprop = "RemoveUrl UnsafeUrl" })
                     </span>
                 </span>
             </div>

@@ -92,7 +92,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 12
     testRunner.When("I fill in", ((string)(null)), table1, "When ");
 #line 15
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 17
@@ -117,30 +117,47 @@ this.ScenarioSetup(scenarioInfo);
 #line 22
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 23
-    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 24
-        testRunner.And("I follow \"Add a new layer...\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 25
-    testRunner.Then("I should see \"<h1[^>]*>Add Layer</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Layer\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table2.AddRow(new string[] {
+                        "ContentTypeSettingsViewModel.Draftable",
+                        "true"});
+#line 24
+        testRunner.And("I fill in", ((string)(null)), table2, "And ");
+#line 27
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
+    testRunner.Then("I should see \"\\\"Layer\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 30
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 31
+        testRunner.And("I follow \"Add a new layer...\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
+    testRunner.Then("I should see \"<h1[^>]*>Add Layer</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table3.AddRow(new string[] {
                         "LayerPart.Name",
                         "For awesome stuff"});
-            table2.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "LayerPart.LayerRule",
                         "url \"~/awesome*\""});
-#line 26
-    testRunner.When("I fill in", ((string)(null)), table2, "When ");
-#line 30
-        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 32
-    testRunner.Then("I should see \"The Layer has been created as draft.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 33
+    testRunner.When("I fill in", ((string)(null)), table3, "When ");
+#line 37
+        testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 38
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 39
+    testRunner.Then("I should see \"Your Layer has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 40
         testRunner.And("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">For awesome stuff</" +
                     "option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -152,25 +169,25 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ICanDeleteALayer()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can delete a layer", ((string[])(null)));
-#line 35
-this.ScenarioSetup(scenarioInfo);
-#line 36
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 37
-    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 38
-    testRunner.Then("I should see \"<option[^>]*>Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 39
-    testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 40
-    testRunner.Then("I should see \"<input[^>]*name=\"LayerPart.Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 41
-    testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 42
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+this.ScenarioSetup(scenarioInfo);
 #line 43
-    testRunner.Then("I should see \"Layer was successfully deleted\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 44
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 45
+    testRunner.Then("I should see \"<option[^>]*>Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 46
+    testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 47
+    testRunner.Then("I should see \"<input[^>]*name=\"LayerPart.Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 48
+    testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 49
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 50
+    testRunner.Then("I should see \"Layer was successfully deleted\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 51
         testRunner.And("I should not see \"<option[^>]*>Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -181,54 +198,69 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ICanAddAWidgetToASpecificZoneInASpecificLayer()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can add a widget to a specific zone in a specific layer", ((string[])(null)));
-#line 46
-this.ScenarioSetup(scenarioInfo);
-#line 47
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 48
-    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table3.AddRow(new string[] {
-                        "layerId",
-                        "Disabled"});
-#line 49
-        testRunner.And("I fill in", ((string)(null)), table3, "And ");
-#line 52
-        testRunner.And("I hit \"Show\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 53
-    testRunner.Then("I should see \"<option[^>]*selected[^>]*>Disabled\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+this.ScenarioSetup(scenarioInfo);
 #line 54
-    testRunner.When("I follow \"Add\" where href has \"zone=Header\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 55
-    testRunner.Then("I should see \"<h1[^>]*>Choose A Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 56
-    testRunner.When("I follow \"<h2>Html Widget</h2>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 57
-    testRunner.Then("I should see \"<h1[^>]*>Add Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/HtmlWidget\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table4.AddRow(new string[] {
+                        "ContentTypeSettingsViewModel.Draftable",
+                        "true"});
+#line 56
+        testRunner.And("I fill in", ((string)(null)), table4, "And ");
+#line 59
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 60
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 61
+    testRunner.Then("I should see \"\\\"Html Widget\\\" settings have been saved.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 62
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table5.AddRow(new string[] {
+                        "layerId",
+                        "Disabled"});
+#line 63
+        testRunner.And("I fill in", ((string)(null)), table5, "And ");
+#line 66
+    testRunner.Then("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 67
+    testRunner.When("I follow \"Add\" where href has \"zone=Header\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 68
+    testRunner.Then("I should see \"<h1[^>]*>Choose A Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 69
+    testRunner.When("I follow \"<h2>Html Widget</h2>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 70
+    testRunner.Then("I should see \"<h1[^>]*>Add Widget</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table6.AddRow(new string[] {
                         "WidgetPart.Title",
                         "Flashy HTML Widget"});
-            table4.AddRow(new string[] {
+            table6.AddRow(new string[] {
                         "Body.Text",
                         "<p><blink>hi</blink></p>"});
-#line 58
-    testRunner.When("I fill in", ((string)(null)), table4, "When ");
-#line 62
+#line 71
+    testRunner.When("I fill in", ((string)(null)), table6, "When ");
+#line 75
         testRunner.And("I hit \"Save Draft\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 63
+#line 76
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 64
+#line 77
     testRunner.Then("I should see \"Your Html Widget has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 65
-        testRunner.And("I should see \"<option[^>]*selected[^>]*>Disabled\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 66
+#line 78
+        testRunner.And("I should see \"<option[^>]+selected=\"selected\"[^>]+value=\"\\d+\">Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 79
         testRunner.And("I should see \"<li[^>]*class=\"[^\"]*widgets-this-layer[^\"]*\"[^>]*>\\s*<form[^>]*>\\s*" +
                     "<h3[^>]*>\\s*<a[^>]*>Flashy HTML Widget</a>\\s*</h3>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

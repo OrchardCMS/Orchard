@@ -10,6 +10,11 @@ namespace Orchard.CustomForms.Models {
             set { Record.ContentType = value; }
         }
 
+        public bool UseContentTypePermissions {
+            get { return Record.UseContentTypePermissions; }
+            set { Record.UseContentTypePermissions = value; }
+        }
+
         public bool SaveContentItem {
             get { return Record.SaveContentItem; }
             set { Record.SaveContentItem = value; }

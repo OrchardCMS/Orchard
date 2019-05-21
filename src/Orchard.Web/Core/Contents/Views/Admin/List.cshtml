@@ -1,22 +1,36 @@
-﻿@using Orchard.Core.Contents.ViewModels;
+﻿@using Orchard.Core.Contents;
+@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Security;
+@using Orchard.Security.Permissions;
 @{
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
-    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+    // if no specific type is selected, we assume we should show the "Create" button
+    var showCreateContentButton = string.IsNullOrWhiteSpace(typeDisplayName); 
+    IAuthorizationService _authorizationService;
+    WorkContext.TryResolve<IAuthorizationService>(out _authorizationService);
+
+    if (!showCreateContentButton) {
+        // being here it means there is a specific type we are considering
         pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
         createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
+        var permission = DynamicPermissions
+            .CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.CreateContent.Name], Model.ContentType);
+        if (_authorizationService.TryCheckAccess(permission, WorkContext.CurrentUser, null)) {
+            showCreateContentButton = true;
+        }
     }
 
     IEnumerable<string> cultures = Model.Options.Cultures;
-    
+
     Layout.Title = pageTitle.Text;
 }
-
+@if (showCreateContentButton) { 
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
-
+}
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
         <label><input type="checkbox" class="check-all" />@T("Select all")</label>
@@ -65,7 +79,7 @@
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
-@Display(Model.ContentItems)
+        @Display(Model.ContentItems)
     </fieldset>
-@Display(Model.Pager)
+    @Display(Model.Pager)
 }

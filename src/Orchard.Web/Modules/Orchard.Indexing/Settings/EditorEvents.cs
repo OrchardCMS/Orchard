@@ -66,13 +66,19 @@ namespace Orchard.Indexing.Settings {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
             var previous = builder.Current.Settings.GetModel<FieldIndexing>();
-
+            
             var model = new FieldIndexing();
             updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
             builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);
+            builder.WithSetting("FieldIndexing.Stored", model.Stored.ToString());
+            builder.WithSetting("FieldIndexing.Analyzed", model.Analyzed.ToString());
+            builder.WithSetting("FieldIndexing.TagsRemoved", model.TagsRemoved.ToString());
 
             // create indexing tasks only if settings have changed
-            if (model.Included != previous.Included) {
+            if (model.Included != previous.Included ||
+                model.Stored != previous.Stored ||
+                model.Analyzed != previous.Analyzed ||
+                model.TagsRemoved != previous.TagsRemoved) {
 
                 // if a field setting has changed, all existing content items need to be re-indexed
                 CreateIndexingTasks();

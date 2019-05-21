@@ -27,7 +27,7 @@ namespace Orchard.Localization.Settings {
         }
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
             var typeDefinition = _contentDefinitionManager.GetTypeDefinition(builder.PartName);
-            if (typeDefinition != null && (_typeHasLocalizationPart || typeDefinition.Parts.Any(ctpd => ctpd.PartDefinition.Name == "LocalizationPart"))) {
+            if (_typeHasLocalizationPart || (typeDefinition != null && typeDefinition.Parts.Any(ctpd => ctpd.PartDefinition.Name == "LocalizationPart"))) {
                 _typeHasLocalizationPart = true;
                 var settings = new LocalizationCultureNeutralitySettings();
                 if (updateModel.TryUpdateModel(settings, "LocalizationCultureNeutralitySettings", null, null)) {
