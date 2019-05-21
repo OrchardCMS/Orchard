@@ -5,17 +5,16 @@ using Orchard.Projections.Models;
 namespace Orchard.Projections.Services {
     public class FieldIndexService : IFieldIndexService {
 
-        public void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType) {
+        public void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType) =>
             Set(part, partName, fieldName, valueName, value, valueType, FieldIndexRecordVersionOptions.Value);
-        }
 
         public void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType,
             FieldIndexRecordVersionOptions fieldIndexRecordVersionOption) {
-            var propertyName = String.Join(".", partName, fieldName, valueName ?? "");
+            var propertyName = string.Join(".", partName, fieldName, valueName ?? "");
 
             var typeCode = Type.GetTypeCode(valueType);
 
-            if(valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+            if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                 typeCode = Type.GetTypeCode(Nullable.GetUnderlyingType(valueType));
             }
 
@@ -29,14 +28,15 @@ namespace Orchard.Projections.Services {
                     }
 
                     // take the first 4000 chars as it is the limit for the field
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        stringRecord.Value = value == null ? null : value.ToString().Substring(0, Math.Min(value.ToString().Length, 4000));
+                    var stringRecordValue = value?.ToString().Substring(0, Math.Min(value.ToString().Length, 4000));
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            stringRecord.Value = stringRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            stringRecord.LatestValue = stringRecordValue;
+                            break;
                     }
-                    else {
-                        stringRecord.LatestValue = value == null ? null : value.ToString().Substring(0, Math.Min(value.ToString().Length, 4000));
-                    }
-
-                    
                     break;
                 case TypeCode.Byte:
                 case TypeCode.SByte:
@@ -52,11 +52,14 @@ namespace Orchard.Projections.Services {
                         part.Record.IntegerFieldIndexRecords.Add(integerRecord);
                     }
 
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        integerRecord.Value = value == null ? default(long?) : Convert.ToInt64(value);
-                    }
-                    else {
-                        integerRecord.LatestValue = value == null ? default(long?) : Convert.ToInt64(value);
+                    var integerRecordValue = value == null ? default(long?) : Convert.ToInt64(value);
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            integerRecord.Value = integerRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            integerRecord.LatestValue = integerRecordValue;
+                            break;
                     }
                     break;
                 case TypeCode.DateTime:
@@ -66,11 +69,14 @@ namespace Orchard.Projections.Services {
                         part.Record.IntegerFieldIndexRecords.Add(dateTimeRecord);
                     }
 
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        dateTimeRecord.Value = value == null ? default(long?) : ((DateTime)value).Ticks;
-                    }
-                    else {
-                        dateTimeRecord.LatestValue = value == null ? default(long?) : ((DateTime)value).Ticks;
+                    var dateTimeRecordValue = value == null ? default(long?) : ((DateTime)value).Ticks;
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            dateTimeRecord.Value = dateTimeRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            dateTimeRecord.LatestValue = dateTimeRecordValue;
+                            break;
                     }
                     break;
                 case TypeCode.Boolean:
@@ -80,11 +86,14 @@ namespace Orchard.Projections.Services {
                         part.Record.IntegerFieldIndexRecords.Add(booleanRecord);
                     }
 
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        booleanRecord.Value = value == null ? default(long?) : Convert.ToInt64((bool)value);
-                    }
-                    else {
-                        booleanRecord.LatestValue = value == null ? default(long?) : Convert.ToInt64((bool)value);
+                    var booleanRecordValue = value == null ? default(long?) : Convert.ToInt64((bool)value);
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            booleanRecord.Value = booleanRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            booleanRecord.LatestValue = booleanRecordValue;
+                            break;
                     }
                     break;
                 case TypeCode.Decimal:
@@ -94,11 +103,14 @@ namespace Orchard.Projections.Services {
                         part.Record.DecimalFieldIndexRecords.Add(decimalRecord);
                     }
 
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        decimalRecord.Value = value == null ? default(decimal?) : Convert.ToDecimal((decimal)value);
-                    }
-                    else {
-                        decimalRecord.LatestValue = value == null ? default(decimal?) : Convert.ToDecimal((decimal)value);
+                    var decimalRecordValue = value == null ? default(decimal?) : Convert.ToDecimal((decimal)value);
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            decimalRecord.Value = decimalRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            decimalRecord.LatestValue = decimalRecordValue;
+                            break;
                     }
                     break;
                 case TypeCode.Single:
@@ -109,22 +121,24 @@ namespace Orchard.Projections.Services {
                         part.Record.DoubleFieldIndexRecords.Add(doubleRecord);
                     }
 
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        doubleRecord.Value = value == null ? default(double?) : Convert.ToDouble(value);
-                    }
-                    else {
-                        doubleRecord.LatestValue = value == null ? default(double?) : Convert.ToDouble(value);
+                    var doubleRecordValue = value == null ? default(double?) : Convert.ToDouble(value);
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            doubleRecord.Value = doubleRecordValue;
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            doubleRecord.LatestValue = doubleRecordValue;
+                            break;
                     }
                     break;
             }
         }
 
-        public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName) {
-            return Get<T>(part, partName, fieldName, valueName, FieldIndexRecordVersionOptions.Value);
-        }
+        public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName) =>
+            Get<T>(part, partName, fieldName, valueName, FieldIndexRecordVersionOptions.Value);
 
         public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName, FieldIndexRecordVersionOptions fieldIndexRecordVersionOption) {
-            var propertyName = String.Join(".", partName, fieldName, valueName ?? "");
+            var propertyName = string.Join(".", partName, fieldName, valueName ?? "");
 
             var typeCode = Type.GetTypeCode(typeof(T));
 
@@ -132,12 +146,17 @@ namespace Orchard.Projections.Services {
                 case TypeCode.Char:
                 case TypeCode.String:
                     var stringRecord = part.Record.StringFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return stringRecord != null ? (T)Convert.ChangeType(stringRecord.Value, typeof(T)) : default(T);
+                    var stringRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            stringRecordValue = (T)Convert.ChangeType(stringRecord.Value, typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            stringRecordValue = (T)Convert.ChangeType(stringRecord.LatestValue, typeof(T));
+                            break;
                     }
-                    else {
-                        return stringRecord != null ? (T)Convert.ChangeType(stringRecord.LatestValue, typeof(T)) : default(T);
-                    }
+                    return stringRecord != null ? stringRecordValue : default;
                 case TypeCode.Byte:
                 case TypeCode.SByte:
                 case TypeCode.Int16:
@@ -147,47 +166,72 @@ namespace Orchard.Projections.Services {
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     var integerRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return integerRecord != null ? (T)Convert.ChangeType(integerRecord.Value, typeof(T)) : default(T);
+                    var integerRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            integerRecordValue = (T)Convert.ChangeType(integerRecord.Value, typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            integerRecordValue = (T)Convert.ChangeType(integerRecord.LatestValue, typeof(T));
+                            break;
                     }
-                    else {
-                        return integerRecord != null ? (T)Convert.ChangeType(integerRecord.LatestValue, typeof(T)) : default(T);
-                    }
+                    return integerRecord != null ? integerRecordValue : default;
                 case TypeCode.Decimal:
                     var decimalRecord = part.Record.DecimalFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return decimalRecord != null ? (T)Convert.ChangeType(decimalRecord.Value, typeof(T)) : default(T);
+                    var decimalRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            decimalRecordValue = (T)Convert.ChangeType(decimalRecord.Value, typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            decimalRecordValue = (T)Convert.ChangeType(decimalRecord.LatestValue, typeof(T));
+                            break;
                     }
-                    else {
-                        return decimalRecord != null ? (T)Convert.ChangeType(decimalRecord.LatestValue, typeof(T)) : default(T);
-                    }
+                    return decimalRecord != null ? decimalRecordValue : default;
                 case TypeCode.Single:
                 case TypeCode.Double:
                     var doubleRecord = part.Record.DoubleFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return doubleRecord != null ? (T)Convert.ChangeType(doubleRecord.Value, typeof(T)) : default(T);
+                    var doubleRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            doubleRecordValue = (T)Convert.ChangeType(doubleRecord.Value, typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            doubleRecordValue = (T)Convert.ChangeType(doubleRecord.LatestValue, typeof(T));
+                            break;
                     }
-                    else {
-                        return doubleRecord != null ? (T)Convert.ChangeType(doubleRecord.LatestValue, typeof(T)) : default(T);
-                    }
+                    return doubleRecord != null ? doubleRecordValue : default;
                 case TypeCode.DateTime:
                     var dateTimeRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return dateTimeRecord != null ? (T)Convert.ChangeType(new DateTime(Convert.ToInt64(dateTimeRecord.Value)), typeof(T)) : default(T);
+                    var dateTimeRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            dateTimeRecordValue = (T)Convert.ChangeType(new DateTime(Convert.ToInt64(dateTimeRecord.Value)), typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            dateTimeRecordValue = (T)Convert.ChangeType(new DateTime(Convert.ToInt64(dateTimeRecord.LatestValue)), typeof(T));
+                            break;
                     }
-                    else {
-                        return dateTimeRecord != null ? (T)Convert.ChangeType(new DateTime(Convert.ToInt64(dateTimeRecord.LatestValue)), typeof(T)) : default(T);
-                    }
+                    return dateTimeRecord != null ? dateTimeRecordValue : default;
                 case TypeCode.Boolean:
                     var booleanRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (fieldIndexRecordVersionOption == FieldIndexRecordVersionOptions.Value) {
-                        return booleanRecord != null ? (T)Convert.ChangeType(booleanRecord.Value, typeof(T)) : default(T);
+                    var booleanRecordValue = default(T);
+
+                    switch (fieldIndexRecordVersionOption) {
+                        case FieldIndexRecordVersionOptions.Value:
+                            booleanRecordValue = (T)Convert.ChangeType(booleanRecord.Value, typeof(T));
+                            break;
+                        case FieldIndexRecordVersionOptions.LatestValue:
+                            booleanRecordValue = (T)Convert.ChangeType(booleanRecord.LatestValue, typeof(T));
+                            break;
                     }
-                    else {
-                        return booleanRecord != null ? (T)Convert.ChangeType(booleanRecord.LatestValue, typeof(T)) : default(T);
-                    }
+                    return booleanRecord != null ? booleanRecordValue : default;
                 default:
-                    return default(T);
+                    return default;
             }
         }
     }
