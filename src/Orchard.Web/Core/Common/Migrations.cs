@@ -30,7 +30,11 @@ namespace Orchard.Core.Common {
                     .Column<DateTime>("PublishedUtc")
                     .Column<DateTime>("ModifiedUtc")
                     .Column<int>("Container_id")
-                );
+                ).AlterTable(nameof(CommonPartRecord), table => {
+                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.CreatedUtc)}", nameof(CommonPart.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.ModifiedUtc)}", nameof(CommonPart.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.PublishedUtc)}", nameof(CommonPart.PublishedUtc));
+                });
 
             SchemaBuilder.CreateTable("CommonPartVersionRecord",
                 table => table
@@ -39,7 +43,11 @@ namespace Orchard.Core.Common {
                     .Column<DateTime>("PublishedUtc")
                     .Column<DateTime>("ModifiedUtc")
                     .Column<string>("ModifiedBy")
-                );
+                ).AlterTable(nameof(CommonPartVersionRecord), table => {
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.CreatedUtc)}", nameof(CommonPartVersionRecord.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.ModifiedUtc)}", nameof(CommonPartVersionRecord.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.PublishedUtc)}", nameof(CommonPartVersionRecord.PublishedUtc));
+                });
 
             SchemaBuilder.CreateTable("IdentityPartRecord",
                 table => table
@@ -59,7 +67,7 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 5;
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -111,6 +119,23 @@ namespace Orchard.Core.Common {
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("CommonPartVersionRecord", table => table.AddColumn<string>("ModifiedBy", command => command.Nullable()));
             return 5;
+        }
+
+        public int UpdateFrom5() {
+
+            SchemaBuilder.AlterTable(nameof(CommonPart), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.CreatedUtc)}", nameof(CommonPart.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.ModifiedUtc)}", nameof(CommonPart.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.PublishedUtc)}", nameof(CommonPart.PublishedUtc));
+            });
+
+            SchemaBuilder.AlterTable(nameof(CommonPartVersionRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.CreatedUtc)}", nameof(CommonPartVersionRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.ModifiedUtc)}", nameof(CommonPartVersionRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.PublishedUtc)}", nameof(CommonPartVersionRecord.PublishedUtc));
+            });
+
+            return 6;
         }
     }
 }
