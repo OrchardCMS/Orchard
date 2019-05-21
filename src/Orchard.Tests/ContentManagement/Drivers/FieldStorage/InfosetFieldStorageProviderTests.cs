@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -121,6 +122,23 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         [Test, Ignore("implementation pending")]
         public void VersionedSettingOnInfosetField() {
             Assert.Fail("todo");
+        }
+
+        [Test]
+        public void ForbiddenXmlCharactersDontBreakInfoset() {
+            var part = CreateContentItemPart();
+            var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
+
+            var invalidXmlCharacters = Enumerable
+                .Range(0, 32).Except(new[] { 9, 10, 13 })
+                .Select(character => Char.ConvertFromUtf32(character));
+
+            foreach (var character in invalidXmlCharacters) {
+                storage.Set("alpha", character);
+
+                // It's always the retrieval that can fail with invalid characters.
+                Assert.That(part.ContentItem.VersionRecord.Data, Is.Not.Null); 
+            }
         }
     }
 }
