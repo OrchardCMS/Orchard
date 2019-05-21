@@ -94,12 +94,5 @@ namespace Orchard.Taxonomies.Services {
         /// <param name="part">The TermPart whose FullWeight we wish to compute.</param>
         /// <returns>The recomputed value of the TermPart's FullWeight.</returns>
         string ComputeFullWeight(TermPart part);
-        /// <summary>
-        /// Returns all siblings of the given TermPart, ordered in ascending alphabetical
-        /// order of their Name property. This IEnumerable also includes the part.
-        /// </summary>
-        /// <param name="part"></param>
-        /// <returns></returns>
-        IEnumerable<TermPart> OrderedSiblings(TermPart part);
     }
 }

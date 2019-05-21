@@ -95,7 +95,7 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
+                //termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
             }
             return Editor(termPart, shapeHelper);
         }

@@ -223,6 +223,7 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             Services.ContentManager.Publish(term.ContentItem);
+            _taxonomyService.ProcessPath(term);
             Services.Notifier.Success(T("The {0} term has been created.", term.Name));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId });

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Taxonomies.Models;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -15,6 +14,7 @@ using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
+using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
@@ -30,7 +30,7 @@ namespace Orchard.Taxonomies.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        private readonly HashSet<int> _processedTermParts = new HashSet<int>(); 
+        private readonly HashSet<int> _processedTermParts = new HashSet<int>();
 
         public TaxonomyService(
             IRepository<TermContentItem> termContentItemRepository,
@@ -195,8 +195,8 @@ namespace Orchard.Taxonomies.Services {
 
         public IEnumerable<TermPart> GetAllTerms() {
             var result = GetTermsQuery()
-                .OrderBy(x=>x.TaxonomyId)
-                .OrderBy(x=>x.FullWeight)
+                .OrderBy(x => x.TaxonomyId)
+                .OrderBy(x => x.FullWeight)
                 .List();
             return result;
         }
@@ -296,7 +296,7 @@ namespace Orchard.Taxonomies.Services {
                     _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermParts } });
                 }
                 foreach (var termPartRecordId in termPartRecordIds) {
-                    _processedTermParts.Add(termPartRecordId);                    
+                    _processedTermParts.Add(termPartRecordId);
                 }
             }
         }
@@ -342,7 +342,7 @@ namespace Orchard.Taxonomies.Services {
 
             var result = GetTermsQuery()
                 .Where(x => x.Path.StartsWith(rootPath))
-                .OrderBy(x=>x.FullWeight)
+                .OrderBy(x => x.FullWeight)
                 .List();
 
             if (includeParent) {
@@ -370,12 +370,17 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm) {
+            // get the children before changing the path
             var children = GetChildren(term);
-            term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             // compute new path and publish. This also computes the new weight and
             // recursively does the same for siblings and children of the TermPart
             // that was moved.
+            term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
+            // process the children
+            foreach (var child in children) {
+                ProcessPath(child);
+            }
         }
 
         public void ProcessPath(TermPart term) {
@@ -388,43 +393,48 @@ namespace Orchard.Taxonomies.Services {
                 // path has changed. evict stale caches.
                 if (_termFamilies == null) {
                     _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
-                }
-                // We evict the cache for both the old and new values of the path.
-                // old: processing a former sibling we cause us to reprocess this term
-                //   when we don't need to.
-                if (_termFamilies.ContainsKey(oldPath)) {
-                    _termFamilies.Remove(oldPath);
-                }
-                // new: attempting to process the weight for this term would skip it.
-                if (_termFamilies.ContainsKey(term.Path)) {
-                    _termFamilies.Remove(term.Path);
+                } else {
+                    // We evict the cache for both the old and new values of the path.
+                    // old: processing a former sibling we cause us to reprocess this term
+                    //   when we don't need to.
+                    if (_termFamilies.ContainsKey(term.TaxonomyId + oldPath)) {
+                        _termFamilies.Remove(term.TaxonomyId + oldPath);
+                    }
+                    // new: attempting to process the weight for this term would skip it.
+                    if (_termFamilies.ContainsKey(term.TaxonomyId + term.Path)) {
+                        _termFamilies.Remove(term.TaxonomyId + term.Path);
+                    }
                 }
             }
-            // Reprocess weights
-            ProcessFullWeight(term);
+            // oldPath is empty when creating a new term, before doing all the updates
+            if (!string.IsNullOrWhiteSpace(oldPath)) {
+                // Reprocess weights
+                ProcessFullWeight(term);
+            }
         }
         private void ProcessFullWeight(TermPart term) {
             // Given part
             // - Update FullWeight for term
-            // - Update FullWeight for term's siblings
+            // - Update FullWeight for term's siblings of the same weight
             // - If term's FullWeight changed, update path and FullWeight for all its children
             // - If FullWeight changed for any of term's siblings, update their children
             // We don't have to check for each child's siblings, because we are updating
             // all children anyway (as long as we have to update any).
 
             // Get term and its siblings
-            var litter = OrderedSiblings(term);
+            var litter = OrderedSiblings(term)
+                .Where(sib => sib.Weight == term.Weight);
+
             // For each one, see whether we should update its weight.
             // in that case, update its children as well.
             // Note that term is included in that IEnumerable already, in its place among
             // its siblings, ordered by title alphabetically.
-
             foreach (var tp in litter) {
                 var newWeight = ComputeFullWeight(tp);
                 if (!newWeight.Equals(tp.FullWeight, StringComparison.InvariantCultureIgnoreCase)) {
                     tp.FullWeight = newWeight;
                     PublishTerm(tp);
-                    UpdateChildren(term);
+                    UpdateChildren(tp);
                 }
             }
         }
@@ -530,12 +540,14 @@ namespace Orchard.Taxonomies.Services {
             // ordering of the titles. This needs to be a fixed length, just like for
             // the string for the weight assigned to the part.
             // Siblings in a taxonomy are those TermParts that have the same Path.
+            // We are only interested in those with the same Weight.
             var siblingsIds = OrderedSiblings(part)
+                .Where(sib => sib.Weight == part.Weight)
                 .Select(tp => tp.Id)
                 .ToArray();
             var siblingsWeight = (1048575).ToString("X5");
             for (int i = 0; i < siblingsIds.Length; i++) {
-                if (siblingsIds[i]==part.Id) {
+                if (siblingsIds[i] == part.Id) {
                     siblingsWeight = i.ToString("X5");
                     break;
                 }
