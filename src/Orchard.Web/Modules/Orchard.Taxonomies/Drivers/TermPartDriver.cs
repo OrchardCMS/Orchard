@@ -16,7 +16,7 @@ using Orchard.UI.Navigation;
 using System.Text;
 
 namespace Orchard.Taxonomies.Drivers {
-    public class TermPartDriver : ContentPartDriver<TermPart> {
+    public class TermPartDriver : ContentPartCloningDriver<TermPart> {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
         private readonly IHttpContextAccessor _httpContextAccessor;
