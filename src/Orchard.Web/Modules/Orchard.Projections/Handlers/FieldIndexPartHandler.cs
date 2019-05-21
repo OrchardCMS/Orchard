@@ -46,23 +46,25 @@ namespace Orchard.Projections.Handlers {
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
             if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
-                DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
-                    _fieldIndexService.Set(fieldIndexPart,
-                    indexServiceContext.LocalPart.PartDefinition.Name,
-                    indexServiceContext.LocalField.Name,
-                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType,
-                    FieldIndexRecordVersionOptions.LatestValue);
+                DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) => {
+                    _fieldIndexService.Set(
+                        fieldIndexPart,
+                        indexServiceContext.LocalPart.PartDefinition.Name,
+                        indexServiceContext.LocalField.Name,
+                        indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType,
+                        FieldIndexRecordVersionOptions.LatestValue);
                 });
             }
         }
 
 
         public void Publishing(PublishContentContext context, FieldIndexPart fieldIndexPart) {
-            DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
-                _fieldIndexService.Set(fieldIndexPart,
-                indexServiceContext.LocalPart.PartDefinition.Name,
-                indexServiceContext.LocalField.Name,
-                indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
+            DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) => {
+                _fieldIndexService.Set(
+                    fieldIndexPart,
+                    indexServiceContext.LocalPart.PartDefinition.Name,
+                    indexServiceContext.LocalField.Name,
+                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
 
             });
         }
@@ -71,7 +73,7 @@ namespace Orchard.Projections.Handlers {
         /// </summary>
         /// <param name="fieldIndexPart"></param>
         /// <param name="indexService"></param>
-        private void DescribeValuesToindex(FieldIndexPart fieldIndexPart, Action<IndexServiceContext> indexService) {
+        private void DescribeValuesToIndex(FieldIndexPart fieldIndexPart, Action<IndexServiceContext> indexService) {
             foreach (var part in fieldIndexPart.ContentItem.Parts) {
                 foreach (var field in part.PartDefinition.Fields) {
 
