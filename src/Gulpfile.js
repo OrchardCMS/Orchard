@@ -97,7 +97,13 @@ function resolveAssetGroupPaths(assetGroup, assetManifestPath) {
     assetGroup.manifestPath = assetManifestPath;
     assetGroup.basePath = path.dirname(assetManifestPath);
     assetGroup.inputPaths = assetGroup.inputs.map(function (inputPath) {
-        return path.resolve(path.join(assetGroup.basePath, inputPath));
+        var excludeFile = false;
+        if (inputPath.startsWith('!')) {
+            inputPath = inputPath.slice(1);
+            excludeFile = true;
+        }
+        var newPath = path.resolve(path.join(assetGroup.basePath, inputPath));
+        return (excludeFile ? '!' : '') + newPath;
     });
     assetGroup.watchPaths = [];
     if (assetGroup.watch) {

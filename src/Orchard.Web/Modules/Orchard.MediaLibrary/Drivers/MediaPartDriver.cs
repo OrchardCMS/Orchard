@@ -6,7 +6,6 @@ using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaPartDriver : ContentPartDriver<MediaPart> {
-
         protected override string Prefix {
             get { return "MediaPart"; }
         }
@@ -28,7 +27,7 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override DriverResult Editor(MediaPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, new[] {"Caption", "AlternateText"}, null);
+            updater.TryUpdateModel(part, Prefix, new[] { "Caption", "AlternateText" }, null);
             return Editor(part, shapeHelper);
         }
 

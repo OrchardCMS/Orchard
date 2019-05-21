@@ -34,8 +34,8 @@ Scenario: Creating and using Enumeration fields
     # Specifying Options
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                       | value   |
-            | Fields[0].EnumerationFieldSettings.Options | Seattle |
+            | name                                              | value   |
+            | Fields[Location].EnumerationFieldSettings.Options | Seattle |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "<option>Seattle</option>"
@@ -46,9 +46,9 @@ Scenario: Creating and using Enumeration fields
     When I fill in 
             | name                 | value   |
             | Event.Location.Value | Seattle |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as a draft."
     When I go to "Admin/Contents/List"
     Then I should see "Location:" 
         And I should see "Seattle"
@@ -56,8 +56,8 @@ Scenario: Creating and using Enumeration fields
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                    | value                    |
-            | Fields[0].EnumerationFieldSettings.Hint | Please select a location |
+            | name                                           | value                    |
+            | Fields[Location].EnumerationFieldSettings.Hint | Please select a location |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Please select a location"
@@ -65,8 +65,8 @@ Scenario: Creating and using Enumeration fields
     # The List Mode Dropdown
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value    |
-            | Fields[0].EnumerationFieldSettings.ListMode | Dropdown |
+            | name                                               | value         |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Dropdown |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "select id=\"Event_Location_Value\" name=\"Event.Location.Value\""
@@ -74,8 +74,8 @@ Scenario: Creating and using Enumeration fields
     # The List Mode Radiobutton
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value       |
-            | Fields[0].EnumerationFieldSettings.ListMode | Radiobutton |
+            | name                                               | value             |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Radiobutton |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "input id=\"Event_Location_Value\" name=\"Event.Location.Value\" type=\"radio\""
@@ -83,8 +83,8 @@ Scenario: Creating and using Enumeration fields
     # The List Mode Listbox
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value   |
-            | Fields[0].EnumerationFieldSettings.ListMode | Listbox |
+            | name                                               | value   |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Listbox |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "select id=\"Event_Location_SelectedValues\" multiple=\"multiple\" name=\"Event.Location.SelectedValues\""
@@ -92,8 +92,8 @@ Scenario: Creating and using Enumeration fields
     # The List Mode Checkbox
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value    |
-            | Fields[0].EnumerationFieldSettings.ListMode | Checkbox |
+            | name                                               | value    |
+            | Fields[Location].EnumerationFieldSettings.ListMode | Checkbox |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "input type=\"checkbox\" name=\"Event.Location.SelectedValues\""
@@ -101,40 +101,40 @@ Scenario: Creating and using Enumeration fields
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value |
-            | Fields[0].EnumerationFieldSettings.Required | true  |
+            | name                                               | value |
+            | Fields[Location].EnumerationFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The Location field is required."
     
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                            | value    |
-            | Fields[0].EnumerationFieldSettings.Options      | Seattle  |
-            | Fields[0].EnumerationFieldSettings.ListMode     | Dropdown |
-            | Fields[0].EnumerationFieldSettings.DefaultValue | Seattle  |
+            | name                                                   | value         |
+            | Fields[Location].EnumerationFieldSettings.Options      | Seattle  |
+            | Fields[Location].EnumerationFieldSettings.ListMode     | Dropdown |
+            | Fields[Location].EnumerationFieldSettings.DefaultValue | Seattle  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "selected=\"selected">Seattle"
-	
+    
     # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                            | value   |
-            | Fields[0].EnumerationFieldSettings.Required     | true    |
-            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+            | name													 | value   |
+            | Fields[Location].EnumerationFieldSettings.Required     | true    |
+            | Fields[Location].EnumerationFieldSettings.ListMode     | Listbox |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
-	
+    
     # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                            | value   |
-            | Fields[0].EnumerationFieldSettings.Required     | false   |
-            | Fields[0].EnumerationFieldSettings.ListMode     | Listbox |
+            | name                                                   | value   |
+            | Fields[Location].EnumerationFieldSettings.Required     | false   |
+            | Fields[Location].EnumerationFieldSettings.ListMode     | Listbox |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

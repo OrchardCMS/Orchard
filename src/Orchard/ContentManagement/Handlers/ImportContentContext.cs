@@ -1,10 +1,13 @@
 using System;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
     public class ImportContentContext : ContentContextBase {
         public XElement Data { get; set; }
         private ImportContentSession Session { get; set; }
+        private readonly string Separator = @".";
+        public string Prefix { get; set; }
 
         public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {
@@ -13,7 +16,18 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         public string Attribute(string elementName, string attributeName) {
-            var element = Data.Element(elementName);
+            // Step one : fetch element with prefix
+            var element = Data.Element(AdjustElementName(elementName));
+            // Step two : fetch elements without prefix
+            if (element == null) {
+                var elements = Data.Elements(elementName);
+                if (elements != null && elements.Count() > 1) {
+                    element = elements.Last();
+                } else if (elements != null && elements.Count() == 1) {
+                    element = elements.First();
+                }
+            }
+
             if (element != null) {
                 var attribute = element.Attribute(attributeName);
                 if (attribute != null)
@@ -23,7 +37,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         public string ChildEl(string elementName, string childElementName) {
-            var element = Data.Element(elementName);
+            var element = Data.Element(AdjustElementName(elementName));
             return element == null ? null : element.El(childElementName);
         }
 
@@ -67,6 +81,12 @@ namespace Orchard.ContentManagement.Handlers {
 
         public ContentItem GetItemFromSession(string id) {
             return Session.Get(id);
+        }
+
+        private string AdjustElementName(string elementName) {
+            if (!string.IsNullOrEmpty(Prefix) && !elementName.StartsWith(Prefix + Separator))
+                return string.Join(Separator, Prefix, elementName);
+            return elementName;
         }
     }
 }

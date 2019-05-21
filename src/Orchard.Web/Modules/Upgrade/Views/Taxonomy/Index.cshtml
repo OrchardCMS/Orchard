@@ -1,6 +1,11 @@
 ﻿@using Orchard.Utility.Extensions
 
-@{ Layout.Title = T("Migrate Taxonomies").ToString(); }
+@{ 
+    Script.Require("jQuery");
+    Layout.Title = T("Migrate Taxonomies").ToString(); 
+}
+
+<div class="message message-Warning" id="message-progress" style="display: none"></div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
@@ -14,4 +19,52 @@
             <button type="submit">@T("Migrate")</button>
         }
     </fieldset>
+}
+
+<fieldset>
+    <legend>@T("Migrating Terms: ")</legend>
+    <span class="hint">@T("This migration step will update all existing terms so they are lexicographically orderable")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateTerms", "Taxonomy")">@T("Migrate")</button>
+</fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';     
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All terms have been processed").Text)';
+            $('.button-migrate').click(function () {
+                var importUrl = $(this).data('url');
+
+                var startId = 0;
+                $('#message-progress').show();
+                var iId = setInterval(function () {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: importUrl,
+                        async: false,
+                        data: {
+                            __RequestVerificationToken: antiForgeryToken,
+                            id: startId // start at index 0
+                        },
+                        success: function (data) {
+                            if (Number(data) == startId) {
+                                clearInterval(iId);
+                                $('#message-progress').text(endMessage);
+                            }
+                            else {
+                                startId = Number(data);
+                                $('#message-progress').text('Processing content item ' + startId);
+                            }
+                        },
+                        fail: function(result) {
+                            console.log("An error occured: " + result);
+                        }
+                    });
+
+                }, 100);
+                
+            });
+        });
+    </script>
 }

@@ -1,514 +1,785 @@
-/* ========================================================================
- * Bootstrap: tooltip.js v3.3.5
- * http://getbootstrap.com/javascript/#tooltip
- * Inspired by the original jQuery.tipsy by Jason Frame
- * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+/**
+ * --------------------------------------------------------------------------
+ * Bootstrap (v4.3.1): tooltip.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * ======================================================================== */
+ * --------------------------------------------------------------------------
+ */
+
+import {
+  DefaultWhitelist,
+  sanitizeHtml
+} from './tools/sanitizer'
+import $ from 'jquery'
+import Popper from 'popper.js'
+import Util from './util'
+
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
+
+const NAME                  = 'tooltip'
+const VERSION               = '4.3.1'
+const DATA_KEY              = 'bs.tooltip'
+const EVENT_KEY             = `.${DATA_KEY}`
+const JQUERY_NO_CONFLICT    = $.fn[NAME]
+const CLASS_PREFIX          = 'bs-tooltip'
+const BSCLS_PREFIX_REGEX    = new RegExp(`(^|\\s)${CLASS_PREFIX}\\S+`, 'g')
+const DISALLOWED_ATTRIBUTES = ['sanitize', 'whiteList', 'sanitizeFn']
+
+const DefaultType = {
+  animation         : 'boolean',
+  template          : 'string',
+  title             : '(string|element|function)',
+  trigger           : 'string',
+  delay             : '(number|object)',
+  html              : 'boolean',
+  selector          : '(string|boolean)',
+  placement         : '(string|function)',
+  offset            : '(number|string|function)',
+  container         : '(string|element|boolean)',
+  fallbackPlacement : '(string|array)',
+  boundary          : '(string|element)',
+  sanitize          : 'boolean',
+  sanitizeFn        : '(null|function)',
+  whiteList         : 'object'
+}
+
+const AttachmentMap = {
+  AUTO   : 'auto',
+  TOP    : 'top',
+  RIGHT  : 'right',
+  BOTTOM : 'bottom',
+  LEFT   : 'left'
+}
+
+const Default = {
+  animation         : true,
+  template          : '<div class="tooltip" role="tooltip">' +
+                    '<div class="arrow"></div>' +
+                    '<div class="tooltip-inner"></div></div>',
+  trigger           : 'hover focus',
+  title             : '',
+  delay             : 0,
+  html              : false,
+  selector          : false,
+  placement         : 'top',
+  offset            : 0,
+  container         : false,
+  fallbackPlacement : 'flip',
+  boundary          : 'scrollParent',
+  sanitize          : true,
+  sanitizeFn        : null,
+  whiteList         : DefaultWhitelist
+}
+
+const HoverState = {
+  SHOW : 'show',
+  OUT  : 'out'
+}
+
+const Event = {
+  HIDE       : `hide${EVENT_KEY}`,
+  HIDDEN     : `hidden${EVENT_KEY}`,
+  SHOW       : `show${EVENT_KEY}`,
+  SHOWN      : `shown${EVENT_KEY}`,
+  INSERTED   : `inserted${EVENT_KEY}`,
+  CLICK      : `click${EVENT_KEY}`,
+  FOCUSIN    : `focusin${EVENT_KEY}`,
+  FOCUSOUT   : `focusout${EVENT_KEY}`,
+  MOUSEENTER : `mouseenter${EVENT_KEY}`,
+  MOUSELEAVE : `mouseleave${EVENT_KEY}`
+}
+
+const ClassName = {
+  FADE : 'fade',
+  SHOW : 'show'
+}
+
+const Selector = {
+  TOOLTIP       : '.tooltip',
+  TOOLTIP_INNER : '.tooltip-inner',
+  ARROW         : '.arrow'
+}
+
+const Trigger = {
+  HOVER  : 'hover',
+  FOCUS  : 'focus',
+  CLICK  : 'click',
+  MANUAL : 'manual'
+}
 
 
-+function ($) {
-  'use strict';
+/**
+ * ------------------------------------------------------------------------
+ * Class Definition
+ * ------------------------------------------------------------------------
+ */
 
-  // TOOLTIP PUBLIC CLASS DEFINITION
-  // ===============================
+class Tooltip {
+  constructor(element, config) {
+    /**
+     * Check for Popper dependency
+     * Popper - https://popper.js.org
+     */
+    if (typeof Popper === 'undefined') {
+      throw new TypeError('Bootstrap\'s tooltips require Popper.js (https://popper.js.org/)')
+    }
 
-  var Tooltip = function (element, options) {
-    this.type       = null
-    this.options    = null
-    this.enabled    = null
-    this.timeout    = null
-    this.hoverState = null
-    this.$element   = null
-    this.inState    = null
+    // private
+    this._isEnabled     = true
+    this._timeout       = 0
+    this._hoverState    = ''
+    this._activeTrigger = {}
+    this._popper        = null
 
-    this.init('tooltip', element, options)
+    // Protected
+    this.element = element
+    this.config  = this._getConfig(config)
+    this.tip     = null
+
+    this._setListeners()
   }
 
-  Tooltip.VERSION  = '3.3.5'
+  // Getters
 
-  Tooltip.TRANSITION_DURATION = 150
-
-  Tooltip.DEFAULTS = {
-    animation: true,
-    placement: 'top',
-    selector: false,
-    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-    trigger: 'hover focus',
-    title: '',
-    delay: 0,
-    html: false,
-    container: false,
-    viewport: {
-      selector: 'body',
-      padding: 0
-    }
+  static get VERSION() {
+    return VERSION
   }
 
-  Tooltip.prototype.init = function (type, element, options) {
-    this.enabled   = true
-    this.type      = type
-    this.$element  = $(element)
-    this.options   = this.getOptions(options)
-    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
-    this.inState   = { click: false, hover: false, focus: false }
-
-    if (this.$element[0] instanceof document.constructor && !this.options.selector) {
-      throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
-    }
-
-    var triggers = this.options.trigger.split(' ')
-
-    for (var i = triggers.length; i--;) {
-      var trigger = triggers[i]
-
-      if (trigger == 'click') {
-        this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
-      } else if (trigger != 'manual') {
-        var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin'
-        var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout'
-
-        this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
-      }
-    }
-
-    this.options.selector ?
-      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-      this.fixTitle()
+  static get Default() {
+    return Default
   }
 
-  Tooltip.prototype.getDefaults = function () {
-    return Tooltip.DEFAULTS
+  static get NAME() {
+    return NAME
   }
 
-  Tooltip.prototype.getOptions = function (options) {
-    options = $.extend({}, this.getDefaults(), this.$element.data(), options)
-
-    if (options.delay && typeof options.delay == 'number') {
-      options.delay = {
-        show: options.delay,
-        hide: options.delay
-      }
-    }
-
-    return options
+  static get DATA_KEY() {
+    return DATA_KEY
   }
 
-  Tooltip.prototype.getDelegateOptions = function () {
-    var options  = {}
-    var defaults = this.getDefaults()
-
-    this._options && $.each(this._options, function (key, value) {
-      if (defaults[key] != value) options[key] = value
-    })
-
-    return options
+  static get Event() {
+    return Event
   }
 
-  Tooltip.prototype.enter = function (obj) {
-    var self = obj instanceof this.constructor ?
-      obj : $(obj.currentTarget).data('bs.' + this.type)
+  static get EVENT_KEY() {
+    return EVENT_KEY
+  }
 
-    if (!self) {
-      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
-      $(obj.currentTarget).data('bs.' + this.type, self)
-    }
+  static get DefaultType() {
+    return DefaultType
+  }
 
-    if (obj instanceof $.Event) {
-      self.inState[obj.type == 'focusin' ? 'focus' : 'hover'] = true
-    }
+  // Public
 
-    if (self.tip().hasClass('in') || self.hoverState == 'in') {
-      self.hoverState = 'in'
+  enable() {
+    this._isEnabled = true
+  }
+
+  disable() {
+    this._isEnabled = false
+  }
+
+  toggleEnabled() {
+    this._isEnabled = !this._isEnabled
+  }
+
+  toggle(event) {
+    if (!this._isEnabled) {
       return
     }
 
-    clearTimeout(self.timeout)
+    if (event) {
+      const dataKey = this.constructor.DATA_KEY
+      let context = $(event.currentTarget).data(dataKey)
 
-    self.hoverState = 'in'
+      if (!context) {
+        context = new this.constructor(
+          event.currentTarget,
+          this._getDelegateConfig()
+        )
+        $(event.currentTarget).data(dataKey, context)
+      }
 
-    if (!self.options.delay || !self.options.delay.show) return self.show()
+      context._activeTrigger.click = !context._activeTrigger.click
 
-    self.timeout = setTimeout(function () {
-      if (self.hoverState == 'in') self.show()
-    }, self.options.delay.show)
+      if (context._isWithActiveTrigger()) {
+        context._enter(null, context)
+      } else {
+        context._leave(null, context)
+      }
+    } else {
+      if ($(this.getTipElement()).hasClass(ClassName.SHOW)) {
+        this._leave(null, this)
+        return
+      }
+
+      this._enter(null, this)
+    }
   }
 
-  Tooltip.prototype.isInStateTrue = function () {
-    for (var key in this.inState) {
-      if (this.inState[key]) return true
+  dispose() {
+    clearTimeout(this._timeout)
+
+    $.removeData(this.element, this.constructor.DATA_KEY)
+
+    $(this.element).off(this.constructor.EVENT_KEY)
+    $(this.element).closest('.modal').off('hide.bs.modal')
+
+    if (this.tip) {
+      $(this.tip).remove()
+    }
+
+    this._isEnabled     = null
+    this._timeout       = null
+    this._hoverState    = null
+    this._activeTrigger = null
+    if (this._popper !== null) {
+      this._popper.destroy()
+    }
+
+    this._popper = null
+    this.element = null
+    this.config  = null
+    this.tip     = null
+  }
+
+  show() {
+    if ($(this.element).css('display') === 'none') {
+      throw new Error('Please use show on visible elements')
+    }
+
+    const showEvent = $.Event(this.constructor.Event.SHOW)
+    if (this.isWithContent() && this._isEnabled) {
+      $(this.element).trigger(showEvent)
+
+      const shadowRoot = Util.findShadowRoot(this.element)
+      const isInTheDom = $.contains(
+        shadowRoot !== null ? shadowRoot : this.element.ownerDocument.documentElement,
+        this.element
+      )
+
+      if (showEvent.isDefaultPrevented() || !isInTheDom) {
+        return
+      }
+
+      const tip   = this.getTipElement()
+      const tipId = Util.getUID(this.constructor.NAME)
+
+      tip.setAttribute('id', tipId)
+      this.element.setAttribute('aria-describedby', tipId)
+
+      this.setContent()
+
+      if (this.config.animation) {
+        $(tip).addClass(ClassName.FADE)
+      }
+
+      const placement  = typeof this.config.placement === 'function'
+        ? this.config.placement.call(this, tip, this.element)
+        : this.config.placement
+
+      const attachment = this._getAttachment(placement)
+      this.addAttachmentClass(attachment)
+
+      const container = this._getContainer()
+      $(tip).data(this.constructor.DATA_KEY, this)
+
+      if (!$.contains(this.element.ownerDocument.documentElement, this.tip)) {
+        $(tip).appendTo(container)
+      }
+
+      $(this.element).trigger(this.constructor.Event.INSERTED)
+
+      this._popper = new Popper(this.element, tip, {
+        placement: attachment,
+        modifiers: {
+          offset: this._getOffset(),
+          flip: {
+            behavior: this.config.fallbackPlacement
+          },
+          arrow: {
+            element: Selector.ARROW
+          },
+          preventOverflow: {
+            boundariesElement: this.config.boundary
+          }
+        },
+        onCreate: (data) => {
+          if (data.originalPlacement !== data.placement) {
+            this._handlePopperPlacementChange(data)
+          }
+        },
+        onUpdate: (data) => this._handlePopperPlacementChange(data)
+      })
+
+      $(tip).addClass(ClassName.SHOW)
+
+      // If this is a touch-enabled device we add extra
+      // empty mouseover listeners to the body's immediate children;
+      // only needed because of broken event delegation on iOS
+      // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+      if ('ontouchstart' in document.documentElement) {
+        $(document.body).children().on('mouseover', null, $.noop)
+      }
+
+      const complete = () => {
+        if (this.config.animation) {
+          this._fixTransition()
+        }
+        const prevHoverState = this._hoverState
+        this._hoverState     = null
+
+        $(this.element).trigger(this.constructor.Event.SHOWN)
+
+        if (prevHoverState === HoverState.OUT) {
+          this._leave(null, this)
+        }
+      }
+
+      if ($(this.tip).hasClass(ClassName.FADE)) {
+        const transitionDuration = Util.getTransitionDurationFromElement(this.tip)
+
+        $(this.tip)
+          .one(Util.TRANSITION_END, complete)
+          .emulateTransitionEnd(transitionDuration)
+      } else {
+        complete()
+      }
+    }
+  }
+
+  hide(callback) {
+    const tip       = this.getTipElement()
+    const hideEvent = $.Event(this.constructor.Event.HIDE)
+    const complete = () => {
+      if (this._hoverState !== HoverState.SHOW && tip.parentNode) {
+        tip.parentNode.removeChild(tip)
+      }
+
+      this._cleanTipClass()
+      this.element.removeAttribute('aria-describedby')
+      $(this.element).trigger(this.constructor.Event.HIDDEN)
+      if (this._popper !== null) {
+        this._popper.destroy()
+      }
+
+      if (callback) {
+        callback()
+      }
+    }
+
+    $(this.element).trigger(hideEvent)
+
+    if (hideEvent.isDefaultPrevented()) {
+      return
+    }
+
+    $(tip).removeClass(ClassName.SHOW)
+
+    // If this is a touch-enabled device we remove the extra
+    // empty mouseover listeners we added for iOS support
+    if ('ontouchstart' in document.documentElement) {
+      $(document.body).children().off('mouseover', null, $.noop)
+    }
+
+    this._activeTrigger[Trigger.CLICK] = false
+    this._activeTrigger[Trigger.FOCUS] = false
+    this._activeTrigger[Trigger.HOVER] = false
+
+    if ($(this.tip).hasClass(ClassName.FADE)) {
+      const transitionDuration = Util.getTransitionDurationFromElement(tip)
+
+      $(tip)
+        .one(Util.TRANSITION_END, complete)
+        .emulateTransitionEnd(transitionDuration)
+    } else {
+      complete()
+    }
+
+    this._hoverState = ''
+  }
+
+  update() {
+    if (this._popper !== null) {
+      this._popper.scheduleUpdate()
+    }
+  }
+
+  // Protected
+
+  isWithContent() {
+    return Boolean(this.getTitle())
+  }
+
+  addAttachmentClass(attachment) {
+    $(this.getTipElement()).addClass(`${CLASS_PREFIX}-${attachment}`)
+  }
+
+  getTipElement() {
+    this.tip = this.tip || $(this.config.template)[0]
+    return this.tip
+  }
+
+  setContent() {
+    const tip = this.getTipElement()
+    this.setElementContent($(tip.querySelectorAll(Selector.TOOLTIP_INNER)), this.getTitle())
+    $(tip).removeClass(`${ClassName.FADE} ${ClassName.SHOW}`)
+  }
+
+  setElementContent($element, content) {
+    if (typeof content === 'object' && (content.nodeType || content.jquery)) {
+      // Content is a DOM node or a jQuery
+      if (this.config.html) {
+        if (!$(content).parent().is($element)) {
+          $element.empty().append(content)
+        }
+      } else {
+        $element.text($(content).text())
+      }
+
+      return
+    }
+
+    if (this.config.html) {
+      if (this.config.sanitize) {
+        content = sanitizeHtml(content, this.config.whiteList, this.config.sanitizeFn)
+      }
+
+      $element.html(content)
+    } else {
+      $element.text(content)
+    }
+  }
+
+  getTitle() {
+    let title = this.element.getAttribute('data-original-title')
+
+    if (!title) {
+      title = typeof this.config.title === 'function'
+        ? this.config.title.call(this.element)
+        : this.config.title
+    }
+
+    return title
+  }
+
+  // Private
+
+  _getOffset() {
+    const offset = {}
+
+    if (typeof this.config.offset === 'function') {
+      offset.fn = (data) => {
+        data.offsets = {
+          ...data.offsets,
+          ...this.config.offset(data.offsets, this.element) || {}
+        }
+
+        return data
+      }
+    } else {
+      offset.offset = this.config.offset
+    }
+
+    return offset
+  }
+
+  _getContainer() {
+    if (this.config.container === false) {
+      return document.body
+    }
+
+    if (Util.isElement(this.config.container)) {
+      return $(this.config.container)
+    }
+
+    return $(document).find(this.config.container)
+  }
+
+  _getAttachment(placement) {
+    return AttachmentMap[placement.toUpperCase()]
+  }
+
+  _setListeners() {
+    const triggers = this.config.trigger.split(' ')
+
+    triggers.forEach((trigger) => {
+      if (trigger === 'click') {
+        $(this.element).on(
+          this.constructor.Event.CLICK,
+          this.config.selector,
+          (event) => this.toggle(event)
+        )
+      } else if (trigger !== Trigger.MANUAL) {
+        const eventIn = trigger === Trigger.HOVER
+          ? this.constructor.Event.MOUSEENTER
+          : this.constructor.Event.FOCUSIN
+        const eventOut = trigger === Trigger.HOVER
+          ? this.constructor.Event.MOUSELEAVE
+          : this.constructor.Event.FOCUSOUT
+
+        $(this.element)
+          .on(
+            eventIn,
+            this.config.selector,
+            (event) => this._enter(event)
+          )
+          .on(
+            eventOut,
+            this.config.selector,
+            (event) => this._leave(event)
+          )
+      }
+    })
+
+    $(this.element).closest('.modal').on(
+      'hide.bs.modal',
+      () => {
+        if (this.element) {
+          this.hide()
+        }
+      }
+    )
+
+    if (this.config.selector) {
+      this.config = {
+        ...this.config,
+        trigger: 'manual',
+        selector: ''
+      }
+    } else {
+      this._fixTitle()
+    }
+  }
+
+  _fixTitle() {
+    const titleType = typeof this.element.getAttribute('data-original-title')
+
+    if (this.element.getAttribute('title') || titleType !== 'string') {
+      this.element.setAttribute(
+        'data-original-title',
+        this.element.getAttribute('title') || ''
+      )
+
+      this.element.setAttribute('title', '')
+    }
+  }
+
+  _enter(event, context) {
+    const dataKey = this.constructor.DATA_KEY
+    context = context || $(event.currentTarget).data(dataKey)
+
+    if (!context) {
+      context = new this.constructor(
+        event.currentTarget,
+        this._getDelegateConfig()
+      )
+      $(event.currentTarget).data(dataKey, context)
+    }
+
+    if (event) {
+      context._activeTrigger[
+        event.type === 'focusin' ? Trigger.FOCUS : Trigger.HOVER
+      ] = true
+    }
+
+    if ($(context.getTipElement()).hasClass(ClassName.SHOW) || context._hoverState === HoverState.SHOW) {
+      context._hoverState = HoverState.SHOW
+      return
+    }
+
+    clearTimeout(context._timeout)
+
+    context._hoverState = HoverState.SHOW
+
+    if (!context.config.delay || !context.config.delay.show) {
+      context.show()
+      return
+    }
+
+    context._timeout = setTimeout(() => {
+      if (context._hoverState === HoverState.SHOW) {
+        context.show()
+      }
+    }, context.config.delay.show)
+  }
+
+  _leave(event, context) {
+    const dataKey = this.constructor.DATA_KEY
+    context = context || $(event.currentTarget).data(dataKey)
+
+    if (!context) {
+      context = new this.constructor(
+        event.currentTarget,
+        this._getDelegateConfig()
+      )
+      $(event.currentTarget).data(dataKey, context)
+    }
+
+    if (event) {
+      context._activeTrigger[
+        event.type === 'focusout' ? Trigger.FOCUS : Trigger.HOVER
+      ] = false
+    }
+
+    if (context._isWithActiveTrigger()) {
+      return
+    }
+
+    clearTimeout(context._timeout)
+
+    context._hoverState = HoverState.OUT
+
+    if (!context.config.delay || !context.config.delay.hide) {
+      context.hide()
+      return
+    }
+
+    context._timeout = setTimeout(() => {
+      if (context._hoverState === HoverState.OUT) {
+        context.hide()
+      }
+    }, context.config.delay.hide)
+  }
+
+  _isWithActiveTrigger() {
+    for (const trigger in this._activeTrigger) {
+      if (this._activeTrigger[trigger]) {
+        return true
+      }
     }
 
     return false
   }
 
-  Tooltip.prototype.leave = function (obj) {
-    var self = obj instanceof this.constructor ?
-      obj : $(obj.currentTarget).data('bs.' + this.type)
+  _getConfig(config) {
+    const dataAttributes = $(this.element).data()
 
-    if (!self) {
-      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
-      $(obj.currentTarget).data('bs.' + this.type, self)
+    Object.keys(dataAttributes)
+      .forEach((dataAttr) => {
+        if (DISALLOWED_ATTRIBUTES.indexOf(dataAttr) !== -1) {
+          delete dataAttributes[dataAttr]
+        }
+      })
+
+    config = {
+      ...this.constructor.Default,
+      ...dataAttributes,
+      ...typeof config === 'object' && config ? config : {}
     }
 
-    if (obj instanceof $.Event) {
-      self.inState[obj.type == 'focusout' ? 'focus' : 'hover'] = false
-    }
-
-    if (self.isInStateTrue()) return
-
-    clearTimeout(self.timeout)
-
-    self.hoverState = 'out'
-
-    if (!self.options.delay || !self.options.delay.hide) return self.hide()
-
-    self.timeout = setTimeout(function () {
-      if (self.hoverState == 'out') self.hide()
-    }, self.options.delay.hide)
-  }
-
-  Tooltip.prototype.show = function () {
-    var e = $.Event('show.bs.' + this.type)
-
-    if (this.hasContent() && this.enabled) {
-      this.$element.trigger(e)
-
-      var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
-      if (e.isDefaultPrevented() || !inDom) return
-      var that = this
-
-      var $tip = this.tip()
-
-      var tipId = this.getUID(this.type)
-
-      this.setContent()
-      $tip.attr('id', tipId)
-      this.$element.attr('aria-describedby', tipId)
-
-      if (this.options.animation) $tip.addClass('fade')
-
-      var placement = typeof this.options.placement == 'function' ?
-        this.options.placement.call(this, $tip[0], this.$element[0]) :
-        this.options.placement
-
-      var autoToken = /\s?auto?\s?/i
-      var autoPlace = autoToken.test(placement)
-      if (autoPlace) placement = placement.replace(autoToken, '') || 'top'
-
-      $tip
-        .detach()
-        .css({ top: 0, left: 0, display: 'block' })
-        .addClass(placement)
-        .data('bs.' + this.type, this)
-
-      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
-      this.$element.trigger('inserted.bs.' + this.type)
-
-      var pos          = this.getPosition()
-      var actualWidth  = $tip[0].offsetWidth
-      var actualHeight = $tip[0].offsetHeight
-
-      if (autoPlace) {
-        var orgPlacement = placement
-        var viewportDim = this.getPosition(this.$viewport)
-
-        placement = placement == 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top'    :
-                    placement == 'top'    && pos.top    - actualHeight < viewportDim.top    ? 'bottom' :
-                    placement == 'right'  && pos.right  + actualWidth  > viewportDim.width  ? 'left'   :
-                    placement == 'left'   && pos.left   - actualWidth  < viewportDim.left   ? 'right'  :
-                    placement
-
-        $tip
-          .removeClass(orgPlacement)
-          .addClass(placement)
-      }
-
-      var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight)
-
-      this.applyPlacement(calculatedOffset, placement)
-
-      var complete = function () {
-        var prevHoverState = that.hoverState
-        that.$element.trigger('shown.bs.' + that.type)
-        that.hoverState = null
-
-        if (prevHoverState == 'out') that.leave(that)
-      }
-
-      $.support.transition && this.$tip.hasClass('fade') ?
-        $tip
-          .one('bsTransitionEnd', complete)
-          .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
-        complete()
-    }
-  }
-
-  Tooltip.prototype.applyPlacement = function (offset, placement) {
-    var $tip   = this.tip()
-    var width  = $tip[0].offsetWidth
-    var height = $tip[0].offsetHeight
-
-    // manually read margins because getBoundingClientRect includes difference
-    var marginTop = parseInt($tip.css('margin-top'), 10)
-    var marginLeft = parseInt($tip.css('margin-left'), 10)
-
-    // we must check for NaN for ie 8/9
-    if (isNaN(marginTop))  marginTop  = 0
-    if (isNaN(marginLeft)) marginLeft = 0
-
-    offset.top  += marginTop
-    offset.left += marginLeft
-
-    // $.fn.offset doesn't round pixel values
-    // so we use setOffset directly with our own function B-0
-    $.offset.setOffset($tip[0], $.extend({
-      using: function (props) {
-        $tip.css({
-          top: Math.round(props.top),
-          left: Math.round(props.left)
-        })
-      }
-    }, offset), 0)
-
-    $tip.addClass('in')
-
-    // check to see if placing tip in new offset caused the tip to resize itself
-    var actualWidth  = $tip[0].offsetWidth
-    var actualHeight = $tip[0].offsetHeight
-
-    if (placement == 'top' && actualHeight != height) {
-      offset.top = offset.top + height - actualHeight
-    }
-
-    var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight)
-
-    if (delta.left) offset.left += delta.left
-    else offset.top += delta.top
-
-    var isVertical          = /top|bottom/.test(placement)
-    var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
-    var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight'
-
-    $tip.offset(offset)
-    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical)
-  }
-
-  Tooltip.prototype.replaceArrow = function (delta, dimension, isVertical) {
-    this.arrow()
-      .css(isVertical ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
-      .css(isVertical ? 'top' : 'left', '')
-  }
-
-  Tooltip.prototype.setContent = function () {
-    var $tip  = this.tip()
-    var title = this.getTitle()
-
-    $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
-    $tip.removeClass('fade in top bottom left right')
-  }
-
-  Tooltip.prototype.hide = function (callback) {
-    var that = this
-    var $tip = $(this.$tip)
-    var e    = $.Event('hide.bs.' + this.type)
-
-    function complete() {
-      if (that.hoverState != 'in') $tip.detach()
-      that.$element
-        .removeAttr('aria-describedby')
-        .trigger('hidden.bs.' + that.type)
-      callback && callback()
-    }
-
-    this.$element.trigger(e)
-
-    if (e.isDefaultPrevented()) return
-
-    $tip.removeClass('in')
-
-    $.support.transition && $tip.hasClass('fade') ?
-      $tip
-        .one('bsTransitionEnd', complete)
-        .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
-      complete()
-
-    this.hoverState = null
-
-    return this
-  }
-
-  Tooltip.prototype.fixTitle = function () {
-    var $e = this.$element
-    if ($e.attr('title') || typeof $e.attr('data-original-title') != 'string') {
-      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
-    }
-  }
-
-  Tooltip.prototype.hasContent = function () {
-    return this.getTitle()
-  }
-
-  Tooltip.prototype.getPosition = function ($element) {
-    $element   = $element || this.$element
-
-    var el     = $element[0]
-    var isBody = el.tagName == 'BODY'
-
-    var elRect    = el.getBoundingClientRect()
-    if (elRect.width == null) {
-      // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
-      elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
-    }
-    var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
-    var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
-    var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
-
-    return $.extend({}, elRect, scroll, outerDims, elOffset)
-  }
-
-  Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
-    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
-           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
-           placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
-        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
-
-  }
-
-  Tooltip.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
-    var delta = { top: 0, left: 0 }
-    if (!this.$viewport) return delta
-
-    var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
-    var viewportDimensions = this.getPosition(this.$viewport)
-
-    if (/right|left/.test(placement)) {
-      var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
-      var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
-      if (topEdgeOffset < viewportDimensions.top) { // top overflow
-        delta.top = viewportDimensions.top - topEdgeOffset
-      } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
-        delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
-      }
-    } else {
-      var leftEdgeOffset  = pos.left - viewportPadding
-      var rightEdgeOffset = pos.left + viewportPadding + actualWidth
-      if (leftEdgeOffset < viewportDimensions.left) { // left overflow
-        delta.left = viewportDimensions.left - leftEdgeOffset
-      } else if (rightEdgeOffset > viewportDimensions.right) { // right overflow
-        delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
+    if (typeof config.delay === 'number') {
+      config.delay = {
+        show: config.delay,
+        hide: config.delay
       }
     }
 
-    return delta
-  }
-
-  Tooltip.prototype.getTitle = function () {
-    var title
-    var $e = this.$element
-    var o  = this.options
-
-    title = $e.attr('data-original-title')
-      || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
-
-    return title
-  }
-
-  Tooltip.prototype.getUID = function (prefix) {
-    do prefix += ~~(Math.random() * 1000000)
-    while (document.getElementById(prefix))
-    return prefix
-  }
-
-  Tooltip.prototype.tip = function () {
-    if (!this.$tip) {
-      this.$tip = $(this.options.template)
-      if (this.$tip.length != 1) {
-        throw new Error(this.type + ' `template` option must consist of exactly 1 top-level element!')
-      }
+    if (typeof config.title === 'number') {
+      config.title = config.title.toString()
     }
-    return this.$tip
+
+    if (typeof config.content === 'number') {
+      config.content = config.content.toString()
+    }
+
+    Util.typeCheckConfig(
+      NAME,
+      config,
+      this.constructor.DefaultType
+    )
+
+    if (config.sanitize) {
+      config.template = sanitizeHtml(config.template, config.whiteList, config.sanitizeFn)
+    }
+
+    return config
   }
 
-  Tooltip.prototype.arrow = function () {
-    return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
-  }
+  _getDelegateConfig() {
+    const config = {}
 
-  Tooltip.prototype.enable = function () {
-    this.enabled = true
-  }
-
-  Tooltip.prototype.disable = function () {
-    this.enabled = false
-  }
-
-  Tooltip.prototype.toggleEnabled = function () {
-    this.enabled = !this.enabled
-  }
-
-  Tooltip.prototype.toggle = function (e) {
-    var self = this
-    if (e) {
-      self = $(e.currentTarget).data('bs.' + this.type)
-      if (!self) {
-        self = new this.constructor(e.currentTarget, this.getDelegateOptions())
-        $(e.currentTarget).data('bs.' + this.type, self)
+    if (this.config) {
+      for (const key in this.config) {
+        if (this.constructor.Default[key] !== this.config[key]) {
+          config[key] = this.config[key]
+        }
       }
     }
 
-    if (e) {
-      self.inState.click = !self.inState.click
-      if (self.isInStateTrue()) self.enter(self)
-      else self.leave(self)
-    } else {
-      self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+    return config
+  }
+
+  _cleanTipClass() {
+    const $tip = $(this.getTipElement())
+    const tabClass = $tip.attr('class').match(BSCLS_PREFIX_REGEX)
+    if (tabClass !== null && tabClass.length) {
+      $tip.removeClass(tabClass.join(''))
     }
   }
 
-  Tooltip.prototype.destroy = function () {
-    var that = this
-    clearTimeout(this.timeout)
-    this.hide(function () {
-      that.$element.off('.' + that.type).removeData('bs.' + that.type)
-      if (that.$tip) {
-        that.$tip.detach()
-      }
-      that.$tip = null
-      that.$arrow = null
-      that.$viewport = null
-    })
+  _handlePopperPlacementChange(popperData) {
+    const popperInstance = popperData.instance
+    this.tip = popperInstance.popper
+    this._cleanTipClass()
+    this.addAttachmentClass(this._getAttachment(popperData.placement))
   }
 
+  _fixTransition() {
+    const tip = this.getTipElement()
+    const initConfigAnimation = this.config.animation
 
-  // TOOLTIP PLUGIN DEFINITION
-  // =========================
+    if (tip.getAttribute('x-placement') !== null) {
+      return
+    }
 
-  function Plugin(option) {
+    $(tip).removeClass(ClassName.FADE)
+    this.config.animation = false
+    this.hide()
+    this.show()
+    this.config.animation = initConfigAnimation
+  }
+
+  // Static
+
+  static _jQueryInterface(config) {
     return this.each(function () {
-      var $this   = $(this)
-      var data    = $this.data('bs.tooltip')
-      var options = typeof option == 'object' && option
+      let data = $(this).data(DATA_KEY)
+      const _config = typeof config === 'object' && config
 
-      if (!data && /destroy|hide/.test(option)) return
-      if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
-      if (typeof option == 'string') data[option]()
+      if (!data && /dispose|hide/.test(config)) {
+        return
+      }
+
+      if (!data) {
+        data = new Tooltip(this, _config)
+        $(this).data(DATA_KEY, data)
+      }
+
+      if (typeof config === 'string') {
+        if (typeof data[config] === 'undefined') {
+          throw new TypeError(`No method named "${config}"`)
+        }
+        data[config]()
+      }
     })
   }
+}
 
-  var old = $.fn.tooltip
+/**
+ * ------------------------------------------------------------------------
+ * jQuery
+ * ------------------------------------------------------------------------
+ */
 
-  $.fn.tooltip             = Plugin
-  $.fn.tooltip.Constructor = Tooltip
+$.fn[NAME] = Tooltip._jQueryInterface
+$.fn[NAME].Constructor = Tooltip
+$.fn[NAME].noConflict = () => {
+  $.fn[NAME] = JQUERY_NO_CONFLICT
+  return Tooltip._jQueryInterface
+}
 
-
-  // TOOLTIP NO CONFLICT
-  // ===================
-
-  $.fn.tooltip.noConflict = function () {
-    $.fn.tooltip = old
-    return this
-  }
-
-}(jQuery);
+export default Tooltip

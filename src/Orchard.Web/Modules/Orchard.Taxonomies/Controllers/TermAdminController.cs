@@ -14,20 +14,24 @@ using Orchard.Taxonomies.Helpers;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
 using Orchard.DisplayManagement;
+using Orchard.Taxonomies.Events;
 
 namespace Orchard.Taxonomies.Controllers {
     [ValidateInput(false), Admin]
     public class TermAdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
+        private readonly ITermLocalizationEventHandler _termLocalizationEventHandler;
 
         public TermAdminController(IOrchardServices services,
             ITaxonomyService taxonomyService,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ITermLocalizationEventHandler termLocalizationEventHandler) {
             Services = services;
             _siteService = siteService;
             _taxonomyService = taxonomyService;
+            _termLocalizationEventHandler = termLocalizationEventHandler;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -41,12 +45,14 @@ namespace Orchard.Taxonomies.Controllers {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
+            
+            var allTerms = _taxonomyService.GetTermsQuery(taxonomyId).OrderBy(x => x.FullWeight);
 
-            var allTerms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).List());
+            var totalItemCount = allTerms.Count();
 
-            var termsPage = pager.PageSize > 0 ? allTerms.Skip(pager.GetStartIndex()).Take(pager.PageSize) : allTerms;
+            var termsPage = pager.PageSize > 0 ? allTerms.Slice(pager.GetStartIndex(), pager.PageSize) : allTerms.Slice(0, 0);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
+            var pagerShape = Shape.Pager(pager).TotalItemCount(totalItemCount);
 
             var entries = termsPage
                     .Select(term => term.CreateTermEntry())
@@ -86,7 +92,9 @@ namespace Orchard.Taxonomies.Controllers {
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
-                        _taxonomyService.DeleteTerm(term);
+                        if (term != null) {
+                            _taxonomyService.DeleteTerm(term);
+                        }
                     }
 
                     Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
@@ -167,9 +175,14 @@ namespace Orchard.Taxonomies.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to move terms")))
                 return new HttpUnauthorizedResult();
 
+            MoveTermsContext context = new MoveTermsContext();
+            context.Terms = ResolveTermIds(termIds);
+            context.ParentTerm = _taxonomyService.GetTerm(selectedTermId);
+            _termLocalizationEventHandler.MovingTerms(context);
+
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(selectedTermId);
-            var terms = ResolveTermIds(termIds);
+            var terms = context.Terms;
 
             foreach (var term in terms) {
                 _taxonomyService.MoveTerm(taxonomy, term, parentTerm);

@@ -152,7 +152,7 @@ namespace Orchard.Tokens.Providers {
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
             if (chainIndex == 0) { // ")." has not be found
-                return new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), token.Length.ToString());
+                return new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), "");
             }
             if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
                 return null;

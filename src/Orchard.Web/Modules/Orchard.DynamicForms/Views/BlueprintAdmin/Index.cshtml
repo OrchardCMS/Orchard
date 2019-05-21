@@ -32,8 +32,14 @@
                     <td>@blueprint.ElementTypeName</td>
                     <td>@blueprint.BaseElementTypeName</td>
                     <td>
-                        @Html.ActionLink(T("Edit").Text, "Edit", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.DynamicForms" }, null) @T(" | ")
-                        @Html.ActionLink(T("Remove").Text, "Delete", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.ActionLink(T("Edit").Text, "Edit", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.DynamicForms" }, null)
+                            </li>
+                            <li class="action-link">
+                                @Html.ActionLink(T("Delete").Text, "Delete", "BlueprintAdmin", new { id = blueprint.Id, area = "Orchard.DynamicForms" }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                            </li>
+                        </ul>
                     </td>
                 </tr>
             }

@@ -84,7 +84,7 @@
             var _this = $(this);
             var firstError = _this.find(".input-validation-error").first();
             // try to focus the first error on the page
-            if (firstError.size() === 1) {
+            if (firstError.length === 1) {
                 firstError.focus();
                 return _this;
             }
@@ -175,7 +175,7 @@
             if (controller.is(":checkbox")) {
                 controller.click($(this).toggleWhatYouControl).each($(this).toggleWhatYouControl);
             } else if (controller.is(":radio")) {
-                $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); });
+                $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); }).each($(this).toggleWhatYouControl);
             }
             else if (controller.is("option")) {
                 controller.parent().change(function() {

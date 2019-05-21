@@ -16,18 +16,16 @@ namespace Orchard.OpenId.Models {
             set { this.Store(x => x.ConsumerSecret, value); }
         }
 
-        public bool IsValid {
-            get {
-                if (String.IsNullOrWhiteSpace(ConsumerKey) ||
-                    String.CompareOrdinal(ConsumerKey, Constants.Twitter.DefaultConsumerKey) == 0 ||
-                    String.IsNullOrWhiteSpace(ConsumerSecret) ||
-                    String.CompareOrdinal(ConsumerSecret, Constants.Twitter.DefaultConsumerSecret) == 0) {
+        public bool IsValid() {
+            if (String.IsNullOrWhiteSpace(ConsumerKey) ||
+                String.CompareOrdinal(ConsumerKey, Constants.Twitter.DefaultConsumerKey) == 0 ||
+                String.IsNullOrWhiteSpace(ConsumerSecret) ||
+                String.CompareOrdinal(ConsumerSecret, Constants.Twitter.DefaultConsumerSecret) == 0) {
 
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
 
         public string VeriSignClass3SecureServerCA_G2

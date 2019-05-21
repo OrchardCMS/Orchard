@@ -313,8 +313,8 @@ namespace Orchard.Environment.ShellBuilders {
                 ImplementationType = implementationType;
             }
 
-            public string Name { get; }
-            public Type ImplementationType { get; }
+            public string Name { get; private set; }
+            public Type ImplementationType { get; private set; }
         }
 
         private class DecoratorRegistration {
@@ -324,9 +324,9 @@ namespace Orchard.Environment.ShellBuilders {
                 IsDecorated = isDecorated;
             }
 
-            public Type InterfaceType { get; }
-            public ItemToBeRegistered ItemToBeRegistered { get; }
-            public bool IsDecorated { get; }
+            public Type InterfaceType { get; private set; }
+            public ItemToBeRegistered ItemToBeRegistered { get; private set; }
+            public bool IsDecorated { get; private set; }
         }
     }
 }

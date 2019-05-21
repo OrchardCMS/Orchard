@@ -10,6 +10,10 @@ namespace Orchard.Projections.Models {
             set { this.As<TitlePart>().Title = value; }
         }
 
+        public QueryVersionScopeOptions VersionScope {
+            get { return Retrieve(x => x.VersionScope); }
+            set { Store(x => x.VersionScope, value); }
+        }
         public IList<SortCriterionRecord> SortCriteria {
             get { return Record.SortCriteria; }
         }

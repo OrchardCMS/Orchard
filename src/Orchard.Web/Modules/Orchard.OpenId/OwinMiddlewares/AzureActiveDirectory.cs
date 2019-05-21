@@ -52,7 +52,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             var azureWebSiteProtectionEnabled = false;
             var azureUseAzureGraphApi = false;
 
-            if (settings == null || !settings.IsValid) {
+            if (settings == null || !settings.IsValid()) {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 
@@ -60,6 +60,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
             _azureTenant = settings.Tenant;
             _azureAdInstance = settings.ADInstance;
             _azureGraphApiUri = settings.GraphApiUrl;
+            _azureGraphApiKey = settings.GraphApiKey;
             logoutRedirectUri = settings.LogoutRedirectUri;
             azureWebSiteProtectionEnabled = settings.AzureWebSiteProtectionEnabled;
             azureAppKey = settings.AppKey;
@@ -87,12 +88,15 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     AuthenticationFailed = context => {
                         context.HandleResponse();
                         context.Response.Redirect(Constants.General.AuthenticationErrorUrl);
-
+                        Logger.Debug(context.Exception, "AAD authentication failed.");
                         return Task.FromResult(0);
                     }
                 }
-
             };
+
+            // Allowing login from all AAD tenants (so with any Microsoft ID). We'd need to list all possible AAD tenants 
+            // here otherwise.
+            openIdOptions.TokenValidationParameters.ValidateIssuer = false;
 
             if (azureWebSiteProtectionEnabled) {
                 middlewares.Add(new OwinMiddlewareRegistration {

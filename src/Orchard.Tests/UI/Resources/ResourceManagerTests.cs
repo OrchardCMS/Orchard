@@ -13,6 +13,7 @@ namespace Orchard.Tests.UI.Resources {
     public class ResourceManagerTests {
         private IContainer _container;
         private IResourceManager _resourceManager;
+        private IResourceFileHashProvider _resourceFileHashProvider;
         private TestManifestProvider _testManifest;
         private string _appPath = "/AppPath/";
 
@@ -37,7 +38,7 @@ namespace Orchard.Tests.UI.Resources {
         private void VerifyPaths(string resourceType, RequireSettings defaultSettings, string expectedPaths, bool ssl) {
             defaultSettings = defaultSettings ?? new RequireSettings();
             var requiredResources = _resourceManager.BuildRequiredResources(resourceType);
-            var renderedResources = string.Join(",", requiredResources.Select(context => context.GetResourceUrl(defaultSettings, _appPath, ssl)).ToArray());
+            var renderedResources = string.Join(",", requiredResources.Select(context => context.GetResourceUrl(defaultSettings, _appPath, ssl, _resourceFileHashProvider)).ToArray());
             Assert.That(renderedResources, Is.EqualTo(expectedPaths));
         }
 
@@ -45,9 +46,11 @@ namespace Orchard.Tests.UI.Resources {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ResourceManager>().As<IResourceManager>();
+            builder.RegisterType<ResourceFileHashProvider>().As<IResourceFileHashProvider>();
             builder.RegisterType<TestManifestProvider>().As<IResourceManifestProvider>().SingleInstance();
             _container = builder.Build();
             _resourceManager = _container.Resolve<IResourceManager>();
+            _resourceFileHashProvider = _container.Resolve<IResourceFileHashProvider>();
             _testManifest = _container.Resolve<IResourceManifestProvider>() as TestManifestProvider;
         }
 

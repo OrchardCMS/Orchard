@@ -8,6 +8,7 @@ using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.Indexing {
     public class LuceneSearchBuilderTests {
@@ -34,6 +35,7 @@ namespace Orchard.Tests.Modules.Indexing {
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<DefaultLuceneAnalyzerProvider>().As<ILuceneAnalyzerProvider>();
             builder.RegisterType<DefaultLuceneAnalyzerSelector>().As<ILuceneAnalyzerSelector>();
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
@@ -746,6 +748,74 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(SearchBuilder.WithinRange("date", null, new DateTime(2010, 05, 28, 12, 30, 30), true, false).Count(), Is.EqualTo(0));
             Assert.That(SearchBuilder.WithinRange("number", null, 123.456, true, false).Count(), Is.EqualTo(0));
             Assert.That(SearchBuilder.WithinRange("integer", null, 123, true, false).Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldAllowGroupedClauses() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "michael has a cousin named michel").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "speak inside the mic").Analyze());
+            _provider.Store("default", _provider.New(4).Add("body", "a dog is pursuing a cat").Analyze());
+            _provider.Store("default", _provider.New(5).Add("body", "michael speaks to elephants").Analyze());
+
+            var michael = SearchBuilder.WithField("body", "michael").GetBits();
+            var cousinKitchenOrCat = SearchBuilder.WithField("body", "cousin").WithField("body", "kitchen").WithField("body", "cat").GetBits();
+
+            Assert.That(michael.Count(), Is.EqualTo(3));
+            Assert.That(cousinKitchenOrCat.Count(), Is.EqualTo(3));
+
+            // Contains "michael" AND ("cousin" OR "kitchen" OR "cat")
+            var michaelAndCousinKitchenOrcat = SearchBuilder
+                .WithField("body", "michael").Mandatory()
+                .WithGroup(groupSearchBuilder => groupSearchBuilder
+                    .WithField("body", "kitchen")
+                    .WithField("body", "cousin")
+                    .WithField("body", "cat")).Mandatory().GetBits();
+
+            Assert.That(michaelAndCousinKitchenOrcat.Count(), Is.EqualTo(2));
+            Assert.That(michael.And(cousinKitchenOrCat).Count(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ShouldAllowNestedGroupedClauses()
+        {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen with his cousin").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "michael has a cousin named michel").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "speak inside the mic").Analyze());
+            _provider.Store("default", _provider.New(4).Add("body", "a dog is pursuing a cat").Analyze());
+            _provider.Store("default", _provider.New(5).Add("body", "michael speaks to elephants").Analyze());
+
+            var michael = SearchBuilder.WithField("body", "michael").GetBits();
+            var elephant = SearchBuilder.WithField("body", "elephant").GetBits();
+            var cousinAndKitchen = SearchBuilder
+                .WithField("body", "cousin").Mandatory()
+                .WithField("body", "kitchen").Mandatory().GetBits();
+
+            // Contains "elephant" OR ("cousin" AND "kitchen")
+            var elephantOrCousinAndKitchen = SearchBuilder
+                .WithField("body", "elephant")
+                    .WithGroup(nestedSearchBuilder => nestedSearchBuilder
+                        .WithField("body", "cousin").Mandatory()
+                        .WithField("body", "kitchen").Mandatory()
+                    ).GetBits();
+
+            // Contains "michael" AND ("elephant" OR ("cousin" AND "kitchen"))
+            var michaelAndElephantOrCousinAndKitchen = SearchBuilder
+                .WithField("body", "michael").Mandatory()
+                .WithGroup(groupSearchBuilder => groupSearchBuilder
+                    .WithField("body", "elephant")
+                    .WithGroup(nestedSearchBuilder => nestedSearchBuilder
+                        .WithField("body", "cousin").Mandatory()
+                        .WithField("body", "kitchen").Mandatory())
+                    ).Mandatory().GetBits();
+
+            Assert.That(michael.Count(), Is.EqualTo(3));
+            Assert.That(elephant.Count(), Is.EqualTo(1));
+            Assert.That(cousinAndKitchen.Count(), Is.EqualTo(1));
+            Assert.That(elephantOrCousinAndKitchen.Count(), Is.EqualTo(2));
+            Assert.That(michaelAndElephantOrCousinAndKitchen.Count(), Is.EqualTo(2));
         }
     }
 }

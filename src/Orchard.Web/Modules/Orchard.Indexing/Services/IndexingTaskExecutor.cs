@@ -160,6 +160,9 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(versionRecord => versionRecord.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
+                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
+                        // We need to filter out such records, otherwise they will crash the ContentManager.
+                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
                         .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
                         .Distinct()
                         .ToList();
@@ -220,6 +223,9 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(x => x.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
+                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
+                        // We need to filter out such records, otherwise they will crash the ContentManager.
+                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
                         .GroupBy(x => x.ContentItemRecord.Id)
                     .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
                         .OrderBy(x => x.TaskId)
@@ -332,7 +338,7 @@ namespace Orchard.Indexing.Services {
         }
 
         /// <summary>
-        /// Creates a IDocumentIndex instance for a specific content item id. If the content 
+        /// Creates a IDocumentIndex instance for a specific content item id. If the content
         /// item is no more published, it returns null.
         /// </summary>
         private IDocumentIndex ExtractDocumentIndex(ContentItem contentItem) {

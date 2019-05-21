@@ -57,7 +57,7 @@ namespace Orchard.Email.Services {
                 Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments") ? parameters["Attachments"] : new List<string>())
             };
 
-            if (emailMessage.Recipients.Length == 0) {
+            if (string.IsNullOrWhiteSpace(emailMessage.Recipients)) {
                 Logger.Error("Email message doesn't have any recipient");
                 return;
             }
@@ -121,7 +121,6 @@ namespace Orchard.Email.Services {
                         mailMessage.ReplyToList.Add(new MailAddress(recipient));
                     }
                 }
-
                 foreach (var attachmentPath in emailMessage.Attachments) {
                     if (File.Exists(attachmentPath)) {
                         mailMessage.Attachments.Add(new Attachment(attachmentPath));
@@ -130,6 +129,15 @@ namespace Orchard.Email.Services {
                         throw new FileNotFoundException(T("One or more attachments not found.").Text);
                     }
                 }
+
+                if (parameters.ContainsKey("NotifyReadEmail")) {
+                    if (parameters["NotifyReadEmail"] is bool) {
+                        if ((bool)(parameters["NotifyReadEmail"])) {
+                            mailMessage.Headers.Add("Disposition-Notification-To", mailMessage.From.ToString());
+                        }
+                    }
+                }
+
                 _smtpClientField.Value.Send(mailMessage);
             }
             catch (Exception e) {

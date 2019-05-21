@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement.Handlers {
     public class TemplateFilterForPart<TPart> : TemplateFilterBase<ContentPart> where TPart : ContentPart, new() {
@@ -35,7 +36,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void BuildEditorShape(BuildEditorContext context, ContentPart part) {
-            if (!string.Equals(_groupId, context.GroupId, StringComparison.OrdinalIgnoreCase))
+            if (!_groupId.SafeNameEquals(context.GroupId, StringComparison.OrdinalIgnoreCase))
                 return;
 
             var templatePart = part.As<TPart>();
@@ -44,9 +45,9 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void UpdateEditorShape(UpdateEditorContext context, ContentPart part) {
-            if (!string.Equals(_groupId, context.GroupId, StringComparison.OrdinalIgnoreCase))
+            if (!_groupId.SafeNameEquals(context.GroupId, StringComparison.OrdinalIgnoreCase))
                 return;
-            
+
             var templatePart = part.As<TPart>();
             context.Updater.TryUpdateModel(templatePart, _prefix, null, null);
             BuildEditorShape(context, part);

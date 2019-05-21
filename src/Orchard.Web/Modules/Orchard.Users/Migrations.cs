@@ -7,7 +7,7 @@ namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("UserPartRecord", 
+            SchemaBuilder.CreateTable("UserPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("UserName")

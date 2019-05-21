@@ -22,7 +22,7 @@ namespace Orchard.MediaLibrary.Services {
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename, string contentType);
         IMediaFactory GetMediaFactory(Stream stream, string mimeType, string contentType);
-
+        bool CheckMediaFolderPermission(Orchard.Security.Permissions.Permission permission, string folderPath);
         /// <summary>
         /// Creates a unique filename to prevent filename collisions.
         /// </summary>
@@ -40,6 +40,8 @@ namespace Orchard.MediaLibrary.Services {
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
         IMediaFolder GetRootMediaFolder();
+
+        IMediaFolder GetUserMediaFolder();
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -143,7 +145,7 @@ namespace Orchard.MediaLibrary.Services {
         string Combine(string path1, string path2);
     }
 
-    public static class MediaLibrayServiceExtensions {
+    public static class MediaLibraryServiceExtensions {
         public static bool CanManageMediaFolder(this IMediaLibraryService service, string folderPath) {
             // The current user can manage a media if he has access to the whole hierarchy
             // or the media is under his personal storage folder.

@@ -6,5 +6,5 @@
     DateTime? publishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().PublishedUtc;
 }
 @if (publishLaterPart.IsPublished() && publishedUtc.HasValue) {
-    @T("Published: {0}", Display.DateTimeRelative(DateTimeUtc: publishedUtc.Value)) @T(" | ")
+    @T("Published: {0}", Display.DateTimeRelative(DateTimeUtc: publishedUtc.Value))
 }

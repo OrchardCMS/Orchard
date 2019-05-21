@@ -1,13 +1,13 @@
 ﻿@* Html.RegisterStyle("site.css"); *@
-@{ 
+@{
     Model.Header.Add(Display.Header(), "5");
     Model.Header.Add(Display.User(), "10");
     Model.Header.Add(Model.Navigation, "15");
 }
 <div id="page">
-<!-- should be a header wrapper (and what about a wrapper for the default layout?) -->
+    <!-- should be a header wrapper (and what about a wrapper for the default layout?) -->
     <header>
-@Display(Model.Header)
+        @Display(Model.Header)
     </header>
     <div id="main">
         <div id="messages">
@@ -15,19 +15,19 @@
         </div>
         <div id="content-wrapper">
             <div id="content">
-@Display(Model.Content)
+                @Display(Model.Content)
             </div>
         </div>
         <div id="sidebar-wrapper">
             <div id="sidebar">
-@Display(Model.Sidebar)
+                @Display(Model.Sidebar)
             </div>
         </div>
     </div>
-<!-- should really be a footer wrapper -->
+    <!-- should really be a footer wrapper -->
     <div id="footer-wrapper">
         <footer>
-@Display(Model.Footer)
+            @Display(Model.Footer)
         </footer>
     </div>
 </div>

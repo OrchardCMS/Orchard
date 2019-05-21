@@ -212,6 +212,27 @@ form.link button:hover, button.link:hover {
 ol.decimal {list-style:decimal inside; margin:12px 0;}
 ul.disc {list-style:disc inside; margin:12px 0;}
 
+.action-links {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+}
+
+.action-links + .action-links::before {
+    content: " ";
+    display: block;
+}
+
+.action-links > .action-label {
+    font-weight: bold;
+    margin: 0 6px;
+}
+
+.action-links > .action-link + .action-link::before {
+    content: "|";
+    margin: 0 2px 0 6px;
+}
+
 /* Header - Branding, Login and Culture Selection
 ***************************************************************/
 #header {
@@ -955,26 +976,26 @@ table.items tr.internal *{
     margin:1em 0;
     padding:0;
 }
-.contentItems li {
+.contentItems > ul > li, .contentItems > li {
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
     border-bottom:1px solid #eaeaea;
 }
-.contentItems.bulk-items li {
+.contentItems.bulk-items > ul > li {
     padding-bottom:.6em;
     padding-left:.6em;
 }
-#main .contentItems li .actions {
+#main .contentItems > ul > li .actions {
     color:#EAE9D9;
     height:auto;
     margin:-1.3em 0 0;
     padding:0 0 .1em;
 }
-#main .contentItems li .actions .ibutton {
+#main .contentItems > ul > li .actions .ibutton {
     margin-right:6px;
 }
-#main .contentItems li .actions .destruct .ibutton {
+#main .contentItems > ul > li .actions .destruct .ibutton {
     margin-left:8px;
     margin-right:0;
 }
@@ -989,6 +1010,7 @@ table.items tr.internal *{
 .contentItems .summary {
     clear:both;
     padding:1.2em .4em .5em;
+    overflow: auto;
 }
 .contentItems .properties {
     float:left;
@@ -1020,7 +1042,12 @@ table.items tr.internal *{
     margin:0 .2em -.2em;
 }
 .contentItems .related {
-    text-align:right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: auto;
+    float: right;
+    text-align: right;
 }
 .contentItems .comment-count {
     line-height:2em;
@@ -1130,25 +1157,24 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
 }
 /* Core Contents and Orchard.PublishLater */
 
-.edit-item-sidebar fieldset {
-    margin:0;
-    padding:0;
+.edit-item-secondary {
+    margin-top: 2em;
 }
 
-fieldset.publish-button, fieldset.delete-button, fieldset.save-button {
-    clear:none;
-    float:left;
+.edit-item-sidebar fieldset {
+    float: left;
+    clear: none;
+    margin: 0;
+    padding: 0;
 }
-fieldset.save-button {
-    clear:left;
+
+.edit-item-sidebar fieldset + fieldset {
+    margin-left: 12px;
 }
-fieldset.publish-button {
-    margin: 0 12px 0 0;
-    padding: 0 12px;
-    border-right:1px solid #ccc;
-}
-fieldset.delete-button {
-    margin: 0 0 0 12px;
+
+fieldset.cancel-button {
+    padding-left: 12px;
+    border-left: 1px solid #ccc;
 }
 
 /* Dashboard */
@@ -1500,8 +1526,8 @@ html.dir-rtl {
     margin-left:inherit;
     margin-right:10px;
 }
-.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button {
-    float:right;
+.dir-rtl fieldset.publish-button, .dir-rtl fieldset.delete-button, .dir-rtl fieldset.save-button {
+    float: right;
 }
 .dir-rtl fieldset.save-button {
     clear:right;

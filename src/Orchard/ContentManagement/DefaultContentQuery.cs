@@ -22,21 +22,30 @@ namespace Orchard.ContentManagement {
         private ICacheManager _cacheManager;
         private ISignals _signals;
         private IRepository<ContentTypeRecord> _contentTypeRepository;
+        private IEnumerable<IGlobalCriteriaProvider> _globalCriteriaList;
 
         public DefaultContentQuery(
             IContentManager contentManager, 
             ITransactionManager transactionManager, 
             ICacheManager cacheManager,
             ISignals signals,
-            IRepository<ContentTypeRecord> contentTypeRepository) {
+            IRepository<ContentTypeRecord> contentTypeRepository,
+            IEnumerable<IGlobalCriteriaProvider> globalCriteriaList) {
             _transactionManager = transactionManager;
             ContentManager = contentManager;
             _cacheManager = cacheManager;
             _signals = signals;
             _contentTypeRepository = contentTypeRepository;
+            _globalCriteriaList = globalCriteriaList;
         }
 
         public IContentManager ContentManager { get; private set; }
+
+        private void BeforeExecuteQuery(ICriteria contentItemVersionCriteria) {
+            foreach(var criteria in _globalCriteriaList) {
+                criteria.AddCriteria(contentItemVersionCriteria);
+            }
+        }
 
         ISession BindSession() {
             if (_session == null)
@@ -188,6 +197,8 @@ namespace Orchard.ContentManagement {
                 criteria = criteria.SetMaxResults(count);
             }
 
+            BeforeExecuteQuery(criteria);
+
             return criteria
                 .List<ContentItemVersionRecord>()
                 .Select(x => ContentManager.Get(x.ContentItemRecord.Id, _versionOptions != null && _versionOptions.IsDraftRequired ? _versionOptions : VersionOptions.VersionRecord(x.Id)))
@@ -199,6 +210,7 @@ namespace Orchard.ContentManagement {
             criteria.ClearOrders();
 
             criteria.ApplyVersionOptionsRestrictions(_versionOptions);
+            BeforeExecuteQuery(criteria);
 
             return criteria.SetProjection(Projections.RowCount()).UniqueResult<Int32>();
         }

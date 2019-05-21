@@ -167,7 +167,9 @@ blockquote  { margin: 0.923em; color: #666; font-style: italic; }
 strong      { font-weight: bold; }
 em,dfn      { font-style: italic; }
 dfn         { font-weight: bold; }
-sup, sub    { line-height: 0; }
+sup, sub    { line-height: 0; font-size: 75%; position: relative; display: inline-block; }
+sup         { top: -0.5em; }
+sub         { bottom: -0.25em; }
 
 abbr, 
 acronym     { border-bottom: 1px dotted #666; }
@@ -739,7 +741,7 @@ button:focus, .button:focus {
 .dir-rtl .aside-2 .aside-second { float: left; }
 
 /* If zones 1, 2 are on */
-.dir-rtl .aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:right; }
+.dir-rtl .aside-12 .aside-first, .dir-rtl .aside-12 .aside-second, .dir-rtl .aside-12 #layout-content { float:right; }
 
 /* Tripel Zones*/
 .dir-rtl #layout-tripel > div { float:right; }

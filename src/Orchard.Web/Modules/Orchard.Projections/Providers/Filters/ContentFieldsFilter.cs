@@ -75,7 +75,9 @@ namespace Orchard.Projections.Providers.Filters {
             var relationship = fieldTypeEditor.GetFilterRelationship(propertyName.ToSafeName());
 
             // generate the predicate based on the editor which has been used
-            Action<IHqlExpressionFactory> predicate = fieldTypeEditor.GetFilterPredicate(context.State);
+            dynamic fullState = context.State;
+            fullState.VersionScope = context.QueryPartRecord.VersionScope;
+            Action<IHqlExpressionFactory> predicate = fieldTypeEditor.GetFilterPredicate(fullState);
 
             // combines the predicate with a filter on the specific property name of the storage, as implemented in FieldIndexService
             Action<IHqlExpressionFactory> andPredicate = x => x.And(y => y.Eq("PropertyName", propertyName), predicate);

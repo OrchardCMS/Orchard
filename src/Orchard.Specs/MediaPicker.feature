@@ -4,9 +4,9 @@
     I want to create, edit and publish media fields
 
 Scenario: Creating and using media fields
-    
-    # Creating an Event content type 
-    Given I have installed Orchard
+
+    # Creating an Event content type
+    Given I have installed Orchard 
         And I have installed "Orchard.Media"
         And I have installed "Orchard.MediaPicker"
 
@@ -20,7 +20,7 @@ Scenario: Creating and using media fields
         And I hit "Create"
         And I go to "Admin/ContentTypes/"
     Then I should see "Event"
-    
+
     # Adding a media field
     When I go to "Admin/ContentTypes/Edit/Event"
         And I follow "Add Field"
@@ -36,45 +36,45 @@ Scenario: Creating and using media fields
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"
     Then I should see "File"
-    When I fill in 
+    When I fill in
             | name           | value |
             | Event.File.Url |       |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
-    Then I should see "Your Event has been created."
+    Then I should see "The Event has been created as a draft."
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                    | value                |
-            | Fields[0].MediaPickerFieldSettings.Hint | Please select a file |
+            | Fields[File].MediaPickerFieldSettings.Hint | Please select a file |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Please select a file"
 
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                        | value |
-            | Fields[0].MediaPickerFieldSettings.Required | true  |
+            | Fields[File].MediaPickerFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I fill in 
+        And I fill in
             | name           | value |
             | Event.File.Url |       |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The File field is required."
 
     # The value should be bound
     When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
+        And I fill in
             | name                                                 | value |
-            | ext-Fields[0].MediaPickerFieldSettings               | true  |
-            | Fields[0].MediaPickerFieldSettings.AllowedExtensions | jpg   |
+            | ext-Fields[File].MediaPickerFieldSettings               | true  |
+            | Fields[File].MediaPickerFieldSettings.AllowedExtensions | jpg   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-    And I fill in 
+    And I fill in
             | name           | value                            |
             | Event.File.Url | ~/Media/Default/images/Image.png |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "The File field must have one of these extensions: jpg."

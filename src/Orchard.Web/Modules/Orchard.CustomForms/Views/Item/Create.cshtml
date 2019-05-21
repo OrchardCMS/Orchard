@@ -22,6 +22,8 @@
     // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(Model)
 
+    @Html.Hidden("contentId", (int)Model.ContentId, new { id = string.Empty });
+
     <fieldset class="submit-button">
         <button type="submit" name="submit.Save" value="submit.Save">@submitButtonText</button>
     </fieldset>

@@ -32,7 +32,8 @@ namespace Orchard.Indexing.Handlers {
                     // part fields
                     foreach ( var part in infosetPart.ContentItem.Parts ) {
                         foreach ( var field in part.PartDefinition.Fields ) {
-                            if (!field.Settings.GetModel<FieldIndexing>().Included) {
+                            var indexingSettings = field.Settings.GetModel<FieldIndexing>();
+                            if (!indexingSettings.Included) {
                                 continue;
                             }
 
@@ -62,16 +63,17 @@ namespace Orchard.Indexing.Handlers {
                                     
                                     var typeCode = Type.GetTypeCode(t);
 
+                                    IDocumentIndex documentIndex = null;
                                     switch (typeCode) {
                                         case TypeCode.Empty:
                                         case TypeCode.Object:
                                         case TypeCode.DBNull:
                                         case TypeCode.String:
                                         case TypeCode.Char:
-                                            context.DocumentIndex.Add(indexName, Convert.ToString(value)).RemoveTags().Analyze();
+                                            documentIndex = context.DocumentIndex.Add(indexName, Convert.ToString(value));
                                             break;
                                         case TypeCode.Boolean:
-                                            context.DocumentIndex.Add(indexName, Convert.ToBoolean(value));
+                                            documentIndex = context.DocumentIndex.Add(indexName, Convert.ToBoolean(value));
                                             break;
                                         case TypeCode.SByte:
                                         case TypeCode.Int16:
@@ -80,17 +82,35 @@ namespace Orchard.Indexing.Handlers {
                                         case TypeCode.UInt32:
                                         case TypeCode.Int64:
                                         case TypeCode.UInt64:
-                                            context.DocumentIndex.Add(indexName, Convert.ToInt32(value));
+                                            documentIndex = context.DocumentIndex.Add(indexName, Convert.ToInt32(value));
                                             break;
                                         case TypeCode.Single:
                                         case TypeCode.Double:
                                         case TypeCode.Decimal:
-                                            context.DocumentIndex.Add(indexName, Convert.ToDouble(value));
+                                            documentIndex = context.DocumentIndex.Add(indexName, Convert.ToDouble(value));
                                             break;
                                         case TypeCode.DateTime:
-                                            context.DocumentIndex.Add(indexName, Convert.ToDateTime(value));
+                                            documentIndex = context.DocumentIndex.Add(indexName, Convert.ToDateTime(value));
                                             break;
                                     }
+
+                                    if(documentIndex == null) {
+                                        // Protection against none of the case statements above being matched
+                                        return;
+                                    }
+
+                                    if (indexingSettings.Stored) {
+                                        documentIndex.Store();
+                                    }
+
+                                    if (indexingSettings.Analyzed) {
+                                        documentIndex.Analyze();
+                                    }
+
+                                    if (indexingSettings.TagsRemoved) {
+                                        documentIndex.RemoveTags();
+                                    }
+
                                 }
                             });
 

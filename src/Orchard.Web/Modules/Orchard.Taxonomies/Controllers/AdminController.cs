@@ -365,6 +365,7 @@ namespace Orchard.Taxonomies.Controllers {
                 IsInternal = taxonomy.IsInternal,
                 ContentItem = taxonomy.ContentItem,
                 IsChecked = false,
+                HasDraft = taxonomy.ContentItem.HasDraft(),
             };
         }
 

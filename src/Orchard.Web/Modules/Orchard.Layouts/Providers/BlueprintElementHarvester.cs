@@ -64,6 +64,10 @@ namespace Orchard.Layouts.Providers {
             foreach (var driver in drivers) {
                 driver.Displaying(context);
             }
+
+            if (element.Descriptor.Displaying != null) {
+                element.Descriptor.Displaying(context);
+            }
         }
     }
 }

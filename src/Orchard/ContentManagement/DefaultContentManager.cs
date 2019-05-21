@@ -33,7 +33,7 @@ namespace Orchard.ContentManagement {
         private readonly ICacheManager _cacheManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
-        private readonly Lazy<ITransactionManager> _transactionManager; 
+        private readonly Lazy<ITransactionManager> _transactionManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
         private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
@@ -78,7 +78,11 @@ namespace Orchard.ContentManagement {
         public ILogger Logger { get; set; }
 
         public IEnumerable<IContentHandler> Handlers {
-              get { return _handlers.Value; }
+            get { return _handlers.Value; }
+        }
+
+        public ITransactionManager TransactionManager {
+            get { return _transactionManager.Value; }
         }
 
         public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {
