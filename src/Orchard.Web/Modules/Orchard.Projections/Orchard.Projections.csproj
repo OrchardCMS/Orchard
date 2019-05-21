@@ -135,7 +135,6 @@
     <Content Include="Styles\Web.config" />
     <Compile Include="Extensions\QueryPartRecordExtensions.cs" />
     <Compile Include="Extensions\QueryVersionScopeOptionsExtensions.cs" />
-    <Compile Include="FieldIndexRecordVersionOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />

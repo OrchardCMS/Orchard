@@ -93,7 +93,8 @@ namespace Orchard.Projections.Handlers {
                                 LocalField = localField,
                                 StorageName = storageName,
                                 FieldValue = fieldValue,
-                                StorageType = storageType });
+                                StorageType = storageType
+                            });
                         });
 
                     foreach (var driver in drivers) {

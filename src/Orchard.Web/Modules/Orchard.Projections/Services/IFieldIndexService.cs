@@ -8,4 +8,9 @@ namespace Orchard.Projections.Services {
         void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType);
         void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType, FieldIndexRecordVersionOptions fieldIndexRecordVersionOption);
     }
+
+    public enum FieldIndexRecordVersionOptions {
+        Value,
+        LatestValue
+    }
 }
