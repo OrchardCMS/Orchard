@@ -149,11 +149,11 @@ namespace Orchard.Taxonomies.Drivers {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
                 if (createFullWeigth) {
-                    part.FullWeight = part.FullWeight + pathContentItem.As<TermPart>().Weight.ToString("D6") + "." + pathContentItem.Id.ToString() + "/";
+                    part.FullWeight = _taxonomyService.ComputeFullWeight(part);
                 }
             }
             if (createFullWeigth) {
-                part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "." + part.Id + "/";
+                part.FullWeight = _taxonomyService.ComputeFullWeight(part);
             }
         }
 
