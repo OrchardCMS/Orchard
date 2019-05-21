@@ -372,37 +372,75 @@ namespace Orchard.Taxonomies.Services {
         public void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm) {
             var children = GetChildren(term);
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
+            // compute new path and publish. This also computes the new weight and
+            // recursively does the same for siblings and children of the TermPart
+            // that was moved.
             ProcessPath(term);
-            string previousFullWeight = term.FullWeight;
-            ProcessFullWeight(term, parentTerm);
-
-            var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
-            _contentManager.Publish(contentItem);
-
-            foreach (var childTerm in children) {
-                ProcessPath(childTerm);
-                childTerm.FullWeight = ProcessChildrenFullWeight(childTerm.FullWeight, term.FullWeight, previousFullWeight);
-                contentItem = _contentManager.Get(childTerm.ContentItem.Id, VersionOptions.DraftRequired);
-                _contentManager.Publish(contentItem);
-            }
-        }
-
-        public void ProcessFullWeight(TermPart term, TermPart parentTerm) {
-            term.FullWeight = (parentTerm != null ? parentTerm.FullWeight : "") + term.Weight.ToString("D6") + "." + term.Id + "/";
-        }
-
-        public string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight) {
-            if (string.IsNullOrWhiteSpace(childrenFullWeight)){
-                childrenFullWeight = parentFullWeight;
-            }
-            int pos = childrenFullWeight.IndexOf(parentOldFullWeight);
-
-            return childrenFullWeight.Substring(0, pos) + parentFullWeight + childrenFullWeight.Substring(pos + parentOldFullWeight.Length);
         }
 
         public void ProcessPath(TermPart term) {
+            // if term.Path changes, we should remove it from the Dictionary we are
+            // using to cache siblings, otherwise we process wrong TermParts
             var parentTerm = term.Container.As<TermPart>();
+            var oldPath = term.Path ?? string.Empty;
             term.Path = parentTerm != null ? parentTerm.FullPath + "/" : "/";
+            if (!oldPath.Equals(term.Path, StringComparison.InvariantCultureIgnoreCase)) {
+                // path has changed. evict stale caches.
+                if (_termFamilies == null) {
+                    _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
+                }
+                // We evict the cache for both the old and new values of the path.
+                // old: processing a former sibling we cause us to reprocess this term
+                //   when we don't need to.
+                if (_termFamilies.ContainsKey(oldPath)) {
+                    _termFamilies.Remove(oldPath);
+                }
+                // new: attempting to process the weight for this term would skip it.
+                if (_termFamilies.ContainsKey(term.Path)) {
+                    _termFamilies.Remove(term.Path);
+                }
+            }
+            // Reprocess weights
+            ProcessFullWeight(term);
+        }
+        private void ProcessFullWeight(TermPart term) {
+            // Given part
+            // - Update FullWeight for term
+            // - Update FullWeight for term's siblings
+            // - If term's FullWeight changed, update path and FullWeight for all its children
+            // - If FullWeight changed for any of term's siblings, update their children
+            // We don't have to check for each child's siblings, because we are updating
+            // all children anyway (as long as we have to update any).
+
+            // Get term and its siblings
+            var litter = OrderedSiblings(term);
+            // For each one, see whether we should update its weight.
+            // in that case, update its children as well.
+            // Note that term is included in that IEnumerable already, in its place among
+            // its siblings, ordered by title alphabetically.
+
+            foreach (var tp in litter) {
+                var newWeight = ComputeFullWeight(tp);
+                if (!newWeight.Equals(tp.FullWeight, StringComparison.InvariantCultureIgnoreCase)) {
+                    tp.FullWeight = newWeight;
+                    PublishTerm(tp);
+                    UpdateChildren(term);
+                }
+            }
+        }
+        /// <summary>
+        /// This will update both path and weight for the children of the given TermPart.
+        /// Then it will recursively update the children of each child.
+        /// </summary>
+        /// <param name="part"></param>
+        private void UpdateChildren(TermPart part) {
+            foreach (var childTerm in GetChildren(part)) {
+                ProcessPath(childTerm);
+            }
+        }
+        protected void PublishTerm(TermPart term) {
+            var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
+            _contentManager.Publish(contentItem);
         }
 
         public void CreateHierarchy(IEnumerable<TermPart> terms, Action<TermPartNode, TermPartNode> append) {
@@ -488,7 +526,6 @@ namespace Orchard.Taxonomies.Services {
             // results sorted in ascending order. Terms in Orchard have always been
             // order by descending weight. This needs to be a fixed length.
             var partWeight = (1048575 - part.Weight).ToString("X5");
-            var weightTime = DateTime.Now;
             // siblings weight: this is a "comparative" term to include alphabetical
             // ordering of the titles. This needs to be a fixed length, just like for
             // the string for the weight assigned to the part.
@@ -496,19 +533,17 @@ namespace Orchard.Taxonomies.Services {
             var siblingsIds = OrderedSiblings(part)
                 .Select(tp => tp.Id)
                 .ToArray();
-            var siblingsWeight = string.Empty;
+            var siblingsWeight = (1048575).ToString("X5");
             for (int i = 0; i < siblingsIds.Length; i++) {
                 if (siblingsIds[i]==part.Id) {
                     siblingsWeight = i.ToString("X5");
                     break;
                 }
             }
-            var siblingsTime = DateTime.Now;
             // the part's Id ensures that no two FullWeight strings will be the same.
             // This is the only variable length portion of a TermPart's own weight. We
             // should never rely on this component of the order for anything: its main
             // point is to make sure each string is unique.
-            Logger.Error($"Times: siblings = {siblingsTime-weightTime}");
             return $"{parentWeight}{partWeight}.{siblingsWeight}.{part.Id}/";
             // The length of the portion of weight for a given term is
             // 5 + 1 + 5 + 1 + x + 1 = x + 13, where x is the number of characters of the Id.

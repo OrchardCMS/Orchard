@@ -94,13 +94,8 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            if(updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                //termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
-
-                //foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
-                //    childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
-                //}
-
+            if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
+                termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
             }
             return Editor(termPart, shapeHelper);
         }
