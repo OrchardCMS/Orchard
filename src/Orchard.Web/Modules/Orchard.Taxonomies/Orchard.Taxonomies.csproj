@@ -27,6 +27,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +52,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -62,12 +67,16 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -119,19 +128,19 @@
     <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />
     <Compile Include="Drivers\LocalizedTermPartDriver.cs" />
-    <Compile Include="Handlers\LocalizedTaxonomyFieldHandler.cs" />
-    <Compile Include="LocalizedTaxonomyMigration.cs" />
-    <Compile Include="Services\LocalizedTaxonomySource.cs" />
-    <Compile Include="Services\TaxonomyServiceDraftable.cs" />
-    <Compile Include="Services\TaxonomySource.cs" />
     <Compile Include="EventHandlers\TermMovingEventHandler.cs" />
-    <Compile Include="Services\ITaxonomySource.cs" />
     <Compile Include="Events\ITermLocalizationEventHandler.cs" />
-    <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
+    <Compile Include="Handlers\LocalizedTaxonomyFieldHandler.cs" />
     <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
+    <Compile Include="LocalizedTaxonomyMigration.cs" />
     <Compile Include="Models\MoveTermsContext.cs" />
     <Compile Include="Services\ITaxonomyExtensionsService.cs" />
+    <Compile Include="Services\ITaxonomySource.cs" />
+    <Compile Include="Services\LocalizedTaxonomySource.cs" />
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
+    <Compile Include="Services\TaxonomyServiceDraftable.cs" />
+    <Compile Include="Services\TaxonomySource.cs" />
+    <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
     <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
     <Compile Include="ViewModels\AssociateTermTypeViewModel.cs" />
     <Compile Include="ViewModels\LocalizedTaxonomiesViewModel.cs" />
@@ -254,7 +263,7 @@
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Localization\Orchard.Localization.csproj">
-      <Project>{fbc8b571-ed50-49d8-8d9d-64ab7454a0d6}</Project>
+      <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
       <Name>Orchard.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
@@ -288,13 +297,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\TaxonomyTermSelector.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\DefinitionTemplates\TaxonomyFieldLocalizationSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\TaxonomyFieldList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TaxonomyTermSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
