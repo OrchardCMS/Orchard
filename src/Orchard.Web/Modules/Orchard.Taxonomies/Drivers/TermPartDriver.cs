@@ -158,11 +158,14 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
-            clonePart.Count = originalPart.Count;
+            // arguably, copying the container/parent should be done elsewhere,
+            // but since it is required to be certain of its value for proper use
+            // of the TermPart we also do it here.
             clonePart.Selectable = originalPart.Selectable;
             clonePart.Weight = originalPart.Weight;
             clonePart.TaxonomyId = originalPart.TaxonomyId;
-            clonePart.Path = originalPart.Path;
+            clonePart.Container = originalPart.Container;
+            _taxonomyService.ProcessPath(clonePart);
         }
     }
 }
