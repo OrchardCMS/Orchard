@@ -52,19 +52,19 @@ namespace Orchard.Taxonomies.Services {
             _shellDescriptorManager = shellDescriptorManager;
         }
         
-        new public TaxonomyPart GetTaxonomy(int id) {
+        public override TaxonomyPart GetTaxonomy(int id) {
             return _contentManager.Get(id, VersionOptions.Latest).As<TaxonomyPart>();
         }
         
-        new public IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+        public override IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
             return base.GetTaxonomiesQuery().ForVersion(VersionOptions.Latest);
         }
 
-        new public IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        public override IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
             return base.GetTermsQuery().ForVersion(VersionOptions.Latest);
         }
 
-        new protected void PublishTerm(TermPart term) {
+        protected override void PublishTerm(TermPart term) {
             // only publish the term if it was published already
             if (term.ContentItem.IsPublished()) {
                 var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
