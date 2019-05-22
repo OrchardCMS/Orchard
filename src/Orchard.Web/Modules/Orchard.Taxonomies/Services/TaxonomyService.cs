@@ -522,7 +522,7 @@ namespace Orchard.Taxonomies.Services {
             // of integers; we set that to a fixed lenght so that the number of
             // characters does not affect our ordering.
             // (1048575).ToString("X5") = "FFFFF"
-            // The maximum lenght of the string in the db poses an hard limit on the
+            // The maximum length of the string in the db poses an hard limit on the
             // number of characters for the FullWeight, hence on the number of levels
             // in the hierarchy.
 
@@ -535,10 +535,14 @@ namespace Orchard.Taxonomies.Services {
             // descending order of assigned weight. A "normal" OrderBy in SQL gives
             // results sorted in ascending order. Terms in Orchard have always been
             // order by descending weight. This needs to be a fixed length.
-            var partWeight = (1048575 - part.Weight).ToString("X5");
+            // Since weights may be negative, we bias them around the middle of the
+            // valid range we are considering.
+            var partWeight = (524288 - part.Weight).ToString("X5");
             // siblings weight: this is a "comparative" term to include alphabetical
             // ordering of the titles. This needs to be a fixed length, just like for
-            // the string for the weight assigned to the part.
+            // the string for the weight assigned to the part. This fixed length poses
+            // an hard limit on the number of terms on the same level and with the same
+            // weight that are allowed in a taxonomy.
             // Siblings in a taxonomy are those TermParts that have the same Path.
             // We are only interested in those with the same Weight.
             var siblingsIds = OrderedSiblings(part)
