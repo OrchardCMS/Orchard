@@ -63,7 +63,7 @@ namespace Orchard.Taxonomies.Services {
             return GetTaxonomiesQuery().List();
         }
 
-        public TaxonomyPart GetTaxonomy(int id) {
+        public virtual TaxonomyPart GetTaxonomy(int id) {
             return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
@@ -448,7 +448,7 @@ namespace Orchard.Taxonomies.Services {
                 ProcessPath(childTerm);
             }
         }
-        protected void PublishTerm(TermPart term) {
+        protected virtual void PublishTerm(TermPart term) {
             var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
             _contentManager.Publish(contentItem);
         }
@@ -484,12 +484,12 @@ namespace Orchard.Taxonomies.Services {
             };
         }
 
-        public IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+        public virtual IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
             return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>();
         }
 
-        public IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        public virtual IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
             return _contentManager
                 .Query<TermPart, TermPartRecord>();
         }
