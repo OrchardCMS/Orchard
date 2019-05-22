@@ -574,9 +574,10 @@ namespace Orchard.Taxonomies.Services {
             if (!_termFamilies.ContainsKey(key)) {
                 _termFamilies.Add(key, GetTermsQuery(part.TaxonomyId)
                     .Where(tpr => tpr.Path == part.Path)
-                    .Join<TitlePartRecord>()
-                    .OrderBy(tpr => tpr.Title)
-                    .List());
+                    .List()
+                    // we are ordering in memory to use the StringComparer that used
+                    // to be used when sorting TermParts
+                    .OrderBy(tp => tp.Name, StringComparer.OrdinalIgnoreCase));
             }
             return _termFamilies[key];
         }

@@ -59,9 +59,7 @@ namespace Orchard.Taxonomies.Models {
         /// <summary>
         /// This property is used to represent the lexicographic order of the term inside the taxonomy.
         /// The term FullWeight is composed by his parent FullWeight and the lexicographic representation of the own term separated with a slash '/'.
-        /// The term is represented at the end of his FullWeight using the term Weight padded with zeros and the term Id separated with a point '.'.
-        /// e.g: Term1=> Id:144, Path:"/", Weight:-1, FullWeight: "-0000001.144/"
-        /// e.g: Term2=> Id:154, Path:"/144/", Weight:-1, FullWeight: "-0000001.144/-0000001.154/"
+        /// See TaxonomyService.ComputeFullWeight for the details of the implementation.
         /// </summary>
         public string FullWeight {
             get { return Record.FullWeight; }
