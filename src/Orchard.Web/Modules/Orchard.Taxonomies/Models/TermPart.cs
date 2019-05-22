@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
@@ -49,6 +50,7 @@ namespace Orchard.Taxonomies.Models {
         /// <summary>
         /// Property used to sort terms that have the same level or path
         /// </summary>
+        [Range(-524287, 524288, ErrorMessage = "Valid Weight is between -524287 and 524288")]
         public int Weight {
             get { return Retrieve(x => x.Weight); }
             set { Store(x => x.Weight, value); }

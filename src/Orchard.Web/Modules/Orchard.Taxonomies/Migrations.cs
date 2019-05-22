@@ -108,5 +108,22 @@ namespace Orchard.Taxonomies {
             });
             return 8;
         }
+
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.DropIndex("IDX_FullWeight");
+            });
+            return 9;
+        }
+        public int UpdateFrom9() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.AlterColumn("FullWeight", column => {
+                    column.WithType(DbType.String);
+                    column.WithLength(1023);
+                });
+                table.CreateIndex("IDX_FullWeight", "FullWeight");
+            });
+            return 10;
+        }
     }
 }
