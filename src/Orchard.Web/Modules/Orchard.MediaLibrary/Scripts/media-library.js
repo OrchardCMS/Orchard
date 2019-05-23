@@ -47,7 +47,7 @@ $(function () {
                             folderPath: folderPath,
                             mediaItemIds: ids,
                             __RequestVerificationToken: settings.antiForgeryToken
-                        },
+                        }
                     }).done(function (result) {
                         if (result) {
                             if (viewModel.displayed()) {
@@ -67,7 +67,7 @@ $(function () {
                     });
                 }
             });
-        };
+        }
 
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
@@ -140,6 +140,11 @@ $(function () {
             self.focus = ko.observable();
             self.results = ko.observableArray();
             self.displayed = ko.observable();
+            self.isEveryItemSelected = ko.computed({
+                read: function () {
+                    return self.selection().length === self.results().length;
+                }
+            });
             self.mediaItemsCount = 0;
             self.orderMedia = ko.observableArray(['created']);
             self.mediaType = ko.observableArray([]);
@@ -148,7 +153,7 @@ $(function () {
             self.mediaFoldersRequestCount = ko.observable(0);
             self.mediaFoldersPendingRequest = ko.computed({
                 read: function () {
-                    return (self.mediaFoldersRequestCount() > 0);
+                    return self.mediaFoldersRequestCount() > 0;
                 },
                 write: function (value) {
                     if (value === true) {
@@ -162,7 +167,7 @@ $(function () {
             self.mediaPendingRequest = ko.observable(false);
             self.pendingRequest = ko.computed({
                 read: function () {
-                    return (self.mediaFoldersPendingRequest() || self.mediaPendingRequest());
+                    return self.mediaFoldersPendingRequest() || self.mediaPendingRequest();
                 },
                 write: function (value) {
                     self.mediaPendingRequest(value);
@@ -187,7 +192,6 @@ $(function () {
                 self.pendingRequest(true);
 
                 var url = self.loadMediaItemsUrl(folderPath, self.results().length, count, self.orderMedia(), self.mediaType());
-                console.log(url);
 
                 $.ajax({
                     type: "GET",
@@ -214,11 +218,30 @@ $(function () {
                             }
                         }
                     }
+
+                    self.updateSelectAllText();
                 }).fail(function (data) {
                     console.error(data);
                 }).always(function () {
                     self.pendingRequest(false);
                 });
+            };
+
+            self.updateSelectAllText = function () {
+                var element = $("#select-all-button");
+
+                element.html(self.isEveryItemSelected() ? element.data("select-none-text") : element.data("select-all-text"));
+            };
+
+            self.updateAllSelection = function () {
+                if (self.isEveryItemSelected()) {
+                    self.clearSelection();
+                }
+                else {
+                    self.selectAll();
+                }
+
+                self.updateSelectAllText();
             };
 
             self.selectAll = function () {
@@ -343,7 +366,8 @@ $(function () {
                 viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
                 var actionurl = url + '?folderPath=' + encodeURIComponent(folder) + "&replaceId=" + encodeURIComponent(ids[0]);
                 window.location = actionurl;
-            }
+            };
+
             var selectFolderOrRecent = function () {
                 if (self.displayed()) {
                     self.selectFolder(self.displayed());
@@ -519,7 +543,7 @@ $(function () {
                 }
                 parent.$.colorbox.selectedData = selectedData;
                 parent.$.colorbox.close();
-            };
+            }
         };
 
         $("#media-library-main-selection-select > .button-select").on('click', function () {
@@ -527,7 +551,7 @@ $(function () {
         });
 
         $("#select-all-button").on('click', function () {
-            viewModel.selectAll();
+            viewModel.updateAllSelection();
         });
 
         $("#media-library-main-list").on('dblclick', function () {
@@ -539,7 +563,6 @@ $(function () {
                 parent.$.colorbox.selectedData = null;
                 parent.$.colorbox.close();
             }
-            ;
         });
 
         $("#media-library-main-list").on("mouseover", ".media-thumbnail", function () {
@@ -640,4 +663,4 @@ $(function () {
         });
 
     })(window.mediaLibrarySettings);
-})
+});
