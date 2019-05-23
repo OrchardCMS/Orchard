@@ -54,7 +54,9 @@ namespace Orchard.Packaging.Services {
             var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
             var package = packageRepository.FindPackage(packageId, packageVersion);
             if (package == null) {
-                throw new ArgumentException(T("The specified package could not be found, id:{0} version:{1}", packageId, String.IsNullOrEmpty(version) ? T("No version").Text : version).Text);
+                var message = T("The specified package could not be found: ID: {0}, version: {1}.",
+                    packageId, string.IsNullOrEmpty(version) ? T("No version").Text : version);
+                throw new OrchardException(message);
             }
 
             return InstallPackage(package, packageRepository, location, applicationPath);
