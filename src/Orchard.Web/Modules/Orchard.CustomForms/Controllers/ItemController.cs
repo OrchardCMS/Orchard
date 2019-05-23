@@ -81,7 +81,7 @@ namespace Orchard.CustomForms.Controllers {
 
             ContentItem contentItem;
             if (contentId > 0) {
-                contentItem = _contentManager.Get(contentId);
+                contentItem = _contentManager.Get(contentId,VersionOptions.Latest);
 
                 if (customForm.UseContentTypePermissions && !Services.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
                     return new HttpUnauthorizedResult();
@@ -152,7 +152,7 @@ namespace Orchard.CustomForms.Controllers {
 
             ContentItem contentItem;
             if (contentId > 0)
-                contentItem = _contentManager.Get(contentId);
+                contentItem = _contentManager.Get(contentId,VersionOptions.Latest);
             else
                 contentItem = _contentManager.New(customForm.ContentType);
 
