@@ -221,6 +221,12 @@ $(function () {
                 });
             };
 
+            self.selectAll = function () {
+                self.results().forEach(function (item) {
+                    viewModel.toggleSelect(item, true);
+                });
+            }
+
             self.clearSelection = function() {
                 this.focus(null);
                 // unselect previous elements
@@ -518,6 +524,10 @@ $(function () {
 
         $("#media-library-main-selection-select > .button-select").on('click', function () {
         	pickAndClose();
+        });
+
+        $("#media-library-toolbar > .button-select-all").on('click', function () {
+            viewModel.selectAll();
         });
 
         $("#media-library-main-list").on('dblclick', function () {
