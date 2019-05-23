@@ -122,8 +122,7 @@ namespace Orchard.Core.Common {
         }
 
         public int UpdateFrom5() {
-
-            SchemaBuilder.AlterTable(nameof(CommonPart), table => {
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
                 table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.CreatedUtc)}", nameof(CommonPart.CreatedUtc));
                 table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.ModifiedUtc)}", nameof(CommonPart.ModifiedUtc));
                 table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.PublishedUtc)}", nameof(CommonPart.PublishedUtc));
