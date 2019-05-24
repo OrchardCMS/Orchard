@@ -2,7 +2,6 @@
 
 @using System.Text
 @using Orchard.ContentManagement
-@using Orchard.MediaLibrary.WebSearch.Models
 @using Orchard.MediaLibrary.WebSearch.Providers
 @using System.Linq
 
@@ -34,7 +33,7 @@
 <body>
     <div id="websearch-main">
         <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
-
+        <div id="websearch-mainTeszt">
         @if (String.IsNullOrWhiteSpace(pixabayApiKey))
         {
             <div id="message-api">
@@ -47,15 +46,16 @@
                     <button type="submit" class="fa fa-search"></button>
                 </div>
                 <div id="query">
-                    <input type="text" autofocus=autofocus placeholder="@T("search")" />
+                    <input type="text" autofocus placeholder="@T("search")" />
                 </div>
                 <div id="selectSearchApi">
                     @Html.DropDownList("ApiNames", new SelectList(apiNames))
+                    @*<select data-bind="options: models, optionsText: 'key', optionsCaption: '@T("Select a provider...")', value: selectedModel"></select>*@
                 </div>
             </div>
-        </form>
-
-        <ul id="websearch-results" data-bind="foreach: results">
+        </form>        
+        
+        <ul id="websearch-results" class="websearch-results" data-bind="foreach: results">
             <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
                 <div class="overlay">
                     <p class="filename" data-bind="text: getFilename()"></p>
@@ -63,6 +63,10 @@
                 </div>
             </li>
         </ul>
+    </div>
+    <div id="Teszt1">
+            @Display.PixabayWebSearch()
+        </div>
     </div>
 
     <div id="websearch-properties">
@@ -80,10 +84,12 @@
 
         <div id="websearch-properties-selection" data-bind="visible: selection().length">
             <h1>@T("SELECTION")</h1>
-            <button id="button-import">@if (Model.Replace == null)
-            {<text>@T("Import")</text> }
-        else
-        { <text>@T("Replace")</text>} </button>
+            <button id="button-import">
+                @if (Model.Replace == null)
+                {<text>@T("Import")</text> }
+            else
+            { <text>@T("Replace")</text>}
+            </button>
             <ul data-bind="foreach: selection">
                 <li>
                     <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.backgroundImage + ')' }">
@@ -95,7 +101,7 @@
             </ul>
         </div>
     </div>
-    l
+
     @using (Script.Foot())
     {
         <script type="text/javascript">
@@ -140,20 +146,29 @@
                 self.filename = function () {
                     return value.substr(value.lastIndexOf('/') + 1);
                 };
+                
+                function newWebSearchHandler(e) {
+                    switch (e.selectedApi) {
+                        case "Bing":
+                            self.doBingSearch(e.query);
+                            break;
+                        default:
+                    }
+                };
+
+                $(document).on("newWebSearch", newWebSearchHandler);
 
                 self.doSearch = function () {
                     var query = $('#query > input').val();
 
                     var selectedApi = $('#selectSearchApi select').val();
-                    switch (selectedApi) {
-                        case "Pixabay":
-                            self.doPixabaySearch(query);
-                            break;
-                        case "Bing":
-                            self.doBingSearch(query);
-                            break;
-                        default:
-                    }
+
+                    $.event.trigger({
+                        type: "newWebSearch",
+                        query: query,
+                        selectedApi: selectedApi
+                    });
+
                 };
 
                 self.doBingSearch = function (query) {
@@ -166,22 +181,6 @@
                         headers: header,
                     }).done(function (msg) {
                         var results = msg.images.value;
-                        self.clearSelection();
-                        self.results([]);
-                        for (var i = 0; i < results.length; i++) {
-                            self.results.push(new SearchResult(results[i]));
-                        }
-                    });
-                };
-
-                self.doPixabaySearch = function (query) {
-                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@pixabayApiKey';
-
-                    $.ajax({
-                        type: 'GET',
-                        url: url,
-                    }).done(function (msg) {
-                        var results = msg.hits;
                         self.clearSelection();
                         self.results([]);
                         for (var i = 0; i < results.length; i++) {
@@ -238,9 +237,10 @@
             };
 
             var viewModel = new WebSearchViewModel();
-            ko.applyBindings(viewModel);
+            //ko.applyBindings(viewModel);
+            ko.applyBindings(viewModel, document.getElementById("websearch-mainTeszt"));
 
-            $("#websearch-results").on("click", "li", function (e) {
+            $(".websearch-results").on("click", "li", function (e) {
                 var searchResult = ko.dataFor(this);
                 @if(Model.Replace == null) {
                     <text>

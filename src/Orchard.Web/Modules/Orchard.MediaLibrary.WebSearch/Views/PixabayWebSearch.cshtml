@@ -1,0 +1,158 @@
+﻿@using Orchard.MediaLibrary.WebSearch.Providers
+@using System.Linq
+
+@{
+
+    var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
+    var pixabayApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Pixabay")?.ApiKey ?? "";
+
+}
+
+<ul id="websearch-results" class="websearch-results" data-bind="foreach: PixabayResults">
+    <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+        <div class="overlay">
+            <p class="filename" data-bind="text: getFilename()"></p>
+            <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
+        </div>
+    </li>
+</ul>
+
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            function SearchResult(data) {
+                var self = this;
+
+                // values
+                self.data = data;
+                self.hasFocus = ko.observable();
+                self.selected = ko.observable();
+                self.status = ko.observable('');
+                self.tooltip = ko.observable('');
+
+                self.data.imageUrl = self.data.largeImageURL || self.data.contentUrl;
+                self.data.backgroundImage = self.data.previewURL || self.data.thumbnailUrl;
+
+                // operations
+                self.setData = function (value) {
+                    self.data = value;
+                };
+
+                self.getFilename = function () {
+                    var value = self.data.imageUrl;
+                    return value.substr(value.lastIndexOf('/') + 1);
+                };
+
+                self.kilobytes = function () {
+                    return Math.round(self.data.imageSize / 1024);
+                };
+            }
+
+
+            function PixabayWebSearchViewModel() {
+                var self = this;
+
+                // values
+                self.selection = ko.observableArray([]);
+                self.focus = ko.observable();
+                self.PixabayResults = ko.observableArray();
+
+                self.filename = function () {
+                    return value.substr(value.lastIndexOf('/') + 1);
+                };
+
+                function newPixabayWebSearchHandler(e) {
+                    switch (e.selectedApi) {
+                        case "Pixabay":
+                            self.doPixabaySearch(e.query);
+                            break;                       
+                        default:
+                    }
+                };
+
+                $(document).on("newWebSearch", newPixabayWebSearchHandler);
+
+                //self.doSearch = function () {
+                //    var query = $('#query > input').val();
+
+                //    var selectedApi = $('#selectSearchApi select').val();
+
+                //    $.event.trigger({
+                //        type: "newWebSearch",
+                //        query: query,
+                //        selectedApi: selectedApi
+                //    });
+
+                //};
+
+                self.doPixabaySearch = function (query) {
+                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@pixabayApiKey';
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                    }).done(function (msg) {
+                        var PixabayResults = msg.hits;
+                        self.clearSelection();
+                        self.PixabayResults([]);
+                        for (var i = 0; i < PixabayResults.length; i++) {
+                            self.PixabayResults.push(new SearchResult(PixabayResults[i]));
+                        }
+                    });
+                };
+
+                self.clearSelection = function () {
+                    // unselect previous elements
+                    self.selection().forEach(function (item) {
+                        item.selected(false);
+                    });
+
+                    self.selection([]);
+                };
+
+                self.focus.subscribe(function (oldValue) {
+                    if (oldValue) {
+                        oldValue.hasFocus(false);
+                    }
+                }, this, "beforeChange");
+
+                self.focus.subscribe(function (newValue) {
+                    if (newValue) {
+                        newValue.hasFocus(true);
+                    }
+                });
+
+                self.toggleSelect = function (searchResult) {
+                    var index = $.inArray(searchResult, self.selection());
+                    if (index == -1) {
+                        self.selection.push(searchResult);
+                        searchResult.selected(true);
+                    } else {
+                        self.selection.remove(searchResult);
+                        searchResult.selected(false);
+                    }
+
+                    self.focus(searchResult);
+                };
+
+                self.select = function (searchResult) {
+                    var index = $.inArray(searchResult, self.selection());
+                    if (index == -1) {
+                        self.clearSelection();
+                        self.selection([searchResult]);
+                        searchResult.selected(true);
+                    }
+
+                    self.focus(searchResult);
+                };
+
+            };
+
+            var viewModel = new PixabayWebSearchViewModel();
+            ko.applyBindings(viewModel, document.getElementById("Teszt1"));
+        })
+        //]]>
+    </script>
+}
