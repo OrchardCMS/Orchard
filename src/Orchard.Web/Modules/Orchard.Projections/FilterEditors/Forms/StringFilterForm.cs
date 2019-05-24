@@ -94,7 +94,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     return y => y.Not(x => x.Like(property, Convert.ToString(value), HqlMatchMode.Anywhere));
                 case StringOperator.ContainsAnyIfProvided:
                     if (string.IsNullOrWhiteSpace((string)value))
-                        return x => x.IsNotEmpty(property);
+                        return x => x.IsNotEmpty("Id"); // basically, return every possible ContentItem
                     var values3 = Convert.ToString(value)
                         .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     var predicates3 = values3.Skip(1)
