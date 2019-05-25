@@ -31,9 +31,9 @@ namespace Orchard.Core.Common {
                     .Column<DateTime>("ModifiedUtc")
                     .Column<int>("Container_id")
                 ).AlterTable(nameof(CommonPartRecord), table => {
-                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.CreatedUtc)}", nameof(CommonPart.CreatedUtc));
-                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.ModifiedUtc)}", nameof(CommonPart.ModifiedUtc));
-                    table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.PublishedUtc)}", nameof(CommonPart.PublishedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
                 });
 
             SchemaBuilder.CreateTable("CommonPartVersionRecord",
@@ -123,9 +123,9 @@ namespace Orchard.Core.Common {
 
         public int UpdateFrom5() {
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.CreatedUtc)}", nameof(CommonPart.CreatedUtc));
-                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.ModifiedUtc)}", nameof(CommonPart.ModifiedUtc));
-                table.CreateIndex($"IDX_{nameof(CommonPart)}_{nameof(CommonPart.PublishedUtc)}", nameof(CommonPart.PublishedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
             });
 
             SchemaBuilder.AlterTable(nameof(CommonPartVersionRecord), table => {
