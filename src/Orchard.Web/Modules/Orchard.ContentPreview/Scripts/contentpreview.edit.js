@@ -1,9 +1,6 @@
 $(function () {
     $(document)
-        .on('input', '#Title_Title', function () {
-            $(document).trigger('contentpreview:render');
-        })
-        .on('propertychange', '#Title_Title', function () {
+        .on('input change propertychange', '#Title_Title', function () {
             $(document).trigger('contentpreview:render');
         })
         .on('keyup', '#Title_Title', function (event) {
@@ -11,10 +8,12 @@ $(function () {
             if (event.keyCode == 46 || event.ctrlKey) {
                 $(document).trigger('contentpreview:render');
             }
-        })
-        .on('change', '.content-preview-select', function () {
-            $(document).trigger('contentpreview:render');
         });
+
+    tinyMCE.activeEditor.on('change keyup', function (e) {
+        this.targetElm.value = this.getContent();
+        $(document).trigger('contentpreview:render');
+    });
 });
 
 var previewButton, contentItemType, previewId, previewContentItemId, previewContentItemVersionId, form, formData;
@@ -51,7 +50,7 @@ $(function () {
         // triggered by the preview window the first time it is loaded in order
         // to pre-render the view even if no contentpreview:render is already sent
         sendFormData();
-    });    
+    });
 
     $(window).on('unload', function () {
         localStorage.removeItem('contentpreview:' + previewId);
