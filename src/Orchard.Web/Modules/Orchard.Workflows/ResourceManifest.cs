@@ -36,6 +36,10 @@ namespace Orchard.Workflows {
 
             manifest.DefineStyle("WorkflowsAdmin").SetUrl("orchard-workflows-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
 
+            manifest.DefineScript("jsPlumb").SetUrl("jquery.jsPlumb-1.4.1-all-min.js").SetDependencies("jQueryUI");
+
+
+            // Trying to find a matching activity CSS for each activity in the extension it's contained in.
             var resourceNamesAndPaths = _cacheManager.Get("Orchard.Workflows.ActivityResourceNames", context => {
                 var resourceNameAndPathList = new List<Tuple<string, string>>();
 
@@ -51,7 +55,6 @@ namespace Orchard.Workflows {
 
                     if (File.Exists(filePath)) {
                         resourceNameAndPathList.Add(Tuple.Create(resourceName, filename));
-
                     }
                 }
 
@@ -69,8 +72,6 @@ namespace Orchard.Workflows {
                 .DefineStyle("WorkflowsActivities")
                 .SetUrl("workflows-activity.css")
                 .SetDependencies(resourceNamesAndPaths.Select(resourceNameAndPath => resourceNameAndPath.Item1).ToArray());
-
-            manifest.DefineScript("jsPlumb").SetUrl("jquery.jsPlumb-1.4.1-all-min.js").SetDependencies("jQueryUI");
         }
     }
 }
