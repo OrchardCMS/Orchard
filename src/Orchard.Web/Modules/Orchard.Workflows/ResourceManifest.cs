@@ -39,21 +39,24 @@ namespace Orchard.Workflows {
             manifest.DefineScript("jsPlumb").SetUrl("jquery.jsPlumb-1.4.1-all-min.js").SetDependencies("jQueryUI");
 
 
-            // Trying to find a matching activity CSS for each activity in the extension it's contained in.
+            // Trying to find a matching activity CSS for each activity in the extensions they come from.
             var resourceNamesAndPaths = _cacheManager.Get("Orchard.Workflows.ActivityResourceNames", context => {
                 var resourceNameAndPathList = new List<Tuple<string, string>>();
 
                 foreach (var activity in _activitiesManager.Value.GetActivities()) {
                     var assemblyName = activity.GetType().Assembly.GetName().Name;
-                    var descriptor = _extensionManager.GetExtension(assemblyName);
-                    if (descriptor == null) continue;
+                    var extension = _extensionManager.GetExtension(assemblyName);
+                    if (extension == null) continue;
 
-                    var stylesPath = _virtualPathProvider.Combine(descriptor.VirtualPath, "Styles");
+                    var stylesPath = _virtualPathProvider.Combine(extension.VirtualPath, "Styles");
                     var resourceName = "WorkflowsActivity-" + activity.Name;
                     var filename = resourceName.HtmlClassify() + ".css";
                     var filePath = _virtualPathProvider.Combine(_hostEnvironment.MapPath(stylesPath), filename);
 
                     if (File.Exists(filePath)) {
+                        /* Since stylesheets are shapes, we don't need to create the resource with the full path to the CSS file,
+                         * because extensions can override those shapes by file name if they reference Orchard.Workflows,
+                         * even when they don't exist in Orchard.Workflows. */
                         resourceNameAndPathList.Add(Tuple.Create(resourceName, filename));
                     }
                 }
