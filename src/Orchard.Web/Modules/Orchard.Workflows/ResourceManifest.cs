@@ -73,7 +73,6 @@ namespace Orchard.Workflows {
 
             manifest
                 .DefineStyle("WorkflowsActivities")
-                .SetUrl("workflows-activity.css")
                 .SetDependencies(resourceNamesAndPaths.Select(resourceNameAndPath => resourceNameAndPath.Item1).ToArray());
         }
     }
