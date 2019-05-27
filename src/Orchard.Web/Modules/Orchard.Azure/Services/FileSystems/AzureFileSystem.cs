@@ -232,6 +232,16 @@ namespace Orchard.Azure.Services.FileSystems {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
 
+            // Workaround for https://github.com/Azure/azure-storage-net/issues/892
+            // Renaming a folder by only changing the casing corrupts all the files in the folder.
+            if (path.Equals(newPath, StringComparison.OrdinalIgnoreCase)) {
+                var tempPath = Guid.NewGuid().ToString() + "/";
+
+                RenameFolder(path, tempPath);
+
+                path = tempPath;
+            }
+
             if (!path.EndsWith("/"))
                 path += "/";
 
