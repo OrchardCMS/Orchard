@@ -130,7 +130,6 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
             foreach (var character in InfosetHelper.InvalidXmlCharacters) {
-                System.IO.File.AppendAllText(@"d:\Users\Zoltán\Desktop\chars.txt", character.ToString());
                 Assert.Throws<ArgumentException>(() => storage.Set("alpha", character));
             }
         }
