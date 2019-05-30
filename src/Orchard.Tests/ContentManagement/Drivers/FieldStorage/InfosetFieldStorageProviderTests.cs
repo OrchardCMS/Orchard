@@ -125,19 +125,13 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void ForbiddenXmlCharactersDontBreakInfoset() {
+        public void ForbiddenXmlCharactersCauseException() {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            var invalidXmlCharacters = Enumerable
-                .Range(0, 32).Except(new[] { 9, 10, 13 })
-                .Select(character => Char.ConvertFromUtf32(character));
-
-            foreach (var character in invalidXmlCharacters) {
-                storage.Set("alpha", character);
-
-                // It's always the retrieval that can fail with invalid characters.
-                Assert.That(part.ContentItem.VersionRecord.Data, Is.Not.Null); 
+            foreach (var character in InfosetHelper.InvalidXmlCharacters) {
+                System.IO.File.AppendAllText(@"d:\Users\Zoltán\Desktop\chars.txt", character.ToString());
+                Assert.Throws<ArgumentException>(() => storage.Set("alpha", character));
             }
         }
     }
