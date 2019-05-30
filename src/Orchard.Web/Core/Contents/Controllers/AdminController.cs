@@ -405,11 +405,11 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.CreateContent, originalContentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Couldn't clone content")))
                 return new HttpUnauthorizedResult();
 
             // pass a dummy content to the authorization check to check for "own" variations
-            var dummyContent = _contentManager.New(originalContentItem.ContentType);
+            var dummyContent = _contentManager.New(contentItem.ContentType);
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("You do not have permission to edit (or create) content.")))
                 return new HttpUnauthorizedResult();
