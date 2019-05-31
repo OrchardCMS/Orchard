@@ -1,15 +1,15 @@
+@using Orchard.ContentManagement
+
 @{
+    var contentItem = Model.ContentItem as ContentItem;
     var previewId = Guid.NewGuid();
     Script.Include("contentpreview.edit.js");
 }
 
-<a id="previewButton" target="_blank" class="publish-button btn btn-info" href="@Url.Action("Index", "Preview", new { area = "Orchard.ContentPreview", id = previewId })">@T("Preview")</a>
+<fieldset>
+    <a id="previewButton" target="_blank" class="publish-button button" href="@Url.Action("Index", "Preview", new { area = "Orchard.ContentPreview", id = previewId })">@T("Preview")</a>
 
-<div id="renderPreviewUrl" style="display:none" data-value="@Url.Action("Render", "Preview", new { area = "Orchard.ContentPreview" })"></div>
-<div id="contentItemType" style="display:none" data-value="Page"></div>
-<div id="previewId" style="display:none" data-value="@previewId"></div>
-<div id="previewContentItemId" style="display:none" data-value="6666"></div>
-<div id="previewContentItemVersionId" style="display:none" data-value="6666"></div>
-
-@*<script asp-src="~/Orchard.ContentPreview/Scripts/contentpreview.edit.js" depends-on="admin" at="Foot"></script>*@
-
+    <div id="renderPreviewUrl" style="display:none" data-value="@Url.Action("Render", "Preview", new { area = "Orchard.ContentPreview" })"></div>
+    <div id="contentItemType" style="display:none" data-value=@contentItem.ContentType></div>
+    <div id="previewId" style="display:none" data-value="@previewId"></div>
+</fieldset>
