@@ -20,6 +20,13 @@
             }
         };
 
+        this.addElement = function (contentType) {
+            var deferred = new $.Deferred();
+            deferred.resolve();
+            deferred.then(serializeLayout());
+            return deferred.promise();
+        };
+
         this.editElement = function (element) {
             var deferred = new $.Deferred();
 
@@ -38,21 +45,22 @@
                 }, "post");
 
                 dialog.element.on("command", function (e, args) {
-                    
-                    switch(args.command) {
+
+                    switch (args.command) {
                         case "update":
                             deferred.resolve(args);
                             dialog.close();
+                            deferred.then(serializeLayout());
                             break;
                         case "cancel":
                         case "close":
                             args.cancel = true;
                             deferred.resolve(args);
+                            deferred.then(serializeLayout());
                             break;
                     }
                 });
             }
-
             return deferred.promise();
         };
 
@@ -98,7 +106,7 @@
             var layoutDataDataJson = serializeCanvas();
             var recycleBinDataJson = serializeRecycleBin();
 
-            layoutDataField.val(layoutDataDataJson);
+            layoutDataField.val(layoutDataDataJson).trigger("change");
             recycleBinDataField.val(recycleBinDataJson);
         };
 

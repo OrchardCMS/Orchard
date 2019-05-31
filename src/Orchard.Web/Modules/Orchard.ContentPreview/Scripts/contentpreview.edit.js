@@ -1,14 +1,19 @@
 $(function () {
     $(document)
-        .on('input change propertychange', '#Title_Title', function () {
+        .on('input change propertychange', 'form input', function () {
             $(document).trigger('contentpreview:render');
         })
-        .on('keyup', '#Title_Title', function (event) {
+        .on('keyup', 'form input', function (event) {
             // handle backspace
             if (event.keyCode == 46 || event.ctrlKey) {
                 $(document).trigger('contentpreview:render');
             }
         });
+
+
+    $('.layout-data-field').change(function () {
+        $(document).trigger('contentpreview:render');
+    });
 
     tinyMCE.activeEditor.on('change keyup', function (e) {
         this.targetElm.value = this.getContent();

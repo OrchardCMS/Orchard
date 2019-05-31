@@ -153,7 +153,7 @@
 
                     if ($scope.element.hasEditor) {
                         $scope.edit = function () {
-                            $scope.$root.editElement($scope.element).then(function (args) {
+                            $scope.$root.editElement($scope.element).done(function (args) {
                                 $scope.$apply(function () {
                                     if (args.cancel)
                                         return;
@@ -255,7 +255,7 @@
                                         receivedElement.setParent(element);
 
                                         if (!!receivedElement.hasEditor) {
-                                            $scope.$root.editElement(receivedElement).then(function (args) {
+                                            $scope.$root.editElement(receivedElement).done(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
                                                     receivedElement.applyElementEditorModel(args.elementEditorModel);
@@ -281,6 +281,10 @@
                                         element.setIsDropTarget(false);
                                         if (!!receivedElement)
                                             receivedElement.setIsFocused();
+
+                                        $scope.$root.addElement(receivedElement).done(function () {
+                                            return;
+                                        });
                                     });
                                 });
                             }
