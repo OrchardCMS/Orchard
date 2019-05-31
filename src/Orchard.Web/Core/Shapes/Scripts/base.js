@@ -237,7 +237,6 @@
 
             if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
             	// use a custom message if its set in data-message
-                debugger;
             	var dataMessage = _this.data('message');
             	if (dataMessage === undefined) {
             		dataMessage = confirmRemoveMessage;
