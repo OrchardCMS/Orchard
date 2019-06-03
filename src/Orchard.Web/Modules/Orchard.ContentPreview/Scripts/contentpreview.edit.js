@@ -35,10 +35,16 @@ $(function () {
     sendFormData = function () {
 
         formData = form.serializeArray(); // convert form to array
+
         formData.push({ name: "ContentItemType", value: contentItemType });
         formData.push({ name: "PreviewId", value: previewId });
         formData.push({ name: "PreviewContentItemId", value: previewContentItemId });
         formData.push({ name: "PreviewContentItemVersionId", value: previewContentItemVersionId });
+
+        var foundIndex = formData.findIndex(data => data.name === "AutoroutePart.CurrentUrl");
+        if (foundIndex > -1) {
+            formData[foundIndex].value += "-preview";
+        }
 
         // store the form data to pass it in the event handler
         localStorage.setItem('contentpreview:' + previewId, JSON.stringify($.param(formData)));
