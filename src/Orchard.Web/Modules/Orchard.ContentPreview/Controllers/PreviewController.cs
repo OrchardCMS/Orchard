@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Themes;
@@ -15,17 +17,24 @@ namespace Orchard.ContentPreview.Controllers {
         private readonly INotifier _notifier;
         private readonly IClock _clock;
         private readonly IAuthorizer _authorizer;
+        private readonly IHttpContextAccessor _hca;
+
+        public Localizer T { get; set; }
 
 
         public PreviewController(
             IContentManager contentManager,
             INotifier notifier,
             IClock clock,
-            IAuthorizer authorizer) {
+            IAuthorizer authorizer,
+            IHttpContextAccessor hca) {
             _clock = clock;
             _notifier = notifier;
             _contentManager = contentManager;
             _authorizer = authorizer;
+            _hca = hca;
+
+            T = NullLocalizer.Instance;
         }
 
 
@@ -39,9 +48,11 @@ namespace Orchard.ContentPreview.Controllers {
             if (!_authorizer.Authorize(Permissions.ContentPreview)) {
                 return new HttpUnauthorizedResult();
             }
-
-            var contentItemType = Request.Form["ContentItemType"];
+            
+            var contentItemType = _hca.Current().Request.Form["ContentItemType"];
             var contentItem = _contentManager.New(contentItemType);
+
+            contentItem.VersionRecord = new ContentItemVersionRecord(); 
 
             var commonPart = contentItem.As<CommonPart>();
             commonPart.CreatedUtc = commonPart.ModifiedUtc= commonPart.PublishedUtc = _clock.UtcNow;
@@ -51,6 +62,8 @@ namespace Orchard.ContentPreview.Controllers {
             if (!ModelState.IsValid) {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
+
+            _notifier.Warning(T("The Content Preview feature doesn't support properties where we have relations to ContentPartRecord (E.g. Taxonomies, Tags)."));
 
             model = _contentManager.BuildDisplay(contentItem, "Detail");
 
