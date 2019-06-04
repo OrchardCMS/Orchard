@@ -141,14 +141,12 @@ namespace Orchard.ContentManagement {
         /// <exception cref="ArgumentException">Thrown if the string contains invalid characters.</exception>
         /// <returns>The original string if no invalid characters were found.</returns>
         public static string ThrowIfContainsInvalidXmlCharacter(string value) {
-            var invalidCharacters = value.Intersect(InvalidXmlCharacters);
-
-            if (!invalidCharacters.Any()) {
+            if (!value.Any(character => InvalidXmlCharacters.Contains(character))) {
                 return value;
             }
 
             throw new ArgumentException(
-                $"The string contains the character(s) {string.Join(", ", invalidCharacters.Select(character => character.ToString()))} which are invalid in XML and should be removed.");
+                $"The string contains character(s) that are invalid in XML and which should be removed.");
         }
     }
 }
