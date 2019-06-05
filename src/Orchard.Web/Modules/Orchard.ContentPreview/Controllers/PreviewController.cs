@@ -19,9 +19,6 @@ namespace Orchard.ContentPreview.Controllers {
         private readonly IAuthorizer _authorizer;
         private readonly IHttpContextAccessor _hca;
 
-        public Localizer T { get; set; }
-
-
         public PreviewController(
             IContentManager contentManager,
             INotifier notifier,
@@ -37,6 +34,7 @@ namespace Orchard.ContentPreview.Controllers {
             T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
 
         public ActionResult Index() {
             return View();
@@ -45,23 +43,21 @@ namespace Orchard.ContentPreview.Controllers {
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Render() {
-            if (!_authorizer.Authorize(Permissions.ContentPreview)) {
-                return new HttpUnauthorizedResult();
-            }
-            
+            if (!_authorizer.Authorize(Permissions.ContentPreview)) return new HttpUnauthorizedResult();
+
+
             var contentItemType = _hca.Current().Request.Form["ContentItemType"];
             var contentItem = _contentManager.New(contentItemType);
 
-            contentItem.VersionRecord = new ContentItemVersionRecord(); 
+            contentItem.VersionRecord = new ContentItemVersionRecord();
 
             var commonPart = contentItem.As<CommonPart>();
-            commonPart.CreatedUtc = commonPart.ModifiedUtc= commonPart.PublishedUtc = _clock.UtcNow;
-            
+            commonPart.CreatedUtc = commonPart.ModifiedUtc = commonPart.PublishedUtc = _clock.UtcNow;
+
             var model = _contentManager.UpdateEditor(contentItem, this);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
-            }
 
             _notifier.Warning(T("The Content Preview feature doesn't support properties where we have relations to ContentPartRecord (E.g. Taxonomies, Tags)."));
 
@@ -71,7 +67,6 @@ namespace Orchard.ContentPreview.Controllers {
         }
 
 
-        [ValidateInput(false)]
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }

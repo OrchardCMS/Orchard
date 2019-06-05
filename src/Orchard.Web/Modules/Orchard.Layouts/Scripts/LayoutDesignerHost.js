@@ -5,7 +5,7 @@
         this.element.data("layout-designer-host", this);
         this.editor = layoutEditor;
 
-        function serializeLayoutHandler() {
+        function serializelayoutHandler() {
             serializeLayout();
         };
 

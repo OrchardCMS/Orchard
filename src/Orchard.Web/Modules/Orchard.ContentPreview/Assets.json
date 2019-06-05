@@ -1,6 +1,0 @@
-[
-    {
-        "inputs": [ "Assets/Styles.less" ],
-        "output": "Styles/Styles.css"
-    }
-]

@@ -139,9 +139,6 @@
                                 $scope.$apply(function () {
                                     element.editor.focusedElement.setIsFocused();
                                 });
-                                $.event.trigger({
-                                    type: "layouteditor:edited"
-                                });
                             }, 100);
                         }
                     });
