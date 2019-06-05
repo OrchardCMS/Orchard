@@ -184,10 +184,21 @@ namespace Orchard.ContentManagement {
             return Slice(0, 0);
         }
 
-        public IEnumerable<ContentItem> Slice(int skip, int count) {
+        public IEnumerable<int> ListIds() {
+            return ListIds(0, 0);
+        }
+
+        public IEnumerable<ContentItem> Slice(int skip, int count)
+        {
+            var ids = ListIds(skip, count);
+            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(_includedPartRecords));
+        }
+
+        private IEnumerable<int> ListIds(int skip, int count)
+        {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
             _cacheable = true;
-            
+
             var hql = ToHql(false);
 
             var query = _session
@@ -195,19 +206,19 @@ namespace Orchard.ContentManagement {
                 .SetCacheable(_cacheable)
                 ;
 
-            if (skip != 0) {
+            if (skip != 0)
+            {
                 query.SetFirstResult(skip);
             }
-            if (count != 0 && count != Int32.MaxValue) {
+            if (count != 0 && count != Int32.MaxValue)
+            {
                 query.SetMaxResults(count);
             }
 
-            var ids = query
+            return query
                 .SetResultTransformer(Transformers.AliasToEntityMap)
                 .List<IDictionary>()
                 .Select(x => (int)x["Id"]);
-
-            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(_includedPartRecords));
         }
 
         public int Count() {
@@ -583,7 +594,7 @@ namespace Orchard.ContentManagement {
                 return "";
             });
 
-            InSubquery(propertyName, subqueryWithParameters);
+            Criterion = InSubquery(propertyName, subqueryWithParameters);
         }
 
         public void IsNull(string propertyName) {

@@ -39,8 +39,8 @@
                 <add assembly="System.Data.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089"/>
                 <add assembly="System.Web.Mvc, Version=5.2.3, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
                 <add assembly="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
-                <add assembly="Orchard.Framework,Culture=neutral, PublicKeyToken=null"/>
-                <add assembly="Orchard.Core,Culture=neutral, PublicKeyToken=null"/>
+                <add assembly="Orchard.Framework"/>
+                <add assembly="Orchard.Core"/>
             </assemblies>
         </compilation>
     </system.web>
@@ -48,7 +48,7 @@
         <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
             <dependentAssembly>
                 <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30AD4FE6B2A6AEED" culture="neutral"/>
-                <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0"/>
+                <bindingRedirect oldVersion="0.0.0.0-12.0.0.0" newVersion="12.0.0.0" />
             </dependentAssembly>
             <dependentAssembly>
                 <assemblyIdentity name="NHibernate" publicKeyToken="AA95F207798DFDB4" culture="neutral"/>
