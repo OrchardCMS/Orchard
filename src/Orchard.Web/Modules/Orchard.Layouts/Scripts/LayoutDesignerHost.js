@@ -4,6 +4,13 @@
         this.element = element;
         this.element.data("layout-designer-host", this);
         this.editor = layoutEditor;
+
+        function serializeLayoutHandler() {
+            serializeLayout();
+        };
+
+        $(document).on("serializelayout", serializelayoutHandler);
+
         this.settings = {
             antiForgeryToken: self.element.data("anti-forgery-token"),
             editorDialogTitleFormat: self.element.data("editor-dialog-title-format"),
@@ -23,7 +30,10 @@
         this.addElement = function (contentType) {
             var deferred = new $.Deferred();
             deferred.resolve();
-            deferred.then(serializeLayout());
+            $.event.trigger({
+                type: "layouteditor:edited"
+            });
+
             return deferred.promise();
         };
 
@@ -45,18 +55,18 @@
                 }, "post");
 
                 dialog.element.on("command", function (e, args) {
-
                     switch (args.command) {
                         case "update":
                             deferred.resolve(args);
                             dialog.close();
-                            deferred.then(serializeLayout());
+                            $.event.trigger({
+                                type: "layouteditor:edited"
+                            });
                             break;
                         case "cancel":
                         case "close":
                             args.cancel = true;
                             deferred.resolve(args);
-                            deferred.then(serializeLayout());
                             break;
                     }
                 });

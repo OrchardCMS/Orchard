@@ -139,6 +139,9 @@
                                 $scope.$apply(function () {
                                     element.editor.focusedElement.setIsFocused();
                                 });
+                                $.event.trigger({
+                                    type: "layouteditor:edited"
+                                });
                             }, 100);
                         }
                     });
@@ -149,6 +152,9 @@
 
                     $scope.delete = function (element) {
                         element.delete();
+                        $.event.trigger({
+                            type: "layouteditor:edited"
+                        });
                     }
 
                     if ($scope.element.hasEditor) {

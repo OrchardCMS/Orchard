@@ -24,6 +24,13 @@ $(function () {
 var previewButton, contentItemType, previewId, previewContentItemId, previewContentItemVersionId, form, formData;
 
 $(function () {
+    function serializeLayoutHandler() {
+        $.event.trigger({
+            type: "serializelayout"
+        });
+    };
+
+    $(document).on("layouteditor:edited", serializeLayoutHandler);
 
     previewButton = document.getElementById('previewButton');
     contentItemType = $(document.getElementById('contentItemType')).data('value');
@@ -33,7 +40,6 @@ $(function () {
     form = $(previewButton).closest('form');
 
     sendFormData = function () {
-
         formData = form.serializeArray(); // convert form to array
 
         formData.push({ name: "ContentItemType", value: contentItemType });
