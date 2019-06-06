@@ -36,15 +36,12 @@ namespace Orchard.ContentPreview.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
-            return View();
-        }
+        public ActionResult Index() => View();
 
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Render() {
             if (!_authorizer.Authorize(Permissions.ContentPreview)) return new HttpUnauthorizedResult();
-
 
             var contentItemType = _hca.Current().Request.Form["ContentItemType"];
             var contentItem = _contentManager.New(contentItemType);
@@ -66,13 +63,10 @@ namespace Orchard.ContentPreview.Controllers {
             return View(model);
         }
 
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) =>
+            TryUpdateModel(model, prefix, includeProperties, excludeProperties);
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
-            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
-        }
-
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) =>
             ModelState.AddModelError(key, errorMessage.ToString());
-        }
     }
 }

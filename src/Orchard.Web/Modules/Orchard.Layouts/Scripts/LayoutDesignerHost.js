@@ -55,6 +55,7 @@
                 }, "post");
 
                 dialog.element.on("command", function (e, args) {
+
                     switch (args.command) {
                         case "update":
                             deferred.resolve(args);
@@ -71,6 +72,7 @@
                     }
                 });
             }
+
             return deferred.promise();
         };
 

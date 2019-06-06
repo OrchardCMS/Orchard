@@ -10,7 +10,6 @@ $(function () {
             }
         });
 
-
     $('.layout-data-field').change(function () {
         $(document).trigger('contentpreview:render');
     });
@@ -35,8 +34,6 @@ $(function () {
     previewButton = document.getElementById('previewButton');
     contentItemType = $(document.getElementById('contentItemType')).data('value');
     previewId = $(document.getElementById('previewId')).data('value');
-    previewContentItemId = $(document.getElementById('previewContentItemId')).data('value');
-    previewContentItemVersionId = $(document.getElementById('previewContentItemVersionId')).data('value');
     form = $(previewButton).closest('form');
 
     sendFormData = function () {
@@ -44,8 +41,6 @@ $(function () {
 
         formData.push({ name: "ContentItemType", value: contentItemType });
         formData.push({ name: "PreviewId", value: previewId });
-        formData.push({ name: "PreviewContentItemId", value: previewContentItemId });
-        formData.push({ name: "PreviewContentItemVersionId", value: previewContentItemVersionId });
 
         var foundIndex = formData.findIndex(data => data.name === "AutoroutePart.CurrentUrl");
         if (foundIndex > -1) {
