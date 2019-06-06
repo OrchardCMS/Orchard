@@ -41,7 +41,9 @@ namespace Orchard.ContentPreview.Controllers {
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Render() {
-            if (!_authorizer.Authorize(Permissions.ContentPreview)) return new HttpUnauthorizedResult();
+            if (!_authorizer.Authorize(Permissions.ContentPreview)) {
+                return new HttpUnauthorizedResult();
+            }
 
             var contentItemType = _hca.Current().Request.Form["ContentItemType"];
             var contentItem = _contentManager.New(contentItemType);
@@ -53,10 +55,11 @@ namespace Orchard.ContentPreview.Controllers {
 
             var model = _contentManager.UpdateEditor(contentItem, this);
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+            }
 
-            _notifier.Warning(T("The Content Preview feature doesn't support properties where we have relations to ContentPartRecord (E.g. Taxonomies, Tags)."));
+            _notifier.Warning(T("The Content Preview feature doesn't support properties where there are relationships to ContentPartRecord (e.g. Taxonomies, Tags)."));
 
             model = _contentManager.BuildDisplay(contentItem, "Detail");
 

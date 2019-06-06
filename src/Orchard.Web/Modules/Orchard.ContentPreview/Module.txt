@@ -4,9 +4,9 @@ Author: The Orchard Team
 Website: https://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.3
-Description: The content Preview module enables live content edition and content preview.
+Description: The content Preview module enables live content editing and content preview.
 Features:
     Orchard.ContentPreview:
-        Description: The content Preview module enables live content edition and content preview.
+        Description: The content Preview module enables live content editing and content preview.
         Category: Content
         Dependencies: Contents
