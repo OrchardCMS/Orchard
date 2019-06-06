@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
@@ -56,7 +55,7 @@ namespace Orchard.ContentPreview.Controllers {
             var model = _contentManager.UpdateEditor(contentItem, this);
 
             if (!ModelState.IsValid) {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+                return View();
             }
 
             _notifier.Warning(T("The Content Preview feature doesn't support properties where there are relationships to ContentPartRecord (e.g. Taxonomies, Tags)."));
