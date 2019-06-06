@@ -1,9 +1,9 @@
-﻿using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Common.Models;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.ContentPreview.Drivers {
-    public class ContentPreviewDriver : ContentPartDriver<CommonPart> {
-        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) =>
+    public class ContentPreviewDriver : ContentPartDriver<ContentPart> {
+        protected override DriverResult Editor(ContentPart part, dynamic shapeHelper) =>
             ContentShape("ContentPreview_Button", () => shapeHelper.ContentPreview_Button(Model: part.ContentItem));
     }
 }
