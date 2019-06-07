@@ -52,10 +52,6 @@
                 $('#notConnectedWarning').hide();
             });
 
-            $('#close-server-warning').on('click', function () {
-                $('#serverErrorWarning').hide();
-            });
-
             var preview = localStorage.getItem('contentpreview:@previewId');
 
             if (preview == null) {
@@ -124,7 +120,6 @@
                             iframe.contentWindow.document.close();
                             previewRenderData = data;
                         }
-                        $(serverErrorWarning).hide();
                     })
                     .fail(function (data) {
                         previewRendering = false;
