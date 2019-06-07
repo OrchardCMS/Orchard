@@ -50,7 +50,10 @@ namespace Orchard.ContentPreview.Controllers {
             contentItem.VersionRecord = new ContentItemVersionRecord();
 
             var commonPart = contentItem.As<CommonPart>();
-            commonPart.CreatedUtc = commonPart.ModifiedUtc = commonPart.PublishedUtc = _clock.UtcNow;
+
+            if (commonPart != null) {
+                commonPart.CreatedUtc = commonPart.ModifiedUtc = commonPart.PublishedUtc = _clock.UtcNow;
+            }
 
             var model = _contentManager.UpdateEditor(contentItem, this);
 
