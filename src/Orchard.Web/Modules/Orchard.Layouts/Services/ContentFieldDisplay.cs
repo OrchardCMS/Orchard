@@ -12,7 +12,6 @@ using Orchard.FileSystems.VirtualPath;
 namespace Orchard.Layouts.Services {
     public class ContentFieldDisplay : ContentDisplayBase, IContentFieldDisplay {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
-        private readonly ShellSettings _shellSettings;
 
         public ContentFieldDisplay(
             IShapeFactory shapeFactory,

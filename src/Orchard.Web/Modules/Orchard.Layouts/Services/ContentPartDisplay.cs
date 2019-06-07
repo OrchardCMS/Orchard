@@ -12,7 +12,6 @@ using Orchard.FileSystems.VirtualPath;
 namespace Orchard.Layouts.Services {
     public class ContentPartDisplay : ContentDisplayBase, IContentPartDisplay {
         private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
-        private readonly ShellSettings _shellSettings;
 
 
         public ContentPartDisplay(
