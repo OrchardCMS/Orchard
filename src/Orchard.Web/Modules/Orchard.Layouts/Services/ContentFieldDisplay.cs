@@ -6,20 +6,23 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Layouts.Services {
     public class ContentFieldDisplay : ContentDisplayBase, IContentFieldDisplay {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
+        private readonly ShellSettings _shellSettings;
 
         public ContentFieldDisplay(
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator, 
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor, 
+            IWorkContextAccessor workContextAccessor,
+            ShellSettings shellSettings, 
             IEnumerable<IContentFieldDriver> contentFieldDrivers) 
-            : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor) {
+            : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor, shellSettings) {
 
             _contentFieldDrivers = contentFieldDrivers;
         }

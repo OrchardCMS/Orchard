@@ -5,7 +5,9 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Mvc.Routes;
 using Orchard.UI.Zones;
 
 namespace Orchard.Layouts.Services {
@@ -17,19 +19,26 @@ namespace Orchard.Layouts.Services {
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ShellSettings _shellSettings;
+        private readonly UrlPrefix _urlPrefix;
 
         protected ContentDisplayBase(
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor,
+            ShellSettings shellSettings) {
 
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
             _requestContext = requestContext;
             _virtualPathProvider = virtualPathProvider;
             _workContextAccessor = workContextAccessor;
+            _shellSettings = shellSettings;
+            if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
+                _urlPrefix = new UrlPrefix(_shellSettings.RequestUrlPrefix);
+
 
         }
 
@@ -145,7 +154,12 @@ namespace Orchard.Layouts.Services {
         /// Gets the current app-relative path, i.e. ~/my-blog/foo.
         /// </summary>
         private string GetPath() {
-            return VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path));
+            var appRelativePath = _virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path);
+            // If the tenant has a prefix, we strip the tenant prefix away.
+            if (_urlPrefix != null)
+                appRelativePath = _urlPrefix.RemoveLeadingSegments(appRelativePath);
+
+            return VirtualPathUtility.AppendTrailingSlash(appRelativePath);
         }
     }
 }
