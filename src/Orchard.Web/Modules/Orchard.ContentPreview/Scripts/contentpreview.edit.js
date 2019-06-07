@@ -14,10 +14,12 @@ $(function () {
         $(document).trigger('contentpreview:render');
     });
 
-    tinyMCE.activeEditor.on('change keyup', function (e) {
-        this.targetElm.value = this.getContent();
-        $(document).trigger('contentpreview:render');
-    });
+    if (typeof (tinyMCE) !== "undefined") {
+        tinyMCE.activeEditor.on('change keyup', function (e) {
+            this.targetElm.value = this.getContent();
+            $(document).trigger('contentpreview:render');
+        });
+    }
 });
 
 var previewButton, contentItemType, previewId, previewContentItemId, previewContentItemVersionId, form, formData;
