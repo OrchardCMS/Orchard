@@ -1,3 +1,9 @@
 ﻿<Placement>
-    <Place ContentPreview_Button="Sidebar:27" />
+    <Match Path="/Admin/Contents/*">
+        <Place ContentPreview_Button="Sidebar:27" />
+    </Match>
+
+    <Match Path="/Admin/Widgets/*">
+        <Place ContentPreview_Button="Sidebar:27" />
+    </Match>
 </Placement>
