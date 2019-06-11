@@ -61,7 +61,7 @@ namespace Orchard.ContentPreview.Controllers {
                 return View();
             }
 
-            _notifier.Warning(T("The Content Preview feature doesn't support properties where there are relationships to ContentPartRecord (e.g. Taxonomies, Tags)."));
+            _notifier.Warning(T("The Content Preview feature doesn't support properties where there are relationships to ContentPartRecord (e.g. Taxonomies, Tags). These won't update in the preview windows but otherwise keep working."));
 
             model = _contentManager.BuildDisplay(contentItem, "Detail");
 
