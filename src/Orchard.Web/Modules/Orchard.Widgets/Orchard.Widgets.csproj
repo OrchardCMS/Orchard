@@ -125,6 +125,7 @@
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\IWidgetCommandsService.cs" />
     <Compile Include="Services\RuleManager.cs" />
     <Compile Include="Services\DefaultLayerEvaluationService.cs" />

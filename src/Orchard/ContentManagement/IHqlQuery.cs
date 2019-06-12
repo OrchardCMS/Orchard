@@ -41,6 +41,11 @@ namespace Orchard.ContentManagement {
         IEnumerable<ContentItem> List();
 
         /// <summary>
+        /// Executes the query and returns all ids for matching content items.
+        /// </summary>
+        IEnumerable<int> ListIds();
+
+        /// <summary>
         /// Returns a subset of the matching content items.
         /// </summary>
         IEnumerable<ContentItem> Slice(int skip, int count);

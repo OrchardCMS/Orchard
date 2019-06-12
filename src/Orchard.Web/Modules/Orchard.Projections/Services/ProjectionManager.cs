@@ -14,7 +14,7 @@ using Orchard.Projections.Models;
 using Orchard.Tokens;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManagerExtension {
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
@@ -120,9 +120,11 @@ namespace Orchard.Projections.Services {
                 tokens.Add("Content", part.ContentItem);
             }
 
-            // aggregate the result for each group query
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens)
-                .Sum(contentQuery => contentQuery.Count());
+            var contentQueries = GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens);
+
+            return queryRecord.FilterGroups.Count > 1 ?
+                contentQueries.SelectMany(contentQuery => contentQuery.ListIds()).Distinct().Count() :
+                contentQueries.Sum(contentQuery => contentQuery.Count());
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
@@ -189,7 +191,7 @@ namespace Orchard.Projections.Services {
                 groupQuery = sortCriterionContext.Query;
             }
 
-            return groupQuery.Slice(skip, count);
+            return groupQuery.Slice(0, count);
         }
 
         public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, IEnumerable<SortCriterionRecord> sortCriteria, Dictionary<string, object> tokens) {

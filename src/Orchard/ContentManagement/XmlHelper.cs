@@ -52,7 +52,7 @@ namespace Orchard.ContentManagement {
         /// <param name="value">The value to set.</param>
         /// <returns>Itself</returns>
         public static XElement Attr<T>(this XElement el, string name, T value) {
-            el.SetAttributeValue(name, ToString(value));
+            el.SetAttributeValue(name, InfosetHelper.ThrowIfContainsInvalidXmlCharacter(ToString(value)));
             return el;
         }
 
@@ -141,7 +141,7 @@ namespace Orchard.ContentManagement {
         /// <param name="value">The value.</param>
         /// <returns>The element.</returns>
         public static XElement Val<TValue>(this XElement el, TValue value) {
-            el.SetValue(ToString(value));
+            el.SetValue(InfosetHelper.ThrowIfContainsInvalidXmlCharacter(ToString(value)));
             return el;
         }
 
