@@ -123,7 +123,7 @@ namespace Orchard.CustomForms.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.Record.ContentType);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseContentTypePermissions", part.Record.UseContentTypePermissions);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SaveContentItem", part.Record.SaveContentItem);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SavePublishContentItem", part.Record.SaveContentItem);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SavePublishContentItem", part.Record.SavePublishContentItem);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomMessage", part.Record.CustomMessage);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Record.Message);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Redirect", part.Record.Redirect);
