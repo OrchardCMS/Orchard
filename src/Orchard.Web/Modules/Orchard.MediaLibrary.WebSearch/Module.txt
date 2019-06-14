@@ -8,10 +8,16 @@ Description: Description for the module
 Features:
     Orchard.MediaLibrary.WebSearch:
         Description: Description for feature Orchard.MediaLibrary.WebSearch.
+        Category: Media
+        Name: WebSearch
         Dependencies: Orchard.MediaLibrary
     Orchard.MediaLibrary.WebSearch.Bing:
         Description: Description for feature Orchard.MediaLibrary.WebSearch.Bing.
+        Category: Media
+        Name: Bing
         Dependencies: Orchard.MediaLibrary.WebSearch
     Orchard.MediaLibrary.WebSearch.Pixabay:
         Description: Description for feature Orchard.MediaLibrary.WebSearch.Pixabay.
+        Category: Media
+        Name: Pixabay
         Dependencies: Orchard.MediaLibrary.WebSearch

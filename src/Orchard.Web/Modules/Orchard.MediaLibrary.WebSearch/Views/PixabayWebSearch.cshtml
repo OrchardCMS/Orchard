@@ -88,11 +88,14 @@
                 //};
 
                 self.doPixabaySearch = function (query) {
-                    var url = 'https://pixabay.com/api?q=' + encodeURIComponent(query) + '&key=@pixabayApiKey';
+                    var url = "@Url.HttpRouteUrl("", new { Area = "Orchard.MediaLibrary.WebSearch", Controller = "PixabayWebSearchApi" })";
 
                     $.ajax({
-                        type: 'GET',
+                        type: "GET",
                         url: url,
+                        data: {
+                            query: query
+                        },
                     }).done(function (msg) {
                         var PixabayResults = msg.hits;
                         self.clearSelection();

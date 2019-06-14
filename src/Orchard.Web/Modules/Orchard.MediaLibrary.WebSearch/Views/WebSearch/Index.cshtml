@@ -34,37 +34,37 @@
     <div id="websearch-main">
         <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
         <div id="websearch-mainTeszt">
-        @if (String.IsNullOrWhiteSpace(pixabayApiKey))
-        {
-            <div id="message-api">
-                @T("You need to define an API Key in the Media settings before being able to use this feature.")
-            </div>
-        }
-        <form data-bind="submit: doSearch">
-            <div class="query-container">
-                <div id="icon">
-                    <button type="submit" class="fa fa-search"></button>
+            @if (String.IsNullOrWhiteSpace(pixabayApiKey))
+            {
+                <div id="message-api">
+                    @T("You need to define an API Key in the Media settings before being able to use this feature.")
                 </div>
-                <div id="query">
-                    <input type="text" autofocus placeholder="@T("search")" />
+            }
+            <form data-bind="submit: doSearch">
+                <div class="query-container">
+                    <div id="icon">
+                        <button type="submit" class="fa fa-search"></button>
+                    </div>
+                    <div id="query">
+                        <input type="text" autofocus=autofocus autofocus=autofocus autofocus=autofocus autofocus=autofocus placeholder="@T("search")" />
+                    </div>
+                    <div id="selectSearchApi">
+                        @Html.DropDownList("ApiNames", new SelectList(apiNames))
+                        @*<select data-bind="options: models, optionsText: 'key', optionsCaption: '@T("Select a provider...")', value: selectedModel"></select>*@
+                    </div>
                 </div>
-                <div id="selectSearchApi">
-                    @Html.DropDownList("ApiNames", new SelectList(apiNames))
-                    @*<select data-bind="options: models, optionsText: 'key', optionsCaption: '@T("Select a provider...")', value: selectedModel"></select>*@
-                </div>
-            </div>
-        </form>        
-        
-        <ul id="websearch-results" class="websearch-results" data-bind="foreach: results">
-            <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
-                <div class="overlay">
-                    <p class="filename" data-bind="text: getFilename()"></p>
-                    <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <div id="Teszt1">
+            </form>
+
+            <ul id="websearch-results" class="websearch-results" data-bind="foreach: results">
+                <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+                    <div class="overlay">
+                        <p class="filename" data-bind="text: getFilename()"></p>
+                        <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="Teszt1">
             @Display.PixabayWebSearch()
         </div>
     </div>
@@ -146,7 +146,7 @@
                 self.filename = function () {
                     return value.substr(value.lastIndexOf('/') + 1);
                 };
-                
+
                 function newWebSearchHandler(e) {
                     switch (e.selectedApi) {
                         case "Bing":
@@ -172,15 +172,16 @@
                 };
 
                 self.doBingSearch = function (query) {
-                    var url = 'https://api.cognitive.microsoft.com/bing/v7.0/search?q=' + encodeURIComponent(query);
-                    var header = { "Ocp-Apim-Subscription-Key": "@bingApiKey" };
+                    var url = "@Url.HttpRouteUrl("", new { Area = "Orchard.MediaLibrary.WebSearch", Controller = "BingWebSearchApi" })";
 
                     $.ajax({
-                        type: 'GET',
+                        type: "GET",
                         url: url,
-                        headers: header,
+                        data: {
+                            query: query
+                        },
                     }).done(function (msg) {
-                        var results = msg.images.value;
+                        var results = msg.value;
                         self.clearSelection();
                         self.results([]);
                         for (var i = 0; i < results.length; i++) {
