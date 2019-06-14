@@ -115,9 +115,9 @@ namespace Orchard.Taxonomies.Services {
 
         public void DeleteTaxonomy(TaxonomyPart taxonomy) {
             _contentManager.Remove(taxonomy.ContentItem);
-
+            List<TermPart> allTerms = GetRootTerms(taxonomy.Id).ToList();
             // Removing terms
-            foreach (var term in GetRootTerms(taxonomy.Id)) {
+            foreach (var term in allTerms) {
                 DeleteTerm(term);
             }
 
