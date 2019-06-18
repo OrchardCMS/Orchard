@@ -87,10 +87,10 @@ namespace Orchard.CustomForms.Drivers {
             updater.TryUpdateModel(viewModel, Prefix, null, null);
 
             // Warn if the custom form is set to save a content item that is viewable by anonymous users (publicly accessible)
-            if (viewModel.CustomFormPart.SaveContentItem) {
+            if (viewModel.CustomFormPart.SaveContentItem || viewModel.CustomFormPart.SavePublishContentItem) {
                 // If it's draftable then don't display the warning because the generated content items won't be publicly accessible
                 var typeDefinition = _contentDefinitionManager.ListTypeDefinitions().Where(x => String.Equals(x.Name, viewModel.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (typeDefinition != null && !typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
+                if (typeDefinition != null && (!typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable || viewModel.CustomFormPart.SavePublishContentItem)) {
                     // Create a dummy content item of the specified type to check permissions against
                     if (_authService.TryCheckAccess(Orchard.Core.Contents.Permissions.ViewContent, null, _orchardServices.ContentManager.New(viewModel.CustomFormPart.ContentType))) {
                         _orchardServices.Notifier.Add(UI.Notify.NotifyType.Warning, T("Your custom form will save data to content items that are publicly accessible."));
@@ -110,22 +110,26 @@ namespace Orchard.CustomForms.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "ContentType", x => part.Record.ContentType = x);
             context.ImportAttribute(part.PartDefinition.Name, "UseContentTypePermissions", x => part.Record.UseContentTypePermissions = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "SaveContentItem", x => part.Record.SaveContentItem = Boolean.Parse(x));
+            context.ImportAttribute(part.PartDefinition.Name, "SavePublishContentItem", x => part.Record.SavePublishContentItem = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "CustomMessage", x => part.Record.CustomMessage = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "Message", x => part.Record.Message = x);
             context.ImportAttribute(part.PartDefinition.Name, "Redirect", x => part.Record.Redirect = Boolean.Parse(x));
             context.ImportAttribute(part.PartDefinition.Name, "RedirectUrl", x => part.Record.RedirectUrl = x);
             context.ImportAttribute(part.PartDefinition.Name, "SubmitButtonText", x => part.Record.SubmitButtonText = x);
+            context.ImportAttribute(part.PartDefinition.Name, "PublishButtonText", x => part.Record.PublishButtonText = x);
         }
         
         protected override void Exporting(CustomFormPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.Record.ContentType);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseContentTypePermissions", part.Record.UseContentTypePermissions);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SaveContentItem", part.Record.SaveContentItem);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SavePublishContentItem", part.Record.SavePublishContentItem);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomMessage", part.Record.CustomMessage);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Record.Message);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Redirect", part.Record.Redirect);
             context.Element(part.PartDefinition.Name).SetAttributeValue("RedirectUrl", part.Record.RedirectUrl);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SubmitButtonText", part.Record.SubmitButtonText);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PublishButtonText", part.Record.PublishButtonText);
         }
     }
 }
