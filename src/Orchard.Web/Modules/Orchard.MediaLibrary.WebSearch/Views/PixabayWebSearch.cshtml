@@ -1,15 +1,5 @@
-﻿@using Orchard.MediaLibrary.WebSearch.Providers
-@using System.Linq
-
-@{
-
-    var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
-    var pixabayApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Pixabay")?.ApiKey ?? "";
-
-}
-
-<ul id="websearch-results" class="websearch-results" data-bind="foreach: PixabayResults">
-    <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+﻿<ul id="websearch-results" class="websearch-results" data-bind="foreach: PixabayResults">
+    <li data-bind="style: { backgroundImage: 'url(' + data.previewURL + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
         <div class="overlay">
             <p class="filename" data-bind="text: getFilename()"></p>
             <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
@@ -32,8 +22,7 @@
                 self.status = ko.observable('');
                 self.tooltip = ko.observable('');
 
-                self.data.imageUrl = self.data.largeImageURL || self.data.contentUrl;
-                self.data.backgroundImage = self.data.previewURL || self.data.thumbnailUrl;
+                self.data.imageUrl = self.data.largeImageURL;
 
                 // operations
                 self.setData = function (value) {

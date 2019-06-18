@@ -26,14 +26,12 @@
         var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
 
         var pixabayApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Pixabay")?.ApiKey ?? "";
-        var bingApiKey = webSearchProviders.FirstOrDefault(provider => provider.Name == "Bing")?.ApiKey ?? "";
         var apiNames = webSearchProviders.Select(provider => provider.Name);
     }
 </head>
 <body>
-    <div id="websearch-main">
-        <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
-        <div id="websearch-mainTeszt">
+    <div id="websearch-mainTeszt">
+        <div id="websearch-main">
             @if (String.IsNullOrWhiteSpace(pixabayApiKey))
             {
                 <div id="message-api">
@@ -46,39 +44,38 @@
                         <button type="submit" class="fa fa-search"></button>
                     </div>
                     <div id="query">
-                        <input type="text" autofocus=autofocus autofocus=autofocus autofocus=autofocus autofocus=autofocus placeholder="@T("search")" />
+                        <input type="text" autofocus placeholder="@T("search")" />
                     </div>
                     <div id="selectSearchApi">
                         @Html.DropDownList("ApiNames", new SelectList(apiNames))
-                        @*<select data-bind="options: models, optionsText: 'key', optionsCaption: '@T("Select a provider...")', value: selectedModel"></select>*@
                     </div>
                 </div>
             </form>
 
             <ul id="websearch-results" class="websearch-results" data-bind="foreach: results">
-                <li data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
+                <li data-bind="style: { backgroundImage: 'url(' + data.thumbnailUrl + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
                     <div class="overlay">
                         <p class="filename" data-bind="text: getFilename()"></p>
-                        <p class="dimensions" data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight + ' - ' + Math.round(data.imageSize/1024) + ' KB'"></p>
+                        <p class="dimensions" data-bind="text: data.width + ' x ' +  data.height + ' - ' + Math.round(data.contentSize.slice(0, -2)/1024) + ' KB'"></p>
                     </div>
                 </li>
             </ul>
-        </div>
-        <div id="Teszt1">
+        
+        @*<div id="Teszt1">
             @Display.PixabayWebSearch()
-        </div>
+        </div>*@
     </div>
 
     <div id="websearch-properties">
         <article data-bind="with: focus">
             <h1>@T("PROPERTIES")</h1>
-            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.backgroundImage + ')' }"></div>
-            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.webformatWidth + ' x ' +  data.webformatHeight"></span></div>
+            <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.thumbnailUrl + ')' }"></div>
+            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.width + ' x ' +  data.height"></span></div>
             <div class="filename"><em>@T("Filename:")</em> <span data-bind="text: getFilename()"></span></div>
-            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.imageSize/1024) + ' KB'"></span></div>
+            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.contentSize.slice(0, -2)/1024) + ' KB'"></span></div>
             <div class="actions">
-                <a class="source button" data-bind="attr: {href: data.imageUrl}" target="_blank">@T("Page")</a>
-                <a class="media button" data-bind="attr: {href: data.imageUrl}" target="_blank">@T("Open")</a>
+                <a class="source button" data-bind="attr: {href: data.contentUrl}" target="_blank">@T("Page")</a>
+                <a class="media button" data-bind="attr: {href: data.contentUrl}" target="_blank">@T("Open")</a>
             </div>
         </article>
 
@@ -92,7 +89,7 @@
             </button>
             <ul data-bind="foreach: selection">
                 <li>
-                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.backgroundImage + ')' }">
+                    <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.thumbnailUrl + ')' }">
                         <div class="selection-overlay">
                             <div class="selection-progress" data-bind="css: status(), attr: { 'title': tooltip() == '' ? null : tooltip() }"></div>
                         </div>
@@ -101,6 +98,7 @@
             </ul>
         </div>
     </div>
+        </div>
 
     @using (Script.Foot())
     {
@@ -117,21 +115,14 @@
                 self.status = ko.observable('');
                 self.tooltip = ko.observable('');
 
-                self.data.imageUrl = self.data.largeImageURL || self.data.contentUrl;
-                self.data.backgroundImage = self.data.previewURL || self.data.thumbnailUrl;
-
                 // operations
                 self.setData = function (value) {
                     self.data = value;
                 };
 
                 self.getFilename = function () {
-                    var value = self.data.imageUrl;
+                    var value = self.data.contentUrl;
                     return value.substr(value.lastIndexOf('/') + 1);
-                };
-
-                self.kilobytes = function () {
-                    return Math.round(self.data.imageSize / 1024);
                 };
             }
 
@@ -238,7 +229,7 @@
             };
 
             var viewModel = new WebSearchViewModel();
-            //ko.applyBindings(viewModel);
+
             ko.applyBindings(viewModel, document.getElementById("websearch-mainTeszt"));
 
             $(".websearch-results").on("click", "li", function (e) {
@@ -264,7 +255,7 @@
 
             $("#button-import").on("click", function (e) {
                 viewModel.selection().forEach(function (item) {
-                    var url = item.data.imageUrl;
+                    var url = item.data.contentUrl;
                     item.status('uploading');
                     item.tooltip('');
                     @if (Model.Replace == null) {
