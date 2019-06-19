@@ -9,6 +9,5 @@ namespace Orchard.MediaLibrary.WebSearch.Handlers {
             Filters.Add(new ActivatingFilter<PixabayWebSearchSettingsPart>("Site"));
             Filters.Add(new TemplateFilterForPart<PixabayWebSearchSettingsPart>("PixabayWebSearchSettings", "Parts/WebSearch.PixabayWebSearchSettings", "media"));
         }
-
     }
 }

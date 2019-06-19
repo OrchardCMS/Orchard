@@ -47,7 +47,7 @@
                     <select id="ApiNames" name="ApiNames">
                         @foreach (var provider in webSearchProviders)
                         {
-                            <option value="@provider.Name" @(provider.IsValid? "" : "disabled")>@provider.Name</option>
+                            <option value="@provider.Name" @(provider.IsValid ? "" : "disabled")=)>@provider.Name</option>
                         }
                     </select>
                 </div>
