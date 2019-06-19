@@ -1,7 +1,5 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
 
-@using System.Text
-@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.WebSearch.Providers
 @using System.Linq
 
@@ -15,23 +13,21 @@
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-websearch-admin.css");
         Style.Require("FontAwesome");
+
+        var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
+
+        var hasValidApiKey = webSearchProviders.Any(provider => provider.IsValid);
+        var apiNames = webSearchProviders.Select(provider => provider.Name);
     }
 
     @Display.Metas()
     @Display.HeadScripts()
     @Display.HeadLinks()
     @Display.StyleSheetLinks()
-
-    @{
-        var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
-
-        var isApiKey = webSearchProviders.Any(provider => provider.IsValid);
-        var apiNames = webSearchProviders.Select(provider => provider.Name);
-    }
 </head>
 <body>
     <div id="websearch-main">
-        @if (!isApiKey)
+        @if (!hasValidApiKey)
         {
             <div id="message-api">
                 @T("You need to define an API Key in the Media settings before being able to use this feature.")
@@ -44,10 +40,16 @@
                     <button type="submit" class="fa fa-search"></button>
                 </div>
                 <div id="query">
-                    <input type="text" autofocus placeholder="@T("search")" />
+                    <input type="text" autofocus placeholder="@T("Search")" />
                 </div>
+
                 <div id="selectSearchApi">
-                    @Html.DropDownList("ApiNames", new SelectList(apiNames))
+                    <select id="ApiNames" name="ApiNames">
+                        @foreach (var provider in webSearchProviders)
+                        {
+                            <option value="@provider.Name" @(provider.IsValid? "" : "disabled")>@provider.Name</option>
+                        }
+                    </select>
                 </div>
             </div>
         </form>
@@ -56,7 +58,7 @@
             <li data-bind="style: { backgroundImage: 'url(' + data.ThumbnailUrl + ')' }, css:  { 'has-focus': hasFocus(), 'selected': selected() }">
                 <div class="overlay">
                     <p class="filename" data-bind="text: getFilename()"></p>
-                    <p class="dimensions" data-bind="text: data.Width + ' x ' +  data.Height + ' - ' + Math.round(data.Size/1024) + ' KB'"></p>
+                    <p class="dimensions" data-bind="text: data.Width + ' x ' +  data.Height + ' - ' + kilobytes() + ' KB'"></p>
                 </div>
             </li>
         </ul>
@@ -67,11 +69,11 @@
         <article data-bind="with: focus">
             <h1>@T("PROPERTIES")</h1>
             <div class="thumbnail" data-bind="style: { backgroundImage: 'url(' + data.ThumbnailUrl + ')' }"></div>
-            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.width + ' x ' +  data.height"></span></div>
+            <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.Width + ' x ' +  data.Height"></span></div>
             <div class="filename"><em>@T("Filename:")</em> <span data-bind="text: getFilename()"></span></div>
-            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.Size/1024) + ' KB'"></span></div>
+            <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: kilobytes() + ' KB'"></span></div>
             <div class="actions">
-                <a class="source button" data-bind="attr: {href: data.ImageUrl}" target="_blank">@T("Page")</a>
+                <a class="source button" data-bind="attr: {href: data.PageUrl}" target="_blank">@T("Page")</a>
                 <a class="media button" data-bind="attr: {href: data.ImageUrl}" target="_blank">@T("Open")</a>
             </div>
         </article>
@@ -119,6 +121,10 @@
                 self.getFilename = function () {
                     var value = self.data.ImageUrl;
                     return value.substr(value.lastIndexOf('/') + 1);
+                };
+
+                self.kilobytes = function () {
+                    return Math.round(data.Size/1024);
                 };
             }
 

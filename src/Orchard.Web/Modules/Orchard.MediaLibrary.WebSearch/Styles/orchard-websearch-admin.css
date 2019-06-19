@@ -66,6 +66,14 @@
         padding-left: 5px;
     }
 
+    #websearch-results .overlay .filename {
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
 /* PROPERTIES */
 
 #websearch-properties {

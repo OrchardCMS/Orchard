@@ -1,6 +1,6 @@
 ﻿using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
-using Orchard.MediaLibrary.WebSearch.Models;
+using Orchard.MediaLibrary.WebSearch.Settings;
 
 namespace Orchard.MediaLibrary.WebSearch.Handlers {
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Bing")]
