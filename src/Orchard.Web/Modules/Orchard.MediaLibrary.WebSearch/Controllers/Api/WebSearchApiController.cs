@@ -22,7 +22,7 @@ namespace Orchard.MediaLibrary.WebSearch.Controllers.Api {
             }
 
             var selectedProvider = _wsp.FirstOrDefault(provider => provider.Name == providerType);
-            if (!selectedProvider.IsValid) {
+            if (selectedProvider == null || !selectedProvider.IsValid) {
                 return NotFound();
             }
 

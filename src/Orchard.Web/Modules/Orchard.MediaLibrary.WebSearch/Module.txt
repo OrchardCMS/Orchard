@@ -4,20 +4,20 @@ Author: The Orchard Team
 Website: https://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.3
-Description: Description for the module
+Description: Enables Orchard to use image search in media or as a provider.
 Features:
     Orchard.MediaLibrary.WebSearch:
-        Description: Description for feature Orchard.MediaLibrary.WebSearch.
+        Description: Enables Orchard to use image search in media or as a provider.
         Category: Media
-        Name: WebSearch
+        Name: Media Library Web Search
         Dependencies: Orchard.MediaLibrary
     Orchard.MediaLibrary.WebSearch.Bing:
-        Description: Description for feature Orchard.MediaLibrary.WebSearch.Bing.
+        Description: Enables Orchard to use Bing image search in media or as a provider.
         Category: Media
         Name: Bing
         Dependencies: Orchard.MediaLibrary.WebSearch
     Orchard.MediaLibrary.WebSearch.Pixabay:
-        Description: Description for feature Orchard.MediaLibrary.WebSearch.Pixabay.
+        Description: Enables Orchard to use Pixabay image search in media or as a provider.
         Category: Media
         Name: Pixabay
         Dependencies: Orchard.MediaLibrary.WebSearch

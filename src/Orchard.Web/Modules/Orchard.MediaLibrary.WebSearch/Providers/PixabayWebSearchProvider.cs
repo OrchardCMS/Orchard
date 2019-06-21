@@ -31,11 +31,11 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         public override IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IPixabayApi>(PixabayBaseUrl);
 
-            var ratingResults = client.GetImagesAsync(ApiKey, query);
-            var pixabayApiResult = _jsonConverter.Deserialize<dynamic>(ratingResults.Result);
+            var apiResponse = client.GetImagesAsync(ApiKey, query);
+            var apiResult = _jsonConverter.Deserialize<dynamic>(apiResponse.Result);
             var webSearchResult = new List<WebSearchResult>();
 
-            foreach (var hit in pixabayApiResult.hits) {
+            foreach (var hit in apiResult.hits) {
                 webSearchResult.Add(new WebSearchResult() {
                     ThumbnailUrl = hit.previewURL,
                     Width = hit.imageWidth,
@@ -43,7 +43,6 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
                     ImageUrl = hit.largeImageURL,
                     Size = hit.imageSize,
                     PageUrl = hit.pageURL
-
                 });
             }
 

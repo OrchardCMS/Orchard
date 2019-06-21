@@ -161,16 +161,17 @@
 /* SEARCH */
 
 .query-container {
+    display: flex;
     margin: 5px;
     width: 90%;
     margin-bottom: 10px;
 }
 
-#query {
-    margin-right: 40px;
+.media-websearch-input-field {
+    width: 100%;
 }
 
-    #query input {
+    .media-websearch-input-field input {
         width: 100%;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
@@ -178,12 +179,11 @@
         height: 28px;
     }
 
-#icon {
-    float: right;
-    width:40px;
+.media-websearch-search-icon {
+    width: 40px;
 }
 
-#icon button {
+.media-websearch-search-icon button {
     height: 28px;
     width: 40px;
     border: none;
@@ -195,6 +195,15 @@
     border-bottom-left-radius: 0;
     font-size: 18px;
 }
+
+.media-websearch-api-selector-container {
+    margin-left: 10px;
+}
+
+    .media-websearch-api-selector-container .media-websearch-api-selector {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 
 .actions {
     margin-top: 5px;

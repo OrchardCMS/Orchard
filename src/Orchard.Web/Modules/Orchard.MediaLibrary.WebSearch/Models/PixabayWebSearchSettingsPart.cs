@@ -2,6 +2,5 @@
 
 namespace Orchard.MediaLibrary.WebSearch.Models {
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Pixabay")]
-    public class PixabayWebSearchSettingsPart : WebSearchSettingsBase {
-    }
+    public class PixabayWebSearchSettingsPart : WebSearchSettingsBase { }
 }
