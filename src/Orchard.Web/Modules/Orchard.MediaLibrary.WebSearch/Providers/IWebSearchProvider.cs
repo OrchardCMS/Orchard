@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.MediaLibrary.WebSearch.Settings;
+using Orchard.MediaLibrary.WebSearch.Models;
 using Orchard.MediaLibrary.WebSearch.ViewModels;
 
 namespace Orchard.MediaLibrary.WebSearch.Providers {
@@ -8,6 +8,6 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         IWebSearchSettings Settings { get; }
         bool IsValid { get; }
         string ApiKey { get; }
-        List<WebSearchResult> GetImages(string query);
+        IEnumerable<WebSearchResult> GetImages(string query);
     }
 }

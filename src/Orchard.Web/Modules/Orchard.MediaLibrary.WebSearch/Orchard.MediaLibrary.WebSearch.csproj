@@ -116,22 +116,20 @@
     <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
     <Compile Include="IBingApi.cs" />
     <Compile Include="IPixabayApi.cs" />
-    <Compile Include="Settings\PixabayWebSearchSettingsPart.cs" />
-    <Compile Include="Settings\BingWebSearchSettingsPart.cs" />
+    <Compile Include="Models\PixabayWebSearchSettingsPart.cs" />
+    <Compile Include="Models\BingWebSearchSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\IWebSearchProvider.cs" />
     <Compile Include="Providers\PixabayWebSearchProvider.cs" />
     <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="Providers\BingWebSearchProvider.cs" />
     <Compile Include="Providers\WebSearchProviderBase.cs" />
-    <Compile Include="Settings\IWebSearchSettings.cs" />
-    <Compile Include="Settings\WebSearchSettingsBase.cs" />
+    <Compile Include="Models\IWebSearchSettings.cs" />
+    <Compile Include="Models\WebSearchSettingsBase.cs" />
     <Compile Include="ViewModels\WebSearchResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\orchard-websearch-admin.css" />
-    <Content Include="Styles\Styles.css" />
-    <Content Include="Styles\Styles.min.css" />
     <Content Include="packages.config" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />

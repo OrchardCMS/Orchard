@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
-using Orchard.MediaLibrary.WebSearch.Settings;
+using Orchard.MediaLibrary.WebSearch.Models;
 using Orchard.MediaLibrary.WebSearch.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
@@ -29,7 +30,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         public override string Name => "Bing";
 
 
-        public override List<WebSearchResult> GetImages(string query) {
+        public override IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IBingApi>(BingBaseUrl);
 
             var ratingResults = client.GetImagesAsync(ApiKey, query);
@@ -49,7 +50,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
                 });
             }
 
-            return webSearchResult;
+            return webSearchResult.Any() ? webSearchResult : Enumerable.Empty<WebSearchResult>();
         }
     }
 }
