@@ -29,7 +29,6 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
 
         public override string Name => "Bing";
 
-
         public override IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IBingApi>(BingBaseUrl);
 
