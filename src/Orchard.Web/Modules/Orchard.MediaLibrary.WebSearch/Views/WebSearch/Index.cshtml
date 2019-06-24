@@ -35,7 +35,7 @@
             return;
         }
         <form data-bind="submit: doSearch">
-            <div class="query-container">                
+            <div class="query-container">
                 <div id="query" class="media-websearch-input-field">
                     <input type="text" autofocus placeholder="@T("Search")" />
                 </div>
@@ -81,12 +81,7 @@
 
         <div id="websearch-properties-selection" data-bind="visible: selection().length">
             <h1>@T("SELECTION")</h1>
-            <button id="button-import">
-                @if (Model.Replace == null)
-                {<text>@T("Import")</text> }
-            else
-            { <text>@T("Replace")</text>}
-            </button>
+            <button id="button-import"> @if (Model.Replace == null) { <text>@T("Import")</text> } else { <text>@T("Replace")</text> } </button>
             <ul data-bind="foreach: selection">
                 <li>
                     <div class="selection" data-bind="click: $parent.focus, style: { backgroundImage: 'url(' + data.ThumbnailUrl + ')' }">
@@ -159,7 +154,6 @@
                             self.results.push(new SearchResult(results[i]));
                         }
                     });
-
                 };
 
                 self.clearSelection = function () {
@@ -206,11 +200,9 @@
 
                     self.focus(searchResult);
                 };
-
             };
 
             var viewModel = new WebSearchViewModel();
-
             ko.applyBindings(viewModel);
 
             $("#websearch-results").on("click", "li", function (e) {
