@@ -8,10 +8,12 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Layouts.Services {
     public class ContentPartDisplay : ContentDisplayBase, IContentPartDisplay {
         private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
+        private readonly ShellSettings _shellSettings;
 
 
         public ContentPartDisplay(
@@ -22,9 +24,19 @@ namespace Orchard.Layouts.Services {
             IWorkContextAccessor workContextAccessor,
             ShellSettings shellSettings, 
             IEnumerable<IContentPartDriver> contentPartDrivers) 
-            : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor, shellSettings) {
-
+            : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor) {
+            _shellSettings = shellSettings;
             _contentPartDrivers = contentPartDrivers;
+        }
+        public override UrlPrefix TenantUrlPrefix {
+            get {
+                if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                    return new UrlPrefix(_shellSettings.RequestUrlPrefix);
+                }
+                else {
+                    return null;
+                }
+            }
         }
 
         public override string DefaultStereotype {

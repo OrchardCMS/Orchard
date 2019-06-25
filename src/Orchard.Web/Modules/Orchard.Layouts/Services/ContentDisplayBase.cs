@@ -19,29 +19,22 @@ namespace Orchard.Layouts.Services {
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly ShellSettings _shellSettings;
-        private readonly UrlPrefix _urlPrefix;
 
         protected ContentDisplayBase(
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor,
-            ShellSettings shellSettings) {
+            IWorkContextAccessor workContextAccessor) {
 
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
             _requestContext = requestContext;
             _virtualPathProvider = virtualPathProvider;
             _workContextAccessor = workContextAccessor;
-            _shellSettings = shellSettings;
-            if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
-                _urlPrefix = new UrlPrefix(_shellSettings.RequestUrlPrefix);
-
-
         }
 
+        public abstract UrlPrefix TenantUrlPrefix { get; }
         public abstract string DefaultStereotype { get; }
 
         public BuildDisplayContext BuildDisplayContext(IContent content, string displayType, string groupId) {
@@ -156,8 +149,8 @@ namespace Orchard.Layouts.Services {
         private string GetPath() {
             var appRelativePath = _virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path);
             // If the tenant has a prefix, we strip the tenant prefix away.
-            if (_urlPrefix != null)
-                appRelativePath = _urlPrefix.RemoveLeadingSegments(appRelativePath);
+            if (TenantUrlPrefix != null)
+                appRelativePath = TenantUrlPrefix.RemoveLeadingSegments(appRelativePath);
 
             return VirtualPathUtility.AppendTrailingSlash(appRelativePath);
         }
