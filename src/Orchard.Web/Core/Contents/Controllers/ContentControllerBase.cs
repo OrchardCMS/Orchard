@@ -29,6 +29,11 @@ namespace Orchard.Core.Contents.Controllers {
                         return RedirectToRoute(itemMetadata.AdminRouteValues);
 
                     break;
+                case ContentItemRoute.Editor:
+                    if (isCustomRoute(itemMetadata.EditorRouteValues))
+                        return RedirectToRoute(itemMetadata.EditorRouteValues);
+
+                    break;
                 case ContentItemRoute.Create:
                     if (isCustomRoute(itemMetadata.CreateRouteValues))
                         return RedirectToRoute(itemMetadata.CreateRouteValues);
