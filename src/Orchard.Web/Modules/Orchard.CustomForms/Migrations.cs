@@ -65,7 +65,7 @@ namespace Orchard.CustomForms {
             return 5;
         }
         public int UpdateFrom5() {
-            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("SavePublishContentItem"));
+            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("SavePublishContentItem", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("PublishButtonText"));
             return 6;
         }
