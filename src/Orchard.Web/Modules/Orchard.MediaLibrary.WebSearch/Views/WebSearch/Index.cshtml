@@ -57,7 +57,7 @@
                     <select id="media-websearch-api-selector" name="ApiNames" class="media-websearch-api-selector">
                         @foreach (var provider in webSearchProviders)
                         {
-                            <option value="@provider.Name" @(provider.IsValid() ? "" : "disabled")=)>@provider.Name</option>
+                            <option value="@provider.Name" @(provider.IsValid() ? "" : "disabled")>@provider.Name</option>
                         }
                     </select>
                 </div>
