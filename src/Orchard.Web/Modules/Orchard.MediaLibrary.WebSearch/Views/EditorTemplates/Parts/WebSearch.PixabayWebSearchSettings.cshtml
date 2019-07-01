@@ -3,9 +3,9 @@
 <fieldset>
     <legend>@T("Pixabay Web Search")</legend>
     <div>
-        @Html.TextBoxFor(m => m.ApiKey, new { @class = "text medium" })
+        @Html.TextBoxFor(m => m.ApiKey, new { type = "password", @class = "text medium" })
         <span class="hint">@T("Your private key.")</span>
     </div>
 
-    @T("Get a free API Key on {0}", Html.Raw("<a href=\"https://pixabay.com/api/docs\">https://pixabay.com/api/docs</a>"))
+    @T("Get a free API Key on {0}", Html.Raw("<a href=\"https://pixabay.com/api/docs\">Pixabay</a>"))
 </fieldset>
