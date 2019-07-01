@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using Orchard.MediaLibrary.WebSearch.Controllers.Api;
 using Orchard.MediaLibrary.WebSearch.Models;
 using Orchard.MediaLibrary.WebSearch.ViewModels;
 using Orchard.Services;

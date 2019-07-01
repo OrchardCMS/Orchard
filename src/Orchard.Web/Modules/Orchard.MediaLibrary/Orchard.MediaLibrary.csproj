@@ -113,7 +113,6 @@
     <Content Include="Styles\menu.media-library-admin.css" />
     <Content Include="Styles\menu.oembed-mediaproviders.css" />
     <Content Include="Styles\orchard-oembed-admin.css" />
-    <Content Include="Styles\menu.websearch-mediaproviders.css" />
     <Content Include="Styles\menu.clientstorage-mediaproviders.css" />
     <Content Include="Styles\dialog-mode.css" />
     <Content Include="Styles\media-library-picker-admin.css" />

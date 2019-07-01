@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using Orchard.MediaLibrary.WebSearch.Controllers.Api;
 using Orchard.MediaLibrary.WebSearch.Models;
 using Orchard.MediaLibrary.WebSearch.ViewModels;
 using Orchard.Services;
@@ -37,7 +37,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
             var webSearchResult = new List<WebSearchResult>();
 
             foreach (var hit in apiResult.value) {
-                String imageSize = hit.contentSize;
+                string imageSize = hit.contentSize;
 
                 webSearchResult.Add(new WebSearchResult() {
                     ThumbnailUrl = hit.thumbnailUrl,

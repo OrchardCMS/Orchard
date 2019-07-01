@@ -15,8 +15,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
             builder.AddImageSet("websearch")
                 .Add(T("Web Search"), "7",
                     menu => menu.Action("Index", "WebSearch", new { area = "Orchard.MediaLibrary.WebSearch" })
-                        .Permission(Permissions.ManageOwnMedia)
-                        .Permission(Permissions.ImportMediaContent));
+                        .Permission(Permissions.ManageWebSearchMediaContent));
         }
     }
 }

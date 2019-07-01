@@ -17,7 +17,7 @@ namespace Orchard.MediaLibrary.WebSearch.Controllers.Api {
 
         [HttpGet]
         public IHttpActionResult GetImages(string query, string providerType) {
-            if (!_authorizer.Authorize(Permissions.ManageMediaContent)) {
+            if (!_authorizer.Authorize(Permissions.ManageWebSearchMediaContent)) {
                 return StatusCode(HttpStatusCode.Unauthorized);
             }
 

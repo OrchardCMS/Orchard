@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using RestEase;
 
-namespace Orchard.MediaLibrary.WebSearch {
+namespace Orchard.MediaLibrary.WebSearch.Controllers.Api {
     [Header("User-Agent", "RestEase")]
     public interface IPixabayApi {
         [Get("api/")]
