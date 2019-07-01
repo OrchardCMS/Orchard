@@ -4,25 +4,25 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.MediaLibrary.WebSearch {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageWebSearchMediaContent =
-            new Permission { Description = "Manage Web Search Media", Name = nameof(ManageWebSearchMediaContent) };
+        public static readonly Permission AccessMediaWebSearch =
+            new Permission { Description = "Access Media Web Search", Name = nameof(AccessMediaWebSearch), ImpliedBy = new[] { MediaLibrary.Permissions.ManageMediaContent } };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() =>
             new[] {
-                ManageWebSearchMediaContent
+                AccessMediaWebSearch
             };
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() =>
             new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] { ManageWebSearchMediaContent }
+                    Permissions = new[] { AccessMediaWebSearch }
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] { ManageWebSearchMediaContent }
+                    Permissions = new[] { AccessMediaWebSearch }
                 },
             };
 

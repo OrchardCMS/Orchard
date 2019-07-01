@@ -1,5 +1,6 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
 
+@using Orchard.MediaLibrary.WebSearch
 @using Orchard.MediaLibrary.WebSearch.Providers
 @using System.Linq
 
@@ -16,7 +17,8 @@
 
         var webSearchProviders = WorkContext.Resolve<IEnumerable<IWebSearchProvider>>();
 
-        var hasValidApiKey = webSearchProviders.Any(provider => provider.IsValid);
+        var hasValidProvider = webSearchProviders.Any();
+        var hasValidApiKey = webSearchProviders.Any(provider => provider.IsValid());
         var apiNames = webSearchProviders.Select(provider => provider.Name);
     }
 
@@ -27,6 +29,13 @@
 </head>
 <body>
     <div id="websearch-main">
+        @if (!hasValidProvider)
+        {
+            <div id="message-api">
+                @T("You need to enable a Web Search provider feature like \"Media Library Web Search - Google\".")
+            </div>
+            return;
+        }
         @if (!hasValidApiKey)
         {
             <div id="message-api">
@@ -48,7 +57,7 @@
                     <select id="media-websearch-api-selector" name="ApiNames" class="media-websearch-api-selector">
                         @foreach (var provider in webSearchProviders)
                         {
-                            <option value="@provider.Name" @(provider.IsValid ? "" : "disabled")=)>@provider.Name</option>
+                            <option value="@provider.Name" @(provider.IsValid() ? "" : "disabled")=)>@provider.Name</option>
                         }
                     </select>
                 </div>

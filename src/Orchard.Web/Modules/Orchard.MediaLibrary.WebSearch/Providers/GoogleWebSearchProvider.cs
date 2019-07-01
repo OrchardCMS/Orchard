@@ -32,7 +32,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         public override IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IGoogleApi>(GoogleBaseUrl);
 
-            var apiResponse = client.GetImagesAsync(ApiKey, _settings.SearchEngineId, query);
+            var apiResponse = client.GetImagesAsync(this.GetApiKey(), _settings.SearchEngineId, query);
             var apiResult = _jsonConverter.Deserialize<dynamic>(apiResponse.Result);
             var webSearchResult = new List<WebSearchResult>();
 

@@ -32,7 +32,7 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         public override IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IBingApi>(BingBaseUrl);
 
-            var apiResponse = client.GetImagesAsync(ApiKey, query);
+            var apiResponse = client.GetImagesAsync(this.GetApiKey(), query);
             var apiResult = _jsonConverter.Deserialize<dynamic>(apiResponse.Result);
             var webSearchResult = new List<WebSearchResult>();
 

@@ -17,12 +17,12 @@ namespace Orchard.MediaLibrary.WebSearch.Controllers.Api {
 
         [HttpGet]
         public IHttpActionResult GetImages(string query, string providerType) {
-            if (!_authorizer.Authorize(Permissions.ManageWebSearchMediaContent)) {
+            if (!_authorizer.Authorize(Permissions.AccessMediaWebSearch)) {
                 return StatusCode(HttpStatusCode.Unauthorized);
             }
 
             var selectedProvider = _wsp.FirstOrDefault(provider => provider.Name == providerType);
-            if (selectedProvider == null || !selectedProvider.IsValid) {
+            if (selectedProvider == null || !selectedProvider.IsValid()) {
                 return NotFound();
             }
 

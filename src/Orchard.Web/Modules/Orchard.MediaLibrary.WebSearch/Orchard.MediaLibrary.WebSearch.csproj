@@ -112,6 +112,7 @@
     <Compile Include="Controllers\Api\IGoogleApi.cs" />
     <Compile Include="Controllers\Api\WebSearchApiController.cs" />
     <Compile Include="Controllers\WebSearchController.cs" />
+    <Compile Include="Extensions\WebSearchProviderExtensions.cs" />
     <Compile Include="Handlers\GoogleWebSearchSettingsPartHandler.cs" />
     <Compile Include="Handlers\BingWebSearchSettingsPartHandler.cs" />
     <Compile Include="Handlers\PixabayWebSearchSettingsPartHandler.cs" />
