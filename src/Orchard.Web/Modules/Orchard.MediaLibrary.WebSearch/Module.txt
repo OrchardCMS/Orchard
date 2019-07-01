@@ -20,3 +20,8 @@ Features:
         Category: Media
         Name: Media Library Web Search - Pixabay
         Dependencies: Orchard.MediaLibrary.WebSearch
+    Orchard.MediaLibrary.WebSearch.Google:
+        Description: Google web search provider for importing images to the Media Library.
+        Category: Media
+        Name: Media Library Web Search - Google
+        Dependencies: Orchard.MediaLibrary.WebSearch
