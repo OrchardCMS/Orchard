@@ -1,23 +1,22 @@
 ﻿Name: Orchard.MediaLibrary.WebSearch
 AntiForgery: enabled
-Author: The Orchard Team
+Author: The Orchard Team, Lombiq Technologies Ltd.
 Website: https://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.10.3
-Description: Enables Orchard to use image search in media or as a provider.
 Features:
     Orchard.MediaLibrary.WebSearch:
-        Description: Enables Orchard to use image search in media or as a provider.
+        Description: Base functionality for Orchard to be able import images from web search results to the Media Library.
         Category: Media
         Name: Media Library Web Search
         Dependencies: Orchard.MediaLibrary
     Orchard.MediaLibrary.WebSearch.Bing:
-        Description: Enables Orchard to use Bing image search in media or as a provider.
+        Description: Bing web search provider for importing images to the Media Library.
         Category: Media
-        Name: Bing
+        Name: Media Library Web Search - Bing
         Dependencies: Orchard.MediaLibrary.WebSearch
     Orchard.MediaLibrary.WebSearch.Pixabay:
-        Description: Enables Orchard to use Pixabay image search in media or as a provider.
+        Description: Pixabay web search provider for importing images to the Media Library.
         Category: Media
-        Name: Pixabay
+        Name: Media Library Web Search - Pixabay
         Dependencies: Orchard.MediaLibrary.WebSearch
