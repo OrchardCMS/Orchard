@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement.MetaData;
+using System.Data;
 using Orchard.Data.Migration;
 
 namespace Orchard.Taxonomies {
@@ -99,6 +100,30 @@ namespace Orchard.Taxonomies {
                 .CreateIndex("IDX_TermsPartRecord_id_Field", "TermsPartRecord_id", "Field")
             );
             return 7;
+        }
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.AddColumn("FullWeight", DbType.String);
+                table.CreateIndex("IDX_FullWeight", "FullWeight");
+            });
+            return 8;
+        }
+
+        public int UpdateFrom8() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.DropIndex("IDX_FullWeight");
+            });
+            return 9;
+        }
+        public int UpdateFrom9() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => {
+                table.AlterColumn("FullWeight", column => {
+                    column.WithType(DbType.String);
+                    column.WithLength(1023);
+                });
+                table.CreateIndex("IDX_FullWeight", "FullWeight");
+            });
+            return 10;
         }
     }
 }
