@@ -11,7 +11,7 @@ using RestEase;
 
 namespace Orchard.MediaLibrary.WebSearch.Providers {
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Bing")]
-    public class BingWebSearchProvider : WebSearchProviderBase {
+    public class BingWebSearchProvider : IWebSearchProvider {
         private const string BingBaseUrl = "https://api.cognitive.microsoft.com";
 
         private readonly ISiteService _siteService;
@@ -25,11 +25,11 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         private BingWebSearchSettingsPart _settings =>
            _siteService.GetSiteSettings().As<BingWebSearchSettingsPart>();
 
-        public override IWebSearchSettings Settings => _settings;
+        public IWebSearchSettings Settings => _settings;
 
-        public override string Name => "Bing";
+        public string Name => "Bing";
 
-        public override IEnumerable<WebSearchResult> GetImages(string query) {
+        public IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IBingApi>(BingBaseUrl);
 
             var apiResponse = client.GetImagesAsync(this.GetApiKey(), query);

@@ -129,7 +129,6 @@
     <Compile Include="Providers\PixabayWebSearchProvider.cs" />
     <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="Providers\BingWebSearchProvider.cs" />
-    <Compile Include="Providers\WebSearchProviderBase.cs" />
     <Compile Include="Models\IWebSearchSettings.cs" />
     <Compile Include="Models\WebSearchSettingsBase.cs" />
     <Compile Include="ViewModels\WebSearchResult.cs" />

@@ -11,7 +11,7 @@ using RestEase;
 
 namespace Orchard.MediaLibrary.WebSearch.Providers {
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Google")]
-    public class GoogleWebSearchProvider : WebSearchProviderBase {
+    public class GoogleWebSearchProvider : IWebSearchProvider {
         private const string GoogleBaseUrl = "https://www.googleapis.com";
 
         private readonly ISiteService _siteService;
@@ -25,11 +25,11 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
         private GoogleWebSearchSettingsPart _settings =>
            _siteService.GetSiteSettings().As<GoogleWebSearchSettingsPart>();
 
-        public override IWebSearchSettings Settings => _settings;
+        public IWebSearchSettings Settings => _settings;
 
-        public override string Name => "Google";
+        public string Name => "Google";
 
-        public override IEnumerable<WebSearchResult> GetImages(string query) {
+        public IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IGoogleApi>(GoogleBaseUrl);
 
             var apiResponse = client.GetImagesAsync(this.GetApiKey(), _settings.SearchEngineId, query);

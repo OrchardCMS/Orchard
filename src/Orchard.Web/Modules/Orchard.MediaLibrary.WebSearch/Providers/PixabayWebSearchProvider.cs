@@ -11,7 +11,7 @@ using RestEase;
 
 namespace Orchard.MediaLibrary.WebSearch.Providers {
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Pixabay")]
-    public class PixabayWebSearchProvider : WebSearchProviderBase {
+    public class PixabayWebSearchProvider : IWebSearchProvider {
         private const string PixabayBaseUrl = "https://pixabay.com";
 
         private readonly ISiteService _siteService;
@@ -22,14 +22,14 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
             _jsonConverter = jsonConverter;
         }
 
-        public override string Name => "Pixabay";
+        public string Name => "Pixabay";
 
         private PixabayWebSearchSettingsPart _settings =>
            _siteService.GetSiteSettings().As<PixabayWebSearchSettingsPart>();
 
-        public override IWebSearchSettings Settings => _settings;
+        public IWebSearchSettings Settings => _settings;
 
-        public override IEnumerable<WebSearchResult> GetImages(string query) {
+        public IEnumerable<WebSearchResult> GetImages(string query) {
             var client = RestClient.For<IPixabayApi>(PixabayBaseUrl);
 
             var apiResponse = client.GetImagesAsync(this.GetApiKey(), query);
