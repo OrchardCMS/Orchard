@@ -94,6 +94,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web", "Orchard.Web\
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A} = {6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}
 		{14C049FD-B35B-415A-A824-87F26B26E7FD} = {14C049FD-B35B-415A-A824-87F26B26E7FD}
 		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC} = {085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3} = {8EE141BE-7217-4F5B-8214-3146BEFA07E3}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Framework", "Orchard\Orchard.Framework.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
@@ -284,6 +285,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.OpenId", "Orchard.Web\Modules\Orchard.OpenId\Orchard.OpenId.csproj", "{42E217C1-E163-4B6B-9E8F-42BEE21B6896}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Glimpse", "Orchard.Web\Modules\Orchard.Glimpse\Orchard.Glimpse.csproj", "{71E17466-D937-49D7-8C7D-77CCBAB8CCF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.MediaLibrary.WebSearch", "Orchard.Web\Modules\Orchard.MediaLibrary.WebSearch\Orchard.MediaLibrary.WebSearch.csproj", "{8EE141BE-7217-4F5B-8214-3146BEFA07E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1138,6 +1141,16 @@ Global
 		{71E17466-D937-49D7-8C7D-77CCBAB8CCF4}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{71E17466-D937-49D7-8C7D-77CCBAB8CCF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71E17466-D937-49D7-8C7D-77CCBAB8CCF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1228,6 +1241,7 @@ Global
 		{1CC62F45-E6FF-43D5-84BF-509A1085D994} = {74E681ED-FECC-4034-B9BD-01B0BB1BDECA}
 		{42E217C1-E163-4B6B-9E8F-42BEE21B6896} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{71E17466-D937-49D7-8C7D-77CCBAB8CCF4} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{8EE141BE-7217-4F5B-8214-3146BEFA07E3} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4

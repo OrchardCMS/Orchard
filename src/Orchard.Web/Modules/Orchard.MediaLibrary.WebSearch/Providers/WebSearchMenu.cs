@@ -1,7 +1,7 @@
 ﻿using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.MediaLibrary.Providers {
+namespace Orchard.MediaLibrary.WebSearch.Providers {
     public class WebSearchMenu : INavigationProvider {
         public Localizer T { get; set; }
 
@@ -13,10 +13,9 @@ namespace Orchard.MediaLibrary.Providers {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("websearch")
-                .Add(T("Web Search"), "7", 
-                    menu => menu.Action("Index", "WebSearch", new { area = "Orchard.MediaLibrary" })
-                        .Permission(Permissions.ManageOwnMedia)
-                        .Permission(Permissions.ImportMediaContent));
+                .Add(T("Web Search"), "7",
+                    menu => menu.Action("Index", "WebSearch", new { area = "Orchard.MediaLibrary.WebSearch" })
+                        .Permission(Permissions.AccessMediaWebSearch));
         }
     }
 }

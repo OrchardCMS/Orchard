@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
@@ -13,6 +14,7 @@ using Orchard.UI.Admin;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
+    [OrchardFeature("Orchard.MediaLibrary.WebSearch")]
     public class WebSearchController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IContentManager _contentManager;
@@ -103,7 +105,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 return HttpNotFound();
 
             // Check permission
-            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, replaceMedia.FolderPath) && _mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, replaceMedia.FolderPath)) 
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, replaceMedia.FolderPath) && _mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, replaceMedia.FolderPath))
                 && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
