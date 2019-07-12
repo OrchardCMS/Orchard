@@ -95,7 +95,8 @@ namespace Orchard.MediaLibrary.Services {
 
             if (!String.IsNullOrEmpty(folderPath)) {
                 if (recursive) {
-                    query = query.Join<MediaPartRecord>().Where(m => m.FolderPath.StartsWith(folderPath));
+                    var subfolderSearch = folderPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? folderPath : folderPath + Path.DirectorySeparatorChar;
+                    query = query.Join<MediaPartRecord>().Where(m => (m.FolderPath == folderPath || m.FolderPath.StartsWith(subfolderSearch)));
                 }
                 else {
                     query = query.Join<MediaPartRecord>().Where(m => m.FolderPath == folderPath);
