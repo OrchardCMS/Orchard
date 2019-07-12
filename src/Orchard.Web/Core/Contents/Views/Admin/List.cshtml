@@ -1,13 +1,18 @@
-﻿@using Orchard.Core.Contents;
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
 @using Orchard.Core.Contents.ViewModels;
 @using Orchard.Security;
-@using Orchard.Security.Permissions;
+
 @{
+    IOrchardServices _orchardServices;
+    WorkContext.TryResolve<IOrchardServices>(out _orchardServices);
+
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
     // if no specific type is selected, we assume we should show the "Create" button
-    var showCreateContentButton = string.IsNullOrWhiteSpace(typeDisplayName); 
+    var showCreateContentButton = string.IsNullOrWhiteSpace(typeDisplayName);
     IAuthorizationService _authorizationService;
     WorkContext.TryResolve<IAuthorizationService>(out _authorizationService);
 
@@ -26,9 +31,19 @@
 
     Layout.Title = pageTitle.Text;
 }
-@if (showCreateContentButton) { 
+@if (showCreateContentButton) {
 <div class="manage">
-    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+    @{
+        if (!String.IsNullOrWhiteSpace((string)Model.Options.SelectedFilter)) {
+            var content = _orchardServices.ContentManager.New(Model.Options.SelectedFilter);
+            ContentItemMetadata metadata = _orchardServices.ContentManager.GetItemMetadata(content);
+
+            var url = Url.RouteUrl(metadata.CreateRouteValues);
+            <a class="button primaryAction" href="@url">@createLinkText.Text</a>
+        } else {
+            @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" });
+        }
+    }
 </div>
 }
 @using (Html.BeginFormAntiForgeryPost()) {
