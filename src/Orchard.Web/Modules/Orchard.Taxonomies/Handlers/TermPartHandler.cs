@@ -18,8 +18,8 @@ namespace Orchard.Taxonomies.Handlers {
             T = NullLocalizer.Instance;
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<TermPart>((context, part) => part.Selectable = true);
-
         }
+
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var term = context.ContentItem.As<TermPart>();
 
