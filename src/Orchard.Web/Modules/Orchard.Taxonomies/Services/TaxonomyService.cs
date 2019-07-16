@@ -30,7 +30,7 @@ namespace Orchard.Taxonomies.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        private readonly HashSet<int> _processedTermParts = new HashSet<int>();
+        private readonly HashSet<int> _processedTermPartIds = new HashSet<int>();
 
         public TaxonomyService(
             IRepository<TermContentItem> termContentItemRepository,
@@ -292,11 +292,11 @@ namespace Orchard.Taxonomies.Services {
 
             var termPartRecordIds = termList.Select(t => t.Term.TermRecord.Id).ToArray();
             if (termPartRecordIds.Any()) {
-                if (!_processedTermParts.Any()) {
-                    _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermParts } });
+                if (!_processedTermPartIds.Any()) {
+                    _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermPartIds } });
                 }
                 foreach (var termPartRecordId in termPartRecordIds) {
-                    _processedTermParts.Add(termPartRecordId);
+                    _processedTermPartIds.Add(termPartRecordId);
                 }
             }
         }

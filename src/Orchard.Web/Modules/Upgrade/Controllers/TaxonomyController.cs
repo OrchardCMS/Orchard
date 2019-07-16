@@ -22,6 +22,8 @@ namespace Upgrade.Controllers {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IFeatureManager _featureManager;
 
+        private const int BatchSize = 50;
+
         public TaxonomyController(
             IUpgradeService upgradeService,
             IOrchardServices orchardServices,
@@ -58,6 +60,18 @@ namespace Upgrade.Controllers {
             return View();
         }
 
+        public ActionResult Index110() {
+            ViewBag.CanMigrate = false;
+
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
+                _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in upgrade the terms' weights."));
+            } else {
+                ViewBag.CanMigrate = true;
+            }
+
+            return View();
+        }
+
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST() {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to migrate Contrib.Taxonomies.")))
@@ -79,7 +93,6 @@ namespace Upgrade.Controllers {
             return RedirectToAction("Index");
         }
 
-        private const int BATCH = 50;
         [HttpPost]
         public JsonResult MigrateTerms(int id) {
             var lastCount = id;
@@ -88,13 +101,13 @@ namespace Upgrade.Controllers {
                 .GetTermsQuery()
                 .OrderBy(x => x.TaxonomyId)
                 .OrderBy(tpr => tpr.Path)
-                .Slice(lastCount, BATCH);
+                .Slice(lastCount, BatchSize);
             foreach (var term in thisBatch) {
                 term.FullWeight = _taxonomyService.ComputeFullWeight(term);
             }
             if (thisBatch.Any()) {
                 // ajax stops calling once it is returned the same number it sent
-                lastCount += BATCH;
+                lastCount += BatchSize;
             }
 
 
