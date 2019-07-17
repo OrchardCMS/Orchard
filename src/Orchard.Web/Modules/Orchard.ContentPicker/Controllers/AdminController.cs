@@ -160,6 +160,7 @@ namespace Orchard.ContentPicker.Controllers {
             RouteData.Values["Options.SelectedFilter"] = model.Options.SelectedFilter;
             RouteData.Values["Options.OrderBy"] = model.Options.OrderBy.ToString();
             RouteData.Values["Options.ContentsStatus"] = model.Options.ContentsStatus.ToString();
+            RouteData.Values["Options.SelectedCulture"] = model.Options.SelectedCulture;
 
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }
