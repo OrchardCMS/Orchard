@@ -367,6 +367,7 @@ namespace Orchard.Users.Controllers {
             else {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
                 Services.Notifier.Information(T("User {0} disabled", user.UserName));
+                _userEventHandlers.Moderate(user);
             }
 
             return RedirectToAction("Index");
