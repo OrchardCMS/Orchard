@@ -40,8 +40,15 @@ namespace Orchard.MediaLibrary.Handlers {
 
             OnRemoving<MediaPart>((context, part) => RemoveMedia(part));
             OnLoaded<MediaPart>((context, part) => {
-                if (!String.IsNullOrEmpty(part.FileName)) {
+                if (!string.IsNullOrEmpty(part.FileName)) {
                     part._publicUrl.Loader(() => _mediaLibraryService.GetMediaPublicUrl(part.FolderPath, part.FileName));
+                } else {
+                    // Usually, OEmbedParts won't directly have a source file, but we may be interested
+                    // in easily accessing their source Url.
+                    var oePart = part.As<OEmbedPart>();
+                    if (oePart != null) {
+                        part._publicUrl.Loader(() => oePart.Source);
+                    }
                 }
             });
 
