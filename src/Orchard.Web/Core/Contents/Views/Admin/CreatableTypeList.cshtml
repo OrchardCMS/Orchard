@@ -6,7 +6,7 @@
     IOrchardServices _orchardServices;
     WorkContext.TryResolve<IOrchardServices>(out _orchardServices);
 
-    Layout.Title = T("Create New Content").ToString();
+    Layout.Title = T("Create New Content");
 }
 
 @foreach (var type in Model.ContentTypes) {
