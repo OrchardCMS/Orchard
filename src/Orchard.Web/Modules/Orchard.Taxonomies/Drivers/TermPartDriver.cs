@@ -94,9 +94,7 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(termPart, Prefix, null, null)) {
-                //termPart.FullWeight = _taxonomyService.ComputeFullWeight(termPart);
-            }
+            updater.TryUpdateModel(termPart, Prefix, null, null);
             return Editor(termPart, shapeHelper);
         }
 
@@ -158,7 +156,7 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
-            // arguably, copying the container/parent should be done elsewhere,
+            // Arguably, copying the container/parent should be done elsewhere,
             // but since it is required to be certain of its value for proper use
             // of the TermPart we also do it here.
             clonePart.Selectable = originalPart.Selectable;
