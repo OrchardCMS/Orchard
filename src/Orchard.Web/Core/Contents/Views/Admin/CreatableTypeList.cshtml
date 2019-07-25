@@ -1,5 +1,26 @@
-@{ Layout.Title = T("Create New Content").ToString(); }
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+
+@{
+    IOrchardServices _orchardServices;
+    WorkContext.TryResolve<IOrchardServices>(out _orchardServices);
+
+    Layout.Title = T("Create New Content");
+}
 
 @foreach (var type in Model.ContentTypes) {
-    <p>@Html.ActionLink((string)type.DisplayName, "Create", new { Area = "Contents", Id = (string)type.Name, ContainerId = Model.ContainerId, ReturnUrl = Request.QueryString["ReturnUrl"] })</p>
+    var content = _orchardServices.ContentManager.New(type.Name);
+
+    if (Authorizer.Authorize(Permissions.CreateContent, content)) {
+        ContentItemMetadata metadata = _orchardServices.ContentManager.GetItemMetadata(content);
+
+        RouteValueDictionary createRouteValues = metadata.CreateRouteValues;
+        createRouteValues.Add("ContainerId", Model.ContainerId);
+        createRouteValues.Add("ReturnUrl", Request.QueryString["ReturnUrl"]);
+
+        var url = Url.RouteUrl(createRouteValues);
+
+        <p><a href="@url">@type.DisplayName</a></p>
+    }
 }
