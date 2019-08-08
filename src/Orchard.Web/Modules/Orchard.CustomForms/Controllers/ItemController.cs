@@ -152,7 +152,7 @@ namespace Orchard.CustomForms.Controllers {
 
             ContentItem contentItem;
             if (contentId > 0)
-                contentItem = _contentManager.Get(contentId);
+                contentItem = _contentManager.Get(contentId,VersionOptions.DraftRequired);
             else
                 contentItem = _contentManager.New(customForm.ContentType);
 

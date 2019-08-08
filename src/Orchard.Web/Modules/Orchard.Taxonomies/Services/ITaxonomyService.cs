@@ -48,9 +48,8 @@ namespace Orchard.Taxonomies.Services {
         void DeleteTerm(TermPart termPart);
         void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm);
         void ProcessPath(TermPart term);
-        void ProcessFullWeight(TermPart term, TermPart parentTerm);
-        string ProcessChildrenFullWeight(string childrenFullWeight, string parentFullWeight, string parentOldFullWeight);
 
+        IContentQuery<TermPart, TermPartRecord> GetTermsQuery();
         IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId);
 
         string GenerateTermTypeName(string taxonomyName);
@@ -87,5 +86,13 @@ namespace Orchard.Taxonomies.Services {
         /// <param name="terms">The <see cref="TermPart"/> objects to orgnanize in a hierarchy. The objects need to be sorted.</param>
         /// <param name="append">The action to perform when a node is added as a child, or <c>null</c> if nothing needs to be done.</param>
         void CreateHierarchy(IEnumerable<TermPart> terms, Action<TermPartNode, TermPartNode> append);
+
+        /// <summary>
+        /// Provides a way to compute the updated value of the FullWeight for a TermPart.
+        /// This method does not update the corresponding property of the TermPart.
+        /// </summary>
+        /// <param name="part">The TermPart whose FullWeight we wish to compute.</param>
+        /// <returns>The recomputed value of the TermPart's FullWeight.</returns>
+        string ComputeFullWeight(TermPart part);
     }
 }

@@ -97,6 +97,9 @@ namespace Orchard.DisplayManagement.Implementation {
                 // now find the actual binding to render, taking alternates into account
                 ShapeBinding actualBinding;
                 if ( TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
+                    // Add the BindingSource to the metadata, so it can be used as a scope
+                    // for Localizers
+                    shape.Metadata.BindingSources.Add(actualBinding.BindingSource);
                     shape.Metadata.ChildContent = Process(actualBinding, shape, context);
                 }
                 else {

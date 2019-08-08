@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.UI.Notify;
 using Orchard.Taxonomies.Services;
 using Orchard.Localization;
+using System;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TermPartHandler : ContentHandler {
@@ -18,6 +19,7 @@ namespace Orchard.Taxonomies.Handlers {
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<TermPart>((context, part) => part.Selectable = true);
         }
+
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var term = context.ContentItem.As<TermPart>();
 
@@ -39,7 +41,7 @@ namespace Orchard.Taxonomies.Handlers {
                 return;
             }
             base.UpdateEditorShape(context);
-            if(context.Updater.TryUpdateModel(part, "Term", null, null)) {
+            if (context.Updater.TryUpdateModel(part, "Term", null, null)) {
                 var existing = _taxonomyService.GetTermByName(part.TaxonomyId, part.Name);
                 if (existing != null && existing.Record != part.Record && existing.Container.ContentItem.Record == part.Container.ContentItem.Record) {
                     context.Updater.AddModelError("Name", T("The term {0} already exists at this level", part.Name));

@@ -40,7 +40,6 @@
                     }
                 });
 
-            angular.bootstrap($(".layout-editor-holder")[0], ["LayoutEditor"]);
 
             $(function () {
                 var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
@@ -59,6 +58,8 @@
                         e.preventDefault();
                     });
                 });
+
+                angular.bootstrap($(".layout-editor-holder")[0], ["LayoutEditor"]);
             });
 
         </script>

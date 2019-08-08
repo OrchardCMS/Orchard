@@ -1,0 +1,11 @@
+﻿@model Orchard.MediaLibrary.WebSearch.Models.PixabayWebSearchSettingsPart
+
+<fieldset>
+    <legend>@T("Pixabay Web Search")</legend>
+    <div>
+        @Html.TextBoxFor(m => m.ApiKey, new { type = "password", @class = "text medium" })
+        <span class="hint">@T("Your private key.")</span>
+    </div>
+
+    @T("Get a free API Key on <a href=\"https://pixabay.com/api/docs\">Pixabay</a>.")
+</fieldset>
