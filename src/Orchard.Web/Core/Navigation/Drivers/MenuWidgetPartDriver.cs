@@ -41,17 +41,20 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
+            var menu = _menuService.GetMenu(part.MenuContentItemId);
+            if (menu == null) {
+                return null;
+            }
+
+            var menuItems = _navigationManager.BuildMenu(menu);
+
+            var menuName = menu.As<TitlePart>().Title.HtmlClassify();
             if (part.Breadcrumb) {
+                var menuShape = shapeHelper.Breadcrumb();
+                menuShape.MenuName(menuName);
+                menuShape.ContentItem(menu);
                 return ContentShape("Parts_MenuWidget", () => {
-                    var menu = _menuService.GetMenu(part.MenuContentItemId);
-
-                    if (menu == null) {
-                        return null;
-                    }
-
-                    var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                     var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-                    var menuItems = _navigationManager.BuildMenu(menu);
                     menuItems = menuItems
                         .Where(mi => mi.Content == null // if there is no associated content, it is culture neutral
                             || string.IsNullOrEmpty(mi.Culture) // if the menu item is culture neutral or of the current culture
@@ -93,26 +96,17 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     menuItems = result;
-                    var menuShape = shapeHelper.Breadcrumb();
-
-                    menuShape.MenuName(menuName);
-                    menuShape.ContentItem(menu);
 
                     NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                     return shapeHelper.Parts_MenuWidget(Menu: menuShape);
                 });
             } else {
+                var menuShape = shapeHelper.Menu();
+                menuShape.MenuName(menuName);
+                menuShape.ContentItem(menu);
                 return ContentShape("Parts_MenuWidget", () => {
-                    var menu = _menuService.GetMenu(part.MenuContentItemId);
-
-                    if (menu == null) {
-                        return null;
-                    }
-
-                    var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                     var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-                    var menuItems = _navigationManager.BuildMenu(menu);
                     menuItems = menuItems
                         .Where(x => !x.Content.Has<BreadcrumbMenuItemPart>())
                         .Where(mi => mi.Content == null // if there is no associated content, it is culture neutral
@@ -122,7 +116,6 @@ namespace Orchard.Core.Navigation.Drivers {
                     var request = _workContextAccessor.GetContext().HttpContext.Request;
                     var routeData = request.RequestContext.RouteData;
                     var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);
-                    var menuShape = shapeHelper.Menu();
 
                     var topLevelItems = menuItems.ToList();
 
@@ -161,10 +154,7 @@ namespace Orchard.Core.Navigation.Drivers {
                         }
                     }
                     menuItems = topLevelItems;
-
-                    menuShape.MenuName(menuName);
-                    menuShape.ContentItem(menu);
-
+                    
                     NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                     return shapeHelper.Parts_MenuWidget(Menu: menuShape);

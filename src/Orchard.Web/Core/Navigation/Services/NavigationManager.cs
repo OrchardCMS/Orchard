@@ -52,7 +52,14 @@ namespace Orchard.Core.Navigation.Services {
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
+            return FinishMenu(
+                Reduce(
+                    Arrange(
+                        Filter(
+                            Merge(sources))),
+                    false,
+                    hasDebugShowAllMenuItems)
+                .ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
@@ -231,9 +238,9 @@ namespace Orchard.Core.Navigation.Services {
 
             foreach (var item in items) {
                 MenuItem parent;
-                var parentPosition = String.Empty;
+                var parentPosition = string.Empty;
 
-                var position = item.Position ?? String.Empty;
+                var position = item.Position ?? string.Empty;
 
                 var lastSegment = position.LastIndexOf('.');
                 if (lastSegment != -1) {
