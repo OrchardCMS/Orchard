@@ -8,6 +8,7 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 using Orchard.UI.Zones;
+using System.Diagnostics;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
@@ -56,8 +57,10 @@ namespace Orchard.ContentManagement {
             context.Layout = workContext.Layout;
 
             BindPlacement(context, actualDisplayType, stereotype);
-
+            var sw1 = Stopwatch.StartNew();
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
+            sw1.Stop();
+            Logger.Error($"BuildDisplay for {content.ContentItem.ContentType} {content.Id}: {sw1.ElapsedMilliseconds}");
             return context.Shape;
         }
 
