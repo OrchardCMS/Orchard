@@ -24,4 +24,12 @@ namespace Orchard.ContentManagement {
         public readonly IList<GroupInfo> DisplayGroupInfo = new List<GroupInfo>();
         public readonly IList<GroupInfo> EditorGroupInfo = new List<GroupInfo>();
     }
+
+    public enum ContentItemRoute {
+        Admin,
+        Create,
+        Editor,
+        Remove,
+        Display
+    }
 }

@@ -1,4 +1,4 @@
-﻿namespace Orchard.Projections {
+﻿namespace Orchard.Projections.Models {
     public enum QueryVersionScopeOptions {
         Published,
         Latest,

@@ -158,6 +158,7 @@
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerTypePartSettingsViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
+    <Compile Include="Contents\Controllers\ContentControllerBase.cs" />
     <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />

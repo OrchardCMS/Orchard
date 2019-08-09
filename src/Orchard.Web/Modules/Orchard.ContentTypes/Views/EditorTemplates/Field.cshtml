@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions
 @model Orchard.ContentTypes.ViewModels.EditPartFieldViewModel
 @{
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 <fieldset class="manage-field">
     <h3>@Model.DisplayName <span>(@Model.FieldDefinition.Name.CamelFriendly())</span></h3>
