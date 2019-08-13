@@ -1,15 +1,15 @@
-﻿var enhanceViewModel = function(viewModel) {
+﻿var enhanceViewModel = function (viewModel) {
     // extension point for other modules to alter the view model
 };
 
-var baseViewModel = function() {
+var baseViewModel = function () {
 
 };
 
 $(function () {
     (function (settings) {
 
-        function attachFolderTitleDropEvent (elements) {
+        function attachFolderTitleDropEvent(elements) {
             elements.droppable({
                 accept: function () {
                     var targetId = $(this).data('term-id');
@@ -47,7 +47,7 @@ $(function () {
                             folderPath: folderPath,
                             mediaItemIds: ids,
                             __RequestVerificationToken: settings.antiForgeryToken
-                        },
+                        }
                     }).done(function (result) {
                         if (result) {
                             if (viewModel.displayed()) {
@@ -67,7 +67,7 @@ $(function () {
                     });
                 }
             });
-        };
+        }
 
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
@@ -105,7 +105,7 @@ $(function () {
             self.selected = ko.observable();
             self.status = ko.observable('');
             self.summary = ko.observable('');
-            self.cssClass = ko.computed(function() {
+            self.cssClass = ko.computed(function () {
                 var css = '';
                 if (self.selected()) {
                     css += ' selected';
@@ -118,14 +118,14 @@ $(function () {
                 return css;
             });
 
-            self.mediaInfos = ko.computed(function () {
+            self.publicationStatus = ko.computed(function () {
                 var pubStatus = self.data.published ? "" : draftText;
                 var localization = (self.data.localization != "" ? "(" + self.data.localization + ")" : "");
                 return pubStatus + " " + localization;
             });
 
             // operations
-            self.setData = function(value) {
+            self.setData = function (value) {
                 self.data = value;
             };
         }
@@ -142,6 +142,11 @@ $(function () {
             self.focus = ko.observable();
             self.results = ko.observableArray();
             self.displayed = ko.observable();
+            self.isEveryItemSelected = ko.computed({
+                read: function () {
+                    return self.selection().length === self.results().length;
+                }
+            });
             self.mediaItemsCount = 0;
             self.orderMedia = ko.observableArray(['created']);
             self.mediaType = ko.observableArray([]);
@@ -150,7 +155,7 @@ $(function () {
             self.mediaFoldersRequestCount = ko.observable(0);
             self.mediaFoldersPendingRequest = ko.computed({
                 read: function () {
-                    return (self.mediaFoldersRequestCount() > 0);
+                    return self.mediaFoldersRequestCount() > 0;
                 },
                 write: function (value) {
                     if (value === true) {
@@ -164,7 +169,7 @@ $(function () {
             self.mediaPendingRequest = ko.observable(false);
             self.pendingRequest = ko.computed({
                 read: function () {
-                    return (self.mediaFoldersPendingRequest() || self.mediaPendingRequest());
+                    return self.mediaFoldersPendingRequest() || self.mediaPendingRequest();
                 },
                 write: function (value) {
                     self.mediaPendingRequest(value);
@@ -173,7 +178,7 @@ $(function () {
 
             self.getMediaItems = function (count, append) {
                 var folderPath = self.displayed() || '';
-                
+
                 if (self.mediaPendingRequest()) {
                     return;
                 }
@@ -189,13 +194,12 @@ $(function () {
                 self.pendingRequest(true);
 
                 var url = self.loadMediaItemsUrl(folderPath, self.results().length, count, self.orderMedia(), self.mediaType());
-                console.log(url);
-                
+
                 $.ajax({
                     type: "GET",
                     url: url,
                     cache: false
-                }).done(function(data) {
+                }).done(function (data) {
                     var mediaItems = data.mediaItems;
                     var mediaItemsFolderPath = data.folderPath;
 
@@ -216,35 +220,60 @@ $(function () {
                             }
                         }
                     }
-                }).fail(function(data) {
+
+                    self.updateSelectAllText();
+                }).fail(function (data) {
                     console.error(data);
-                }).always(function() {
+                }).always(function () {
                     self.pendingRequest(false);
                 });
             };
 
-            self.clearSelection = function() {
+            self.updateSelectAllText = function () {
+                var element = $("#select-all-button");
+
+                element.html(self.isEveryItemSelected() ? element.data("select-none-text") : element.data("select-all-text"));
+            };
+
+            self.updateAllSelection = function () {
+                if (self.isEveryItemSelected()) {
+                    self.clearSelection();
+                }
+                else {
+                    self.selectAll();
+                }
+
+                self.updateSelectAllText();
+            };
+
+            self.selectAll = function () {
+                self.results().forEach(function (item) {
+                    viewModel.toggleSelect(item, true);
+                });
+            };
+
+            self.clearSelection = function () {
                 this.focus(null);
                 // unselect previous elements
-                self.selection().forEach(function(item) {
+                self.selection().forEach(function (item) {
                     item.selected(false);
                 });
 
                 self.selection([]);
             };
 
-            self.focus.subscribe(function(oldValue) {
+            self.focus.subscribe(function (oldValue) {
                 if (oldValue) {
                     oldValue.hasFocus(false);
                 }
             }, this, "beforeChange");
 
-            self.afterRenderMediaFolderTemplate = function(elements, model) {
+            self.afterRenderMediaFolderTemplate = function (elements, model) {
                 var childTitles = $(elements).find(".media-library-folder-title");
                 attachFolderTitleDropEvent(childTitles);
             };
 
-            self.focus.subscribe(function(newValue) {
+            self.focus.subscribe(function (newValue) {
                 if (newValue) {
                     newValue.hasFocus(true);
 
@@ -257,21 +286,21 @@ $(function () {
                             type: "GET",
                             url: url,
                             cache: false
-                        }).done(function(data) {
+                        }).done(function (data) {
                             newValue.summary(data);
                         });
                     }
                 }
             });
 
-            self.displayFolder = function(folderPath) {
+            self.displayFolder = function (folderPath) {
                 self.results([]);
                 self.displayed(folderPath);
 
                 self.loadMediaItemsUrl = function (f, skip, count, order, mediaType) {
                     return settings.mediaItemsActionUrl + '?folderPath=' + encodeURIComponent(f) + '&skip=' + skip + '&count=' + count + '&order=' + order + '&mediaType=' + mediaType;
                 };
-                
+
                 self.getMediaItems(pageCount);
             };
 
@@ -280,22 +309,22 @@ $(function () {
                 self.displayFolder(folderPath);
             };
 
-            self.selectRecent = function() {
+            self.selectRecent = function () {
                 History.pushState({ action: 'selectRecent' }, '', '?recent');
 
                 self.loadMediaItemsUrl = function (folderPath, skip, count, order, mediaType) {
                     return settings.recentMediaItemsActionUrl + '?skip=' + skip + '&count=' + count + '&order=' + order + '&mediaType=' + mediaType;
                 };
-                
+
                 self.results([]);
                 self.displayed(null);
                 self.getMediaItems(pageCount);
             };
 
-            self.toggleSelect = function(searchResult, force) {
+            self.toggleSelect = function (searchResult, force) {
                 var index = $.inArray(searchResult, self.selection());
                 if (index == -1 || force) {
-                    self.selection.remove(function(item) { return item.data.id == searchResult.data.id; });
+                    self.selection.remove(function (item) { return item.data.id == searchResult.data.id; });
                     self.selection.push(searchResult);
                     searchResult.selected(true);
                 } else {
@@ -306,7 +335,7 @@ $(function () {
                 this.focus(searchResult);
             };
 
-            self.select = function(searchResult) {
+            self.select = function (searchResult) {
                 var index = $.inArray(searchResult, self.selection());
                 if (index == -1) {
                     self.clearSelection();
@@ -317,14 +346,14 @@ $(function () {
                 this.focus(searchResult);
             };
 
-            self.scrolled = function(data, event) {
+            self.scrolled = function (data, event) {
                 var elem = event.target;
                 if (elem.scrollTop > (elem.scrollHeight - elem.offsetHeight - 300)) {
                     self.getMediaItems(pageCount, true);
                 }
             };
 
-            self.importMedia = function() {
+            self.importMedia = function () {
                 var url = settings.importActionUrl + '?folderPath=' + encodeURIComponent(self.displayed());
                 window.location = url;
             };
@@ -339,7 +368,8 @@ $(function () {
                 viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
                 var actionurl = url + '?folderPath=' + encodeURIComponent(folder) + "&replaceId=" + encodeURIComponent(ids[0]);
                 window.location = actionurl;
-            }
+            };
+
             var selectFolderOrRecent = function () {
                 if (self.displayed()) {
                     self.selectFolder(self.displayed());
@@ -368,13 +398,13 @@ $(function () {
 
             self.isExpanded = ko.observable(false);
 
-            self.isSelected = ko.computed(function() {
+            self.isSelected = ko.computed(function () {
                 return (self.mediaIndexViewModel.displayed() == self.folderPath());
             });
 
             self.fetchChildren = function (deepestChildPath) {
                 self.childFoldersFetchStatus = 1;
-                
+
                 var getChildFolderListUrl = function (f) {
                     return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
                 };
@@ -450,7 +480,7 @@ $(function () {
         });
 
         enhanceViewModel(viewModel);
-        
+
         ko.applyBindings(viewModel);
 
         if (settings.hasFolderPath && settings.folderPath != settings.rootFolderPath) {
@@ -478,7 +508,7 @@ $(function () {
             History.pushState({ action: 'selectRecent' }, '', '?recent');
         }
 
-        window.onpopstate = function(event) {
+        window.onpopstate = function (event) {
             if (event && event.state && event.state.action == 'displayFolder') {
                 viewModel.displayFolder(event.state.folder);
             }
@@ -488,7 +518,7 @@ $(function () {
             }
         };
 
-        $("#media-library-main-list").on("mousedown", "li", function(e) {
+        $("#media-library-main-list").on("mousedown", "li", function (e) {
             // only for left click
             if (e.which != 1) {
                 return;
@@ -500,46 +530,49 @@ $(function () {
             } else {
                 viewModel.select(searchResult);
             }
-        }).on("contextmenu", "li", function() {
+        }).on("contextmenu", "li", function () {
             var searchResult = ko.dataFor(this);
             viewModel.toggleSelect(searchResult);
             return false;
         });
 
         var pickAndClose = function () {
-        	if (parent.$.colorbox) {
-        		var selectedData = [];
-        		for (var i = 0; i < viewModel.selection().length; i++) {
-        			var selection = viewModel.selection()[i];
-        			selectedData.push(selection.data);
-        		}
-        		parent.$.colorbox.selectedData = selectedData;
-        		parent.$.colorbox.close();
-        	};
-        }
+            if (parent.$.colorbox) {
+                var selectedData = [];
+                for (var i = 0; i < viewModel.selection().length; i++) {
+                    var selection = viewModel.selection()[i];
+                    selectedData.push(selection.data);
+                }
+                parent.$.colorbox.selectedData = selectedData;
+                parent.$.colorbox.close();
+            }
+        };
 
         $("#media-library-main-selection-select > .button-select").on('click', function () {
-        	pickAndClose();
+            pickAndClose();
+        });
+
+        $("#select-all-button").on('click', function () {
+            viewModel.updateAllSelection();
         });
 
         $("#media-library-main-list").on('dblclick', function () {
-        	pickAndClose();
+            pickAndClose();
         });
 
-        $("#media-library-main-selection-select > .button-cancel").on('click', function() {
+        $("#media-library-main-selection-select > .button-cancel").on('click', function () {
             if (parent.$.colorbox) {
                 parent.$.colorbox.selectedData = null;
                 parent.$.colorbox.close();
             }
-            ;
         });
 
-        $("#media-library-main-list").on("mouseover", ".media-thumbnail", function() {
+        $("#media-library-main-list").on("mouseover", ".media-thumbnail", function () {
             if (!$(this).hasClass("ui-draggable")) {
                 $(this).draggable({
                     revert: 'invalid',
                     //containment: 'li',
-                    helper: function(event) {
+                    helper: function (event) {
                         var clone = $(event.currentTarget).clone().removeAttr('id');
                         clone.removeClass('selected');
                         clone.addClass('dragged-selection');
@@ -554,7 +587,7 @@ $(function () {
                     cursor: 'move',
                     distance: 10,
                     appendTo: 'body',
-                    create: function() {
+                    create: function () {
                         // position the handler a little left to the center to let the number of selected items to appear
                         $(this).draggable("option", "cursorAt", { left: $(this).width() / 2 - 20, top: $(this).height() / 2 });
                     }
@@ -562,13 +595,13 @@ $(function () {
             }
         });
 
-        $('#delete-selection-button').click(function() {
+        $('#delete-selection-button').click(function () {
             if (!confirm(settings.deleteConfirmationMessage)) {
                 return false;
             }
 
             var ids = [];
-            viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
+            viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
             var url = settings.deleteActionUrl;
 
             $.ajax({
@@ -580,9 +613,9 @@ $(function () {
                     mediaItemIds: ids,
                     __RequestVerificationToken: settings.antiForgeryToken
                 }
-            }).done(function(result) {
+            }).done(function (result) {
                 if (result) {
-                    viewModel.results.remove(function(item) {
+                    viewModel.results.remove(function (item) {
                         return ids.indexOf(item.data.id) != -1;
                     });
 
@@ -632,4 +665,4 @@ $(function () {
         });
 
     })(window.mediaLibrarySettings);
-})
+});

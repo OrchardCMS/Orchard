@@ -47,7 +47,7 @@
                             @Display(BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
                                 <h3>@Html.ItemDisplayText(contentItem)</h3>
-                                <p class="publication-status" data-bind="text: mediaInfos">
+                                <p class="publication-status" data-bind="text: publicationStatus">
                                     @(contentItem.IsPublished() ? "" : T("Draft").Text)
                                     @{
                                         var localizationPart = contentItem.As<LocalizationPart>();

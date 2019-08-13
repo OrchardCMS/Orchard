@@ -44,7 +44,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public Localizer T { get; set; }
-        public Logging.ILogger Logger { get; set;  }
+        public Logging.ILogger Logger { get; set; }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
             // instantiates the appropriate package repository
@@ -54,7 +54,9 @@ namespace Orchard.Packaging.Services {
             var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
             var package = packageRepository.FindPackage(packageId, packageVersion);
             if (package == null) {
-                throw new ArgumentException(T("The specified package could not be found, id:{0} version:{1}", packageId, String.IsNullOrEmpty(version) ? T("No version").Text : version).Text);
+                var message = T("The specified package could not be found: ID: {0}, version: {1}.",
+                    packageId, string.IsNullOrEmpty(version) ? T("No version").Text : version);
+                throw new OrchardException(message);
             }
 
             return InstallPackage(package, packageRepository, location, applicationPath);
@@ -92,8 +94,8 @@ namespace Orchard.Packaging.Services {
             // check the new package is compatible with current Orchard version
             var descriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
 
-            if(descriptor != null) {
-                if(new FlatPositionComparer().Compare(descriptor.OrchardVersion, typeof(ContentItem).Assembly.GetName().Version.ToString()) >= 0) {
+            if (descriptor != null) {
+                if (new FlatPositionComparer().Compare(descriptor.OrchardVersion, typeof(ContentItem).Assembly.GetName().Version.ToString()) >= 0) {
                     if (previousInstalled) {
                         // restore the previous version
                         RestoreExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
@@ -105,7 +107,7 @@ namespace Orchard.Packaging.Services {
 
                     Logger.Error(String.Format("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
                     throw new OrchardException(T("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
-                }    
+                }
             }
 
             return packageInfo;
@@ -134,8 +136,8 @@ namespace Orchard.Packaging.Services {
                     var packageManager = new NuGetPackageManager(
                         packageRepository,
                         new DefaultPackagePathResolver(sourceLocation),
-                        new PhysicalFileSystem(installedPackagesPath) {Logger = logger}
-                        ) {Logger = logger};
+                        new PhysicalFileSystem(installedPackagesPath) { Logger = logger }
+                        ) { Logger = logger };
 
                     packageManager.InstallPackage(package, true);
                     installed = true;
@@ -181,7 +183,8 @@ namespace Orchard.Packaging.Services {
 
             if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
                 extensionFullPath = _virtualPathProvider.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
-            } else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+            }
+            else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
                 extensionFullPath = _virtualPathProvider.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
             }
 
@@ -201,13 +204,13 @@ namespace Orchard.Packaging.Services {
                 var sourcePackageRepository = new LocalPackageRepository(installedPackagesPath);
 
                 try {
-                    var project = new FileBasedProjectSystem(applicationPath) {Logger = logger};
+                    var project = new FileBasedProjectSystem(applicationPath) { Logger = logger };
                     var projectManager = new ProjectManager(
                         sourcePackageRepository,
                         new DefaultPackagePathResolver(installedPackagesPath),
                         project,
                         new ExtensionReferenceRepository(project, sourcePackageRepository, _extensionManager)
-                        ) {Logger = logger};
+                        ) { Logger = logger };
 
                     // add the package to the project
                     projectManager.RemovePackageReference(packageId);
@@ -220,8 +223,8 @@ namespace Orchard.Packaging.Services {
                     var packageManager = new NuGetPackageManager(
                         sourcePackageRepository,
                         new DefaultPackagePathResolver(applicationPath),
-                        new PhysicalFileSystem(installedPackagesPath) {Logger = logger}
-                        ) {Logger = logger};
+                        new PhysicalFileSystem(installedPackagesPath) { Logger = logger }
+                        ) { Logger = logger };
 
                     packageManager.UninstallPackage(packageId);
                 }
@@ -314,7 +317,7 @@ namespace Orchard.Packaging.Services {
                 Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
                 _notifier.Success(T("Successfully un-installed local package {0}", package.ExtensionId()));
             }
-            catch {}
+            catch { }
         }
     }
 }

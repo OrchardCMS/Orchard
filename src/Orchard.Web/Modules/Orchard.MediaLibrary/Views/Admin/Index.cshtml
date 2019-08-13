@@ -22,6 +22,11 @@
         <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
         
         @Display(Model.CustomActionsShapes)
+        <button class="button" id="select-all-button"
+                data-select-all-text="@T("Select All")" data-select-none-text="@T("Select None")"
+                data-bind="visible: results().length > 0">
+            @T("Select All")
+        </button>
     </div>
     <div id="media-library-main">
         <div id="media-library-main-navigation">
@@ -43,7 +48,7 @@
                         </div>
                         <div class="media-library-main-list-overlay">
                             <p class="title" data-bind="text: data.title, attr: { title: data.title }"></p>
-                            <p class="publication-status" data-bind="text: mediaInfos"></p>
+                            <p class="publication-status" data-bind="text: publicationStatus"></p>
                         </div>
                     </li>
                 </ul>
