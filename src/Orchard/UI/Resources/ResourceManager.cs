@@ -62,7 +62,7 @@ namespace Orchard.UI.Resources {
 
         private static string ToPhysicalPath(string resourcePath) {
             if (!String.IsNullOrEmpty(resourcePath) && (VirtualPathUtility.IsAppRelative(resourcePath) || VirtualPathUtility.IsAbsolute(resourcePath)) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute) && !resourcePath.StartsWith("//")) {
-                return HostingEnvironment.MapPath(resourcePath);
+                return HostingEnvironment.MapPath(resourcePath.Split(new[] { '?' })[0]);
             }
             return null;
         }
