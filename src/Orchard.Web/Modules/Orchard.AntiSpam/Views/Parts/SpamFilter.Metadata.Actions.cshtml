@@ -5,10 +5,10 @@
 }
 
 @if (Model.ContentPart.Status == SpamStatus.Spam) {
-    @Html.Link(@T("Not Spam").Text, Url.Action("ReportHam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+    @Html.Link(@T("Not Spam").Text, Url.Action("ReportHam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
 }
 else {
-    @Html.Link(@T("Spam").Text, Url.Action("ReportSpam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+    @Html.Link(@T("Spam").Text, Url.Action("ReportSpam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
 }
 
 @T(" | ")

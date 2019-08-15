@@ -28,7 +28,7 @@ else if (WorkContext.CurrentUser != null && !isAuthorized) {
 else if (isAuthorized) {
     @Html.ValidationSummary() 
     <span id="comment-form-beacon"></span>
-    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "comment-form" })) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.RawUrl }), FormMethod.Post, new { @class = "comment-form" })) {
         if (TempData.ContainsKey("Comments.InvalidCommentEditorShape")) {
             @Display(TempData["Comments.InvalidCommentEditorShape"]);
         }

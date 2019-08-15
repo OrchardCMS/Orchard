@@ -39,7 +39,7 @@
                         @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
                         @if (row.Name != "Administrator") {
                             @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
+                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
                         }
                     </td>
                 </tr>
