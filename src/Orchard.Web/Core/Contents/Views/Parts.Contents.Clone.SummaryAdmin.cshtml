@@ -4,6 +4,9 @@
   ContentPart contentPart = Model.ContentPart;
 }
 @if (Authorizer.Authorize(Permissions.CreateContent, contentPart)) {
-    <a href="@Url.Action("Clone", "Admin", new { Id = Model.ContentItem.Id, Area = "Contents" })" itemprop="UnsafeUrl">@T("Clone")</a>
-    @T(" | ")
+    <ul class="action-links action-links-item">
+        <li class="action-link">
+            <a href="@Url.Action("Clone", "Admin", new { Id = Model.ContentItem.Id, ReturnUrl = Request.RawUrl, Area = "Contents" })" itemprop="UnsafeUrl">@T("Clone")</a>
+        </li>
+    </ul>
 }

@@ -42,7 +42,7 @@
                             </li>
                             @if (row.Name != "Administrator") {
                                 <li class="action-link">
-                                    <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                    <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
                                 </li>
                             }
                         </ul>

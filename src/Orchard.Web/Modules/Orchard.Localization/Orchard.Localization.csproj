@@ -105,7 +105,6 @@
     <Compile Include="Controllers\AdminCultureSelectorController.cs" />
     <Compile Include="Extensions\MetaDataExtensions.cs" />
     <Compile Include="Handlers\LocalizationCultureNeutralityHandler.cs" />
-    <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\ContentLocalizationTokens.cs" />
     <Compile Include="Selectors\ContentCultureSelector.cs" />

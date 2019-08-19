@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
-using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc;
 using Orchard.Settings;
@@ -24,14 +22,25 @@ namespace Orchard.UI.Resources {
         };
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
-        private readonly Work<WorkContext> _workContext;
-        private readonly Work<IHttpContextAccessor> _httpContextAccessor;
+        private readonly Lazy<IWorkContextAccessor> _wcaLazy;
+        private readonly Lazy<IHttpContextAccessor> _hcaLazy;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
         private const string NotIE = "!IE";
+
+
+        public ResourceManager(
+            IEnumerable<Meta<IResourceManifestProvider>> resourceProviders,
+            Lazy<IWorkContextAccessor> wcaLazy,
+            Lazy<IHttpContextAccessor> hcaLazy) {
+            _providers = resourceProviders;
+            _wcaLazy = wcaLazy;
+            _hcaLazy = hcaLazy;
+        }
+
 
         private static string ToAppRelativePath(string resourcePath) {
             if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute) && !resourcePath.StartsWith("//")) {
@@ -83,14 +92,14 @@ namespace Orchard.UI.Resources {
             }
 
             var tagBuilder = GetTagBuilder(resource, url);
-            
+
             if (attributes != null) {
                 // todo: try null value
                 tagBuilder.MergeAttributes(attributes, true);
             }
 
             writer.WriteLine(tagBuilder.ToString(resource.TagRenderMode));
-            
+
             if (!string.IsNullOrEmpty(condition)) {
                 if (condition == NotIE) {
                     writer.WriteLine("<!--<![endif]-->");
@@ -99,15 +108,6 @@ namespace Orchard.UI.Resources {
                     writer.WriteLine("<![endif]-->");
                 }
             }
-        }
-
-        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders,
-            Work<WorkContext> workContext,
-            Work<IHttpContextAccessor> httpContextAccessor
-            ) {
-            _providers = resourceProviders;
-            _workContext = workContext;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public IEnumerable<IResourceManifest> ResourceProviders {
@@ -352,7 +352,7 @@ namespace Orchard.UI.Resources {
             }
 
             var index = meta.Name ?? meta.HttpEquiv;
-            
+
             if (String.IsNullOrEmpty(index)) {
                 return;
             }
@@ -366,8 +366,8 @@ namespace Orchard.UI.Resources {
 
         private string GetResourceKey(string releasePath, string debugPath) {
             bool debugMode;
-            var site = _workContext.Value.CurrentSite;
-            switch (site.ResourceDebugMode) {
+
+            switch (_wcaLazy.Value.GetContext().CurrentSite.ResourceDebugMode) {
                 case ResourceDebugMode.Enabled:
                     debugMode = true;
                     break;
@@ -375,17 +375,11 @@ namespace Orchard.UI.Resources {
                     debugMode = false;
                     break;
                 default:
-                    Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    var context = _httpContextAccessor.Value.Current();
-                    debugMode = context != null && context.IsDebuggingEnabled;
+                    debugMode = _hcaLazy.Value.Current()?.IsDebuggingEnabled ?? false;
                     break;
             }
-            if (debugMode && !string.IsNullOrWhiteSpace(debugPath)) {
-                return debugPath;
-            }
-            else {
-                return releasePath;
-            }
+
+            return debugMode && !string.IsNullOrWhiteSpace(debugPath) ? debugPath : releasePath;
         }
     }
 }

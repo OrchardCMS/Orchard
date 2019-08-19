@@ -48,7 +48,7 @@
                             @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = tagEntry.Tag.Id })
                         </li>
                         <li class="action-link">
-                            <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                            <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                         </li>
                     </ul>
                 </td>
