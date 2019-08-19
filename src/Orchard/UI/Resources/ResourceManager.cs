@@ -177,7 +177,7 @@ namespace Orchard.UI.Resources {
             var resourcePhysicalPath = ToPhysicalPath(resourcePath);
             var resourceDebugPhysicalPath = ToPhysicalPath(resourceDebugPath);
 
-            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => {
+            return Require(resourceType, ToAppRelativePath(GetResourceKey(resourcePath, resourceDebugPath))).Define(d => {
                 d.SetUrl(resourcePath, resourceDebugPath);
                 if (resourcePhysicalPath != null)
                     d.SetPhysicalPath(resourcePhysicalPath, resourceDebugPhysicalPath);
