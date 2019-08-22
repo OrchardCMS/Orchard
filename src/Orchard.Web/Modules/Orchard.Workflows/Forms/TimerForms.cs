@@ -46,7 +46,7 @@ namespace Orchard.Workflows.Forms {
         }
     }
 
-    public class ScheduleFormsValitator : FormHandler {
+    public class ScheduleFormsValidator : FormHandler {
         public Localizer T { get; set; }
 
         public override void Validating(ValidatingContext context) {
