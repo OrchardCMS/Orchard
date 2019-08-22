@@ -22,7 +22,11 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITokenizer _tokenizer;
         private readonly IContentManager _contentManager;
 
-        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer, IContentManager contentManager)
+        public TaxonomyElementDriver(
+            IFormsBasedElementServices formsServices,
+            ITaxonomyService taxonomyService,
+            ITokenizer tokenizer,
+            IContentManager contentManager)
             : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
@@ -151,21 +155,21 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnExporting(Taxonomy element, ExportElementContext context) {
-            var taxonomy = element.TaxonomyId != null ? _contentManager.Get<TaxonomyPart>(element.TaxonomyId.Value) : default(TaxonomyPart);
-            var taxonomyIdentity = taxonomy != null ? _contentManager.GetItemMetadata(taxonomy).Identity.ToString() : default(string);
+            var taxonomy = _contentManager.Get<TaxonomyPart>(element.TaxonomyId ?? 0);
 
-            if (taxonomyIdentity != null)
-                context.ExportableData["TaxonomyId"] = taxonomyIdentity;
+            if (taxonomy == null) return;
+
+            var taxonomyIdentity = _contentManager.GetItemMetadata(taxonomy)?.Identity?.ToString();
+
+            if (string.IsNullOrEmpty(taxonomyIdentity)) context.ExportableData["TaxonomyId"] = taxonomyIdentity;
         }
 
         protected override void OnImportCompleted(Taxonomy element, ImportElementContext context) {
             var taxonomyIdentity = context.ExportableData.Get("TaxonomyId");
-            var taxonomy = taxonomyIdentity != null ? context.Session.GetItemFromSession(taxonomyIdentity) : default(ContentManagement.ContentItem);
+
+            var taxonomy = string.IsNullOrEmpty(taxonomyIdentity) ? context.Session.GetItemFromSession(taxonomyIdentity) : null;
             
-            if (taxonomy == null)
-                return;
-            
-            element.TaxonomyId = taxonomy.Id;
+            if (taxonomy != null) element.TaxonomyId = taxonomy.Id;
         }
 
         private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, string displayType, int? taxonomyId, IDictionary<string, object> tokenData) {
