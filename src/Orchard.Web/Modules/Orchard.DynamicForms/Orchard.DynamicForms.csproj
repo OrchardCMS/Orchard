@@ -26,6 +26,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -274,7 +275,6 @@
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
-    <Compile Include="Drivers\ValidationElementDriver.cs" />
     <Compile Include="Drivers\BindingsElementDriver.cs" />
     <Compile Include="Drivers\TaxonomyElementDriver.cs" />
     <Compile Include="Drivers\HiddenFieldElementDriver.cs" />
