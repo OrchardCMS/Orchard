@@ -29,11 +29,13 @@ namespace Orchard.Localization.Services {
             if (localized == null)
                 return null;
 
+            int masterContentItemId = localized.HasTranslationGroup ? localized.Record.MasterContentItemId : localized.Id;
+
             // Warning: Returns only the first of same culture localizations.
             return _contentManager
                 .Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType)
                 .Where<LocalizationPartRecord>(l =>
-                (l.Id == content.ContentItem.Id || l.MasterContentItemId == content.ContentItem.Id)
+                (l.Id == masterContentItemId || l.MasterContentItemId == masterContentItemId)
                 && l.CultureId == cultureRecord.Id)
                 .Slice(1)
                 .FirstOrDefault();
