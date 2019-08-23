@@ -103,7 +103,7 @@ namespace Orchard.Projections.Providers.Layouts {
         }
     }
 
-    public class GridLayoutFormsValitator : FormHandler {
+    public class GridLayoutFormsValidator : FormHandler {
         public Localizer T { get; set; }
 
         public override void Validating(ValidatingContext context) {

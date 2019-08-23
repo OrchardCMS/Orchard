@@ -1,7 +1,9 @@
 ﻿@model Orchard.Layouts.ViewModels.MenuEditorViewModel
+
 @{
     var menuOptions = Model.Menus.Select(x => new SelectListItem {Text = Html.ItemDisplayText(x).ToString(), Value = x.Id.ToString(), Selected = x.Id == Model.CurrentMenuId});
 }
+
 <fieldset>
     @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
     @Html.DropDownListFor(m => m.CurrentMenuId, menuOptions)

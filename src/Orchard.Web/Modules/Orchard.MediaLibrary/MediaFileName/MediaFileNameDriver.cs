@@ -61,8 +61,11 @@ namespace Orchard.MediaLibrary.MediaFileName
                                 try {
                                     _mediaLibraryService.RenameFile(part.FolderPath, priorFileName, model.FileName);
                                     part.FileName = model.FileName;
-                                    
+
                                     _notifier.Add(NotifyType.Success, T("File '{0}' was renamed to '{1}'", priorFileName, model.FileName));
+                                }
+                                catch (OrchardException) {
+                                    updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file. Invalid Windows file path."));
                                 }
                                 catch (Exception) {
                                     updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file"));
