@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Orchard.Modules.Models;
 using Orchard.Recipes.Models;
 
-namespace Orchard.Modules.ViewModels {
+namespace Orchard.Recipes.ViewModels {
     public class RecipesViewModel {
         public IEnumerable<ModuleRecipesViewModel> Modules { get; set; }
     }

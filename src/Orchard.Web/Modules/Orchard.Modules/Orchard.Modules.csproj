@@ -116,7 +116,6 @@
     <Compile Include="Services\IModuleService.cs" />
     <Compile Include="Models\ModuleEntry.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
-    <Compile Include="ViewModels\RecipesViewModel.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,9 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ModuleEntry.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\Recipes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\features.admin.js" />
