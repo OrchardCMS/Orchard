@@ -303,7 +303,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        [Ignore("To be implemented")]
+
         public void ResetPasswordLinkShouldBeSent() {
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
