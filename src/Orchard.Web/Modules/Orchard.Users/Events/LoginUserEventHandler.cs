@@ -29,7 +29,7 @@ namespace Orchard.Users.Events {
 
         public void AccessDenied(IUser user) { }
 
-        public void ChangedPassword(IUser user) { }
+        public void ChangedPassword(IUser user, string password) { }
 
         public void SentChallengeEmail(IUser user) { }
 

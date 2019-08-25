@@ -297,7 +297,7 @@ namespace Orchard.Users.Controllers {
 
                 if (validated != null) {
                     _membershipService.SetPassword(validated, newPassword);
-                    _userEventHandler.ChangedPassword(validated);
+                    _userEventHandler.ChangedPassword(validated, newPassword);
 
                     // if security settings tell to invalidate on password change fire the LoggedOut event
                     if (_orchardServices.WorkContext.CurrentSite.As<SecuritySettingsPart>().ShouldInvalidateAuthOnPasswordChanged) {
@@ -353,7 +353,7 @@ namespace Orchard.Users.Controllers {
 
             _membershipService.SetPassword(user, newPassword);
 
-            _userEventHandler.ChangedPassword(user);
+            _userEventHandler.ChangedPassword(user, newPassword);
 
             return RedirectToAction("ChangePasswordSuccess");
         }
