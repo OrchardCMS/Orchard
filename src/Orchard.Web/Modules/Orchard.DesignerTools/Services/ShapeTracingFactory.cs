@@ -19,7 +19,6 @@ namespace Orchard.DesignerTools.Services {
     public class ShapeTracingFactory : IShapeFactoryEvents, IShapeDisplayEvents {
         private readonly WorkContext _workContext;
         private readonly IShapeTableManager _shapeTableManager;
-        private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
         private bool _processing;
@@ -28,14 +27,12 @@ namespace Orchard.DesignerTools.Services {
 
         public ShapeTracingFactory(
             IWorkContextAccessor workContextAccessor, 
-            IShapeTableManager shapeTableManager, 
-            IThemeManager themeManager, 
+            IShapeTableManager shapeTableManager,
             IWebSiteFolder webSiteFolder,
             IAuthorizer authorizer
             ) {
             _workContext = workContextAccessor.GetContext();
             _shapeTableManager = shapeTableManager;
-            _themeManager = themeManager;
             _webSiteFolder = webSiteFolder;
             _authorizer = authorizer;
         }
@@ -103,7 +100,7 @@ namespace Orchard.DesignerTools.Services {
 
             var shape = context.Shape;
             var shapeMetadata = (ShapeMetadata) context.Shape.Metadata;
-            var currentTheme = _themeManager.GetRequestTheme(_workContext.HttpContext.Request.RequestContext);
+            var currentTheme = _workContext.CurrentTheme;
             var shapeTable = _shapeTableManager.GetShapeTable(currentTheme.Id);
 
             if (!shapeMetadata.Wrappers.Contains("ShapeTracingWrapper")) {

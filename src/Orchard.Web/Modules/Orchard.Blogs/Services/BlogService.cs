@@ -17,7 +17,7 @@ namespace Orchard.Blogs.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly HashSet<int> _processedBlogParts = new HashSet<int>();
-        IPathResolutionService _pathResolutionService;
+        private readonly IPathResolutionService _pathResolutionService;
 
         public BlogService(
             IContentManager contentManager,

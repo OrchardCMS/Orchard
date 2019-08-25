@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.1
-OrchardVersion: 1.9
+Version: 1.10.3
+OrchardVersion: 1.10.3
 Description: The taxonomy module is providing custom categorization of arbitrary content types. 
 Features:
     Orchard.Taxonomies:
@@ -11,3 +11,8 @@ Features:
         Description: Categorize a content item.
         Category: Content
         Dependencies: Orchard.Autoroute, Title, Contents, Orchard.Tokens
+	Orchard.Taxonomies.LocalizationExtensions
+		Name: Taxonomies Localization Extensions
+        Description: Adds localization support to taxonomies
+        Category: Content
+		Dependencies: Orchard.Taxonomies, Orchard.Localization

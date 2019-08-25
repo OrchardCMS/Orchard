@@ -40,7 +40,7 @@ namespace Orchard.DynamicForms.Drivers {
 
             // Allow the initial value to be tokenized.
             // If a value was posted, use that value instead (without tokenizing it).
-            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue ?? "", tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

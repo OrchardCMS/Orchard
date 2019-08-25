@@ -15,13 +15,19 @@ namespace Orchard.Users.Handlers {
         public void Creating(UserContext context) {
             _workflowManager.TriggerEvent("UserCreating",
                                          context.User,
-                                         () => new Dictionary<string, object> {{"User", context}});
+                                         () => new Dictionary<string, object> {
+                                             {"User", context.User},
+                                             {"UserParameters", context.UserParameters}
+                                         });
         }
 
         public void Created(UserContext context) {
             _workflowManager.TriggerEvent("UserCreated",
                                          context.User,
-                                         () => new Dictionary<string, object> {{"User", context}});
+                                         () => new Dictionary<string, object> {
+                                             {"User", context.User},
+                                             {"UserParameters", context.UserParameters}
+                                         });
         }
 
         public void LoggingIn(string userNameOrEmail, string password) {
@@ -76,6 +82,12 @@ namespace Orchard.Users.Handlers {
             _workflowManager.TriggerEvent("UserApproved",
                                          user,
                                          () => new Dictionary<string, object> {{"User", user}});
+        }
+
+        public void Moderate(Security.IUser user) {
+            _workflowManager.TriggerEvent("UserDisabled",
+                                         user,
+                                         () => new Dictionary<string, object> { { "User", user } });
         }
     }
 }

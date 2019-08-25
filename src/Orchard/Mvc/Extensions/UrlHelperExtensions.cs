@@ -31,7 +31,9 @@ namespace Orchard.Mvc.Extensions {
             
             if(String.IsNullOrEmpty(baseUrl)) {
                 var workContextAccessor = urlHelper.RequestContext.GetWorkContext();
-                baseUrl = workContextAccessor.CurrentSite.BaseUrl;
+                if (workContextAccessor != null) {
+                    baseUrl = workContextAccessor.CurrentSite.BaseUrl;
+                }
 
                 if (String.IsNullOrWhiteSpace(baseUrl)) {
                     baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();

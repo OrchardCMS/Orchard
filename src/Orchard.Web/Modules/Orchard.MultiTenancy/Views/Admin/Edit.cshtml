@@ -48,7 +48,7 @@
             <div class="options">
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseConnectionString">@T("Connection string")</label>
-                    @Html.TextBoxFor(svm => svm.DatabaseConnectionString)
+                    @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
                     <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
                 </span>
                 <span data-controllerid="sqlDatabaseOption">

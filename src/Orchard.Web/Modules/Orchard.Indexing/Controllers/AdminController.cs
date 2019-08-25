@@ -83,8 +83,8 @@ namespace Orchard.Indexing.Controllers {
                 Services.Notifier.Success(T("Index named {0} created successfully", id));
             }
             catch(Exception e) {
-                Services.Notifier.Error(T("An error occured while creating the index: {0}", id));
-                Logger.Error("An error occured while creatign the index " + id, e);
+                Services.Notifier.Error(T("An error occurred while creating the index: {0}", id));
+                Logger.Error("An error occurred while creatign the index " + id, e);
                 return View("Create", id);
             }
 

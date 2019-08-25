@@ -1,0 +1,14 @@
+﻿@model Orchard.MediaLibrary.WebSearch.Models.GoogleWebSearchSettingsPart
+
+<fieldset>
+    <legend>@T("Google Web Search")</legend>
+    <div>
+        @Html.TextBoxFor(m => m.ApiKey, new { type = "password", @class = "text medium"})
+        <span class="hint">@T("Your private key.")</span>
+
+        @Html.TextBoxFor(m => m.SearchEngineId, new { type = "password", @class = "text medium"})
+        <span class="hint">@T("Your search engine ID aka cx.")</span>
+    </div>
+
+    @T("Get a free API Key on <a href=\"https://console.developers.google.com/\">Google API Console</a>. Also, you need to create custom search engine at <a href=\"https://cse.google.com/cse/create/new\">Google Custom Search<a> based on your search criteria.")
+</fieldset>

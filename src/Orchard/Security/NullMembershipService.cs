@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Orchard.Localization;
 
 namespace Orchard.Security {
     /// <summary>
@@ -11,7 +13,7 @@ namespace Orchard.Security {
             throw new NotImplementedException();
         }
 
-        public MembershipSettings GetSettings() {
+        public IMembershipSettings GetSettings() {
             throw new NotImplementedException();
         }
 
@@ -23,7 +25,11 @@ namespace Orchard.Security {
             throw new NotImplementedException();
         }
 
-        public IUser ValidateUser(string userNameOrEmail, string password) {
+        public IUser ValidateUser(string userNameOrEmail, string password, out List<LocalizedString> validationErrors) {
+            throw new NotImplementedException();
+        }
+
+        public bool PasswordIsExpired(IUser user, int weeks) {
             throw new NotImplementedException();
         }
     }

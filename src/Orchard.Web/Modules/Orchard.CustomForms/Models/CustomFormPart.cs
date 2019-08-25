@@ -10,11 +10,21 @@ namespace Orchard.CustomForms.Models {
             set { Record.ContentType = value; }
         }
 
+        public bool UseContentTypePermissions {
+            get { return Record.UseContentTypePermissions; }
+            set { Record.UseContentTypePermissions = value; }
+        }
+
         public bool SaveContentItem {
             get { return Record.SaveContentItem; }
             set { Record.SaveContentItem = value; }
         }
 
+        public bool SavePublishContentItem {
+            get { return Record.SavePublishContentItem; }
+            set { Record.SavePublishContentItem = value; }
+        }
+        
         public bool CustomMessage {
             get { return Record.CustomMessage; }
             set { Record.CustomMessage = value; }
@@ -39,6 +49,12 @@ namespace Orchard.CustomForms.Models {
         public string SubmitButtonText {
             get { return Record.SubmitButtonText; }
             set { Record.SubmitButtonText = value; }
+        }
+
+        
+        public string PublishButtonText {
+            get { return Record.PublishButtonText; }
+            set { Record.PublishButtonText = value; }
         }
 
         public string Title {

@@ -1,29 +1,58 @@
-﻿@using Orchard.Core.Contents.ViewModels;
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Security;
+
 @{
+    IOrchardServices _orchardServices;
+    WorkContext.TryResolve<IOrchardServices>(out _orchardServices);
+
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
-    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+    // if no specific type is selected, we assume we should show the "Create" button
+    var showCreateContentButton = string.IsNullOrWhiteSpace(typeDisplayName);
+    IAuthorizationService _authorizationService;
+    WorkContext.TryResolve<IAuthorizationService>(out _authorizationService);
+
+    if (!showCreateContentButton) {
+        // being here it means there is a specific type we are considering
         pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
         createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
+        var permission = DynamicPermissions
+            .CreateDynamicPermission(DynamicPermissions.PermissionTemplates[Permissions.CreateContent.Name], Model.ContentType);
+        if (_authorizationService.TryCheckAccess(permission, WorkContext.CurrentUser, null)) {
+            showCreateContentButton = true;
+        }
     }
 
     IEnumerable<string> cultures = Model.Options.Cultures;
-    
+
     Layout.Title = pageTitle.Text;
 }
-
+@if (showCreateContentButton) {
 <div class="manage">
-    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
-</div>
+    @{
+        if (!String.IsNullOrWhiteSpace((string)Model.Options.SelectedFilter)) {
+            var content = _orchardServices.ContentManager.New(Model.Options.SelectedFilter);
+            ContentItemMetadata metadata = _orchardServices.ContentManager.GetItemMetadata(content);
 
+            var url = Url.RouteUrl(metadata.CreateRouteValues);
+            <a class="button primaryAction" href="@url">@createLinkText.Text</a>
+        } else {
+            @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" });
+        }
+    }
+</div>
+}
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
-        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
+        <label><input type="checkbox" class="check-all" />@T("Select all")</label>
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
         </select>
@@ -54,7 +83,7 @@
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
         </select>
-        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+        <label for="contentResults" class="bulk-filter">@T("Filter by")</label>
         <select id="contentResults" name="Options.ContentsStatus">
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Owner, T("owned by me").ToString())
             @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
@@ -65,7 +94,7 @@
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
-@Display(Model.ContentItems)
+        @Display(Model.ContentItems)
     </fieldset>
-@Display(Model.Pager)
+    @Display(Model.Pager)
 }

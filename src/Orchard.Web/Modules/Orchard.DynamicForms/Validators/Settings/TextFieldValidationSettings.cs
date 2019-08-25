@@ -5,5 +5,6 @@ namespace Orchard.DynamicForms.Validators.Settings {
         public bool? IsRequired { get; set; }
         public int? MinimumLength { get; set; }
         public int? MaximumLength { get; set; }
+        public string ValidationExpression { get; set; }
     }
 }

@@ -22,7 +22,7 @@ Scenario: I can create a new user
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "User created"
     When I follow "Add a new user"
@@ -33,7 +33,7 @@ Scenario: I can create a new user
         | Password | a12345! |
         | ConfirmPassword | a12345! |
         | UserRoles.Roles[0].Granted | true |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "User created"
         And I should see "Adding role Administrator to user user2"
@@ -49,7 +49,7 @@ Scenario: I can create a new user
         | UserRoles.Roles[2].Granted | true |
         | UserRoles.Roles[3].Granted | true |
         | UserRoles.Roles[4].Granted | true |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "User created"
         And I should see "Adding role Administrator to user user3"
@@ -58,11 +58,13 @@ Scenario: I can create a new user
         And I should see "Adding role Author to user user3"
         And I should see "Adding role Contributor to user user3"
     When I follow "Add a new user"
-        And I hit "Save"
+        And I hit "Publish"
     Then I should see "The UserName field is required."
     Then I should see "The Email field is required."
+    Then I should see "You must specify a valid email address."
     Then I should see "The Password field is required."
     Then I should see "The ConfirmPassword field is required."
+    Then I should see "The password can&#39;t be empty."
     When I go to "admin/users"
         And I follow "Add a new user"
         And I fill in
@@ -71,21 +73,29 @@ Scenario: I can create a new user
         | Email | user4@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a123456! |
-        And I hit "Save"
+        And I hit "Publish"
     Then I should see "Password confirmation must match"
 
 @management
 Scenario: I can edit an existing user
     Given I have installed Orchard
+    When I go to "Admin/ContentTypes/Edit/User"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"User\" settings have been saved."
     When I go to "admin/users"
-        And I follow "Add a new user"
+    Then I should see "Users"
+    When I follow "Add a new user"
         And I fill in
         | name | value |
         | UserName | user1 |
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "User created"
     When I fill in
@@ -98,7 +108,7 @@ Scenario: I can edit an existing user
         | name | value |
         | UserName | user2 |
         | Email | user2@domain.com |
-        And I hit "Save"
+        And I hit "Save Draft"
         And I am redirected
     Then I should see "User information updated"
         And I should see "<a[^>]*>user2</a>"
@@ -107,6 +117,13 @@ Scenario: I can edit an existing user
 @management
 Scenario: I should not be able to reuse an existing username or email
     Given I have installed Orchard
+    When I go to "Admin/ContentTypes/Edit/User"
+        And I fill in
+        | name                                   | value |
+        | ContentTypeSettingsViewModel.Draftable | true  |
+        And I hit "Save"
+        And I am redirected
+    Then I should see "\"User\" settings have been saved."
     When I go to "admin/users"
 # create user1
         And I follow "Add a new user"
@@ -116,7 +133,7 @@ Scenario: I should not be able to reuse an existing username or email
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
 # create user2
         And I follow "Add a new user"
@@ -126,7 +143,7 @@ Scenario: I should not be able to reuse an existing username or email
         | Email | user2@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "<a[^>]*>user1</a>"
         And I should see "<a[^>]*>user2</a>"
@@ -141,17 +158,16 @@ Scenario: I should not be able to reuse an existing username or email
         | name | value |
         | UserName | user2 |
         | Email | user1@domain.com |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "User with that username and/or email already exists."
     When I fill in
         | name | value |
         | UserName | user1 |
         | Email | user2@domain.com |
-        And I hit "Save"
+        And I hit "Save Draft"
     Then I should see "User with that username and/or email already exists."
 
 @management
-@ignore
 Scenario: I should be able to remove an existing user
     Given I have installed Orchard
     When I go to "admin/users"
@@ -163,7 +179,7 @@ Scenario: I should be able to remove an existing user
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "<a[^>]*>user1</a>"
 # filtering on 'user1' to have only one Delete link to follow
@@ -172,7 +188,7 @@ Scenario: I should be able to remove an existing user
         | Options.Search | user1 |
         And I hit "Filter"
     Then I should see "<a[^>]*>user1</a>"
-    When I follow "Delete"
+        When I hit "Delete"
         And I am redirected
     Then I should see "User user1 deleted"
         And I should not see "<a[^>]*>user1</a>"
@@ -189,7 +205,7 @@ Scenario: I should not be able to filter users by name
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
 # create user2
         And I follow "Add a new user"
@@ -199,7 +215,7 @@ Scenario: I should not be able to filter users by name
         | Email | user2@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "<a[^>]*>user1</a>"
         And I should see "<a[^>]*>user2</a>"
@@ -237,7 +253,7 @@ Scenario: I should be able to filter users by status
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
 # create user2
         And I follow "Add a new user"
@@ -247,7 +263,7 @@ Scenario: I should be able to filter users by status
         | Email | user2@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "<a[^>]*>user1</a>"
         And I should see "<a[^>]*>user2</a>"
@@ -302,7 +318,7 @@ Scenario: I should not be able to add users with invalid email addresses
         | Email | NotAnEmail |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
     Then I should see "You must specify a valid email address."
 @email
 Scenario: I should be able to add users with valid email addresses
@@ -315,6 +331,6 @@ Scenario: I should be able to add users with valid email addresses
         | Email | user1@domain.com |
         | Password | a12345! |
         | ConfirmPassword | a12345! |
-        And I hit "Save"
+        And I hit "Publish"
         And I am redirected
     Then I should see "User created"

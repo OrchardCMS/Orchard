@@ -1,2 +1,16 @@
 ﻿@model dynamic
-@if (Model.CurrentUser != null) {<div id="login">@T("User:") @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)@T(" | ")@Html.ActionLink(T("Change password").ToString(), "ChangePassword", new { area = "Orchard.Users", Controller = "Account" })@T(" | ")@Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })</div>}
+@if (Model.CurrentUser != null) {
+    <div id="login">
+        <ul class="action-links">
+            <li class="action-link">
+                @T("User:") @Html.ItemDisplayText((Orchard.ContentManagement.IContent)Model.CurrentUser)
+            </li>
+            <li class="action-link">
+                @Html.ActionLink(T("Change password").ToString(), "ChangePassword", new { area = "Orchard.Users", Controller = "Account" })
+            </li>
+            <li class="action-link">
+                @Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account", ReturnUrl = Href("~/") })
+            </li>
+        </ul>
+    </div>
+}

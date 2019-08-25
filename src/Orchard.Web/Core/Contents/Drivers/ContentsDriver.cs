@@ -12,17 +12,18 @@ namespace Orchard.Core.Contents.Drivers {
                 ContentShape("Parts_Contents_Publish_Summary",
                              () => shapeHelper.Parts_Contents_Publish_Summary()),
                 ContentShape("Parts_Contents_Publish_SummaryAdmin",
-                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin()),
-                ContentShape("Parts_Contents_Clone_SummaryAdmin",
-                             () => shapeHelper.Parts_Contents_Clone_SummaryAdmin())
+                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin())
                 );
         }
 
         protected override DriverResult Editor(ContentPart part, dynamic shapeHelper) {
-            var results = new List<DriverResult> { ContentShape("Content_SaveButton", saveButton => saveButton) };
+            var results = new List<DriverResult>();
 
             if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                results.Add(ContentShape("Content_PublishButton", publishButton => publishButton));
+                results.Add(ContentShape("Content_SaveButton", saveButton => saveButton));
+
+            results.Add(ContentShape("Content_PublishButton", publishButton => publishButton));
+            results.Add(ContentShape("Content_CancelButton", cancelButton => cancelButton));
 
             return Combined(results.ToArray());
         }

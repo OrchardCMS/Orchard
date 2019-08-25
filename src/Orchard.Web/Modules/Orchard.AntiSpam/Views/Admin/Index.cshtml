@@ -37,18 +37,18 @@
         </select>
     </fieldset>
     <fieldset class="bulk-actions">
-		<label for="sortResults">@T("Sort by:")</label>
+        <label for="sortResults">@T("Sort by:")</label>
         <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, SpamOrder.Creation, T("Creation date").ToString())
         </select>
-		<input type="hidden" name="Page" value="1" />
-		<label for="pageSize">@T("Show:")</label>
-		<select id="pageSize" name="PageSize">
-			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-			@foreach (int size in pageSizes.OrderBy(p => p)) {
-				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+        <input type="hidden" name="Page" value="1" />
+        <label for="pageSize">@T("Show:")</label>
+        <select id="pageSize" name="PageSize">
+            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+            @foreach (int size in pageSizes.OrderBy(p => p)) {
+                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
    }
-		</select>
+        </select>
         <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
@@ -56,6 +56,6 @@
                 @Display(entry.Shape)
                 spamIndex++;
             }
-	@Display(Model.Pager)
+    @Display(Model.Pager)
     </fieldset>
 } 

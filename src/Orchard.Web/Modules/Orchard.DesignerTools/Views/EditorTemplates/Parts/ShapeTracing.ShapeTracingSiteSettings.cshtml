@@ -1,0 +1,10 @@
+@model Orchard.DesignerTools.Models.ShapeTracingSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Shape Tracing")</legend>
+    <div>
+        @Html.EditorFor(m => m.IsShapeTracingActive) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.IsShapeTracingActive)">@T("Use shape tracing")</label>
+        <span class="hint">@T("Enable to apply shape tracing to each page displayed on the front end of the site.")</span>
+    </div>
+</fieldset>

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
+using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Upgrade.Services;
@@ -15,22 +19,27 @@ namespace Upgrade.Controllers {
     public class TaxonomyController : Controller {
         private readonly IUpgradeService _upgradeService;
         private readonly IOrchardServices _orchardServices;
+        private readonly ITaxonomyService _taxonomyService;
         private readonly IFeatureManager _featureManager;
+
+        private const int BatchSize = 50;
 
         public TaxonomyController(
             IUpgradeService upgradeService,
             IOrchardServices orchardServices,
-            IFeatureManager featureManager) {
+            IFeatureManager featureManager,
+            ITaxonomyService taxonomyService) {
             _upgradeService = upgradeService;
             _orchardServices = orchardServices;
             _featureManager = featureManager;
+            _taxonomyService = taxonomyService;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            ViewBag.CanMigrate = false; 
+            ViewBag.CanMigrate = false;
 
             if(_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in order to migrate Contrib.Taxonomies to Orchard.Taxonomies."));
@@ -45,7 +54,19 @@ namespace Upgrade.Controllers {
                     _orchardServices.Notifier.Warning(T("This migration step might have been done already."));
                 }
 
-                ViewBag.CanMigrate = true; 
+                ViewBag.CanMigrate = true;
+            }
+
+            return View();
+        }
+
+        public ActionResult Index110() {
+            ViewBag.CanMigrate = false;
+
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
+                _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in upgrade the terms' weights."));
+            } else {
+                ViewBag.CanMigrate = true;
             }
 
             return View();
@@ -71,5 +92,27 @@ namespace Upgrade.Controllers {
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public JsonResult MigrateTerms(int id) {
+            var lastCount = id;
+
+            var thisBatch = _taxonomyService
+                .GetTermsQuery()
+                .OrderBy(x => x.TaxonomyId)
+                .OrderBy(tpr => tpr.Path)
+                .Slice(lastCount, BatchSize);
+            foreach (var term in thisBatch) {
+                term.FullWeight = _taxonomyService.ComputeFullWeight(term);
+            }
+            if (thisBatch.Any()) {
+                // ajax stops calling once it is returned the same number it sent
+                lastCount += BatchSize;
+            }
+
+
+            return new JsonResult { Data = lastCount };
+        }
+
     }
 }

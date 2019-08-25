@@ -132,4 +132,10 @@
       Parts_MediaLibrary_Navigation="Navigation:5"
   />
 
+  <Place
+  Parts_MediaLibraryLocalization_Actions="Actions:6"
+  Parts_MediaLibraryLocalization_Navigation="Navigation:1"
+  />
+
+
 </Placement>

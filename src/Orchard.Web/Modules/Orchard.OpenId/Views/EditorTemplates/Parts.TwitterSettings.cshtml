@@ -1,0 +1,48 @@
+﻿@model Orchard.OpenId.Models.TwitterSettingsPart
+@using Orchard.OpenId.Constants
+@{
+    Style.Include("TwitterAdmin").AtHead();
+
+    Script.Require("jQuery");
+    Script.Require("TwitterAdmin").AtFoot();
+}
+
+<h2>@T("Twitter Settings")</h2>
+<fieldset>
+    <label for="@Html.IdFor(m => m.ConsumerKey)">@T("Consumer Key")</label>
+    @Html.TextBoxFor(m => m.ConsumerKey, new { @class = "text large" })
+    <span class="hint">@T("Twitter's Consumer Key obtained from your twitter dashboard (e.g. {0})", Twitter.DefaultConsumerKey)</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.IdFor(m => m.ConsumerSecret)">@T("Consumer Secret")</label>
+    @Html.TextBoxFor(m => m.ConsumerSecret, new { @class = "text large" })
+    <span class="hint">@T("Twitter's Consumer Secret obtained from your twitter dashboard (e.g. {0})", Twitter.DefaultConsumerSecret)</span>
+</fieldset>
+<fieldset>
+    <h6 id="colExpControl" class="coll-exp-control" title="@T("Click to toggle view")">
+        @T("Certificate Subject Key Identifiers")
+        <button id="colExpButton" type="button" class="coll-exp-button">+</button>
+    </h6>
+    <div id="colExpArea" class="coll-exp-area">
+        <span class="hint">@T("These settings rarely change, it is recommended to keep default values")</span>
+
+        <label for="@Html.IdFor(m => m.VeriSignClass3SecureServerCA_G2)">@T("VeriSign Class3 Secure Server CA - G2")</label>
+        @Html.TextBoxFor(m => m.VeriSignClass3SecureServerCA_G2, new { @class = "text large" })
+
+        <label for="@Html.IdFor(m => m.VeriSignClass3SecureServerCA_G3)">@T("VeriSign Class3 Secure Server CA - G3")</label>
+        @Html.TextBoxFor(m => m.VeriSignClass3SecureServerCA_G3, new { @class = "text large" })
+
+        <label for="@Html.IdFor(m => m.VeriSignClass3PublicPrimaryCA_G5)">@T("VeriSign Class3 Secure Server CA - G5")</label>
+        @Html.TextBoxFor(m => m.VeriSignClass3PublicPrimaryCA_G5, new { @class = "text large" })
+
+        <label for="@Html.IdFor(m => m.SymantecClass3SecureServerCA_G4)">@T("Symantec Class3 Secure Server CA - G4")</label>
+        @Html.TextBoxFor(m => m.SymantecClass3SecureServerCA_G4, new { @class = "text large" })
+
+        <label for="@Html.IdFor(m => m.DigiCertSHA2HighAssuranceServerCA)">@T("DigiCert SHA2 High Assurance Server CA")</label>
+        @Html.TextBoxFor(m => m.DigiCertSHA2HighAssuranceServerCA, new { @class = "text large" })
+
+        <label for="@Html.IdFor(m => m.DigiCertHighAssuranceEVRootCA)">@T("DigiCert High Assurance EV Root CA")</label>
+        @Html.TextBoxFor(m => m.DigiCertHighAssuranceEVRootCA, new { @class = "text large" })
+    </div>
+</fieldset>
+<hr />

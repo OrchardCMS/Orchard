@@ -212,6 +212,20 @@ namespace Orchard.Environment.Extensions.Loaders {
             return dependencies;
         }
 
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                var projectPath = GetProjectPath(descriptor);
+                if (projectPath == null) {
+                    return false;
+                }
+
+                return _buildManager.GetCompiledAssembly(projectPath) != null;
+            }
+
+            return false;
+        }
+
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
             // Skip files from locations other than "~/Modules" and "~/Themes" etc.
             if (string.IsNullOrEmpty(PrefixMatch(projectPath, _extensionsVirtualPathPrefixes))) {

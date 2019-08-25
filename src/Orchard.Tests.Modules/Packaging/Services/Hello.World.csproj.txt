@@ -117,7 +117,7 @@
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
-          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <CustomServerUrl>https://github.com/OrchardCMS/Orchard</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

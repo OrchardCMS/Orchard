@@ -1,0 +1,14 @@
+﻿<Placement>
+    <!-- By default only enabling the content preview for content types where it most possibly makes sens. -->
+    <Match Path="~/Admin/Contents/*">
+        <Place ContentPreview_Button="Sidebar:27" />
+    </Match>
+
+    <Match Path="~/Admin/Blogs/*">
+        <Place ContentPreview_Button="Sidebar:27" />
+    </Match>
+
+    <Match Path="~/Admin/Widgets/*">
+        <Place ContentPreview_Button="Sidebar:27" />
+    </Match>
+</Placement>

@@ -1,0 +1,44 @@
+﻿@model Orchard.ContentPicker.ViewModels.ContentPickerFieldViewModel
+@using Orchard.ContentPicker.Settings;
+@using Orchard.Localization.Models;
+@using Orchard.ContentManagement;
+
+@{
+    Script.Require("jQuery").AtFoot();
+
+    var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldLocalizationSettings>();
+
+    string tryTranslateMsg = T("Selected items with a localization different than the current one will be localized.").Text;
+    string removeMissingMsg = T("Selected items for which there is no correct localization will be removed.").Text;
+    string removeUnlocalizableMsg = T("Selected items that cannot have localizations will be removed.").Text;
+
+    if (settings.RemoveItemsWithoutLocalization) { tryTranslateMsg += " " + removeMissingMsg; }
+    if (settings.RemoveItemsWithNoLocalizationPart) { tryTranslateMsg += " " + removeUnlocalizableMsg; }
+
+    //We will use a script to find the fieldset for the field we are currently processing.
+    //The fieldset contains a span of class "hint". We will add tryTranslateMsg to it.
+    //We will check if the field exists in the page DOM, just in case a Placement.info suppresses it.
+    string dataPartName = HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name);
+    string dataFieldName = HttpUtility.JavaScriptStringEncode(Model.Field.PartFieldDefinition.Name);
+}
+<input type="hidden" id="@dataPartName-@dataFieldName-tryTranslateMsg" value="@tryTranslateMsg" />
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function () {
+            var hint = $("fieldset[data-part-name='@dataPartName'][data-field-name='@dataFieldName']").find("span.hint")[0];
+            if (hint) {
+                hint.innerText += " " + $("#@dataPartName-@dataFieldName-tryTranslateMsg").val();
+            }
+        });
+        @foreach (var contentItem in Model.ContentItems) {
+            var loc = contentItem.As<LocalizationPart>();
+            if (loc != null && loc.Culture!=null && !string.IsNullOrWhiteSpace(loc.Culture.Culture)) {
+                <text>
+        $(function () {
+            $("span[data-id='@contentItem.Id'][data-fieldid='@Html.FieldIdFor(m => m.Field.Ids)'].content-picker-item")[0].append(" (@loc.Culture.Culture)");
+        })
+        </text>
+            }
+        }
+    </script>
+}

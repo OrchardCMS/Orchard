@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using Orchard.Localization;
 
 namespace Orchard.Validation {
     /// <summary>
     /// Provides methods to validate paths.
     /// </summary>
     public static class PathValidation {
+
         /// <summary>
         /// Determines if a path lies within the base path boundaries.
         /// If not, an exception is thrown.
@@ -26,7 +28,7 @@ namespace Orchard.Validation {
             }
 
             if (!valid) {
-                throw new ArgumentException("Invalid path");
+                throw new OrchardException(new LocalizedString("Invalid Path"));
             }
 
             return mappedPath;

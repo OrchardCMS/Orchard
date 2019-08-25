@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Security;
@@ -15,7 +16,7 @@ namespace Orchard.Core.Navigation.Commands {
         private readonly IMembershipService _membershipService;
 
         public MenuCommands(
-            IContentManager contentManager, 
+            IContentManager contentManager,
             IMenuService menuService,
             ISiteService siteService,
             IMembershipService membershipService) {
@@ -27,7 +28,10 @@ namespace Orchard.Core.Navigation.Commands {
 
         [OrchardSwitch]
         public string MenuPosition { get; set; }
-        
+
+        [OrchardSwitch]
+        public string Identity { get; set; }
+
         [OrchardSwitch]
         public string Owner { get; set; }
 
@@ -41,7 +45,7 @@ namespace Orchard.Core.Navigation.Commands {
         public string MenuName { get; set; }
 
         [CommandName("menuitem create")]
-        [CommandHelp("menuitem create /MenuPosition:<position> /MenuText:<text> /Url:<url> /MenuName:<name> [/Owner:<username>] \r\n\t" + "Creates a new menu item")]
+        [CommandHelp("menuitem create /MenuPosition:<position> /MenuText:<text> /Url:<url> /MenuName:<name> [/Owner:<username>]\r\n\t" + "Creates a new menu item")]
         [OrchardSwitches("MenuPosition,MenuText,Url,MenuName,Owner")]
         public void Create() {
             // flushes before doing a query in case a previous command created the menu
@@ -75,15 +79,18 @@ namespace Orchard.Core.Navigation.Commands {
         }
 
         [CommandName("menu create")]
-        [CommandHelp("menu create /MenuName:<name>\r\n\t" + "Creates a new menu")]
-        [OrchardSwitches("MenuName")]
+        [CommandHelp("menu create /MenuName:<name> [/Identity:<identity>] \r\n\t" + "Creates a new menu")]
+        [OrchardSwitches("MenuName,Identity")]
         public void CreateMenu() {
             if (string.IsNullOrWhiteSpace(MenuName)) {
                 Context.Output.WriteLine(T("Menu name can't be empty.").Text);
                 return;
             }
 
-            _menuService.Create(MenuName);
+            var menuItem = _menuService.Create(MenuName);
+            if (menuItem.Has<IdentityPart>() && !String.IsNullOrEmpty(Identity)) {
+                menuItem.As<IdentityPart>().Identifier = Identity;
+            }
 
             Context.Output.WriteLine(T("Menu created successfully.").Text);
         }

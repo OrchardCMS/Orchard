@@ -34,7 +34,7 @@ namespace Orchard.Comments {
                                 Area = "Orchard.Comments",
                                 Controller = "Admin",
                                 id = item.Id,
-                                returnUrl = Html.ViewContext.HttpContext.Request.ToUrlString()
+                                returnUrl = Html.ViewContext.HttpContext.Request.RawUrl
                             });
                 }
 

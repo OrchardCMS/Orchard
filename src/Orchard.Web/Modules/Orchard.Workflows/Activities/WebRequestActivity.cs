@@ -48,6 +48,9 @@ namespace Orchard.Workflows.Activities {
                     case "GET":
                         response = httpClient.GetAsync("").Result;
                         break;
+                    case "DELETE":
+                        response = httpClient.DeleteAsync("").Result;
+                        break;
                     case "POST":
                         var format = activityContext.GetState<string>("FormFormat");
 

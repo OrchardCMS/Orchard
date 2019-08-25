@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
+using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
@@ -18,16 +20,22 @@ namespace Orchard.DynamicForms.Drivers {
     public class TaxonomyElementDriver : FormsElementDriver<Taxonomy> {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITokenizer _tokenizer;
+        private readonly IContentManager _contentManager;
 
-        public TaxonomyElementDriver(IFormsBasedElementServices formsServices, ITaxonomyService taxonomyService, ITokenizer tokenizer)
+        public TaxonomyElementDriver(
+            IFormsBasedElementServices formsServices,
+            ITaxonomyService taxonomyService,
+            ITokenizer tokenizer,
+            IContentManager contentManager)
             : base(formsServices) {
             _taxonomyService = taxonomyService;
             _tokenizer = tokenizer;
+            _contentManager = contentManager;
         }
 
         protected override EditorResult OnBuildEditor(Taxonomy element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var enumerationEditor = BuildForm(context, "TaxonomyForm");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var enumerationEditor = BuildForm(context, "TaxonomyForm", "Properties:15");
             var checkBoxValidation = BuildForm(context, "TaxonomyValidation", "Validation:10");
 
             return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
@@ -146,6 +154,24 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
+        protected override void OnExporting(Taxonomy element, ExportElementContext context) {
+            var taxonomy = _contentManager.Get<TaxonomyPart>(element.TaxonomyId ?? 0);
+
+            if (taxonomy == null) return;
+
+            var taxonomyIdentity = _contentManager.GetItemMetadata(taxonomy)?.Identity?.ToString();
+
+            if (string.IsNullOrEmpty(taxonomyIdentity)) context.ExportableData["TaxonomyId"] = taxonomyIdentity;
+        }
+
+        protected override void OnImportCompleted(Taxonomy element, ImportElementContext context) {
+            var taxonomyIdentity = context.ExportableData.Get("TaxonomyId");
+
+            var taxonomy = string.IsNullOrEmpty(taxonomyIdentity) ? context.Session.GetItemFromSession(taxonomyIdentity) : null;
+            
+            if (taxonomy != null) element.TaxonomyId = taxonomy.Id;
+        }
+
         private IEnumerable<SelectListItem> GetTermOptions(Taxonomy element, string displayType, int? taxonomyId, IDictionary<string, object> tokenData) {
             var optionLabel = element.OptionLabel;
             var runtimeValues = GetRuntimeValues(element);
@@ -163,8 +189,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             var projection = terms.Select(x => {
                 var data = new {Content = x};
-                var value = _tokenizer.Replace(valueExpression, data);
-                var text = _tokenizer.Replace(textExpression, data);
+                var value = _tokenizer.Replace(valueExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
                 return new SelectListItem {
                     Text = text,

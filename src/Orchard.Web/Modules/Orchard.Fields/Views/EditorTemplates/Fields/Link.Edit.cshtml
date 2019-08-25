@@ -24,7 +24,7 @@
         <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>   }>@T("Url")</label>
     </div>
     <div class="editor-field">
-        @(isRequired ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder }))
+        @(settings.Required ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder }))
         <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
     </div>
     @if (settings.LinkTextMode == LinkTextMode.Optional || settings.LinkTextMode == LinkTextMode.Required) {
@@ -32,7 +32,7 @@
             <label for="@Html.FieldIdFor(m => m.Text)" @if (settings.LinkTextMode == LinkTextMode.Required) { <text> class="required" </text> }>@T("Text")</label>
         </div>
         <div class="editor-field">
-            @(isTextRequired ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder }))
+            @(settings.LinkTextMode == LinkTextMode.Required ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder }))
             <span class="hint">@T("The text of the link. If left empty, the url will be used instead.")</span>
         </div>
     }

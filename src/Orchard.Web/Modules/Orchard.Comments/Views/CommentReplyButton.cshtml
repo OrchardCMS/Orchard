@@ -3,4 +3,4 @@
     CommentPart comment = Model.ContentPart;
 }
 
-<a class="comment-reply-button" href="#" data-id="@comment.Id">@T("Reply")</a>
+<a class="comment-reply-button" href="#" data-contentitem-id="@comment.CommentedOnContentItem.Id" data-id="@comment.Id">@T("Reply")</a>

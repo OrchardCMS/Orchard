@@ -1,9 +1,7 @@
 using System;
-using System.IO;
 using System.Linq;
 using NuGet;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Environment.State;

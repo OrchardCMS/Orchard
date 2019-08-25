@@ -4,17 +4,17 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Forms.Services;
-using Orchard.Projections.Descriptors;
 using Orchard.Localization;
-using Orchard.Projections.Descriptors.Property;
+using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
+using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManager{
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
@@ -104,6 +104,35 @@ namespace Orchard.Projections.Services {
         }
 
         public int GetCount(int queryId) {
+            return GetCount(queryId, null);
+        }
+
+        public int GetCount(int queryId, ContentPart part) {
+            var queryRecord = _queryRepository.Get(queryId);
+
+            if (queryRecord == null) {
+                throw new ArgumentException("queryId");
+            }
+
+            // prepares tokens 
+            Dictionary<string, object> tokens = new Dictionary<string, object>();
+            if (part != null) {
+                tokens.Add("Content", part.ContentItem);
+            }
+
+            var contentQueries = GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens);
+
+            return queryRecord.FilterGroups.Count > 1 ?
+                contentQueries.SelectMany(contentQuery => contentQuery.ListIds()).Distinct().Count() :
+                contentQueries.Sum(contentQuery => contentQuery.Count());
+        }
+
+        public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
+            return GetContentItems(queryId, null, skip, count);
+        }
+
+        public IEnumerable<ContentItem> GetContentItems(int queryId, ContentPart part, int skip = 0, int count = 0) {
+            var availableSortCriteria = DescribeSortCriteria().ToList();
 
             var queryRecord = _queryRepository.Get(queryId);
 
@@ -111,36 +140,27 @@ namespace Orchard.Projections.Services {
                 throw new ArgumentException("queryId");
             }
 
-            // aggregate the result for each group query
-
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>())
-                .Sum(contentQuery => contentQuery.Count());
-        }
-
-        public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
-            var availableSortCriteria = DescribeSortCriteria().ToList();
-
-            var queryRecord = _queryRepository.Get(queryId);
-
-            if(queryRecord == null) {
-                throw new ArgumentException("queryId");
-            }
-
             var contentItems = new List<ContentItem>();
 
+            // prepares tokens 
+            Dictionary<string, object> tokens = new Dictionary<string, object>();
+            if (part != null) {
+                tokens.Add("Content", part.ContentItem);
+            }
+
             // aggregate the result for each group query
-            foreach(var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position))) {
+            foreach (var contentQuery in GetContentQueries(queryRecord, queryRecord.SortCriteria.OrderBy(sc => sc.Position), tokens)) {
                 contentItems.AddRange(contentQuery.Slice(skip, count));
             }
 
-            if(queryRecord.FilterGroups.Count <= 1) {
+            if (queryRecord.FilterGroups.Count <= 1) {
                 return contentItems;
             }
 
             // re-executing the sorting with the cumulated groups
             var ids = contentItems.Select(c => c.Id).ToArray();
 
-            if(ids.Length == 0) {
+            if (ids.Length == 0) {
                 return Enumerable.Empty<ContentItem>();
             }
 
@@ -150,7 +170,8 @@ namespace Orchard.Projections.Services {
             foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position)) {
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
-                    State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                    State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                    QueryPartRecord = queryRecord
                 };
 
                 string category = sortCriterion.Category;
@@ -170,24 +191,30 @@ namespace Orchard.Projections.Services {
                 groupQuery = sortCriterionContext.Query;
             }
 
-            return groupQuery.Slice(skip, count);
+            return groupQuery.Slice(0, count);
         }
 
-        public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, IEnumerable<SortCriterionRecord> sortCriteria) {
+        public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, IEnumerable<SortCriterionRecord> sortCriteria, Dictionary<string, object> tokens) {
+
             var availableFilters = DescribeFilters().ToList();
             var availableSortCriteria = DescribeSortCriteria().ToList();
+            if (tokens == null) {
+                tokens = new Dictionary<string, object>();
+            }
 
-            // pre-executing all groups 
+            var version = queryRecord.VersionScope.ToVersionOptions();
+
+            // pre-executing all groups
             foreach (var group in queryRecord.FilterGroups) {
-
-                var contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+                var contentQuery = _contentManager.HqlQuery().ForVersion(version);
 
                 // iterate over each filter to apply the alterations to the query object
                 foreach (var filter in group.Filters) {
-                    var tokenizedState = _tokenizer.Replace(filter.State, new Dictionary<string, object>());
+                    var tokenizedState = _tokenizer.Replace(filter.State, tokens);
                     var filterContext = new FilterContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(tokenizedState)
+                        State = FormParametersHelper.ToDynamic(tokenizedState),
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = filter.Category;
@@ -213,7 +240,8 @@ namespace Orchard.Projections.Services {
                 foreach (var sortCriterion in sortCriteria.OrderBy(s => s.Position)) {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                        State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = sortCriterion.Category;
@@ -237,7 +265,7 @@ namespace Orchard.Projections.Services {
 
 
                 yield return contentQuery;
-            }            
+            }
         }
     }
 }

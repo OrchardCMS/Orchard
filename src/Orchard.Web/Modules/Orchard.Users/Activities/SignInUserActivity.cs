@@ -60,8 +60,8 @@ namespace Orchard.Users.Activities {
                     yield return T("IncorrectUserNameOrPassword");
                     yield break;
                 }
-
-                user = _membershipService.ValidateUser(userNameOrEmail, password);
+                List<LocalizedString> validationErrors;
+                user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
             }
 
             if (user == null) {
@@ -71,7 +71,7 @@ namespace Orchard.Users.Activities {
 
             _userEventHandler.LoggingIn(userNameOrEmail, password);
             _authenticationService.SignIn(user, createPersistentCookie);
-            _userEventHandler.LoggedIn(user);            
+            _userEventHandler.LoggedIn(user);
 
             yield return T("Done");
         }
@@ -80,7 +80,7 @@ namespace Orchard.Users.Activities {
             if (String.IsNullOrWhiteSpace(value))
                 return false;
 
-            var falseValues = new[] {"false", "off", "no"};
+            var falseValues = new[] { "false", "off", "no" };
             return falseValues.All(x => !String.Equals(x, value, StringComparison.OrdinalIgnoreCase));
         }
     }

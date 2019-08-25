@@ -9,13 +9,13 @@ namespace Orchard.Recipes.Providers.RecipeHandlers {
     /// Delegates execution of the step to the appropriate recipe execution step implementation.
     /// </summary>
     public class RecipeExecutionStepHandler : Component, IRecipeHandler {
-        private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
-        public RecipeExecutionStepHandler(IEnumerable<IRecipeExecutionStep> recipeExecutionSteps) {
-            _recipeExecutionSteps = recipeExecutionSteps;
+        private readonly IRecipeExecutionStepResolver _recipeExecutionStepResolver;
+        public RecipeExecutionStepHandler(IRecipeExecutionStepResolver recipeExecutionStepResolver) {
+            _recipeExecutionStepResolver = recipeExecutionStepResolver;
         }
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            var executionStep = _recipeExecutionSteps.FirstOrDefault(x => x.Names.Contains(recipeContext.RecipeStep.Name));
+            var executionStep = _recipeExecutionStepResolver.Resolve(recipeContext.RecipeStep.Name);
             var recipeExecutionContext = new RecipeExecutionContext {ExecutionId = recipeContext.ExecutionId, RecipeStep = recipeContext.RecipeStep};
 
             if (executionStep != null) {

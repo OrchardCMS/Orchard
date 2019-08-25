@@ -113,11 +113,40 @@ namespace Orchard.FileSystems.AppData {
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void CreateFile(string path, string content) {
-            using (var stream = CreateFile(path)) {
-                using (var tw = new StreamWriter(stream)) {
-                    tw.Write(content);
+            var filePath = CombineToPhysicalPath(path);
+            var folderPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(folderPath)) {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // for existing files, just overwrite
+            if (File.Exists(filePath)) {
+                File.WriteAllText(filePath, content);
+            } else {
+                WriteAllTextWithTempFileAndMove(filePath, content);
+            }
+        }
+
+        private static void WriteAllTextWithTempFileAndMove(string path, string content) {
+            // generate a temp file
+            var tempPath = Path.GetTempFileName();
+
+            // write the data to a temp file
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough)) {
+                using (var writer = new StreamWriter(tempFile)) {
+                    writer.Write(content);
                 }
             }
+
+            // move to destination
+            // will throw exception if destination exists
+            File.Move(tempPath, path);
+            
+            // Modify file's access control to inherit permissions from parent directory. When files are moved they do not inherit
+            // permissions from the parent directory by default
+            System.Security.AccessControl.FileSecurity fileSecurity = File.GetAccessControl(path);
+            fileSecurity.SetAccessRuleProtection(false, false);
+            File.SetAccessControl(path, fileSecurity);
         }
 
         public Stream CreateFile(string path) {

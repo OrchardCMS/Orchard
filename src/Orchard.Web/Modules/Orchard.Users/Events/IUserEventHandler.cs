@@ -57,6 +57,11 @@ namespace Orchard.Users.Events {
         /// Called after a user has been approved
         /// </summary>
         void Approved(IUser user);
+
+        /// <summary>
+        /// Called after a user has been disabled
+        /// </summary>
+        void Moderate(IUser user);
     }
 }
 

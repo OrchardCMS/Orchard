@@ -26,7 +26,7 @@
 }
 
 <fieldset class="update-actions">
-    <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(DateTimeUtc: Model.LastUpdateCheckUtc.Value))" >@T("Check for Updates")</a>
+    <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(DateTimeUtc: Model.LastUpdateCheckUtc.Value))" >@T("Check for Updates")</a>
 </fieldset>
 
 @if (Model.Entries.Count() <= 0) {
@@ -60,8 +60,14 @@
                     </div>
 
                     <div class="related">
-                        @Html.Link(T("Install Latest").Text, InstallAction(theme.NewVersionToInstall))@T(" | ")
-                        <a href="@theme.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.Link(T("Install Latest").Text, InstallAction(theme.NewVersionToInstall))
+                            </li>
+                            <li class="action-link">
+                                <a href="@theme.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="properties">

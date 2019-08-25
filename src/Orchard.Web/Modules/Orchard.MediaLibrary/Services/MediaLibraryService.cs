@@ -12,6 +12,7 @@ using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Validation;
+using Orchard.MediaLibrary.Providers;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -19,18 +20,20 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IMimeTypeProvider _mimeTypeProvider;
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
-
+        private readonly IMediaFolderProvider _mediaFolderProvider;
         private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
 
         public MediaLibraryService(
             IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider,
             IStorageProvider storageProvider,
-            IEnumerable<IMediaFactorySelector> mediaFactorySelectors) {
+            IEnumerable<IMediaFactorySelector> mediaFactorySelectors,
+            IMediaFolderProvider mediaFolderProvider) {
             _orchardServices = orchardServices;
             _mimeTypeProvider = mimeTypeProvider;
             _storageProvider = storageProvider;
             _mediaFactorySelectors = mediaFactorySelectors;
+            _mediaFolderProvider = mediaFolderProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -77,7 +80,8 @@ namespace Orchard.MediaLibrary.Services {
             return BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true, mediaType: mediaType, versionOptions: versionOptions)
                 .Count();
         }
-
+        
+        //TODO: extract the logic from MediaLibraryService and add a method definition into IMediaLibraryService in order to give a point of extension
         private static IContentQuery<MediaPart> BuildGetMediaContentItemsQuery(
             IContentManager contentManager, string folderPath = null, bool recursive = false, string order = null, string mediaType = null, VersionOptions versionOptions = null) {
 
@@ -91,7 +95,8 @@ namespace Orchard.MediaLibrary.Services {
 
             if (!String.IsNullOrEmpty(folderPath)) {
                 if (recursive) {
-                    query = query.Join<MediaPartRecord>().Where(m => m.FolderPath.StartsWith(folderPath));
+                    var subfolderSearch = folderPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? folderPath : folderPath + Path.DirectorySeparatorChar;
+                    query = query.Join<MediaPartRecord>().Where(m => (m.FolderPath == folderPath || m.FolderPath.StartsWith(subfolderSearch)));
                 }
                 else {
                     query = query.Join<MediaPartRecord>().Where(m => m.FolderPath == folderPath);
@@ -174,6 +179,8 @@ namespace Orchard.MediaLibrary.Services {
 
             using (var stream = storageFile.OpenRead()) {
                 var mediaFactory = GetMediaFactory(stream, mimeType, contentType);
+                if (mediaFactory == null)
+                    throw new Exception(T("No media factory available to handle this resource.").Text);
                 var mediaPart = mediaFactory.CreateMedia(stream, mediaFile.Name, mimeType, contentType);
                 if (mediaPart != null) {
                     mediaPart.FolderPath = relativePath;
@@ -221,14 +228,13 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public IMediaFolder GetRootMediaFolder() {
-            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+            if (_orchardServices.Authorizer.Authorize(Permissions.SelectMediaContent)) {
                 return null;
             }
 
             if (_orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
-                var userPath = _storageProvider.Combine("Users", currentUser.UserName);
-
+                var userPath = _storageProvider.Combine("Users", _mediaFolderProvider.GetFolderName(currentUser));
                 return new MediaFolder() {
                     Name = currentUser.UserName,
                     MediaPath = userPath
@@ -236,6 +242,39 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             return null;
+        }
+
+        public IMediaFolder GetUserMediaFolder() {
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            var userPath = _storageProvider.Combine("Users", _mediaFolderProvider.GetFolderName(currentUser));
+            return new MediaFolder() {
+                Name = currentUser.UserName,
+                MediaPath = userPath
+            };
+        }
+
+        public bool CheckMediaFolderPermission(Orchard.Security.Permissions.Permission permission, string folderPath) {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
+                return true;
+            }
+            if (_orchardServices.WorkContext.CurrentUser==null)
+                return _orchardServices.Authorizer.Authorize(permission);
+            // determines the folder type: public, user own folder (my), folder of another user (private)
+            var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
+            var userFolderPath = GetUserMediaFolder().MediaPath;
+            bool isMyfolder = false;
+
+            if (rootedFolderPath.StartsWith(userFolderPath)) {
+                // the folder is the user's private path or one of its subfolders
+                isMyfolder = true;
+            }
+
+            if(isMyfolder) {
+                return _orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia);
+            }
+            else { // other
+                return _orchardServices.Authorizer.Authorize(permission);
+            }
         }
 
         /// <summary>
@@ -324,15 +363,16 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
 
             try {
-                var segments = folderPath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var newFolderPath = String.Join(Path.DirectorySeparatorChar.ToString(), segments.Take(segments.Length - 1).Union(new[] { newFolderName }));
+                var parentIndex = folderPath.LastIndexOfAny(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+                var parentPath = parentIndex > 0 ? folderPath.Substring(0, parentIndex) : String.Empty;
+                var newFolderPath = _storageProvider.Combine(parentPath, newFolderName);
 
                 var mediaParts = BuildGetMediaContentItemsQuery(_orchardServices.ContentManager, folderPath, true).List();
                 foreach (var mediaPart in mediaParts) {
                     mediaPart.FolderPath = newFolderPath + mediaPart.FolderPath.Substring(folderPath.Length);
                 }
 
-                _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(Path.GetDirectoryName(folderPath), newFolderName));
+                _storageProvider.RenameFolder(folderPath, newFolderPath);
             }
             catch (Exception) {
                 _orchardServices.TransactionManager.Cancel();

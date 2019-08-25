@@ -10,10 +10,9 @@ namespace Orchard.Environment.Extensions.Compilers {
 
             _codeCompilerType = GetDefaultCompilerTypeForLanguage("C#");
 
-            // NOTE: This code could be used to define a compilation flag with the current Orchard version 
-            // but it's not compatible with Medium Trust
             var orchardVersion = new AssemblyName(typeof(IDependency).Assembly.FullName).Version;
-            _codeCompilerType.CompilerParameters.CompilerOptions += string.Format("/define:ORCHARD_{0}_{1}", orchardVersion.Major, orchardVersion.Minor);
+            // Additional options after the ones defined in web.config require to be separated by a leading space character.
+            _codeCompilerType.CompilerParameters.CompilerOptions += $" /define:ORCHARD_{orchardVersion.Major}_{orchardVersion.Minor}";
         }
 
         public IOrchardHostContainer HostContainer { get; set; }
@@ -27,7 +26,7 @@ namespace Orchard.Environment.Extensions.Compilers {
         public override void GenerateCode(AssemblyBuilder assemblyBuilder) {
             var context = new CompileExtensionContext {
                 VirtualPath = this.VirtualPath,
-                AssemblyBuilder =  new AspNetAssemblyBuilder(assemblyBuilder, this)
+                AssemblyBuilder = new AspNetAssemblyBuilder(assemblyBuilder, this)
             };
             HostContainer.Resolve<IExtensionCompiler>().Compile(context);
         }

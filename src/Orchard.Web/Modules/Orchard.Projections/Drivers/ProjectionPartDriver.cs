@@ -110,7 +110,7 @@ namespace Orchard.Projections.Drivers {
                     _feedManager.Register(metaData.DisplayText, "rss", new RouteValueDictionary { { "projection", part.Id } });
 
                     // execute the query
-                    var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + part.Record.Skip, pager.PageSize).ToList();
+                    var contentItems = _projectionManager.GetContentItems(query.Id, part, pager.GetStartIndex() + part.Record.Skip, pager.PageSize).ToList();
 
                     // sanity check so that content items with ProjectionPart can't be added here, or it will result in an infinite loop
                     contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
@@ -122,7 +122,7 @@ namespace Orchard.Projections.Drivers {
 
                     // create pager shape
                     if (part.Record.DisplayPager) {
-                        var contentItemsCount = _projectionManager.GetCount(query.Id) - part.Record.Skip;
+                        var contentItemsCount = _projectionManager.GetCount(query.Id, part) - part.Record.Skip;
                         contentItemsCount = Math.Max(0, contentItemsCount);
                         pagerShape.TotalItemCount(contentItemsCount);
                     }

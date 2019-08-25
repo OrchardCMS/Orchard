@@ -7,7 +7,7 @@
 @helper FolderLink(string folderName, string mediaPath) {
 	// querystring values need to persist after a new GET when clicking on the media browser's
 	// folders for navigation.
-    @Html.ActionLink(folderName, "Index", null, null, null, "tab=1", new {
+    @Html.ActionLink(folderName, "Index", null, null, null, "tab-gallery", new {
         callback = Request["callback"],
 		uploadpath = Request["uploadpath"],
 		editmode = Request["editmode"],

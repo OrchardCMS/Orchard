@@ -17,12 +17,7 @@ namespace Orchard.Blogs {
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
+            var routeDescriptors = new[] {
                              new RouteDescriptor {
                                                      Route = new Route(
                                                          "Admin/Blogs/Create",
@@ -86,6 +81,20 @@ namespace Orchard.Blogs {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPostAdmin"},
                                                                                       {"action", "Create"}
+                                                                                  },
+                                                         new RouteValueDictionary (),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs/Posts/CreateWithoutBlog",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPostAdmin"},
+                                                                                      {"action", "CreateWithoutBlog"}
                                                                                   },
                                                          new RouteValueDictionary (),
                                                          new RouteValueDictionary {
@@ -211,6 +220,9 @@ namespace Orchard.Blogs {
                                                          new MvcRouteHandler())
                                                  }
                          };
+
+            foreach (var routeDescriptor in routeDescriptors)
+                routes.Add(routeDescriptor);
         }
     }
 }

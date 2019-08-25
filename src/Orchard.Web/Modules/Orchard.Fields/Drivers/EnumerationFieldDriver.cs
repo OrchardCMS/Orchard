@@ -36,7 +36,7 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, EnumerationField field, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration_Edit", GetDifferentiator(field, part),
                 () => {
-                    if (part.IsNew()) {
+                    if (part.IsNew() && String.IsNullOrEmpty(field.Value)) {
                         var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
                         if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
                             field.Value = settings.DefaultValue;
@@ -51,7 +51,7 @@ namespace Orchard.Fields.Drivers {
                 var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
 
                 if (settings.Required && field.SelectedValues.Length == 0) {
-                    updater.AddModelError(field.Name, T("The field {0} is mandatory", T(field.DisplayName)));
+                    updater.AddModelError(field.Name, T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
@@ -63,8 +63,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, EnumerationField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Value))
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
         }
 
         protected override void Cloning(ContentPart part, EnumerationField originalField, EnumerationField cloneField, CloneContentContext context) {

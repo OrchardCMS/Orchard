@@ -59,6 +59,18 @@ namespace Orchard.CustomForms {
             return 4;
         }
 
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("UseContentTypePermissions"));
+
+            return 5;
+        }
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("SavePublishContentItem", c => c.WithDefault(false)));
+            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("PublishButtonText"));
+            return 6;
+        }
+
+
         public void Uninstall() {
             ContentDefinitionManager.DeleteTypeDefinition("CustomForm");
         }

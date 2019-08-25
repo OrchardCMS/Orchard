@@ -24,13 +24,15 @@
         <h4>
             <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
             <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
-            @if (comments.ThreadedComments && comments.CommentsActive && isAuthorized) {
-                @Display.CommentReplyButton(ContentPart: comment)
-            }
         </h4>
     </header>
 
     @Display.CommentText(ContentPart: Model.ContentPart, ContentItem: Model.ContentItem)
+
+    @if (comments.ThreadedComments && comments.CommentsActive && isAuthorized) {
+        <div>@Display.CommentReplyButton(ContentPart: comment)</div>
+        <div class="comment-reply-form-beacon" data-contentitem-id="@comment.CommentedOnContentItem.Id" data-id="@comment.ContentItem.Id"></div>
+    }
 
     @Display(children)
 @tag.EndElement

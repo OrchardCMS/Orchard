@@ -1,13 +1,13 @@
-﻿using System;
-using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using System;
 
 namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("UserPartRecord", 
+            SchemaBuilder.CreateTable("UserPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("UserName")
@@ -23,11 +23,12 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -53,6 +54,15 @@ namespace Orchard.Users {
                 });
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UserPartRecord",
+                table => {
+                    table.AddColumn<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)));
+                });
+
+            return 5;
         }
     }
 }

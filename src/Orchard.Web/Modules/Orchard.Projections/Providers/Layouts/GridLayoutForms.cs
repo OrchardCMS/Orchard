@@ -89,7 +89,7 @@ namespace Orchard.Projections.Providers.Layouts {
                             _EmptyCell: Shape.TextBox(
                                 Id: "empty-cell", Name: "EmptyCell",
                                 Title: T("Empty Cell"),
-                                Description: T("The HTML to render as empty cells to fill a row. (e.g., <td>&nbsp;</td>"),
+                                Description: T("The HTML to render as empty cells to fill a row. (e.g., <td>&nbsp;</td>)"),
                                 Classes: new[] { "text medium", "tokenized" }
                                 )
                             )
@@ -103,7 +103,7 @@ namespace Orchard.Projections.Providers.Layouts {
         }
     }
 
-    public class GridLayoutFormsValitator : FormHandler {
+    public class GridLayoutFormsValidator : FormHandler {
         public Localizer T { get; set; }
 
         public override void Validating(ValidatingContext context) {

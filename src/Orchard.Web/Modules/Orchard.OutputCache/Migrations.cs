@@ -1,7 +1,16 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement;
+using Orchard.Data.Migration;
+using Orchard.OutputCache.Models;
 
 namespace Orchard.OutputCache {
     public class Migrations : DataMigrationImpl {
+
+        private readonly IOrchardServices _orchardServices;
+
+        public Migrations(IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
+        }
+
         public int Create() {
             
             SchemaBuilder.CreateTable("CacheParameterRecord",
@@ -55,6 +64,18 @@ namespace Orchard.OutputCache {
                     });
 
             return 7;
+        }
+
+        public int UpdateFrom7() {
+            var cacheSettings = _orchardServices.WorkContext.CurrentSite.As<CacheSettingsPart>();
+            if (!string.IsNullOrWhiteSpace(cacheSettings.VaryByQueryStringParameters)) {
+                // Prevent behavior from changing if vary on querystring was used prior to introduction of exclusive mode
+                cacheSettings.VaryByQueryStringIsExclusive = false;
+            }
+            else {
+                cacheSettings.VaryByQueryStringIsExclusive = true; // Default mode
+            };
+            return 8;
         }
     }
 }

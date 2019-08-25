@@ -6,5 +6,6 @@
         public int EndPosition { get; set; }
         public dynamic ContentItems { get; set; }
         public dynamic Pager { get; set; }
+        public string IndexName { get; set; }
     }
 }

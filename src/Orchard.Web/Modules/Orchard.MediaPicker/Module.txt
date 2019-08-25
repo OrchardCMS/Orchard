@@ -4,7 +4,7 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.8
-OrchardVersion: 1.9
+OrchardVersion: 1.10.3
 LifecycleStatus: Deprecated
 Description: UI for browsing for, uploading, or selecting an image for an HTML editor.
 Dependencies: Orchard.Media, Orchard.Resources

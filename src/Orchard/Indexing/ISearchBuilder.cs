@@ -6,6 +6,7 @@ namespace Orchard.Indexing {
         ISearchBuilder Parse(string defaultField, string query, bool escape = true);
         ISearchBuilder Parse(string[] defaultFields, string query, bool escape = true);
 
+        ISearchBuilder WithGroup(Action<ISearchBuilder> groupSearchBuilder);
         ISearchBuilder WithField(string field, bool value);
         ISearchBuilder WithField(string field, DateTime value);
         ISearchBuilder WithField(string field, string value);

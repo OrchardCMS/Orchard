@@ -17,21 +17,19 @@ namespace Orchard.Alias {
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
-                routes.Add(routeDescriptor);
-            }
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
             var distinctAreaNames = _blueprint.Controllers
                 .Select(controllerBlueprint => controllerBlueprint.AreaName)
                 .Distinct();
 
-            return distinctAreaNames.Select(areaName =>
-                new RouteDescriptor {
-                    Priority = 80,
-                    Route = new AliasRoute(_aliasHolder, areaName, new MvcRouteHandler())
-                }).ToList();
+            var routeDescriptors = distinctAreaNames.Select(areaName =>
+                 new RouteDescriptor {
+                     Priority = 80,
+                     Route = new AliasRoute(_aliasHolder, areaName, new MvcRouteHandler())
+                 }).ToList();
+
+            foreach (var routeDescriptor in routeDescriptors) {
+                routes.Add(routeDescriptor);
+            }
         }
     }
 }
