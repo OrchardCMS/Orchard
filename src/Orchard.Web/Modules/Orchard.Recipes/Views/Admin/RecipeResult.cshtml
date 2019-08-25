@@ -1,7 +1,9 @@
 ﻿@model Orchard.Recipes.ViewModels.RecipeResultViewModel
+
 @{
     Layout.Title = T("Recipe File Execution Result").ToString();
 }
+
 @if (Model.Result.IsSuccessful) {
     <div class="message message-Information">
         @T("The recipe file was successfully executed.")
@@ -12,6 +14,7 @@ else {
         @T("The recipe file execution failed. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", Model.Result.ExecutionId)
     </div>
 }
+
 <h2>@T("Recipe steps")</h2>
 <table class="items" style="width: auto;">
     <thead>

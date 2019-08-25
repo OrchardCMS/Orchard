@@ -118,7 +118,6 @@
     <Compile Include="Commands\RecipesCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\ModuleEntry.cs" />
     <Compile Include="Models\RecipeResultRecord.cs" />
     <Compile Include="Models\RecipeStepResultRecord.cs" />
     <Compile Include="Models\VersionHistoryOptions.cs" />

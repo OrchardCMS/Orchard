@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.ViewModels {
@@ -7,7 +8,7 @@ namespace Orchard.Recipes.ViewModels {
     }
 
     public class ModuleRecipesViewModel {
-        public ModuleEntry Module { get; set; }
-        public IEnumerable<Recipe> Recipes { get; set; } 
+        public ExtensionDescriptor Descriptor { get; set; }
+        public IEnumerable<Recipe> Recipes { get; set; }
     }
 }
