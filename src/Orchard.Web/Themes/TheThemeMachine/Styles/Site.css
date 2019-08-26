@@ -167,7 +167,9 @@ blockquote  { margin: 0.923em; color: #666; font-style: italic; }
 strong      { font-weight: bold; }
 em,dfn      { font-style: italic; }
 dfn         { font-weight: bold; }
-sup, sub    { line-height: 0; }
+sup, sub    { line-height: 0; font-size: 75%; position: relative; display: inline-block; }
+sup         { top: -0.5em; }
+sub         { bottom: -0.25em; }
 
 abbr, 
 acronym     { border-bottom: 1px dotted #666; }

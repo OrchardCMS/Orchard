@@ -16,10 +16,11 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override EditorResult OnBuildEditor(TextField element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
             var textFieldEditor = BuildForm(context, "TextField", "Properties:15");
             var textFieldValidation = BuildForm(context, "TextFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, textFieldEditor, textFieldValidation);
+            return Editor(context, autoLabelEditor, placeholderEditor, textFieldEditor, textFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -86,6 +87,7 @@ namespace Orchard.DynamicForms.Drivers {
             var tokenData = context.GetTokenData();
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
+            context.ElementShape.ProcessedPlaceholder = _tokenizer.Replace(element.Placeholder, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
             // Allow the initial value to be tokenized.
             // If a value was posted, use that value instead (without tokenizing it).

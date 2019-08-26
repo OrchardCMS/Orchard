@@ -232,6 +232,16 @@ namespace Orchard.Azure.Services.FileSystems {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
 
+            // Workaround for https://github.com/Azure/azure-storage-net/issues/892
+            // Renaming a folder by only changing the casing corrupts all the files in the folder.
+            if (path.Equals(newPath, StringComparison.OrdinalIgnoreCase)) {
+                var tempPath = Guid.NewGuid().ToString() + "/";
+
+                RenameFolder(path, tempPath);
+
+                path = tempPath;
+            }
+
             if (!path.EndsWith("/"))
                 path += "/";
 
@@ -246,7 +256,8 @@ namespace Orchard.Azure.Services.FileSystems {
                 }
 
                 if (blob is CloudBlobDirectory) {
-                    string foldername = blob.Uri.Segments.Last();
+                    var blobDir = (CloudBlobDirectory)blob;
+                    string foldername = blobDir.Prefix.Substring(blobDir.Parent.Prefix.Length);
                     string source = String.Concat(path, foldername);
                     string destination = String.Concat(newPath, foldername);
                     RenameFolder(source, destination);

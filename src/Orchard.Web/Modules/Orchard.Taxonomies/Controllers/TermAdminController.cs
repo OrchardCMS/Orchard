@@ -45,12 +45,14 @@ namespace Orchard.Taxonomies.Controllers {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
+            
+            var allTerms = _taxonomyService.GetTermsQuery(taxonomyId).OrderBy(x => x.FullWeight);
 
-            var allTerms = TermPart.Sort(_taxonomyService.GetTermsQuery(taxonomyId).List());
+            var totalItemCount = allTerms.Count();
 
-            var termsPage = pager.PageSize > 0 ? allTerms.Skip(pager.GetStartIndex()).Take(pager.PageSize) : allTerms;
+            var termsPage = pager.PageSize > 0 ? allTerms.Slice(pager.GetStartIndex(), pager.PageSize) : allTerms.Slice(0, 0);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(allTerms.Count());
+            var pagerShape = Shape.Pager(pager).TotalItemCount(totalItemCount);
 
             var entries = termsPage
                     .Select(term => term.CreateTermEntry())
@@ -90,7 +92,9 @@ namespace Orchard.Taxonomies.Controllers {
 
                     foreach (var entry in checkedEntries) {
                         var term = _taxonomyService.GetTerm(entry.Id);
-                        _taxonomyService.DeleteTerm(term);
+                        if (term != null) {
+                            _taxonomyService.DeleteTerm(term);
+                        }
                     }
 
                     Services.Notifier.Information(T.Plural("{0} term has been removed.", "{0} terms have been removed.", checkedEntries.Count));
@@ -219,6 +223,7 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             Services.ContentManager.Publish(term.ContentItem);
+            _taxonomyService.ProcessPath(term);
             Services.Notifier.Success(T("The {0} term has been created.", term.Name));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId });

@@ -29,13 +29,15 @@ namespace Orchard.Users.Events {
 
         public void AccessDenied(IUser user) { }
 
-        public void ChangedPassword(IUser user) { }
+        public void ChangedPassword(IUser user, string password) { }
 
         public void SentChallengeEmail(IUser user) { }
 
         public void ConfirmedEmail(IUser user) { }
 
         public void Approved(IUser user) { }
+
+        public void Moderate(IUser user) { }
 
         public void LoggingIn(string userNameOrEmail, string password) { }
 

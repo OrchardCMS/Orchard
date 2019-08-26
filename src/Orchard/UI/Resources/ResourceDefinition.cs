@@ -307,7 +307,7 @@ namespace Orchard.UI.Resources {
         private string GetPhysicalPath(string url) {
             if (!String.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute) && !url.StartsWith("//")) {
                 if (VirtualPathUtility.IsAbsolute(url) || VirtualPathUtility.IsAppRelative(url)) {
-                    return HostingEnvironment.MapPath(url);
+                    return HostingEnvironment.MapPath(url.Split(new[] { '?' })[0]);
                 }
                 if (!String.IsNullOrEmpty(BasePath)) {
                     return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url));

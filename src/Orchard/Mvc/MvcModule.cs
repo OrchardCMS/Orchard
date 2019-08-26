@@ -41,9 +41,10 @@ namespace Orchard.Mvc {
             // thus preventing a StackOverflowException.
 
             var baseUrl = new Func<string>(() => {
-                var url = siteService.GetSiteSettings().BaseUrl;
-                return !String.IsNullOrWhiteSpace(url) ? url : "http://localhost"
-                    + HostingEnvironment.ApplicationVirtualPath.TrimEnd('/');
+                var s = siteService.GetSiteSettings().BaseUrl;
+
+                // When Setup is running from the command line, no BaseUrl exists yet.
+                return string.IsNullOrEmpty(s) ? "http://localhost" : s;
             });
 
             return new HttpContextPlaceholder(baseUrl);

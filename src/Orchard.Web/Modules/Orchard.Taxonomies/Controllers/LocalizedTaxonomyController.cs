@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Fields;
@@ -56,8 +57,15 @@ namespace Orchard.Taxonomies.Controllers {
                         ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
                         : new List<TermEntry>(0);
                     List<TermPart> appliedTerms = new List<TermPart>();
+                    int firstTermIdForCulture = 0;
                     if (contentId > 0) {
                         appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
+
+                        // It takes the first term localized with the culture in order to set correctly the TaxonomyFieldViewModel.SingleTermId
+                        var firstTermForCulture = appliedTerms.FirstOrDefault(x => x.As<LocalizationPart>() != null && x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Culture == culture);
+                        if (firstTermForCulture != null) {
+                            firstTermIdForCulture = firstTermForCulture.Id;
+                        }
                         terms.ForEach(t => t.IsChecked = appliedTerms.Select(x => x.Id).Contains(t.Id));
                     }
                     viewModel = new TaxonomyFieldViewModel {
@@ -66,7 +74,7 @@ namespace Orchard.Taxonomies.Controllers {
                         Terms = terms,
                         SelectedTerms = appliedTerms,
                         Settings = taxonomySettings,
-                        SingleTermId = appliedTerms.Select(t => t.Id).FirstOrDefault(),
+                        SingleTermId = firstTermIdForCulture,
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };

@@ -1,155 +1,260 @@
-/* ========================================================================
- * Bootstrap: tab.js v3.3.5
- * http://getbootstrap.com/javascript/#tabs
- * ========================================================================
- * Copyright 2011-2015 Twitter, Inc.
+/**
+ * --------------------------------------------------------------------------
+ * Bootstrap (v4.3.1): tab.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * ======================================================================== */
+ * --------------------------------------------------------------------------
+ */
 
+import $ from 'jquery'
+import Util from './util'
 
-+function ($) {
-  'use strict';
+/**
+ * ------------------------------------------------------------------------
+ * Constants
+ * ------------------------------------------------------------------------
+ */
 
-  // TAB CLASS DEFINITION
-  // ====================
+const NAME               = 'tab'
+const VERSION            = '4.3.1'
+const DATA_KEY           = 'bs.tab'
+const EVENT_KEY          = `.${DATA_KEY}`
+const DATA_API_KEY       = '.data-api'
+const JQUERY_NO_CONFLICT = $.fn[NAME]
 
-  var Tab = function (element) {
-    // jscs:disable requireDollarBeforejQueryAssignment
-    this.element = $(element)
-    // jscs:enable requireDollarBeforejQueryAssignment
+const Event = {
+  HIDE           : `hide${EVENT_KEY}`,
+  HIDDEN         : `hidden${EVENT_KEY}`,
+  SHOW           : `show${EVENT_KEY}`,
+  SHOWN          : `shown${EVENT_KEY}`,
+  CLICK_DATA_API : `click${EVENT_KEY}${DATA_API_KEY}`
+}
+
+const ClassName = {
+  DROPDOWN_MENU : 'dropdown-menu',
+  ACTIVE        : 'active',
+  DISABLED      : 'disabled',
+  FADE          : 'fade',
+  SHOW          : 'show'
+}
+
+const Selector = {
+  DROPDOWN              : '.dropdown',
+  NAV_LIST_GROUP        : '.nav, .list-group',
+  ACTIVE                : '.active',
+  ACTIVE_UL             : '> li > .active',
+  DATA_TOGGLE           : '[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]',
+  DROPDOWN_TOGGLE       : '.dropdown-toggle',
+  DROPDOWN_ACTIVE_CHILD : '> .dropdown-menu .active'
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Class Definition
+ * ------------------------------------------------------------------------
+ */
+
+class Tab {
+  constructor(element) {
+    this._element = element
   }
 
-  Tab.VERSION = '3.3.5'
+  // Getters
 
-  Tab.TRANSITION_DURATION = 150
+  static get VERSION() {
+    return VERSION
+  }
 
-  Tab.prototype.show = function () {
-    var $this    = this.element
-    var $ul      = $this.closest('ul:not(.dropdown-menu)')
-    var selector = $this.data('target')
+  // Public
 
-    if (!selector) {
-      selector = $this.attr('href')
-      selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+  show() {
+    if (this._element.parentNode &&
+        this._element.parentNode.nodeType === Node.ELEMENT_NODE &&
+        $(this._element).hasClass(ClassName.ACTIVE) ||
+        $(this._element).hasClass(ClassName.DISABLED)) {
+      return
     }
 
-    if ($this.parent('li').hasClass('active')) return
+    let target
+    let previous
+    const listElement = $(this._element).closest(Selector.NAV_LIST_GROUP)[0]
+    const selector = Util.getSelectorFromElement(this._element)
 
-    var $previous = $ul.find('.active:last a')
-    var hideEvent = $.Event('hide.bs.tab', {
-      relatedTarget: $this[0]
-    })
-    var showEvent = $.Event('show.bs.tab', {
-      relatedTarget: $previous[0]
-    })
-
-    $previous.trigger(hideEvent)
-    $this.trigger(showEvent)
-
-    if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
-
-    var $target = $(selector)
-
-    this.activate($this.closest('li'), $ul)
-    this.activate($target, $target.parent(), function () {
-      $previous.trigger({
-        type: 'hidden.bs.tab',
-        relatedTarget: $this[0]
-      })
-      $this.trigger({
-        type: 'shown.bs.tab',
-        relatedTarget: $previous[0]
-      })
-    })
-  }
-
-  Tab.prototype.activate = function (element, container, callback) {
-    var $active    = container.find('> .active')
-    var transition = callback
-      && $.support.transition
-      && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
-
-    function next() {
-      $active
-        .removeClass('active')
-        .find('> .dropdown-menu > .active')
-          .removeClass('active')
-        .end()
-        .find('[data-toggle="tab"]')
-          .attr('aria-expanded', false)
-
-      element
-        .addClass('active')
-        .find('[data-toggle="tab"]')
-          .attr('aria-expanded', true)
-
-      if (transition) {
-        element[0].offsetWidth // reflow for transition
-        element.addClass('in')
-      } else {
-        element.removeClass('fade')
-      }
-
-      if (element.parent('.dropdown-menu').length) {
-        element
-          .closest('li.dropdown')
-            .addClass('active')
-          .end()
-          .find('[data-toggle="tab"]')
-            .attr('aria-expanded', true)
-      }
-
-      callback && callback()
+    if (listElement) {
+      const itemSelector = listElement.nodeName === 'UL' || listElement.nodeName === 'OL' ? Selector.ACTIVE_UL : Selector.ACTIVE
+      previous = $.makeArray($(listElement).find(itemSelector))
+      previous = previous[previous.length - 1]
     }
 
-    $active.length && transition ?
-      $active
-        .one('bsTransitionEnd', next)
-        .emulateTransitionEnd(Tab.TRANSITION_DURATION) :
-      next()
+    const hideEvent = $.Event(Event.HIDE, {
+      relatedTarget: this._element
+    })
 
-    $active.removeClass('in')
+    const showEvent = $.Event(Event.SHOW, {
+      relatedTarget: previous
+    })
+
+    if (previous) {
+      $(previous).trigger(hideEvent)
+    }
+
+    $(this._element).trigger(showEvent)
+
+    if (showEvent.isDefaultPrevented() ||
+        hideEvent.isDefaultPrevented()) {
+      return
+    }
+
+    if (selector) {
+      target = document.querySelector(selector)
+    }
+
+    this._activate(
+      this._element,
+      listElement
+    )
+
+    const complete = () => {
+      const hiddenEvent = $.Event(Event.HIDDEN, {
+        relatedTarget: this._element
+      })
+
+      const shownEvent = $.Event(Event.SHOWN, {
+        relatedTarget: previous
+      })
+
+      $(previous).trigger(hiddenEvent)
+      $(this._element).trigger(shownEvent)
+    }
+
+    if (target) {
+      this._activate(target, target.parentNode, complete)
+    } else {
+      complete()
+    }
   }
 
+  dispose() {
+    $.removeData(this._element, DATA_KEY)
+    this._element = null
+  }
 
-  // TAB PLUGIN DEFINITION
-  // =====================
+  // Private
 
-  function Plugin(option) {
+  _activate(element, container, callback) {
+    const activeElements = container && (container.nodeName === 'UL' || container.nodeName === 'OL')
+      ? $(container).find(Selector.ACTIVE_UL)
+      : $(container).children(Selector.ACTIVE)
+
+    const active = activeElements[0]
+    const isTransitioning = callback && (active && $(active).hasClass(ClassName.FADE))
+    const complete = () => this._transitionComplete(
+      element,
+      active,
+      callback
+    )
+
+    if (active && isTransitioning) {
+      const transitionDuration = Util.getTransitionDurationFromElement(active)
+
+      $(active)
+        .removeClass(ClassName.SHOW)
+        .one(Util.TRANSITION_END, complete)
+        .emulateTransitionEnd(transitionDuration)
+    } else {
+      complete()
+    }
+  }
+
+  _transitionComplete(element, active, callback) {
+    if (active) {
+      $(active).removeClass(ClassName.ACTIVE)
+
+      const dropdownChild = $(active.parentNode).find(
+        Selector.DROPDOWN_ACTIVE_CHILD
+      )[0]
+
+      if (dropdownChild) {
+        $(dropdownChild).removeClass(ClassName.ACTIVE)
+      }
+
+      if (active.getAttribute('role') === 'tab') {
+        active.setAttribute('aria-selected', false)
+      }
+    }
+
+    $(element).addClass(ClassName.ACTIVE)
+    if (element.getAttribute('role') === 'tab') {
+      element.setAttribute('aria-selected', true)
+    }
+
+    Util.reflow(element)
+
+    if (element.classList.contains(ClassName.FADE)) {
+      element.classList.add(ClassName.SHOW)
+    }
+
+    if (element.parentNode && $(element.parentNode).hasClass(ClassName.DROPDOWN_MENU)) {
+      const dropdownElement = $(element).closest(Selector.DROPDOWN)[0]
+
+      if (dropdownElement) {
+        const dropdownToggleList = [].slice.call(dropdownElement.querySelectorAll(Selector.DROPDOWN_TOGGLE))
+
+        $(dropdownToggleList).addClass(ClassName.ACTIVE)
+      }
+
+      element.setAttribute('aria-expanded', true)
+    }
+
+    if (callback) {
+      callback()
+    }
+  }
+
+  // Static
+
+  static _jQueryInterface(config) {
     return this.each(function () {
-      var $this = $(this)
-      var data  = $this.data('bs.tab')
+      const $this = $(this)
+      let data = $this.data(DATA_KEY)
 
-      if (!data) $this.data('bs.tab', (data = new Tab(this)))
-      if (typeof option == 'string') data[option]()
+      if (!data) {
+        data = new Tab(this)
+        $this.data(DATA_KEY, data)
+      }
+
+      if (typeof config === 'string') {
+        if (typeof data[config] === 'undefined') {
+          throw new TypeError(`No method named "${config}"`)
+        }
+        data[config]()
+      }
     })
   }
+}
 
-  var old = $.fn.tab
+/**
+ * ------------------------------------------------------------------------
+ * Data Api implementation
+ * ------------------------------------------------------------------------
+ */
 
-  $.fn.tab             = Plugin
-  $.fn.tab.Constructor = Tab
+$(document)
+  .on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
+    event.preventDefault()
+    Tab._jQueryInterface.call($(this), 'show')
+  })
 
+/**
+ * ------------------------------------------------------------------------
+ * jQuery
+ * ------------------------------------------------------------------------
+ */
 
-  // TAB NO CONFLICT
-  // ===============
+$.fn[NAME] = Tab._jQueryInterface
+$.fn[NAME].Constructor = Tab
+$.fn[NAME].noConflict = () => {
+  $.fn[NAME] = JQUERY_NO_CONFLICT
+  return Tab._jQueryInterface
+}
 
-  $.fn.tab.noConflict = function () {
-    $.fn.tab = old
-    return this
-  }
-
-
-  // TAB DATA-API
-  // ============
-
-  var clickHandler = function (e) {
-    e.preventDefault()
-    Plugin.call($(this), 'show')
-  }
-
-  $(document)
-    .on('click.bs.tab.data-api', '[data-toggle="tab"]', clickHandler)
-    .on('click.bs.tab.data-api', '[data-toggle="pill"]', clickHandler)
-
-}(jQuery);
+export default Tab

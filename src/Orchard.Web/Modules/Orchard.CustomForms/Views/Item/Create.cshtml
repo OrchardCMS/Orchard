@@ -13,6 +13,7 @@
     Model.Zones["Sidebar"].Items.Clear();
 
     var submitButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.SubmitButtonText) ? T("Submit").Text : Model.ContentItem.CustomFormPart.SubmitButtonText;
+    var publishButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.PublishButtonText) ? T("Publish").Text : Model.ContentItem.CustomFormPart.PublishButtonText;
 }
 
 @Display(New.Parts_Title().Title(displayText))
@@ -22,8 +23,14 @@
     // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(Model)
 
+    @Html.Hidden("contentId", (int)Model.ContentId, new { id = string.Empty });
+
     <fieldset class="submit-button">
-        <button type="submit" name="submit.Save" value="submit.Save">@submitButtonText</button>
+        @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == false || Model.ContentItem.CustomFormPart.SaveContentItem == true) {
+            <button type="submit" name="submit.Save" value="submit.Save">@submitButtonText</button>
+        }
+        @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == true) {
+            <button type="submit" name="submit.Publish" value="submit.Publish">@publishButtonText</button>
+        }
     </fieldset>
 }
-

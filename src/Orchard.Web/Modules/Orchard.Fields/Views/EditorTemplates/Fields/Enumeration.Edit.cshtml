@@ -33,7 +33,7 @@
                 if (!string.IsNullOrWhiteSpace(option)) {
                     <div>
                         <input type="checkbox" name="@Html.FieldNameFor(m => m.SelectedValues)" value="@option" @((Model.SelectedValues != null && Model.SelectedValues.Contains(option)) ? "checked=\"checked\"" : "") class="check-box" id="@Html.FieldIdFor(m => m.SelectedValues)-@index" />
-                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SelectedValues)-@index">@T(option)</label>
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SelectedValues)-@index">@option</label>
                     </div>
                 }
             }

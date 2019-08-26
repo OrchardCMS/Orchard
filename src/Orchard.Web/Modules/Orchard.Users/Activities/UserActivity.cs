@@ -153,4 +153,15 @@ namespace Orchard.Users.Activities {
             get { return T("User is approved."); }
         }
     }
+
+    [OrchardFeature("Orchard.Users.Workflows")]
+    public class UserDisabledActivity : UserActivity {
+        public override string Name {
+            get { return "UserDisabled"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("User is Disabled."); }
+        }
+    }
 }

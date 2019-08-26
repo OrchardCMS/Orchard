@@ -1,10 +1,10 @@
 ﻿@{
     dynamic editor = Model.Editor;
-    
+
     if (TempData.ContainsKey("CustomFormWidget.InvalidCustomFormState")) {
         editor = TempData["CustomFormWidget.InvalidCustomFormState"];
     }
-  
+
     // remove default Save/Publish buttons
     editor.Zones["Sidebar"].Items.Clear();
 }
@@ -15,8 +15,14 @@
     @Display(editor)
 
     @Html.Hidden("returnUrl", Request.RawUrl, new { id = string.Empty });
+    @Html.Hidden("contentId", Request.QueryString["contentId"], new { id = string.Empty });
 
     <fieldset class="submit-button">
-        <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
+       
+            <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
+        }
+        @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == true) {
+            <button type="submit" name="submit.Publish" value="submit.Publish">@Model.ContentPart.PublishButtonText</button>
+        }
     </fieldset>
 }

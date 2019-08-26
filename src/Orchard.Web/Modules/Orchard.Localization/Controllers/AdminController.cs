@@ -6,6 +6,7 @@ using Orchard.Localization.Services;
 using Orchard.UI.Notify;
 using System;
 using System.Web.Mvc;
+using System.Linq;
 
 namespace Orchard.Localization.Controllers
 {
@@ -72,6 +73,14 @@ namespace Orchard.Localization.Controllers
             Services.Notifier.Success(T("Successfully cloned. The translated content was saved as a draft."));
 
             var editorRouteValues = _contentManager.GetItemMetadata(contentItemTranslation).EditorRouteValues;
+            // adds request variables of current controller to the new redirect route 
+            // for example the returnUrl parameter
+            foreach (var key in Request.Form.AllKeys.Where(x=> !x.StartsWith("__") && !editorRouteValues.Keys.Contains(x))) {
+                editorRouteValues.Add(key, Request.Form[key]);
+            }
+            foreach (var key in Request.QueryString.AllKeys.Where(x => !x.StartsWith("__") && !editorRouteValues.Keys.Contains(x))) {
+                editorRouteValues.Add(key, Request.QueryString[key]);
+            }
             return RedirectToRoute(editorRouteValues);
         }
     }

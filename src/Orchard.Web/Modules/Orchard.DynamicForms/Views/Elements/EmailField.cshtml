@@ -9,6 +9,7 @@
     tagBuilder.Attributes["type"] = "email";
     tagBuilder.Attributes["value"] = Model.ProcessedValue;
     tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["placeholder"] = Model.ProcessedPlaceholder;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (!ViewData.ModelState.IsValidField(Model.ProcessedName)) {

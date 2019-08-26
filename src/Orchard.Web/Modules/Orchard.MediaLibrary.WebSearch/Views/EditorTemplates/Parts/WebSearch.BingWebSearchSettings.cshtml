@@ -1,0 +1,11 @@
+﻿@model Orchard.MediaLibrary.WebSearch.Models.BingWebSearchSettingsPart
+
+<fieldset>
+    <legend>@T("Bing Web Search")</legend>
+    <div>
+        @Html.TextBoxFor(m => m.ApiKey, new { type = "password", @class = "text medium"})
+        <span class="hint">@T("Your private key.")</span>
+    </div>
+
+    @T("Get a free API Key on <a href=\"https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api\">Azure</a>.")
+</fieldset>

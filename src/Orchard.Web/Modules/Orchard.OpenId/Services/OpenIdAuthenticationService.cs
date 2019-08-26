@@ -5,13 +5,14 @@ using System.Web.Security;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Services;
 
 namespace Orchard.OpenId.Services {
     [OrchardFeature("Orchard.OpenId")]
-    public class OpenIdAuthenticationService : IAuthenticationService {
+    public class OpenIdAuthenticationService : IAuthenticationService, IOpenIdAuthenticationService {
         private readonly ShellSettings _settings;
         private readonly IClock _clock;
         private readonly IMembershipService _membershipService;
@@ -19,6 +20,8 @@ namespace Orchard.OpenId.Services {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMembershipValidationService _membershipValidationService;
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
+        private readonly IEnumerable<IUserDataProvider> _userDataProviders;
+        private readonly ISecurityService _securityService;
 
         private IUser _localAuthenticationUser;
 
@@ -26,7 +29,7 @@ namespace Orchard.OpenId.Services {
         private IAuthenticationService FallbackAuthenticationService {
             get {
                 if (_fallbackAuthenticationService == null)
-                    _fallbackAuthenticationService = new FormsAuthenticationService(_settings, _clock, _membershipService, _httpContextAccessor, _sslSettingsProvider, _membershipValidationService);
+                    _fallbackAuthenticationService = new FormsAuthenticationService(_settings, _clock, _membershipService, _httpContextAccessor, _sslSettingsProvider, _membershipValidationService, _userDataProviders, _securityService);
 
                 return _fallbackAuthenticationService;
             }
@@ -39,7 +42,9 @@ namespace Orchard.OpenId.Services {
             ISslSettingsProvider sslSettingsProvider,
             IHttpContextAccessor httpContextAccessor,
             IMembershipValidationService membershipValidationService,
-            IEnumerable<IOpenIdProvider> openIdProviders) {
+            IEnumerable<IOpenIdProvider> openIdProviders,
+            IEnumerable<IUserDataProvider> userDataProviders,
+            ISecurityService securityService) {
 
             _httpContextAccessor = httpContextAccessor;
             _membershipService = membershipService;
@@ -48,6 +53,8 @@ namespace Orchard.OpenId.Services {
             _sslSettingsProvider = sslSettingsProvider;
             _membershipValidationService = membershipValidationService;
             _openIdProviders = openIdProviders;
+            _userDataProviders = userDataProviders;
+            _securityService = securityService;
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
@@ -73,9 +80,9 @@ namespace Orchard.OpenId.Services {
                 return FallbackAuthenticationService.GetAuthenticatedUser();
             }
 
-            var user = _httpContextAccessor.Current().GetOwinContext().Authentication.User;
+            var userIdentity = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Identity;
 
-            if (!user.Identity.IsAuthenticated) {
+            if (string.IsNullOrEmpty(userIdentity.Name?.Trim()) || !userIdentity.IsAuthenticated) {
                 return null;
             }
 
@@ -84,7 +91,7 @@ namespace Orchard.OpenId.Services {
                 return _localAuthenticationUser;
             }
 
-            var userName = user.Identity.Name.Trim();
+            var userName = userIdentity.Name.Trim();
 
             //Get the local user, if local user account doesn't exist, create it 
             var localUser =
@@ -96,8 +103,14 @@ namespace Orchard.OpenId.Services {
             return _localAuthenticationUser = localUser;
         }
 
-        private bool IsLocalUser() {
-            var anyClaim = _httpContextAccessor.Current().GetOwinContext().Authentication.User.Claims.FirstOrDefault();
+        public bool IsLocalUser() {
+            var httpContext = _httpContextAccessor.Current();
+
+            if (httpContext.IsBackgroundContext()) {
+                return true;
+            }
+
+            var anyClaim = httpContext.GetOwinContext().Authentication.User.Claims.FirstOrDefault();
 
             if (anyClaim == null || anyClaim.Issuer == Constants.General.LocalIssuer || anyClaim.Issuer == Constants.General.FormsIssuer) {
                 return true;

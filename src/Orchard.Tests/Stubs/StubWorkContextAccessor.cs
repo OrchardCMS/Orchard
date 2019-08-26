@@ -45,7 +45,7 @@ namespace Orchard.Tests.Stubs {
                 }
 
                 public string SiteName {
-                    get { throw new NotImplementedException(); }
+                    get { return "TestSite"; }
                 }
 
                 public string SiteSalt {

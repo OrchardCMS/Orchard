@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Security;
 using Autofac;
 using Moq;
@@ -21,6 +22,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Settings;
@@ -32,7 +34,7 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Users.Services
+namespace Orchard.Tests.Modules.Users.Services 
 {
     [TestFixture]
     public class MembershipServiceTests {
@@ -146,8 +148,9 @@ namespace Orchard.Tests.Modules.Users.Services
             Assert.That(user1Record.PasswordSalt, Is.Not.EqualTo(user2Record.PasswordSalt));
             Assert.That(user1Record.Password, Is.Not.EqualTo(user2Record.Password));
 
-            Assert.That(_membershipService.ValidateUser("a", "b"), Is.Not.Null);
-            Assert.That(_membershipService.ValidateUser("d", "b"), Is.Not.Null);
+            List<LocalizedString> validationErrors;
+            Assert.That(_membershipService.ValidateUser("a", "b", out validationErrors), Is.Not.Null);
+            Assert.That(_membershipService.ValidateUser("d", "b", out validationErrors), Is.Not.Null);
         }
 
         [Test]
@@ -156,9 +159,10 @@ namespace Orchard.Tests.Modules.Users.Services
             _session.Flush();
             _session.Clear();
 
-            var validate1 = _membershipService.ValidateUser("test-user", "bad-password");
-            var validate2 = _membershipService.ValidateUser("bad-user", "test-password");
-            var validate3 = _membershipService.ValidateUser("test-user", "test-password");
+            List<LocalizedString> validationErrors;
+            var validate1 = _membershipService.ValidateUser("test-user", "bad-password", out validationErrors);
+            var validate2 = _membershipService.ValidateUser("bad-user", "test-password", out validationErrors);
+            var validate3 = _membershipService.ValidateUser("test-user", "test-password", out validationErrors);
 
             Assert.That(validate1, Is.Null);
             Assert.That(validate2, Is.Null);
@@ -168,7 +172,7 @@ namespace Orchard.Tests.Modules.Users.Services
         [Test]
         public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
-            
+
             Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 

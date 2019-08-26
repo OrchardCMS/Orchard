@@ -16,7 +16,9 @@ Scenario: Creating and using Boolean fields
             | DisplayName | Event |
             | Name        | Event |
         And I hit "Create"
-        And I go to "Admin/ContentTypes/"
+        And I am redirected
+        Then I should see "The \"Event\" content type has been created."
+        When I go to "Admin/ContentTypes/"
     Then I should see "Event"
 
     # Adding a Boolean field
@@ -47,30 +49,34 @@ Scenario: Creating and using Boolean fields
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                | value                        |
-            | Fields[0].BooleanFieldSettings.Hint | Check if the event is active |
+            | name                                     | value                        |
+            | Fields[Active].BooleanFieldSettings.Hint | Check if the event is active |
         And I hit "Save"
+        And I am redirected
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
 
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                        | value |
-            | Fields[0].BooleanFieldSettings.DefaultValue | True  |
+            | name                                             | value |
+            | Fields[Active].BooleanFieldSettings.DefaultValue | True  |
         And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
+        And I am redirected
+        Then I should see "\"Event\" settings have been saved."
+        When I go to "Admin/Contents/Create/Event" 
     Then I should see "checked=\"checked\""
 
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                        | value |
-            | Fields[0].BooleanFieldSettings.Optional     | false |
+            | name                                              | value         |
+            | Fields[Active].BooleanFieldSettings.Optional     | false |
+            | Fields[Active].BooleanFieldSettings.SelectionMode | Dropdown list |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in
             | name               | value |
             | Event.Active.Value |       |
         And I hit "Save Draft"
-    Then I should see "The Active field is required."
+    #Then I should see "The Active field is required."

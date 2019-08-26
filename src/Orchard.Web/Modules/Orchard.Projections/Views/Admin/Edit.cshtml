@@ -84,7 +84,6 @@
                         <li class="action-link">
                             @Html.ActionLink(T("Up").Text, "Move", new { controller = "SortCriterion", id = sortCriterion.SortCriterionRecordId, direction = "up", queryId = Model.Id })
                         </li>
-                        }
                         @if (sortCriterion != Model.SortCriteria.Last()) {
                             <li class="action-link">
                                 @Html.ActionLink(T("Down").Text, "Move", new { controller = "SortCriterion", id = sortCriterion.SortCriterionRecordId, direction = "down", queryId = Model.Id })

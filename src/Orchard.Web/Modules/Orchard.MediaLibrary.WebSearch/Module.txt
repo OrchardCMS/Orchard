@@ -1,0 +1,27 @@
+﻿Name: Orchard.MediaLibrary.WebSearch
+AntiForgery: enabled
+Author: The Orchard Team, Lombiq Technologies Ltd.
+Website: https://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.10.3
+Features:
+    Orchard.MediaLibrary.WebSearch:
+        Description: Base functionality for Orchard to be able import images from web search results to the Media Library.
+        Category: Media
+        Name: Media Library Web Search
+        Dependencies: Orchard.MediaLibrary
+    Orchard.MediaLibrary.WebSearch.Bing:
+        Description: Bing web search provider for importing images to the Media Library.
+        Category: Media
+        Name: Media Library Web Search - Bing
+        Dependencies: Orchard.MediaLibrary.WebSearch
+    Orchard.MediaLibrary.WebSearch.Pixabay:
+        Description: Pixabay web search provider for importing images to the Media Library.
+        Category: Media
+        Name: Media Library Web Search - Pixabay
+        Dependencies: Orchard.MediaLibrary.WebSearch
+    Orchard.MediaLibrary.WebSearch.Google:
+        Description: Google web search provider for importing images to the Media Library.
+        Category: Media
+        Name: Media Library Web Search - Google
+        Dependencies: Orchard.MediaLibrary.WebSearch

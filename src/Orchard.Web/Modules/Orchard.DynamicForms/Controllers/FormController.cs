@@ -48,7 +48,7 @@ namespace Orchard.DynamicForms.Controllers {
 
             if (form == null) {
                 Logger.Warning("The specified form \"{0}\" could not be found.", formName);
-                _notifier.Warning(T("The specified form \"{0}\" could not be found."));
+                _notifier.Warning(T("The specified form \"{0}\" could not be found.", formName));
                 return Redirect(urlReferrer);
             }
 

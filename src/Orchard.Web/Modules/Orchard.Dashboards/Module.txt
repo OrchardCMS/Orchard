@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.2
-OrchardVersion: 1.9
+Version: 1.10.3
+OrchardVersion: 1.10.3
 Description: The Dashboards module enables administrators to customize the dashboard screen of the administration UI of the application.
 Features:
     Orchard.Dashboards:

@@ -70,14 +70,10 @@ namespace Orchard.Comments.Drivers {
 
                         return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),
-                ContentShape("Parts_Comments_Count",
-                    () => {
-                        if (part.CommentsShown == false)
-                            return null;
-
-                        return shapeHelper.Parts_Comments_Count(
-                            CommentCount: part.CommentsCount);
-                    }),
+                ContentShape("Parts_Comments_Count", () =>
+                    part.CommentsShown ? shapeHelper.Parts_Comments_Count(CommentCount: part.CommentsCount) : null),
+                ContentShape("Parts_Comments_Count_Summary", () =>
+                    part.CommentsShown ? shapeHelper.Parts_Comments_Count_Summary(CommentCount: part.CommentsCount) : null),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
                     () => {
 

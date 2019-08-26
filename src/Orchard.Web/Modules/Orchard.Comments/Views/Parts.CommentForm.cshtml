@@ -33,7 +33,7 @@ else if (isAuthorized) {
         <div class="comment-reply-form-settings" data-contentitem-id="@commentsPart.ContentItem.Id" data-active-comment-id="@activeCommentId"></div>
     }
     @Html.ValidationSummary() 
-    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.ToUrlString() }), FormMethod.Post, new { @class = "comment-form", data_contentitem_id = commentsPart.ContentItem.Id })) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Comment", new { Area = "Orchard.Comments", ReturnUrl = Context.Request.RawUrl }), FormMethod.Post, new { @class = "comment-form", data_contentitem_id = commentsPart.ContentItem.Id })) {
         if (TempData.ContainsKey("Comments.InvalidCommentEditorShape")) {
             @Display(TempData["Comments.InvalidCommentEditorShape"]);
         }
@@ -41,6 +41,5 @@ else if (isAuthorized) {
             @Display(Model.EditorShape)
         }
         <button class="primaryAction" type="submit">@T("Submit Comment")</button>
-    }
-    
+    }    
 }

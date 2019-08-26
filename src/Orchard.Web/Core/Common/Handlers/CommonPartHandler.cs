@@ -1,11 +1,10 @@
-using System;
 using System.Linq;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Security;
 using Orchard.Services;
 
@@ -40,7 +39,7 @@ namespace Orchard.Core.Common.Handlers {
             OnLoading<CommonPart>((context, part) => LazyLoadHandlers(part));
             OnVersioning<CommonPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
-            OnUpdateEditorShape<CommonPart>(AssignUpdateDates);
+            OnUpdating<CommonPart>(AssignUpdatingDates);
             OnVersioning<CommonPart>(AssignVersioningDates);
             OnPublishing<CommonPart>(AssignPublishingDates);
             OnRemoving<CommonPart>(AssignRemovingDates);
@@ -100,7 +99,7 @@ namespace Orchard.Core.Common.Handlers {
             part.VersionModifiedBy = GetUserName();
         }
 
-        private void AssignUpdateDates(UpdateEditorContext context, CommonPart part) {
+        private void AssignUpdatingDates(UpdateContentContext context, CommonPart part) {
             var utcNow = _clock.UtcNow;
 
             part.ModifiedUtc = utcNow;

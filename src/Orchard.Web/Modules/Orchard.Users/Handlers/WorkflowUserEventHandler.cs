@@ -60,10 +60,10 @@ namespace Orchard.Users.Handlers {
                                          () => new Dictionary<string, object> {{"User", user}});
         }
 
-        public void ChangedPassword(Security.IUser user) {
+        public void ChangedPassword(Security.IUser user, string password) {
             _workflowManager.TriggerEvent("UserChangedPassword",
                                          user,
-                                         () => new Dictionary<string, object> {{"User", user}});
+                                         () => new Dictionary<string, object> {{"User", user}, { "Password", password } });
         }
 
         public void SentChallengeEmail(Security.IUser user) {
@@ -82,6 +82,12 @@ namespace Orchard.Users.Handlers {
             _workflowManager.TriggerEvent("UserApproved",
                                          user,
                                          () => new Dictionary<string, object> {{"User", user}});
+        }
+
+        public void Moderate(Security.IUser user) {
+            _workflowManager.TriggerEvent("UserDisabled",
+                                         user,
+                                         () => new Dictionary<string, object> { { "User", user } });
         }
     }
 }

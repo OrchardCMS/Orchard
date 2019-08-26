@@ -24,7 +24,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Projections.Drivers {
     public class ProjectionPartDriver : ContentPartDriver<ProjectionPart> {
         private readonly IRepository<QueryPartRecord> _queryRepository;
-        private readonly IProjectionManagerExtension _projectionManager;
+        private readonly IProjectionManager _projectionManager;
         private readonly IFeedManager _feedManager;
         private readonly ITokenizer _tokenizer;
         private readonly IDisplayHelperFactory _displayHelperFactory;
@@ -34,7 +34,7 @@ namespace Orchard.Projections.Drivers {
         public ProjectionPartDriver(
             IOrchardServices services,
             IRepository<QueryPartRecord> queryRepository,
-            IProjectionManagerExtension projectionManager,
+            IProjectionManager projectionManager,
             IFeedManager feedManager,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory,

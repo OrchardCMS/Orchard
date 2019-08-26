@@ -97,6 +97,9 @@
                                                 break;
                                             case "paste":
                                                 focusedElement.paste(e.originalEvent.clipboardData);
+                                                $.event.trigger({
+                                                    type: "layouteditor:edited"
+                                                });
                                                 break;
                                         }
                                     });

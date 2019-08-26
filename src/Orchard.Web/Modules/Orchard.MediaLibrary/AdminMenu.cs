@@ -15,7 +15,8 @@ namespace Orchard.MediaLibrary {
             builder.AddImageSet("media-library")
                 .Add(T("Media"), "6",
                     menu => menu.Add(T("Media"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MediaLibrary" })
-                        .Permission(Permissions.ManageOwnMedia)));
+                        .Permission(Permissions.ManageOwnMedia)
+                        .Permission(Permissions.SelectMediaContent)));
         }
     }
 }

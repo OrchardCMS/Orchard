@@ -5,13 +5,18 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Security;
 
 namespace Orchard.Blogs.Handlers {
     public class BlogPostPartHandler : ContentHandler {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IBlogService _blogService;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
+        public BlogPostPartHandler(IAuthorizationService authorizationService, IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext, IWorkContextAccessor workContextAccessor) {
+            _authorizationService = authorizationService;
             _blogService = blogService;
+            _workContextAccessor = workContextAccessor;
 
             OnGetDisplayShape<BlogPostPart>(SetModelProperties);
             OnGetEditorShape<BlogPostPart>(SetModelProperties);
@@ -45,8 +50,29 @@ namespace Orchard.Blogs.Handlers {
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var blogPost = context.ContentItem.As<BlogPostPart>();
 
+            if (blogPost == null) {
+                return;
+            }
+
+            int blogId = 0;
             // BlogPart can be null if this is a new Blog Post item.
-            if (blogPost == null || blogPost.BlogPart == null) {
+            if (blogPost.BlogPart == null) {
+                var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
+                if (blogs.Count() == 1) {
+                    var singleBlog = blogs.ElementAt(0);
+                    if (singleBlog != null) blogId = singleBlog.Id;
+                }
+            } else {
+                blogId = blogPost.BlogPart.Id;
+            }
+
+            if (blogId == 0) {
+                context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                    {"Area", "Orchard.Blogs"},
+                    {"Controller", "BlogPostAdmin"},
+                    {"Action", "CreateWithoutBlog"}
+                };
+
                 return;
             }
 
@@ -54,21 +80,21 @@ namespace Orchard.Blogs.Handlers {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Create"},
-                {"blogId", blogPost.BlogPart.Id}
+                {"blogId", blogId}
             };
             context.Metadata.EditorRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Edit"},
                 {"postId", context.ContentItem.Id},
-                {"blogId", blogPost.BlogPart.Id}
+                {"blogId", blogId}
             };
             context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Delete"},
                 {"postId", context.ContentItem.Id},
-                {"blogId", blogPost.BlogPart.Id}
+                {"blogId", blogId}
             };
         }
     }

@@ -1,12 +1,16 @@
 ﻿@using Orchard.AntiSpam.Models
-@using Orchard.Utility.Extensions
+
 @{
     SpamFilterPart part = Model.ContentPart;
 }
 
-@if (Model.ContentPart.Status == SpamStatus.Spam) {
-    @Html.Link(@T("Not Spam").Text, Url.Action("ReportHam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
-}
-else {
-    @Html.Link(@T("Spam").Text, Url.Action("ReportSpam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
-}
+<ul class="action-links">
+    <li class="action-link">
+        @if (Model.ContentPart.Status == SpamStatus.Spam) {
+            @Html.Link(@T("Not Spam").Text, Url.Action("ReportHam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
+        }
+        else {
+            @Html.Link(@T("Spam").Text, Url.Action("ReportSpam", "Admin", new {area = "Orchard.AntiSpam", part.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
+        }
+    </li>
+</ul>

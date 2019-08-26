@@ -92,6 +92,9 @@
                 return;
             var index = _(this.children).indexOf(child);
             this.children.move(index, index - 1);
+            $.event.trigger({
+                type: "layouteditor:edited"
+            });
         };
 
         this.moveChildDown = function (child) {
@@ -99,6 +102,9 @@
                 return;
             var index = _(this.children).indexOf(child);
             this.children.move(index, index + 1);
+            $.event.trigger({
+                type: "layouteditor:edited"
+            });
         };
 
         this.canMoveChildUp = function (child) {

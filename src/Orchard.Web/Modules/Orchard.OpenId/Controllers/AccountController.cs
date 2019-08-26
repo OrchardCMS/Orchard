@@ -85,6 +85,7 @@ namespace Orchard.OpenId.Controllers
             return this.RedirectLocal(returnUrl);
         }
 
+        [AlwaysAccessible]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public void Challenge(string openIdProvider, string returnUrl) {
             _userEventHandler.LoggingIn(openIdProvider, String.Empty);
@@ -122,7 +123,10 @@ namespace Orchard.OpenId.Controllers
 
         public ActionResult LogonCallback() {
             var user = _authenticationService.GetAuthenticatedUser();
-            _userEventHandler.LoggedIn(user);
+
+            if (user != null) {
+                _userEventHandler.LoggedIn(user); 
+            }
 
             if (TempData.ContainsKey("ReturnUrl"))
                 return this.RedirectLocal((String)TempData["ReturnUrl"]);
@@ -162,7 +166,8 @@ namespace Orchard.OpenId.Controllers
             if (!validate)
                 return null;
 
-            var user = _membershipService.ValidateUser(userNameOrEmail, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
             if (user == null) {
                 ModelState.AddModelError("password", T("The username or e-mail or password provided is incorrect."));
             }
@@ -170,8 +175,8 @@ namespace Orchard.OpenId.Controllers
             return user;
         }
 
-        private string GetCallbackPath(WorkContext workContext)
-        {
+        private string GetCallbackPath(WorkContext workContext) 
+            {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 

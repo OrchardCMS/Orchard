@@ -4,17 +4,17 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Forms.Services;
-using Orchard.Projections.Descriptors;
 using Orchard.Localization;
-using Orchard.Projections.Descriptors.Property;
+using Orchard.Projections.Descriptors;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
+using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Tokens;
 
 namespace Orchard.Projections.Services {
-    public class ProjectionManager : IProjectionManagerExtension {
+    public class ProjectionManager : IProjectionManager {
         private readonly ITokenizer _tokenizer;
         private readonly IEnumerable<IFilterProvider> _filterProviders;
         private readonly IEnumerable<ISortCriterionProvider> _sortCriterionProviders;
@@ -120,9 +120,11 @@ namespace Orchard.Projections.Services {
                 tokens.Add("Content", part.ContentItem);
             }
 
-            // aggregate the result for each group query
-            return GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens)
-                .Sum(contentQuery => contentQuery.Count());
+            var contentQueries = GetContentQueries(queryRecord, Enumerable.Empty<SortCriterionRecord>(), tokens);
+
+            return queryRecord.FilterGroups.Count > 1 ?
+                contentQueries.SelectMany(contentQuery => contentQuery.ListIds()).Distinct().Count() :
+                contentQueries.Sum(contentQuery => contentQuery.Count());
         }
 
         public IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0) {
@@ -168,7 +170,8 @@ namespace Orchard.Projections.Services {
             foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position)) {
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
-                    State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                    State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                    QueryPartRecord = queryRecord
                 };
 
                 string category = sortCriterion.Category;
@@ -188,7 +191,7 @@ namespace Orchard.Projections.Services {
                 groupQuery = sortCriterionContext.Query;
             }
 
-            return groupQuery.Slice(skip, count);
+            return groupQuery.Slice(0, count);
         }
 
         public IEnumerable<IHqlQuery> GetContentQueries(QueryPartRecord queryRecord, IEnumerable<SortCriterionRecord> sortCriteria, Dictionary<string, object> tokens) {
@@ -199,17 +202,19 @@ namespace Orchard.Projections.Services {
                 tokens = new Dictionary<string, object>();
             }
 
-            // pre-executing all groups 
-            foreach (var group in queryRecord.FilterGroups) {
+            var version = queryRecord.VersionScope.ToVersionOptions();
 
-                var contentQuery = _contentManager.HqlQuery().ForVersion(VersionOptions.Published);
+            // pre-executing all groups
+            foreach (var group in queryRecord.FilterGroups) {
+                var contentQuery = _contentManager.HqlQuery().ForVersion(version);
 
                 // iterate over each filter to apply the alterations to the query object
                 foreach (var filter in group.Filters) {
                     var tokenizedState = _tokenizer.Replace(filter.State, tokens);
                     var filterContext = new FilterContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(tokenizedState)
+                        State = FormParametersHelper.ToDynamic(tokenizedState),
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = filter.Category;
@@ -235,7 +240,8 @@ namespace Orchard.Projections.Services {
                 foreach (var sortCriterion in sortCriteria.OrderBy(s => s.Position)) {
                     var sortCriterionContext = new SortCriterionContext {
                         Query = contentQuery,
-                        State = FormParametersHelper.ToDynamic(sortCriterion.State)
+                        State = FormParametersHelper.ToDynamic(sortCriterion.State),
+                        QueryPartRecord = queryRecord
                     };
 
                     string category = sortCriterion.Category;

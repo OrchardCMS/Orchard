@@ -9,7 +9,7 @@ Scenario: Dynamic compilation can be disabled
     When I go to "admin"
     Then I should see "<div id="orchard-version">Orchard v(?:\.\d+){2,4}</div>"
 
-@ignore 
+@ignore
 Scenario: Dynamic compilation will kick in if modules are deployed as source files only
     Given I have chosen to deploy modules as source files only
         And I have installed Orchard

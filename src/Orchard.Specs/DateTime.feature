@@ -39,7 +39,7 @@ Scenario: Creating and using Date fields
             | Event.EventDate.Editor.Date | 31/01/2012 |
             | Event.EventDate.Editor.Time | 12:00 AM   |
         And I hit "Save Draft"
-    Then I should see "Date of the event could not be parsed as a valid date and time"
+    Then I should see "Date of the event could not be parsed as a valid date and time."
 
     # Creating an Event content item
     When I go to "Admin/Contents/Create/Event"
@@ -47,21 +47,19 @@ Scenario: Creating and using Date fields
     When I fill in
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
-        And I fill in
-            | name                        | value    |
-            | Event.EventDate.Editor.Time | 12:00 AM |
+            | Event.EventDate.Editor.Time | 12:00 AM   |
         And I hit "Save Draft"
         And I am redirected
     Then I should see "The Event has been created as a draft."
     When I go to "Admin/Contents/List"
-    Then I should see "Date of the event"
+    Then I should see "Date of the event:"
         And I should see "1/31/2012 12:00"
 
     # The hint should be displayed
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                 | value                       |
-            | Fields[0].DateTimeFieldSettings.Hint | Enter the date of the event |
+            | name                                         | value                       |
+            | Fields[EventDate].DateTimeFieldSettings.Hint | Enter the date of the event |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Enter the date of the event"
@@ -69,8 +67,8 @@ Scenario: Creating and using Date fields
     # Display = DateOnly
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                    | value    |
-            | Fields[0].DateTimeFieldSettings.Display | DateOnly |
+            | name										      | value    |
+            | Fields[EventDate].DateTimeFieldSettings.Display | DateOnly |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -79,8 +77,8 @@ Scenario: Creating and using Date fields
     # Display = TimeOnly
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                    | value    |
-            | Fields[0].DateTimeFieldSettings.Display | TimeOnly |
+            | name                                            | value    |
+            | Fields[EventDate].DateTimeFieldSettings.Display | TimeOnly |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Time"
@@ -89,21 +87,12 @@ Scenario: Creating and using Date fields
     # Required & Date and Time
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                     | value       |
-            | Fields[0].DateTimeFieldSettings.Display  | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Required | true        |
+            | name                                             | value       |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-    Then I should see "Event.EventDate.Editor.Date"
-    When I fill in
-            | name                        | value      |
-            | Event.EventDate.Editor.Date | 01/31/2012 |
-            | Event.EventDate.Editor.Time | 12:00 AM   |
-        And I hit "Save Draft"
-        And I am redirected
-    Then I should see "The Event has been created as draft."
-    When I go to "Admin/Contents/Create/Event"
-     And I fill in
+        And I fill in
             | name                        | value      |
             | Event.EventDate.Editor.Date | 01/31/2012 |
         And I hit "Save Draft"
@@ -119,8 +108,8 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                     | value    |
-            | Fields[0].DateTimeFieldSettings.Display  | DateOnly |
-            | Fields[0].DateTimeFieldSettings.Required | true     |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true     |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -131,8 +120,8 @@ Scenario: Creating and using Date fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                     | value    |
-            | Fields[0].DateTimeFieldSettings.Display  | TimeOnly |
-            | Fields[0].DateTimeFieldSettings.Required | true     |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | TimeOnly |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true     |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
@@ -142,13 +131,14 @@ Scenario: Creating and using Date fields
     # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
-            | name                                        | value       |
-            | Fields[0].DateTimeFieldSettings.Display     | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Editor.Date | 01/31/2016  |
-            | Fields[0].DateTimeFieldSettings.Editor.Time | 10:00 AM    |
+            | name                                                | value       |
+            | Fields[EventDate].DateTimeFieldSettings.Display     | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Editor.Date | 01/31/2016  |
+            | Fields[EventDate].DateTimeFieldSettings.Editor.Time | 10:00 AM    |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Event.EventDate.Editor.Date"
+    And  I should see "Event.EventDate.Editor.Time"
     When I hit "Save Draft"
         And I am redirected
     Then I should see "The Event has been created."
@@ -190,8 +180,8 @@ Scenario: Creating and using date time fields in another culture
         And I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                     | value       |
-            | Fields[0].DateTimeFieldSettings.Display  | DateAndTime |
-            | Fields[0].DateTimeFieldSettings.Required | true        |
+            | Fields[EventDate].DateTimeFieldSettings.Display  | DateAndTime |
+            | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
     When I go to "Admin/Contents/Create/Event"
         And I fill in

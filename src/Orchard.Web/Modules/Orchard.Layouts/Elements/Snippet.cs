@@ -1,6 +1,5 @@
 ﻿using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
     [OrchardFeature("Orchard.Layouts.Snippets")]

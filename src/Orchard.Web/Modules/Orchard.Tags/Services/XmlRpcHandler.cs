@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
@@ -88,7 +89,8 @@ namespace Orchard.Tags.Services {
             if (postId < 1)
                 return;
 
-            var user = _membershipService.ValidateUser(userName, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var driver = new XmlRpcDriver(item => {
@@ -117,7 +119,8 @@ namespace Orchard.Tags.Services {
         }
 
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
-            var user = _membershipService.ValidateUser(userName, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var array = new XRpcArray();
@@ -127,17 +130,18 @@ namespace Orchard.Tags.Services {
                               .Set("tag_id", thisTag.TagName)
                               .Set("name", thisTag.TagName));
                 // nyi - not yet implemented
-                              //.Set("count", "")
-                              //.Set("slug", "")
-                              //.Set("html_url", "")
-                              //.Set("rss_url", ""));
+                //.Set("count", "")
+                //.Set("slug", "")
+                //.Set("html_url", "")
+                //.Set("rss_url", ""));
             }
 
             return array;
         }
 
         private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
-            var user = _membershipService.ValidateUser(userName, password);
+            List<LocalizedString> validationErrors;
+            var user = _membershipService.ValidateUser(userName, password, out validationErrors);
 
             var rawTags = content.Optional<string>("mt_keywords");
             if (string.IsNullOrWhiteSpace(rawTags))

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
@@ -96,6 +97,18 @@ namespace Orchard.Blogs.Controllers {
 
             Services.Notifier.Success(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(blogPost));
+        }
+
+        public ActionResult CreateWithoutBlog() {
+            var blogs = _blogService.Get().ToArray();
+
+            if (blogs.Count() == 0) {
+                Services.Notifier.Warning(T("To create a BlogPost you need to create a blog first. You have been redirected to the Blog creation page."));
+                return RedirectToAction("Create", "BlogAdmin", new { area = "Orchard.Blogs" });
+            } else {
+                Services.Notifier.Warning(T("To create a BlogPost you need to choose a blog first. You have been redirected to the Blog selection page."));
+                return RedirectToAction("List", "BlogAdmin", new { area = "Orchard.Blogs" });
+            }
         }
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)

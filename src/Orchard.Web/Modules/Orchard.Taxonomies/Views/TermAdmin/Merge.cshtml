@@ -12,7 +12,7 @@
         <label for="@Html.FieldIdFor(m => m.SelectedTermId)">@T("Parent term")</label>
         <select name="@Html.FieldNameFor(m => m.SelectedTermId)" id="@Html.FieldIdFor(m => m.SelectedTermId)">
             @foreach (var term in Model.Terms) {
-                <option value="@term.Id">@T(term.Name)</option>
+                <option value="@term.Id">@T.Encode(term.Name)</option>
             }
         </select>    
         

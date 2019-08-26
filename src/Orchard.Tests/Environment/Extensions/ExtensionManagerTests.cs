@@ -201,7 +201,7 @@ Features:
 Name: AnotherWiki
 SessionState: required
 Author: Coder Notaprogrammer
-Website: http://anotherwiki.codeplex.com
+Website: https://github.com/MyCompany/AnotherWiki
 Version: 1.2.3
 OrchardVersion: 1
 Features:
@@ -227,7 +227,7 @@ Features:
             Assert.That(descriptor.Id, Is.EqualTo("MyCompany.AnotherWiki"));
             Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
-            Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
+            Assert.That(descriptor.WebSite, Is.EqualTo("https://github.com/MyCompany/AnotherWiki"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(5));

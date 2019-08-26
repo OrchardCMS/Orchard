@@ -7,7 +7,6 @@
     Model.List.Id = string.Format("comments_{0}", commentsPart.ContentItem.Id);
 }
 
-<h2 class="comment-count">@T.Plural("No Comments", "1 Comment", "{0} Comments", (int)Model.CommentCount)</h2>
 @Display(Model.List)
 
 @* render reply button if threaded comments enabled *@
