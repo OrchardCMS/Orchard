@@ -8,37 +8,30 @@ namespace Orchard.Fields.Fields {
 
         public DateTime? DateTime {
             get {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                var settings = PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
                 var value = Storage.Get<DateTime?>();
-                if (value.HasValue) {
-                  if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                      return new DateTime(value.Value.Year, value.Value.Month, value.Value.Day);
-                  }
-                }
-                return value;
+
+                return value.HasValue && settings.Display == DateTimeFieldDisplays.DateOnly ?
+                    new DateTime(value.Value.Year, value.Value.Month, value.Value.Day) : value;
             }
 
             set {
                 if (value.HasValue) {
-                  var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                  if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                      Storage.Set(new DateTime(value.Value.Year, value.Value.Month, value.Value.Day));
-                  }
-                  else {
-                      Storage.Set(value.Value);
-                  }
+                    var settings = PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+
+                    Storage.Set(settings.Display == DateTimeFieldDisplays.DateOnly ?
+                        new DateTime(value.Value.Year, value.Value.Month, value.Value.Day) : value.Value);
                 }
                 else {
-                  Storage.Set<System.DateTime?>(null);
+                    Storage.Set<DateTime?>(null);
                 }
             }
         }
 
         public DateTimeFieldDisplays Display {
             get {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                return settings.Display;
+                return PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>().Display;
             }
         }
-    } 
+    }
 }
