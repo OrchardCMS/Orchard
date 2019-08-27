@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Configuration;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;

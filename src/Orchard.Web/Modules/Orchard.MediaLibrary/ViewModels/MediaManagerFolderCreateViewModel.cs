@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Configuration;
+﻿using System.Collections.Generic;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.ViewModels {
@@ -8,10 +6,5 @@ namespace Orchard.MediaLibrary.ViewModels {
         public string Name { get; set; }
         public string FolderPath { get; set; }
         public IEnumerable<IMediaFolder> Hierarchy { get; set; }
-        public string InvalidCharactersPattern {
-            get {
-                return Models.MediaFolder.InvalidNameCharactersPattern.Replace(@"\", @"\\");
-            }
-        }
     }
 }

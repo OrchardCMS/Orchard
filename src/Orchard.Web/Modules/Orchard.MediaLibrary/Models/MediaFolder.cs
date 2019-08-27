@@ -18,6 +18,8 @@ namespace Orchard.MediaLibrary.Models {
         }
 
         public static string[] InvalidNameCharacters = { "/", "\\", "<", ">", "*", "%", "&", ":", "?" };
-        public static string InvalidNameCharactersPattern = @"[^/\<>*%&:\?]+"; //generated offline using the array above
+        // These pattern was generated offline using the array above and encoded for
+        // use in razor pages
+        public static string InvalidNameCharactersPattern = @"[^/\\<>*%&:\\?]+"; 
     }
 }
