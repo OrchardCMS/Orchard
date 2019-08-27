@@ -492,21 +492,13 @@ namespace Orchard.ContentTypes.Controllers {
             var partViewModel = _contentDefinitionService.GetPart(id);
             var typeViewModel = _contentDefinitionService.GetType(id);
 
-            // If the specified Part doesn't exist, try to find a matching Type,
-            // where the implicit Part with the same name can be created to store Fields.
-            if (partViewModel == null) {
-                if (typeViewModel == null) return HttpNotFound();
-                else {
-                    partViewModel = _contentDefinitionService.AddPart(new CreatePartViewModel { Name = typeViewModel.Name });
-                    _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
-                }
-            }
+            if (partViewModel == null && typeViewModel == null) return HttpNotFound();
 
 
             ValidateDisplayName(viewModel.DisplayName);
 
             // Additional Display Name validation.
-            if (!string.IsNullOrWhiteSpace(viewModel.DisplayName) &&
+            if (partViewModel != null && !string.IsNullOrWhiteSpace(viewModel.DisplayName) &&
                 partViewModel.Fields.Any(t => string.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("DisplayName", T("A content field with this display name already exists.").Text);
             }
@@ -514,18 +506,26 @@ namespace Orchard.ContentTypes.Controllers {
             ValidateTechnicalName(viewModel.Name);
 
             // Additional Technical Name validation.
-            if (!string.IsNullOrWhiteSpace(viewModel.Name) &&
+            if (partViewModel != null && !string.IsNullOrWhiteSpace(viewModel.Name) &&
                 partViewModel.Fields.Any(t => string.Equals(t.Name.ToSafeName(), viewModel.Name.ToSafeName(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("Name", T("A content field with this technical name already exists.").Text);
             }
 
             if (!ModelState.IsValid) {
-                viewModel.Part = partViewModel;
+                viewModel.Part = partViewModel ?? new EditPartViewModel { Name = typeViewModel.Name };
                 viewModel.Fields = _contentDefinitionService.GetFields();
 
                 Services.TransactionManager.Cancel();
 
                 return View(viewModel);
+            }
+
+
+            // If the specified Part doesn't exist, create an implicit ,
+            // where the implicit Part with the same name can be created to store Fields.
+            if (partViewModel == null) {
+                partViewModel = _contentDefinitionService.AddPart(new CreatePartViewModel { Name = typeViewModel.Name });
+                _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
             }
 
 
