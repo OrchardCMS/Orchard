@@ -6,22 +6,37 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Layouts.Services {
     public class ContentPartDisplay : ContentDisplayBase, IContentPartDisplay {
         private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
+        private readonly ShellSettings _shellSettings;
+
 
         public ContentPartDisplay(
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator, 
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor, 
+            IWorkContextAccessor workContextAccessor,
+            ShellSettings shellSettings, 
             IEnumerable<IContentPartDriver> contentPartDrivers) 
             : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor) {
-
+            _shellSettings = shellSettings;
             _contentPartDrivers = contentPartDrivers;
+        }
+        public override UrlPrefix TenantUrlPrefix {
+            get {
+                if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                    return new UrlPrefix(_shellSettings.RequestUrlPrefix);
+                }
+                else {
+                    return null;
+                }
+            }
         }
 
         public override string DefaultStereotype {
@@ -67,9 +82,8 @@ namespace Orchard.Layouts.Services {
             return context.Shape;
         }
 
-        private IEnumerable<IContentPartDriver> GetPartDrivers(string partName) {
-            return _contentPartDrivers.Where(x => GetPartOfDriver(x.GetType().BaseType).Name == partName);
-        }
+        private IEnumerable<IContentPartDriver> GetPartDrivers(string partName) =>
+            _contentPartDrivers.Where(x => GetPartOfDriver(x.GetType()?.BaseType)?.Name == partName);
 
         private Type GetPartOfDriver(Type type) {
             var baseType = type;

@@ -39,7 +39,7 @@ namespace Orchard.MediaLibrary.MediaFileName
                 "Parts_Media_Edit_FileName",
                 () => {
                     var currentUser = _authenticationService.GetAuthenticatedUser();
-                    if (!_authorizationService.TryCheckAccess(Permissions.ManageMediaContent, currentUser, part)) {
+                    if (!_authorizationService.TryCheckAccess(Permissions.EditMediaContent, currentUser, part)) {
                         return null;
                     }
 
@@ -61,8 +61,11 @@ namespace Orchard.MediaLibrary.MediaFileName
                                 try {
                                     _mediaLibraryService.RenameFile(part.FolderPath, priorFileName, model.FileName);
                                     part.FileName = model.FileName;
-                                    
+
                                     _notifier.Add(NotifyType.Information, T("File '{0}' was renamed to '{1}'", priorFileName, model.FileName));
+                                }
+                                catch (OrchardException) {
+                                    updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file. Invalid Windows file path."));
                                 }
                                 catch (Exception) {
                                     updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file"));

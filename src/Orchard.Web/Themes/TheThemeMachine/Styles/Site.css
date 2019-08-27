@@ -739,7 +739,7 @@ button:focus, .button:focus {
 .dir-rtl .aside-2 .aside-second { float: left; }
 
 /* If zones 1, 2 are on */
-.dir-rtl .aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:right; }
+.dir-rtl .aside-12 .aside-first, .dir-rtl .aside-12 .aside-second, .dir-rtl .aside-12 #layout-content { float:right; }
 
 /* Tripel Zones*/
 .dir-rtl #layout-tripel > div { float:right; }

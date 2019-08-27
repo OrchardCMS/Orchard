@@ -1,4 +1,4 @@
-﻿// From https://msbuildtypescript.codeplex.com/, included under apache 2.0
+﻿// Originally taken from https://msbuildtypescript.codeplex.com (no longer exists) under Apache 2.0.
 
 using System.Collections.Generic;
 using System.Diagnostics;

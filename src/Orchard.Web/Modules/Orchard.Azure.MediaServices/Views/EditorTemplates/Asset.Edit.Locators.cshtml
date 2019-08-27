@@ -14,7 +14,7 @@
         <tbody>
             @foreach (var locator in locators) {
                 <tr>
-                    <td>@T(locator.Name)</td>
+                    <td>@T.Encode(locator.Name)</td>
                     <td>@locator.Id</td>
                     <td><a href="@locator.Url" target="_blank">@locator.Url</a></td>
                 </tr>

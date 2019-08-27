@@ -6,7 +6,12 @@ using Orchard.Collections;
 using Orchard.Security;
 
 namespace Orchard.AuditTrail.Services {
+
+    /// <summary>
+    /// Manage the audit trail.
+    /// </summary>
     public interface IAuditTrailManager : IDependency {
+
         /// <summary>
         /// Gets a page of event records from the audit trail.
         /// </summary>

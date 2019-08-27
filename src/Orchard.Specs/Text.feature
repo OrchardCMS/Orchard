@@ -35,7 +35,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                       | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "class=\"text large\""
@@ -44,7 +44,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                         | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required | true  |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -57,7 +57,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                     | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
@@ -77,7 +77,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                             | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "value=\"Orchard Harvest 2016\""
@@ -86,7 +86,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                             | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
@@ -95,7 +95,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                             | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | false |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

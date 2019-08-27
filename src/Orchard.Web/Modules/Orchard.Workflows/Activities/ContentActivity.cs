@@ -89,6 +89,16 @@ namespace Orchard.Workflows.Activities {
         }
     }
 
+    public class ContentUnpublishedActivity : ContentActivity {
+        public override string Name {
+            get { return "ContentUnpublished"; }
+        }
+
+
+        public override LocalizedString Description {
+            get { return T("Content is unpublished."); }
+        }
+    }
     public class ContentVersionedActivity : ContentActivity {
         public override string Name {
             get { return "ContentVersioned"; }

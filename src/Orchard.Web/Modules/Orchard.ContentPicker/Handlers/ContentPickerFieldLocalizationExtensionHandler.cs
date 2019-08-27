@@ -42,7 +42,7 @@ namespace Orchard.ContentPicker.Handlers {
                     var settings = field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldLocalizationSettings>();
                     if (settings.TryToLocalizeItems) {
                         //try to replace items in the field with their translation
-                        var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty);
+                        var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty);
                         if (settings.RemoveItemsWithNoLocalizationPart && itemsInField.Where(ci => !ci.Parts.Any(part => part is LocalizationPart)).Any()) {
                             //keep only items that have a LocalizationPart
                             _orchardServices.Notifier.Warning(T(
@@ -92,7 +92,7 @@ namespace Orchard.ContentPicker.Handlers {
                     }
                     if (settings.AssertItemsHaveSameCulture) {
                         //verify that the items in the ContentPickerField are all in the culture of the ContentItem whose editor we are updating
-                        var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty);
+                        var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty);
                         var itemsWithoutLocalizationPart = itemsInField.Where(ci => !ci.Parts.Any(part => part is LocalizationPart));
                         List<int> badItemIds = itemsInField.Where(ci => ci.Parts.Any(part => part is LocalizationPart && ((LocalizationPart)part).Culture != lPart.Culture)).Select(ci => ci.Id).ToList();
                         if (itemsWithoutLocalizationPart.Count() > 0) {

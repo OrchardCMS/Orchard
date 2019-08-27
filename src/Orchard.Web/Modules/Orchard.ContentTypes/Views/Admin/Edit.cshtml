@@ -4,7 +4,7 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit Content Type - {0}", Html.Raw(Model.DisplayName)).Text;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 
 <div class="manage">
