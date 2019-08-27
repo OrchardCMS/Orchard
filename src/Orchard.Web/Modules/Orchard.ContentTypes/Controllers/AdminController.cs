@@ -229,7 +229,9 @@ namespace Orchard.ContentTypes.Controllers {
 
             // Additional Display Name validation.
             if (!string.IsNullOrWhiteSpace(edited.DisplayName) &&
-                _contentDefinitionService.GetTypes().Any(t => string.Equals(t.DisplayName.Trim(), edited.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                _contentDefinitionService.GetTypes().Any(t =>
+                    !string.Equals(t.Name, edited.Name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(t.DisplayName.Trim(), edited.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("DisplayName", T("A content type with this display name already exists.").Text);
             }
 
@@ -577,12 +579,14 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null) return HttpNotFound();
 
 
-            ValidateTechnicalName(viewModel.Name);
+            ValidateDisplayName(viewModel.Name);
 
-            // Additional Technical Name validation.
-            if (!string.IsNullOrWhiteSpace(viewModel.Name) &&
-                partViewModel.Fields.Any(t => string.Equals(t.Name.ToSafeName(), viewModel.Name.ToSafeName(), StringComparison.OrdinalIgnoreCase))) {
-                ModelState.AddModelError("Name", T("A content field with this technical name already exists.").Text);
+            // Additional Display Name validation.
+            if (!string.IsNullOrWhiteSpace(viewModel.DisplayName) &&
+                partViewModel.Fields.Any(f =>
+                    !string.Equals(f.Name, viewModel.Name, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(f.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                ModelState.AddModelError("DisplayName", T("A content field with this display name already exists on this content part.").Text);
             }
 
             if (!ModelState.IsValid) return View(viewModel);
