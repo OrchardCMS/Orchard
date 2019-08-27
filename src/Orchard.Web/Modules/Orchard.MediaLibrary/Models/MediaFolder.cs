@@ -17,9 +17,11 @@ namespace Orchard.MediaLibrary.Models {
             get { return _size.Value; }
         }
 
-        public static string[] InvalidNameCharacters = { "/", "\\", "<", ">", "*", "%", "&", ":", "?" };
-        // These pattern was generated offline using the array above and encoded for
+        public static string[] InvalidNameCharacters = { "/", "\\", "<", ">", "*", "%", "&", ":", "?",
+            // more characters added to comply with recommendations in RFC 1738
+            " ", "\"", "#", "{", "}", "|", "^", "~", "[", "]", "`"};
+        // This pattern was generated offline using the array above and encoded for
         // use in razor pages
-        public static string InvalidNameCharactersPattern = @"[^/\\<>*%&:\\?]+"; 
+        public static string InvalidNameCharactersPattern = @"[^/\\<>*%&:\\?\s#}{|^~\]\[`\x22]+"; 
     }
 }

@@ -25,7 +25,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Folder Name")</label>
-        <input id="Name" class="text medium" name="Name" type="text" autofocus="autofocus" pattern="@MediaFolder.InvalidNameCharactersPattern" title="@T("The name contains invalid characters.")" />
+        <input id="Name" class="text medium" name="Name" type="text" autofocus="autofocus" pattern='@MediaFolder.InvalidNameCharactersPattern' title="@T("The name contains invalid characters.")" />
         @Html.HiddenFor(m => m.FolderPath)
     </fieldset>
     <fieldset>
