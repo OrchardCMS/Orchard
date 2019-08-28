@@ -211,9 +211,10 @@ namespace Orchard.Users.Controllers {
                 siteUrl = HttpContext.Request.ToRootUrlString();
             }
 
-            _userService.SendLostPasswordEmail(username, nonce => Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
+            _userService.SendLostPasswordEmail(username, nonce =>
+                Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce }), siteUrl));
 
-            _orchardServices.Notifier.Information(T("Check your e-mail for the confirmation link."));
+            _orchardServices.Notifier.Information(T("If your username or email is correct, we will send you an email with a link to reset your password."));
 
             return RedirectToAction("LogOn");
         }

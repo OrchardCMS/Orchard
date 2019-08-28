@@ -1,9 +1,11 @@
 @using Orchard.Utility.Extensions
+
 @model Orchard.ContentTypes.ViewModels.EditFieldNameViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
 
-    Layout.Title = T("Edit Field \"{0}\"", Html.Raw(Model.DisplayName)).ToString();
+    Layout.Title = T("Edit Content Field - {0}", Html.Raw(Model.DisplayName)).Text;
 
     var returnUrl = Request.QueryString["returnUrl"];
 }

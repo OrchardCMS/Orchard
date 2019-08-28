@@ -148,7 +148,6 @@
     <Compile Include="ViewModels\RemovePartViewModel.cs" />
     <Compile Include="ViewModels\CreateTypeViewModel.cs" />
     <Compile Include="ViewModels\EditTypeViewModel.cs" />
-    <Compile Include="ViewModels\ListContentsViewModel.cs" />
     <Compile Include="ViewModels\ListContentTypesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
