@@ -1,11 +1,12 @@
 ﻿(function ($) {
     var assignPositions = function () {
         var position = 0;
+
         $('.type').each(function () {
             var input = $(this);
             var tab = input.closest(".zone-container").data("tab");
             //input = input.next();
-            var postab = tab != "" ? position + "#" + tab : position + "";
+            var postab = tab !== "" ? position + "#" + tab : position + "";
             reAssignIdName(input, position);  // type
 
             input = input.next();
@@ -106,12 +107,13 @@
         var $this = $(this);
         var shape = $(this).next().next();
         shape.toggle();
-        if ($this.text() == 'Show Editor Shape') {
-            $this.text('Hide Editor Shape');
+
+        if ($this.text() === $this.data("text-show")) {
+            $this.text($this.data("text-hide"));
         } else {
-            $this.text('Show Editor Shape');
+            $this.text($this.data("text-show"));
         }
-    })
+    });
 
     // returns all the tabs
     function getTabs(header) {

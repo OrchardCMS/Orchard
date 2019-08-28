@@ -5,7 +5,7 @@
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("PlacementEditor").AtFoot();
-    Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+    Layout.Title = T("Edit Placement - {0}", Html.Raw(Model.ContentTypeDefinition.DisplayName)).Text;
 
     int i = 0;
 }
@@ -13,8 +13,9 @@
 @helper RenderPlacement(DriverResultPlacement p, int i)
 {
     var placement = p.PlacementSettings;
+
     <li class="place" data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
-        <span class="toggle">Show Editor Shape</span>
+        <span class="toggle" data-text-show="@T("Show Editor Shape")" data-text-hide="@T("Hide Editor Shape")">@T("Show Editor Shape")</span>
         <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
         <div class="shape-editor">
             @try
@@ -25,6 +26,7 @@
             {
             }
         </div>
+
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Differentiator, new { @class = "differentiator" })
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Zone, new { @class = "zone" })
@@ -39,7 +41,7 @@
     @Html.ValidationSummary()
     <div id="placement">
         <div data-tab="" class="zone-container" id="content-tab">
-            <h2>Content</h2>
+            <h2>@T("Content")</h2>
             <ul class="tabdrag">
                 @foreach (var p in Model.Content)
                 {
@@ -53,7 +55,7 @@
             @foreach (var tab in Model.Tabs)
             {
                 <div data-tab="@tab.Key" class="zone-container tab-container">
-                    <a class="delete">Delete</a>
+                    <a class="delete">@T("Delete")</a>
                     <h2>@tab.Key</h2>
                     <ul class="tabdrag">
                         @foreach (var p in tab.Value)
