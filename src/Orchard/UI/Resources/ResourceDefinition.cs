@@ -16,7 +16,7 @@ namespace Orchard.UI.Resources {
             { "script", "src" },
             { "link", "href" }
         };
-        private static readonly Dictionary<string, Dictionary<string,string>> _resourceAttributes = new Dictionary<string, Dictionary<string,string>> {
+        private static readonly Dictionary<string, Dictionary<string, string>> _resourceAttributes = new Dictionary<string, Dictionary<string, string>> {
             { "script", new Dictionary<string, string> { {"type", "text/javascript"} } },
             { "stylesheet", new Dictionary<string, string> { {"type", "text/css"}, {"rel", "stylesheet"} } }
         };
@@ -41,7 +41,7 @@ namespace Orchard.UI.Resources {
             TagRenderMode = _fileTagRenderModes.ContainsKey(TagBuilder.TagName) ? _fileTagRenderModes[TagBuilder.TagName] : TagRenderMode.Normal;
             Dictionary<string, string> attributes;
             if (_resourceAttributes.TryGetValue(type, out attributes)) {
-                foreach(var pair in attributes) {
+                foreach (var pair in attributes) {
                     TagBuilder.Attributes[pair.Key] = pair.Value;
                 }
             }
@@ -65,7 +65,7 @@ namespace Orchard.UI.Resources {
             _resourceTypeDirectories.TryGetValue(resourceType, out path);
             return path ?? "";
         }
-        
+
         private static string Coalesce(params string[] strings) {
             foreach (var str in strings) {
                 if (!String.IsNullOrEmpty(str)) {
@@ -74,7 +74,7 @@ namespace Orchard.UI.Resources {
             }
             return null;
         }
-        
+
         public IResourceManifest Manifest { get; private set; }
         public string TagName {
             get { return TagBuilder.TagName; }
@@ -120,6 +120,7 @@ namespace Orchard.UI.Resources {
         }
 
         public string[] Cultures { get; private set; }
+        [Obsolete("This parameter has no effect on the resource URL.")]
         public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
         public string FilePathAttributeName { get; private set; }
@@ -156,28 +157,25 @@ namespace Orchard.UI.Resources {
         }
 
         public ResourceDefinition SetCdn(string cdnUrl) {
-            return SetCdn(cdnUrl, null, null);
+            return SetCdn(cdnUrl, null);
         }
 
         public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug) {
-            return SetCdn(cdnUrl, cdnUrlDebug, null);
-        }
+            if (string.IsNullOrWhiteSpace(cdnUrl)) throw new ArgumentNullException("cdnUrl");
 
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool? cdnSupportsSsl) {
-            if (String.IsNullOrEmpty(cdnUrl)) {
-                throw new ArgumentNullException("cdnUrl");
-            }
             UrlCdn = cdnUrl;
-            if (cdnUrlDebug != null) {
-                UrlCdnDebug = cdnUrlDebug;
-            }
-            if (cdnSupportsSsl.HasValue) {
-                CdnSupportsSsl = cdnSupportsSsl.Value;
-            }
+
+            if (!string.IsNullOrWhiteSpace(cdnUrlDebug)) UrlCdnDebug = cdnUrlDebug;
+
             else {
                 CdnSupportsSsl = cdnUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
             }
             return this;
+        }
+
+        [Obsolete("Use SetCdn without the \"cdnSupportsSsl\" parameter instead as it has no effect.")]
+        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool cdnSupportsSsl) {
+            return SetCdn(cdnUrl, cdnUrlDebug);
         }
 
         public ResourceDefinition SetPhysicalPath(string physicalPath) {
@@ -259,8 +257,8 @@ namespace Orchard.UI.Resources {
                 url = VirtualPathUtility.Combine(BasePath, url);
             }
             if (VirtualPathUtility.IsAppRelative(url)) {
-                url = applicationPath != null 
-                    ? VirtualPathUtility.ToAbsolute(url, applicationPath) 
+                url = applicationPath != null
+                    ? VirtualPathUtility.ToAbsolute(url, applicationPath)
                     : VirtualPathUtility.ToAbsolute(url);
             }
             if (settings.FileHashMode && !String.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath)) {
