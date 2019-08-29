@@ -180,8 +180,9 @@ namespace Orchard.Autoroute.Services {
         }
 
         public void RemoveAliases(AutoroutePart part) {
-            if (part!=null)
+            if (part != null) {
                 _aliasService.Delete(part.Path, AliasSource);
+            }
         }
 
         public string GenerateUniqueSlug(AutoroutePart part, IEnumerable<string> existingPaths) {
