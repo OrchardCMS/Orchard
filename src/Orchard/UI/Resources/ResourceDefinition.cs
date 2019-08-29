@@ -120,8 +120,6 @@ namespace Orchard.UI.Resources {
         }
 
         public string[] Cultures { get; private set; }
-        [Obsolete("This parameter has no effect on the resource URL.")]
-        public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
         public string FilePathAttributeName { get; private set; }
         public TagBuilder TagBuilder { get; private set; }
@@ -167,15 +165,7 @@ namespace Orchard.UI.Resources {
 
             if (!string.IsNullOrWhiteSpace(cdnUrlDebug)) UrlCdnDebug = cdnUrlDebug;
 
-            else {
-                CdnSupportsSsl = cdnUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-            }
             return this;
-        }
-
-        [Obsolete("Use SetCdn without the \"cdnSupportsSsl\" parameter instead as it has no effect.")]
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool cdnSupportsSsl) {
-            return SetCdn(cdnUrl, cdnUrlDebug);
         }
 
         public ResourceDefinition SetPhysicalPath(string physicalPath) {
@@ -213,29 +203,18 @@ namespace Orchard.UI.Resources {
         }
 
         public string ResolveUrl(RequireSettings settings, string applicationPath, IResourceFileHashProvider resourceFileHashProvider) {
-            return ResolveUrl(settings, applicationPath, false, resourceFileHashProvider);
-        }
-
-        public string ResolveUrl(RequireSettings settings, string applicationPath, bool ssl, IResourceFileHashProvider resourceFileHashProvider) {
             string url;
             string physicalPath = null;
             // Url priority:
-            if (!ssl || (ssl && CdnSupportsSsl)) { //Not ssl or ssl and cdn supports it
-                if (settings.DebugMode) {
-                    url = settings.CdnMode
-                        ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
-                        : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
-                }
-                else {
-                    url = settings.CdnMode
-                        ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
-                        : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
-                }
+            if (settings.DebugMode) {
+                url = settings.CdnMode
+                    ? Coalesce(UrlCdnDebug, UrlDebug, UrlCdn, Url)
+                    : Coalesce(UrlDebug, Url, UrlCdnDebug, UrlCdn);
             }
-            else { //ssl and cdn does not support it, only evaluate non-cdn url's
-                url = settings.DebugMode
-                    ? Coalesce(UrlDebug, Url)
-                    : Coalesce(Url, UrlDebug);
+            else {
+                url = settings.CdnMode
+                    ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
+                    : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
             }
             if (url == UrlDebug) {
                 physicalPath = PhysicalPathDebug;
