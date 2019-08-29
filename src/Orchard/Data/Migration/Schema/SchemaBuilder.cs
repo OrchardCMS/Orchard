@@ -33,8 +33,8 @@ namespace Orchard.Data.Migration.Schema {
         /// <summary>
         /// Translate Table name into database table name - including prefixes.
         /// </summary>
-        public virtual string TableDbName(string srcTable, string FeaturePrefixOverride = null) {
-            return _interpreter.PrefixTableName(String.Concat(FormatPrefix(FeaturePrefixOverride??FeaturePrefix), srcTable));
+        public virtual string TableDbName(string srcTable, string featurePrefixOverride = null) {
+            return _interpreter.PrefixTableName(FormatPrefix(featurePrefixOverride ?? FeaturePrefix) + srcTable);
         }
 
         /// <summary>
