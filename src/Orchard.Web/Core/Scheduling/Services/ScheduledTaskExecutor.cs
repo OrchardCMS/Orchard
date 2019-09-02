@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Scheduling.Services {
     public class ScheduledTaskExecutor : IBackgroundTask {
@@ -53,6 +54,9 @@ namespace Orchard.Core.Scheduling.Services {
                     // removing record first helps avoid concurrent execution
                     _repository.Delete(taskRecord);
 
+                    // persisting the change so it takes effect in the other async operations
+                    _repository.Flush();
+
                     var context = new ScheduledTaskContext {
                         Task = new Task(_contentManager, taskRecord)
                     };
@@ -63,6 +67,9 @@ namespace Orchard.Core.Scheduling.Services {
                     }
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
                     Logger.Warning(ex, "Unable to process scheduled task #{0} of type {1}", taskEntry.Id, taskEntry.Action);
                     _transactionManager.Cancel();
                 }

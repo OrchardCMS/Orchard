@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -76,6 +79,82 @@ namespace Orchard.Tests.Caching {
 
             Assert.That(c1.CacheManager.GetCache<string, string>(),
                 Is.Not.SameAs(c2.CacheManager.GetCache<string, string>()));
+        }
+
+        [Test]
+        public void CacheManagerIsNotBlocking() {
+            var hits = 0;
+            string result = "";
+            string key = "key";
+
+            var e1 = new ManualResetEvent(false);
+            var e2 = new ManualResetEvent(false);
+            var e3 = new ManualResetEvent(false);
+
+            // task1 is started first, when inside the lambda, we are waiting 
+            // for the test to give the green light. Then we unblock the task2
+            var task1 = Task.Run(() => {
+                result = _cacheManager.Get(key, ctx => {
+                    e1.WaitOne(TimeSpan.FromSeconds(5));
+                    hits++;
+                    e2.Set();
+                    e3.WaitOne(TimeSpan.FromSeconds(5));
+
+                    return "testResult";
+                });
+            });
+
+            // task2 is called once task1 is inside the lambda, ensuring it's not blocking.
+            var task2 = Task.Run(() => {
+                e2.WaitOne(TimeSpan.FromSeconds(5));
+                result = _cacheManager.Get(key, ctx => {
+                    hits++;
+                    e3.Set();
+                    return "testResult";
+                });
+            });
+
+            e1.Set();
+            Task.WaitAll(task1, task2);
+
+            Assert.That(result, Is.EqualTo("testResult"));
+            Assert.That(hits, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CacheManagerIsBlocking() {
+            var hits = 0;
+            string result = "";
+            string key = "key";
+
+            var e1 = new ManualResetEvent(false);
+            var e2 = new ManualResetEvent(false);
+
+            // task1 is started first, when inside the lambda, we are waiting 
+            // for the test to give the green light. Then we unblock the task2
+            var task1 = Task.Run(() => {
+                result = _cacheManager.Get(key, true, ctx => {
+                    e1.WaitOne(TimeSpan.FromSeconds(5));
+                    hits++;
+                    e2.Set();
+                    return "testResult";
+                });
+            });
+
+            // task2 is called once task1 is inside the lambda. Here we expect the lamda not to be called.
+            var task2 = Task.Run(() => {
+                e2.WaitOne(TimeSpan.FromSeconds(5));
+                result = _cacheManager.Get(key, true, ctx => {
+                    hits++;
+                    return "testResult";
+                });
+            });
+
+            e1.Set();
+            Task.WaitAll(task1, task2);
+
+            Assert.That(result, Is.EqualTo("testResult"));
+            Assert.That(hits, Is.EqualTo(1));
         }
 
         class ComponentOne {

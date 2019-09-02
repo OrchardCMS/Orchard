@@ -1,25 +1,25 @@
-﻿using System.Collections.Generic;
-using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
+﻿using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     public class TextAreaElementDriver : FormsElementDriver<TextArea> {
         private readonly ITokenizer _tokenizer;
-        public TextAreaElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public TextAreaElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(TextArea element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var textAreaEditor = BuildForm(context, "TextArea");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
+            var textAreaEditor = BuildForm(context, "TextArea", "Properties:15");
             var textAreaValidation = BuildForm(context, "TextAreaValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, textAreaEditor, textAreaValidation);
+            return Editor(context, autoLabelEditor, placeholderEditor, textAreaEditor, textAreaValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -31,7 +31,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "large", "tokenized" },
+                        Classes: new[] { "text", "large" },
                         Description: T("The value of this text area.")),
                     _Rows: shape.Textbox(
                         Id: "Rows",
@@ -89,9 +89,14 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(TextArea element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
-            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.RuntimeValue, context.GetTokenData());
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.ProcessedPlaceholder = _tokenizer.Replace(element.Placeholder, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

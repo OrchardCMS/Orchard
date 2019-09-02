@@ -1,13 +1,4 @@
 ﻿(function ($) {
-    var closedDialogs = [];
-
-    var disposeClosedDialogs = function () {
-        $.each(closedDialogs, function () {
-            this.dispose();
-        });
-
-        closedDialogs = [];
-    };
 
     var Dialog = function (templateElementSelector) {
         var self = this;
@@ -19,8 +10,6 @@
         this.view = null;
         this.isVisible = false;
         this._title = this.template.find(".title").html();
-
-        disposeClosedDialogs();
 
         this.title = function (value) {
             var titleElement = this.root.find(".title");
@@ -57,27 +46,7 @@
         }
 
         this.close = function () {
-            this.isVisible = false;
-
-            if (this.root) {
-                $(window).off("resize", resizeIFrame);
-
-                // Hiding is tricky - TinyMCE throws an exception in FF when we hide the root element.
-                // To avoid this, move the dialog out of view. The next time a Dialog is instantiated, it will be disposed of.
-                this.overlay.css({
-                    position: "absolute",
-                    left: "0",
-                    top: "0",
-                    width: "0",
-                    height: "0",
-                    overflow: "hidden"
-                });
-            }
-
-            $(document).off("keyup", onKeyUp);
-            closedDialogs.push(self);
-
-
+            this.dispose();
         };
 
         this.load = function (url, data, method) {
@@ -87,19 +56,21 @@
             this.frame.element.show();
             this.view.hide();
 
-            resizeIFrame();
-            centerPosition();
+            onWindowResize();
             this.frame.getDocument().on("keyup", onKeyUp);
 
-            $(window).on("resize", function () {
-                resizeIFrame();
-                centerPosition();
-            });
+            $(window).on("resize", onWindowResize);
         };
 
         this.dispose = function () {
-            if (this.root)
+            this.isVisible = false;
+            this.frame.element.off();
+            this.frame.getDocument().off("keyup", onKeyUp);
+            $(window).off("resize", onWindowResize);
+
+            if (this.root) {
                 this.root.remove();
+            }
         };
 
         this.setHtml = function (html) {
@@ -131,12 +102,17 @@
             buttons.toggle(show);
         };
 
+        var onWindowResize = function () {
+            resizeIFrame();
+            centerPosition();
+        };
+
         var resizeIFrame = function () {
             if (self.frame == null)
                 return;
 
-            self.frame.element.height($(window).height() * .75);
-            self.frame.element.width($(window).width() * .75);
+            self.frame.element.height($(window).height() * .80);
+            self.frame.element.width($(window).width() * .87);
         };
 
         var resizeView = function () {
@@ -149,7 +125,7 @@
 
         var onKeyUp = function (e) {
             var esc = 27;
-            if (e.keyCode == esc) {
+            if (e.keyCode === esc) {
                 self.trigger("command", {
                     command: "cancel"
                 });
@@ -176,8 +152,8 @@
                         break;
                     case "save":
                         {
-                            var frameDoc = self.frame.getDocument();
-                            var form = frameDoc.find("form:first");
+                            var frameWindow = self.frame.getWindow();
+                            var form = frameWindow.$("form:first");
                             form.submit();
                         }
                         break;
@@ -193,10 +169,9 @@
         };
 
         var updateDialog = function (scope) {
-            //var document = self.frame.getDocument();
             var dialogSettings = scope.find(".dialog-settings");
             var title = dialogSettings.find(".title");
-            var buttons = dialogSettings.find(".buttons");
+            var buttons = $(dialogSettings.find(".buttons")[0].outerHTML);
 
             if (title.length > 0) self.title(title.html());
             if (buttons.length > 0) {

@@ -35,6 +35,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             // enable /Views/"EditorTemplates/+{templateName}
             var partialViewLocationFormats = new[] {
                 parameters.VirtualPath + "/Views/{0}.cshtml",
+                parameters.VirtualPath + "/Views/{1}/{0}.cshtml",
             };
 
             //Logger.Debug("PartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", partialViewLocationFormats));
@@ -59,11 +60,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters) {
-            var areaFormats = new[] {
-                                        "~/Core/{2}/Views/{1}/{0}.cshtml",
-                                        "~/Modules/{2}/Views/{1}/{0}.cshtml",
-                                        "~/Themes/{2}/Views/{1}/{0}.cshtml",
-                                    };
+            //TBD: It would probably be better to determined the area deterministically from the module of the controller, not by trial and error.
+            var areaFormats = parameters.ExtensionLocations.Select(location => location + "/{2}/Views/{1}/{0}.cshtml").ToArray();
 
             //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
 
@@ -71,6 +69,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 .SelectMany(x => new[] {
                                            x + "/Views/{0}.cshtml",
                                        })
+                .Concat(new[] { "~/Views/{1}/{0}.cshtml", "~/Views/{0}.cshtml" })
                 .ToArray();
 
             //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));

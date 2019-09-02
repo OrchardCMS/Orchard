@@ -25,7 +25,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
             (<any>blocked).unblock();
     }
 
-    function uploadCompleted(sender, data) {
+    function uploadCompleted(sender: any, data: any) {
         var scope = $(sender).closest("[data-upload-accept-file-types]");
         var status = data.errorThrown && data.errorThrown.length > 0 ? data.errorThrown : data.textStatus;
         scope.find(".progress-bar").hide();
@@ -53,7 +53,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
         $(sender).replaceWith("<span>Successfully uploaded video file '" + originalFileName + "'.</span>");
     }
      
-    function initializeUpload(fileInput) {
+    function initializeUpload(fileInput: any) {
         var scope = $(fileInput).closest("[data-upload-accept-file-types]");
         var acceptFileTypes: string = scope.data("upload-accept-file-types");
         var antiForgeryToken = requiredUploads.closest("form").find("[name='__RequestVerificationToken']").val();
@@ -67,30 +67,30 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
             formData: {
                 __RequestVerificationToken: antiForgeryToken
             },
-            progressall: (e, data) => {
+            progressall: (e: any, data: any) => {
                 var percentComplete = Math.floor((data.loaded / data.total) * 100);
                 scope.find(".progress-bar").show().find('.progress').css('width', percentComplete + '%');
                 scope.find(".progress-text").show().text("Uploading (" + percentComplete + "%)...");
             },
-            done: function (e, data) {
+            done: function (e: any, data: any) {
                 uploadCompleted(this, data);
             },
-            fail: function (e, data) {
+            fail: function (e: any, data: any) {
                 uploadCompleted(this, data);
             },
-            processdone: (e, data) => {
+            processdone: (e: any, data: any) => {
                 scope.find(".validation-text").hide();
                 scope.data("upload-isactive", true);
                 cancelUpload.show();
                 var xhr = data.submit();
                 scope.data("xhr", xhr);
             },
-            processfail: (e, data) => {
+            processfail: (e: any, data: any) => {
                 scope.find(".validation-text").show();
             }
         });
 
-        cancelUpload.on("click", e=> {
+        cancelUpload.on("click", e => {
             e.preventDefault();
 
             if (confirm("Are you sure you want to cancel this upload?")) {

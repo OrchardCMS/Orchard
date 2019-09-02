@@ -68,35 +68,35 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Importing(CommonPart part, ImportContentContext context) {
-            var owner = context.Attribute(part.PartDefinition.Name, "Owner");
-            if (owner != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Owner", owner => {
                 var contentIdentity = new ContentIdentity(owner);
-                part.Owner = _membershipService.GetUser(contentIdentity.Get("User.UserName"));
-            }
-            // use the super user if the referenced one doesn't exist
-            else {
-                part.Owner = _membershipService.GetUser(Services.WorkContext.CurrentSite.SuperUser);
-            }
 
-            var container = context.Attribute(part.PartDefinition.Name, "Container");
-            if (container != null) {
-                part.Container = context.GetItemFromSession(container);
-            }
+                // use the super user if the referenced one doesn't exist;
+                part.Owner =
+                    _membershipService.GetUser(contentIdentity.Get("User.UserName"))
+                    ?? _membershipService.GetUser(Services.WorkContext.CurrentSite.SuperUser);
+            });
 
-            var createdUtc = context.Attribute(part.PartDefinition.Name, "CreatedUtc");
-            if (createdUtc != null) {
-                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Container", container =>
+                part.Container = context.GetItemFromSession(container)
+            );
 
-            var publishedUtc = context.Attribute(part.PartDefinition.Name, "PublishedUtc");
-            if (publishedUtc != null) {
-                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CreatedUtc", createdUtc =>
+                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc)
+            );
 
-            var modifiedUtc = context.Attribute(part.PartDefinition.Name, "ModifiedUtc");
-            if (modifiedUtc != null) {
-                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "PublishedUtc", publishedUtc =>
+                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "ModifiedUtc", modifiedUtc =>
+                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc)
+            );
         }
 
         protected override void Exporting(CommonPart part, ExportContentContext context) {
@@ -122,6 +122,10 @@ namespace Orchard.Core.Common.Drivers {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
+        }
+
+        protected override void Cloning(CommonPart originalPart, CommonPart clonePart, CloneContentContext context) {
+            clonePart.Container = originalPart.Container;
         }
     }
 }

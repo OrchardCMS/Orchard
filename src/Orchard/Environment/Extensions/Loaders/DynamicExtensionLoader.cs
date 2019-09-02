@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Orchard.Caching;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -13,7 +14,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
-        public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
+        private readonly string[] _extensionsVirtualPathPrefixes; //  { "~/Modules/", "~/Themes/" };
 
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -31,7 +32,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             IHostEnvironment hostEnvironment,
             IAssemblyProbingFolder assemblyProbingFolder,
             IDependenciesFolder dependenciesFolder,
-            IProjectFileParser projectFileParser)
+            IProjectFileParser projectFileParser,
+            ExtensionLocations extensionLocations)
             : base(dependenciesFolder) {
 
             _buildManager = buildManager;
@@ -43,6 +45,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
+
+            _extensionsVirtualPathPrefixes = extensionLocations.ModuleAndThemeLocations;
         }
 
         public ILogger Logger { get; set; }
@@ -208,9 +212,23 @@ namespace Orchard.Environment.Extensions.Loaders {
             return dependencies;
         }
 
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+                var projectPath = GetProjectPath(descriptor);
+                if (projectPath == null) {
+                    return false;
+                }
+
+                return _buildManager.GetCompiledAssembly(projectPath) != null;
+            }
+
+            return false;
+        }
+
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
-            // Skip files from locations other than "~/Modules" and "~/Themes"
-            if (string.IsNullOrEmpty(PrefixMatch(projectPath, ExtensionsVirtualPathPrefixes))) {
+            // Skip files from locations other than "~/Modules" and "~/Themes" etc.
+            if (string.IsNullOrEmpty(PrefixMatch(projectPath, _extensionsVirtualPathPrefixes))) {
                 return;
             }
 

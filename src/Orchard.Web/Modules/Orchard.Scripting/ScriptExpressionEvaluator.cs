@@ -20,7 +20,7 @@ namespace Orchard.Scripting {
         public Localizer T { get; set; }
 
         public object Evaluate(string expression, IEnumerable<IGlobalMethodProvider> providers) {
-            var expr = _cacheManager.Get(expression, ctx => {
+            var expr = _cacheManager.Get(expression, true, ctx => {
                     var ast = ParseExpression(expression);
                     return new { Tree = ast, Errors = ast.GetErrors().ToList() };
                 });

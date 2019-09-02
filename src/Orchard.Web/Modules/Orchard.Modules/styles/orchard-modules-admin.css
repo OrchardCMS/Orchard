@@ -6,19 +6,22 @@ html.dyn #main ul.features button { display:none; }
 .features.detail-view .category > ul {
     border:1px solid #EAEAEA;
     margin-bottom:2em;
+	display: flex;
+	flex-direction: column;
 }
 .features.summary-view .category {
-    overflow:hidden;
     padding-bottom:1em;
 }
+
+.features.summary-view .category > ul {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 .features.summary-view .feature {
     border:1px solid #EAEAEA;
-    display:block;
-    float:left;
-    height:6em;
     margin:0 .5% 1% .5%;
-    position:relative;
-    width:32.2%;
+    width:32%;
 }
 
 .features.summary-view .missingDependencies{

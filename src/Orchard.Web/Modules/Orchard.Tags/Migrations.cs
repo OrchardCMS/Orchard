@@ -36,6 +36,13 @@ namespace Orchard.Tags {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("ContentTagRecord", table => table
+                .CreateIndex("IDX_TagsPartRecord_Id", "TagsPartRecord_Id")
+            );
+            return 3;
+        }
     }
 
     [OrchardFeature("Orchard.Tags.TagCloud")]
@@ -47,9 +54,7 @@ namespace Orchard.Tags {
                 "TagCloud",
                 cfg => cfg
                            .WithPart("TagCloudPart")
-                           .WithPart("CommonPart")
-                           .WithPart("WidgetPart")
-                           .WithSetting("Stereotype", "Widget")
+                           .AsWidget()
                 );
 
             return 1;

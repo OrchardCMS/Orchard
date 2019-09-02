@@ -39,14 +39,22 @@ namespace Orchard.Core.Title.Drivers {
         }
 
         protected override void Importing(TitlePart part, ImportContentContext context) {
-            var title = context.Attribute(part.PartDefinition.Name, "Title");
-            if (title != null) {
-                part.Title = title;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Title", title =>
+                part.Title = title
+            );
         }
 
         protected override void Exporting(TitlePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
+        }
+
+        protected override void Cloning(TitlePart originalPart, TitlePart clonePart, CloneContentContext context) {
+            clonePart.Title = originalPart.Title;
         }
     }
 }

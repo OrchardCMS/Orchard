@@ -1,5 +1,7 @@
 ﻿@using Orchard.Core.Contents.ViewModels;
 @{
+    Script.Require("SelectableContentTab");
+
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Recent Content");
 
@@ -7,7 +9,10 @@
         pageTitle = T("Manage {0} Content", typeDisplayName);
     }
 
+    IEnumerable<string> cultures = Model.Options.Cultures;
+
     Layout.Title = pageTitle;
+
 }
 
 <div class="manage">
@@ -22,6 +27,17 @@
                 @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
             }
         </select>
+
+        @if (cultures.Count() > 1) {
+            <label for="filterCultures" class="bulk-culture">@T("Culture")</label>
+            <select id="filterCultures" name="Options.SelectedCulture">
+                @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+                @foreach (string culture in cultures) {
+                    @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                }
+            </select>
+        }
+
         <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
         <select id="orderResults" name="Options.OrderBy">
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
@@ -33,6 +49,7 @@
     <fieldset class="contentItems bulk-items">
 @Display(Model.ContentItems)
     </fieldset>
+    @Html.Link(T("Add Selected").Text, "#", new { @class = "button addSelected"})
 @Display(Model.Pager)
 }
 

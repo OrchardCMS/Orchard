@@ -4,18 +4,19 @@
     Layout.Title = T("Add New Tenant").ToString();
 
     Script.Require("jQuery").AtFoot();
+    Script.Require("ShapesBase").AtFoot();
     Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
     Script.Include("multi-tenancy.admin.js").AtFoot();
 }
 
-@using (Html.BeginFormAntiForgeryPost()) { 
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
         <div>
             <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
             @Html.TextBoxFor(m => m.Name, new { @class = "text" })
             <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
-        </div>        
+        </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
@@ -30,7 +31,7 @@
     </fieldset>
     <fieldset>
         <legend>@T("Database Setup")</legend>
-         <div>
+        <div>
             @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
             <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
         </div>
@@ -44,22 +45,22 @@
             <div class="options">
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseConnectionString">@T("Connection string")</label>
-                    @Html.EditorFor(svm => svm.DatabaseConnectionString)
+                    @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
                     <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;User ID=userName;Password=password")</span>
                 </span>
                 <span data-controllerid="sqlDatabaseOption">
-                    <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
+                    <label for="DatabaseTablePrefix">@T("Database table prefix")</label>
                     @Html.EditorFor(svm => svm.DatabaseTablePrefix)
                 </span>
             </div>
         </div>
     </fieldset>
-    
+
     <fieldset class="available-extensions">
         <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
         <div>
             <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
-            
+
             <ol>
                 <li>
                     <input type="checkbox" class="select-all" id="select-all-themes" />
@@ -79,10 +80,10 @@
                 }
             </ol>
 
-        </div>  
+        </div>
     </fieldset>
-    
-   <fieldset class="available-extensions">
+
+    <fieldset class="available-extensions">
         <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
         <div>
             <span class="hint">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
@@ -94,21 +95,21 @@
                 </li>
 
                 @for (var i = 0; i < Model.Modules.Count; i++) {
-                <li>
-                    @{
-                        var theme = Model.Modules[i];
-                        @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
-                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
-                        @Html.HiddenFor(m => m.Modules[i].ModuleId)
-                        @Html.HiddenFor(m => m.Modules[i].ModuleName)
-                    }
-                </li>
+                    <li>
+                        @{
+                            var theme = Model.Modules[i];
+                            @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
+                            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
+                            @Html.HiddenFor(m => m.Modules[i].ModuleId)
+                            @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                        }
+                    </li>
                 }
             </ol>
-        </div>  
-    </fieldset>   
-    
+        </div>
+    </fieldset>
+
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>
- }
+}

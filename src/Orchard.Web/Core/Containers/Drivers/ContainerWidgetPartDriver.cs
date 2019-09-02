@@ -32,7 +32,8 @@ namespace Orchard.Core.Containers.Drivers {
 
                     IContentQuery<ContentItem> query = _contentManager
                         .Query(VersionOptions.Published)
-                        .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
+                        .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id)
+                        .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
 
                     if (part.Record.ApplyFilter)
                         query = query.Where(part.Record.FilterByProperty, part.Record.FilterByOperator, part.Record.FilterByValue);
@@ -54,7 +55,7 @@ namespace Orchard.Core.Containers.Drivers {
             return ContentShape(
                 "Parts_ContainerWidget_Edit",
                 () => {
-                    var model = new ContainerWidgetViewModel {Part = part};
+                    var model = new ContainerWidgetViewModel { Part = part };
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List().ToArray();
 
                     if (updater != null) {
@@ -67,12 +68,12 @@ namespace Orchard.Core.Containers.Drivers {
                     }
 
                     var listItems = !containers.Any()
-                        ? new[] {new SelectListItem {Text = T("(None - create container enabled items first)").Text, Value = "0"}}
+                        ? new[] { new SelectListItem { Text = T("(None - create container enabled items first)").Text, Value = "0" } }
                         : containers.Select(x => new SelectListItem {
-                                Value = Convert.ToString(x.Id),
-                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
-                                Selected = x.Id == model.Part.Record.ContainerId,
-                            });
+                            Value = Convert.ToString(x.Id),
+                            Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
+                            Selected = x.Id == model.Part.Record.ContainerId,
+                        });
 
                     model.AvailableContainers = new SelectList(listItems, "Value", "Text", model.Part.Record.ContainerId);
 
@@ -81,23 +82,25 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override void Importing(ContainerWidgetPart part, ImportContentContext context) {
-            var containerIdentity = context.Attribute(part.PartDefinition.Name, "Container");
-            if (containerIdentity != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Container", containerIdentity => {
                 var container = context.GetItemFromSession(containerIdentity);
                 if (container != null) {
                     part.Record.ContainerId = container.Id;
                 }
-            }
+            });
 
-            var pageSize = context.Attribute(part.PartDefinition.Name, "PageSize");
-            if (pageSize != null) {
-                part.Record.PageSize = Convert.ToInt32(pageSize);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "PageSize", pageSize =>
+                part.Record.PageSize = Convert.ToInt32(pageSize)
+            );
 
-            var filterByValue = context.Attribute(part.PartDefinition.Name, "FilterByValue");
-            if (filterByValue != null) {
-                part.Record.FilterByValue = filterByValue;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "FilterByValue", filterByValue =>
+                part.Record.FilterByValue = filterByValue
+            );
         }
 
         protected override void Exporting(ContainerWidgetPart part, ExportContentContext context) {

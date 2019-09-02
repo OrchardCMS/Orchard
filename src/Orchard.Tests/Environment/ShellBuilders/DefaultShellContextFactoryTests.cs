@@ -21,6 +21,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
@@ -56,11 +57,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             _container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
-                .Returns(httpContext);
-
-            _container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(httpContext);
+                .Returns(default(HttpContextBase));
 
             var factory = _container.Resolve<IShellContextFactory>();
 

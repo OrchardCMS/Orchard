@@ -7,12 +7,7 @@ namespace Orchard.Search {
     public class Routes : IRouteProvider {
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
-        }
-
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
+            var routeDescriptors = new[] {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route("Search/ContentPicker",
@@ -43,6 +38,9 @@ namespace Orchard.Search {
                         new MvcRouteHandler())
                 }
             };
+
+            foreach (var routeDescriptor in routeDescriptors)
+                routes.Add(routeDescriptor);
         }
     }
 }

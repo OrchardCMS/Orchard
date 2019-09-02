@@ -28,17 +28,20 @@ namespace Orchard.Core.Shapes {
         private readonly Work<IResourceManager> _resourceManager;
         private readonly Work<IHttpContextAccessor> _httpContextAccessor;
         private readonly Work<IShapeFactory> _shapeFactory;
+        private readonly IResourceFileHashProvider _resourceFileHashProvider;
 
         public CoreShapes(
             Work<WorkContext> workContext, 
             Work<IResourceManager> resourceManager,
             Work<IHttpContextAccessor> httpContextAccessor,
-            Work<IShapeFactory> shapeFactory
+            Work<IShapeFactory> shapeFactory,
+            IResourceFileHashProvider resourceHashProvider
             ) {
             _workContext = workContext;
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
             _shapeFactory = shapeFactory;
+            _resourceFileHashProvider = resourceHashProvider;
 
             T = NullLocalizer.Instance;
         }
@@ -283,7 +286,7 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
             var unordered = ((IEnumerable<dynamic>)Shape).ToArray();
-            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab);
+            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab ?? "");
 
             if (tabbed.Count() > 1) {
                 foreach (var tab in tabbed) {
@@ -319,9 +322,12 @@ namespace Orchard.Core.Shapes {
             var progress = 1;
             var flatPositionComparer = new FlatPositionComparer();
             var ordering = unordered.Select(item => {
-                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
-                                   ? null
-                                   : item.Metadata.Position;
+                string position = null;
+                var itemPosition = item as IPositioned;
+                if (itemPosition != null) {
+                    position = itemPosition.Position;
+                }
+
                 return new { item, position };
             }).ToList();
 
@@ -438,32 +444,37 @@ namespace Orchard.Core.Shapes {
                     break;
                 default:
                     Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    debugMode = _httpContextAccessor.Value.Current().IsDebuggingEnabled;
+                    var context = _httpContextAccessor.Value.Current();
+                    debugMode = context != null && context.IsDebuggingEnabled;
                     break;
             }
             var defaultSettings = new RequireSettings {
                 DebugMode = debugMode,
                 CdnMode = site.UseCdn,
+                FileHashMode = site.UseFileHash,
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
-            var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
+            var httpContext = _httpContextAccessor.Value.Current();
+            var appPath = httpContext == null || httpContext.Request == null
+                ? null
+                : httpContext.Request.ApplicationPath;
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
 
-                var path = context.GetResourceUrl(defaultSettings, appPath);
+                var url = context.GetResourceUrl(defaultSettings, appPath, _resourceFileHashProvider);
                 var condition = context.Settings.Condition;
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Style(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else if (resourceType == "script") { 
-                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Script(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Resource(Url: url, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 Output.Write(result);
             }
@@ -794,6 +805,11 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void EditorTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
             RenderInternal(Html, Output, "EditorTemplates/" + TemplateName, Model, Prefix);
+        }
+
+        [Shape]
+        public void DefinitionTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
+            RenderInternal(Html, Output, "DefinitionTemplates/" + TemplateName, Model, Prefix);
         }
 
         static void RenderInternal(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {

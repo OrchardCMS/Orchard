@@ -1,9 +1,8 @@
 ﻿@model Orchard.Fields.Settings.InputFieldSettings
-@using Orchard.Fields.Settings;
 
 <fieldset>
     <div>
-    	<label class="forpicker" for="@Html.FieldIdFor(m => m.Type)">@T("Input type")</label>    
+    	<label for="@Html.FieldIdFor(m => m.Type)">@T("Input type")</label>    
         <select id="@Html.FieldIdFor(m => m.Type)" name="@Html.FieldNameFor(m => m.Type)">
             @Html.SelectOption(Orchard.Fields.Settings.InputType.Text, Model.Type == Orchard.Fields.Settings.InputType.Text, T("Text").ToString(), new { id = Html.FieldIdFor(m => m.Type) + "-text" })
             @Html.SelectOption(Orchard.Fields.Settings.InputType.Url, Model.Type == Orchard.Fields.Settings.InputType.Url, T("Url").ToString())
@@ -13,7 +12,7 @@
         <span class="hint">@T("Defines what format should be applied to the text.")</span>
     </div>
 	<div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.Type) + "-text")">
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.Pattern)">@T("Pattern")</label>
+        <label for="@Html.FieldIdFor(m => m.Pattern)">@T("Pattern")</label>
         @Html.TextBoxFor(m => m.Pattern, new { @class = "text medium" })
         @Html.ValidationMessageFor(m => m.Pattern)
         <span class="hint">@T("Declaring what pattern should be used for validating a field’s value, in the form of a regular expression. (optional)")</span>
@@ -21,7 +20,7 @@
 </fieldset>
 <fieldset>
 	<div class="editor-field">
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.Title)">@T("Title")</label>
+        <label for="@Html.FieldIdFor(m => m.Title)">@T("Title")</label>
         @Html.TextBoxFor(m => m.Title, new { @class = "text"})
         @Html.ValidationMessageFor(m => m.Title)
         <span class="hint">@T("The title attribute of the field. (optional)")</span>
@@ -47,7 +46,7 @@
 </fieldset>
 <fieldset>
 	<div class="editor-field">
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.Placeholder)">@T("Watermark")</label>
+        <label for="@Html.FieldIdFor(m => m.Placeholder)">@T("Watermark")</label>
         @Html.TextBoxFor(m => m.Placeholder, new { @class = "text" })
         @Html.ValidationMessageFor(m => m.Placeholder)
         <span class="hint">@T("A hint to display when the input is empty. (optional)")</span>
@@ -55,7 +54,7 @@
 </fieldset>
 <fieldset>
 	<div class="editor-field">
-    <label class="forpicker" for="@Html.FieldIdFor(m => m.EditorCssClass)">@T("Editor css class")</label>
+    <label for="@Html.FieldIdFor(m => m.EditorCssClass)">@T("Editor css class")</label>
         @Html.TextBoxFor(m => m.EditorCssClass, new { @class = "text" })
         @Html.ValidationMessageFor(m => m.EditorCssClass)
         <span class="hint">@T("The css class to use for the editor. (optional)")</span>
@@ -63,7 +62,7 @@
 </fieldset>
 <fieldset>
 	<div class="editor-field">
-        <label class="forpicker" for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
+        <label for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
         @Html.TextBoxFor(m => m.MaxLength, new { @class = "text small" })
         @Html.ValidationMessageFor(m => m.MaxLength)
         <span class="hint">@T("The maximum number of chars allowed. (optional)")</span>
@@ -75,5 +74,13 @@
         @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
         <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large" })
+        <span class="hint">@T("The default value proposed when creating a content item. (optional)")</span>
+        @Html.ValidationMessageFor(m => m.DefaultValue)
     </div>
 </fieldset>

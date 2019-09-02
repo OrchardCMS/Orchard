@@ -67,11 +67,35 @@ namespace Orchard.Layouts.Services {
             context.Layout.LayoutData = _serializer.Serialize(elementTree);
         }
 
+        public void Exported(ExportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.Exported(elements, context);
+            context.Layout.LayoutData = _serializer.Serialize(elementTree);
+        }
+
         public void Importing(ImportLayoutContext context) {
             var elementTree = LoadElements(context.Layout).ToArray();
             var elements = elementTree.Flatten().ToArray();
 
             _elementManager.Importing(elements, context);
+            context.Layout.LayoutData = _serializer.Serialize(elementTree);
+        }
+
+        public void Imported(ImportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.Imported(elements, context);
+            context.Layout.LayoutData = _serializer.Serialize(elementTree);
+        }
+
+        public void ImportCompleted(ImportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.ImportCompleted(elements, context);
             context.Layout.LayoutData = _serializer.Serialize(elementTree);
         }
 

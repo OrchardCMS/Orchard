@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
@@ -15,7 +16,7 @@ namespace Orchard.UI.Resources {
             { "script", "src" },
             { "link", "href" }
         };
-        private static readonly Dictionary<string, Dictionary<string,string>> _resourceAttributes = new Dictionary<string, Dictionary<string,string>> {
+        private static readonly Dictionary<string, Dictionary<string, string>> _resourceAttributes = new Dictionary<string, Dictionary<string, string>> {
             { "script", new Dictionary<string, string> { {"type", "text/javascript"} } },
             { "stylesheet", new Dictionary<string, string> { {"type", "text/css"}, {"rel", "stylesheet"} } }
         };
@@ -29,7 +30,8 @@ namespace Orchard.UI.Resources {
         };
 
         private string _basePath;
-        private readonly Dictionary<RequireSettings, string> _urlResolveCache = new Dictionary<RequireSettings, string>();
+        private string _physicalPath;
+        private string _physicalPathDebug;
 
         public ResourceDefinition(ResourceManifest manifest, string type, string name) {
             Manifest = manifest;
@@ -39,7 +41,7 @@ namespace Orchard.UI.Resources {
             TagRenderMode = _fileTagRenderModes.ContainsKey(TagBuilder.TagName) ? _fileTagRenderModes[TagBuilder.TagName] : TagRenderMode.Normal;
             Dictionary<string, string> attributes;
             if (_resourceAttributes.TryGetValue(type, out attributes)) {
-                foreach(var pair in attributes) {
+                foreach (var pair in attributes) {
                     TagBuilder.Attributes[pair.Key] = pair.Value;
                 }
             }
@@ -72,7 +74,7 @@ namespace Orchard.UI.Resources {
             }
             return null;
         }
-        
+
         public IResourceManifest Manifest { get; private set; }
         public string TagName {
             get { return TagBuilder.TagName; }
@@ -81,6 +83,11 @@ namespace Orchard.UI.Resources {
         public string Name { get; private set; }
         public string Type { get; private set; }
         public string Version { get; private set; }
+        public string Url { get; private set; }
+        public string UrlDebug { get; private set; }
+        public string UrlCdn { get; private set; }
+        public string UrlCdnDebug { get; private set; }
+
         public string BasePath {
             get {
                 if (!String.IsNullOrEmpty(_basePath)) {
@@ -93,12 +100,26 @@ namespace Orchard.UI.Resources {
                 return basePath ?? "";
             }
         }
-        public string Url { get; private set; }
-        public string UrlDebug { get; private set; }
-        public string UrlCdn { get; private set; }
-        public string UrlCdnDebug { get; private set; }
+
+        public string PhysicalPath {
+            get {
+                if (!String.IsNullOrEmpty(_physicalPath)) {
+                    return _physicalPath;
+                }
+                return GetPhysicalPath(Url);
+            }
+        }
+
+        public string PhysicalPathDebug {
+            get {
+                if (!String.IsNullOrEmpty(_physicalPathDebug)) {
+                    return _physicalPathDebug;
+                }
+                return GetPhysicalPath(UrlDebug);
+            }
+        }
+
         public string[] Cultures { get; private set; }
-        public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
         public string FilePathAttributeName { get; private set; }
         public TagBuilder TagBuilder { get; private set; }
@@ -134,27 +155,38 @@ namespace Orchard.UI.Resources {
         }
 
         public ResourceDefinition SetCdn(string cdnUrl) {
-            return SetCdn(cdnUrl, null, null);
+            return SetCdn(cdnUrl, null);
         }
 
         public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug) {
-            return SetCdn(cdnUrl, cdnUrlDebug, null);
+            if (string.IsNullOrWhiteSpace(cdnUrl)) throw new ArgumentNullException("cdnUrl");
+
+            UrlCdn = cdnUrl;
+
+            if (!string.IsNullOrWhiteSpace(cdnUrlDebug)) UrlCdnDebug = cdnUrlDebug;
+
+            return this;
         }
 
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool? cdnSupportsSsl) {
-            if (String.IsNullOrEmpty(cdnUrl)) {
-                throw new ArgumentNullException("cdnUrl");
+        public ResourceDefinition SetPhysicalPath(string physicalPath) {
+            return SetPhysicalPath(physicalPath, null);
+        }
+
+        public ResourceDefinition SetPhysicalPath(string physicalPath, string physicalPathDebug) {
+            if (String.IsNullOrEmpty(physicalPath)) {
+                throw new ArgumentNullException("physicalPath");
             }
-            UrlCdn = cdnUrl;
-            if (cdnUrlDebug != null) {
-                UrlCdnDebug = cdnUrlDebug;
-            }
-            if (cdnSupportsSsl.HasValue) {
-                CdnSupportsSsl = cdnSupportsSsl.Value;
+            _physicalPath = physicalPath;
+            if (physicalPathDebug != null) {
+                _physicalPathDebug = physicalPathDebug;
             }
             return this;
         }
 
+        /// <summary>
+        /// Sets the version of the resource.
+        /// </summary>
+        /// <param name="version">The version to set, in the form of <code>major.minor[.build[.revision]]</code></param>
         public ResourceDefinition SetVersion(string version) {
             Version = version;
             return this;
@@ -170,11 +202,9 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        public string ResolveUrl(RequireSettings settings, string applicationPath) {
+        public string ResolveUrl(RequireSettings settings, string applicationPath, IResourceFileHashProvider resourceFileHashProvider) {
             string url;
-            if (_urlResolveCache.TryGetValue(settings, out url)) {
-                return url;
-            }
+            string physicalPath = null;
             // Url priority:
             if (settings.DebugMode) {
                 url = settings.CdnMode
@@ -185,6 +215,12 @@ namespace Orchard.UI.Resources {
                 url = settings.CdnMode
                     ? Coalesce(UrlCdn, Url, UrlCdnDebug, UrlDebug)
                     : Coalesce(Url, UrlDebug, UrlCdn, UrlCdnDebug);
+            }
+            if (url == UrlDebug) {
+                physicalPath = PhysicalPathDebug;
+            }
+            else if (url == Url) {
+                physicalPath = PhysicalPath;
             }
             if (String.IsNullOrEmpty(url)) {
                 return null;
@@ -200,13 +236,17 @@ namespace Orchard.UI.Resources {
                 url = VirtualPathUtility.Combine(BasePath, url);
             }
             if (VirtualPathUtility.IsAppRelative(url)) {
-                url = VirtualPathUtility.ToAbsolute(url, applicationPath);
+                url = applicationPath != null
+                    ? VirtualPathUtility.ToAbsolute(url, applicationPath)
+                    : VirtualPathUtility.ToAbsolute(url);
             }
-            _urlResolveCache[settings] = url;
+            if (settings.FileHashMode && !String.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath)) {
+                url = AddQueryStringValue(url, "fileHash", resourceFileHashProvider.GetResourceFileHash(physicalPath));
+            }
             return url;
         }
 
-        public string FindNearestCulture(string culture) {
+        private string FindNearestCulture(string culture) {
             // go for an exact match
             if (Cultures == null) {
                 return null;
@@ -241,5 +281,34 @@ namespace Orchard.UI.Resources {
             return (Name ?? "").GetHashCode() ^ (Type ?? "").GetHashCode();
         }
 
+        private string GetPhysicalPath(string url) {
+            if (!String.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute) && !url.StartsWith("//")) {
+                if (VirtualPathUtility.IsAbsolute(url) || VirtualPathUtility.IsAppRelative(url)) {
+                    return HostingEnvironment.MapPath(url.Split(new[] { '?' })[0]);
+                }
+                if (!String.IsNullOrEmpty(BasePath)) {
+                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url));
+                }
+            }
+            return null;
+        }
+
+        private string AddQueryStringValue(string url, string name, string value) {
+            if (String.IsNullOrEmpty(url)) {
+                return null;
+            }
+            var encodedValue = HttpUtility.UrlEncode(value);
+            if (url.Contains("?")) {
+                if (url.EndsWith("&")) {
+                    return String.Format("{0}{1}={2}", url, name, encodedValue);
+                }
+                else {
+                    return String.Format("{0}&{1}={2}", url, name, encodedValue);
+                }
+            }
+            else {
+                return String.Format("{0}?{1}={2}", url, name, encodedValue);
+            }
+        }
     }
 }

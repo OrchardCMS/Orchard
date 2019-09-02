@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Contents;
 using Orchard.Core.Contents.Settings;
 using Orchard.CustomForms.Activities;
 using Orchard.CustomForms.Models;
@@ -14,6 +19,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
+using Orchard.Security.Permissions;
 using Orchard.Themes;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
@@ -23,6 +29,7 @@ namespace Orchard.CustomForms.Controllers {
     [Themed(true)]
     [ValidateInput(false)]
     public class ItemController : Controller, IUpdateModel {
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
         private readonly IRulesManager _rulesManager;
@@ -31,6 +38,7 @@ namespace Orchard.CustomForms.Controllers {
 
         public ItemController(
             IOrchardServices orchardServices,
+            IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
             ITransactionManager transactionManager,
             IShapeFactory shapeFactory,
@@ -38,6 +46,7 @@ namespace Orchard.CustomForms.Controllers {
             ITokenizer tokenizer,
             IWorkflowManager workflowManager) {
             Services = orchardServices;
+            _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _transactionManager = transactionManager;
             _rulesManager = rulesManager;
@@ -62,9 +71,31 @@ namespace Orchard.CustomForms.Controllers {
 
             var customForm = form.As<CustomFormPart>();
 
-            var contentItem = _contentManager.New(customForm.ContentType);
+            // Retrieve the id of the content to edit
+            int contentId = 0;
+            var queryString = Services.WorkContext.HttpContext.Request.QueryString;
 
-            if(!contentItem.Has<ICommonPart>()) {
+            if (queryString.AllKeys.Contains("contentId")) {
+                int.TryParse(queryString["contentId"], out contentId);
+            }
+
+            ContentItem contentItem;
+            if (contentId > 0) {
+                contentItem = _contentManager.Get(contentId);
+
+                if (customForm.UseContentTypePermissions && !Services.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
+                    return new HttpUnauthorizedResult();
+            } else {
+                contentItem = _contentManager.New(customForm.ContentType);
+
+                if (customForm.UseContentTypePermissions && !Services.Authorizer.Authorize(Core.Contents.Permissions.CreateContent, contentItem))
+                    return new HttpUnauthorizedResult();
+            }
+
+            if (contentItem == null || contentItem.ContentType != customForm.ContentType)
+                return new HttpUnauthorizedResult();
+
+            if (!contentItem.Has<ICommonPart>()) {
                 throw new OrchardException(T("The content type must have CommonPart attached"));
             }
 
@@ -75,6 +106,7 @@ namespace Orchard.CustomForms.Controllers {
 
             model
                 .ContentItem(form)
+                .ContentId(contentId)
                 .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
 
             return View(model);
@@ -82,8 +114,8 @@ namespace Orchard.CustomForms.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(int id, string returnUrl) {
-            return CreatePOST(id, returnUrl, contentItem => {
+        public ActionResult CreatePOST(int id, int contentId, string returnUrl) {
+            return CreatePOST(id, contentId, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
@@ -91,7 +123,7 @@ namespace Orchard.CustomForms.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(int id, string returnUrl) {
+        public ActionResult CreateAndPublishPOST(int id, int contentId, string returnUrl) {
             var form = _contentManager.Get(id);
 
             if (form == null || !form.Has<CustomFormPart>()) {
@@ -106,10 +138,10 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), dummyContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return CreatePOST(id, contentId, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult CreatePOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult CreatePOST(int id, int contentId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var form = _contentManager.Get(id);
 
             if (form == null || !form.Has<CustomFormPart>()) {
@@ -117,23 +149,31 @@ namespace Orchard.CustomForms.Controllers {
             }
 
             var customForm = form.As<CustomFormPart>();
-            var contentItem = _contentManager.New(customForm.ContentType);
+
+            ContentItem contentItem;
+            if (contentId > 0)
+                contentItem = _contentManager.Get(contentId,VersionOptions.DraftRequired);
+            else
+                contentItem = _contentManager.New(customForm.ContentType);
+
+            if (contentItem == null || contentItem.ContentType != customForm.ContentType)
+                return new HttpUnauthorizedResult();
 
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            if(customForm.SaveContentItem)
+            if(customForm.SaveContentItem && contentId <= 0)
                 _contentManager.Create(contentItem, VersionOptions.Draft);
 
             var model = _contentManager.UpdateEditor(contentItem, this);
-            
+
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
 
                 // if custom form is inside a widget, we display the form itself
                 if (form.ContentType == "CustomFormWidget") {
                     foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
-                        Services.Notifier.Error(T(error));
+                        Services.Notifier.Error(new LocalizedString(HttpUtility.HtmlEncode(error)));
                     }
 
                     // save the updated editor shape into TempData to survive a redirection and keep the edited values
@@ -170,7 +210,7 @@ namespace Orchard.CustomForms.Controllers {
             // writes a confirmation message
             if (customForm.CustomMessage) {
                 if (!String.IsNullOrWhiteSpace(customForm.Message)) {
-                    Services.Notifier.Information(T(customForm.Message));
+                    Services.Notifier.Success(T(customForm.Message));
                 }
             }
 

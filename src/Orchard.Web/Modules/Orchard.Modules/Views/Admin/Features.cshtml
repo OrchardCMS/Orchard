@@ -9,7 +9,7 @@
 @{
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
-    Style.Include("font-awesome.css", "font-awesome.min.css");
+    Style.Require("FontAwesome");
     Script.Require("Switchable").AtFoot();
     Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
 
@@ -71,7 +71,7 @@
                     continue;
                 }
                 //hmmm...I feel like I've done this before...
-                var lifecycleStatus = feature.Descriptor.Extension.LifecycleStatus;
+                var lifecycleStatus = feature.Descriptor.LifecycleStatus;
                 var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
                 var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";

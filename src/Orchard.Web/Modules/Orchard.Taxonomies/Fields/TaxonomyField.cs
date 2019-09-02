@@ -19,6 +19,7 @@ namespace Orchard.Taxonomies.Fields {
         /// </summary>
         public IEnumerable<TermPart> Terms {
             get { return TermsField.Value; }
+            set { TermsField.Value = value; }
         }
     }
 }

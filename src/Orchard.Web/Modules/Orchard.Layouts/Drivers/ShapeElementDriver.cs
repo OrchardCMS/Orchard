@@ -5,13 +5,14 @@ using Orchard.Forms.Services;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Drivers {
     public class ShapeElementDriver : FormsElementDriver<Shape> {
         private readonly IShapeFactory _shapeFactory;
 
-        public ShapeElementDriver(IFormManager formManager, IShapeFactory shapeFactory)
-            : base(formManager) {
+        public ShapeElementDriver(IFormsBasedElementServices formsServices, IShapeFactory shapeFactory)
+            : base(formsServices) {
             _shapeFactory = shapeFactory;
         }
 
@@ -36,7 +37,7 @@ namespace Orchard.Layouts.Drivers {
                         Id: "shapeType",
                         Name: "ShapeType",
                         Title: T("Shape Type"),
-                        Description: T("The shape type name to dislay."),
+                        Description: T("The shape type name to display."),
                         Classes: new[] { "text", "large", "tokenized" }));
 
                 return form;

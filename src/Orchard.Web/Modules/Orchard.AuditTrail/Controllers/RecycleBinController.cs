@@ -56,7 +56,7 @@ namespace Orchard.AuditTrail.Controllers {
             var restoredContentItem = _recycleBin.Restore(contentItem);
             var restoredContentItemTitle = _contentManager.GetItemMetadata(restoredContentItem).DisplayText;
 
-            _notifier.Information(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
+            _notifier.Success(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
 
             return this.RedirectReturn(returnUrl, () => Url.Action("Index", "RecycleBin"));
         }
@@ -110,12 +110,12 @@ namespace Orchard.AuditTrail.Controllers {
             foreach (var contentItem in contentItems) {
                 var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
                 if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem)) {
-                    _notifier.Error(T("You need the EditContent permission to restore <strong>{0}</strong>.", contentItemTitle));
+                    _notifier.Error(T("You need to have permission to edit <strong>{0}</strong> to be able to restore it.", contentItemTitle));
                     continue;
                 }
 
                 _recycleBin.Restore(contentItem);
-                _notifier.Information(T("&quot;{0}&quot; has been restored.", contentItemTitle));
+                _notifier.Success(T("&quot;{0}&quot; has been restored.", contentItemTitle));
             }
         }
 
@@ -125,13 +125,13 @@ namespace Orchard.AuditTrail.Controllers {
             foreach (var contentItem in contentItems) {
                 var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
                 if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, contentItem)) {
-                    _notifier.Error(T("You need the DeleteContent permission to permanently delete <strong>{0}</strong>.", contentItemTitle));
+                    _notifier.Error(T("You need to have permission to delete <strong>{0}</strong> to be able to permanently delete it.", contentItemTitle));
                     continue;
                 }
 
                 try {
                     _contentManager.Destroy(contentItem);
-                    _notifier.Information(T("&quot;{0}&quot; has been permanently deleted.", contentItemTitle));
+                    _notifier.Success(T("&quot;{0}&quot; has been permanently deleted.", contentItemTitle));
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "An exception occurred while trying to permanently delete content with ID {0}.", contentItem.Id);

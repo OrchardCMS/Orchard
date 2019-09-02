@@ -11,6 +11,11 @@ namespace Orchard.Users.Drivers {
     public class UserPartDriver : ContentPartDriver<UserPart> {
 
         protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             part.Email = context.Attribute(part.PartDefinition.Name, "Email");
             part.EmailChallengeToken = context.Attribute(part.PartDefinition.Name, "EmailChallengeToken");
             part.EmailStatus = (UserStatus)Enum.Parse(typeof(UserStatus), context.Attribute(part.PartDefinition.Name, "EmailStatus"));
@@ -21,6 +26,7 @@ namespace Orchard.Users.Drivers {
             part.PasswordSalt = context.Attribute(part.PartDefinition.Name, "PasswordSalt");
             part.RegistrationStatus = (UserStatus)Enum.Parse(typeof(UserStatus), context.Attribute(part.PartDefinition.Name, "RegistrationStatus"));
             part.UserName = context.Attribute(part.PartDefinition.Name, "UserName");
+            part.LastPasswordChangeUtc = DateTime.Parse(context.Attribute(part.PartDefinition.Name, "LastPasswordChangeUtc"));
         }
 
         protected override void Exporting(UserPart part, ContentManagement.Handlers.ExportContentContext context) {
@@ -34,6 +40,7 @@ namespace Orchard.Users.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("PasswordSalt", part.PasswordSalt);
             context.Element(part.PartDefinition.Name).SetAttributeValue("RegistrationStatus", part.RegistrationStatus);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.UserName);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LastPasswordChangeUtc", part.LastPasswordChangeUtc);
         }
     }
 }

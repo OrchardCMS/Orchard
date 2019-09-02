@@ -6,28 +6,23 @@ using System.Web.Routing;
 
 namespace Orchard.Mvc.Routes {
     public class DefaultRouteProvider : IRouteProvider {
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                             new RouteDescriptor {                                                     
-                                                     Priority = -20,
-                                                     Route = new Route(
-                                                         "{controller}/{action}/{id}",
-                                                         new RouteValueDictionary {
-                                                                                      {"controller", "home"},
-                                                                                      {"action", "index"},
-                                                                                      {"id", ""},
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"controller", new HomeOrAccount()}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 }
-                         };
-        }
-
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach(var routeDescriptor in GetRoutes())
-                routes.Add(routeDescriptor);
+            var routeDescriptor = new RouteDescriptor {
+                Priority = -20,
+                Route = new Route(
+                    "{controller}/{action}/{id}",
+                    new RouteValueDictionary {
+                        {"controller", "home"},
+                        {"action", "index"},
+                        {"id", ""},
+                    },
+                    new RouteValueDictionary {
+                        {"controller", new HomeOrAccount()}
+                    },
+                    new MvcRouteHandler())
+            };
+
+            routes.Add(routeDescriptor);
         }
 
         //TEMP: this is hardcoded to allow base web app controllers to pass

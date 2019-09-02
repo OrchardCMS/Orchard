@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,26 +7,35 @@ using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies.Services {
     public class TermCountProcessor : ITermCountProcessor {
-        private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
 
-        public TermCountProcessor(IContentManager contentManager, ITaxonomyService taxonomyService) {
-            _contentManager = contentManager;
+        public TermCountProcessor(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
         }
 
-        public void Process(params int[] termPartRecordIds) {
-
+        public void Process(IEnumerable<int> termPartRecordIds)
+        {
+            var processedTermPartRecordIds = new List<int>();
             foreach (var id in termPartRecordIds) {
-                var termPart = _taxonomyService.GetTerm(id);
-                while (termPart != null) {
-                    termPart.Count = (int)_taxonomyService.GetContentItemsCount(termPart);
-
-                    // compute count for the hierarchy too
-                    if (termPart.Container != null) {
-                        var parentTerm = termPart.Container.As<TermPart>();
-                        termPart = parentTerm;
+                if (!processedTermPartRecordIds.Contains(id)) {
+                    var termPart = _taxonomyService.GetTerm(id);
+                    if (termPart != null) {
+                        ProcessTerm(termPart, processedTermPartRecordIds);
                     }
+                }
+            }
+        }
+
+        private void ProcessTerm(TermPart termPart, ICollection<int> processedTermPartRecordIds)
+        {
+            termPart.Count = (int)_taxonomyService.GetContentItemsCount(termPart);
+            processedTermPartRecordIds.Add(termPart.Id);
+
+            // Look for a parent term that has not yet been processed
+            if (termPart.Container != null) {
+                var parentTerm = termPart.Container.As<TermPart>();
+                if (parentTerm != null && !processedTermPartRecordIds.Contains(parentTerm.Id)) {
+                    ProcessTerm(parentTerm, processedTermPartRecordIds);
                 }
             }
         }

@@ -81,8 +81,14 @@ namespace Orchard.UI.Navigation {
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData) {
             // doing route data comparison first and if that fails, fallback to string-based URL lookup
-            var path = SetSelectedPath(menuItems, currentRequest, currentRouteData, false) 
-                    ?? SetSelectedPath(menuItems, currentRequest, currentRouteData, true);
+            var path = GetSelectedPath(menuItems, currentRequest, currentRouteData, false) 
+                    ?? GetSelectedPath(menuItems, currentRequest, currentRouteData, true);
+
+            if(path != null) {
+                foreach(var menuItem in path) {
+                    menuItem.Selected = true;
+                }
+            }
 
             return path;
         }
@@ -95,13 +101,18 @@ namespace Orchard.UI.Navigation {
         /// <param name="currentRouteData">The current route data.</param>
         /// <param name="compareUrls">Should compare raw string URLs instead of route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
-        private static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
+        private static Stack<MenuItem> GetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
+            var selectedPaths = new List<Stack<MenuItem>>();
             foreach (MenuItem menuItem in menuItems) {
-                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
+                Stack<MenuItem> selectedPath = GetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
                 if (selectedPath != null) {
-                    menuItem.Selected = true;
                     selectedPath.Push(menuItem);
-                    return selectedPath;
+                    if (compareUrls) {
+                        selectedPaths.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
 
                 // compare route values (if any) first
@@ -122,15 +133,19 @@ namespace Orchard.UI.Navigation {
                 }
 
                 if (match) {
-                    menuItem.Selected = true;
-
                     selectedPath = new Stack<MenuItem>();
                     selectedPath.Push(menuItem);
-                    return selectedPath;
+
+                    if (compareUrls) {
+                        selectedPaths.Add(selectedPath);
+                    }
+                    else {
+                        return selectedPath;
+                    }
                 }
             }
 
-            return null;
+            return selectedPaths.OrderByDescending(p => p.First().Href.Split('/').Length).FirstOrDefault();
         }
 
         /// <summary>
@@ -187,6 +202,7 @@ namespace Orchard.UI.Navigation {
             var menuItemShape = shapeFactory.MenuItem()
                 .Text(menuItem.Text)
                 .IdHint(menuItem.IdHint)
+                .Url(menuItem.Url)
                 .Href(menuItem.Href)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)
                 .LocalNav(menuItem.LocalNav)
@@ -216,6 +232,7 @@ namespace Orchard.UI.Navigation {
             var menuItemShape = shapeFactory.LocalMenuItem()
                 .Text(menuItem.Text)
                 .IdHint(menuItem.IdHint)
+                .Url(menuItem.Url)
                 .Href(menuItem.Href)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)
                 .LocalNav(menuItem.LocalNav)

@@ -1,21 +1,21 @@
-﻿using System;
+﻿using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Messaging.Services;
+using Orchard.Security;
+using Orchard.Services;
+using Orchard.Users.Events;
+using Orchard.Users.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Security;
-using Orchard.DisplayManagement;
-using Orchard.Localization;
-using Orchard.Logging;
-using Orchard.ContentManagement;
-using Orchard.Security;
-using Orchard.Users.Events;
-using Orchard.Users.Models;
-using Orchard.Messaging.Services;
-using System.Collections.Generic;
-using Orchard.Services;
 using System.Web.Helpers;
-using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
+using System.Web.Security;
 
 namespace Orchard.Users.Services {
     [OrchardSuppressDependency("Orchard.Security.NullMembershipService")]
@@ -33,10 +33,10 @@ namespace Orchard.Users.Services {
         private readonly IClock _clock;
 
         public MembershipService(
-            IOrchardServices orchardServices, 
-            IMessageService messageService, 
-            IUserEventHandler userEventHandlers, 
-            IClock clock, 
+            IOrchardServices orchardServices,
+            IMessageService messageService,
+            IUserEventHandler userEventHandlers,
+            IClock clock,
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
@@ -56,10 +56,8 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public MembershipSettings GetSettings() {
-            var settings = new MembershipSettings();
-            // accepting defaults
-            return settings;
+        public IMembershipSettings GetSettings() {
+            return _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
         }
 
         public IUser CreateUser(CreateUserParams createUserParams) {
@@ -76,7 +74,7 @@ namespace Orchard.Users.Services {
             user.CreatedUtc = _clock.UtcNow;
             SetPassword(user, createUserParams.Password);
 
-            if ( registrationSettings != null ) {
+            if ( registrationSettings != null) {
                 user.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
                 user.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
             }
@@ -86,7 +84,7 @@ namespace Orchard.Users.Services {
                 user.EmailStatus = UserStatus.Approved;
             }
 
-            var userContext = new UserContext {User = user, Cancel = false, UserParameters = createUserParams};
+            var userContext = new UserContext { User = user, Cancel = false, UserParameters = createUserParams };
             _userEventHandlers.Creating(userContext);
 
             if(userContext.Cancel) {
@@ -100,10 +98,10 @@ namespace Orchard.Users.Services {
                 _userEventHandlers.Approved(user);
             }
 
-            if ( registrationSettings != null  
-                && registrationSettings.UsersAreModerated 
-                && registrationSettings.NotifyModeration 
-                && !createUserParams.IsApproved ) {
+            if ( registrationSettings != null
+                && registrationSettings.UsersAreModerated
+                && registrationSettings.NotifyModeration
+                && !createUserParams.IsApproved) {
                 var usernames = String.IsNullOrWhiteSpace(registrationSettings.NotificationsRecipients)
                                     ? new string[0]
                                     : registrationSettings.NotificationsRecipients.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
@@ -118,7 +116,7 @@ namespace Orchard.Users.Services {
                         template.Metadata.Wrappers.Add("Template_User_Wrapper");
 
                         var parameters = new Dictionary<string, object> {
-                            {"Subject", T("New account").Text},
+                            {"Subject", T("New account on {0}.", _orchardServices.WorkContext.CurrentSite.SiteName).Text},
                             {"Body", _shapeDisplay.Display(template)},
                             {"Recipients", recipient.Email }
                         };
@@ -137,24 +135,29 @@ namespace Orchard.Users.Services {
             return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
-        public IUser ValidateUser(string userNameOrEmail, string password) {
+        public IUser ValidateUser(string userNameOrEmail, string password, out List<LocalizedString> validationErrors) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLowerInvariant();
-
+            validationErrors = new List<LocalizedString>();
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
-
             if (user == null)
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if ( user == null || ValidatePassword(user.As<UserPart>(), password) == false )
+            if (user == null || ValidatePassword(user.As<UserPart>(), password) == false) {
+                validationErrors.Add(T("The username or e-mail or password provided is incorrect."));
                 return null;
+            }
 
-            if ( user.EmailStatus != UserStatus.Approved )
-                return null;
+            if (user.EmailStatus != UserStatus.Approved)
+                validationErrors.Add(T("You must verify your email"));
 
-            if ( user.RegistrationStatus != UserStatus.Approved )
-                return null;
+            if (user.RegistrationStatus != UserStatus.Approved)
+                validationErrors.Add(T("You must be approved before being able to login"));
 
             return user;
+        }
+
+        public bool PasswordIsExpired(IUser user, int days) {
+            return user.As<UserPart>().LastPasswordChangeUtc.Value.AddDays(days) < _clock.UtcNow;
         }
 
         public void SetPassword(IUser user, string password) {
@@ -176,6 +179,7 @@ namespace Orchard.Users.Services {
                 default:
                     throw new ApplicationException(T("Unexpected password format value").ToString());
             }
+            userPart.LastPasswordChangeUtc = _clock.UtcNow;
         }
 
         private bool ValidatePassword(UserPart userPart, string password) {
@@ -224,7 +228,7 @@ namespace Orchard.Users.Services {
                 isValid = Crypto.VerifyHashedPassword(userPart.Password, Encoding.Unicode.GetString(CombineSaltAndPassword(saltBytes, password)));
             }
             else {
-                isValid = SecureStringEquality(userPart.Password, ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password)); 
+                isValid = SecureStringEquality(userPart.Password, ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password));
             }
 
             // Migrating older password hashes to Default algorithm if necessary and enabled.
@@ -232,7 +236,7 @@ namespace Orchard.Users.Services {
                 var keepOldConfiguration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
                 if (String.IsNullOrEmpty(keepOldConfiguration) || keepOldConfiguration.Equals("false", StringComparison.OrdinalIgnoreCase)) {
                     userPart.HashAlgorithm = DefaultHashAlgorithm;
-                    userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
+                    userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
                 }
             }
 

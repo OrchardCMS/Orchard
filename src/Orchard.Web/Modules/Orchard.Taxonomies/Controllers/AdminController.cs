@@ -12,6 +12,14 @@ using Orchard.Taxonomies.Services;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.DisplayManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Data;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents.Settings;
+using Orchard.Mvc.Html;
+using Orchard.Utility.Extensions;
+using Orchard.Mvc.Extensions;
+using System.Web.Routing;
 
 namespace Orchard.Taxonomies.Controllers {
 
@@ -19,16 +27,24 @@ namespace Orchard.Taxonomies.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
-
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly ITransactionManager _transactionManager;
+        private readonly IContentManager _contentManager;
+        private string contentType = "Taxonomy";
         public AdminController(
             IOrchardServices services,
+            IContentManager contentManager,
+            IContentDefinitionManager contentDefinitionManager,
+            ITransactionManager transactionManager,
             ITaxonomyService taxonomyService,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = services;
             _siteService = siteService;
             _taxonomyService = taxonomyService;
-
+            _contentDefinitionManager = contentDefinitionManager;
+            _transactionManager = transactionManager;
+            _contentManager = contentManager;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -83,8 +99,145 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index");
         }
 
+
+        public ActionResult Create() {
+            var contentItem = _contentManager.New(contentType);
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Cannot create taxonomies")))
+                return new HttpUnauthorizedResult();
+            var model = _contentManager.BuildEditor(contentItem);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Create")]
+        [Mvc.FormValueRequired("submit.Save")]
+        public ActionResult CreatePOST(string returnUrl) {
+            return CreatePOST(returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Create")]
+        [Mvc.FormValueRequired("submit.Publish")]
+        public ActionResult CreateAndPublishPOST(string returnUrl) {
+
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(contentType);
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, dummyContent, T("Couldn't create taxonomies")))
+                return new HttpUnauthorizedResult();
+
+            return CreatePOST(returnUrl, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult CreatePOST(string returnUrl, Action<ContentItem> conditionallyPublish) {
+            var contentItem = _contentManager.New(contentType);
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Couldn't create taxonomies")))
+                return new HttpUnauthorizedResult();
+
+            _contentManager.Create(contentItem, VersionOptions.Draft);
+
+            var model = _contentManager.UpdateEditor(contentItem, this);
+
+            if (!ModelState.IsValid) {
+                _transactionManager.Cancel();
+                return View(model);
+            }
+
+            conditionallyPublish(contentItem);
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("Your content has been created.")
+                : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
+            if (!string.IsNullOrEmpty(returnUrl)) {
+                return this.RedirectLocal(returnUrl);
+            }
+            var adminRouteValues = _contentManager.GetItemMetadata(contentItem).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
+        }
+
+        public ActionResult Edit(int id) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Cannot edit content")))
+                return new HttpUnauthorizedResult();
+
+            var model = _contentManager.BuildEditor(contentItem);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Save")]
+        public ActionResult EditPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Publish")]
+        public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+            var content = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (content == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, content, T("Couldn't publish content")))
+                return new HttpUnauthorizedResult();
+
+            return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+            var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
+
+            if (contentItem == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Couldn't edit content")))
+                return new HttpUnauthorizedResult();
+
+            string previousRoute = null;
+            if (contentItem.Has<IAliasAspect>()
+                && !string.IsNullOrWhiteSpace(returnUrl)
+                && Request.IsLocalUrl(returnUrl)
+                // only if the original returnUrl is the content itself
+                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase)
+                ) {
+                previousRoute = contentItem.As<IAliasAspect>().Path;
+            }
+
+            var model = _contentManager.UpdateEditor(contentItem, this);
+            if (!ModelState.IsValid) {
+                _transactionManager.Cancel();
+                return View("Edit", model);
+            }
+
+            conditionallyPublish(contentItem);
+
+            if (!string.IsNullOrWhiteSpace(returnUrl)
+                && previousRoute != null
+                && !String.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
+                returnUrl = Url.ItemDisplayUrl(contentItem);
+            }
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("Your content has been saved.")
+                : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
+        }
+
+
+        [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't delete taxonomy")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
@@ -200,7 +353,7 @@ namespace Orchard.Taxonomies.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("The terms have been imported successfully."));
+            Services.Notifier.Success(T("The terms have been imported successfully."));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = id });
         }
@@ -212,6 +365,7 @@ namespace Orchard.Taxonomies.Controllers {
                 IsInternal = taxonomy.IsInternal,
                 ContentItem = taxonomy.ContentItem,
                 IsChecked = false,
+                HasDraft = taxonomy.ContentItem.HasDraft(),
             };
         }
 

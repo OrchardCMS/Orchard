@@ -31,21 +31,33 @@ namespace Orchard.Taxonomies.Tokens {
 
             context.For<TaxonomyField>("TaxonomyField")
                    .Token("Terms", field => String.Join(", ", field.Terms.Select(t => t.Name).ToArray()))
-                   .Token(
-                       token => {
-                           var index = 0;
-                           return (token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) && int.TryParse(token.Substring("Terms:".Length), out index)) ? index.ToString() : null;
-                       },
-                       (token, t) => {
-                           var index = Convert.ToInt32(token);
-                           return index + 1 > t.Terms.Count() ? null : t.Terms.ElementAt(index).Name;
+                   .Token(FilterTokenParam,
+                       (index, field) => {
+                           var term = field.Terms.ElementAtOrDefault(Convert.ToInt32(index));
+                           return term != null ? term.Name : null;
                        })
-                // todo: extend Chain() in order to accept a filter like in Token() so that we can chain on an expression
-                   .Chain("Terms:0", "Content", t => t.Terms.ElementAt(0))
-                   .Chain("Terms:1", "Content", t => t.Terms.ElementAt(1))
-                   .Chain("Terms:2", "Content", t => t.Terms.ElementAt(2))
-                   .Chain("Terms:3", "Content", t => t.Terms.ElementAt(3))
+                   .Chain(FilterChainParam, "Content", (index, field) => field.Terms.ElementAtOrDefault(Convert.ToInt32(index)))
                    ;
+        }
+
+        private static string FilterTokenParam(string token) {
+            int index = 0;
+            return (token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) && int.TryParse(token.Substring("Terms:".Length), out index)) ? index.ToString() : null;
+        }
+
+        private static Tuple<string, string> FilterChainParam(string token) {
+            int tokenLength = "Terms:".Length;
+            int index = 0;
+            int chainIndex = token.IndexOf('.');
+            if (!token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
+                return null;
+
+            if (int.TryParse(token.Substring(tokenLength, chainIndex - tokenLength), out index)) {
+                return new Tuple<string, string>(index.ToString(), token.Substring(chainIndex + 1));
+            }
+            else {
+                return null;
+            }
         }
     }
 }

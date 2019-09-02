@@ -78,18 +78,18 @@ module Orchard.Azure.MediaServices.VideoPlayer.Injectors {
                 flashvars,
                 params,
                 attributes,
-                e => {
+                (e: any) => {
                     if (!e.success)
                         this.fault();
                 });
 
-            instances[this.innerElementId] = this;
+            (<any>instances)[this.innerElementId] = this;
         }
          
         public onMediaPlayerStateChange(state: string) {
             if (state == "playbackError") {
                 this.debug("Playback error detected; cleaning up container and faulting this injector.");
-                instances[this.innerElementId] = null;
+                (<any>instances)[this.innerElementId] = null;
                 this.fault();
             }
         }

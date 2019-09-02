@@ -43,6 +43,9 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
             if (Uri.IsWellFormedUriString(fileName, UriKind.Absolute)
                 || (fileName.StartsWith("//", StringComparison.InvariantCulture)
                 && Uri.IsWellFormedUriString("http:" + fileName, UriKind.Absolute))) {
+                if (fileName.StartsWith("//", StringComparison.InvariantCulture)) {
+                    fileName = "http:" + fileName;
+                }
                 var uri = new Uri(fileName);
                 shapeName = uri.Authority + "$" + uri.AbsolutePath + "$" + uri.Query;
             }
@@ -82,20 +85,34 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                 var featureDescriptors = hit.extensionDescriptor.Features.Where(fd => fd.Id == hit.extensionDescriptor.Id);
                 foreach (var featureDescriptor in featureDescriptors) {
                     builder.Describe(iter.shapeType)
-                        .From(new Feature {Descriptor = featureDescriptor})
+                        .From(new Feature { Descriptor = featureDescriptor })
                         .BoundAs(
                             hit.fileVirtualPath,
                             shapeDescriptor => displayContext => {
-                                                   var shape = ((dynamic) displayContext.Value);
-                                                   var output = displayContext.ViewContext.Writer;
-                                                   ResourceDefinition resource = shape.Resource;
-                                                   string condition = shape.Condition;
-                                                   Dictionary<string, string> attributes = shape.TagAttributes;
-                                                   ResourceManager.WriteResource(output, resource, hit.fileVirtualPath, condition, attributes);
-                                                   return null;
-                                               });
+                                var shape = ((dynamic)displayContext.Value);
+                                var output = displayContext.ViewContext.Writer;
+                                ResourceDefinition resource = shape.Resource;
+                                var url = GetResourceUrl(shape.Url, hit.fileVirtualPath);
+                                string condition = shape.Condition;
+                                Dictionary<string, string> attributes = shape.TagAttributes;
+                                ResourceManager.WriteResource(output, resource, url, condition, attributes);
+                                return null;
+                            });
                 }
             }
+        }
+
+        private string GetResourceUrl(string shapeUrl, string fileVirtualPath) {
+            if (string.IsNullOrEmpty(shapeUrl)) return fileVirtualPath;
+
+            return GetPathFromRelativeUrl(shapeUrl) == GetPathFromRelativeUrl(fileVirtualPath) ? shapeUrl : fileVirtualPath;
+        }
+
+        private string GetPathFromRelativeUrl(string url) {
+            var path = url.TrimStart('~');
+            var indexOfQueryString = path.IndexOf('?');
+
+            return indexOfQueryString >= 0 ? path.Substring(0, indexOfQueryString) : path;
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {

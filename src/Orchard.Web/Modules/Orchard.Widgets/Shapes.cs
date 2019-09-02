@@ -39,7 +39,8 @@ namespace Orchard.Widgets {
                             widget.Classes.Add("widget-" + widgetPart.Name);
 
                             // Widget__Name__[Name]
-                            displaying.ShapeMetadata.Alternates.Add("Widget__Name__" + widgetPart.Name);
+                            // Replacing dashes to shape type-compatible double underscores.
+                            displaying.ShapeMetadata.Alternates.Add("Widget__Name__" + widgetPart.Name.Replace("-", "__"));
                         }
 
                         // Adding other css classes to the widget.

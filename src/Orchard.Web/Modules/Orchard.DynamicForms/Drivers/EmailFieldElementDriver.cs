@@ -1,8 +1,8 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -10,16 +10,17 @@ namespace Orchard.DynamicForms.Drivers {
     public class EmailFieldElementDriver : FormsElementDriver<EmailField>{
         private readonly ITokenizer _tokenizer;
 
-        public EmailFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(EmailField element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
-            var emailFieldEditor = BuildForm(context, "EmailField");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
+            var emailFieldEditor = BuildForm(context, "EmailField", "Properties:15");
             var emailFieldValidation = BuildForm(context, "EmailFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, emailFieldEditor, emailFieldValidation);
+            return Editor(context, autoLabelEditor, placeholderEditor, emailFieldEditor, emailFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -31,7 +32,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The value of this email field.")));
 
                 return form;
@@ -77,9 +78,14 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(EmailField element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
-            context.ElementShape.ProcessedValue = _tokenizer.Replace(element.RuntimeValue, context.GetTokenData());
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.ProcessedPlaceholder = _tokenizer.Replace(element.Placeholder, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

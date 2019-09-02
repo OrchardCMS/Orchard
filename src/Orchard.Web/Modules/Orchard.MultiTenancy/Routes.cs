@@ -5,10 +5,9 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.MultiTenancy {
     public class Routes : IRouteProvider {
-        public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] {
-                             new RouteDescriptor {
-                                                     Route = new Route(
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            var routeDescriptor = new RouteDescriptor {
+                Route = new Route(
                                                          "Admin/MultiTenancy/Edit/{name}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.MultiTenancy"},
@@ -22,14 +21,9 @@ namespace Orchard.MultiTenancy {
                                                                                       {"area", "Orchard.MultiTenancy"}
                                                                                   },
                                                          new MvcRouteHandler())
-                                                 }
-                         };
-        }
+            };
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
-                routes.Add(routeDescriptor);
-            }
+            routes.Add(routeDescriptor);
         }
     }
 }

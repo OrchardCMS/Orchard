@@ -31,7 +31,7 @@ namespace Orchard.AuditTrail.Providers.Users {
             _auditTrailManager.CreateRecord<UserAuditTrailEventProvider>(UserAuditTrailEventProvider.LogInFailed, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "user", eventFilterData: userNameOrEmail);
         }
 
-        public void ChangedPassword(IUser user) {
+        public void ChangedPassword(IUser user, string password) {
             RecordAuditTrail(UserAuditTrailEventProvider.PasswordChanged, user);
         }
 
@@ -68,6 +68,9 @@ namespace Orchard.AuditTrail.Providers.Users {
         }
 
         public void Approved(IUser user) {
+        }
+
+        public void Moderate(IUser user) {
         }
     }
 }

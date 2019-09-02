@@ -82,20 +82,23 @@ namespace Orchard.AntiSpam.Drivers {
                 ReCaptchaPartResponseModel responseModel = _jsonConverter.Deserialize<ReCaptchaPartResponseModel>(result);
 
                 if (!responseModel.Success) {
-                    for (int i = 0; i < responseModel.ErrorCodes.Length; i++) {
-                        if (responseModel.ErrorCodes[i] == "missing-input-response") {
-                            _notifier.Error(T("The Captcha field is required"));
+                    foreach (var errorCode in responseModel.ErrorCodes) {
+                        if(errorCode == "missing-input-response") {
+                            updater.AddModelError("", T("Please prove that you are not a bot."));
+                            _notifier.Error(T("Please prove that you are not a bot."));
                         }
                         else {
-                            _notifier.Error(T("There was an error with the Captcha please try again"));
-                            Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.ErrorCodes[i]);
+                            Logger.Information("An error occurred while submitting a reCaptcha: " + errorCode);
+                            updater.AddModelError("", T("An error occurred while submitting a reCaptcha."));
+                            _notifier.Error(T("An error occurred while submitting a reCaptcha."));
                         }
                     }
                 }
             }
             catch (Exception e) {
-                Logger.Error(e, "An unexcepted error occurred while submitting a reCaptcha");
-                updater.AddModelError("Parts_ReCaptcha_Fields", T("There was an error while validating the Captcha image"));
+                Logger.Error(e, "An unexcepted error occurred while submitting a reCaptcha.");
+                updater.AddModelError("", T("There was an error while validating the Captcha."));
+                _notifier.Error(T("There was an error while validating the Captcha."));
             }
 
             return Editor(part, shapeHelper);

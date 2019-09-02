@@ -1,0 +1,10 @@
+﻿@model Orchard.Layouts.ViewModels.SnippetViewModel
+@{
+    var descriptor = Model;
+    var fieldEditors = descriptor.FieldEditors;
+}
+<fieldset>
+    @foreach (var fieldEditor in fieldEditors) {
+        @Display(fieldEditor)
+    }
+</fieldset>

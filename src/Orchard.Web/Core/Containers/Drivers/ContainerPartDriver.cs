@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Orchard.ContentManagement;
@@ -27,8 +28,8 @@ namespace Orchard.Core.Containers.Drivers {
         private readonly IContainerService _containerService;
 
         public ContainerPartDriver(
-            IContentDefinitionManager contentDefinitionManager, 
-            IOrchardServices orchardServices, 
+            IContentDefinitionManager contentDefinitionManager,
+            IOrchardServices orchardServices,
             ISiteService siteService,
             IFeedManager feedManager, IContainerService containerService) {
             _contentDefinitionManager = contentDefinitionManager;
@@ -47,21 +48,34 @@ namespace Orchard.Core.Containers.Drivers {
             if (!part.ItemsShown)
                 return null;
 
-        return ContentShape("Parts_Container_Contained", () => {
+            return ContentShape("Parts_Container_Contained", () => {
                 var container = part.ContentItem;
                 var query = _contentManager
                 .Query(VersionOptions.Published)
                 .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
-                .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
+                .Join<ContainablePartRecord>().OrderBy(x => x.Position);
 
                 var metadata = container.ContentManager.GetItemMetadata(container);
-                if (metadata!=null)
-                _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+                if (metadata != null) {
+                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary {{"containerid", container.Id}});
+                }
 
-                var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
-                pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
-                                ? pager.PageSize
-                                : part.PageSize;
+                // Retrieving pager parameters.
+                var queryString = _orchardServices.WorkContext.HttpContext.Request.QueryString;
+
+                var page = 0;
+                // Don't try to page if not necessary.
+                if (part.Paginated && queryString["page"] != null) {
+                    Int32.TryParse(queryString["page"], out page);
+                }
+
+                var pageSize = part.PageSize;
+                // If the container is paginated and pageSize is provided in the query string then retrieve it.
+                if (part.Paginated && queryString["pageSize"] != null) {
+                    Int32.TryParse(queryString["pageSize"], out pageSize);
+                }
+
+                var pager = new Pager(_siteService.GetSiteSettings(), page, pageSize);
 
                 var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
@@ -88,6 +102,10 @@ namespace Orchard.Core.Containers.Drivers {
 
         protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Container_Edit", () => {
+                if (!part.ContainerSettings.DisplayContainerEditor) {
+                    return null;
+                }
+
                 var containables = !part.ContainerSettings.RestrictItemContentTypes ? _containerService.GetContainableTypes().ToList() : new List<ContentTypeDefinition>(0);
                 var model = new ContainerViewModel {
                     AdminMenuPosition = part.AdminMenuPosition,
@@ -103,7 +121,7 @@ namespace Orchard.Core.Containers.Drivers {
                     EnablePositioning = part.Record.EnablePositioning,
                     OverrideEnablePositioning = part.ContainerSettings.EnablePositioning == null
                 };
-                
+
                 if (updater != null) {
                     if (updater.TryUpdateModel(model, "Container", null, new[] { "OverrideEnablePositioning" })) {
                         part.AdminMenuPosition = model.AdminMenuPosition;
@@ -123,18 +141,22 @@ namespace Orchard.Core.Containers.Drivers {
                         }
                     }
                 }
-                   
+
                 return shapeHelper.EditorTemplate(TemplateName: "Container", Model: model, Prefix: "Container");
             });
         }
 
         protected override void Importing(ContainerPart part, ImportContentContext context) {
-            var itemContentType = context.Attribute(part.PartDefinition.Name, "ItemContentTypes");
-            if (itemContentType != null) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "ItemContentTypes", itemContentType => {
                 if (_contentDefinitionManager.GetTypeDefinition(itemContentType) != null) {
                     part.Record.ItemContentTypes = itemContentType;
                 }
-            }
+            });
 
             context.ImportAttribute(part.PartDefinition.Name, "ItemsShown", s => part.ItemsShown = XmlConvert.ToBoolean(s));
             context.ImportAttribute(part.PartDefinition.Name, "Paginated", s => part.Paginated = XmlConvert.ToBoolean(s));

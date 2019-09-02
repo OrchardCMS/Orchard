@@ -52,7 +52,7 @@ namespace Orchard.ContentManagement {
         /// <param name="value">The value to set.</param>
         /// <returns>Itself</returns>
         public static XElement Attr<T>(this XElement el, string name, T value) {
-            el.SetAttributeValue(name, ToString(value));
+            el.SetAttributeValue(name, InfosetHelper.ThrowIfContainsInvalidXmlCharacter(ToString(value)));
             return el;
         }
 
@@ -141,7 +141,7 @@ namespace Orchard.ContentManagement {
         /// <param name="value">The value.</param>
         /// <returns>The element.</returns>
         public static XElement Val<TValue>(this XElement el, TValue value) {
-            el.SetValue(ToString(value));
+            el.SetValue(InfosetHelper.ThrowIfContainsInvalidXmlCharacter(ToString(value)));
             return el;
         }
 
@@ -214,7 +214,9 @@ namespace Orchard.ContentManagement {
                 return decimalValue.ToString(CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
                 return value.ToString();
             }
 
@@ -275,8 +277,10 @@ namespace Orchard.ContentManagement {
                 return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
             }
 
-            if (type.IsEnum) {
-                return (T)Enum.Parse(type, value);
+            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (underlyingType.IsEnum) {
+                return (T)Enum.Parse(underlyingType, value);
             }
 
             throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));

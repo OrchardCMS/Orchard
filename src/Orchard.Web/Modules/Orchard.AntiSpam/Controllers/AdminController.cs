@@ -144,7 +144,7 @@ namespace Orchard.AntiSpam.Controllers {
             if (spam != null) {
                 spam.As<SpamFilterPart>().Status = SpamStatus.Spam;
                 _spamService.ReportSpam(spam.As<SpamFilterPart>());
-                Services.ContentManager.Publish(spam);
+                Services.ContentManager.Unpublish(spam);
             }
 
             return this.RedirectLocal(returnUrl, "~/");
@@ -158,7 +158,7 @@ namespace Orchard.AntiSpam.Controllers {
             var spam = Services.ContentManager.Get(id, VersionOptions.Latest);
             if (spam != null) {
                 spam.As<SpamFilterPart>().Status = SpamStatus.Ham;
-                _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                _spamService.ReportHam(spam.As<SpamFilterPart>());
                 Services.ContentManager.Publish(spam);
             }
 

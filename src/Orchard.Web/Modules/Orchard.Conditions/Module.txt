@@ -1,0 +1,13 @@
+﻿Name: Conditions
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.10.3
+OrchardVersion: 1.10.3
+Description: Provides a rules API that evaluate to true or false.
+Features:
+    Orchard.Conditions:
+        Name: Conditions
+        Description: Provides a rules API that evaluate to true or false.
+        Category: Scripting
+        Dependencies: Orchard.Scripting

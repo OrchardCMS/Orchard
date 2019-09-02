@@ -9,8 +9,11 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult UpdateEditorShape(UpdateEditorContext context);
         void Importing(ImportContentContext context);
         void Imported(ImportContentContext context);
+        void ImportCompleted(ImportContentContext context);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
+        void Cloning(CloneContentContext context);
+        void Cloned(CloneContentContext context);
         void Describe(DescribeMembersContext context);
         IEnumerable<ContentFieldInfo> GetFieldInfo();
         void GetContentItemMetadata(GetContentItemMetadataContext context);

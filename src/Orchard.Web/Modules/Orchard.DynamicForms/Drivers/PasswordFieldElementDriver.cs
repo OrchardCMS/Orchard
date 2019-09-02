@@ -1,8 +1,8 @@
 ﻿using Orchard.DynamicForms.Elements;
-using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -10,15 +10,16 @@ namespace Orchard.DynamicForms.Drivers {
     public class PasswordFieldElementDriver : FormsElementDriver<PasswordField>{
         private readonly ITokenizer _tokenizer;
 
-        public PasswordFieldElementDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+        public PasswordFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
             _tokenizer = tokenizer;
         }
 
         protected override EditorResult OnBuildEditor(PasswordField element, ElementEditorContext context) {
-            var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
+            var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
             var passwordFieldValidation = BuildForm(context, "PasswordFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, passwordFieldValidation);
+            return Editor(context, autoLabelEditor, placeholderEditor, passwordFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -74,8 +75,10 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(PasswordField element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData());
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            context.ElementShape.ProcessedPlaceholder = _tokenizer.Replace(element.Placeholder, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

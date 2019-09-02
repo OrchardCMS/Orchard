@@ -35,7 +35,9 @@ namespace Orchard.AuditTrail.Services {
                         case XmlNodeType.Element:
                             var match = reader.GetAttribute("match");
                             var isAttributeChange = match != null && match.StartsWith("@");
-                            var index = match == null || isAttributeChange ? default(int?) : Int32.Parse(match) - 1;
+                            int matchInt;
+                            var index = match == null || isAttributeChange || !Int32.TryParse(match, out matchInt) 
+                                ? default(int?) : matchInt - 1;
                             var diffType = reader.LocalName;
                             var currentElement = stack.Peek();
 
@@ -66,7 +68,6 @@ namespace Orchard.AuditTrail.Services {
                                             var originalContent = currentElement.Value;
                                             var currentContent = reader.ReadElementContentAsString();
 
-                                            stack.Pop();
                                             readNext = false;
                                             yield return
                                                 new DiffNode {

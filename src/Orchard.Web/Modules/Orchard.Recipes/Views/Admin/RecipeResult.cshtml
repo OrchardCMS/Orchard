@@ -1,0 +1,41 @@
+﻿@model Orchard.Recipes.ViewModels.RecipeResultViewModel
+
+@{
+    Layout.Title = T("Recipe File Execution Result").ToString();
+}
+
+@if (Model.Result.IsSuccessful) {
+    <div class="message message-Information">
+        @T("The recipe file was successfully executed.")
+    </div>
+}
+else {
+    <div class="message message-Error">
+        @T("The recipe file execution failed. Check the logs (recipe execution ID <strong>{0}</strong>) for more information.", Model.Result.ExecutionId)
+    </div>
+}
+
+<h2>@T("Recipe steps")</h2>
+<table class="items" style="width: auto;">
+    <thead>
+        <tr>
+            <th>@T("Recipe")</th>
+            <th>@T("Step")</th>
+            <th>@T("Executed")</th>
+            <th>@T("Result")</th>
+            <th>@T("Message")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var step in Model.Result.Steps) {
+            <tr>
+                <td>@(!String.IsNullOrWhiteSpace(step.RecipeName) ? step.RecipeName : T("Untitled").ToString())</td>
+                <td>@step.StepName</td>
+                <td>@step.IsCompleted</td>
+                <td>@if (step.IsSuccessful) { @T("Successful") } else if (step.IsCompleted) { <strong>@T("Failed")</strong> }</td>
+                <td><strong>@step.ErrorMessage</strong></td>
+            </tr>
+        }        
+    </tbody>
+</table>
+

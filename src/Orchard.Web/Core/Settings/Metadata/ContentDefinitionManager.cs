@@ -9,6 +9,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.Core.Settings.Metadata {
     public class ContentDefinitionManager : Component, IContentDefinitionManager {
@@ -124,7 +125,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentTypeDefinition> AcquireContentTypeDefinitions() {
-            return _cacheManager.Get("ContentTypeDefinitions", ctx => {
+            return _cacheManager.Get("ContentTypeDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 AcquireContentPartDefinitions();
@@ -139,7 +140,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentPartDefinition> AcquireContentPartDefinitions() {
-            return _cacheManager.Get("ContentPartDefinitions", ctx => {
+            return _cacheManager.Get("ContentPartDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 var contentPartDefinitionRecords = _partDefinitionRepository.Table
@@ -152,7 +153,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private IDictionary<string, ContentFieldDefinition> AcquireContentFieldDefinitions() {
-            return _cacheManager.Get("ContentFieldDefinitions", ctx => {
+            return _cacheManager.Get("ContentFieldDefinitions", true, ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
                 return _fieldDefinitionRepository.Table.Select(Build).ToDictionary(x => x.Name, y => y);
@@ -188,7 +189,7 @@ namespace Orchard.Core.Settings.Metadata {
 
         private void Apply(ContentTypeDefinition model, ContentTypeDefinitionRecord record) {
             record.DisplayName = model.DisplayName;
-            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
 
             var toRemove = record.ContentTypePartDefinitionRecords
                 .Where(partDefinitionRecord => model.Parts.All(part => partDefinitionRecord.ContentPartDefinitionRecord.Name != part.PartDefinition.Name))
@@ -214,7 +215,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private void Apply(ContentPartDefinition model, ContentPartDefinitionRecord record) {
-            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
 
             var toRemove = record.ContentPartFieldDefinitionRecords
                 .Where(partFieldDefinitionRecord => model.Fields.All(partField => partFieldDefinitionRecord.Name != partField.Name))
@@ -282,6 +283,9 @@ namespace Orchard.Core.Settings.Metadata {
                 return XElement.Parse(settings);
             }
             catch (Exception ex) {
+                if (ex.IsFatal()) {                
+                    throw;
+                }
                 Logger.Error(ex, "Unable to parse settings xml");
                 return null;
             }

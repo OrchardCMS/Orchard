@@ -19,6 +19,7 @@ namespace Orchard.Tests.Environment {
         }
 
         protected override void Register(ContainerBuilder builder) {
+            builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
@@ -28,13 +29,6 @@ namespace Orchard.Tests.Environment {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => _httpContextCurrent);
-
-            container.Mock<IHttpContextAccessor>()
-                .Setup(x => x.CreateContext(It.IsAny<ILifetimeScope>()))
-                .Returns(() => new StubHttpContext());
-
-            container.Mock<IWorkContextEvents>()
-                .Setup(x => x.Started());
         }
 
         [Test]

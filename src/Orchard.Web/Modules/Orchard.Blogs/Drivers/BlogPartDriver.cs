@@ -43,20 +43,22 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Importing(BlogPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var description = context.Attribute(part.PartDefinition.Name, "Description");
-            if (description != null) {
-                part.Description = description;
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var postCount = context.Attribute(part.PartDefinition.Name, "PostCount");
-            if (postCount != null) {
-                part.PostCount = Convert.ToInt32(postCount);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Description", description =>
+                part.Description = description
+            );
 
-            var feedProxyUrl = context.Attribute(part.PartDefinition.Name, "FeedProxyUrl");
-            if (feedProxyUrl != null) {
-                part.FeedProxyUrl = feedProxyUrl;
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "PostCount", postCount =>
+                part.PostCount = Convert.ToInt32(postCount)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "FeedProxyUrl", feedProxyUrl =>
+                part.FeedProxyUrl = feedProxyUrl
+            );
         }
 
         protected override void Exporting(BlogPart part, ContentManagement.Handlers.ExportContentContext context) {

@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Validation;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -155,6 +156,9 @@ namespace Orchard.FileSystems.Media {
                     directoryInfo.Create();
                 }
                 catch (Exception ex) {
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
                     throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
                 }
             }
@@ -182,7 +186,7 @@ namespace Orchard.FileSystems.Media {
                 CreateFolder(path);
             }
             catch {
-                return false; 
+                return false;
             }
 
             return true;
@@ -236,7 +240,7 @@ namespace Orchard.FileSystems.Media {
         }
 
         /// <summary>
-        /// Deletes a file in the storage provider.
+        /// Deletes a file and profile files in the storage provider.
         /// </summary>
         /// <param name="path">The relative path to the file to be deleted.</param>
         /// <exception cref="ArgumentException">If the file doesn't exist.</exception>
@@ -247,6 +251,38 @@ namespace Orchard.FileSystems.Media {
             }
 
             fileInfo.Delete();
+
+            lock (string.Intern(path)) {
+                var ListProfileFileInfo = ListProfiles(path);
+                foreach (var profileFileInfo in ListProfileFileInfo) {
+                    if (profileFileInfo.Exists) {
+                        profileFileInfo.Delete();
+                    }
+                    if (profileFileInfo.Directory.Exists && !(profileFileInfo.Directory.EnumerateFiles().Any() || profileFileInfo.Directory.EnumerateDirectories().Any())) {
+                        profileFileInfo.Directory.Delete();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the List of Profile's files in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file to be deleted.</param>
+        /// <returns></returns>
+        private IEnumerable<FileInfo> ListProfiles(string path) {
+            var directoryInfo = new DirectoryInfo(MapStorage("_Profiles"));
+
+            if (!directoryInfo.Exists) return Enumerable.Empty<FileInfo>();
+
+            var filenameWithExtension = Path.GetFileName(path) ?? "";
+            var urlpath = GetPublicUrl(path);
+            var fileLocation = urlpath.Substring(0, urlpath.Length - filenameWithExtension.Length);
+            var hashpath = fileLocation.GetHashCode().ToString("x").ToLowerInvariant();
+
+            return directoryInfo
+                .GetFiles(filenameWithExtension, SearchOption.AllDirectories)
+                .Where(x => x.Directory.Name.Equals(hashpath));
         }
 
         /// <summary>

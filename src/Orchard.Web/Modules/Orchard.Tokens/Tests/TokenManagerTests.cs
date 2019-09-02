@@ -29,10 +29,11 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestDescribe() {
             var allTokens = _tokenManager.Describe(null);
-            Assert.That(allTokens.Count(), Is.EqualTo(3));
+            Assert.That(allTokens.Count(), Is.EqualTo(4));
             Assert.That(allTokens.Any(d => d.Target == "Site"));
             Assert.That(allTokens.Any(d => d.Target == "User"));
             Assert.That(allTokens.Any(d => d.Target == "Date"));
+            Assert.That(allTokens.Any(d => d.Target == "Users"));
 
             var tokens = allTokens.Single(d => d.Target == "Site").Tokens;
             Assert.That(string.Join(",", tokens.Select(td => td.Target)), Is.EqualTo("Site,Site,Site,Site"));
@@ -59,7 +60,7 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestDescribeFilter() {
             var tokenDescriptors = _tokenManager.Describe(null);
-            Assert.That(tokenDescriptors.Count(), Is.EqualTo(3));
+            Assert.That(tokenDescriptors.Count(), Is.EqualTo(4));
             tokenDescriptors = _tokenManager.Describe(new[] { "Site" });
             Assert.That(tokenDescriptors.Count(), Is.EqualTo(1));
             Assert.That(tokenDescriptors.First().Target, Is.EqualTo("Site"));

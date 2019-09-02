@@ -60,12 +60,18 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             var output = new HtmlStringWriter();
             var arguments = methodInfo.GetParameters()
                 .Select(parameter => BindParameter(displayContext, parameter, output));
-
-            var returnValue = methodInfo.Invoke(serviceInstance, arguments.ToArray());
-            if (methodInfo.ReturnType != typeof(void)) {
-                output.Write(CoerceHtmlString(returnValue));
+            try {
+                var returnValue = methodInfo.Invoke(serviceInstance, arguments.ToArray());
+                if (methodInfo.ReturnType != typeof(void)) {
+                    output.Write(CoerceHtmlString(returnValue));
+                }
+                return output;
             }
-            return output;
+            catch(TargetInvocationException e) {
+                // Throwing a TIE here will probably kill the web process
+                // in Azure. For unknown reasons.
+                throw new Exception(string.Concat("TargetInvocationException ", methodInfo.Name), e.InnerException);
+            }
         }
 
         private static IHtmlString CoerceHtmlString(object invoke) {

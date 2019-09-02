@@ -29,7 +29,8 @@ namespace Lucene.Services {
 
         public static readonly Version LuceneVersion = Version.LUCENE_29;
         public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
-        
+        public static readonly int BatchSize = BooleanQuery.MaxClauseCount;
+
         public LuceneIndexProvider(
             IAppDataFolder appDataFolder, 
             ShellSettings shellSettings,
@@ -39,8 +40,6 @@ namespace Lucene.Services {
 
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
             _basePath = _appDataFolder.Combine("Sites", shellSettings.Name, "Indexes");
-
-            Logger = NullLogger.Instance;
 
             // Ensures the directory exists
             EnsureDirectoryExists();
@@ -152,17 +151,25 @@ namespace Lucene.Services {
             }
 
             using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED)) {
-                var query = new BooleanQuery();
+                // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
+                var pageCount = documentIds.Count() / BatchSize + 1;
+                for (int page = 0; page < pageCount; page++) {
+                    var query = new BooleanQuery();
 
-                try {
-                    foreach (var id in documentIds) {
-                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString(CultureInfo.InvariantCulture))), Occur.SHOULD));
+                    try {
+                        var batch = documentIds
+                            .Skip(page * BatchSize)
+                            .Take(BatchSize);
+
+                        foreach (var id in batch) {
+                            query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString(CultureInfo.InvariantCulture))), Occur.SHOULD));
+                        }
+
+                        writer.DeleteDocuments(query);
                     }
-
-                    writer.DeleteDocuments(query);
-                }
-                catch (Exception ex) {
-                    Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                    catch (Exception ex) {
+                        Logger.Error(ex, "An unexpected error occurred while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                    }
                 }
             }
         }

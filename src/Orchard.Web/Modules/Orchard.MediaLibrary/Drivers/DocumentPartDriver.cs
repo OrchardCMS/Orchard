@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
@@ -17,10 +18,17 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override void Importing(DocumentPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var length = context.Attribute(part.PartDefinition.Name, "Length");
-            if (length != null) {
-                part.Length = int.Parse(length);
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
+
+            context.ImportAttribute(part.PartDefinition.Name, "Length", length =>
+                part.Length = int.Parse(length)
+            );
+        }
+        protected override void Cloning(DocumentPart originalPart, DocumentPart clonePart, CloneContentContext context) {
+            clonePart.Length = originalPart.Length;
         }
     }
 }

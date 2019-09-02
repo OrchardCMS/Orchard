@@ -8,13 +8,13 @@
 <div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>
     using(Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
         <fieldset class="bulk-actions">
-            <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
+            <label><input type="checkbox" class="check-all" />@T("Select all")</label>
             <label for="publishActions">@T("Actions:")</label>
             <select id="publishActions" name="Options.BulkAction">
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.None, T("Choose action...").ToString())
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
             </select>
-            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.RawUrl)
             <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
         </fieldset>
         <fieldset class="contentItems bulk-items">

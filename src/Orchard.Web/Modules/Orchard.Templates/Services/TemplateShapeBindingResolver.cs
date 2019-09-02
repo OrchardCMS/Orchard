@@ -10,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using System.Web.Routing;
+using Orchard.UI.Admin;
 
 namespace Orchard.Templates.Services {
     public class TemplateShapeBindingResolver : IShapeBindingResolver {
@@ -18,30 +20,50 @@ namespace Orchard.Templates.Services {
         private IContentManager _contentManager;
         private IContentDefinitionManager _contentDefinitionManager;
         private ITemplateService _templateService;
+        private readonly RequestContext _requestContext;
 
         public TemplateShapeBindingResolver(
             ICacheManager cacheManager,
             ISignals signals,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITemplateService templateService
-            ) {
+            ITemplateService templateService,
+            RequestContext requestContext) {
             _cacheManager = cacheManager;
             _signals = signals;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _templateService = templateService;
+            _requestContext = requestContext;
         }
 
         public bool TryGetDescriptorBinding(string shapeType, out ShapeBinding shapeBinding) {
             var processors = BuildShapeProcessors();
 
+            var acceptableRenderingModes = new List<RenderingMode>() { RenderingMode.FrontEndAndAdmin };
+            if (AdminFilter.IsApplied(_requestContext)) {
+                acceptableRenderingModes.Add(RenderingMode.Admin);
+            }
+            else {
+                acceptableRenderingModes.Add(RenderingMode.FrontEnd);
+            }
+
+            var templateResults = processors[shapeType].Where(template => acceptableRenderingModes.Contains(template.RenderingMode));
             TemplateResult templateResult = null;
-            if (processors.TryGetValue(shapeType, out templateResult)) {
+            var templateResultsCount = templateResults.Count();
+            if (templateResultsCount == 1) {
+                templateResult = templateResults.FirstOrDefault();
+            }
+            else if (templateResultsCount > 1) {
+                // Templates with the same name but specified rendering mode are prioritized.
+                templateResult = templateResults.FirstOrDefault(template => template.RenderingMode != RenderingMode.FrontEndAndAdmin);
+            }
+
+            if (templateResult != null) {
                 shapeBinding = new ShapeBinding {
                     BindingName = "Templates",
                     Binding = ctx => CoerceHtmlString(_templateService.Execute(
-                        templateResult.Template, 
+                        templateResult.Template,
                         templateResult.Name,
                         templateResult.Processor, ctx.Value)),
                     ShapeDescriptor = new ShapeDescriptor { ShapeType = shapeType }
@@ -54,8 +76,8 @@ namespace Orchard.Templates.Services {
             return false;
         }
 
-        private IDictionary<string, TemplateResult> BuildShapeProcessors() {
-            return _cacheManager.Get("Template.ShapeProcessors", ctx => {
+        private ILookup<string, TemplateResult> BuildShapeProcessors() {
+            return _cacheManager.Get("Template.ShapeProcessors", true, ctx => {
                 ctx.Monitor(_signals.When(DefaultTemplateService.TemplatesSignal));
 
                 // select all name of types which contains ShapePart
@@ -67,11 +89,12 @@ namespace Orchard.Templates.Services {
 
                 var allTemplates = _contentManager.Query<ShapePart>(typesWithShapePart).List();
 
-                return allTemplates.Select(x => new TemplateResult {
-                    Name = x.Name,
-                    Template = x.Template,
-                    Processor = x.ProcessorName
-                }).ToDictionary(x => x.Name, x => x);
+                return allTemplates.Select(shapePart => new TemplateResult {
+                    Name = shapePart.Name,
+                    Template = shapePart.Template,
+                    Processor = shapePart.ProcessorName,
+                    RenderingMode = shapePart.RenderingMode
+                }).ToLookup(template => template.Name);
             });
         }
 
@@ -83,6 +106,7 @@ namespace Orchard.Templates.Services {
             public string Name { get; set; }
             public string Processor { get; set; }
             public string Template { get; set; }
+            public RenderingMode RenderingMode { get; set; }
         }
     }
 }

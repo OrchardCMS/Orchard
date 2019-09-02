@@ -12,6 +12,10 @@ namespace Orchard.Indexing {
             return this;
         }
 
+        public ISearchBuilder WithGroup(Action<ISearchBuilder> groupSearchBuilder) {
+            return this;
+        }
+
         public ISearchBuilder WithField(string field, bool value) {
             return this;
         }

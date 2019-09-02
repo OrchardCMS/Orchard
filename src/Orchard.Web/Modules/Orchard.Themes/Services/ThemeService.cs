@@ -18,6 +18,7 @@ namespace Orchard.Themes.Services {
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly ICacheManager _cacheManager;
+        private readonly ISiteThemeService _siteThemeService;
 
         public ThemeService(
             IOrchardServices orchardServices,
@@ -25,7 +26,8 @@ namespace Orchard.Themes.Services {
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
             IVirtualPathProvider virtualPathProvider,
-            ICacheManager cacheManager) {
+            ICacheManager cacheManager,
+            ISiteThemeService siteThemeService) {
 
             Services = orchardServices;
 
@@ -34,6 +36,7 @@ namespace Orchard.Themes.Services {
             _themeSelectors = themeSelectors;
             _virtualPathProvider = virtualPathProvider;
             _cacheManager = cacheManager;
+            _siteThemeService = siteThemeService;
 
             if (_featureManager.FeatureDependencyNotification == null) {
                 _featureManager.FeatureDependencyNotification = GenerateWarning;
@@ -62,8 +65,16 @@ namespace Orchard.Themes.Services {
                     : null;
             }
 
-            while (themes.Count > 0)
-                _featureManager.DisableFeatures(new[] { themes.Dequeue() });
+            var currentTheme = _siteThemeService.GetCurrentThemeName();
+
+            while (themes.Count > 0) {
+                var themeId = themes.Dequeue();
+
+                // Not disabling base theme if it's the current theme.
+                if (themeId != currentTheme) {
+                    _featureManager.DisableFeatures(new[] { themeId });
+                }
+            }
         }
 
         public void EnableThemeFeatures(string themeName) {
@@ -79,17 +90,24 @@ namespace Orchard.Themes.Services {
                     : null;
             }
 
-            while (themes.Count > 0)
-                _featureManager.EnableFeatures(new[] {themes.Pop()});
+            while (themes.Count > 0) {
+                var themeId = themes.Pop();
+                foreach (var featureId in _featureManager.EnableFeatures(new[] { themeId }, true)) {
+                    if (themeId != featureId) {
+                        var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
+                        Services.Notifier.Success(T("{0} was enabled", featureName));
+                    }
+                }
+            }
         }
 
         public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
+                .OrderByDescending(x => x.Priority).ToList();
 
-            if (requestTheme.Count() < 1)
+            if (!requestTheme.Any())
                 return null;
 
             foreach (var theme in requestTheme) {
@@ -171,6 +189,13 @@ namespace Orchard.Themes.Services {
                                                    ? "{0} and "
                                                    : "{0}, "), fn).ToString()).ToArray())
                     : featuresInQuestion.First()));
+        }
+
+        public void DisablePreviewFeatures(IEnumerable<string> features) {
+             foreach (var featureId in _featureManager.DisableFeatures(features,true)) {
+                 var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
+                        Services.Notifier.Success(T("{0} was disabled", featureName));
+             }
         }
     }
 }

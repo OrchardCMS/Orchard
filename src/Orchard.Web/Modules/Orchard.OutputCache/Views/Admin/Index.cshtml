@@ -29,21 +29,40 @@
     <fieldset>
         <label>@T("Max Age")</label>
         @Html.TextBoxFor(m => m.DefaultMaxAge, new { @class = "text small" })
-        <span class="hint">@T("When defined, a cache-control header with a max-age property will be added. Use this in order to enable kernel cache on IIS.")</span>
+        <span class="hint">@T("Specifies the duration (in seconds) content is allowed to be cached on the client, and on intermediaries such as proxy servers, CDNs or IIS kernel cache.")</span>
+        <span class="hint">@T("When set to a non-zero value, a cache-control header with a max-age property will be added to responses.")</span>
+        <span class="hint">@T("NOTE: Responses cached on intermediaries or clients will not be invalidated when content is edited, and cannot participate in the full cache key variation supported in Orchard.")</span>
+        <span class="hint">@T("Only activate this if you really know what you're doing, and consider setting it to a considerably lower value than the default cache duration.")</span>
     </fieldset>
 
     <fieldset>
         <label>@T("Vary by Query String Parameters")</label>
-        @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
-        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified query string parameters. Leave empty to vary by all query string parameters.")</span>
+        <div>
+            @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "False", new { Id = "varyByQueryStringExclusiveMode" })
+            <label for="varyByQueryStringExclusiveMode" class="forcheckbox">@T("Vary by only the following query string parameters")</label>
+        </div>
+        <div>
+            @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "True", new { Id = "varyByQueryStringInclusiveMode" })
+            <label for="varyByQueryStringInclusiveMode" class="forcheckbox">@T("Vary by all except the following query string parameters")</label>
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
+            <span class="hint">@T("Separate multiple query string parameters with a comma.")</span>
+        </div>
     </fieldset>
-    
+
     <fieldset>
         <label>@T("Vary by Request Headers")</label>
         @Html.TextBoxFor(m => m.VaryByRequestHeaders, new { @class = "text medium" })
         <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request headers.")</span>
     </fieldset>
-    
+
+    <fieldset>
+        <label>@T("Vary by Request Cookies")</label>
+        @Html.TextBoxFor(m => m.VaryByRequestCookies, new { @class = "text medium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary by the specified request cookies.")</span>
+    </fieldset>
+
     <fieldset>
         <label>@T("Ignored URLs")</label>
         @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "text medium" })

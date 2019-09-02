@@ -5,6 +5,7 @@ using Orchard.Logging;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
 using Orchard.ContentManagement.Records;
+using Orchard.Exceptions;
 
 namespace Orchard.Messaging.Services {
     [Obsolete]
@@ -40,8 +41,11 @@ namespace Orchard.Messaging.Services {
 
                 PrepareAndSend(type, properties, context);
             }
-            catch ( Exception e ) {
-                Logger.Error(e, "An error occured while sending the message {0}", type);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                Logger.Error(ex, "An error occurred while sending the message {0}", type);
             }
         }
 
@@ -60,8 +64,11 @@ namespace Orchard.Messaging.Services {
 
                 PrepareAndSend(type, properties, context);
             }
-            catch (Exception e) {
-                Logger.Error(e, "An error occured while sending the message {0}", type);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                Logger.Error(ex, "An error occurred while sending the message {0}", type);
             }
         }
 

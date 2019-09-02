@@ -26,7 +26,7 @@ namespace Orchard.Localization.Services {
         }
 
         public IEnumerable<string> ListCultures() {
-            return _cacheManager.Get("Cultures", context => {
+            return _cacheManager.Get("Cultures", true, context => {
                 context.Monitor(_signals.When("culturesChanged"));
 
                 return _cultureRepository.Table.Select(o => o.Culture).ToList();

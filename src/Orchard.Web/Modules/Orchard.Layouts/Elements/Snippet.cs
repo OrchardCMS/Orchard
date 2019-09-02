@@ -15,5 +15,9 @@ namespace Orchard.Layouts.Elements {
         public override bool HasEditor {
             get { return false; }
         }
+
+        public override string ToolboxIcon {
+            get { return "\uf10c"; }
+        }
     }
 }

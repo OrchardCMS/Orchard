@@ -126,6 +126,7 @@ namespace Orchard.AntiSpam.Services {
                 CommentAuthorEmail = _tokenizer.Replace(settings.CommentAuthorEmailPattern, data),
                 CommentAuthorUrl = _tokenizer.Replace(settings.CommentAuthorUrlPattern, data),
                 CommentContent = _tokenizer.Replace(settings.CommentContentPattern, data),
+                CommentType = part.ContentItem.ContentType.ToLower()
             };
 
             if(workContext.HttpContext != null) {

@@ -1,4 +1,6 @@
 ﻿@{
+    var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
+
     var htmlAttributes = new Dictionary<string, object>();
 
     if (Model.Required == true) {
@@ -8,6 +10,10 @@
     if (Model.AutoFocus == true) {
         htmlAttributes["autofocus"] = "autofocus";
     }
+
+    if (!String.IsNullOrEmpty(Model.Placeholder)) {
+        htmlAttributes["placeholder"] = Model.Placeholder;
+    }
 }
 
-@Html.TextArea("Text", (string)Model.Text, 25, 80, htmlAttributes)
+@Html.TextArea(propertyName, (string)Model.Text, 25, 80, htmlAttributes)

@@ -141,13 +141,15 @@ namespace Orchard.DesignerTools.Services {
             }
 
             foreach (var member in members) {
-                if ((o is ContentItem && (member.Name == "ContentManager"
-                        || member.Name == "Parts"
-                        || member.Name == "Record"
-                        || member.Name == "VersionRecord"
-                        || member.Name == "TypeDefinition" 
-                        || member.Name == "TypePartDefinition" 
-                        || member.Name == "PartDefinition"))
+                if ((o is ContentItem && (
+                        member.Name == "Content" ||
+                        member.Name == "ContentManager" ||
+                        member.Name == "Parts" || 
+                        member.Name == "Record" || 
+                        member.Name == "VersionRecord" || 
+                        member.Name == "TypeDefinition"  || 
+                        member.Name == "TypePartDefinition"  || 
+                        member.Name == "PartDefinition"))
                     || o is Delegate
                     || o is Type
                     ) {

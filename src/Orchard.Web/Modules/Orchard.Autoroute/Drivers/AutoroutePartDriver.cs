@@ -16,11 +16,6 @@ using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
-using Orchard.Localization.Services;
-using Orchard.Localization.Models;
-using Orchard.Mvc;
-using System.Web;
-using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Autoroute.Drivers {
     public class AutoroutePartDriver : ContentPartDriver<AutoroutePart> {
@@ -120,7 +115,7 @@ namespace Orchard.Autoroute.Drivers {
             };
 
             // Retrieve home page.
-            var homePageId = _homeAliasService.GetHomePageId();
+            var homePageId = _homeAliasService.GetHomePageId(VersionOptions.Latest);
             var isHomePage = part.Id == homePageId;
 
             viewModel.IsHomePage = isHomePage;
@@ -149,6 +144,10 @@ namespace Orchard.Autoroute.Drivers {
                 if (!_autorouteService.IsPathValid(part.DisplayAlias)) {
                     updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\", \"%\", \".\". No spaces are allowed (please use dashes or underscores instead)."));
                 }
+                
+                if (part.DisplayAlias != null && part.DisplayAlias.Length > 1850){
+                    updater.AddModelError("CurrentUrl", T("Your permalink is too long. The permalink can only be up to 1,850 characters."));
+                }
 
                 // Mark the content item to be the homepage. Once this content isp ublished, the home alias will be updated to point to this content item.
                 part.PromoteToHomePage = viewModel.PromoteToHomePage;
@@ -159,6 +158,11 @@ namespace Orchard.Autoroute.Drivers {
         }
 
         protected override void Importing(AutoroutePart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             context.ImportAttribute(part.PartDefinition.Name, "Alias", s => part.DisplayAlias = s);
             context.ImportAttribute(part.PartDefinition.Name, "CustomPattern", s => part.CustomPattern = s);
             context.ImportAttribute(part.PartDefinition.Name, "UseCustomPattern", s => part.UseCustomPattern = XmlHelper.Parse<bool>(s));
@@ -171,7 +175,7 @@ namespace Orchard.Autoroute.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCulturePattern", part.Record.UseCulturePattern);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.PromoteToHomePage);
         }
     }
 }

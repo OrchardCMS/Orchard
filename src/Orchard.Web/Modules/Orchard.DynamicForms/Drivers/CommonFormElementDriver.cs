@@ -4,11 +4,12 @@ using Orchard.DynamicForms.Elements;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Services;
 
 namespace Orchard.DynamicForms.Drivers {
     public class CommonFormElementDriver : FormsElementDriver<FormElement> {
 
-        public CommonFormElementDriver(IFormManager formManager, IShapeFactory shapeFactory) : base(formManager) {
+        public CommonFormElementDriver(IFormsBasedElementServices formsServices, IShapeFactory shapeFactory) : base(formsServices) {
             New = shapeFactory;
         }
 
@@ -44,8 +45,10 @@ namespace Orchard.DynamicForms.Drivers {
         protected override void OnDisplaying(FormElement element, ElementDisplayingContext context) {
             context.ElementShape.Metadata.Wrappers.Add("FormElement_Wrapper");
             context.ElementShape.Child.Add(New.PlaceChildContent(Source: context.ElementShape));
-
         }
 
+        protected override EditorResult OnBuildEditor(FormElement element, ElementEditorContext context) {
+            return Editor(context, BuildForm(context, "CommonFormElement", "Properties:10"));
+        }
     }
 }

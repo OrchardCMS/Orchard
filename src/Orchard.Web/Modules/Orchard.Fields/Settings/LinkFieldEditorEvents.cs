@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Orchard.Fields.Settings {
     public class LinkFieldListModeEvents : ContentDefinitionEditorEventsBase {
@@ -28,7 +28,11 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("LinkFieldSettings.TargetMode", model.TargetMode.ToString());
                 builder.WithSetting("LinkFieldSettings.LinkTextMode", model.LinkTextMode.ToString());
                 builder.WithSetting("LinkFieldSettings.StaticText", model.StaticText);
-            
+                builder.WithSetting("LinkFieldSettings.UrlPlaceholder", model.UrlPlaceholder);
+                builder.WithSetting("LinkFieldSettings.TextPlaceholder", model.TextPlaceholder);
+                builder.WithSetting("LinkFieldSettings.DefaultValue", model.DefaultValue);
+                builder.WithSetting("LinkFieldSettings.TextDefaultValue", model.TextDefaultValue);
+
                 yield return DefinitionTemplate(model);
             }
         }

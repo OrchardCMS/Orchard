@@ -114,6 +114,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
+            public bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+                throw new NotImplementedException();
+            }
+
             #endregion
         }
 
@@ -196,7 +200,7 @@ Description: My super wiki module for Orchard.
             _folders.Manifests.Add("MyCompany.AnotherWiki", @"
 Name: AnotherWiki
 Author: Coder Notaprogrammer
-Website: http://anotherwiki.codeplex.com
+Website: https://github.com/MyCompany/AnotherWiki
 Version: 1.2.3
 OrchardVersion: 1
 Features:
@@ -206,7 +210,7 @@ Features:
         Category: Content types
     AnotherWiki Editor:
         Description: A rich editor for wiki contents.
-        Dependencies: TinyMCE, AnotherWiki
+        Dependencies: TinyMce, AnotherWiki
         Category: Input methods
     AnotherWiki DistributionList:
         Description: Sends e-mail alerts when wiki contents gets published.
@@ -222,7 +226,7 @@ Features:
             Assert.That(descriptor.Id, Is.EqualTo("MyCompany.AnotherWiki"));
             Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
-            Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
+            Assert.That(descriptor.WebSite, Is.EqualTo("https://github.com/MyCompany/AnotherWiki"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(5));
@@ -241,7 +245,7 @@ Features:
                         Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
-                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMCE"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMce"));
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         break;
                     case "AnotherWiki DistributionList":
@@ -277,7 +281,7 @@ Features:
             _folders.Manifests.Add("AnotherWiki", @"
 Name: AnotherWiki
 Author: Coder Notaprogrammer
-Website: http://anotherwiki.codeplex.com
+Website: https://github.com/MyCompany/AnotherWiki
 Version: 1.2.3
 OrchardVersion: 1
 Description: Module Description
@@ -287,7 +291,7 @@ Category: Content types
 Features:
     AnotherWiki Editor:
         Description: A rich editor for wiki contents.
-        Dependencies: TinyMCE, AnotherWiki
+        Dependencies: TinyMce, AnotherWiki
         Category: Input methods
     AnotherWiki DistributionList:
         Description: Sends e-mail alerts when wiki contents gets published.
@@ -303,7 +307,7 @@ Features:
             Assert.That(descriptor.Id, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
-            Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
+            Assert.That(descriptor.WebSite, Is.EqualTo("https://github.com/MyCompany/AnotherWiki"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Description, Is.EqualTo("Module Description"));
@@ -323,7 +327,7 @@ Features:
                         Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
-                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMCE"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMce"));
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         break;
                     case "AnotherWiki DistributionList":

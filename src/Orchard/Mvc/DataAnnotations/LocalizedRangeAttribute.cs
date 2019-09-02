@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Orchard.Localization;
 
 namespace Orchard.Mvc.DataAnnotations {
     public class LocalizedRangeAttribute : RangeAttribute {
         public LocalizedRangeAttribute(RangeAttribute attribute, Localizer t)
-            : base(attribute.OperandType, new FormatterConverter().ToString(attribute.Minimum), new FormatterConverter().ToString(attribute.Maximum)) {
+            : base(attribute.OperandType, Convert.ToString(attribute.Minimum, CultureInfo.CurrentCulture), Convert.ToString(attribute.Maximum, CultureInfo.CurrentCulture)) {
             if ( !String.IsNullOrEmpty(attribute.ErrorMessage) )
                 ErrorMessage = attribute.ErrorMessage;
 

@@ -70,6 +70,11 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override void Importing(TagsPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
             var tagString = context.Attribute(part.PartDefinition.Name, "Tags");
             if (tagString != null) {
                 var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
@@ -83,6 +88,10 @@ namespace Orchard.Tags.Drivers {
 
         protected override void Exporting(TagsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags));
+        }
+
+        protected override void Cloning(TagsPart originalPart, TagsPart clonePart, CloneContentContext context) {
+            clonePart.CurrentTags = originalPart.CurrentTags;
         }
     }
 }

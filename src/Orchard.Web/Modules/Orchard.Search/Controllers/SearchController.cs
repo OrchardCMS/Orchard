@@ -75,7 +75,7 @@ namespace Orchard.Search.Controllers {
             // ignore search results which content item has been removed or unpublished
             var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
             foreach (var contentItem in foundItems) {
-                list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
+                list.Add(_contentManager.BuildDisplay(contentItem, searchSettingPart.DisplayType));
             }
             searchHits.TotalItemCount -= foundIds.Count() - foundItems.Count();
 
@@ -87,7 +87,8 @@ namespace Orchard.Search.Controllers {
                 StartPosition = (pager.Page - 1) * pager.PageSize + 1,
                 EndPosition = pager.Page * pager.PageSize > searchHits.TotalItemCount ? searchHits.TotalItemCount : pager.Page * pager.PageSize,
                 ContentItems = list,
-                Pager = pagerShape
+                Pager = pagerShape,
+                IndexName = index
             };
 
             //todo: deal with page requests beyond result count

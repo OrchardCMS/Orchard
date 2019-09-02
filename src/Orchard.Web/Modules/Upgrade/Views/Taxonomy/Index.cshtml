@@ -1,6 +1,11 @@
 ﻿@using Orchard.Utility.Extensions
 
-@{ Layout.Title = T("Migrate Taxonomies").ToString(); }
+@{ 
+    Script.Require("jQuery");
+    Layout.Title = T("Migrate Taxonomies").ToString(); 
+}
+
+<div class="message message-Warning" id="message-progress" style="display: none"></div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
@@ -15,3 +20,4 @@
         }
     </fieldset>
 }
+

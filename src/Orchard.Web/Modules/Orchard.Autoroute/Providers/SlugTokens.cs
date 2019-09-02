@@ -10,10 +10,12 @@ using Orchard.Core.Common.Models;
 namespace Orchard.Autoroute.Providers {
     public class SlugTokens : ITokenProvider {
         private readonly ISlugService _slugService;
+        private readonly IHomeAliasService _homeAliasService;
 
-        public SlugTokens(ISlugService slugService) {
+        public SlugTokens(ISlugService slugService, IHomeAliasService homeAliasService) {
             T = NullLocalizer.Instance;
             _slugService = slugService;
+            _homeAliasService = homeAliasService;
         }
 
         public Localizer T { get; set; }
@@ -40,11 +42,12 @@ namespace Orchard.Autoroute.Providers {
                 // {Content.Slug}
                 .Token("Slug", (content => content == null ? String.Empty : _slugService.Slugify(content)))
                 .Token("Path", (content => {
-                    var autoroute = content.As<AutoroutePart>();
-                    if (autoroute == null) {
+                    var autoroutePart = content.As<AutoroutePart>();
+                    if (autoroutePart == null) {
                         return String.Empty;
                     }
-                    return autoroute.DisplayAlias;
+                    var isHomePage = _homeAliasService.IsHomePage(autoroutePart);
+                    return isHomePage ? String.Empty : autoroutePart.DisplayAlias;
                 }))
                 // {Content.ParentPath}
                 .Token("ParentPath", (content => {
@@ -52,13 +55,15 @@ namespace Orchard.Autoroute.Providers {
                     if (common == null || common.Container == null) {
                         return String.Empty;
                     }
-                    var ar = common.Container.As<AutoroutePart>();
-                    if (ar == null) {
+                    var containerAutoroutePart = common.Container.As<AutoroutePart>();
+                    if (containerAutoroutePart == null) {
                         return String.Empty;
                     }
-                    if (String.IsNullOrEmpty(ar.DisplayAlias))
+                    if (String.IsNullOrEmpty(containerAutoroutePart.DisplayAlias))
                         return String.Empty;
-                    return ar.DisplayAlias + "/";
+
+                    var isHomePage = _homeAliasService.IsHomePage(containerAutoroutePart);
+                    return isHomePage ? "/" : containerAutoroutePart.DisplayAlias + "/";
                 }));
 
             context.For<ContentTypeDefinition>("TypeDefinition")

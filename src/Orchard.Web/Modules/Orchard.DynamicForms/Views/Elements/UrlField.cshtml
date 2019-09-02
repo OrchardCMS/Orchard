@@ -1,0 +1,26 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (UrlField)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.AddCssClass("text");
+    tagBuilder.Attributes["type"] = "url";
+    tagBuilder.Attributes["value"] = Model.ProcessedValue;
+    tagBuilder.Attributes["name"] = Model.ProcessedName;
+    tagBuilder.Attributes["placeholder"] = Model.ProcessedPlaceholder;
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+
+    if (!ViewData.ModelState.IsValidField(Model.ProcessedName)) {
+        tagBuilder.AddCssClass("input-validation-error");
+    }
+}
+
+@if (element.ShowLabel) {
+    <label for="@element.HtmlId">@Model.ProcessedLabel</label>
+}
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage((string)Model.ProcessedName)
+}

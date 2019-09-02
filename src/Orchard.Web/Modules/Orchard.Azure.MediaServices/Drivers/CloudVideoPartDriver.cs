@@ -96,7 +96,7 @@ namespace Orchard.Azure.MediaServices.Drivers {
                         var unpublish = httpContext.Request.Form["submit.Save"] == "submit.Unpublish";
                         if (unpublish) {
                             _services.ContentManager.Unpublish(part.ContentItem);
-                            _services.Notifier.Information(T("Your {0} has been unpublished.", part.ContentItem.TypeDefinition.DisplayName));
+                            _services.Notifier.Success(T("Your {0} has been unpublished.", part.ContentItem.TypeDefinition.DisplayName));
                         }
 
                         if (part.IsPublished())

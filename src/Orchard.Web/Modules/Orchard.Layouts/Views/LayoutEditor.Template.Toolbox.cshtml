@@ -1,10 +1,6 @@
 ﻿<div class="layout-toolbox-wrapper">
 <div class="layout-toolbox">
-    <label>
-        <input type="checkbox" ng-checked="element.inlineEditingIsActive" ng-click="toggleInlineEditing()" />
-        @T("Edit HTML content inline")
-    </label>
-    <ul class="layout-toolbox-groups" ng-hide="element.inlineEditingIsActive">
+        <ul class="layout-toolbox-groups">
         <li class="layout-toolbox-group" ng-class="{collapsed: layoutIsCollapsed}">
             <a href="#" class="layout-toolbox-group-heading" ng-click="toggleLayoutIsCollapsed($event)">@T("Layout")</a>
             <ul class="layout-toolbox-items">

@@ -6,20 +6,21 @@
     new {
         mediaItemsCount = Model.MediaItemsCount,
         mediaItems = Model.MediaItems.Select(x => new {
-            id = x.MediaPart.Id, 
-            contentType = x.MediaPart.ContentItem.ContentType, 
-            contentTypeClass = x.MediaPart.ContentItem.ContentType.HtmlClassify(), 
-            title = x.MediaPart.Title, 
-            alternateText = x.MediaPart.AlternateText, 
-            caption = x.MediaPart.Caption, 
-            resource = x.MediaPart.MediaUrl, 
-            mimeType = x.MediaPart.MimeType, 
-            mimeTypeClass = x.MediaPart.MimeType.HtmlClassify(), 
+            id = x.MediaPart.Id,
+            contentType = x.MediaPart.ContentItem.ContentType,
+            contentTypeClass = x.MediaPart.ContentItem.ContentType.HtmlClassify(),
+            title = x.MediaPart.Title,
+            published = x.MediaPart.ContentItem.VersionRecord.Published,
+            alternateText = x.MediaPart.AlternateText,
+            caption = x.MediaPart.Caption,
+            resource = x.MediaPart.MediaUrl,
+            mimeType = x.MediaPart.MimeType,
+            mimeTypeClass = x.MediaPart.MimeType.HtmlClassify(),
             thumbnail = Display(x.Shape).ToString(),
-            editLink = Url.ItemEditUrl(x.MediaPart)
+            editLink = Url.ItemEditUrl(x.MediaPart),
+            localization = (((dynamic)x.MediaPart.ContentItem).LocalizationPart != null && ((dynamic)x.MediaPart.ContentItem).LocalizationPart.Culture != null) ? ((dynamic)x.MediaPart.ContentItem).LocalizationPart.CultureField.Value.Culture : ""
         }).ToArray(),
         folderPath = Model.FolderPath
     }))
 }
 
- 

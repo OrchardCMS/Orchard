@@ -10,6 +10,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.Settings;
+using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
@@ -37,8 +38,8 @@ namespace Orchard.Layouts.Providers {
 
                 var partSettings = contentPart.Settings.TryGetModel<ContentPartSettings>();
                 var partDescription = partSettings != null ? partSettings.Description : null;
-                var description = T(!String.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
-                return new ElementDescriptor(elementType, contentPart.Name, T(contentPart.Name.CamelFriendly()), description, contentPartElement.Category) {
+                var description = T.Encode(!String.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
+                return new ElementDescriptor(elementType, contentPart.Name, T.Encode(contentPart.Name.CamelFriendly()), description, contentPartElement.Category) {
                     Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2",
                     StateBag = new Dictionary<string, object> {

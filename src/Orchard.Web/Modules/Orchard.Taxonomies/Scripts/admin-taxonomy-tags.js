@@ -2,53 +2,28 @@
 
     /* Helper functions
     **********************************************************************/
-    var addTag = function ($plugin, label) {
-        $plugin.tagit("add", label);
-    };
-
-    var removeTag = function ($plugin, label) {
-        var tags = $plugin.tagit("tags");
-        var index = findTagIndexByLabel(tags, label);
-
-        if (index == -1)
-            return;
-
-        tags.splice(index, 1);
-        $plugin.tagit("fill", tags);
-    };
-
-    var findTagIndexByLabel = function (tags, label) {
-        for (var i = 0; i < tags.length; i++) {
-            var tag = tags[i];
-
-            if (tag.label == label) {
-                return i;
-            }
-        }
-        return -1;
-    };
-
-    var createTermCheckbox = function ($wrapper, tag) {
+	var createTermCheckbox = function ($wrapper, tag, checked) {
         var $ul = $("ul.terms", $wrapper);
         var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
         var namePrefix = $wrapper.data("name-prefix");
         var idPrefix = $wrapper.data("id-prefix");
         var nextIndex = $("li", $ul).length;
+        var id = isNaN(tag.value) ? -nextIndex : tag.value;
         var checkboxId = idPrefix + "_Terms_" + nextIndex + "__IsChecked";
         var checkboxName = namePrefix + ".Terms[" + nextIndex + "].IsChecked";
         var radioName = namePrefix + ".SingleTermId";
-        var checkboxHtml = "<input type=\"checkbox\" value=\"true\" checked=\"checked\" data-term=\"" + tag + "\" data-term-identity=\"" + tag.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + checkboxName + "\" />";
-        var radioHtml = "<input type=\"radio\" value=\"" + -nextIndex + "\" checked=\"checked\" data-term=\"" + tag + "\" data-term-identity=\"" + tag.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + radioName + "\" />";
+        var checkboxHtml = "<input type=\"checkbox\" value=\"" + (checked ? "true\" checked=\"checked\"" : "false") + " data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + checkboxName + "\" />";
+        var radioHtml = "<input type=\"radio\" value=\"" + id + (checked ? "\" checked=\"checked\"" : "\"") + " data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\" id=\"" + checkboxId + "\" name=\"" + radioName + "\" />";
         var inputHtml = singleChoice ? radioHtml : checkboxHtml;
         var $li = $("<li>" +
                     inputHtml +
-                    "<input type=\"hidden\" value=\"" + -nextIndex + "\" id=\"" + idPrefix + "_Terms_" + nextIndex + "__Id" + "\" name=\"" + namePrefix + ".Terms[" + nextIndex + "].Id" + "\" />" +
-                    "<input type=\"hidden\" value=\"" + tag + "\" id=\"" + idPrefix + "_Terms_" + nextIndex + "__Name" + "\" name=\"" + namePrefix + ".Terms[" + nextIndex + "].Name" + "\" />" +
-                    "<label class=\"forcheckbox\" for=\"" + checkboxId + "\">" + tag + "</label>" +
+                    "<input type=\"hidden\" value=\"" + id + "\" id=\"" + idPrefix + "_Terms_" + nextIndex + "__Id" + "\" name=\"" + namePrefix + ".Terms[" + nextIndex + "].Id" + "\" />" +
+                    "<input type=\"hidden\" value=\"" + tag.label + "\" id=\"" + idPrefix + "_Terms_" + nextIndex + "__Name" + "\" name=\"" + namePrefix + ".Terms[" + nextIndex + "].Name" + "\" />" +
+                    "<label class=\"forcheckbox\" for=\"" + checkboxId + "\">" + tag.label + "</label>" +
                   "</li>").hide();
 
-        if (singleChoice) {
-            $("input[type='radio']", $ul).removeAttr("checked");
+        if (checked && singleChoice) {
+        	$("input[type='radio']", $ul).removeAttr("checked");
             $("input[type='radio'][name$='IsChecked']", $ul).val("false");
         }
 
@@ -68,66 +43,28 @@
         var $tagIt = $("ul.tagit", $wrapper);
         var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
         var $terms = $("ul.terms", $wrapper);
-        var $termCheckbox = $("input[data-term-identity='" + tag.label.toLowerCase() + "']", $terms).filter(function () {
-            return $(this).siblings("input[value='" + tag.value + "']").length;
-        });
-        
-        if ($termCheckbox.is(":disabled")) {
-            removeTag($tagIt, tagLabelOrValue);
-            return;
-        }
-
-        if ($termCheckbox.length == 0 && action == "added") {
-            createTermCheckbox($wrapper, tag.label, this);
-        }
-
-        $termCheckbox.prop("checked", action == "added");
+        var initialTags = $(".terms-editor", $wrapper).data("selected-terms");
 
         if (singleChoice && action == "added") {
-            $tagIt.tagit("fill", [tag.label]);
+            $tagIt.tagit("fill", tag);
         }
 
-        if (singleChoice) {
-            if (action == "added") {
-                var $option = $("select.term-picker", $wrapper).find("option[data-term-identity='" + tag.label.toLowerCase() + "']");
-                $option.remove();
-            } else {
-                $("select.term-picker", $wrapper).append("<option data-term=\"" + tag.label + "\" data-term-identity=\"" + tag.label.toLowerCase() + "\">" + tag.label + "</option>");
-            }
-        }
+        $terms.empty();
+
+        var tags = $tagIt.tagit("tags");
+        $(tags).each(function (index, tag) {
+        	createTermCheckbox($wrapper, tag, true);
+        });
+
+    	// Add any tags that are no longer selected but were initially on page load.
+    	// These are required to be posted back so they can be removed.
+        var removedTags = $.grep(initialTags, function (initialTag) { return $.grep(tags, function (tag) { return tag.value === initialTag.value }).length === 0 });
+        $(removedTags).each(function (index, tag) {
+        	createTermCheckbox($wrapper, tag, false);
+        });
 
         $(".no-terms", $wrapper).hide();
     };
-
-    $("fieldset.taxonomy-wrapper .expando").on("change", "input[data-term]:enabled", function(e) {
-        var $checkbox = $(this);
-        var term = $checkbox.data("term");
-        var $wrapper = $checkbox.parents("fieldset.taxonomy-wrapper:first");
-        var $tagIt = $("ul.tagit", $wrapper);
-        var isChecked = $checkbox.is(":checked");
-
-        isChecked ? addTag($tagIt, term) : removeTag($tagIt, term);
-    });
-
-    $("select.term-picker").change(function (e) {
-        var $select = $(this);
-        var $firstOption = $("option:first", $select);
-
-        if ($firstOption.is(":selected"))
-            return;
-
-        var $selecedOption = $("option:selected", $select);
-        var $wrapper = $select.parents("fieldset.taxonomy-wrapper:first");
-        var $tagIt = $("ul.tagit", $wrapper);
-        var term = $selecedOption.text();
-        var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
-
-        addTag($tagIt, term);
-        $select.val("");
-
-        if (!singleChoice)
-            $selecedOption.remove();
-    });
 
     var renderAutocompleteItem = function (ul, item) {
 
@@ -148,20 +85,30 @@
     /* Initialization
     **********************************************************************/
     $(".terms-editor").each(function () {
-        var allTerms = $(this).data("all-terms");
         var selectedTerms = $(this).data("selected-terms");
 
+        var autocompleteUrl = $(this).data("autocomplete-url");
+
         var $tagit = $("> ul", this).tagit({
-            tagSource: allTerms,
+            tagSource: function (request, response) {
+                var termsEditor = $(this.element).parents(".terms-editor");
+                $.getJSON(autocompleteUrl, { taxonomyId: termsEditor.data("taxonomy-id"), leavesOnly: termsEditor.data("leaves-only"), query: request.term }, function (data, status, xhr) {
+                    response(data);
+                });
+            },
             initialTags: selectedTerms,
             triggerKeys: ['enter', 'tab'], // default is ['enter', 'space', 'comma', 'tab'] but we remove comma and space to allow them in the terms
             allowNewTags: $(this).data("allow-new-terms"),
             tagsChanged: onTagsChanged,
             caseSensitive: false,
-            minLength: 0
-        }).data("uiTagit");
+            minLength: 0,
+            sortable: true
+        }).data("ui-tagit");
 
-        $tagit.input.autocomplete().data("uiAutocomplete")._renderItem = renderAutocompleteItem;
+        $tagit.input.autocomplete().data("ui-autocomplete")._renderItem = renderAutocompleteItem;
+        $tagit.input.autocomplete().on("autocompletefocus", function (event, ui) {
+            event.preventDefault();
+        });
 
     });
 

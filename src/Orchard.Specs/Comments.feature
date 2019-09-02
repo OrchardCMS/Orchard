@@ -9,7 +9,7 @@ Scenario: HTML markup in any given comment is encoded
         And I fill in
             | name | value |
             | Title.Title | My Blog |
-        And I hit "Save"
+        And I hit "Publish"
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
@@ -17,7 +17,7 @@ Scenario: HTML markup in any given comment is encoded
             | name | value |
             | Title.Title | My Post |
             | Body.Text | Hi there. |
-        And I hit "Publish Now"
+        And I hit "Publish"
         And I go to "my-blog/my-post"
         And I fill in
             | name | value |
@@ -39,12 +39,12 @@ Scenario: HTML markup in any given comment is encoded
         And I hit "Submit Comment"
         And I am redirected
         # because the ToUrlString extension method breaks in this specific (test) environment, the returnUrl is broken...
-		And I go to "my-blog/my-post"
+        And I go to "my-blog/my-post"
         # And I go to "my-blog/my-post"
     Then I should see "This is&lt;br id=&quot;bad-anon-br&quot; /&gt;a &lt;a href"
         And I should not see "<br id="bad-anon-br" />"
 
-	# Moderated comments are not displayed
+    # Moderated comments are not displayed
     When I go to "users/account/logon"
         And I fill in
             | name | value |
@@ -52,15 +52,15 @@ Scenario: HTML markup in any given comment is encoded
             | password | 6655321 |
         And I hit "Sign In"
         And I am redirected
-		And I go to "admin/settings/comments"
-		And I fill in
+        And I go to "admin/settings/comments"
+        And I fill in
             | name | value |
             | CommentSettings.ModerateComments | true |
-		And I hit "Save"
-		And I am redirected
-	Then I should see "Settings updated"
-	When I go to "users/account/logoff"
-		And I go to "my-blog/my-post"
+        And I hit "Save"
+        And I am redirected
+    Then I should see "Settings updated"
+    When I go to "users/account/logoff"
+        And I go to "my-blog/my-post"
         And I fill in
             | name | value |
             | Comments.Author | Bill |

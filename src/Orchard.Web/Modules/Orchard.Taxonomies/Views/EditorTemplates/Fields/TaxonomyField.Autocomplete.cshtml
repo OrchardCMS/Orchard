@@ -1,5 +1,6 @@
 ﻿@model TaxonomyFieldViewModel
 @using Orchard.Taxonomies.Helpers;
+@using Orchard.Taxonomies.Models
 @using Orchard.Utility.Extensions;
 @using Orchard.Taxonomies.ViewModels;
 
@@ -7,8 +8,7 @@
 @{
     if (Model.Settings.Autocomplete) {
         Style.Require("jQueryUI_Orchard");
-        Script.Require("jQueryUI_Sortable");
-        Script.Require("jQueryUI_Autocomplete");
+        Script.Require("jQueryUI");
         Script.Include("tagit.js").AtFoot();
         Style.Include("admin-taxonomy-tags.css");
         Script.Include("admin-taxonomy-tags.js").AtFoot();
@@ -18,60 +18,61 @@
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
     Script.Include("admin-taxonomy-expando.js").AtFoot();
 
-    var termIndex = 0;
 }
 @functions {
-    bool IsTermDisabled(TermEntry term) {
+    bool IsTermDisabled(TermPart term) {
         return !term.Selectable || (Model.Settings.LeavesOnly && Model.Terms.Any(t => t.Path.Contains(term.Path + term.Id)));
     }
 }
 @{
-    var allTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Select(x => new { label = x.Name, value = x.Id, levels = x.GetLevels(), disabled = IsTermDisabled(x) }));
-    var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Terms.Where(x => x.IsChecked).Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true }));
+    var termIndex = 0;
+    var checkedTerms = Model.SelectedTerms.ToList();
+    var selectedTerms = Newtonsoft.Json.JsonConvert.SerializeObject(checkedTerms.Select(x => new { label = x.Name, value = x.Id, levels = 0, disabled = true })); 
+
 }
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
-    <legend @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.DisplayName</legend>
-    @if (Model.Settings.Autocomplete) {
-    <div class="terms-editor" data-all-terms="@allTerms" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
-        <ul></ul>
-        @if (Model.Settings.SingleChoice) {
-            <div class="hint">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
-        }
-        else {
-            <div class="hint">@T("Enter multiple terms. Hit <i>tab</i>, <i>enter</i> or <i>,</i> to add multiple terms.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
-        }
-    </div>
-    }
-    @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
-    <span class="hint">@Model.Settings.Hint</span>
-    }
-    <div class="hidden-taxonomy-state">
-        <ul class="terms">
-        @foreach (var entry in Model.Terms) {
-            var ti = termIndex;
-            <li>
-                @{
-                    var disabled = IsTermDisabled(entry);
-                    if (Model.Settings.SingleChoice) {
-                            <input @if (disabled) { <text> disabled="disabled" </text>  } type="radio" value="@Model.Terms[ti].Id" @if (entry.Id == Model.SingleTermId) { <text> checked="checked" </text>  } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
-                    }
-                    else {
-                            <input @if (disabled) { <text> disabled="disabled" </text>  } type="checkbox" value="true" @if (entry.IsChecked) { <text> checked="checked" </text>  } name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
-                    }
+        <label @if (Model.Settings.Required) { <text> class="required" </text>  }>@Model.DisplayName</label>
+        @if (Model.Settings.Autocomplete) {
+            <div class="terms-editor text text-medium" data-autocomplete-url="@Url.HttpRouteUrl("", new { area = "Orchard.Taxonomies", controller = "Tags" })" data-taxonomy-id="@Model.TaxonomyId" data-leaves-only="@Model.Settings.LeavesOnly" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
+                <ul></ul>
+                @if (Model.Settings.SingleChoice) {
+                    <div class="hint">@T("Enter a single term. Hit <i>tab</i> or <i>enter</i> to apply the term.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
                 }
-                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
-                @Html.HiddenFor(m => m.Terms[ti].Id)
-            </li>
-            termIndex++;
+                else {
+                    <div class="hint">@T("Enter multiple terms. Hit <i>tab</i>, <i>enter</i> or <i>,</i> to add multiple terms.") @if (!Model.Settings.AllowCustomTerms) { <text>@T("This taxonomy does not allow you to create new terms.") </text> }</div>
+                }
+            </div>
         }
-        </ul>
-    </div>
-            
-    @if (!Model.Terms.Any()) {
-    <div class="no-terms">
-        @T("There are no terms defined for {0} yet.", Model.DisplayName)
-        <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
-    </div>        
-    }
-    @Html.HiddenFor(m => m.TaxonomyId)
-</fieldset>
+        @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
+            <span class="hint">@Model.Settings.Hint</span>
+        }
+        <div class="hidden-taxonomy-state">
+            <ul class="terms">
+                @foreach (var entry in checkedTerms) {
+                var ti = termIndex;
+                    <li>
+                        @{
+                            var disabled = IsTermDisabled(entry);
+                            if (Model.Settings.SingleChoice) {
+                                <input @if (disabled) { <text> disabled="disabled" </text>  } type="radio" value="@entry.Id" @if (entry.Id == Model.SingleTermId) { <text> checked="checked" </text>  } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
+                            }
+                            else {
+                                <input @if (disabled) { <text> disabled="disabled" </text>  } type="checkbox" value="true" checked="checked" name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)" data-term="@entry.Name" data-term-identity="@entry.Name.ToLower()" />
+                            }
+                        }
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
+                        <input type="hidden" name="@Html.FieldNameFor(m => m.Terms[ti].Id)" id="@Html.FieldIdFor(m => m.Terms[ti].Id)" value="@entry.Id" />
+                    </li>
+                                termIndex++;
+                            }
+            </ul>
+        </div>
+
+        @if (!Model.HasTerms && AuthorizedFor(Orchard.Taxonomies.Permissions.CreateTerm)) {
+            <div class="no-terms">
+                @T("There are no terms defined for {0} yet.", Model.DisplayName)
+                <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
+            </div>
+        }
+        @Html.HiddenFor(m => m.TaxonomyId)
+    </fieldset>

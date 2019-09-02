@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+
 @{
     var currentCulture = WorkContext.CurrentCulture;
     var supportedCultures = (IList<string>)Model.SupportedCultures;
@@ -8,22 +9,25 @@
     <select>
         @foreach (var supportedCulture in supportedCultures) {
             var cultureInfo = CultureInfo.GetCultureInfo(supportedCulture);
-            var url = Url.Action("ChangeCulture", "AdminCultureSelector", new { area = "Orchard.Localization", culture = supportedCulture, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
 
-            <option @if (supportedCulture.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
-                @cultureInfo.DisplayName&#x200E;
-            </option>
+            if (cultureInfo is object) {
+                var url = Url.Action("ChangeCulture", "AdminCultureSelector", new { area = "Orchard.Localization", culture = supportedCulture, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+                var selected = supportedCulture.Equals(currentCulture) ? "selected" : "";
+
+                <option @selected value="@url">@cultureInfo.DisplayName</option> 
+            }
         }
     </select>
 </div>
+
 @using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-   (function ($) {
-       $("#culture-selection").change(function (e) {
-           window.location = $("#culture-selection > select > option:selected")[0].value;
-       });
-   })(jQuery);
-//]]>
-</script>
+    <script type="text/javascript">
+    //<![CDATA[
+       (function ($) {
+           $("#culture-selection").change(function (e) {
+               window.location = $("#culture-selection > select > option:selected")[0].value;
+           });
+       })(jQuery);
+    //]]>
+    </script>
 }

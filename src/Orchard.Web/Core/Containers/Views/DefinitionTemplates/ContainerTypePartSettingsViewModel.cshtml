@@ -3,6 +3,11 @@
     Script.Require("ShapesBase");
 }
 <fieldset>
+    @Html.CheckBoxFor(m => m.DisplayContainerEditor)
+    @Html.LabelFor(m => m.DisplayContainerEditor, @T("Display settings editor").ToString(), new { @class = "forcheckbox" })
+    <span class="hint">@T("When checked, users can change the settings for each content item.")</span>
+</fieldset>
+<fieldset>
     <label for="@Html.FieldIdFor(m => m.ItemsShownDefault)">@T("Default Items Shown")</label>
     @Html.EditorFor(m => m.ItemsShownDefault)
 </fieldset>
@@ -17,7 +22,7 @@
 <fieldset>
     @Html.LabelFor(m => m.EnablePositioning, @T("Enable drag and drop"))
     @Html.EditorFor(m => m.EnablePositioning)
-    <span class="hint">@T("Check this option to enable manual repositioning of items using. If not set, this option will be configurable on the list content item itself.")</span>
+    <span class="hint">@T("Check this option to enable manual repositioning of items using drag and drop. If not set, this option will be configurable on the list content item itself.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.AdminListViewName, @T("List View"))

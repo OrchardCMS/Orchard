@@ -79,8 +79,14 @@
                         @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                     </td>
                     <td>
-                        @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })
-                        @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })
+                            </li>
+                            <li class="action-link">
+                                @Html.ActionLink(T("Delete").Text, "Delete", new { path = alias.Path }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                            </li>
+                        </ul>
                     </td>
                 </tr>
             }

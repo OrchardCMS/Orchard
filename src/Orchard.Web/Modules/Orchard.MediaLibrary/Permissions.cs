@@ -4,13 +4,23 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.MediaLibrary {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageMediaContent = new Permission { Description = "Managing Media", Name = "ManageMediaContent" };
+        public static readonly Permission ManageMediaContent = new Permission { Description = "Manage Media", Name = "ManageMediaContent" };
+        public static readonly Permission ImportMediaContent = new Permission { Description = "Import All Media", Name = "ImportMedia", ImpliedBy = new[] { ManageMediaContent } };
+        public static readonly Permission EditMediaContent = new Permission { Description = "Edit All Media", Name = "EditMedia", ImpliedBy = new[] { ManageMediaContent } };
+        public static readonly Permission DeleteMediaContent = new Permission { Description = "Delete All Media", Name = "DeleteMedia", ImpliedBy = new[] { ManageMediaContent } };
+        public static readonly Permission SelectMediaContent = new Permission { Description = "Select All Media", Name = "SelectMedia", ImpliedBy = new[] { ManageMediaContent, ImportMediaContent, EditMediaContent, DeleteMediaContent } };
+        public static readonly Permission ManageOwnMedia = new Permission { Description = "Manage Own Media", Name = "ManageOwnMedia", ImpliedBy = new[] { ManageMediaContent, SelectMediaContent, ImportMediaContent, EditMediaContent, DeleteMediaContent } };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
                 ManageMediaContent,
+                ImportMediaContent,
+                EditMediaContent,
+                DeleteMediaContent,
+                SelectMediaContent,
+                ManageOwnMedia,
             };
         }
 
@@ -29,10 +39,11 @@ namespace Orchard.MediaLibrary {
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {ManageMediaContent}
+                    Permissions = new[] {ManageOwnMedia}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
+                    Permissions = new[] {ManageOwnMedia}
                 },
             };
         }

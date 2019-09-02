@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
@@ -20,35 +21,45 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
-            var masterId = part.HasTranslationGroup
-                               ? part.Record.MasterContentItemId
-                               : part.Id;
 
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
-                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin", () => {
                     var siteCultures = _cultureManager.ListCultures();
 
-                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures);
+                    return shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: ActualMasterId(part), Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures, ContentPart: part);
                 })
                 );
+        }
+
+        private int ActualMasterId(LocalizationPart part) {
+            var masterId = part.HasTranslationGroup
+                               ? part.Record.MasterContentItemId
+                               : part.Id;
+            if (_contentManager.Get(masterId, VersionOptions.Latest) == null) {
+                //the original MasterContentItem has been deleted
+                masterId = part.Id;
+            }
+            return masterId;
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
             var localizations = GetEditorLocalizations(part).ToList();
 
-            var missingCultures = part.HasTranslationGroup ?
-                RetrieveMissingCultures(part.MasterContentItem.As<LocalizationPart>(), true) :
+            var masterContentItem = _contentManager.Get(part.Record.MasterContentItemId, VersionOptions.Latest);
+
+            var missingCultures = part.HasTranslationGroup && masterContentItem != null ?
+                RetrieveMissingCultures(masterContentItem.As<LocalizationPart>(), true) :
                 RetrieveMissingCultures(part, part.Culture != null);
 
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
                 MissingCultures = missingCultures,
                 ContentItem = part,
-                MasterContentItem = part.HasTranslationGroup ? part.MasterContentItem : null,
+                MasterContentItem = masterContentItem,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
@@ -69,7 +80,7 @@ namespace Orchard.Localization.Drivers {
         }
 
         private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
-            var editorLocalizations = GetEditorLocalizations(part);
+            var editorLocalizations = GetEditorLocalizations(part.MasterContentItem != null ? part.MasterContentItem.As<LocalizationPart>() : part);
 
             var cultures = _cultureManager
                 .ListCultures()
@@ -89,35 +100,30 @@ namespace Orchard.Localization.Drivers {
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
             return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
-                .Select(c => {
-                    var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
-                    return c;
-                }).ToList();
+                .Where(c => c.Culture != null)
+                .ToList();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
             return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
-                .Select(c => {
-                    var localized = c.ContentItem.As<LocalizationPart>();
-                    if (localized.Culture == null)
-                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
-                    return c;
-                }).ToList();
+                .Where(c => c.Culture != null)
+                .ToList();
         }
 
-        protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
-            if (masterContentItem != null) {
+        protected override void Importing(LocalizationPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "MasterContentItem", masterContentItem => {
                 var contentItem = context.GetItemFromSession(masterContentItem);
                 if (contentItem != null) {
                     part.MasterContentItem = contentItem;
                 }
-            }
+            });
 
-            var culture = context.Attribute(part.PartDefinition.Name, "Culture");
-            if (culture != null) {
+            context.ImportAttribute(part.PartDefinition.Name, "Culture", culture => {
                 var targetCulture = _cultureManager.GetCultureByName(culture);
                 // Add Culture.
                 if (targetCulture == null && _cultureManager.IsValidCulture(culture)) {
@@ -125,10 +131,10 @@ namespace Orchard.Localization.Drivers {
                     targetCulture = _cultureManager.GetCultureByName(culture);
                 }
                 part.Culture = targetCulture;
-            }
+            });
         }
 
-        protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(LocalizationPart part, ExportContentContext context) {
             if (part.MasterContentItem != null) {
                 var masterContentItemIdentity = _contentManager.GetItemMetadata(part.MasterContentItem).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("MasterContentItem", masterContentItemIdentity.ToString());
@@ -137,6 +143,10 @@ namespace Orchard.Localization.Drivers {
             if (part.Culture != null) {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Culture", part.Culture.Culture);
             }
+        }
+
+        protected override void Cloned(LocalizationPart originalPart, LocalizationPart clonePart, CloneContentContext context) {
+            clonePart.Culture = originalPart.Culture;
         }
     }
 }

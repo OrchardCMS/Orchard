@@ -23,7 +23,7 @@ namespace Orchard.Environment.Extensions.Compilers {
         public bool DisableMonitoring { get; set; }
 
         public ProjectFileDescriptor Parse(string virtualPath) {
-            return _cacheManager.Get(virtualPath,
+            return _cacheManager.Get(virtualPath, true,
                 ctx => {
                     if (!DisableMonitoring) {
                         Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);

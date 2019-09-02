@@ -135,7 +135,7 @@ namespace Orchard.Lists.Controllers {
                             }
                             _contentManager.Publish(item);
                         }
-                        _services.Notifier.Information(T("Lists successfully published."));
+                        _services.Notifier.Success(T("Lists successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in checkedContentItems) {
@@ -145,7 +145,7 @@ namespace Orchard.Lists.Controllers {
                             }
                             _contentManager.Unpublish(item);
                         }
-                        _services.Notifier.Information(T("Lists successfully unpublished."));
+                        _services.Notifier.Success(T("Lists successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in checkedContentItems) {
@@ -155,7 +155,7 @@ namespace Orchard.Lists.Controllers {
                             }
                             _contentManager.Remove(item);
                         }
-                        _services.Notifier.Information(T("Lists successfully removed."));
+                        _services.Notifier.Success(T("Lists successfully removed."));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -303,7 +303,7 @@ namespace Orchard.Lists.Controllers {
         [HttpPost]
         public ActionResult Insert(int containerId, int itemId, PagerParameters pagerParameters) {
             var container = _containerService.Get(containerId, VersionOptions.Latest);
-            var item = _contentManager.Get(itemId, VersionOptions.Latest, QueryHints.Empty.ExpandParts<CommonPart, ContainablePart>());
+            var item = _contentManager.Get(itemId, VersionOptions.Latest, new QueryHints().ExpandParts<CommonPart, ContainablePart>());
             var commonPart = item.As<CommonPart>();
             var previousItemContainer = commonPart.Container;
             var itemMetadata = _contentManager.GetItemMetadata(item);
@@ -359,15 +359,15 @@ namespace Orchard.Lists.Controllers {
             switch (operation) {
                 case ViewModels.ListOperation.Reverse:
                     _containerService.Reverse(items);
-                    _services.Notifier.Information(T("The list has been reversed."));
+                    _services.Notifier.Success(T("The list has been reversed."));
                     break;
                 case ViewModels.ListOperation.Shuffle:
                     _containerService.Shuffle(items);
-                    _services.Notifier.Information(T("The list has been shuffled."));
+                    _services.Notifier.Success(T("The list has been shuffled."));
                     break;
                 case ViewModels.ListOperation.Sort:
                     _containerService.Sort(items, sortBy.GetValueOrDefault(), sortByDirection.GetValueOrDefault());
-                    _services.Notifier.Information(T("The list has been sorted."));
+                    _services.Notifier.Success(T("The list has been sorted."));
                     break;
                 default:
                     _services.Notifier.Error(T("Please select an operation to perform on the list."));
@@ -380,7 +380,11 @@ namespace Orchard.Lists.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("listViewName")]
         public ActionResult ChangeListView(int containerId, string listViewName, PagerParameters pagerParameters) {
-            var container = _containerService.Get(containerId);
+            var container = _containerService.Get(containerId, VersionOptions.Latest);
+            if (container == null || !container.Has<ContainerPart>()) {
+                return HttpNotFound();
+            }
+
             container.Record.AdminListViewName = listViewName;
             return RedirectToAction("List", new { containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize });
         }
@@ -445,7 +449,7 @@ namespace Orchard.Lists.Controllers {
 
                 _containerService.MoveItem(item, targetContainer);
             }
-            _services.Notifier.Information(T("Content successfully moved to <a href=\"{0}\">{1}</a>.", Url.Action("List", new { containerId = targetContainerId }), containerDisplayText));
+            _services.Notifier.Success(T("Content successfully moved to <a href=\"{0}\">{1}</a>.", Url.Action("List", new { containerId = targetContainerId }), containerDisplayText));
             return true;
         }
 
@@ -459,7 +463,7 @@ namespace Orchard.Lists.Controllers {
                 item.As<CommonPart>().Record.Container = null;
                 _containerService.UpdateItemPath(item.ContentItem);
             }
-            _services.Notifier.Information(T("Content successfully removed from the list."));
+            _services.Notifier.Success(T("Content successfully removed from the list."));
             return true;
         }
 
@@ -472,7 +476,7 @@ namespace Orchard.Lists.Controllers {
 
                 _contentManager.Remove(item);
             }
-            _services.Notifier.Information(T("Content successfully removed."));
+            _services.Notifier.Success(T("Content successfully removed."));
             return true;
         }
 
@@ -485,7 +489,7 @@ namespace Orchard.Lists.Controllers {
 
                 _contentManager.Unpublish(item);
             }
-            _services.Notifier.Information(T("Content successfully unpublished."));
+            _services.Notifier.Success(T("Content successfully unpublished."));
             return true;
         }
 
@@ -498,7 +502,7 @@ namespace Orchard.Lists.Controllers {
 
                 _contentManager.Publish(item);
             }
-            _services.Notifier.Information(T("Content successfully published."));
+            _services.Notifier.Success(T("Content successfully published."));
             return true;
         }
     }

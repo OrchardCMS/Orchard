@@ -60,6 +60,11 @@ namespace Orchard.Comments.Services {
         public Localizer T { get; set; } 
         public ILogger Logger { get; set; }
 
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForContainer(int id) {
+            return GetComments()
+                .Where(c => c.CommentedOnContainer == id);
+        }
+
         public CommentPart GetComment(int id) {
             return _orchardServices.ContentManager.Get<CommentPart>(id);
         }
@@ -118,7 +123,8 @@ namespace Orchard.Comments.Services {
         }
 
         public void DeleteComment(int commentId) {
-            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId).ContentItem);
+            // Get latest because the comment may be unpublished if the anti-spam module has caught it
+            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId, VersionOptions.Latest).ContentItem);
         }
 
         public bool CommentsDisabledForCommentedContent(int id) {
@@ -240,7 +246,7 @@ namespace Orchard.Comments.Services {
                 _messageService.Send("Email", parameters);
             }
             catch(Exception e) {
-                Logger.Error(e, "An unexpected error occured while sending a notification email");
+                Logger.Error(e, "An unexpected error occurred while sending a notification email");
             }
         }
 

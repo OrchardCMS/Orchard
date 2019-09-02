@@ -4,14 +4,14 @@
 
 @{
     Style.Include("admin-projections.css");
-	Layout.Title = T("Manage Queries").ToString();
+    Layout.Title = T("Manage Queries").ToString();
     var index = 0;
 
-	var pageSizes = new List<int?>() { 10, 50, 100 };
-	var defaultPageSize = WorkContext.CurrentSite.PageSize;
-	if(!pageSizes.Contains(defaultPageSize)) { 
-		pageSizes.Add(defaultPageSize);
-	}
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if(!pageSizes.Contains(defaultPageSize)) { 
+        pageSizes.Add(defaultPageSize);
+    }
 }
 
 <h1>@Html.TitleForPage(T("Manage Queries").ToString()) </h1>
@@ -19,7 +19,7 @@
     @Html.ValidationSummary()
     <div class="manage">@Html.ActionLink(T("Add a new Query").ToString(), "Create", new { Area = "Contents", id = "Query", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
     <fieldset class="bulk-actions">
-        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
+        <label><input type="checkbox" class="check-all" />@T("Select all")</label>
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, QueriesBulkAction.None, T("Choose action...").ToString())
@@ -28,18 +28,18 @@
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
-		<label for="filterResults">@T("Sort by:")</label>
+        <label for="filterResults">@T("Sort by:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, QueriesOrder.Name, T("Name").ToString())
         </select>
-		<input type="hidden" name="Page" value="1" />
-		<label for="pageSize">@T("Show:")</label>
-		<select id="pageSize" name="PageSize">
-			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-			@foreach(int size in pageSizes.OrderBy(p => p)) {
-				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-			}
-		</select>
+        <input type="hidden" name="Page" value="1" />
+        <label for="pageSize">@T("Show:")</label>
+        <select id="pageSize" name="PageSize">
+            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+            @foreach(int size in pageSizes.OrderBy(p => p)) {
+                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+            }
+        </select>
         <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
     <fieldset>		
@@ -61,17 +61,27 @@
                         @Html.ActionLink(entry.Name, "Edit", new { id = entry.QueryId }) 
                     </td>
                     <td>
-                        @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl }) |
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId }) |
-                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })
-                        @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
-                            <text>| </text> @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
-                        }
+                        <ul class="action-links">
+                            <li class="action-link">
+                                @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl })
+                            </li>
+                            <li class="action-link">
+                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId })
+                            </li>
+                            <li class="action-link">
+                                @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                            </li>
+                            @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
+                                <li class="action-link">
+                                    @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
+                                </li>
+                            }
+                        </ul>
                     </td>
                 </tr>
                 index++;
             }
         </table>
-	@Display(Model.Pager)
+    @Display(Model.Pager)
     </fieldset>
 } 

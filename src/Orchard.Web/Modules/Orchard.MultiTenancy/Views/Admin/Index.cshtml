@@ -14,7 +14,8 @@
             <div class="summary">
                 <div class="properties">
                     <h3>
-                        @tenant.Name @if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
+                        @tenant.Name
+                        @if (!String.IsNullOrEmpty(tenant.RequestUrlHost)) {
                             var tenantClone = new ShellSettings(tenant);
                             foreach (var t in tenant.RequestUrlHost.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                                 tenantClone.RequestUrlHost = t;
@@ -25,11 +26,17 @@
                     </h3>
                 </div>
                 <div class="related">
-                    @if (!String.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
-                    var t = tenant;
-                        @Html.DisplayFor(m => t, String.Format("ActionsFor{0}", tenant.State.ToString()), "") @T(" | ")
-                    }
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { name = tenant.Name, area = "Orchard.MultiTenancy" })
+                    <ul class="action-links">
+                        @if (!String.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
+                            var t = tenant;
+                            <li class="action-link">
+                                @Html.DisplayFor(m => t, String.Format("ActionsFor{0}", tenant.State.ToString()), "")
+                            </li>
+                        }
+                        <li class="action-link">
+                            @Html.ActionLink(T("Edit").ToString(), "Edit", new { name = tenant.Name, area = "Orchard.MultiTenancy" })
+                        </li>
+                    </ul>
                 </div>
             </div>
         </li>

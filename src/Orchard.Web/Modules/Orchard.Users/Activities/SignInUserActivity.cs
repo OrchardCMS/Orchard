@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -14,10 +15,12 @@ namespace Orchard.Users.Activities {
     public class SignInUserActivity : Task {
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IUserEventHandler _userEventHandler;
 
-        public SignInUserActivity(IMembershipService membershipService, IAuthenticationService authenticationService) {
+        public SignInUserActivity(IMembershipService membershipService, IAuthenticationService authenticationService, IUserEventHandler userEventHandler) {
             _membershipService = membershipService;
             _authenticationService = authenticationService;
+            _userEventHandler = userEventHandler;
             T = NullLocalizer.Instance;
         }
 
@@ -57,8 +60,8 @@ namespace Orchard.Users.Activities {
                     yield return T("IncorrectUserNameOrPassword");
                     yield break;
                 }
-
-                user = _membershipService.ValidateUser(userNameOrEmail, password);
+                List<LocalizedString> validationErrors;
+                user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
             }
 
             if (user == null) {
@@ -66,7 +69,9 @@ namespace Orchard.Users.Activities {
                 yield break;
             }
 
+            _userEventHandler.LoggingIn(userNameOrEmail, password);
             _authenticationService.SignIn(user, createPersistentCookie);
+            _userEventHandler.LoggedIn(user);
 
             yield return T("Done");
         }
@@ -75,7 +80,7 @@ namespace Orchard.Users.Activities {
             if (String.IsNullOrWhiteSpace(value))
                 return false;
 
-            var falseValues = new[] {"false", "off", "no"};
+            var falseValues = new[] { "false", "off", "no" };
             return falseValues.All(x => !String.Equals(x, value, StringComparison.OrdinalIgnoreCase));
         }
     }

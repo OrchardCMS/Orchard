@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
@@ -271,8 +272,8 @@ namespace Orchard.ContentTypes.Services {
             _contentDefinitionEventHandlers.ContentPartRemoved(new ContentPartRemovedContext {ContentPartDefinition = partDefinition});
         }
 
-        public IEnumerable<ContentFieldInfo> GetFields() {
-            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo());
+        public IEnumerable<ContentFieldInfo> GetFields() {            
+            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo()).GroupBy(x => x.FieldTypeName).Select(g => g.First());
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
@@ -357,19 +358,23 @@ namespace Orchard.ContentTypes.Services {
         }
 
         private static string VersionName(string name) {
-            int version;
-            var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var i = name.Length - 1;
+            while (i >= 0 && char.IsDigit(name, i)) {
+                i--;
+            }
 
-            if (nameParts.Length > 1 && int.TryParse(nameParts.Last(), out version)) {
+            var substring = i != name.Length - 1 ? name.Substring(i + 1) : string.Empty;
+            int version;
+
+            if (int.TryParse(substring, out version)) {
+                name = name.Remove(name.Length - substring.Length);
                 version = version > 0 ? ++version : 2;
-                //this could unintentionally chomp something that looks like a version
-                name = string.Join("-", nameParts.Take(nameParts.Length - 1));
             }
             else {
                 version = 2;
             }
 
-            return string.Format("{0}-{1}", name, version);
+            return name + version;
         }
     }
 }

@@ -45,6 +45,15 @@ namespace Orchard.ImageEditor.Controllers {
 
         [Themed(false)]
         public ActionResult Edit(string folderPath, string filename) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, folderPath))
+                return new HttpUnauthorizedResult();
+
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.FolderPath == folderPath && x.FileName == filename).Slice(0, 1).FirstOrDefault();
 
             if (media == null) {
@@ -64,16 +73,32 @@ namespace Orchard.ImageEditor.Controllers {
 
         [HttpPost]
         public ActionResult Upload(int id, string content, int width, int height) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
+                return new HttpUnauthorizedResult();
+
             var media = Services.ContentManager.Get(id).As<MediaPart>();
 
             if (media == null) {
                 return HttpNotFound();
             }
 
+            // Check permission.
+            var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
+            if (!Services.Authorizer.Authorize(Permissions.ImportMediaContent) && !_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
+                return new HttpUnauthorizedResult();
+            }
+
             const string signature = "data:image/jpeg;base64,";
 
             if (!content.StartsWith(signature, StringComparison.OrdinalIgnoreCase)) {
                 return HttpNotFound();
+            }
+
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
+            // skip file if the allowed extensions is defined and doesn't match
+            if (!settings.IsFileAllowed(Path.GetFileName(media.FileName))) {
+                return Json(false);
             }
 
             var image = media.As<ImagePart>();
@@ -96,7 +121,7 @@ namespace Orchard.ImageEditor.Controllers {
         }
 
         public ActionResult Proxy(string url) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent))
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia))
                 return HttpNotFound();
 
             var sslFailureCallback = new RemoteCertificateValidationCallback((o, cert, chain, errors) => true);

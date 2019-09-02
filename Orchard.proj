@@ -13,9 +13,10 @@
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
-    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
-    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
-    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
+    <OrchardWebFolder>$(SrcFolder)\Orchard.Web</OrchardWebFolder>
+    <ModulesSrcFolder>$(OrchardWebFolder)\Modules</ModulesSrcFolder>
+    <OrchardCoreSrcFolder>$(OrchardWebFolder)\Core</OrchardCoreSrcFolder>
+    <ThemesSrcFolder>$(OrchardWebFolder)\Themes</ThemesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -27,20 +28,32 @@
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    
+    <OrchardSolution>$(SrcFolder)\Orchard.sln</OrchardSolution>
+    <Solution Condition="$(Solution) == ''">$(OrchardSolution)</Solution>
 
     <!-- TeamCity build number -->
     <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
 
-  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+  <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
+       to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
+  <ItemGroup>
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\tools\nunit-console.exe" />
+    <NUnitPackageToolsFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
+  </ItemGroup>
+
+  <Import Project="$(LibFolder)\msbuildtasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(LibFolder)\slowcheetah\SlowCheetah.Transforms.targets"/>
 
   <!-- Coordinating Targets -->
 
-  <Target Name ="Build">
+  <Target Name="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/> 
+    <CallTarget Targets="Package"/>
   </Target>
 
   <Target Name="FastBuild">
@@ -51,7 +64,6 @@
 
   <Target Name="FullBuild">
     <CallTarget Targets="Clean"/>
-    <CallTarget Targets="TypeScript"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
@@ -92,94 +104,82 @@
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
 
-  <Target Name="AzureBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="Build">
-    </MSBuild>
-  </Target>
-
-  <Target Name="AzureCIBuild">
-    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
-    </MSBuild>
-  </Target>
-
   <!-- Building -->
 
   <Target Name="Clean">
-    <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+    <MSBuild Projects="$(Solution)" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
-
-  <Target Name ="Compile">
+  
+  <Target Name="Compile">
     <!-- Compile to "OutputFolder" -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
+      Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
-      Targets="Build"/>
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+  </Target>
+  
+  <Target Name="BuildViews">
+    <!-- To make sure that Roslyn tools are available, even if the Compile task was not called before this. -->
+    <MSBuild
+      Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
+      Targets="CopyRoslynFilesToOutputFolder"
+      Properties="Configuration=$(Configuration)" />
+    <!-- The actual compilation with views also compiled. -->
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
 
-  <Target Name ="CompileMsBuildTasks">
+  <Target Name="CompileMsBuildTasks">
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
-  </Target>
-
-  <Target Name="TypeScript" DependsOnTargets="CompileMsBuildTasks">
-    <ItemGroup>
-      <TypeScriptSources Include="$(SrcFolder)\**\Scripts\**\*.ts"/>
-    </ItemGroup>
-    <CompileTypeScriptFiles
-      InputFiles="@(TypeScriptSources)"
-      CompilerPath="$(LibFolder)\typescript\tsc.exe"
-      CompilerOptions="--target ES5">
-      <Output TaskParameter="OutputFiles" ItemName="Content" />
-    </CompileTypeScriptFiles>
+      Properties="Configuration=$(Configuration);OutputPath=$(MsBuildTasksFolder)" />
   </Target>
 
   <!-- Testing -->
 
-  <Target Name ="Test">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
-
+  <Target Name="Test">
     <!-- Run unit test assemblies -->
-    <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
+    <CreateItem Include="$(CompileFolder)\*.Tests.*dll" Exclude="$(CompileFolder)\Orchard.Azure.Tests.dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name ="Spec" DependsOnTargets="Package-Stage">
-    <!-- TeamCity support -->
-    <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+  <Target Name="TestAzure">
+    <!-- Run unit test assemblies -->
+    <CreateItem Include="$(CompileFolder)\Orchard.Azure.Tests.dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
 
-    <CreateItem Include="$(CompileFolder)\*.Specs.dll">
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
+  </Target>
+
+  <Target Name="Spec" DependsOnTargets="Package-Stage">
+    <!-- Running SpecFlow tests -->
+    <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+    
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Specs.xml" />
   </Target>
 
   <!-- Packaging (Stage) -->
-
-  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
 
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
-  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.CompileTypeScriptFiles" />
 
   <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
@@ -195,6 +195,7 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+      <Stage-Roslyn Include="$(SrcFolder)\Orchard.Web\bin\roslyn\*" />
      
       <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
       <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
@@ -236,7 +237,7 @@
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
          only want to include the files that are _not_ already present in 
-         the "Orchard.Web\Bin" folder. -->
+         the "Orchard.Web\Bin" folder (except for "Orchard.Web\bin\roslyn"). -->
     <FilterModuleBinaries
       ModulesBinaries="@(Stage-Modules-Binaries)"
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
@@ -266,6 +267,7 @@
     <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Roslyn)" DestinationFolder="$(StageFolder)\bin\roslyn"/>
 
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
@@ -273,19 +275,19 @@
     <!-- extra processing of the staged config files -->
     <TransformXml 
       Source="$(StageFolder)\Web.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.$(Configuration).Config"
       Destination="$(StageFolder)\Web.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\HostComponents.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.$(Configuration).Config"
       Destination="$(StageFolder)\Config\HostComponents.Config"
     />
 
     <TransformXml 
       Source="$(StageFolder)\Config\log4net.Config"
-      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.$(Configuration).Config"
       Destination="$(StageFolder)\Config\log4net.Config"
     />
     
@@ -298,15 +300,17 @@
   <!-- Packaging (MsDeploy) -->
   <Target Name="Package-MsDeploy">
     <ItemGroup>
-      <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
 
       <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.CustomForms\**;
+        $(StageFolder)\**\Modules\Orchard.jQuery\**;
         $(StageFolder)\**\Modules\Orchard.Media\**;
         $(StageFolder)\**\Modules\Orchard.MediaPicker\**;
         $(StageFolder)\**\Modules\Orchard.Rules\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(MsDeploy-Exclude-Modules)" />
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.dll.config;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
@@ -334,9 +338,11 @@
     <ItemGroup>
     
       <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\packages\**\*;
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
         $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\node_modules\**\*;
         $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
         $(MSBuildProjectDirectory)\**\*.sln.cache;
         $(MSBuildProjectDirectory)\**\*.suo;
@@ -344,12 +350,11 @@
         $(MSBuildProjectDirectory)\**\*.patch;
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
-        $(LibFolder)\nunit\addins\**\*;
-        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
+        $(LibFolder)\nunit\addins\**\*;" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
-      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" Exclude=""/>
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;
@@ -361,7 +366,7 @@
 
     </ItemGroup>
 
-    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)"/>
+    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)" />
 
     <PropertyGroup>
       <ZipVersionFileSuffix Condition="$(Version) != ''">.$(Version)</ZipVersionFileSuffix>
@@ -380,11 +385,6 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
-
-    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
-      XPath="/configuration/system.web/trust/@level"
-      Value="Full" />
-
   </Target>
 
   <Target Name="Profiling-Setup">
@@ -392,7 +392,7 @@
       <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
     </ReadLinesFromFile>
 
-    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
+    <Exec Command="&quot;$(ProfilingFolder)\bin\Orchard.exe&quot; %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
   <!-- Gallery Packaging -->

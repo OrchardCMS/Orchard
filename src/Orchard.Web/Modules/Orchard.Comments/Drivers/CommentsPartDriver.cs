@@ -6,6 +6,7 @@ using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Drivers {
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
@@ -69,14 +70,10 @@ namespace Orchard.Comments.Drivers {
 
                         return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),
-                ContentShape("Parts_Comments_Count",
-                    () => {
-                        if (part.CommentsShown == false)
-                            return null;
-
-                        return shapeHelper.Parts_Comments_Count(
-                            CommentCount: part.CommentsCount);
-                    }),
+                ContentShape("Parts_Comments_Count", () =>
+                    part.CommentsShown ? shapeHelper.Parts_Comments_Count(CommentCount: part.CommentsCount) : null),
+                ContentShape("Parts_Comments_Count_Summary", () =>
+                    part.CommentsShown ? shapeHelper.Parts_Comments_Count_Summary(CommentCount: part.CommentsCount) : null),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
                     () => {
 
@@ -110,27 +107,35 @@ namespace Orchard.Comments.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(CommentsPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var commentsShown = context.Attribute(part.PartDefinition.Name, "CommentsShown");
-            if (commentsShown != null) {
-                part.CommentsShown = Convert.ToBoolean(commentsShown);
+        protected override void Importing(CommentsPart part, ImportContentContext context) {
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
             }
 
-            var commentsActive = context.Attribute(part.PartDefinition.Name, "CommentsActive");
-            if (commentsActive != null) {
-                part.CommentsActive = Convert.ToBoolean(commentsActive);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CommentsShown", commentsShown =>
+                part.CommentsShown = Convert.ToBoolean(commentsShown)
+            );
 
-            var threadedComments = context.Attribute(part.PartDefinition.Name, "ThreadedComments");
-            if (threadedComments != null) {
-                part.ThreadedComments = Convert.ToBoolean(threadedComments);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "CommentsActive", commentsActive =>
+                part.CommentsActive = Convert.ToBoolean(commentsActive)
+            );
+
+            context.ImportAttribute(part.PartDefinition.Name, "ThreadedComments", threadedComments =>
+                part.ThreadedComments = Convert.ToBoolean(threadedComments)
+            );
         }
 
-        protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(CommentsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ThreadedComments", part.ThreadedComments);
+        }
+
+        protected override void Cloning(CommentsPart originalPart, CommentsPart clonePart, CloneContentContext context) {
+            clonePart.CommentsShown = originalPart.CommentsShown;
+            clonePart.CommentsActive = originalPart.CommentsActive;
+            // ThreadedComments will be overrided with settings default
         }
     }
 }

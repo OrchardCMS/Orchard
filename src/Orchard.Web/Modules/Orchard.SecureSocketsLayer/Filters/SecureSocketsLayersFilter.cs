@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.SecureSocketsLayer.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.SecureSocketsLayer.Filters {
     public class SecureSocketsLayersFilter : FilterProvider, IActionFilter {
@@ -17,11 +16,6 @@ namespace Orchard.SecureSocketsLayer.Filters {
         public Localizer T { get; set; }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            var settings = _sslService.GetSettings();
-
-            if (!settings.Enabled) {
-                _orchardServices.Notifier.Warning(T("You need to configure the SSL settings."));
-            }
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {

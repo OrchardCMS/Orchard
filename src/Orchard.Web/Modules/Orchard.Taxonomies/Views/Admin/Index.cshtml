@@ -1,4 +1,5 @@
 ﻿@model TaxonomyAdminIndexViewModel
+@using Orchard.Taxonomies;
 @using Orchard.Taxonomies.ViewModels;
 
 @{
@@ -12,11 +13,13 @@
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TaxonomiesAdminIndexBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(Model.BulkAction, TaxonomiesAdminIndexBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.BulkAction, TaxonomiesAdminIndexBulkAction.Delete, T("Delete").ToString())
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
     </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
+        <div class="manage">@Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Orchard.Taxonomies", ReturnUrl = Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    }
     <fieldset>
         <table class="items" summary="@T("This is a table of the taxonomies in your application")">
             <colgroup>
@@ -36,28 +39,37 @@
                 <tr class="@(taxonomyEntry.IsInternal ? "internal" : null)">
                     <td>
                         <input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Id" name="@Html.NameOf(m => m.Taxonomies[ti].Id)" />
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Permissions.ManageTaxonomies)) {
                             <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)" />
                         }
                     </td>
                     <td>
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Permissions.CreateTaxonomy)) {
                             @Html.ActionLink(taxonomyEntry.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { })
                         }
                         else {
                             @Html.ItemDisplayText(taxonomyEntry.ContentItem)
                         }
+                        @if (taxonomyEntry.HasDraft) {
+                            <text>@T(" (Draft)")</text>
+                        }
                     </td>
                     <td>
-                        @if (!taxonomyEntry.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
-                            @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem) <text>|</text>
+                        @if (!taxonomyEntry.IsInternal) {
+                            if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
+                                @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem, new { ReturnUrl = Request.RawUrl }) <text>|</text>
+                            }
                             @Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Id }, new object { }) <text>|</text>
-                            @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new object { }) <text>|</text>
-                            @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
+                            if (Authorizer.Authorize(Permissions.ManageTaxonomies)) {
+                                @Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) <text>|</text>
+                            }
+                            if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
+                                @Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Id }, new object { })
+                            }
                         }
                     </td>
                 </tr>
-                        taxonomyIndex++;
+                taxonomyIndex++;
             }
         </table>
         @Display(Model.Pager)

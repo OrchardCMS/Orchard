@@ -37,7 +37,7 @@ namespace Orchard.DisplayManagement.Descriptors {
         public ILogger Logger { get; set; }
 
         public ShapeTable GetShapeTable(string themeName) {
-            return _cacheManager.Get(themeName ?? "", x => {
+            return _cacheManager.Get(themeName ?? "", true, x => {
                 Logger.Information("Start building shape table");
 
                 var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {

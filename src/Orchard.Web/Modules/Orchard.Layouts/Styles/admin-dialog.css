@@ -75,7 +75,8 @@ header, footer, aside, nav, article { display: block; }
 }
 
 .zone-content .edit-widget .primary .widget-props,
-.zone-content .edit-widget .secondary {
+.zone-content .edit-widget .secondary,
+.zone-content .edit-item .edit-item-secondary {
     display: none;
 }
 
@@ -536,10 +537,15 @@ span.message {
     border:1px solid #e5cece;  /* red */
     padding-left:26px;
 }
-.message-Information, .notifications {
+.message-Success, .notifications {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
     color:#062232;
+}
+.message-Information {
+    background:#d9edf7; /* blue */
+    border:1px solid #bce8f1;
+    color:#31708f;
 }
 .message-Warning {
     background:#fdf5bc; /* yellow */
@@ -754,7 +760,7 @@ button:hover, .button:hover, a.button:hover {
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
-button:active, .buton:active, a.button:active {
+button:active, .button:active, a.button:active {
     text-decoration:none; 
     background:#6a7b42;
     border:1px solid #487328;

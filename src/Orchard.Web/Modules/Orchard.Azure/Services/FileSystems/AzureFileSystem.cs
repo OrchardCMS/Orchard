@@ -75,14 +75,21 @@ namespace Orchard.Azure.Services.FileSystems {
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
             _container = _blobClient.GetContainerReference(ContainerName);
-
+ 
+            ////Set the default service version to the current version "2015-12-11" so that newer features and optimizations are enabled on the images and videos stored in the blob storage.
+            var properties = _blobClient.GetServiceProperties();
+            if (properties.DefaultServiceVersion == null) {
+                properties.DefaultServiceVersion = "2015-12-11";
+                _blobClient.SetServiceProperties(properties);
+            }
+            
             _container.CreateIfNotExists(_isPrivate ? BlobContainerPublicAccessType.Off : BlobContainerPublicAccessType.Blob);
         }
 
         private static string ConvertToRelativeUriPath(string path) {
             var newPath = path.Replace(@"\", "/");
 
-            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://")) {
+            if (newPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || newPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 throw new ArgumentException("Path must be relative");
             }
 
@@ -106,7 +113,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return path2;
             }
 
-            if (path2.StartsWith("http://") || path2.StartsWith("https://")) {
+            if (path2.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || path2.StartsWith("https://", StringComparison.OrdinalIgnoreCase)) {
                 return path2;
             }
 
@@ -225,6 +232,16 @@ namespace Orchard.Azure.Services.FileSystems {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
 
+            // Workaround for https://github.com/Azure/azure-storage-net/issues/892
+            // Renaming a folder by only changing the casing corrupts all the files in the folder.
+            if (path.Equals(newPath, StringComparison.OrdinalIgnoreCase)) {
+                var tempPath = Guid.NewGuid().ToString() + "/";
+
+                RenameFolder(path, tempPath);
+
+                path = tempPath;
+            }
+
             if (!path.EndsWith("/"))
                 path += "/";
 
@@ -239,7 +256,8 @@ namespace Orchard.Azure.Services.FileSystems {
                 }
 
                 if (blob is CloudBlobDirectory) {
-                    string foldername = blob.Uri.Segments.Last();
+                    var blobDir = (CloudBlobDirectory)blob;
+                    string foldername = blobDir.Prefix.Substring(blobDir.Parent.Prefix.Length);
                     string source = String.Concat(path, foldername);
                     string destination = String.Concat(newPath, foldername);
                     RenameFolder(source, destination);
@@ -264,7 +282,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-            newBlob.StartCopyFromBlob(blob);
+            newBlob.StartCopy(blob);
             blob.Delete();
         }
 
@@ -277,7 +295,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-            newBlob.StartCopyFromBlob(blob);
+            newBlob.StartCopy(blob);
         }
 
         public IStorageFile CreateFile(string path) {
@@ -308,9 +326,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-            var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
-            if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
-            return uri.ToString();
+            var uriBuilder = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
+            if (!string.IsNullOrEmpty(_publicHostName)) uriBuilder.Host = _publicHostName;
+            return uriBuilder.Uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
@@ -355,7 +373,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 // as opposed to the File System implementation, if nothing is done on the stream
                 // the file will be emptied, because Azure doesn't implement FileMode.Truncate
                 _blob.DeleteIfExists();
-                _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
+                _blob = _blob.Container.GetBlockBlobReference(_blob.Name);
                 _blob.UploadFromStream(new MemoryStream(new byte[0]));
                 return OpenWrite();
             }

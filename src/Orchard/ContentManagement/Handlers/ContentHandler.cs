@@ -96,6 +96,41 @@ namespace Orchard.ContentManagement.Handlers {
         protected void OnIndexed<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnIndexed = handler });
         }
+        protected void OnCloning<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnCloning = handler });
+        }
+
+        protected void OnCloned<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnCloned = handler });
+        }
+
+        protected void OnImporting<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnImporting = handler });
+        }
+
+        protected void OnImported<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnImported = handler });
+        }
+
+        protected void OnImportCompleted<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnImportCompleted = handler });
+        }
+
+        protected void OnExporting<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnExporting = handler });
+        }
+
+        protected void OnExported<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnExported = handler });
+        }
+
+        protected void OnRestoring<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnRestoring = handler });
+        }
+
+        protected void OnRestored<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnRestored = handler });
+        }
 
         protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
@@ -132,6 +167,13 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             public Action<IndexContentContext, TPart> OnIndexing { get; set; }
             public Action<IndexContentContext, TPart> OnIndexed { get; set; }
+            public Action<CloneContentContext, TPart> OnCloning { get; set; }
+            public Action<CloneContentContext, TPart> OnCloned { get; set; }
+            public Action<ImportContentContext, TPart> OnImporting { get; set; }
+            public Action<ImportContentContext, TPart> OnImported { get; set; }
+            public Action<ImportContentContext, TPart> OnImportCompleted { get; set; }
+            public Action<ExportContentContext, TPart> OnExporting { get; set; }
+            public Action<ExportContentContext, TPart> OnExported { get; set; }
             public Action<RestoreContentContext, TPart> OnRestoring { get; set; }
             public Action<RestoreContentContext, TPart> OnRestored { get; set; }
             public Action<DestroyContentContext, TPart> OnDestroying { get; set; }
@@ -188,12 +230,40 @@ namespace Orchard.ContentManagement.Handlers {
                 if (OnRemoved != null) OnRemoved(context, instance);
             }
             protected override void Indexing(IndexContentContext context, TPart instance) {
-                if ( OnIndexing != null )
+                if (OnIndexing != null)
                     OnIndexing(context, instance);
             }
             protected override void Indexed(IndexContentContext context, TPart instance) {
-                if ( OnIndexed != null )
+                if (OnIndexed != null)
                     OnIndexed(context, instance);
+            }
+            protected override void Cloning(CloneContentContext context, TPart instance) {
+                if (OnCloning != null)
+                    OnCloning(context, instance);
+            }
+            protected override void Cloned(CloneContentContext context, TPart instance) {
+                if (OnCloned != null)
+                    OnCloned(context, instance);
+            }
+            protected override void Importing(ImportContentContext context, TPart instance) {
+                if (OnImporting != null)
+                    OnImporting(context, instance);
+            }
+            protected override void Imported(ImportContentContext context, TPart instance) {
+                if (OnImported != null)
+                    OnImported(context, instance);
+            }
+            protected override void ImportCompleted(ImportContentContext context, TPart instance) {
+                if (OnImportCompleted != null)
+                    OnImportCompleted(context, instance);
+            }
+            protected override void Exporting(ExportContentContext context, TPart instance) {
+                if (OnExporting != null)
+                    OnExporting(context, instance);
+            }
+            protected override void Exported(ExportContentContext context, TPart instance) {
+                if (OnExported != null)
+                    OnExported(context, instance);
             }
             protected override void Restoring(RestoreContentContext context, TPart instance) {
                 if (OnRestoring != null)
@@ -353,18 +423,44 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         void IContentHandler.Importing(ImportContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Importing(context);
             Importing(context);
         }
 
+        void IContentHandler.Cloned(CloneContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Cloned(context);
+            Cloned(context);
+        }
+
+        void IContentHandler.Cloning(CloneContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Cloning(context);
+            Cloning(context);
+        }
+
         void IContentHandler.Imported(ImportContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Imported(context);
             Imported(context);
         }
 
+        void IContentHandler.ImportCompleted(ImportContentContext importContentContext) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.ImportCompleted(importContentContext);
+            ImportCompleted(importContentContext);
+        }
+
         void IContentHandler.Exporting(ExportContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Exporting(context);
             Exporting(context);
         }
 
         void IContentHandler.Exported(ExportContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Exported(context);
             Exported(context);
         }
 
@@ -443,8 +539,11 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Indexing(IndexContentContext context) { }
         protected virtual void Indexed(IndexContentContext context) { }
 
+        protected virtual void Cloning(CloneContentContext context) { }
+        protected virtual void Cloned(CloneContentContext context) { }
         protected virtual void Importing(ImportContentContext context) { }
         protected virtual void Imported(ImportContentContext context) { }
+        protected virtual void ImportCompleted(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
         protected virtual void Restoring(RestoreContentContext context) { }

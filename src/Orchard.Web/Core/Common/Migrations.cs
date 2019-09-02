@@ -10,42 +10,51 @@ namespace Orchard.Core.Common {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<IdentityPartRecord> _identityPartRepository;
 
+
         public Migrations(IRepository<IdentityPartRecord> identityPartRepository) {
             _identityPartRepository = identityPartRepository;
         }
 
-        public int Create() {
-            SchemaBuilder.CreateTable("BodyPartRecord",
-                table => table
-                    .ContentPartVersionRecord()
-                    .Column<string>("Text", column => column.Unlimited())
-                    .Column<string>("Format")
-                );
 
-            SchemaBuilder.CreateTable("CommonPartRecord",
-                table => table
+        public int Create() {
+            SchemaBuilder.CreateTable("BodyPartRecord", table => table
+                .ContentPartVersionRecord()
+                .Column<string>("Text", column => column.Unlimited())
+                .Column<string>("Format"));
+
+            SchemaBuilder
+                .CreateTable("CommonPartRecord", table => table
                     .ContentPartRecord()
                     .Column<int>("OwnerId")
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("PublishedUtc")
                     .Column<DateTime>("ModifiedUtc")
-                    .Column<int>("Container_id")
-                );
+                    .Column<int>("Container_id"))
+                .AlterTable(nameof(CommonPartRecord), table => {
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
+                });
 
-            SchemaBuilder.CreateTable("CommonPartVersionRecord",
-                table => table
+            SchemaBuilder
+                .CreateTable("CommonPartVersionRecord", table => table
                     .ContentPartVersionRecord()
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("PublishedUtc")
                     .Column<DateTime>("ModifiedUtc")
-                    .Column<string>("ModifiedBy")
-                );
+                    .Column<string>("ModifiedBy"))
+                .AlterTable(nameof(CommonPartVersionRecord), table => {
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.CreatedUtc)}", nameof(CommonPartVersionRecord.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.ModifiedUtc)}", nameof(CommonPartVersionRecord.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.PublishedUtc)}", nameof(CommonPartVersionRecord.PublishedUtc));
+                });
 
-            SchemaBuilder.CreateTable("IdentityPartRecord",
-                table => table
+            SchemaBuilder
+                .CreateTable(nameof(IdentityPartRecord), table => table
                     .ContentPartRecord()
-                    .Column<string>("Identifier", column => column.WithLength(255))
-                );
+                    .Column<string>("Identifier", column => column.WithLength(255)))
+                .AlterTable(nameof(IdentityPartRecord), table => table
+                    .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
 
             ContentDefinitionManager.AlterPartDefinition("BodyPart", builder => builder
                 .Attachable()
@@ -59,15 +68,14 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 5;
+            return 7;
         }
 
         public int UpdateFrom1() {
-            SchemaBuilder.CreateTable("IdentityPartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<string>("Identifier", column => column.Unlimited())
-                );
+            SchemaBuilder.CreateTable("IdentityPartRecord", table => table
+                .ContentPartRecord()
+                .Column<string>("Identifier", column => column.Unlimited()));
+
             ContentDefinitionManager.AlterPartDefinition("IdentityPart", builder => builder.Attachable());
 
             return 2;
@@ -95,8 +103,10 @@ namespace Orchard.Core.Common {
                 }
             }
 
-            SchemaBuilder.AlterTable("IdentityPartRecord", table => table.DropColumn("Identifier"));
-            SchemaBuilder.AlterTable("IdentityPartRecord", table => table.AddColumn<string>("Identifier", command => command.WithLength(255)));
+            SchemaBuilder.AlterTable("IdentityPartRecord", table => table
+                .DropColumn("Identifier"));
+            SchemaBuilder.AlterTable("IdentityPartRecord", table => table
+                .AddColumn<string>("Identifier", command => command.WithLength(255)));
 
             foreach (var existingIdentityPart in existingIdentityParts) {
                 var updateIdentityPartRecord = _identityPartRepository.Get(existingIdentityPart.Id);
@@ -108,9 +118,35 @@ namespace Orchard.Core.Common {
 
             return 4;
         }
+
         public int UpdateFrom4() {
-            SchemaBuilder.AlterTable("CommonPartVersionRecord", table => table.AddColumn<string>("ModifiedBy", command => command.Nullable()));
+            SchemaBuilder.AlterTable("CommonPartVersionRecord", table => table
+                .AddColumn<string>("ModifiedBy", command => command.Nullable()));
+
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
+            });
+
+            SchemaBuilder.AlterTable(nameof(CommonPartVersionRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.CreatedUtc)}", nameof(CommonPartVersionRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.ModifiedUtc)}", nameof(CommonPartVersionRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.PublishedUtc)}", nameof(CommonPartVersionRecord.PublishedUtc));
+            });
+
+            return 6;
+        }
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
+                .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
+
+            return 7;
         }
     }
 }

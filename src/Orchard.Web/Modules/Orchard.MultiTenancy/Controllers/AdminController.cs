@@ -66,8 +66,16 @@ namespace Orchard.MultiTenancy.Controllers {
             }
 
             // Ensure tenants name are valid.
-            if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^\w+$")) {
+            if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^[a-zA-Z]\w*$")) {
                 ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
+            }
+
+            if (string.Equals(viewModel.Name, ShellSettingsSerializer.EmptyValue, StringComparison.OrdinalIgnoreCase)) {
+                ModelState.AddModelError("Name", T("Invalid tenant name.").Text);
+            }
+
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace( viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
             }
 
             if (!ModelState.IsValid) {
@@ -88,11 +96,12 @@ namespace Orchard.MultiTenancy.Controllers {
                         Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
+                Services.Notifier.Success(T("Tenant '{0}' was created successfully.", viewModel.Name));
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex) {
                 Logger.Error(ex, "Error while creating tenant.");
-                Services.Notifier.Error(T("Tenant creation failed with error: {0}", ex.Message));
+                Services.Notifier.Error(T("Tenant creation failed with error: {0}.", ex.Message));
                 return View(viewModel);
             }
         }
@@ -138,10 +147,13 @@ namespace Orchard.MultiTenancy.Controllers {
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+
             if (tenant == null)
                 return HttpNotFound();
-            else if (tenant.Name == _thisShellSettings.Name)
-                return new HttpUnauthorizedResult();
+
+            if (!string.Equals(viewModel.Name, "default", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(viewModel.RequestUrlHost) && string.IsNullOrWhiteSpace(viewModel.RequestUrlPrefix)) {
+                ModelState.AddModelError("RequestUrlHostRequestUrlPrefix", T("RequestUrlHost and RequestUrlPrefix can not be empty at the same time.").Text);
+            }
 
             if (!ModelState.IsValid) {
                 return View(viewModel);

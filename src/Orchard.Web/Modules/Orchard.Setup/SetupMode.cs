@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Caching;
@@ -29,6 +28,7 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 using Orchard.Tasks;
+using Orchard.Tasks.Locking;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -188,6 +188,11 @@ namespace Orchard.Setup {
             }
 
             public bool UseCdn {
+                get { return false; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public bool UseFileHash {
                 get { return false; }
                 set { throw new NotImplementedException(); }
             }

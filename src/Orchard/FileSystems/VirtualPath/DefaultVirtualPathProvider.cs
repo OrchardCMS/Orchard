@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.VirtualPath {
     public class DefaultVirtualPathProvider : IVirtualPathProvider {
@@ -59,9 +60,12 @@ namespace Orchard.FileSystems.VirtualPath {
                 }
                 return result;
             }
-            catch (Exception e) {
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
                 // The initial path might have been invalid (e.g. path indicates a path outside the application root)
-                Logger.Information(e, "Path '{0}' cannot be made app relative", virtualPath);
+                Logger.Information(ex, "Path '{0}' cannot be made app relative", virtualPath);
                 return null;
             }
         }
@@ -156,8 +160,11 @@ namespace Orchard.FileSystems.VirtualPath {
             try {
                 return FileExists(virtualPath);
             }
-            catch (Exception e) {
-                Logger.Information(e, "File '{0}' can not be checked for existence. Assuming doesn't exist.", virtualPath);
+            catch (Exception ex) {
+                if (ex.IsFatal()) {
+                    throw;
+                } 
+                Logger.Information(ex, "File '{0}' can not be checked for existence. Assuming doesn't exist.", virtualPath);
                 return false;
             }
         }

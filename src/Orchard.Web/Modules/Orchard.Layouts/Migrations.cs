@@ -29,18 +29,17 @@ namespace Orchard.Layouts {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("TitlePart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "True"))
                 .DisplayedAs("Layout")
-                .Listable()
                 .Draftable());
 
             ContentDefinitionManager.AlterTypeDefinition("LayoutWidget", type => type
                 .WithPart("CommonPart", p => p
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("WidgetPart")
                 .WithPart("LayoutPart")
                 .WithSetting("Stereotype", "Widget")
@@ -73,7 +72,7 @@ namespace Orchard.Layouts {
 
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("Layout", type => type
-                .WithPart("IdentityPart"));
+                .WithIdentity());
 
             return 3;
         }
@@ -84,7 +83,7 @@ namespace Orchard.Layouts {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("WidgetPart")
-                .WithPart("IdentityPart")
+                .WithIdentity()
                 .WithPart("ElementWrapperPart", p => p
                     .WithSetting("ElementWrapperPartSettings.ElementTypeName", elementTypeName))
                 .WithSetting("Stereotype", "Widget")

@@ -202,6 +202,7 @@ namespace Orchard.Tests.ContentManagement {
         private void Import(XElement element) {
             var importContentSession = new ImportContentSession(_contentManager);
             _contentManager.Import(element, importContentSession);
+            _contentManager.CompleteImport(element, importContentSession);
         }
 
         private XElement CreateContentElement(string title = "Dummy", string identity = "123456789012345678901234567890ab", string version = null) {

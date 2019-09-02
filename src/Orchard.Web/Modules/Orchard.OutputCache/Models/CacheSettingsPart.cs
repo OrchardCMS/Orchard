@@ -18,6 +18,11 @@ namespace Orchard.OutputCache.Models {
             set { this.Store(x => x.DefaultMaxAge, value); }
         }
 
+        public bool VaryByQueryStringIsExclusive {
+            get { return this.Retrieve(x => x.VaryByQueryStringIsExclusive); }
+            set { this.Store(x => x.VaryByQueryStringIsExclusive, value); }
+        }
+
         public string VaryByQueryStringParameters {
             get {
                 return this.Retrieve(
@@ -42,6 +47,11 @@ namespace Orchard.OutputCache.Models {
                 this.Store(x => x.VaryByRequestHeaders, value);
                 this.Store<string>("VaryRequestHeaders", null); // Get rid of old property name.
             }
+        }
+
+        public string VaryByRequestCookies {
+            get { return this.Retrieve(x => x.VaryByRequestCookies); }
+            set { this.Store(x => x.VaryByRequestCookies, value); }
         }
 
         public string IgnoredUrls {

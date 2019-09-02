@@ -1,8 +1,19 @@
-﻿<div class="sections">
-    <div class="primary">
+@using Orchard.Core.Shapes
+@{
+    var tabs = (IEnumerable<string>)CoreShapes.HarvestAndSortTabs(Model.Content);
+    Display.LocalNavigation(Tabs: tabs);
+}
+<div class="edit-item">
+    <div class="edit-item-primary">
         @Display(Model.Content)
     </div>
-    <div class="secondary">
-        @Display(Model.Sidebar)
+    <div class="edit-item-secondary group">
+        <div class="edit-item-sidebar group">
+            @Display(Model.Sidebar)
+        </div>
     </div>
 </div>
+
+@if (!String.IsNullOrWhiteSpace(Request.QueryString["returnUrl"])) {
+    @Html.Hidden("returnUrl", Request.QueryString["returnUrl"])
+}

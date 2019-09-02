@@ -16,6 +16,19 @@ namespace Orchard.Layouts.Shapes {
         private readonly Work<IShapeFactory> _shapeFactory;
         private readonly Work<ITokenizer> _tokenizer;
 
+        public static void AddTokenizers(dynamic elementShape, ITokenizer tokenizer) {
+            var element = (Element)elementShape.Element;
+            var content = (ContentItem)elementShape.ContentItem;
+            var htmlId = element.HtmlId;
+            var htmlClass = element.HtmlClass;
+            var htmlStyle = element.HtmlStyle;
+
+            // Provide tokenizer functions.
+            elementShape.TokenizeHtmlId = (Func<string>)(() => tokenizer.Replace(htmlId, new { Content = content }));
+            elementShape.TokenizeHtmlClass = (Func<string>)(() => tokenizer.Replace(htmlClass, new { Content = content }));
+            elementShape.TokenizeHtmlStyle = (Func<string>)(() => tokenizer.Replace(htmlStyle, new { Content = content }));
+        }
+
         public ElementShapes(
             ITagBuilderFactory tagBuilderFactory, 
             Work<IShapeFactory> shapeFactory, 
@@ -32,16 +45,7 @@ namespace Orchard.Layouts.Shapes {
 
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Element").OnDisplaying(context => {
-                var element = (Element)context.Shape.Element;
-                var content = (ContentItem)context.Shape.ContentItem;
-                var htmlId = element.HtmlId;
-                var htmlClass = element.HtmlClass;
-                var htmlStyle = element.HtmlStyle;
-
-                // Provide tokenizer functions.
-                context.Shape.TokenizeHtmlId = (Func<string>)(() => _tokenizer.Value.Replace(htmlId, new { Content = content }));
-                context.Shape.TokenizeHtmlClass = (Func<string>)(() => _tokenizer.Value.Replace(htmlClass, new { Content = content }));
-                context.Shape.TokenizeHtmlStyle = (Func<string>)(() => _tokenizer.Value.Replace(htmlStyle, new { Content = content }));
+                AddTokenizers(context.Shape, _tokenizer.Value);
             });
         }
 

@@ -1,11 +1,10 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
-using Orchard.Utility.Extensions;
+using System;
 
 namespace Orchard.Fields.Drivers {
     public class InputFieldDriver : ContentFieldDriver<InputField> {
@@ -36,15 +35,21 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, InputField field, dynamic shapeHelper) {
             return ContentShape("Fields_Input_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    if (part.IsNew() && String.IsNullOrEmpty(field.Value)) {
+                        var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
+                        field.Value = settings.DefaultValue;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, InputField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<InputFieldSettings>();
 
-                if (settings.Required && string.IsNullOrWhiteSpace(field.Value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
+                    updater.AddModelError(GetPrefix(field, part), T("The {0} field is required.", T(field.DisplayName)));
                 }
             }
 
@@ -57,6 +62,10 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Exporting(ContentPart part, InputField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value);
+        }
+
+        protected override void Cloning(ContentPart part, InputField originalField, InputField cloneField, CloneContentContext context) {
+            cloneField.Value = originalField.Value;
         }
 
         protected override void Describe(DescribeMembersContext context) {

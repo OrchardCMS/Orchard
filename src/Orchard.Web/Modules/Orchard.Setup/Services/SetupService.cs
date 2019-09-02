@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
@@ -16,7 +17,6 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -26,14 +26,14 @@ using Orchard.Settings;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
-    public class SetupService : ISetupService {
+    [OrchardFeature("Orchard.Setup.Services")]
+    public class SetupService : Component, ISetupService {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
-        private readonly IExtensionManager _extensionManager;
         private readonly IRecipeHarvester _recipeHarvester;
         private IEnumerable<Recipe> _recipes;
 
@@ -44,22 +44,16 @@ namespace Orchard.Setup.Services {
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
             IProcessingEngine processingEngine,
-            IExtensionManager extensionManager,
             IRecipeHarvester recipeHarvester) {
+
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
-            _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
-            T = NullLocalizer.Instance;
-            Logger = NullLogger.Instance;
         }
-
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -68,54 +62,60 @@ namespace Orchard.Setup.Services {
         public IEnumerable<Recipe> Recipes() {
             if (_recipes == null) {
                 var recipes = new List<Recipe>();
-
-                foreach (var extension in _extensionManager.AvailableExtensions()) {
-                    recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe));
-                }
-
+                recipes.AddRange(_recipeHarvester.HarvestRecipes().Where(recipe => recipe.IsSetupRecipe));
                 _recipes = recipes;
             }
-
             return _recipes;
         }
 
         public string Setup(SetupContext context) {
+            var initialState = _shellSettings.State;
+            try {
+                return SetupInternal(context);
+            }
+            catch {
+                _shellSettings.State = initialState;
+                throw;
+            }
+        }
+
+        private string SetupInternal(SetupContext context) {
             string executionId;
 
             Logger.Information("Running setup for tenant '{0}'.", _shellSettings.Name);
 
             // The vanilla Orchard distibution has the following features enabled.
             string[] hardcoded = {
-                    // Framework
-                    "Orchard.Framework",
-                    // Core
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation","Scheduling", "Settings", "Shapes", "Title",
-                    // Modules
-                    "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules",
-                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
-                };
+                // Framework
+                "Orchard.Framework",
+                // Core
+                "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation","Scheduling", "Settings", "Shapes", "Title",
+                // Modules
+                "Orchard.Pages", "Orchard.ContentPicker", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules",
+                "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
+            };
 
             context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct().ToList();
 
+            // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
+            _shellSettings.State = TenantState.Initializing;
+
             var shellSettings = new ShellSettings(_shellSettings);
 
-            if (string.IsNullOrEmpty(shellSettings.DataProvider)) {
+            if (String.IsNullOrEmpty(shellSettings.DataProvider)) {
                 shellSettings.DataProvider = context.DatabaseProvider;
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
                 shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             }
 
-            #region Encryption Settings
-
             shellSettings.EncryptionAlgorithm = "AES";
-            // randomly generated key
+
+            // Randomly generated key.
             shellSettings.EncryptionKey = SymmetricAlgorithm.Create(shellSettings.EncryptionAlgorithm).Key.ToHexString();
-
             shellSettings.HashAlgorithm = "HMACSHA256";
-            // randomly generated key
-            shellSettings.HashKey = HMAC.Create(shellSettings.HashAlgorithm).Key.ToHexString();
 
-            #endregion
+            // Randomly generated key.
+            shellSettings.HashKey = HMAC.Create(shellSettings.HashAlgorithm).Key.ToHexString();
 
             var shellDescriptor = new ShellDescriptor {
                 Features = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })
@@ -123,12 +123,12 @@ namespace Orchard.Setup.Services {
 
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
 
-            // initialize database explicitly, and store shell descriptor
+            // Initialize database explicitly, and store shell descriptor.
             using (var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint)) {
 
                 using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
-                    // check if the database is already created (in case an exception occured in the second phase)
+                    // Check if the database is already created (in case an exception occurred in the second phase).
                     var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
                     var installationPresent = true;
                     try {
@@ -143,7 +143,7 @@ namespace Orchard.Setup.Services {
                         throw new OrchardException(T("A previous Orchard installation was detected in this database with this table prefix."));
                     }
 
-                    // Make a workaround to avoid the Transaction issue for PostgreSQL
+                    // Workaround to avoid some Transaction issue for PostgreSQL.
                     environment.Resolve<ITransactionManager>().RequireNew();
 
                     schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
@@ -168,16 +168,13 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-            // in effect "pump messages" see PostMessage circa 1980
+            // In effect "pump messages" see PostMessage circa 1980.
             while (_processingEngine.AreTasksPending())
                 _processingEngine.ExecuteNextTask();
 
-            // creating a standalone environment. 
+            // Creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
-            // components will exist entirely in isolation - no crossover between the safemode container currently in effect
-
-            // must mark state as Running - otherwise standalone enviro is created "for setup"
-            shellSettings.State = TenantState.Running;
+            // components will exist entirely in isolation - no crossover between the safemode container currently in effect.
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
                     executionId = CreateTenantData(context, environment);
@@ -189,23 +186,21 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
-
             return executionId;
         }
 
         private string CreateTenantData(SetupContext context, IWorkContextScope environment) {
-            // create superuser
+            // Create site owner.
             var membershipService = environment.Resolve<IMembershipService>();
-            var user =
-                membershipService.CreateUser(new CreateUserParams(context.AdminUsername, context.AdminPassword,
-                                                                  String.Empty, String.Empty, String.Empty,
-                                                                  true));
+            var user = membershipService.CreateUser(
+                new CreateUserParams(context.AdminUsername, context.AdminPassword, 
+                String.Empty, String.Empty, String.Empty, true));
 
-            // set superuser as current user for request (it will be set as the owner of all content items)
+            // Set site owner as current user for request (it will be set as the owner of all content items).
             var authenticationService = environment.Resolve<IAuthenticationService>();
             authenticationService.SetAuthenticatedUserForRequest(user);
 
-            // set site name and settings
+            // Set site name and settings.
             var siteService = environment.Resolve<ISiteService>();
             var siteSettings = siteService.GetSiteSettings().As<SiteSettingsPart>();
             siteSettings.SiteSalt = Guid.NewGuid().ToString("N");
@@ -213,19 +208,27 @@ namespace Orchard.Setup.Services {
             siteSettings.SuperUser = context.AdminUsername;
             siteSettings.SiteCulture = "en-US";
 
-            // add default culture
+            // Add default culture.
             var cultureManager = environment.Resolve<ICultureManager>();
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            var recipe = Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase));
-
-            if (recipe == null)
-                throw new OrchardException(T("The recipe '{0}' could not be found.", context.Recipe));
-
+            var recipe = context.Recipe;
             var executionId = recipeManager.Execute(recipe);
 
-            // null check: temporary fix for running setup in command line
+            // Once the recipe has finished executing, we need to update the shell state to "Running", so add a recipe step that does exactly that.
+            var recipeStepQueue = environment.Resolve<IRecipeStepQueue>();
+            var recipeStepResultRecordRepository = environment.Resolve<IRepository<RecipeStepResultRecord>>();
+            var activateShellStep = new RecipeStep(Guid.NewGuid().ToString("N"), recipe.Name, "ActivateShell", new XElement("ActivateShell"));
+            recipeStepQueue.Enqueue(executionId, activateShellStep);
+            recipeStepResultRecordRepository.Create(new RecipeStepResultRecord {
+                ExecutionId = executionId,
+                RecipeName = recipe.Name,
+                StepId = activateShellStep.Id,
+                StepName = activateShellStep.Name
+            });
+
+            // Null check: temporary fix for running setup in command line.
             if (HttpContext.Current != null) {
                 authenticationService.SignIn(user, true);
             }

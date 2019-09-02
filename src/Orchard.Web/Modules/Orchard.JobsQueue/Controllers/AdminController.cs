@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Localization;
 using Orchard.JobsQueue.Models;
+using System.Linq;
+using System.Web.Mvc;
 using Orchard.JobsQueue.Services;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -20,9 +20,9 @@ namespace Orchard.JobsQueue.Controllers {
         private readonly IJobsQueueProcessor _jobsQueueProcessor;
 
         public AdminController(
-            IJobsQueueManager jobsQueueManager, 
+            IJobsQueueManager jobsQueueManager,
             IShapeFactory shapeFactory,
-            IOrchardServices services, 
+            IOrchardServices services,
             IJobsQueueProcessor jobsQueueProcessor) {
             _jobsQueueManager = jobsQueueManager;
             _services = services;
@@ -43,7 +43,7 @@ namespace Orchard.JobsQueue.Controllers {
             return View(model);
         }
 
-        public ActionResult List(PagerParameters pagerParameters) {
+        public ActionResult List(PagerParameters pagerParameters, bool processQueue = false) {
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
 
             var jobsCount = _jobsQueueManager.GetJobsCount();
@@ -52,6 +52,7 @@ namespace Orchard.JobsQueue.Controllers {
                 .Pager(_services.New.Pager(pager).TotalItemCount(jobsCount))
                 .JobsQueueStatus(_services.WorkContext.CurrentSite.As<JobsQueueSettingsPart>().Status)
                 .Jobs(jobs)
+                .ProcessQueue(processQueue)
                 ;
 
             return View(model);
@@ -82,10 +83,17 @@ namespace Orchard.JobsQueue.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.Process")]
         public ActionResult Process() {
-            _jobsQueueProcessor.ProcessQueue();
-            _services.Notifier.Information(T("Processing has started."));
-            return RedirectToAction("List");
-        }
+            var processQueue = false;
+            if (_jobsQueueManager.GetJobsCount() > 0) {
+                _services.Notifier.Information(T("Processing is in progress."));
+                processQueue = true;
+                _jobsQueueProcessor.ProcessQueue(1, 1);
+            }
+            else {
+                _services.Notifier.Information(T("Processing has been completed."));
+            }
 
+            return RedirectToAction("List", new { processQueue });
+        }
     }
 }

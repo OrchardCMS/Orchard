@@ -5,6 +5,7 @@
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
+        var self = this;
         this.type = type;
         this.data = data;
         this.htmlId = htmlId;
@@ -13,6 +14,7 @@
         this.isTemplated = isTemplated;
         this.rule = rule;
 
+        this.templateStyles = {};
         this.editor = null;
         this.parent = null;
         this.setIsFocusedEventHandlers = [];
@@ -57,7 +59,7 @@
         this.setIsActive = function (value) {
             if (!this.editor)
                 return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             if (value)
@@ -72,16 +74,12 @@
             return this.editor.focusedElement === this;
         };
 
-        this.allowSealedFocus = function() {
-            return false;
-        };
-
         this.setIsFocused = function () {
             if (!this.editor)
-                return;
-            if (this.isTemplated && !this.allowSealedFocus())
-                return;
-            if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
+            	return;
+            if (!this.children && this.isTemplated)
+            	return;
+            if (this.editor.isDragging || this.editor.isResizing)
                 return;
 
             this.editor.focusedElement = this;
@@ -124,34 +122,39 @@
         };
 
         this.canDelete = function () {
-            return !!this.parent;
+            if (this.isTemplated || !this.parent)
+                return false;
+            return true;
         };
 
         this.delete = function () {
-            if (!!this.parent)
-                this.parent.deleteChild(this);
+            if (!this.canDelete())
+                return;
+            this.parent.deleteChild(this);
         };
 
         this.canMoveUp = function () {
-            if (!this.parent)
+            if (this.isTemplated || !this.parent)
                 return false;
             return this.parent.canMoveChildUp(this);
         };
 
         this.moveUp = function () {
-            if (!!this.parent)
-                this.parent.moveChildUp(this);
+            if (!this.canMoveUp())
+                return;
+            this.parent.moveChildUp(this);
         };
 
         this.canMoveDown = function () {
-            if (!this.parent)
+            if (this.isTemplated || !this.parent)
                 return false;
             return this.parent.canMoveChildDown(this);
         };
 
         this.moveDown = function () {
-            if (!!this.parent)
-                this.parent.moveChildDown(this);
+            if (!this.canMoveDown())
+                return;
+            this.parent.moveChildDown(this);
         };
 
         this.elementToObject = function () {
@@ -162,12 +165,18 @@
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
                 isTemplated: this.isTemplated,
-                rule: this.rule
+                rule: this.rule,
+                contentType: this.contentType,
+                hasEditor: this.hasEditor
             };
         };
 
         this.getEditorObject = function() {
             return {};
+        };
+
+        this.toObject = function () {
+            return self.elementToObject();
         };
 
         this.copy = function (clipboardData) {
@@ -180,14 +189,27 @@
         };
 
         this.cut = function (clipboardData) {
-            this.copy(clipboardData);
-            this.delete();
+            if (this.canDelete()) {
+                this.copy(clipboardData);
+                this.delete();
+            }
         };
 
         this.paste = function (clipboardData) {
             if (!!this.parent)
                 this.parent.paste(clipboardData);
         };
+
+        this.getTemplateStyles = function () {
+            var styles = this.templateStyles || {};
+            var css = "";
+
+            for (var property in styles) {
+                css += property + ":" + styles[property] + ";";
+            }
+
+            return css;
+        }
     };
 
 })(LayoutEditor || (LayoutEditor = {}));

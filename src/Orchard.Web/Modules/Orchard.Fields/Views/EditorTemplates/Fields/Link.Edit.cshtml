@@ -2,7 +2,7 @@
 @using Orchard.Fields.Settings;
 @{
     var settings = Model.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
-    string target = string.Empty;
+    string target = String.Empty;
     switch (settings.TargetMode) {
         case TargetMode.NewWindow:
             target = "_blank";
@@ -13,36 +13,36 @@
         case TargetMode.Top:
             target = "_top";
             break;
-	}
+    }
 }
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
     @if (HasText(settings.Hint)) {
-    <span class="hint">@settings.Hint</span>
+        <span class="hint">@settings.Hint</span>
     }
     <div class="editor-label">
-        <label for="@Html.FieldIdFor(m => m.Value)" @if(settings.Required) { <text>class="required"</text> }>@T("Url")</label>
+        <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>   }>@T("Url")</label>
     </div>
     <div class="editor-field">
-        @Html.TextBoxFor(m => m.Value, new { @class = "text large" })
+        @(settings.Required ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder }))
         <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
     </div>
     @if (settings.LinkTextMode == LinkTextMode.Optional || settings.LinkTextMode == LinkTextMode.Required) {
         <div class="editor-label">
-            <label for="@Html.FieldIdFor(m => m.Text)" @if(settings.LinkTextMode == LinkTextMode.Required) { <text>class="required"</text> }>@T("Text")</label>
+            <label for="@Html.FieldIdFor(m => m.Text)" @if (settings.LinkTextMode == LinkTextMode.Required) { <text> class="required" </text> }>@T("Text")</label>
         </div>
         <div class="editor-field">
-            @Html.TextBoxFor(m => m.Text, new {@class = "text medium"})
+            @(settings.LinkTextMode == LinkTextMode.Required ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium", placeholder = settings.UrlPlaceholder }))
             <span class="hint">@T("The text of the link. If left empty, the url will be used instead.")</span>
         </div>
     }
-    
+
     @if (settings.TargetMode == TargetMode.UserChoice) {
         <div class="editor-label">
             <label for="@Html.FieldIdFor(m => m.Target)">@T("Target")</label>
         </div>
         <div class="editor-field">
-            @Html.TextBoxFor(m => m.Target, new { @class = "text"})
+            @Html.TextBoxFor(m => m.Target, new { @class = "text" })
             <span class="hint">@T("A valid HTML target attribute value. e.g., _blank, _parent, _top, or an anchor. ")</span>
         </div>
     }

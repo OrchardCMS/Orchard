@@ -38,7 +38,7 @@ namespace Orchard.Redis.Caching {
         public object Get<T>(string key) {
             var json = Database.StringGet(GetLocalizedKey(key));
             if(String.IsNullOrEmpty(json)) {
-                return default(T);
+                return null;
             }
             return JsonConvert.DeserializeObject<T>(json);
         }
@@ -54,11 +54,11 @@ namespace Orchard.Redis.Caching {
         }
 
         public void Remove(string key) {
-            Database.KeyDelete(key);
+            Database.KeyDelete(GetLocalizedKey(key));
         }
 
         public void Clear() {
-            Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            _connectionMultiplexer.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         private string GetLocalizedKey(string key) {

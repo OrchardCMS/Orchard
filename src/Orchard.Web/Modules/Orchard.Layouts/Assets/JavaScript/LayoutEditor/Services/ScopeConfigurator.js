@@ -15,7 +15,7 @@
                         var resetFocus = false;
                         var element = $scope.element;
                     
-                        if (element.editor.isDragging || element.editor.inlineEditingIsActive)
+                        if (element.editor.isDragging)
                             return;
 
                         // If native clipboard support exists, the pseudo-clipboard will have been disabled.
@@ -47,7 +47,7 @@
                             handled = true;
                         }
 
-                        if (element.type == "Content") { // This is a content element.
+                        if (!!element.hasEditor) { // This element has an editor dialog.
                             if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 13) { // Enter
                                 $element.find(".layout-panel-action-edit").first().click();
                                 handled = true;
@@ -149,6 +149,26 @@
 
                     $scope.delete = function (element) {
                         element.delete();
+                        $.event.trigger({
+                            type: "layouteditor:edited"
+                        });
+                    }
+
+                    if ($scope.element.hasEditor) {
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).done(function (args) {
+                                $scope.$apply(function () {
+                                    if (args.cancel)
+                                        return;
+
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.applyElementEditorModel(args.elementEditorModel);
+
+                                    if (!!$scope.element.setHtml)
+                                        $scope.element.setHtml(args.element.html);
+                                });
+                            });
+                        };
                     }
                 },
 
@@ -238,7 +258,7 @@
                                         receivedElement.setParent(element);
 
                                         if (!!receivedElement.hasEditor) {
-                                            $scope.$root.editElement(receivedElement).then(function (args) {
+                                            $scope.$root.editElement(receivedElement).done(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
                                                     receivedElement.applyElementEditorModel(args.elementEditorModel);
@@ -264,6 +284,10 @@
                                         element.setIsDropTarget(false);
                                         if (!!receivedElement)
                                             receivedElement.setIsFocused();
+
+                                        $scope.$root.addElement(receivedElement).done(function () {
+                                            return;
+                                        });
                                     });
                                 });
                             }

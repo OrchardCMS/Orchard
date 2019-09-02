@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -87,17 +88,62 @@ namespace Orchard.Layouts.Drivers {
             context.Element(part.PartDefinition.Name).SetValue(exportableData);
         }
 
-        protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
-            var root = context.Data.Element(part.PartDefinition.Name);
+        protected override void Exported(ElementWrapperPart part, ExportContentContext context) {
+            var describeContext = CreateDescribeContext(part);
+            // Deserialize element from the version set in the Exporting method
+            var currentContextValue = context.Element(part.PartDefinition.Name).Value;
+            var element = _serializer.Deserialize(currentContextValue, describeContext);
+            _elementManager.Exported(new[] {element}, new ExportLayoutContext());
+            var exportableData = _serializer.Serialize(element);
 
-            if (root == null)
+            context.Element(part.PartDefinition.Name).SetValue(exportableData);
+        }
+
+        protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
+            HandleImportEvent(part, context, (describeContext, element) => {
+                _elementManager.Importing(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
+        }
+
+        protected override void Imported(ElementWrapperPart part, ImportContentContext context) {
+            HandleSecondaryImportEvent(part, context, (describeContext, element) => {
+                _elementManager.Imported(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
+        }
+
+        protected override void ImportCompleted(ElementWrapperPart part, ImportContentContext context) {
+            HandleSecondaryImportEvent(part, context, (describeContext, element) => {
+                _elementManager.ImportCompleted(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
+            });
+        }
+
+        private void HandleSecondaryImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            if (root == null) {
                 return;
+            }
+
+            var describeContext = CreateDescribeContext(part);
+            // Deserialize element from the data set in previous Import events
+            var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
+            var data = ElementDataHelper.Deserialize(part.ElementData);
+            var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
+
+            callback(describeContext, element);
+            part.ElementData = element.Data.Serialize();
+        }
+
+        private void HandleImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            if (root == null) {
+                return;
+            }
 
             var exportedData = root.Value;
             var describeContext = CreateDescribeContext(part);
             var element = _serializer.Deserialize(exportedData, describeContext);
 
-            _elementManager.Importing(new[]{element}, new ImportLayoutContext { Session = new ImportContentContextWrapper(context)});
+            callback(describeContext, element);
             part.ElementData = element.Data.Serialize();
         }
 

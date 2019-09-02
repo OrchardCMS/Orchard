@@ -55,9 +55,9 @@ namespace Orchard.Fields.Tokens {
                 ;
 
             context.For<DateTimeField>("DateTimeField")
-                .Token("Date", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value)))
-                .Token("Time", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortTimeFormat, _cultureInfo.Value)))
-                .Token("DateTime", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateTimeFormat, _cultureInfo.Value)))
+                .Token("Date", (Func<DateTimeField, object>)(d => d.DateTime.HasValue ? d.DateTime.Value.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value) : null))
+                .Token("Time", (Func<DateTimeField, object>)(d => d.DateTime.HasValue ? d.DateTime.Value.ToString(_dateTimeLocalization.ShortTimeFormat, _cultureInfo.Value) : null))
+                .Token("DateTime", (Func<DateTimeField, object>)(d => d.DateTime.HasValue ? d.DateTime.Value.ToString(_dateTimeLocalization.ShortDateTimeFormat, _cultureInfo.Value) : null))
                 .Chain("DateTime", "Date", (Func<DateTimeField, object>)(field => field.DateTime))
                 ;
         }

@@ -1,0 +1,18 @@
+﻿.navicon-web-search:before {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    content: '\f002';
+    font-size: 14px;
+    color: black;
+    padding-right: 5px;
+}
+
+/* RTL */
+
+.dir-rtl .navicon-web-search:before {
+    padding-right: inherit;
+    padding-left: 5px;
+}

@@ -1,6 +1,6 @@
 ﻿<h1>@Html.TitleForPage(T("Create a New Account").ToString())</h1>
 <p>@T("Use the form below to create a new account.")</p>
-<p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</p>
+<p>@T.Plural("The password can't be empty.", "Passwords are required to be a minimum of {0} characters in length.", (int)ViewData["PasswordLength"])</p>
 @Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString()) 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))) { 
     <fieldset>
@@ -13,7 +13,7 @@
         <div>
             <label for="email">@T("Email:")</label>
             @Html.TextBox("email") 
-            @Html.ValidationMessage("email") 
+            @Html.ValidationMessage("email")
         </div>
         <div>
             <label for="password">@T("Password:")</label>

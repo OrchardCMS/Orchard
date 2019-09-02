@@ -6,23 +6,38 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Layouts.Services {
     public class ContentFieldDisplay : ContentDisplayBase, IContentFieldDisplay {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
-
+        private readonly ShellSettings _shellSettings;
         public ContentFieldDisplay(
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor, 
-            IEnumerable<IContentFieldDriver> contentFieldDrivers) 
+            IWorkContextAccessor workContextAccessor,
+            ShellSettings shellSettings,
+            IEnumerable<IContentFieldDriver> contentFieldDrivers)
             : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor) {
-
+            _shellSettings = shellSettings;
             _contentFieldDrivers = contentFieldDrivers;
         }
+
+        public override UrlPrefix TenantUrlPrefix {
+            get {
+                if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                    return new UrlPrefix(_shellSettings.RequestUrlPrefix);
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
 
         public override string DefaultStereotype {
             get { return "ContentField"; }
@@ -33,7 +48,7 @@ namespace Orchard.Layouts.Services {
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
             drivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
+                var result = Filter(driver.BuildDisplayShape(context), field);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
@@ -63,8 +78,23 @@ namespace Orchard.Layouts.Services {
                 if (result != null)
                     result.Apply(context);
             }, Logger);
-            
+
             return context.Shape;
+        }
+
+        private DriverResult Filter(DriverResult driverResult, ContentField field) {
+            DriverResult result = null;
+            var combinedResult = driverResult as CombinedResult;
+            var contentShapeResult = driverResult as ContentShapeResult;
+
+            if (combinedResult != null) {
+                result = combinedResult.GetResults().SingleOrDefault(x => x.ContentField != null && x.ContentField.Name == field.Name);
+            }
+            else if (contentShapeResult != null) {
+                result = contentShapeResult.ContentField != null && contentShapeResult.ContentField.Name == field.Name ? contentShapeResult : driverResult;
+            }
+
+            return result;
         }
 
         private IEnumerable<IContentFieldDriver> GetFieldDrivers(string fieldName) {

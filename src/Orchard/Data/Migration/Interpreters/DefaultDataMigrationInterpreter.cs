@@ -382,7 +382,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 }
             }
             finally {
-                _sqlStatements.Clear();    
+                _sqlStatements.Clear();
             }
         }
 
@@ -405,7 +405,7 @@ namespace Orchard.Data.Migration.Interpreters {
             if ( value == null ) {
                 return "null";
             }
-            
+
             TypeCode typeCode = Type.GetTypeCode(value.GetType());
             switch (typeCode) {
                 case TypeCode.Empty:
@@ -428,7 +428,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 case TypeCode.Decimal:
                     return Convert.ToString(value, CultureInfo.InvariantCulture);
                 case TypeCode.DateTime:
-                    return String.Concat("'", Convert.ToString(value, CultureInfo.InvariantCulture), "'");
+                    return String.Concat("'", ((DateTime)value).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture), "'");
             }
 
             return "null";

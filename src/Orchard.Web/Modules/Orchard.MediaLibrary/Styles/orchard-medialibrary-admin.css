@@ -1,5 +1,5 @@
-﻿.zone-content, #content, #main, #layout-content, #layout-main {
-    height: 100%;
+.zone-content, #content, #main, #layout-content, #layout-main {
+    height: auto;
     display: block;
     min-height: 400px;
     margin-bottom: 0;
@@ -153,6 +153,10 @@
             background-image: url('images/folders-loader.gif');
             background-repeat: no-repeat;
             background-position: center;
+        }
+
+        #media-library-main-list.pending li {
+            opacity:.3;
         }
 
     /* Remove the space for the editor, and the scrollbar in the import page */
@@ -341,7 +345,7 @@
         -ms-text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
-        text-wrap: none;
+        white-space: nowrap;
     }
 
     .media-library-main-list-overlay .publication-status {
@@ -441,23 +445,24 @@
     float: left;
 }
 
-.dir-rtl #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
-    margin-left: -1px;
+.dir-rtl #media-library-main-navigation {
+    border-right: inherit;
+    border-left: 1px solid #e0e0e0;
 }
 
 .dir-rtl #button-recent i {
-    padding-left:5px;
+    padding-left: 5px;
     padding-right: 3px;
 }
 
 .dir-rtl .media-library-navigation-folder-link i {
-    padding-left:5px;
+    padding-left: 5px;
     padding-right: 3px;
 }
 
 .dir-rtl .media-library-folder ul {
-padding-left: inherit;
-padding-right: 16px;
+    padding-left: 0;
+    padding-right: 16px;
 }
 
 .dir-rtl #media-library-main-list {
@@ -467,7 +472,12 @@ padding-right: 16px;
 
 .dir-rtl #media-library-import .import-provider {
     padding-left: inherit;
-    padding-right: 25px;
+    padding-right: 5px;
+}
+
+.dir-rtl #media-library-main-editor {
+    border-left: inherit;
+    border-right: 1px solid #e0e0e0;
 }
 
 .dir-rtl #media-library-main-selection li {
@@ -486,9 +496,19 @@ padding-right: 16px;
     float: right;
 }
 
+.dir-rtl #media-library-main-list li.selected:after {
+    border-left: inherit;
+    border-right: 40px solid transparent;
+    right: inherit;
+    left: -3px;
+}
 
-.dir-rtl #media-library-main-list li.selected:after{width:0;height:0;border-top:40px solid #3C822E;border-left:inherit;border-right:40px solid transparent;position:absolute;display:block;right:0;content:".";color: transparent;top:0;z-index:1000}
-.dir-rtl #media-library-main-list li.selected:before{position:absolute;content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTcyMzAxOTkyMzNFMTFFMjkzQzk4NTYzNUZCQUM3MjMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTcyMzAxOUEyMzNFMTFFMjkzQzk4NTYzNUZCQUM3MjMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxNzIzMDE5NzIzM0UxMUUyOTNDOTg1NjM1RkJBQzcyMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxNzIzMDE5ODIzM0UxMUUyOTNDOTg1NjM1RkJBQzcyMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiTFf8gAAAAGUExURf///////1V89WwAAAACdFJOU/8A5bcwSgAAAEdJREFUeNqckEEOACAIw8r/P21ihIHzJMdlKwzChi8Jk4BLYo8pw3UsDZchIsOFKaDAJFOrSKOWV0bnMMit4zgZb/94zhJgAK06APe0qnuFAAAAAElFTkSuQmCC);margin-left:-5px;margin-right:inherit;color:#fff;right:inherit;left:5px;font-family:Tahoma;z-index:2000}
+.dir-rtl #media-library-main-list li.selected:before {
+    margin-right: inherit;
+    margin-left: 0;
+    right: inherit;
+    left: 5px;
+}
 
 .dir-rtl .media-library-main-list-overlay {
     left: inherit;
@@ -497,6 +517,10 @@ padding-right: 16px;
 }
 
 .dir-rtl .media-library-main-list-overlay p {
-    padding-right:inherit;
-    padding-left:5px;
+    padding-right: inherit;
+    padding-left: 5px;
+}
+
+.dir-rtl #media-library-main-navigation .navicon {
+    background-position: right;
 }

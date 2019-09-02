@@ -1,40 +1,57 @@
-﻿using System;
-using System.Collections.Concurrent;
+using System;
 using System.Web;
 using Autofac;
-using Orchard.Mvc.Extensions;
-using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
-        readonly object _contextKey = new object();
+        readonly ILifetimeScope _lifetimeScope;
+        private HttpContextBase _httpContext;
+        private IWorkContextAccessor _wca;
 
-        [ThreadStatic]
-        static ConcurrentDictionary<object, HttpContextBase> _threadStaticContexts;
+        public HttpContextAccessor(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
+        }
 
         public HttpContextBase Current() {
-            if (!HttpContext.Current.IsBackgroundContext())
-                return new HttpContextWrapper(HttpContext.Current);
+            var httpContext = GetStaticProperty();
 
-            return GetContext();
+            if (!IsBackgroundHttpContext(httpContext))
+                return new HttpContextWrapper(httpContext);
+
+            if (_httpContext != null)
+                return _httpContext;
+
+            if (_wca == null && _lifetimeScope.IsRegistered<IWorkContextAccessor>())
+                _wca = _lifetimeScope.Resolve<IWorkContextAccessor>();
+
+            var workContext = _wca != null ? _wca.GetLogicalContext() : null;
+            return workContext != null ? workContext.HttpContext : null;
         }
 
-        public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
-            return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
-                var baseUrl = lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
-                return !String.IsNullOrEmpty(baseUrl) ? baseUrl : "http://localhost"; // Return a valid URL always.
-            });
+        public void Set(HttpContextBase httpContext) {
+            _httpContext = httpContext;
         }
 
-        private HttpContextBase GetContext() {
-            HttpContextBase context;
-            return ThreadStaticContexts.TryGetValue(_contextKey, out context) ? context : null;
+        internal static bool IsBackgroundHttpContext(HttpContext httpContext) {
+            return httpContext == null || httpContext.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
 
-        static ConcurrentDictionary<object, HttpContextBase> ThreadStaticContexts {
-            get {
-                return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, HttpContextBase>());
+        private static HttpContext GetStaticProperty() {
+            var httpContext = HttpContext.Current;
+            if (httpContext == null) {
+                return null;
             }
+
+            try {
+                // The "Request" property throws at application startup on IIS integrated pipeline mode.
+                if (httpContext.Request == null) {
+                    return null;
+                }
+            }
+            catch (Exception) {
+                return null;
+            }
+            return httpContext;
         }
     }
 }

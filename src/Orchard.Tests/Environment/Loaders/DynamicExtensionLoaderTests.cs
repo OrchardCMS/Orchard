@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.AppData;
@@ -35,6 +36,8 @@ namespace Orchard.Tests.Environment.Loaders {
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+
+            builder.RegisterInstance(new ExtensionLocations());
 
             _mockedStubProjectFileParser = new Mock<IProjectFileParser>();
             builder.RegisterInstance(_mockedStubProjectFileParser.Object).As<IProjectFileParser>();
@@ -151,8 +154,9 @@ namespace Orchard.Tests.Environment.Loaders {
                 IHostEnvironment hostEnvironment,
                 IAssemblyProbingFolder assemblyProbingFolder,
                 IDependenciesFolder dependenciesFolder,
-                IProjectFileParser projectFileParser)
-                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser) {}
+                IProjectFileParser projectFileParser,
+                ExtensionLocations extensionLocations)
+                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser, extensionLocations) {}
 
             public IEnumerable<string> GetDependenciesAccessor(string projectPath) {
                 return GetDependencies(projectPath);

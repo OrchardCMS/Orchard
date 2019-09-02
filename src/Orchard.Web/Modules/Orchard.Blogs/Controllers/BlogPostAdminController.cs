@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
@@ -44,7 +45,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var model = Services.ContentManager.BuildEditor(blogPost);
@@ -76,7 +77,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
             
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
@@ -88,14 +89,26 @@ namespace Orchard.Blogs.Controllers {
             }
 
             if (publish) {
-                if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blog.ContentItem, T("Couldn't publish blog post")))
+                if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blogPost.ContentItem, T("Couldn't publish blog post")))
                     return new HttpUnauthorizedResult();
 
                 Services.ContentManager.Publish(blogPost.ContentItem);
             }
 
-            Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(blogPost));
+        }
+
+        public ActionResult CreateWithoutBlog() {
+            var blogs = _blogService.Get().ToArray();
+
+            if (blogs.Count() == 0) {
+                Services.Notifier.Warning(T("To create a BlogPost you need to create a blog first. You have been redirected to the Blog creation page."));
+                return RedirectToAction("Create", "BlogAdmin", new { area = "Orchard.Blogs" });
+            } else {
+                Services.Notifier.Warning(T("To create a BlogPost you need to choose a blog first. You have been redirected to the Blog selection page."));
+                return RedirectToAction("List", "BlogAdmin", new { area = "Orchard.Blogs" });
+            }
         }
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
@@ -165,7 +178,7 @@ namespace Orchard.Blogs.Controllers {
 
             conditionallyPublish(blogPost.ContentItem);
 
-            Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
+            Services.Notifier.Success(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, Url.BlogPostEdit(blogPost));
         }
@@ -175,7 +188,7 @@ namespace Orchard.Blogs.Controllers {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
             if (draft == null) {
-                Services.Notifier.Information(T("There is no draft to discard."));
+                Services.Notifier.Warning(T("There is no draft to discard."));
                 return RedirectToEdit(id);
             }
 
@@ -186,7 +199,7 @@ namespace Orchard.Blogs.Controllers {
             // locate the published revision to revert onto
             var published = Services.ContentManager.Get(id, VersionOptions.Published);
             if (published == null) {
-                Services.Notifier.Information(T("Can not discard draft on unpublished blog post."));
+                Services.Notifier.Error(T("Can not discard draft on unpublished blog post."));
                 return RedirectToEdit(draft);
             }
 
@@ -195,7 +208,7 @@ namespace Orchard.Blogs.Controllers {
             draft.VersionRecord.Latest = false;
             published.VersionRecord.Latest = true;
 
-            Services.Notifier.Information(T("Blog post draft version discarded"));
+            Services.Notifier.Success(T("Blog post draft version discarded"));
             return RedirectToEdit(published);
         }
 
@@ -225,7 +238,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Delete(post);
-            Services.Notifier.Information(T("Blog post was successfully deleted"));
+            Services.Notifier.Success(T("Blog post was successfully deleted"));
 
             return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
@@ -244,7 +257,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Publish(post);
-            Services.Notifier.Information(T("Blog post successfully published."));
+            Services.Notifier.Success(T("Blog post successfully published."));
 
             return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
@@ -263,7 +276,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Unpublish(post);
-            Services.Notifier.Information(T("Blog post successfully unpublished."));
+            Services.Notifier.Success(T("Blog post successfully unpublished."));
 
             return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }

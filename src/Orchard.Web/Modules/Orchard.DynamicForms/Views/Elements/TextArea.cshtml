@@ -8,6 +8,7 @@
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["name"] = name;
+    tagBuilder.Attributes["placeholder"] = Model.ProcessedPlaceholder;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (element.Rows != null) {
@@ -22,7 +23,9 @@
         tagBuilder.AddCssClass("input-validation-error");
     }
 
-    tagBuilder.SetInnerText(Model.ProcessedValue);
+    if (!String.IsNullOrWhiteSpace((string)Model.ProcessedValue)) {
+        tagBuilder.SetInnerText(Model.ProcessedValue);
+    }
 }
 @if (element.ShowLabel) {
     <label for="@element.HtmlId">@Model.ProcessedLabel</label>

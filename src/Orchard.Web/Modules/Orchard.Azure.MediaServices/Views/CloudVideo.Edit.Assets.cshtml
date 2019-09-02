@@ -8,7 +8,7 @@
     Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
     
     Script.Require("ShapesBase");
-    Script.Require("JQuery");
+    
     Script.Include("cloudmedia-admin-common.js", "cloudmedia-admin-common.min.js");
     
     var cloudVideoPart = (CloudVideoPart)Model.CloudVideoPart;
@@ -19,7 +19,7 @@
 
 @helper MainFileUrl(Asset asset, Func<Asset, string> mainFileUrl, string linkText) {
     if (!String.IsNullOrEmpty(mainFileUrl(asset))) {
-        <a href="@mainFileUrl(asset)">@T(linkText)</a>
+        <a href="@mainFileUrl(asset)">@T.Encode(linkText)</a>
     }
 }
 
