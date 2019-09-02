@@ -66,7 +66,7 @@ namespace Orchard.Taxonomies.Services {
 
         protected override void PublishTerm(TermPart term) {
             // only publish the term if it was published already
-            if (term.ContentItem.IsPublished()) {
+            if (term.ContentItem.HasPublished() && !term.ContentItem.IsPublished()) {
                 var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }
