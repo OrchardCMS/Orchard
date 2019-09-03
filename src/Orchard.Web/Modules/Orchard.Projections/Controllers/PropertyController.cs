@@ -122,8 +122,8 @@ namespace Orchard.Projections.Controllers {
                     viewModel.NoResultText = propertyRecord.NoResultText;
                     viewModel.ZeroIsEmpty = propertyRecord.ZeroIsEmpty;
                     viewModel.HideEmpty = propertyRecord.HideEmpty;
-
-                    viewModel.RewriteOutput = propertyRecord.RewriteOutput;
+                    
+                    viewModel.RewriteOutputCondition = propertyRecord.RewriteOutputCondition;
                     viewModel.RewriteText = propertyRecord.RewriteText;
                     viewModel.StripHtmlTags = propertyRecord.StripHtmlTags;
                     viewModel.TrimLength = propertyRecord.TrimLength;
@@ -190,7 +190,7 @@ namespace Orchard.Projections.Controllers {
                 propertyRecord.ZeroIsEmpty = model.ZeroIsEmpty;
                 propertyRecord.HideEmpty = model.HideEmpty;
 
-                propertyRecord.RewriteOutput = model.RewriteOutput;
+                propertyRecord.RewriteOutputCondition = model.RewriteOutputCondition;
                 propertyRecord.RewriteText = model.RewriteText;
                 propertyRecord.StripHtmlTags = model.StripHtmlTags;
                 propertyRecord.TrimLength = model.TrimLength;

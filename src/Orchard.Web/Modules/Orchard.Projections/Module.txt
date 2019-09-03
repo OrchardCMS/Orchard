@@ -6,4 +6,4 @@ Version: 1.10.3
 OrchardVersion: 1.10.3
 Description: Provides methods to control how lists of content items are filtered and displayed
 Category: Content
-Dependencies: Orchard.Tokens, Orchard.Forms, Feeds, Title
+Dependencies: Orchard.Tokens, Orchard.Conditions, Orchard.Forms, Feeds, Title

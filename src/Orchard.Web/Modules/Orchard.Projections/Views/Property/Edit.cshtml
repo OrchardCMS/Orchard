@@ -141,16 +141,18 @@
         <div class="expando">
             <div>
                 <div>
-                    @Html.CheckBoxFor(m => m.RewriteOutput)
-                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RewriteOutput)">@T("Rewrite output")</label>
-                    <span class="hint">@T("Check to override the output of this property.")</span>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.RewriteOutputCondition)">@T("Rewrite output condition")</label>
+                        @Html.TextBoxFor(m => m.RewriteOutputCondition, new { @class = "text large tokenized" })
+                        <span class="hint">@T("A condition that will be evaluated to decide whether to rewrite the output or not.")</span>
+                    </div>
                 </div>
                 
-                <div data-controllerid="@Html.FieldIdFor(m => m.RewriteOutput)">
+                <div>
                     <div>
                         <label for="@Html.FieldIdFor(m => m.RewriteText)">@T("Rewrite text")</label>
                         @Html.TextBoxFor(m => m.RewriteText, new { @class = "text large tokenized" })
-                        <span class="hint">@T("The text to write for this field. It may include HTML. {Text} can be used to inject the current property text.")</span>
+                        <span class="hint">@T("The tokenized text that will be evaluated and applied if \"Rewrite output condition\" evaluates to true. It may include HTML and {Text} can be used to inject the current property text.")</span>
                     </div>
                 </div>
 

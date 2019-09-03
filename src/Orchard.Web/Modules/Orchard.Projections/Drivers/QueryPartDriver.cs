@@ -232,7 +232,7 @@ namespace Orchard.Projections.Drivers {
                 new XAttribute("MaxLength", property.MaxLength),
                 new XAttribute("NoResultText", property.NoResultText ?? ""),
                 new XAttribute("PreserveLines", property.PreserveLines),
-                new XAttribute("RewriteOutput", property.RewriteOutput),
+                new XAttribute("RewriteOutputCondition", property.RewriteOutputCondition ?? ""),
                 new XAttribute("RewriteText", property.RewriteText ?? ""),
                 new XAttribute("StripHtmlTags", property.StripHtmlTags),
                 new XAttribute("TrimLength", property.TrimLength),
@@ -270,7 +270,10 @@ namespace Orchard.Projections.Drivers {
                 NoResultText = property.Attribute("NoResultText").Value,
                 Position = Convert.ToInt32(property.Attribute("Position").Value),
                 PreserveLines = Convert.ToBoolean(property.Attribute("PreserveLines").Value),
-                RewriteOutput = Convert.ToBoolean(property.Attribute("RewriteOutput").Value),
+                // RewriteOutput is processed to ensure backwards-compatibility with recipes
+                // that were created before RewriteOutputCondition was added.
+                RewriteOutputCondition = property.Attribute("RewriteOutputCondition")?.Value ??
+                    property.Attribute("RewriteOutput")?.Value,
                 RewriteText = property.Attribute("RewriteText").Value,
                 State = property.Attribute("State").Value,
                 StripHtmlTags = Convert.ToBoolean(property.Attribute("StripHtmlTags").Value),
