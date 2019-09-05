@@ -1,4 +1,4 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
@@ -65,8 +65,8 @@ namespace Orchard.Taxonomies.Services {
         }
 
         protected override void PublishTerm(TermPart term) {
-            // only publish the term if it was published already
-            if (term.ContentItem.IsPublished()) {
+            // Only publish the Term if it was published already.
+            if (term.ContentItem.HasPublished() && !term.ContentItem.IsPublished()) {
                 var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }
