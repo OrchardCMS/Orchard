@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.Projections.Models {
     public class PropertyRecord {
@@ -42,7 +43,9 @@ namespace Orchard.Projections.Models {
         public virtual bool HideEmpty { get; set; }
 
         // Rewrite Result
+        [Obsolete("Set RewriteOutputCondition to \"true\" instead.")]
         public virtual bool RewriteOutput { get; set; }
+        public virtual string RewriteOutputCondition { get; set; }
         public virtual string RewriteText { get; set; }
         public virtual bool StripHtmlTags { get; set; }
         public virtual bool TrimLength { get; set; }

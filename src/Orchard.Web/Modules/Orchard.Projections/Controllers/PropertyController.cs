@@ -10,7 +10,6 @@ using Orchard.Localization;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
-using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -59,7 +58,7 @@ namespace Orchard.Projections.Controllers {
                 return new HttpUnauthorizedResult();
 
             var property = _repository.Get(propertyId);
-            if(property == null) {
+            if (property == null) {
                 return HttpNotFound();
             }
 
@@ -82,8 +81,8 @@ namespace Orchard.Projections.Controllers {
             }
 
             var viewModel = new PropertyEditViewModel {
-                Id = id, 
-                Description = String.Empty, 
+                Id = id,
+                Description = String.Empty,
                 Property = property
             };
 
@@ -123,7 +122,7 @@ namespace Orchard.Projections.Controllers {
                     viewModel.ZeroIsEmpty = propertyRecord.ZeroIsEmpty;
                     viewModel.HideEmpty = propertyRecord.HideEmpty;
 
-                    viewModel.RewriteOutput = propertyRecord.RewriteOutput;
+                    viewModel.RewriteOutputCondition = propertyRecord.RewriteOutputCondition;
                     viewModel.RewriteText = propertyRecord.RewriteText;
                     viewModel.StripHtmlTags = propertyRecord.StripHtmlTags;
                     viewModel.TrimLength = propertyRecord.TrimLength;
@@ -158,8 +157,8 @@ namespace Orchard.Projections.Controllers {
                 // add new property record if it's a newly created property
                 if (propertyRecord == null) {
                     propertyRecord = new PropertyRecord {
-                        Category = category, 
-                        Type = type, 
+                        Category = category,
+                        Type = type,
                         Position = layout.Properties.Count
                     };
                     layout.Properties.Add(propertyRecord);
@@ -190,7 +189,7 @@ namespace Orchard.Projections.Controllers {
                 propertyRecord.ZeroIsEmpty = model.ZeroIsEmpty;
                 propertyRecord.HideEmpty = model.HideEmpty;
 
-                propertyRecord.RewriteOutput = model.RewriteOutput;
+                propertyRecord.RewriteOutputCondition = model.RewriteOutputCondition;
                 propertyRecord.RewriteText = model.RewriteText;
                 propertyRecord.StripHtmlTags = model.StripHtmlTags;
                 propertyRecord.TrimLength = model.TrimLength;
@@ -217,9 +216,11 @@ namespace Orchard.Projections.Controllers {
                 return new HttpUnauthorizedResult();
 
             switch (direction) {
-                case "up": _propertyService.MoveUp(id);
+                case "up":
+                    _propertyService.MoveUp(id);
                     break;
-                case "down": _propertyService.MoveDown(id);
+                case "down":
+                    _propertyService.MoveDown(id);
                     break;
                 default:
                     throw new ArgumentException("direction");
