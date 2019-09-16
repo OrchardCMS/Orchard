@@ -83,5 +83,11 @@ namespace Orchard.Users.Handlers {
                                          user,
                                          () => new Dictionary<string, object> {{"User", user}});
         }
+
+        public void Moderate(Security.IUser user) {
+            _workflowManager.TriggerEvent("UserDisabled",
+                                         user,
+                                         () => new Dictionary<string, object> { { "User", user } });
+        }
     }
 }
