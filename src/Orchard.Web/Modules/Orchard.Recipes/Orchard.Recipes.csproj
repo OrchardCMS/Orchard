@@ -126,6 +126,7 @@
     <Compile Include="Providers\Executors\RemoveContentDefinitionStep.cs" />
     <Compile Include="Providers\Executors\RemoveContentStep.cs" />
     <Compile Include="Providers\Executors\RecipesStep.cs" />
+    <Compile Include="Providers\Executors\RemovePartFromContentTypeStep.cs" />
     <Compile Include="ViewModels\ContentExecutionStepViewModel.cs" />
     <Compile Include="Providers\Executors\ContentStep.cs" />
     <Compile Include="Providers\Executors\ContentDefinitionStep.cs" />
