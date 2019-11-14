@@ -138,7 +138,11 @@
                 }
                 $("#Localization_SelectedCulture").on('change', function () {
                     var optionSelected = $("option:selected", this);
-                    filterTaxonomyCulture($("#Localization_SelectedCulture").val());
+                    @if(Model.TryTotranslate) {
+                        <text>
+                            filterTaxonomyCulture($("#Localization_SelectedCulture").val());
+                        </text>
+                    }
                 });
                 $("#Localization_SelectedCulture").trigger("change");
             });

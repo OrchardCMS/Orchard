@@ -8,5 +8,6 @@ namespace Orchard.Taxonomies.ViewModels {
         public string FieldName { get; set; }
         public int Id { get; set; }
         public TaxonomyFieldSettings Setting { get; set; }
+        public bool TryTotranslate { get; set; }
     }
 }

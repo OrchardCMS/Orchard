@@ -22,20 +22,22 @@ namespace Orchard.Taxonomies.Drivers {
             return ContentShape("Fields_TaxonomyFieldList_Edit", GetDifferentiator(field, part), () => {
                 var templateName = "Fields/TaxonomyFieldList";
                 var taxonomySettings= new TaxonomyFieldSettings();
-                  var contentDefinition = _contentDefinitionManager.GetTypeDefinition(part.ContentItem.ContentType);
-                    if (contentDefinition != null) {
-                        var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == field.Name).FirstOrDefault();
-                         if (taxonomyField != null) {
-                             taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
+                var contentDefinition = _contentDefinitionManager.GetTypeDefinition(part.ContentItem.ContentType);
+                if (contentDefinition != null) {
+                    var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == field.Name).FirstOrDefault();
+                        if (taxonomyField != null) {
+                            taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
 
-                        }
                     }
-               
+                }
+                var tryToTranslate = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize;
+
                 var viewModel = new LocalizedTaxonomiesViewModel {
                     ContentType = part.ContentItem.ContentType,
                     FieldName = field.Name,
                     Id = part.ContentItem.Id,
-                    Setting = taxonomySettings
+                    Setting = taxonomySettings,
+                    TryTotranslate = tryToTranslate
                 };
                 return shapeHelper.EditorTemplate(TemplateName: templateName, Model: viewModel, Prefix: GetPrefix(field, part));
             });
