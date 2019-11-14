@@ -40,7 +40,7 @@ namespace Orchard.Taxonomies.Services {
                     masterCorrection = taxonomyPart;
 
                 // update culture according to TryToLocalize settings
-                var fields = currentcontent.Parts.Where(x => x.Fields.Any(y => y.FieldDefinition.Name == "TaxonomyFielda")).Select(z => z.Fields.First(w => w.FieldDefinition.Name == "TaxonomyField"));
+                var fields = currentcontent.Parts.Where(x => x.Fields.Any(y => y.FieldDefinition.Name == "TaxonomyField")).Select(z => z.Fields.First(w => w.FieldDefinition.Name == "TaxonomyField"));
                 if (fields.FirstOrDefault() is TaxonomyField taxoField) {
                     var settings = taxoField.PartFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>();
                     if (settings.TryToLocalize == false) {
