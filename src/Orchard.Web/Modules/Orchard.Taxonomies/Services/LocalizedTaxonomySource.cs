@@ -40,15 +40,14 @@ namespace Orchard.Taxonomies.Services {
                     masterCorrection = taxonomyPart;
 
                 // update culture according to TryToLocalize settings
-                var fields = currentcontent.Parts.Where(x => x.Fields.Any(y => y.FieldDefinition.Name == "TaxonomyField")).Select(z => z.Fields.First(w => w.FieldDefinition.Name == "TaxonomyField"));
-                var taxoField = fields.First() as TaxonomyField;
-                if(taxoField != null) {
+                var fields = currentcontent.Parts.Where(x => x.Fields.Any(y => y.FieldDefinition.Name == "TaxonomyFielda")).Select(z => z.Fields.First(w => w.FieldDefinition.Name == "TaxonomyField"));
+                if (fields.FirstOrDefault() is TaxonomyField taxoField) {
                     var settings = taxoField.PartFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>();
-                    if(settings.TryToLocalize == false) {
+                    if (settings.TryToLocalize == false) {
                         var termsField = taxoField.TermsField.Value.FirstOrDefault();
                         if (termsField != null) {
                             var taxoOriginalLocalization = termsField.ContentItem.As<LocalizationPart>();
-                            if(taxoOriginalLocalization != null && taxoOriginalLocalization.Culture != null) {
+                            if (taxoOriginalLocalization != null && taxoOriginalLocalization.Culture != null) {
                                 culture = taxoOriginalLocalization.Culture.Culture;
                             }
                         }
