@@ -138,11 +138,7 @@
                 }
                 $("#Localization_SelectedCulture").on('change', function () {
                     var optionSelected = $("option:selected", this);
-                    @if(Model.TryTotranslate) {
-                        <text>
-                            filterTaxonomyCulture($("#Localization_SelectedCulture").val());
-                        </text>
-                    }
+                    filterTaxonomyCulture($("#Localization_SelectedCulture").val());
                 });
                 $("#Localization_SelectedCulture").trigger("change");
             });
