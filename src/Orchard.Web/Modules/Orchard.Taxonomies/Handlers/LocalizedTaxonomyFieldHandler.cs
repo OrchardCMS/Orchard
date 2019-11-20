@@ -94,6 +94,10 @@ namespace Orchard.Taxonomies.Handlers {
                     }
                     _taxonomyService.UpdateTerms(context.ContentItem, newTermParts, partFieldDefinition.Name);
                 }
+                else {
+                    // clear all terms
+                    _taxonomyService.UpdateTerms(context.ContentItem, new List<TermPart>(), partFieldDefinition.Name);
+                }
             }
         }
 
