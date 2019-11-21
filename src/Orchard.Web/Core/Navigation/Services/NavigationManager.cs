@@ -12,6 +12,7 @@ using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using Orchard.Exceptions;
+using Orchard.Caching;
 
 namespace Orchard.Core.Navigation.Services {
     public class NavigationManager : INavigationManager {
@@ -22,6 +23,8 @@ namespace Orchard.Core.Navigation.Services {
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
 
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders, 
@@ -30,7 +33,10 @@ namespace Orchard.Core.Navigation.Services {
             IEnumerable<INavigationFilter> navigationFilters,
             UrlHelper urlHelper, 
             IOrchardServices orchardServices,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            ICacheManager cacheManager,
+            ISignals signals) {
+
             _navigationProviders = navigationProviders;
             _menuProviders = menuProviders;
             _authorizationService = authorizationService;
@@ -38,6 +44,9 @@ namespace Orchard.Core.Navigation.Services {
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
+            _cacheManager = cacheManager;
+            _signals = signals;
+
             Logger = NullLogger.Instance;
         }
 
@@ -45,20 +54,52 @@ namespace Orchard.Core.Navigation.Services {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Filter(Merge(sources)), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService
+                .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(
+                Reduce(
+                    Filter(
+                        MergeCached(sources, menuName)),
+                    menuName == "admin",
+                    hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService
+                .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            var keyFragment = KeyFragment(menu);
+            return FinishMenu(
+                Reduce(
+                    ArrangeCached(
+                        Filter(
+                            MergeCached(sources, keyFragment)),
+                        keyFragment),
+                    false,
+                    hasDebugShowAllMenuItems).ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
             var sources = GetSources(menu);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
+            var keyFragment = KeyFragment(menu);
+            return Position.GetNext(
+                Reduce(
+                    ArrangeCached(
+                        Filter(
+                            MergeCached(sources, keyFragment)),
+                        keyFragment),
+                    false,
+                    hasDebugShowAllMenuItems).ToArray());
+        }
+
+        private string KeyFragment(IContent menu) {
+            var fragment = "menu";
+            if (menu.ContentItem.ContentManager!=null) {
+                fragment += "_" + menu.ContentItem.ContentManager.GetItemMetadata(menu).DisplayText;
+            }
+            fragment += "_" + menu.Id;
+            return fragment;
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -206,6 +247,20 @@ namespace Orchard.Core.Navigation.Services {
             }
         }
 
+        private IEnumerable<MenuItem> MergeCached(IEnumerable<IEnumerable<MenuItem>> sources, string keyFragment) {
+            // this method simply caches the results of the static Merge method
+            // so we can avoid calling it as often.
+            // The big "cost" associated to those methods comes from having to actually enumerate
+            // the collections, so we should generate a cache key without doing that.
+            var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.MergeCached_{keyFragment}";
+            return _cacheManager.Get(cacheKey, true, ctx => {
+
+                ctx.Monitor(_signals.When("Orchard.Core.Navigation.MenusUpdated"));
+
+                return Merge(sources);
+            });
+        }
+
         private static IEnumerable<MenuItem> Merge(IEnumerable<IEnumerable<MenuItem>> sources) {
             var comparer = new MenuItemComparer();
             var orderer = new FlatPositionComparer();
@@ -219,6 +274,20 @@ namespace Orchard.Core.Navigation.Services {
                 .OrderBy(positionGroup => positionGroup.Key, orderer)
                 // ordered by item text in the postion group
                 .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
+        }
+
+        private IEnumerable<MenuItem> ArrangeCached(IEnumerable<MenuItem> items, string keyFragment) {
+            // this method simply caches the results of the static Arrange method
+            // so we can avoid calling it as often.
+            // The big "cost" associated to those methods comes from having to actually enumerate
+            // the collections, so we should generate a cache key without doing that. 
+            var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.ArrangeCached_{keyFragment}";
+            return _cacheManager.Get(cacheKey, true, ctx => {
+
+                ctx.Monitor(_signals.When("Orchard.Core.Navigation.MenusUpdated"));
+
+                return Arrange(items);
+            });
         }
 
         /// <summary>
