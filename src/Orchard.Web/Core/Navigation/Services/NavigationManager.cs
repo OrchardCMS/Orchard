@@ -13,6 +13,7 @@ using Orchard.UI.Navigation;
 using Orchard.Utility;
 using Orchard.Exceptions;
 using Orchard.Caching;
+using Orchard.UI.Admin;
 
 namespace Orchard.Core.Navigation.Services {
     public class NavigationManager : INavigationManager {
@@ -247,11 +248,29 @@ namespace Orchard.Core.Navigation.Services {
             }
         }
 
+        private bool? _adminFilterIsApplied;
+        private bool AdminFilterIsApplied {
+            get {
+                // compute this only once per request
+                if (!_adminFilterIsApplied.HasValue) {
+                    _adminFilterIsApplied = AdminFilter.IsApplied(
+                        _orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                }
+                return _adminFilterIsApplied.Value;
+            }
+        }
+
         private IEnumerable<MenuItem> MergeCached(IEnumerable<IEnumerable<MenuItem>> sources, string keyFragment) {
             // this method simply caches the results of the static Merge method
             // so we can avoid calling it as often.
             // The big "cost" associated to those methods comes from having to actually enumerate
             // the collections, so we should generate a cache key without doing that.
+            // We don't cache admin side stuff, even though it would be nice to, because
+            // right now it would be too complex to make sure that cache gets eveicted all
+            // the times it should
+            if (AdminFilterIsApplied) {
+                return Merge(sources);
+            }
             var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.MergeCached_{keyFragment}";
             return _cacheManager.Get(cacheKey, true, ctx => {
 
@@ -281,6 +300,12 @@ namespace Orchard.Core.Navigation.Services {
             // so we can avoid calling it as often.
             // The big "cost" associated to those methods comes from having to actually enumerate
             // the collections, so we should generate a cache key without doing that. 
+            // We don't cache admin side stuff, even though it would be nice to, because
+            // right now it would be too complex to make sure that cache gets eveicted all
+            // the times it should
+            if (AdminFilterIsApplied) {
+                return Arrange(items);
+            }
             var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.ArrangeCached_{keyFragment}";
             return _cacheManager.Get(cacheKey, true, ctx => {
 
