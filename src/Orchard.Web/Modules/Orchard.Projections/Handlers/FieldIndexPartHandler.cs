@@ -48,7 +48,6 @@ namespace Orchard.Projections.Handlers {
             }
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
-            // added check if the item exist because
             // there are two different item types: saved in memory and saved to db
             // those saved in memory don't have correctly the populated record and this generate NullReferenceException
             if (context.UpdatingItemVersionRecord != null) {
