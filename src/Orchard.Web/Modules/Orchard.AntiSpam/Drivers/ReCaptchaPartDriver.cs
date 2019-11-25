@@ -13,6 +13,7 @@ using Orchard.Logging;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Services;
+using System.Collections.Generic;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
@@ -75,7 +76,7 @@ namespace Orchard.AntiSpam.Drivers {
             var context = workContext.HttpContext;
 
             try {
-                var result = ExecuteValidateRequest(
+                var result = ValidateRequest(//ExecuteValidateRequest(
                     settings.PrivateKey,
                     context.Request.ServerVariables["REMOTE_ADDR"],
                     context.Request.Form["g-recaptcha-response"]
@@ -106,13 +107,27 @@ namespace Orchard.AntiSpam.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        private static string ExecuteValidateRequest(string privateKey, string remoteip, string response) {
-            var postData = String.Format(CultureInfo.InvariantCulture,
+        // temporarily save <postData, response> pairs, to prevent sending the same exact request
+        // more than once in a single Request.
+        private Dictionary<string, string> ValidationResponse;
+
+        private string ValidateRequest(string privateKey, string remoteip, string response) {
+            if (ValidationResponse == null) {
+                ValidationResponse = new Dictionary<string, string>();
+            }
+            var postData = string.Format(CultureInfo.InvariantCulture,
                 "secret={0}&response={1}&remoteip={2}",
                 privateKey,
                 response,
                 remoteip
             );
+            if (!ValidationResponse.ContainsKey(postData)) {
+                ValidationResponse.Add(postData, ExecuteValidateRequest(postData));
+            }
+            return ValidationResponse[postData];
+        }
+
+        private static string ExecuteValidateRequest(string postData) {
 
             WebRequest request = WebRequest.Create(ReCaptchaSecureUrl + "?" + postData);
             request.Method = "GET";
@@ -125,5 +140,6 @@ namespace Orchard.AntiSpam.Drivers {
                 }
             }
         }
+        
     }
 }
