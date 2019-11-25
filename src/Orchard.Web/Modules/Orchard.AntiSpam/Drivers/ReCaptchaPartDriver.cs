@@ -35,14 +35,16 @@ namespace Orchard.AntiSpam.Drivers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
-            var workContext = _workContextAccessor.GetContext();
-
-            // don't display the part in the admin
-            if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
-                return null;
-            }
-
+            
+            // we want to be returning a shape even when it should display nothing, because
+            // other features may need the Shape's type, or some other of its properties
             return ContentShape("Parts_ReCaptcha_Fields", () => {
+                var workContext = _workContextAccessor.GetContext();
+                // don't display the part in the admin
+                if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
+                    return null;
+                }
+
                 var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
 
                 if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
