@@ -48,13 +48,17 @@ namespace Orchard.Projections.Handlers {
             }
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
-            if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
-                DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
-                    _draftFieldIndexService.Set(fieldIndexPart,
-                    indexServiceContext.LocalPart.PartDefinition.Name,
-                    indexServiceContext.LocalField.Name,
-                    indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
-                });
+            // there are two different item types: saved in memory and saved to db
+            // those saved in memory don't have correctly the populated record and this generate NullReferenceException
+            if (context.UpdatingItemVersionRecord != null) {
+                if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
+                    DescribeValuesToindex(fieldIndexPart, (indexServiceContext) => {
+                        _draftFieldIndexService.Set(fieldIndexPart,
+                        indexServiceContext.LocalPart.PartDefinition.Name,
+                        indexServiceContext.LocalField.Name,
+                        indexServiceContext.StorageName, indexServiceContext.FieldValue, indexServiceContext.StorageType);
+                    });
+                }
             }
         }
 
