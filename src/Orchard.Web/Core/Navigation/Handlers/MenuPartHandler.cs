@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Routing;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
@@ -8,13 +9,17 @@ using Orchard.Data;
 namespace Orchard.Core.Navigation.Handlers {
     public class MenuPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;
+        private readonly ISignals _signals;
 
         public MenuPartHandler(
             IRepository<MenuPartRecord> menuPartRepository,
-            IContentManager contentManager
+            IContentManager contentManager,
+            ISignals signals
             ) {
 
             _contentManager = contentManager;
+            _signals = signals;
+
             Filters.Add(StorageFilter.For(menuPartRepository));
 
             OnInitializing<MenuPart>((ctx, x) => {
@@ -22,6 +27,13 @@ namespace Orchard.Core.Navigation.Handlers {
             });
 
             OnActivated<MenuPart>(PropertySetHandlers);
+
+            // all items in a menu are characterized by having a MenuPart
+            // invalidating the NavigationManager caches when those change may be enough
+            OnUpdated<MenuPart>((context, part) => InvalidateNavCache());
+            OnPublished<MenuPart>((context, part) => InvalidateNavCache());
+            OnRemoved<MenuPart>((context, part) => InvalidateNavCache());
+            OnDestroyed<MenuPart>((context, part) => InvalidateNavCache());
         }
 
         protected void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart) {
@@ -64,5 +76,8 @@ namespace Orchard.Core.Navigation.Handlers {
             }
         }
 
+        private void InvalidateNavCache() {
+            _signals.Trigger("Orchard.Core.Navigation.MenusUpdated");
+        }
     }
 }
