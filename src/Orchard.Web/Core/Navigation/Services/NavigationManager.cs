@@ -60,7 +60,7 @@ namespace Orchard.Core.Navigation.Services {
             return FinishMenu(
                 Reduce(
                     Filter(
-                        MergeCached(sources, menuName)),
+                        Merge(sources)), //MergeCached(sources, menuName)),
                     menuName == "admin",
                     hasDebugShowAllMenuItems).ToArray());
         }
@@ -72,10 +72,10 @@ namespace Orchard.Core.Navigation.Services {
             var keyFragment = KeyFragment(menu);
             return FinishMenu(
                 Reduce(
-                    ArrangeCached(
+                    Arrange( //ArrangeCached(
                         Filter(
-                            MergeCached(sources, keyFragment)),
-                        keyFragment),
+                            Merge(sources)) //MergeCached(sources, keyFragment)),
+                        ), //keyFragment),
                     false,
                     hasDebugShowAllMenuItems).ToArray());
         }
@@ -86,10 +86,10 @@ namespace Orchard.Core.Navigation.Services {
             var keyFragment = KeyFragment(menu);
             return Position.GetNext(
                 Reduce(
-                    ArrangeCached(
+                    Arrange( //ArrangeCached(
                         Filter(
-                            MergeCached(sources, keyFragment)),
-                        keyFragment),
+                            Merge(sources)) //MergeCached(sources, keyFragment)),
+                        ), //keyFragment),
                     false,
                     hasDebugShowAllMenuItems).ToArray());
         }
