@@ -45,7 +45,7 @@ namespace Orchard.MediaLibrary.Drivers {
                         ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty).ToList(),
                     };
 
-                    model.SelectedIds = string.Concat(",", field.Ids);
+                    model.SelectedIds = string.Join(",", field.Ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/MediaLibraryPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
