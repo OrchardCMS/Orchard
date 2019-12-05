@@ -375,10 +375,31 @@ namespace Orchard.Taxonomies.Services {
             // compute new path and publish. This also computes the new weight and
             // recursively does the same for siblings and children of the TermPart
             // that was moved.
+            // In case we are changing the taxonomy, we will have to properly evict
+            // caches
+            if (taxonomy.Id != term.TaxonomyId) {
+                if (_termFamilies == null) {
+                    _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
+                } else {
+                    // evict the old cache for the term and all children
+                    var oldKey = term.TaxonomyId.ToString() + (term.Path ?? string.Empty);
+                    if (_termFamilies.ContainsKey(oldKey)) {
+                        _termFamilies.Remove(oldKey);
+                    }
+                    foreach (var child in children) {
+                        oldKey = child.TaxonomyId.ToString() + (child.Path ?? string.Empty);
+                        if (_termFamilies.ContainsKey(oldKey)) {
+                            _termFamilies.Remove(oldKey);
+                        }
+                    }
+                }
+            }
+            term.TaxonomyId = taxonomy.Id;
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
             // process the children
             foreach (var child in children) {
+                child.TaxonomyId = taxonomy.Id;
                 ProcessPath(child);
             }
         }
