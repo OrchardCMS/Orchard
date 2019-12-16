@@ -147,6 +147,10 @@ namespace Orchard.Users.Controllers {
             }
 
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
+            ViewData["LowercaseRequirement"] = membershipSettings.GetPasswordLowercaseRequirement();
+            ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
+            ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
+            ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
@@ -228,6 +232,10 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChangePassword() {
             var membershipSettings = _membershipService.GetSettings();
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
+            ViewData["LowercaseRequirement"] = membershipSettings.GetPasswordLowercaseRequirement();
+            ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
+            ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
+            ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
 
             ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
                 .CurrentSite.As<SecuritySettingsPart>()
@@ -245,6 +253,10 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {
             var membershipSettings = _membershipService.GetSettings();
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
+            ViewData["LowercaseRequirement"] = membershipSettings.GetPasswordLowercaseRequirement();
+            ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
+            ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
+            ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
             ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
                 .CurrentSite.As<SecuritySettingsPart>()
                 .ShouldInvalidateAuthOnPasswordChanged;
@@ -330,7 +342,10 @@ namespace Orchard.Users.Controllers {
 
             var membershipSettings = _membershipService.GetSettings();
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
-
+            ViewData["LowercaseRequirement"] = membershipSettings.GetPasswordLowercaseRequirement();
+            ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
+            ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
+            ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
             return View();
         }
 
@@ -345,6 +360,10 @@ namespace Orchard.Users.Controllers {
 
             var membershipSettings = _membershipService.GetSettings();
             ViewData["PasswordLength"] = membershipSettings.GetMinimumPasswordLength();
+            ViewData["LowercaseRequirement"] = membershipSettings.GetPasswordLowercaseRequirement();
+            ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
+            ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
+            ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
 
             ValidatePassword(newPassword);
 
