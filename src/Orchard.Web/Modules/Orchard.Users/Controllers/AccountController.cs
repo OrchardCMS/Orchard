@@ -284,7 +284,11 @@ namespace Orchard.Users.Controllers {
 
             var viewModel = _orchardServices.New.ViewModel(
                 Username: username,
-                PasswordLength: membershipSettings.GetMinimumPasswordLength());
+                PasswordLength: membershipSettings.GetMinimumPasswordLength(),
+                LowercaseRequirement: membershipSettings.GetPasswordLowercaseRequirement(),
+                UppercaseRequirement: membershipSettings.GetPasswordUppercaseRequirement(),
+                SpecialCharacterRequirement: membershipSettings.GetPasswordSpecialRequirement(),
+                NumberRequirement: membershipSettings.GetPasswordNumberRequirement());
 
             return View(viewModel);
         }
@@ -294,7 +298,11 @@ namespace Orchard.Users.Controllers {
             var membershipSettings = _membershipService.GetSettings();
             var viewModel = _orchardServices.New.ViewModel(
                 Username: username,
-                PasswordLength: membershipSettings.GetMinimumPasswordLength());
+                PasswordLength: membershipSettings.GetMinimumPasswordLength(),
+                LowercaseRequirement: membershipSettings.GetPasswordLowercaseRequirement(),
+                UppercaseRequirement: membershipSettings.GetPasswordUppercaseRequirement(),
+                SpecialCharacterRequirement: membershipSettings.GetPasswordSpecialRequirement(),
+                NumberRequirement: membershipSettings.GetPasswordNumberRequirement());
 
             if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
                 return View(viewModel);
