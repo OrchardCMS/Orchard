@@ -16,3 +16,4 @@
 @(new MvcHtmlString(Model.ArchiveData.Day > 0 ? string.Format(" / {0}", Html.Link((string)Model.ArchiveData.Day.ToString(), Url.BlogArchiveDay((BlogPart)Model.Blog, (int)Model.ArchiveData.Year, (int)Model.ArchiveData.Month, (int)Model.ArchiveData.Day))) : ""))
 </div>
 @Display(Model.ContentItems)
+@Display(Model.Pager)
