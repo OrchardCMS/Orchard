@@ -61,6 +61,18 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {
+            return GetBlogArchiveQuery(blogPart,archiveData)
+                .List().Select(ci => ci.As<BlogPostPart>());
+        }
+
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData, int skip, int count) {
+            return GetBlogArchiveQuery(blogPart,archiveData)
+                .Slice(skip, count)
+                .ToList()
+                .Select(ci => ci.As<BlogPostPart>());
+        }
+
+        private IContentQuery<ContentItem, CommonPartRecord> GetBlogArchiveQuery(BlogPart blogPart, ArchiveData archiveData) {
             var query = GetBlogQuery(blogPart, VersionOptions.Published);
 
             if (archiveData.Day > 0) {
@@ -68,8 +80,7 @@ namespace Orchard.Blogs.Services {
 
                 query = query.Where(cr => cr.CreatedUtc >= dayDate && cr.CreatedUtc < dayDate.AddDays(1));
             }
-            else if (archiveData.Month > 0)
-            {
+            else if (archiveData.Month > 0) {
                 var monthDate = new DateTime(archiveData.Year, archiveData.Month, 1);
 
                 query = query.Where(cr => cr.CreatedUtc >= monthDate && cr.CreatedUtc < monthDate.AddMonths(1));
@@ -79,8 +90,7 @@ namespace Orchard.Blogs.Services {
 
                 query = query.Where(cr => cr.CreatedUtc >= yearDate && cr.CreatedUtc < yearDate.AddYears(1));
             }
-
-            return query.List().Select(ci => ci.As<BlogPostPart>());
+            return query;
         }
 
         public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart) {
