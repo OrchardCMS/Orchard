@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Orchard.DisplayManagement.Descriptors {
     public class PlacementInfo {
-        private static readonly char[] Delimiters =  {':', '#', '@'};
+        private static readonly char[] Delimiters =  {':', '#', '@', '%'};
 
         public PlacementInfo() {
             Alternates = Enumerable.Empty<string>();
@@ -70,6 +70,20 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
 
             return Location.Substring(groupDelimiter + 1, nextDelimiter - groupDelimiter - 1); 
+        }
+
+        public string GetCard() {
+            var groupDelimiter = Location.IndexOf('%');
+            if (groupDelimiter == -1) {
+                return "";
+            }
+
+            var nextDelimiter = Location.IndexOfAny(Delimiters, groupDelimiter + 1);
+            if (nextDelimiter == -1) {
+                return Location.Substring(groupDelimiter + 1);
+            }
+
+            return Location.Substring(groupDelimiter + 1, nextDelimiter - groupDelimiter - 1);
         }
     }
 }
