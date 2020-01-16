@@ -148,17 +148,42 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
+            //Grouping Tabs > Cards > Shapes
             var grouped = _placementService.GetEditorPlacement(id)
                 .OrderBy(x => x.PlacementInfo.GetPosition(), new FlatPositionComparer())
                 .ThenBy(x => x.PlacementSettings.ShapeType)
                 .Where(e => e.PlacementSettings.Zone == "Content")
-                .GroupBy(x => x.PlacementInfo.GetTab())
-                .ToDictionary(x => x.Key, y => y.ToList());
-
-            var content = grouped.ContainsKey("") ? grouped[""] : new List<DriverResultPlacement>();
-            var listPlacements = grouped.Values.SelectMany(e => e).ToList();
-
-            grouped.Remove("");
+                .GroupBy(g => g.PlacementInfo.GetTab() + "%" + g.PlacementInfo.GetCard())
+                .Select(x =>
+                    new Card {
+                        Name = x.Key.Split('%')[1],
+                        TabName = x.Key.Split('%')[0],
+                        Placements = x.ToList()
+                    })
+                .GroupBy(x => x.TabName)
+                .Select(x =>
+                    new Tab {
+                        Name = x.Key,
+                        Cards = x.ToList()
+                    }).ToList();
+            var listPlacements = grouped.SelectMany(x => x.Cards.SelectMany(m => m.Placements)).ToList();
+            Tab content;
+            if (grouped.Any(x => String.IsNullOrWhiteSpace(x.Name))) {
+                content = grouped[0];
+                grouped.Remove(content);
+            }
+            else {
+                content = new Tab {
+                    Name = "",
+                    Cards = new List<Card> { new Card { Name = "", TabName = "", Placements = new List<DriverResultPlacement>() } }
+                };
+            }
+            //Adds an empty card if missing, for each tab 
+            for (int i = 0; i < grouped.Count(); i++) {
+                if (!grouped[i].Cards.Any(x => String.IsNullOrEmpty(x.Name))) {
+                    grouped[i].Cards.Insert(0, new Card { Name = "", TabName = grouped[i].Name, Placements = new List<DriverResultPlacement>() });
+                }
+            }
             var placementModel = new EditPlacementViewModel {
                 Content = content,
                 AllPlacements = listPlacements,
@@ -185,12 +210,13 @@ namespace Orchard.ContentTypes.Controllers {
 
             foreach (var placement in viewModel.AllPlacements) {
                 var placementSetting = placement.PlacementSettings;
-                contentTypeDefinition.Placement(PlacementType.Editor,
-                                placementSetting.ShapeType,
-                                placementSetting.Differentiator,
-                                placementSetting.Zone,
-                                placementSetting.Position);
 
+                contentTypeDefinition.Placement(
+                    PlacementType.Editor,
+                    placementSetting.ShapeType,
+                    placementSetting.Differentiator,
+                    placementSetting.Zone,
+                    placementSetting.Position);
             }
 
             // persist changes
