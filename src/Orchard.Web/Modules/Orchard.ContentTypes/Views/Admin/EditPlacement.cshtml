@@ -2,10 +2,11 @@
 @using Orchard.ContentTypes.ViewModels
 
 @model Orchard.ContentTypes.ViewModels.EditPlacementViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("PlacementEditor").AtFoot();
-    Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+    Layout.Title = T("Edit Placement - {0}", Html.Raw(Model.ContentTypeDefinition.DisplayName)).Text;
 
 }
 @functions
@@ -93,5 +94,4 @@
         <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
         <button class="primaryAction" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl" data-message="@T("Are you sure you want to restore these placements?")">@T("Restore")</button>
     </fieldset>
-
 }
