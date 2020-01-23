@@ -79,8 +79,9 @@ namespace Orchard.Taxonomies.Handlers {
                 var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
                 var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
+                var publishedTermIds = terms.Select(t => t.Key);
                 return
-                    part.Terms.Select(
+                    part.Terms.Where(t => publishedTermIds.Contains(t.TermRecord.Id)).Select(
                         x =>
                             new TermContentItemPart {
                                 Field = x.Field,
