@@ -131,8 +131,9 @@
             parent.remove();
             newList.append(list);
         }
-
         assignPositions();
+        // make it sortable
+        initTab();
     });
 
     // toggle editor shapes
