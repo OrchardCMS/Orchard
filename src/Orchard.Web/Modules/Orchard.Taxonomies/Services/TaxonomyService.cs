@@ -281,7 +281,7 @@ namespace Orchard.Taxonomies.Services {
             // adding new terms list
             foreach (var term in terms) {
                 // Remove the newly added terms because they will get processed by the Published-Event
-                termList.RemoveAll(t => t.Term.Id == term.Id);
+                termList.RemoveAll(t => t.Term.TermRecord.Id == term.Id);
                 termsPart.Terms.Add(
                     new TermContentItem {
                         TermsPartRecord = termsPart.Record,
