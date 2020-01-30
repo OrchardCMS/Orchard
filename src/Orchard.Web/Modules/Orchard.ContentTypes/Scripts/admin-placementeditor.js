@@ -116,7 +116,10 @@
     // append items to content, create content if not there
     $("#placement").on("click", ".delete", function (e) {
         var me = $(this);
-        var parent = me.parents(".zone-container");
+        var parent = me.parent(".zone-container");
+        if (!parent.length) {
+            parent = me.parents(".zone-container");
+        }
         var list, newList;
         if (parent.hasClass("tab-container")) {
             list = parent.children(".tabdrag").html();
