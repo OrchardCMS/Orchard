@@ -6,17 +6,13 @@ function Invoke-ExternalCommand {
         [Parameter(Mandatory = $true)] [scriptblock] $ScriptBlock
     )
 
-    # Displays an error message and continue executing if there is an standard error.
+    # Displays an error message and continue executing if there is a standard error.
+    # This is because there are some external command tools write warning message to standard error. 
     & $ScriptBlock 2>&1 
-    if ($LastExitCode) {
-        "Failed exitCode=$LastExitCode, command=$($ScriptBlock.ToString())"
-    }
-}
 
-function Exit-ScriptIfError {
+    # If last exit code is not 0, throw an exception to stop a script
     if ($LastExitCode) {
-        "Command failed with exitCode=$LastExitCode"
-        Exit 1 
+        throw "Failed exitCode=$LastExitCode, command=$($ScriptBlock.ToString())"
     }
 }
 
@@ -34,5 +30,4 @@ function Write-EnviromentValue {
 }
 
 Export-ModuleMember -Function Invoke-ExternalCommand
-Export-ModuleMember -Function Exit-ScriptIfError
 Export-ModuleMember -Function Write-EnviromentValue

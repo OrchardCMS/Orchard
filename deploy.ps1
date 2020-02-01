@@ -34,7 +34,6 @@ if (-not $Env:NEXT_MANIFEST_PATH) {
 if (-not $Env:KUDU_SYNC_CMD) {
     "Installing Kudu Sync"
     Invoke-ExternalCommand -ScriptBlock { & npm install kudusync -g --silent }
-    Exit-ScriptIfError
 
     # Locally just running "kuduSync" would also work
     $Env:KUDU_SYNC_CMD = "$Env:AppData\npm\kuduSync.cmd"
@@ -71,7 +70,6 @@ Write-EnviromentValue -EnvironmentName $EnvironmentNameToWriteValue
 Invoke-ExternalCommand -ScriptBlock { 
 	& nuget restore "$Env:SOLUTION_PATH" -MSBuildPath "$(Split-Path -Path $Env:MSBUILD_PATH)"  
 }
-Exit-ScriptIfError
 
 "Build .NET project to the temp directory"
 $preCompiledDir = "$Env:DEPLOYMENT_SOURCE\build\Precompiled"
@@ -88,7 +86,6 @@ Invoke-ExternalCommand -ScriptBlock {
         $Env:SCM_BUILD_ARGS
     # Set SCM_BUILD_ARGS App Services Apps Settings to string you want to append to the msbuild command line.
 }
-Exit-ScriptIfError
 
 "Kudu syncing" 
 Invoke-ExternalCommand -ScriptBlock { 
@@ -100,12 +97,10 @@ Invoke-ExternalCommand -ScriptBlock {
         -p "$Env:PREVIOUS_MANIFEST_PATH" `
         -i ".git;.hg;.deployment;deploy.cmd;deploy.ps1;node_modules;"
 }
-Exit-ScriptIfError
 
 if ($Env:POST_DEPLOYMENT_ACTION) {
     "Post deployment stub"
     Invoke-ExternalCommand -ScriptBlock { & $Env:POST_DEPLOYMENT_ACTION }
-    Exit-ScriptIfError
 }
 
 "Deployment successfully"
