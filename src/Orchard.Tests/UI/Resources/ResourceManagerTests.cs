@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
-using Orchard.DisplayManagement.Implementation;
+using Orchard.Mvc;
 using Orchard.Tests.Stubs;
-using Orchard.UI.Admin;
 using Orchard.UI.Resources;
 
 namespace Orchard.Tests.UI.Resources {
@@ -20,7 +18,7 @@ namespace Orchard.Tests.UI.Resources {
             public Action<ResourceManifest> DefineManifest { get; set; }
 
             public TestManifestProvider() {
-                
+
             }
             public void BuildManifests(ResourceManifestBuilder builder) {
                 var manifest = builder.Add();
@@ -40,6 +38,8 @@ namespace Orchard.Tests.UI.Resources {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
             builder.RegisterType<ResourceManager>().As<IResourceManager>();
             builder.RegisterType<TestManifestProvider>().As<IResourceManifestProvider>().SingleInstance();
             _container = builder.Build();

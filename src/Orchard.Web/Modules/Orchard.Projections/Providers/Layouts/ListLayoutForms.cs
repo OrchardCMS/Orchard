@@ -65,7 +65,7 @@ namespace Orchard.Projections.Providers.Layouts {
         }
     }
 
-    public class ListLayoutFormsValitator : FormHandler {
+    public class ListLayoutFormsValidator : FormHandler {
         public Localizer T { get; set; }
 
         public override void Validating(ValidatingContext context) {

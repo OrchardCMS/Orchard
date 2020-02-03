@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
+using Orchard.Roles.Constants;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -13,8 +14,6 @@ namespace Orchard.Roles.Services {
         private readonly IRoleService _roleService;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
-        private static readonly string[] AnonymousRole = new[] { "Anonymous" };
-        private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
         public RolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
             _roleService = roleService;
@@ -57,22 +56,22 @@ namespace Orchard.Roles.Services {
                     var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).Distinct().ToArray();
 
                     // determine what set of roles should be examined by the access check
-                    IEnumerable<string> rolesToExamine;
+                    var rolesToExamine = new List<string>();
                     if (context.User == null) {
-                        rolesToExamine = AnonymousRole;
+                        rolesToExamine.Add(SystemRoles.Anonymous);
                     }
                     else if (context.User.Has<IUserRoles>()) {
                         // the current user is not null, so get his roles and add "Authenticated" to it
-                        rolesToExamine = context.User.As<IUserRoles>().Roles;
+                        rolesToExamine = context.User.As<IUserRoles>().Roles.ToList();
 
                         // when it is a simulated anonymous user in the admin
-                        if (!rolesToExamine.Contains(AnonymousRole[0])) {
-                            rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);   
+                        if (!rolesToExamine.Contains(SystemRoles.Anonymous)) {
+                            rolesToExamine.Add(SystemRoles.Authenticated);
                         }
                     }
                     else {
                         // the user is not null and has no specific role, then it's just "Authenticated"
-                        rolesToExamine = AuthenticatedRole;
+                        rolesToExamine.Add(SystemRoles.Authenticated);
                     }
 
                     foreach (var role in rolesToExamine) {
