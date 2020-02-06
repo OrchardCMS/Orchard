@@ -1,3 +1,23 @@
+; .deployment is actually an INI file and parsed by 
+; https://raw.githubusercontent.com/projectkudu/kudu/master/Kudu.Core/Infrastructure/IniFile.cs
+
+; Document of deployment with custom script
+; https://github.com/projectkudu/kudu/wiki/Customizing-deployments#deploying-with-custom-script
+
+; Document of configurable settings https://github.com/projectkudu/kudu/wiki/Configurable-settings
+; Runtime settings cannot be overrided in .deployment e.g. WEBSITE_NODE_DEFAULT_VERSION
+; More info https://github.com/projectkudu/kudu/wiki/Configurable-settings#runtime-settings
+
+; Define default Node.js version in WEBSITE_NODE_DEFAULT_VERSION App Setting
+; Find all Node.js versions from Kudu tool api/diagnostics/runtime
+
 [config]
-command = deploy.cmd
+COMMAND = PowerShell -NoProfile -NoLogo -ExecutionPolicy Unrestricted -Command "& "$(Join-Path -Path $(Get-Location) -ChildPath deploy.ps1)" 2>&1 | Write-Output"
 SCM_COMMAND_IDLE_TIMEOUT = 3600
+
+MSBUILD_PATH = D:\Program Files (x86)\MSBuild-15.9.21.664\MSBuild\MSBuild\15.0\Bin\MSBuild.exe
+PROJECT_PATH = Orchard.proj
+SOLUTION_PATH = src/Orchard.sln
+
+; You can define a custom environment variable as CUSTOM_VARIABLE = my custom variable value
+; and use in a deploy.ps1 script as $Env:CUSTOM_VARIABLE.
