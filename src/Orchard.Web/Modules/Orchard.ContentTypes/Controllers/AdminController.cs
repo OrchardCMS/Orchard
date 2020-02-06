@@ -142,17 +142,67 @@ namespace Orchard.ContentTypes.Controllers {
 
             if (contentTypeDefinition == null) return HttpNotFound();
 
-            var grouped = _placementService.GetEditorPlacement(id)
+            //Grouping Tabs > Cards > Shapes
+            var grouped = _placementService
+                // Get a collection of objects that describe the placement for all shapes
+                // in the editor view for a ContentItem of the given ContentType
+                .GetEditorPlacement(id)
+                // Order all those shapes based on their position
                 .OrderBy(x => x.PlacementInfo.GetPosition(), new FlatPositionComparer())
+                // Then alphabetically by their shape type
                 .ThenBy(x => x.PlacementSettings.ShapeType)
+                // only pick those shapes that live int the "Content" zone
                 .Where(e => e.PlacementSettings.Zone == "Content")
-                .GroupBy(x => x.PlacementInfo.GetTab())
-                .ToDictionary(x => x.Key, y => y.ToList());
-
-            var content = grouped.ContainsKey("") ? grouped[""] : new List<DriverResultPlacement>();
-            var listPlacements = grouped.Values.SelectMany(e => e).ToList();
-
-            grouped.Remove("");
+                // Form groups whose key is a string like {tabName}%{cardName}. Items
+                // in a group represent the shapes that will be in the card called {cardName}
+                // in the tab called {tabName}.
+                .GroupBy(g => g.PlacementInfo.GetTab() + "%" + g.PlacementInfo.GetCard())
+                // Transform each of those groups in an object representing the single cards.
+                // Each of these objects contains the name of the tab that contains it, as
+                // well as the list of shape placements in that card
+                .Select(x =>
+                    new Card {
+                        Name = x.Key.Split('%')[1],
+                        TabName = x.Key.Split('%')[0],
+                        Placements = x.ToList()
+                    })
+                // Group cards by tab
+                .GroupBy(x => x.TabName)
+                // Since each of those groups "represents" a card, we actually make it into one.
+                .Select(x =>
+                    new Tab {
+                        Name = x.Key,
+                        Cards = x.ToList()
+                    })
+                // Make the collection into a List<Tab> because it's easy to interact with it
+                // (see later in the code)
+                .ToList();
+            var listPlacements = grouped
+                // By selecting all placements from the Tab objects we built earlier, we have
+                // them ordered nicely
+                .SelectMany(x => x.Cards.SelectMany(m => m.Placements))
+                .ToList();
+            // We want to have an un-named "default" Tab for shapes, in case none was defined
+            Tab content;
+            if (grouped.Any(x => string.IsNullOrWhiteSpace(x.Name))) {
+                // Because of the way the elements of the list have been ordered above,
+                // if there is a Tab with empty name, it is the first in the list.
+                content = grouped[0];
+                grouped.Remove(content);
+            } else {
+                content = new Tab {
+                    Name = "",
+                    Cards = new List<Card> { new Card { Name = "", TabName = "", Placements = new List<DriverResultPlacement>() } }
+                };
+            }
+            // In each Tab, we want to have a "default" un-named Card. This will simplfy
+            // UI interactions, because it ensures that each Tab has some place we can drop
+            // shapes in.
+            for (int i = 0; i < grouped.Count(); i++) {
+                if (!grouped[i].Cards.Any(x => string.IsNullOrEmpty(x.Name))) {
+                    grouped[i].Cards.Insert(0, new Card { Name = "", TabName = grouped[i].Name, Placements = new List<DriverResultPlacement>() });
+                }
+            }
             var placementModel = new EditPlacementViewModel {
                 Content = content,
                 AllPlacements = listPlacements,
@@ -177,7 +227,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             foreach (var placement in viewModel.AllPlacements) {
                 var placementSetting = placement.PlacementSettings;
-                
+
                 contentTypeDefinition.Placement(
                     PlacementType.Editor,
                     placementSetting.ShapeType,
@@ -311,7 +361,7 @@ namespace Orchard.ContentTypes.Controllers {
             var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
             foreach (var partToAdd in partsToAdd) {
                 _contentDefinitionService.AddPartToType(partToAdd, typeViewModel.Name);
-                
+
                 Services.Notifier.Success(T("The \"{0}\" part has been added.", partToAdd));
             }
 
