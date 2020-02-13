@@ -56,6 +56,7 @@
                     </td>
                     <td>
                         @if (!taxonomyEntry.IsInternal) {
+                            @Html.ItemDisplayLink(T("View").Text, taxonomyEntry.ContentItem) <text>|</text>
                             if (Authorizer.Authorize(Permissions.CreateTaxonomy)) {
                                 @Html.ItemEditLink(T("Edit").Text, taxonomyEntry.ContentItem, new { ReturnUrl = Request.RawUrl }) <text>|</text>
                             }
