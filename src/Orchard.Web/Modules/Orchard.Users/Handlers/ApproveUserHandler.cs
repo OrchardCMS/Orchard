@@ -1,10 +1,10 @@
-﻿using Laser.Orchard.StartupConfig.ApproveUserExtension.Services;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
+﻿using Orchard.ContentManagement.Handlers;
 using Orchard.Mvc;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
+using Orchard.Users.Services;
 
-namespace Laser.Orchard.StartupConfig.ApproveUserExtension.Handler {
+namespace Orchard.Users.Handlers {
     public class ApproveUserHandler : ContentHandler {
         private readonly IApproveUserService _approveUserService;
         private readonly IHttpContextAccessor _httpContextAccessor;
