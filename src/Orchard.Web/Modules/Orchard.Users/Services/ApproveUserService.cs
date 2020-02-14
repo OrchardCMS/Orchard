@@ -7,7 +7,7 @@ using Orchard.Users.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 
-namespace Laser.Orchard.StartupConfig.ApproveUserExtension.Services {
+namespace Orchard.Users.Services {
     public interface IApproveUserService : IDependency {
         void Approve(UserPart contentItem);
         void Disable(UserPart contentItem);
