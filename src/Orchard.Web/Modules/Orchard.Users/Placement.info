@@ -1,5 +1,6 @@
 ﻿<Placement>
   <Match Path="~/Admin/Users/Edit/*">
     <Place Parts_User_EditPassword_Edit="Content:1"/>
+    <Place Parts_UserApprove_Edit="Sidebar:25"/> <!-- immediately following the contents module's Approve Now button -->
   </Match>
 </Placement>
