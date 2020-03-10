@@ -8,6 +8,8 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Environment.Descriptor.Models;
 using System.Linq;
+using System.Collections;
+using System;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -47,28 +49,34 @@ namespace Orchard.Localization.Services {
         ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
+        public Tuple<string, string> GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+            var culture = LoadCulture(cultureName);
+            foreach (var scope in scopes) {
+                string scopedKey = (scope + "|" + text).ToLowerInvariant();
+                if (culture.Translations.ContainsKey(scopedKey)) {
+                    return new Tuple<string, string>(culture.Translations[scopedKey], scope);
+                }
+            }
+            string genericKey = ("|" + text).ToLowerInvariant();
+            if (culture.Translations.ContainsKey(genericKey)) {
+                return new Tuple<string, string>(culture.Translations[genericKey], null);
+            }
+
+            foreach (var scope in scopes) {
+                string parent_text = GetParentTranslation(scope, text, cultureName);
+                if (!parent_text.Equals(text)) {
+                    return new Tuple<string, string>(parent_text, scope);
+                }
+            }
+            return new Tuple<string, string>(text, scopes.FirstOrDefault());
+        }
+
         // This will translate a string into a string in the target cultureName.
         // The scope portion is optional, it amounts to the location of the file containing 
         // the string in case it lives in a view, or the namespace name if the string lives in a binary.
         // If the culture doesn't have a translation for the string, it will fallback to the 
         // parent culture as defined in the .net culture hierarchy. e.g. fr-FR will fallback to fr.
         // In case it's not found anywhere, the text is returned as is.
-        public string GetLocalizedString(string scope, string text, string cultureName) {
-            var culture = LoadCulture(cultureName);
-
-            string scopedKey = (scope + "|" + text).ToLowerInvariant();
-            if (culture.Translations.ContainsKey(scopedKey)) {
-                return culture.Translations[scopedKey];
-            }
-
-            string genericKey = ("|" + text).ToLowerInvariant();
-            if (culture.Translations.ContainsKey(genericKey)) {
-                return culture.Translations[genericKey];
-            }
-
-            return GetParentTranslation(scope, text, cultureName);
-        }
-
         private string GetParentTranslation(string scope, string text, string cultureName) {
             string scopedKey = (scope + "|" + text).ToLowerInvariant();
             string genericKey = ("|" + text).ToLowerInvariant();
@@ -143,8 +151,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id))
-                {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id)) {
 
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
                     text = _webSiteFolder.ReadFile(themePath);
