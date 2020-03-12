@@ -218,61 +218,65 @@ namespace Orchard.Indexing.Services {
                 _indexingStatus = IndexingStatus.Updating;
 
                 do {
-                    var indexingTasks = _taskRepository
-                        .Table.Where(x => x.Id > indexSettings.LastIndexedId)
-                        .OrderBy(x => x.Id)
-                        .Take(ContentItemsPerLoop)
-                        .ToList()
-                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
-                        // We need to filter out such records, otherwise they will crash the ContentManager.
-                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
-                        .GroupBy(x => x.ContentItemRecord.Id)
-                    .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
-                        .OrderBy(x => x.TaskId)
-                        .ToArray();
+                    try {
+                        var indexingTasks = _taskRepository
+                            .Table.Where(x => x.Id > indexSettings.LastIndexedId)
+                            .OrderBy(x => x.Id)
+                            .Take(ContentItemsPerLoop)
+                            .ToList()
+                            // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
+                            // We need to filter out such records, otherwise they will crash the ContentManager.
+                            .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
+                            .GroupBy(x => x.ContentItemRecord.Id)
+                        .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
+                            .OrderBy(x => x.TaskId)
+                            .ToArray();
 
-                    foreach (var item in indexingTasks) {
-                        try {
+                        foreach (var item in indexingTasks) {
+                            try {
 
-                            IDocumentIndex documentIndex = null;
+                                IDocumentIndex documentIndex = null;
 
-                            // item.ContentItem can be null if the content item has been deleted
-                            if (item.ContentItem != null) {
-                                // skip items from types which are not indexed
-                                var settings = GetTypeIndexingSettings(item.ContentItem);
-                                if (settings.List.Contains(indexName)) {
-                                    if (item.ContentItem.HasPublished()) {
-                                        var published = _contentManager.Get(item.Id, VersionOptions.Published);
-                                        documentIndex = ExtractDocumentIndex(published);
+                                // item.ContentItem can be null if the content item has been deleted
+                                if (item.ContentItem != null) {
+                                    // skip items from types which are not indexed
+                                    var settings = GetTypeIndexingSettings(item.ContentItem);
+                                    if (settings.List.Contains(indexName)) {
+                                        if (item.ContentItem.HasPublished()) {
+                                            var published = _contentManager.Get(item.Id, VersionOptions.Published);
+                                            documentIndex = ExtractDocumentIndex(published);
+                                        }
+                                    }
+                                    else if (settings.List.Contains(indexName + ":latest")) {
+                                        var latest = _contentManager.Get(item.Id, VersionOptions.Latest);
+                                        documentIndex = ExtractDocumentIndex(latest);
                                     }
                                 }
-                                else if (settings.List.Contains(indexName + ":latest")) {
-                                    var latest = _contentManager.Get(item.Id, VersionOptions.Latest);
-                                    documentIndex = ExtractDocumentIndex(latest);
+
+                                if (documentIndex == null || item.Delete) {
+                                    deleteFromIndex.Add(item.Id);
                                 }
-                            }
+                                else if (documentIndex.IsDirty) {
+                                    addToIndex.Add(documentIndex);
+                                }
 
-                            if (documentIndex == null || item.Delete) {
-                                deleteFromIndex.Add(item.Id);
+                                indexSettings.LastIndexedId = item.TaskId;
                             }
-                            else if (documentIndex.IsDirty) {
-                                addToIndex.Add(documentIndex);
+                            catch (Exception ex) {
+                                Logger.Warning(ex, "Unable to index content item #{0} during update", item.Id);
                             }
-
-                            indexSettings.LastIndexedId = item.TaskId;
                         }
-                        catch (Exception ex) {
-                            Logger.Warning(ex, "Unable to index content item #{0} during update", item.Id);
+
+                        if (indexingTasks.Length < ContentItemsPerLoop) {
+                            loop = false;
+                        }
+                        else {
+                            _transactionManager.RequireNew();
                         }
                     }
-
-                    if (indexingTasks.Length < ContentItemsPerLoop) {
-                        loop = false;
+                    catch (Exception ex) {
+                        Logger.Warning(ex.Message);
                     }
-                    else {
-                        _transactionManager.RequireNew();
-                    }
-
                 } while (loop);
             }
 
