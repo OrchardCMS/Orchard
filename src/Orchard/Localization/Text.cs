@@ -12,13 +12,6 @@ namespace Orchard.Localization {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ILocalizedStringManager _localizedStringManager;
 
-        //public Text(string scope, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
-        //    _scope = scope;
-        //    _workContextAccessor = workContextAccessor;
-        //    _localizedStringManager = localizedStringManager;
-        //    Logger = NullLogger.Instance;
-        //}
-
         public Text(IEnumerable<string> scopes, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
             _scopes = scopes;
             _workContextAccessor = workContextAccessor;

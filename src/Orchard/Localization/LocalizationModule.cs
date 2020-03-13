@@ -9,7 +9,7 @@ using Module = Autofac.Module;
 
 namespace Orchard.Localization {
     public class LocalizationModule : Module {
-        private readonly ConcurrentDictionary<string, Localizer> _localizerCache;//TODO IEnumerable
+        private readonly ConcurrentDictionary<string, Localizer> _localizerCache;
 
         public LocalizationModule() {
             _localizerCache = new ConcurrentDictionary<string, Localizer>();
