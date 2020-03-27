@@ -15,7 +15,8 @@
     @Display(editor)
 
     @Html.Hidden("returnUrl", Request.RawUrl, new { id = string.Empty });
-    @Html.Hidden("contentId", Request.QueryString["contentId"], new { id = string.Empty });
+    @Html.Hidden("contentId", !string.IsNullOrWhiteSpace(Request.QueryString["contentId"]) ? Request.QueryString["contentId"] : "0", new { id = string.Empty });
+
 
     <fieldset class="submit-button">
        
