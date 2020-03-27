@@ -13,15 +13,10 @@
     @Html.ValidationSummary()
     // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(editor)
-
     @Html.Hidden("returnUrl", Request.RawUrl, new { id = string.Empty });
     @Html.Hidden("contentId", !string.IsNullOrWhiteSpace(Request.QueryString["contentId"]) ? Request.QueryString["contentId"] : "0", new { id = string.Empty });
-
-
     <fieldset class="submit-button">
-       
             <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
-        }
         @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == true) {
             <button type="submit" name="submit.Publish" value="submit.Publish">@Model.ContentPart.PublishButtonText</button>
         }
