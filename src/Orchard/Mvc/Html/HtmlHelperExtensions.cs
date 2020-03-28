@@ -52,7 +52,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text, object htmlAttributes) {
-            return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text, new RouteValueDictionary(htmlAttributes));
+            return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text, RouteValueDictionary htmlAttributes) {
@@ -64,7 +64,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString SelectOption(this HtmlHelper html, object optionValue, bool selected, string text, object htmlAttributes) {
-            return SelectOption(html, optionValue, selected, text, new RouteValueDictionary(htmlAttributes));
+            return SelectOption(html, optionValue, selected, text, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static MvcHtmlString SelectOption(this HtmlHelper html, object optionValue, bool selected, string text, RouteValueDictionary htmlAttributes) {
@@ -203,7 +203,7 @@ namespace Orchard.Mvc.Html {
         #region Image
 
         public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, object htmlAttributes) {
-            return htmlHelper.Image(src, alt, new RouteValueDictionary(htmlAttributes));
+            return htmlHelper.Image(src, alt, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, IDictionary<string, object> htmlAttributes) {
@@ -238,7 +238,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
-            return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
+            return htmlHelper.Link(linkContents, href, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
@@ -264,7 +264,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
-            return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
+            return htmlHelper.LinkOrDefault(linkContents, href, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
@@ -290,7 +290,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, object htmlAttributes) {
-            return Hint(htmlHelper, text, htmlAttributes != null ? new RouteValueDictionary(htmlAttributes) : null);
+            return Hint(htmlHelper, text, htmlAttributes != null ? HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes) : null);
         }
 
         public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, IDictionary<string, object> htmlAttributes) {
@@ -392,7 +392,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
-            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
+            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
