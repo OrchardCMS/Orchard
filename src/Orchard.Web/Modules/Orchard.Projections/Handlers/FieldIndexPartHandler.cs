@@ -45,7 +45,10 @@ namespace Orchard.Projections.Handlers {
             }
         }
         private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
-            if (context.UpdatingItemVersionRecord.Latest) { // updates projection draft indexes only if it is the latest version
+            // there are two different item types: saved in memory and saved to db
+            // those saved in memory don't have correctly the populated record and this generate NullReferenceException
+            if (context.UpdatingItemVersionRecord != null && context.UpdatingItemVersionRecord.Latest) {
+                // updates projection draft indexes only if it is the latest version
                 DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) => {
                     _fieldIndexService.Set(
                         fieldIndexPart,

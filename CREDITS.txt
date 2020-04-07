@@ -191,11 +191,11 @@ Website:      https://lucenenet.apache.org/
 Copyright:    Copyright (c) 2009 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
 
-MarkdownSharp
+Markdig
 -----
-Website:     http://code.google.com/p/markdownsharp/
-Copyright:   Copyright (c) 2009-2011 Jeff Atwood
-License:     MIT
+Website:      https://github.com/lunet-io/markdig
+Copyright:    Copyright (c) 2018-2019, Alexandre Mutel
+License:      BSD 2-Clause
  
 Mono Class Library
 -----

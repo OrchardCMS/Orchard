@@ -223,11 +223,25 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(x => x.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
-                        // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
-                        // We need to filter out such records, otherwise they will crash the ContentManager.
-                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
+                        .Where(x => x.ContentItemRecord != null)
                         .GroupBy(x => x.ContentItemRecord.Id)
-                    .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
+                        .Select(group => new {
+                            TaskId = group.Max(task => task.Id),
+                            Delete = group.Last().Action == IndexingTaskRecord.Delete,
+                            Id = group.Key,
+                            // We can only have a ContentItem if the ContentItemRecord matches
+                            // something that still exists in our records.
+                            ContentItem = group.All(x => {
+                                try {
+                                    return x.ContentItemRecord != null
+                                    // ContentType is required to build the ContentItem
+                                    && x.ContentItemRecord.ContentType != null;
+                                }
+                                catch {
+                                    return false;
+                                }
+                            }) ? _contentManager.Get(group.Key, VersionOptions.Latest) : null // Set to null to "tell" it's a delete/destroy
+                        })
                         .OrderBy(x => x.TaskId)
                         .ToArray();
 
@@ -274,7 +288,7 @@ namespace Orchard.Indexing.Services {
                     }
 
                 } while (loop);
-            }
+			}
 
             // save current state of the index
             indexSettings.LastIndexedUtc = _clock.UtcNow;

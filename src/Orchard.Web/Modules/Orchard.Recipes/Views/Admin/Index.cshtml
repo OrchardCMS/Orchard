@@ -29,7 +29,7 @@
                                 <br />
                                 <div>
                                     <h4>@recipe.Name - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Recipes", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
-                                    <p>@recipe.Description</p>
+                                    <p style="white-space: pre-line;">@recipe.Description</p>
                                 </div>
                             }
                         </div>

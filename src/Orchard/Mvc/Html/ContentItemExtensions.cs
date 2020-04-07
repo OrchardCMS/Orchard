@@ -44,7 +44,7 @@ namespace Orchard.Mvc.Html {
                 NonNullOrEmpty(linkText, metadata.DisplayText, "view"),
                 Convert.ToString(metadata.DisplayRouteValues["action"]),
                 metadata.DisplayRouteValues,
-                new RouteValueDictionary(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
@@ -111,7 +111,7 @@ namespace Orchard.Mvc.Html {
                 NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues),
-                new RouteValueDictionary(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {

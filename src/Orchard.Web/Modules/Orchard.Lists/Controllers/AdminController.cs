@@ -9,7 +9,6 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
 using Orchard.Core.Containers.ViewModels;
-using Orchard.Core.Contents;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
@@ -39,7 +38,7 @@ namespace Orchard.Lists.Controllers {
             IOrchardServices services,
             IContentDefinitionManager contentDefinitionManager,
             IShapeFactory shapeFactory,
-            IContainerService containerService, 
+            IContainerService containerService,
             IListViewService listViewService,
             ITransactionManager transactionManager) {
 
@@ -92,7 +91,7 @@ namespace Orchard.Lists.Controllers {
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
             var pageOfLists = query.Slice(pager.GetStartIndex(), pager.PageSize);
-            
+
             var listsShape = Shape.List();
             listsShape.AddRange(pageOfLists.Select(x => _contentManager.BuildDisplay(x, "SummaryAdmin")).ToList());
             var viewModel = Shape.ViewModel()
@@ -171,10 +170,10 @@ namespace Orchard.Lists.Controllers {
                 if (containerTypes.Count > 1) {
                     return RedirectToAction("SelectType");
                 }
-                return RedirectToAction("Create", new {id = containerTypes.First().Name});
+                return RedirectToAction("Create", new { id = containerTypes.First().Name });
             }
 
-            return RedirectToAction("Create", "Admin", new {area = "Contents", id, returnUrl = Url.Action("Index", "Admin", new { area = "Orchard.Lists" })});
+            return RedirectToAction("Create", "Admin", new { area = "Contents", id, returnUrl = Url.Action("Index", "Admin", new { area = "Orchard.Lists" }) });
         }
 
         public ActionResult SelectType() {
@@ -312,11 +311,11 @@ namespace Orchard.Lists.Controllers {
             LocalizedString message;
 
             if (previousItemContainer == null) {
-                message = T("{0} was moved to <a href=\"{1}\">{2}</a>", itemMetadata.DisplayText, Url.RouteUrl(containerMetadata.AdminRouteValues), containerMetadata.DisplayText);
+                message = T("{0} was moved to <a href=\"{1}\">{2}</a>.", itemMetadata.DisplayText, Url.RouteUrl(containerMetadata.AdminRouteValues), containerMetadata.DisplayText);
             }
             else if (previousItemContainer.Id != containerId) {
                 var previousItemContainerMetadata = _contentManager.GetItemMetadata(commonPart.Container);
-                message = T("{0} was moved from <a href=\"{3}\">{4}</a> to <a href=\"{1}\">{2}</a>",
+                message = T("{0} was moved from <a href=\"{3}\">{4}</a> to <a href=\"{1}\">{2}</a>.",
                     itemMetadata.DisplayText,
                     Url.RouteUrl(containerMetadata.AdminRouteValues),
                     containerMetadata.DisplayText,
@@ -374,7 +373,7 @@ namespace Orchard.Lists.Controllers {
                     break;
             }
 
-            return RedirectToAction("List", new {containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize});
+            return RedirectToAction("List", new { containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize });
         }
 
         [HttpPost, ActionName("List")]
@@ -393,7 +392,7 @@ namespace Orchard.Lists.Controllers {
         /// Only publishes the content if it is already published.
         /// </summary>
         private void RePublish(IContent content) {
-            if(content.ContentItem.VersionRecord.Published)
+            if (content.ContentItem.VersionRecord.Published)
                 _contentManager.Publish(content.ContentItem);
         }
 
@@ -439,7 +438,7 @@ namespace Orchard.Lists.Controllers {
                 if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, item, T("Couldn't move selected content."))) {
                     return false;
                 }
-                
+
                 // Ensure the item can be in that container.
                 if (itemContentTypes.Any() && itemContentTypes.All(x => x.Name != item.ContentItem.ContentType)) {
                     _services.TransactionManager.Cancel();
