@@ -55,7 +55,7 @@ namespace Orchard.Templates.Compilation.Razor {
             Logger = NullLogger.Instance;
         }
 
-        private ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         public IRazorTemplateBase<TModel> CompileRazor<TModel>(string code, string name, IDictionary<string, object> parameters) {
             return (RazorTemplateBase<TModel>)Compile(code, name, typeof(TModel), parameters);
