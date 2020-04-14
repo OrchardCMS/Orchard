@@ -169,6 +169,7 @@ build/
 /artifacts
 *.sln.cache
 src/Orchard.Web/Media/*
+src/Orchard.Web/PrivateMedia/*
 log.xml
 profiling/
 *.orig
