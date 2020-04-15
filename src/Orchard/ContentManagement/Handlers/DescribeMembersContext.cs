@@ -11,15 +11,16 @@ namespace Orchard.ContentManagement.Handlers {
         private readonly Action<IEnumerable> _apply;
         private readonly ContentPartFieldDefinition _contentPartFieldDefinition;
 
-        public DescribeMembersContext(Action<string, Type, LocalizedString, LocalizedString> processMember) : this(processMember, null, null) {
+        public DescribeMembersContext(Action<string, Type, LocalizedString, LocalizedString> processMember)
+            : this(processMember, null, null, null) {
         }
 
         public DescribeMembersContext(IFieldStorage storage, Action<IEnumerable> apply)
-            : this(null, storage, apply) {
+            : this(null, storage, apply, null) {
         }
 
-        public DescribeMembersContext(Action<string, Type, LocalizedString, LocalizedString> processMember, IFieldStorage storage, Action<IEnumerable> apply) :
-            this(null, storage, apply, null) {
+        public DescribeMembersContext(Action<string, Type, LocalizedString, LocalizedString> processMember, IFieldStorage storage, Action<IEnumerable> apply)
+            : this(null, storage, apply, null) {
         }
 
         public DescribeMembersContext(Action<string, Type, LocalizedString, LocalizedString> processMember, IFieldStorage storage, Action<IEnumerable> apply, ContentPartFieldDefinition contentPartFieldDefinition) {
@@ -50,7 +51,9 @@ namespace Orchard.ContentManagement.Handlers {
                 var f = enumerate();
                 var field = Activator.CreateInstance<TField>();
                 field.Storage = _storage;
-                field.PartFieldDefinition = _contentPartFieldDefinition;
+                if (field.PartFieldDefinition == null) {
+                    field.PartFieldDefinition = _contentPartFieldDefinition;
+                }
                 _apply(f(field));
             }
 
