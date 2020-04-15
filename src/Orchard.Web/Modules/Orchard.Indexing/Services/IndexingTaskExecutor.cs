@@ -20,8 +20,7 @@ namespace Orchard.Indexing.Services {
     /// This class is synchronized using a lock file as both command line and web workers can potentially use it,
     /// and singleton locks would not be shared accross those two.
     /// </remarks>
-    public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider
-    {
+    public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider {
         private readonly IRepository<IndexingTaskRecord> _taskRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentRepository;
         private IIndexProvider _indexProvider;
@@ -160,13 +159,22 @@ namespace Orchard.Indexing.Services {
                         .OrderBy(versionRecord => versionRecord.Id)
                         .Take(ContentItemsPerLoop)
                         .ToList()
+                        .Select(versionRecord => {
+                            try {
+                                    // In some rare cases a ContentItemVersionRecord without a ContentItemRecord can end up in the DB.
+                                    // in that case ContentManager throws a ObjectNotFoundException.
+                                    // e.g. NHibernate.ObjectNotFoundException: No row with the given identifier exists[Orchard.ContentManagement.Records.ContentItemRecord#148]
+                                    return _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id));
+                            }
+                            catch {
+                                return null;
+                            }
+                        })
                         // In some rare cases a ContentItemRecord without a ContentType can end up in the DB.
                         // We need to filter out such records, otherwise they will crash the ContentManager.
-                        .Where(x => x.ContentItemRecord != null && x.ContentItemRecord.ContentType != null)
-                        .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
+                        .Where(content => content != null && content.ContentType != null)
                         .Distinct()
                         .ToList();
-
                     // if no more elements to index, switch to update mode
                     if (contentItems.Count == 0) {
                         indexSettings.Mode = IndexingMode.Update;
@@ -288,7 +296,7 @@ namespace Orchard.Indexing.Services {
                     }
 
                 } while (loop);
-			}
+            }
 
             // save current state of the index
             indexSettings.LastIndexedUtc = _clock.UtcNow;
@@ -328,12 +336,10 @@ namespace Orchard.Indexing.Services {
         /// <summary>
         /// Loads the settings file or create a new default one if it doesn't exist
         /// </summary>
-        public IndexSettings LoadSettings(string indexName)
-        {
+        public IndexSettings LoadSettings(string indexName) {
             var indexSettings = new IndexSettings();
             var settingsFilename = GetSettingsFileName(indexName);
-            if (_appDataFolder.FileExists(settingsFilename))
-            {
+            if (_appDataFolder.FileExists(settingsFilename)) {
                 var content = _appDataFolder.ReadFile(settingsFilename);
                 indexSettings = IndexSettings.Parse(content);
             }
@@ -372,7 +378,7 @@ namespace Orchard.Indexing.Services {
             if (contentItem == null ||
                 contentItem.TypeDefinition == null ||
                 contentItem.TypeDefinition.Settings == null) {
-                return new TypeIndexing {Indexes = ""};
+                return new TypeIndexing { Indexes = "" };
             }
             return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
         }
