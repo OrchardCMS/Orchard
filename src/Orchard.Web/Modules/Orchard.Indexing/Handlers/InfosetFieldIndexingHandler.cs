@@ -45,7 +45,7 @@ namespace Orchard.Indexing.Handlers {
                             var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
                             var indexName = infosetPart.TypeDefinition.Name.ToLower() + "-" + field.Name.ToLower();
 
-                            var membersContext = new DescribeMembersContext(fieldStorage, values => {
+                            var membersContext = new DescribeMembersContext(null, fieldStorage, values => {
 
                                 foreach (var value in values) {
 
@@ -92,7 +92,7 @@ namespace Orchard.Indexing.Handlers {
                                             break;
                                     }
                                 }
-                            });
+                            }, localField);
 
                             foreach (var driver in drivers) {
                                 driver.Describe(membersContext);
