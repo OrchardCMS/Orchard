@@ -10,5 +10,7 @@
 
         public bool ShowContentTab { get; set; }
         public string DisplayedContentTypes { get; set; }
+
+        public string DefaultValue { get; set; }
     }
 }
