@@ -7,13 +7,20 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentPicker.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using Orchard.ContentPicker.Fields;
+using Orchard.Tokens;
+using System.Collections.Generic;
 
 namespace Orchard.ContentPicker.Drivers {
     public class ContentPickerFieldDriver : ContentFieldDriver<Fields.ContentPickerField> {
         private readonly IContentManager _contentManager;
+        private readonly ITokenizer _tokenizer;
 
-        public ContentPickerFieldDriver(IContentManager contentManager) {
+        public ContentPickerFieldDriver(
+            IContentManager contentManager,
+            ITokenizer tokenizer) {
             _contentManager = contentManager;
+            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
         }
 
@@ -41,16 +48,36 @@ namespace Orchard.ContentPicker.Drivers {
         protected override DriverResult Editor(ContentPart part, Fields.ContentPickerField field, dynamic shapeHelper) {
             return ContentShape("Fields_ContentPicker_Edit", GetDifferentiator(field, part),
                 () => {
+                    var ids = part.IsNew()
+                        ? GetDefaultids(part, field)
+                        : field.Ids;
                     var model = new ContentPickerFieldViewModel {
                         Field = field,
                         Part = part,
-                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty).ToList()
+                        ContentItems = _contentManager
+                            .GetMany<ContentItem>(ids, VersionOptions.Latest, QueryHints.Empty).ToList()
                     };
 
-                    model.SelectedIds = string.Join(",", field.Ids);
+                    model.SelectedIds = string.Join(",", ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/ContentPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
+        }
+
+        private int[] GetDefaultids(ContentPart part, Fields.ContentPickerField field) {
+            var ids = new int[] { };
+            var settings = field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldSettings>();
+            if (!string.IsNullOrWhiteSpace(settings?.DefaultValue)) {
+                var defaultIds = _tokenizer
+                    .Replace(settings.DefaultValue,
+                        new Dictionary<string, object> { { "Content", part.ContentItem } });
+                if (!string.IsNullOrWhiteSpace(defaultIds)) {
+                    // attempt to parse the string we populated from tokens
+                    ids = ContentPickerField.DecodeIds(defaultIds);
+                }
+            }
+
+            return ids;
         }
 
         protected override DriverResult Editor(ContentPart part, Fields.ContentPickerField field, IUpdateModel updater, dynamic shapeHelper) {
