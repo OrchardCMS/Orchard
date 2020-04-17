@@ -21,7 +21,7 @@ namespace Orchard.ContentPicker.Fields {
             }
         }
 
-        private string EncodeIds(ICollection<int> ids) {
+        private static string EncodeIds(ICollection<int> ids) {
             if (ids == null || !ids.Any()) {
                 return string.Empty;
             }
@@ -30,12 +30,25 @@ namespace Orchard.ContentPicker.Fields {
             return "{" + string.Join("},{", ids.ToArray()) + "}";
         }
 
-        private int[] DecodeIds(string ids) {
+        public static int[] DecodeIds(string ids) {
             if(String.IsNullOrWhiteSpace(ids)) {
                 return new int[0];
             }
-
-            return ids.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            // if some of the slices of the string cannot be properly parsed,
+            // we still will return those that can.
+            return ids
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => {
+                    int i = -1;
+                    if(int.TryParse(s, out i)) {
+                        return i;
+                    }
+                    // if we can't parse return a negative value
+                    return -1;
+                })
+                // take only those that parsed properly
+                .Where(i => i > 0)
+                .ToArray();
         }
     }
 }
