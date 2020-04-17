@@ -296,7 +296,7 @@ namespace Orchard.Indexing.Services {
                     }
 
                 } while (loop);
-			}
+            }
 
             // save current state of the index
             indexSettings.LastIndexedUtc = _clock.UtcNow;
