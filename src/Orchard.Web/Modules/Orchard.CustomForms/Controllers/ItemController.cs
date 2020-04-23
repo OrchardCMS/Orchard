@@ -103,11 +103,15 @@ namespace Orchard.CustomForms.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.BuildEditor(contentItem);
-
+            var routeUrl = Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues);
+            if (contentId > 0) {
+                routeUrl += "?contentId=" + contentId;
+            }
+            
             model
                 .ContentItem(form)
                 .ContentId(contentId)
-                .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
+                .ReturnUrl(routeUrl);
 
             return View(model);
         }
@@ -183,8 +187,15 @@ namespace Orchard.CustomForms.Controllers {
                         return this.RedirectLocal(returnUrl);
                     }
                 }
+                var routeUrl = Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues);
+                if (contentId > 0) {
+                    routeUrl += "?contentId=" + contentId;
+                }
 
-                model.ContentItem(form);
+                model
+                    .ContentItem(form)
+                    .ContentId(contentId)
+                    .ReturnUrl(routeUrl);
                 return View(model);
             }
 
