@@ -72,13 +72,10 @@ namespace Orchard.CustomForms.Controllers {
             var customForm = form.As<CustomFormPart>();
 
             // Retrieve the id of the content to edit
-            int contentId = 0;
             var queryString = Services.WorkContext.HttpContext.Request.QueryString;
 
-            if (queryString.AllKeys.Contains("contentId")) {
-                int.TryParse(queryString["contentId"], out contentId);
-            }
-
+            int.TryParse(queryString["contentId"], out int contentId);
+            
             ContentItem contentItem;
             if (contentId > 0) {
                 contentItem = _contentManager.Get(contentId);
