@@ -208,6 +208,38 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool ProcessPath(AutoroutePart part) {
+            // Try to get the path from the alias service
+            var pathRoute = _aliasService.Get(part.Path);
+            // If we got a route that matches that path
+            if (pathRoute != null) {
+                // and that route matches the route for the content item
+                var itemRoute = _contentManager.GetItemMetadata(part).DisplayRouteValues;
+                if (itemRoute != null
+                    && pathRoute.Count == itemRoute.Count
+                    && pathRoute.All(x =>
+                        // ensure value exists in the other dictionary
+                        itemRoute[x.Key] != null
+                        && x.Value.ToString()
+                        // compare them as strings
+                            .Equals(itemRoute[x.Key].ToString(), StringComparison.InvariantCultureIgnoreCase))) {
+                    // then the path is fine as it is
+                    return true;
+                }
+                // How does the above behave in different cases:
+                // 1. Part with new original path
+                //    The route is not found among the aliases, so processing for it falls
+                //    back to the original code below.
+                // 2. Path hasn't changed
+                //    If the item is Published, the code above finds it among the aliases
+                //    and this method ends.
+                // 3. Path is not original (there would be a collision)
+                //    We find from the aliases the item the path points to. Comparing routes,
+                //    we discover they do not match and fall back to the original code below.
+                // This code branch is basically a short circuit for the case where a ContentItem
+                // is being updated or published without changes to its path. Hence, it does not
+                // fix all issues we have with AutoroutePart and concurrency, but it is an
+                // attempt at mitigating them by preventing database operations in some cases.
+            }
             var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
 
             // Don't include *this* part in the list
