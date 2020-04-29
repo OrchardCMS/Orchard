@@ -146,12 +146,9 @@ namespace Orchard.Core.Common {
             // there are two concurrent transactions that are doing both this kind of query
             // as well as an update (or insert) in the CommonPartRecord.
             // Tests show that this can be easily fixed by adding a non-clustered index
-            // with these keys: OwnerId, PublishedUTC, ModifiedUTC, CreatedUTC.
-            // That index has all three DateTime as keys so that SQL Server will be able to
-            // use it whether we want to order by publication, modification o creation date.
-            // We chose to use a single index with the three DateTime, rather than three
-            // different indexes, because that should lead to fewer write operations when
-            // records are inserted/updated/deleted.
+            // with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}.
+            // That means we need three indexes (one for each DateTime) to support ordering
+            // on either of them.
 
             // The queries we analyzed look like (in pseudo sql)
             // SELECT TOP (N) *
@@ -168,10 +165,14 @@ namespace Orchard.Core.Common {
             //   commonpart2_PublishedUtc desc
 
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByDate",
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation",
                     nameof(CommonPartRecord.OwnerId),
-                    nameof(CommonPartRecord.CreatedUtc),
-                    nameof(CommonPartRecord.ModifiedUtc),
+                    nameof(CommonPartRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification",
+                    nameof(CommonPartRecord.OwnerId),
+                    nameof(CommonPartRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication",
+                    nameof(CommonPartRecord.OwnerId),
                     nameof(CommonPartRecord.PublishedUtc));
             });
             return 7;
