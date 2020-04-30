@@ -138,7 +138,7 @@ namespace Orchard.Core.Settings.Descriptor {
 
                 Logger.Information("Shell descriptor updated for shell '{0}'.", _shellSettings.Name);
 
-                _events.Changed(GetShellDescriptorFromRecord(shellDescriptorRecord), _shellSettings.Name);
+                _events.Changed(GetShellDescriptorFromRecord(GetDescriptorRecord()), _shellSettings.Name);
             });
         }
     }
