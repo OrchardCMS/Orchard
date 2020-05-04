@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -18,6 +19,9 @@ namespace Orchard.Localization.Drivers {
             _cultureManager = cultureManager;
             _localizationService = localizationService;
             _contentManager = contentManager;
+
+            publishedLocalizations = new Dictionary<int, IEnumerable<LocalizationPart>>();
+            latestLocalizations = new Dictionary<int, IEnumerable<LocalizationPart>>();
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
@@ -98,16 +102,36 @@ namespace Orchard.Localization.Drivers {
             return part.Culture != null ? part.Culture.Culture : null;
         }
 
-        private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
-            return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
-                .Where(c => c.Culture != null)
-                .ToList();
+        private Dictionary<int, IEnumerable<LocalizationPart>> publishedLocalizations;
+        private Dictionary<int, IEnumerable<LocalizationPart>> latestLocalizations;
+        private IEnumerable<LocalizationPart> GetDisplayLocalizations(
+            LocalizationPart part, VersionOptions versionOptions) {
+
+            Func<IEnumerable<LocalizationPart>> actualMethod = () =>
+                _localizationService.GetLocalizations(part.ContentItem, versionOptions)
+                    .Where(c => c.Culture != null)
+                    .ToList();
+
+            if (versionOptions.IsPublished) {
+                if (!publishedLocalizations.ContainsKey(part.Id)) {
+                    publishedLocalizations.Add(
+                        part.Id,
+                        actualMethod());
+                }
+                return publishedLocalizations[part.Id];
+            } else if (versionOptions.IsLatest) {
+                if (!latestLocalizations.ContainsKey(part.Id)) {
+                    latestLocalizations.Add(
+                        part.Id,
+                        actualMethod());
+                }
+                return latestLocalizations[part.Id];
+            }
+            return actualMethod();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
-            return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
-                .Where(c => c.Culture != null)
-                .ToList();
+            return GetDisplayLocalizations(part, VersionOptions.Latest);
         }
 
         protected override void Importing(LocalizationPart part, ImportContentContext context) {
