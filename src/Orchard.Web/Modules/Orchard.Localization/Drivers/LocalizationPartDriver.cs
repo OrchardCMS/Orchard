@@ -73,10 +73,14 @@ namespace Orchard.Localization.Drivers {
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
-
-            // GetCulture(part) is checked against null value, because the content culture has to be set only if it's not set already.
-            // model.SelectedCulture is checked against null value, because the editor group may not contain LocalizationPart when the content item is saved for the first time.
-            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null) && GetCulture(part) == null && !string.IsNullOrEmpty(model.SelectedCulture)) {
+            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)
+                // GetCulture(part) is checked against null value, because the content
+                // culture has to be set only if it's not set already.
+                && GetCulture(part) == null
+                // model.SelectedCulture is checked against null value, because the editor
+                // group may not contain LocalizationPart when the content item is saved for
+                // the first time.
+                && !string.IsNullOrEmpty(model.SelectedCulture)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
@@ -106,11 +110,27 @@ namespace Orchard.Localization.Drivers {
         private Dictionary<int, IEnumerable<LocalizationPart>> latestLocalizations;
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(
             LocalizationPart part, VersionOptions versionOptions) {
-
+            
             Func<IEnumerable<LocalizationPart>> actualMethod = () =>
                 _localizationService.GetLocalizations(part.ContentItem, versionOptions)
                     .Where(c => c.Culture != null)
                     .ToList();
+            // if the part has no assigned culture, and it does not belong to
+            // a translation group, it cannot possibly have localizations
+            if (GetCulture(part) == null && !part.HasTranslationGroup) {
+                actualMethod = () => Enumerable.Empty<LocalizationPart>();
+                // this empty list will be "cached" for the part for the duration
+                // a request, in order to prevent asking the db to return something
+                // that we know to not be there. This should prevent a class of
+                // deadlocks on the indexes for the LocalizationPartRecord table.
+                // The reasoning:
+                // part.HasTranslationGroup is false when the content is not a
+                // localization of any other content. It may be a MasterContent,
+                // but if that were the case it would have a value for its Culture.
+                // The condition here represents a new ContentItem, that has never
+                // had an assigned culture (whether it's actually new, or the
+                // LocalizationPart has just been welded to its type)
+            }
 
             if (versionOptions.IsPublished) {
                 if (!publishedLocalizations.ContainsKey(part.Id)) {
