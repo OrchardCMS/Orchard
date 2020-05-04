@@ -82,7 +82,9 @@ namespace Orchard.Localization.Services {
                     (l.Id == masterContentItemId || l.MasterContentItemId == masterContentItemId));
             }
             else {
-                query = query.Where<LocalizationPartRecord>(l => l.MasterContentItemId == contentItemId);
+                query = query.Where<LocalizationPartRecord>(l =>
+                    l.Id != contentItemId && // Exclude the content
+                    l.MasterContentItemId == contentItemId);
             }
 
             // Warning: May contain more than one localization of the same culture.
