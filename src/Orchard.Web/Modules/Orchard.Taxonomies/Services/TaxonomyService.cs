@@ -218,7 +218,7 @@ namespace Orchard.Taxonomies.Services {
                 ? _termContentItemRepository
                     .Table
                     .Where(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId)
-                    .Select(x => x.Id)
+                    .Select(t => t.TermRecord.Id)
                     .ToArray()
                 : _termContentItemRepository
                     .Table
