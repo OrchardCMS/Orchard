@@ -216,11 +216,13 @@ namespace Orchard.Taxonomies.Services {
 
             var termIds = string.IsNullOrEmpty(field)
                 ? _termContentItemRepository
-                    .Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId)
-                    .Select(t => t.TermRecord.Id)
+                    .Table
+                    .Where(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId)
+                    .Select(x => x.Id)
                     .ToArray()
                 : _termContentItemRepository
-                    .Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field)
+                    .Table
+                    .Where(x => x.TermsPartRecord.Id == contentItemId && x.Field == field)
                     .Select(t => t.TermRecord.Id)
                     .ToArray();
 
