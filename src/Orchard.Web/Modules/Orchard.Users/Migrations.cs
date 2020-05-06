@@ -69,5 +69,15 @@ namespace Orchard.Users {
 
             return 6;
         }
+
+        public int UpdateFrom6() {
+            // users are most commonly searched by NormalizedUserName and or Email
+            SchemaBuilder.AlterTable("UserPartRecord", table => {
+                table.CreateIndex($"IDX_UserPartRecord_NameAndEmail",
+                    "NormalizedUserName",
+                    "Email");
+            });
+            return 7;
+        }
     }
 }
