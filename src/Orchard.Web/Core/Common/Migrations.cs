@@ -177,5 +177,15 @@ namespace Orchard.Core.Common {
             });
             return 7;
         }
+
+        public int UpdateFrom7() {
+            // The Container_Id is basically a foreign key, used in several queries
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id",
+                    "Container_id");
+            });
+
+            return 8;
+        }
     }
 }
