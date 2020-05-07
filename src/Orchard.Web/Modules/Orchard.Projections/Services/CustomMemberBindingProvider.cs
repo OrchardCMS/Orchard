@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Orchard.Data;
@@ -16,11 +17,18 @@ namespace Orchard.Projections.Services {
             _sessionFactoryHolder = sessionFactoryHolder;
         }
 
+        private List<MemberBindingRecord> memberBindings;
         public void GetMemberBindings(BindingBuilder builder) {
 
             var recordBluePrints = _sessionFactoryHolder.GetSessionFactoryParameters().RecordDescriptors;
 
-            foreach(var member in _repository.Table.ToList()) {
+            // save this in memory once per request, to avoid hitting the database 5+
+            // times per projection per request.
+            if (memberBindings == null) {
+                memberBindings = _repository.Table.ToList();
+            }
+
+            foreach (var member in memberBindings) {
                 var record = recordBluePrints.FirstOrDefault(r => String.Equals(r.Type.FullName, member.Type, StringComparison.OrdinalIgnoreCase));
 
                 if (record == null) {
@@ -28,7 +36,7 @@ namespace Orchard.Projections.Services {
                 }
 
                 var property = record.Type.GetProperty(member.Member, BindingFlags.Instance | BindingFlags.Public);
-                if(property == null) {
+                if (property == null) {
                     continue;
                 }
 
