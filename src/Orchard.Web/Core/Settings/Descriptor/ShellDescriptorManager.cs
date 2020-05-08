@@ -33,6 +33,10 @@ namespace Orchard.Core.Settings.Descriptor {
             _lockingProvider = lockingProvider;
             _cacheManager = cacheManager;
             _signals = signals;
+
+            _lockString = string.Join(".",
+                _shellSettings["Name"] ?? "",
+                "ShellDescriptorManager");
         }
 
         public ShellDescriptor GetShellDescriptor() {
@@ -78,19 +82,7 @@ namespace Orchard.Core.Settings.Descriptor {
             });
         }
 
-        private string _lockString = "";
-        private string LockString {
-            get {
-                if (string.IsNullOrWhiteSpace(_lockString)) {
-                    _lockString = string.Join(".",
-                        _shellSettings["Name"] ?? "",
-                        _shellSettings["RequestUrlHost"] ?? "",
-                        _shellSettings["RequestUrlPrefix"] ?? "",
-                        "Orchard.Core.Settings.Descriptor.ShellDescriptorManager");
-                }
-                return _lockString;
-            }
-        }
+        private string _lockString;
 
         public void UpdateShellDescriptor(
             int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {
@@ -100,7 +92,7 @@ namespace Orchard.Core.Settings.Descriptor {
             // We are going to put an application lock around this to prevent
             // issues when for some weird reason several updates are being attempted
             // concurrently.
-            _lockingProvider.Lock(LockString, () => {
+            _lockingProvider.Lock(_lockString, () => {
                 ShellDescriptorRecord shellDescriptorRecord = _shellDescriptorRepository.Get(x => x != null);
                 var serialNumber = shellDescriptorRecord == null ? 0 : shellDescriptorRecord.SerialNumber;
                 if (priorSerialNumber != serialNumber)
