@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NHibernate;
 using NHibernate.SqlCommand;
 using Orchard.Data.Providers;
@@ -110,13 +108,21 @@ namespace Orchard.Data {
 
                     // We are only interested in those Captures that involve the tables we are affecting:
                     var affectedCaptures = new List<CaptureWrapper>();
+                    // we are going to assign to each CaptureWrapper an identifier that we make sure that
+                    // isn't in the query
+                    int tag = 0;
+                    const string tagBase = @"@sub{0}bus@";
                     for (int i = 0; i < matches.Groups["Close"].Captures.Count; i++) {
                         // for loop because CaptureCollection does not play nice with iterators
                         var cap = matches.Groups["Close"].Captures[i];
                         var tablesHere = tableNamesForQuery
                             .Where(tn => cap.Value.IndexOf(tn, StringComparison.InvariantCultureIgnoreCase) >= 0);
                         if (tablesHere.Any()) {
-                            affectedCaptures.Add(new CaptureWrapper(cap, tablesHere));
+                            var currentTag = string.Format(tagBase, tag++);
+                            while (sqlString.IndexOf(currentTag) >= 0) {
+                                currentTag = string.Format(tagBase, tag++);
+                            }
+                            affectedCaptures.Add(new CaptureWrapper(cap, tablesHere) { Tag = currentTag });
                         }
                     }
                     // matches.Groups[0].Captures[0] is the original string
@@ -150,14 +156,23 @@ namespace Orchard.Data {
                                     outer.Value = outer.Value
                                         // Remove old substring
                                         .Remove(insertionIndex, inner.OriginalLength)
-                                        // insert new substring
-                                        .Insert(insertionIndex, inner.Value);
+                                        // insert the tag that we will replace with the new substring
+                                        .Insert(insertionIndex, inner.Tag);
                                     outer.IsAltered = true;
                                     // alterations will cascade by the outer loop, so here we stop
                                     // propagating them after the first
                                     break;
                                 }
                             }
+                        }
+                    }
+                    // rebuild query
+                    for(int i = 0; i < affectedCaptures.Count; i++) {
+                        var inner = affectedCaptures[i];
+                        for (int j = i + 1; j < affectedCaptures.Count; j++) {
+                            var outer = affectedCaptures[j];
+                            outer.Value = outer.Value
+                                .Replace(inner.Tag, inner.Value);
                         }
                     }
                     sql = SqlString.Parse(affectedCaptures.Last().Value);
@@ -182,6 +197,8 @@ namespace Orchard.Data {
             public string Value { get; set; }
 
             public IEnumerable<string> TableNames { get; set; }
+
+            public string Tag { get; set; }
 
             public bool IsAltered { get; set; }
 
@@ -219,17 +236,21 @@ namespace Orchard.Data {
                             if (tableIndex > fromIndex && tableIndex < whereIndex) { // sanity check
                                                                                      // if before the table name we have "," or "FROM", this is not a join, but rather
                                                                                      // something like "FROM tableName alias ..."
-                                                                                     // we can insert "WITH (NOLOCK)" after that
+                                                                                     // we can insert "WITH(NOLOCK)" after that
                                 if (tableIndex == fromIndex + 1
                                     || parts[tableIndex - 1].Equals(",")) {
 
-                                    parts.Insert(tableIndex + 2, "WITH (NOLOCK)");
+                                    parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
                                 } else {
                                     // probably doing a join, so edit the next "on" and make it
                                     // "WITH (NOLOCK) on"
                                     for (int i = tableIndex + 1; i < whereIndex; i++) {
+                                        if (parts[i].Trim().Equals("WITH(NOLOCK)", StringComparison.OrdinalIgnoreCase)) {
+                                            // we processed this table anme already
+                                            break;
+                                        }
                                         if (parts[i].Trim().Equals("on", StringComparison.OrdinalIgnoreCase)) {
-                                            parts[i] = "WITH (NOLOCK) on";
+                                            parts[i] = "WITH(NOLOCK) on";
                                             break;
                                         }
                                     }
