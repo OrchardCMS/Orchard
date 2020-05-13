@@ -15,7 +15,7 @@ namespace Orchard.Data.Providers {
                        type="Orchard.Data.Providers.DefaultNoLockTableProvider, Orchard.Framework"
                        service="Orchard..Data.Providers.INoLockTableProvider">
                 <properties>
-                    <property name="TableName" value="Table_Name_1, Table_Name_2" />
+                    <property name="TableNames" value="Table_Name_1, Table_Name_2" />
                 </properties>
             </component>
              */
