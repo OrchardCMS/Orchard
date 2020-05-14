@@ -51,8 +51,14 @@ namespace Orchard.Blogs.Services {
             return blogPart == null ? null : blogPart.ContentItem;
         }
 
+        private IEnumerable<BlogPart> _publishedBlogs;
         public IEnumerable<BlogPart> Get() {
-            return Get(VersionOptions.Published);
+            // this is currently called at least twice per request on the
+            // back-office, both times by the code building the admin menu.
+            if (_publishedBlogs == null) {
+                _publishedBlogs = Get(VersionOptions.Published);
+            }
+            return _publishedBlogs;
         }
 
         public IEnumerable<BlogPart> Get(VersionOptions versionOptions) {
