@@ -55,8 +55,8 @@ namespace Orchard.Data {
                     // the sql may contain substrings, and we want to also process them
                     var sqlString = sql.ToString();
                     // https://docs.microsoft.com/en-us/dotnet/standard/base-types/grouping-constructs-in-regular-expressions?redirectedfrom=MSDN#balancing-group-definitions
-                    string regexPattern = @"^[^\(\)]*(((?'Open'\()[^\(\)]*)+((?'Close-Open'\))[^\(\)]*)+)*(?(Open)(?!))$";
-                    var matches = Regex.Match(sqlString, regexPattern);
+                    const string regexPattern = @"^[^\(\)]*(((?'Open'\()[^\(\)]*)+((?'Close-Open'\))[^\(\)]*)+)*(?(Open)(?!))$";
+                    var matches = Regex.Match(sqlString, regexPattern, RegexOptions.Compiled);
                     // matches.Groups["Close"] contains all portions of sqlString that are between
                     // opening and closing parentheses. The captured strings in that group already
                     // don't have the starting and ending parentheses.
