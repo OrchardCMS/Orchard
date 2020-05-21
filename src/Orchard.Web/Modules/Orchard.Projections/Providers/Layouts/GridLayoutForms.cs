@@ -86,7 +86,7 @@ namespace Orchard.Projections.Providers.Layouts {
                                 Description: T("The class to provide on each cell."),
                                 Classes: new[] { "text medium", "tokenized" }
                                 ),
-                            _EmptyCell: Shape.TextBox(
+                            _EmptyCell: Shape.TextArea(
                                 Id: "empty-cell", Name: "EmptyCell",
                                 Title: T("Empty Cell"),
                                 Description: T("The HTML to render as empty cells to fill a row. (e.g., <td>&nbsp;</td>"),
