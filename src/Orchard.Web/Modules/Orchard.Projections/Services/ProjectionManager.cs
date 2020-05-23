@@ -166,10 +166,12 @@ namespace Orchard.Projections.Services {
 
             // iterate over each sort criteria to apply the alterations to the query object
             foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position)) {
+                var tokenizedState = _tokenizer.Replace(sortCriterion.State, tokens);
                 var sortCriterionContext = new SortCriterionContext {
                     Query = groupQuery,
-                    State = FormParametersHelper.ToDynamic(sortCriterion.State),
-                    QueryPartRecord = queryRecord
+                    State = FormParametersHelper.ToDynamic(tokenizedState),
+                    QueryPartRecord = queryRecord,
+                    Tokens = tokens
                 };
 
                 string category = sortCriterion.Category;
