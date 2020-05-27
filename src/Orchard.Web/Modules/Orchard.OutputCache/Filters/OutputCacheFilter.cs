@@ -606,9 +606,9 @@ namespace Orchard.OutputCache.Filters {
             } else {
                 // if there is a RequestUrlPrefix, we want to check by also removing it from the
                 // url we are verifying, because the configuration might have been done without it
-                var tmp = url;
+                var tmp = url.TrimStart(new[] { '/' });
                 if (tmp.StartsWith(_shellSettings.RequestUrlPrefix)) {
-                    tmp = tmp.TrimStart(new[] { '/' }).Substring(_shellSettings.RequestUrlPrefix.Length);
+                    tmp = tmp.Substring(_shellSettings.RequestUrlPrefix.Length);
                 }
                 foreach (var relativePath in IgnoredRelativePaths) {
                     if (String.Equals(relativePath, url, StringComparison.OrdinalIgnoreCase)
