@@ -497,8 +497,9 @@ namespace Orchard.OutputCache.Filters {
                     ?? (_ignoredRelativePaths = _cacheManager.Get($"{CacheSettings.CacheKey}_IgnoredUrls", true, ContextBoundObject => {
                         ContextBoundObject.Monitor(_signals.When(CacheSettings.CacheKey));
                         return CacheSettings.IgnoredUrls
-                            .Select(s => s.TrimStart(new[] { '~' }).Trim())
-                            .Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"));
+                            ?.Select(s => s.TrimStart(new[] { '~' }).Trim())
+                            ?.Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"))
+                            ?? Enumerable.Empty<string>();
                     }));
             }
         }
