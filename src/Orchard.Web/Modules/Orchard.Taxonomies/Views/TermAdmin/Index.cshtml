@@ -48,7 +48,7 @@
                         }
                         else {
                             @Html.ItemDisplayText(termEntry.ContentItem)
-                            @if (termEntry.HasDraft) {
+                            if (termEntry.HasDraft) {
                                 <text>@T(" (Draft)")</text>
                             }
                         }
