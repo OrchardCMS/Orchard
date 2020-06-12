@@ -1,5 +1,5 @@
-﻿using Orchard.Blogs.Models;
-using Orchard.Blogs.Extensions;
+﻿using Orchard.Blogs.Extensions;
+using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Feeds;
@@ -8,12 +8,10 @@ namespace Orchard.Blogs.Drivers {
     public class BlogPostPartDriver : ContentPartDriver<BlogPostPart> {
         private readonly IFeedManager _feedManager;
         private readonly IContentManager _contentManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public BlogPostPartDriver(IFeedManager feedManager, IContentManager contentManager, IWorkContextAccessor workContextAccessor) {
+        public BlogPostPartDriver(IFeedManager feedManager, IContentManager contentManager) {
             _feedManager = feedManager;
             _contentManager = contentManager;
-            _workContextAccessor = workContextAccessor;
         }
 
         protected override DriverResult Display(BlogPostPart part, string displayType, dynamic shapeHelper) {
