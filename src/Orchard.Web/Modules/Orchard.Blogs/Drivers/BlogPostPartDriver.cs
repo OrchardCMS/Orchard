@@ -19,13 +19,9 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogPostPart part, string displayType, dynamic shapeHelper) {
             if (part.BlogPart != null && part.BlogPart.HasPublished()) {
                 if (displayType.StartsWith("Detail")) {
-                    var blogTitle = _contentManager.GetItemMetadata(part.BlogPart).DisplayText;
-                    _feedManager.Register(part.BlogPart, blogTitle);
-                }
-            }
-            else {
-                if (displayType.StartsWith("Detail") || displayType == "Summary") {
-                    _workContextAccessor.GetContext().HttpContext.Response.RedirectToRoute(new { Area = "Common", Controller = "Error", Action = "NotFound" });
+                    var publishedBlog = _contentManager.Get(part.BlogPart.Id).As<BlogPart>();
+                    var blogTitle = _contentManager.GetItemMetadata(publishedBlog).DisplayText;
+                    _feedManager.Register(publishedBlog, blogTitle);
                 }
             }
             return null;
