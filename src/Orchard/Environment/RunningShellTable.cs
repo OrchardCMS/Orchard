@@ -84,7 +84,12 @@ namespace Orchard.Environment {
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
                 .GroupBy(s => s.RequestUrlHost ?? string.Empty)
                 .OrderByDescending(g => g.Key.Length)
-                .ToDictionary(x => x.Key, x => x.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(
+                    x => x.Key,
+                    // we want to keep this ordered so that, for the same host, shells with a configured
+                    // RequestUrlPrefix are tested first when trying to match them to coming requests.
+                    x => x.OrderByDescending(ss => (ss.RequestUrlPrefix ?? "").Length).AsEnumerable(),
+                    StringComparer.OrdinalIgnoreCase);
 
             if (unqualified.Count() == 1) {
                 // only one shell had no request url criteria
@@ -164,20 +169,20 @@ namespace Orchard.Environment {
                             shells = _shellsByHost[subHostKey];
                         }
                     }
-                    
+
                     // looking for a request url prefix match
                     var mostQualifiedMatch = shells.FirstOrDefault(settings => {
-                        if (settings.State == TenantState.Disabled) {
-                            return false;
-                        }
+                            if (settings.State == TenantState.Disabled) {
+                                return false;
+                            }
 
-                        if (String.IsNullOrWhiteSpace(settings.RequestUrlPrefix)) {
-                            return true;
-                        }
+                            if (String.IsNullOrWhiteSpace(settings.RequestUrlPrefix)) {
+                                return true;
+                            }
 
-                        return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
-                    });
-
+                            return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
+                        });
+                    
                     return mostQualifiedMatch ?? _fallback;
                 });
                 
