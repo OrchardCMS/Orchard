@@ -22,6 +22,10 @@
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\". Multiple hosts can be separated by a comma.")</span>
         </div>
         <div>
+            @Html.CheckBoxFor(m => m.IsBaseHost)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.IsBaseHost)">@T("The URL for this tenant may be used as host for other tenants.")</label>
+        </div>
+        <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
             @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
             <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
