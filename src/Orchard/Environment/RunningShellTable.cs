@@ -84,7 +84,12 @@ namespace Orchard.Environment {
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
                 .GroupBy(s => s.RequestUrlHost ?? string.Empty)
                 .OrderByDescending(g => g.Key.Length)
-                .ToDictionary(x => x.Key, x => x.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(
+                    x => x.Key,
+                    // we want to keep this ordered so that, for the same host, shells with a configured
+                    // RequestUrlPrefix are tested first when trying to match them to coming requests.
+                    x => x.OrderByDescending(ss => (ss.RequestUrlPrefix ?? "").Length).AsEnumerable(),
+                    StringComparer.OrdinalIgnoreCase);
 
             if (unqualified.Count() == 1) {
                 // only one shell had no request url criteria
@@ -165,19 +170,8 @@ namespace Orchard.Environment {
                         }
                     }
 
-                    // looking for a request url prefix match.
-                    // Here we are looking through the "end" tenants. Some tenants may be configured to look
-                    // like hosts for other tenants.
-                    // For example:
-                    // FooTenant responds to http://footenant.com
-                    //   It's configured with RequestUrlHost = footenant.com
-                    // BarTenant is a "sub-tenant" of foo, that responds to http://footenant.com/bar
-                    //   It's configured with RequestUrlHost = footenant.com and RequestUrlPrefix = bar
-                    // http://footenant.com/whatever should get a response from FooTenant
-                    // http://footenant.com/bar/whatever should get a response from BarTenant
-                    // This can be done without FooTenant being the multitenancy.
-                    var mostQualifiedMatch = shells.Where(s => !s.IsBaseHost)
-                        .FirstOrDefault(settings => {
+                    // looking for a request url prefix match
+                    var mostQualifiedMatch = shells.FirstOrDefault(settings => {
                             if (settings.State == TenantState.Disabled) {
                                 return false;
                             }
@@ -188,25 +182,7 @@ namespace Orchard.Environment {
 
                             return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
                         });
-
-                    if (mostQualifiedMatch == null) {
-                        // A tenant may be configured to look like an host for
-                        // other tenants, and should respond here if the path of the request was such
-                        // that those "sub-tenants" did not respond earlier.
-                        mostQualifiedMatch = shells.Where(s => s.IsBaseHost)
-                            .FirstOrDefault(settings => {
-                                if (settings.State == TenantState.Disabled) {
-                                    return false;
-                                }
-
-                                if (String.IsNullOrWhiteSpace(settings.RequestUrlPrefix)) {
-                                    return true;
-                                }
-
-                                return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
-                            });
-                    }
-
+                    
                     return mostQualifiedMatch ?? _fallback;
                 });
                 
