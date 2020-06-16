@@ -104,6 +104,7 @@ namespace Orchard.Tasks.Locking.Services {
                             Logger.Debug("Record for lock '{0}' already owned by current machine or was successfully created; creating lock object.", internalName);
 
                             dLock = new DistributedLock(name, internalName, releaseLockAction: () => {
+                                _locks.Remove(monitorObj);
                                 Monitor.Exit(monitorObj);
                                 DeleteDistributedLockRecord(internalName);
                             });
