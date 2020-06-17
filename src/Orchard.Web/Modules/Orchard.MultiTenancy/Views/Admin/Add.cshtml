@@ -11,28 +11,24 @@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-<fieldset>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
-        @Html.TextBoxFor(m => m.Name, new { @class = "text" })
-        <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
-    </div>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
-        @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
-        <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
-        <span class="hint">@T("You may define multiple domains using the comma (,) as a separator. Use the '*.' prefix to map all subdomains.")</span>
-    </div>
-    <div>
-        @Html.CheckBoxFor(m => m.IsBaseHost)
-        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.IsBaseHost)">@T("The URL for this tenant may be used as host for other tenants.")</label>
-    </div>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
-        @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
-        <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
-    </div>
-</fieldset>
+    <fieldset>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "text" })
+            <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
+            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
+            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            <span class="hint">@T("You may define multiple domains using the comma (,) as a separator. Use the '*.' prefix to map all subdomains.")</span>
+        </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
+            @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
+            <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+        </div>
+    </fieldset>
     <fieldset>
         <legend>@T("Database Setup")</legend>
         <div>

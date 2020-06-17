@@ -173,13 +173,5 @@ namespace Orchard.Environment.Configuration {
                 this["State"] = value.ToString();
             }
         }
-
-        public bool IsBaseHost {
-            get {
-                bool.TryParse(this["IsBaseHost"], out bool baseHost);
-                return baseHost;
-            }
-            set { this["IsBaseHost"] = value.ToString(); }
-        }
     }
 }

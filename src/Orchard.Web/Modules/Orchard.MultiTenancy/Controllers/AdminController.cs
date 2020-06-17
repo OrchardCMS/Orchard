@@ -93,8 +93,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         DataTablePrefix = viewModel.DatabaseTablePrefix,
                         State = TenantState.Uninitialized,
                         Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray(),
-                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray(),
-                        IsBaseHost = viewModel.IsBaseHost
+                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
                 Services.Notifier.Information(T("Tenant '{0}' was created successfully.", viewModel.Name));
@@ -135,8 +134,7 @@ namespace Orchard.MultiTenancy.Controllers {
                     ModuleId = x.Id,
                     ModuleName = x.Name,
                     Checked = tenant.Modules.Contains(x.Id)
-                }).ToList(),
-                IsBaseHost = tenant.IsBaseHost
+                }).ToList()
             });
         }
 
@@ -176,8 +174,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         HashAlgorithm = tenant.HashAlgorithm,
                         HashKey = tenant.HashKey,
                         Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray(),
-                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray(),
-                        IsBaseHost = viewModel.IsBaseHost
+                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
                 return RedirectToAction("Index");

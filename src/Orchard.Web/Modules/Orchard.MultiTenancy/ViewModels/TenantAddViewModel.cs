@@ -19,7 +19,6 @@ namespace Orchard.MultiTenancy.ViewModels {
         [SqlDatabaseConnectionString]
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
-        public bool IsBaseHost { get; set; }
 
         public List<ThemeEntry> Themes { get; set; }
         public List<ModuleEntry> Modules { get; set; }
