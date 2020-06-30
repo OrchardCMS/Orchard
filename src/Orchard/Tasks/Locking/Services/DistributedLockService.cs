@@ -23,6 +23,7 @@ namespace Orchard.Tasks.Locking.Services {
         private readonly ShellSettings _shellSettings;
         private readonly Dictionary<string, DistributedLock> _locks;
         private readonly TimeSpan _defaultRepeatInterval;
+        private bool _anotherMachineHasTheLock;
 
         public DistributedLockService(
             IApplicationEnvironment applicationEnvironment,
@@ -35,6 +36,7 @@ namespace Orchard.Tasks.Locking.Services {
             _applicationEnvironment = applicationEnvironment;
             _locks = new Dictionary<string, DistributedLock>();
             _defaultRepeatInterval = TimeSpan.FromMilliseconds(500);
+            _anotherMachineHasTheLock = false;
         }
 
         public bool TryAcquireLock(string name, TimeSpan? maxValidFor, TimeSpan? timeout, out IDistributedLock dLock) {
@@ -45,8 +47,9 @@ namespace Orchard.Tasks.Locking.Services {
                     Logger.Debug("Successfully acquired lock '{0}'.", name);
                     return true;
                 }
-
-                Logger.Warning("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
+                
+                if(!_anotherMachineHasTheLock)
+                   Logger.Warning("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error while trying to acquire lock '{0}'.", name);
@@ -112,7 +115,9 @@ namespace Orchard.Tasks.Locking.Services {
                             _locks.Add(monitorObj, dLock);
                             return true;
                         }
-
+                        
+                        if(_anotherMachineHasTheLock)
+                            Monitor.Exit(monitorObj);
                         return false;
                     });
 
@@ -172,7 +177,8 @@ namespace Orchard.Tasks.Locking.Services {
                     // Existing lock was for correct machine name => lock record exists.
                     Logger.Debug("Found a valid record for lock '{0}' and current local machine name '{1}'.", internalName, environmentIdentifier);
                     hasLockRecord = true;
-                }
+                }  else if (record.MachineName != environmentIdentifier)
+                        _anotherMachineHasTheLock = true;
             });
 
             return hasLockRecord;
