@@ -45,7 +45,7 @@ namespace Orchard.Tasks.Locking.Services {
                     Logger.Debug("Successfully acquired lock '{0}'.", name);
                     return true;
                 }
-                
+
                 Logger.Debug("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
             }
             catch (Exception ex) {
