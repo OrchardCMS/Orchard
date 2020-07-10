@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
@@ -40,6 +41,17 @@ namespace Orchard.Core.Contents.Controllers {
 
             if (contentItem == null)
                 return HttpNotFound();
+
+
+            var container = contentItem.As<CommonPart>()?.Container;
+            if (container != null && !container.HasPublished()) {
+                // if the content has a container that has not a published version we check preview permissions
+                // in order to check if user can view the content or not.
+                // Open point: should we handle hierarchies? 
+                if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                    return HttpNotFound();
+                }
+            }
 
             if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot view content"))) {
                 return new HttpUnauthorizedResult();
