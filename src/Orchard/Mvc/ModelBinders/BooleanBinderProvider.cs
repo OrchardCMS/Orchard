@@ -17,7 +17,7 @@ namespace Orchard.Mvc.ModelBinders {
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext) {
             var value = false;
             var requestBooleanValue = controllerContext.HttpContext.Request[bindingContext.ModelName].Split(',')[0]; //Html.CheckBox and Html.CheckBoxFor return "true,false" string
-            if (!bool.TryParse(requestBooleanValue.Split(',')[0], out value)) {
+            if (!bool.TryParse(requestBooleanValue, out value)) {
                 bindingContext.ModelState.AddModelError(bindingContext.ModelName, new FormatException());
             }
             return value;
