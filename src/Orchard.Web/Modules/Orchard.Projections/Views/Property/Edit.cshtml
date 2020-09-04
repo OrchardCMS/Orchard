@@ -49,8 +49,8 @@
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CreateLabel)">@T("Create a label")</label>
             <div data-controllerid="@Html.FieldIdFor(m => m.CreateLabel)">
                 <div>
-                    @Html.TextBoxFor(m => m.Label, new { @class = "text medium tokenized" })
-                    <span class="hint">@T("The text to display as a label for this property.")</span>
+                    @Html.TextBoxFor(m => m.Label, new { @class = "text large tokenized" })
+                    <span class="hint">@T("The text to display as a label for this property. It may include HTML.")</span>
                 </div>
             </div>
         </div>
@@ -117,7 +117,7 @@
             <div>
                 <div>
                     <label for="@Html.FieldIdFor(m => m.NoResultText)">@T("No results text")</label>
-                    @Html.TextBoxFor(m => m.NoResultText, new { @class = "text medium tokenized" })
+                    @Html.TextBoxFor(m => m.NoResultText, new { @class = "text large tokenized" })
                     <span class="hint">@T("Text to display when the property is empty.")</span>
                 </div>
 
@@ -149,7 +149,7 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.RewriteOutput)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.RewriteText)">@T("Rewrite text")</label>
-                        @Html.TextBoxFor(m => m.RewriteText, new { @class = "text large tokenized" })
+                        @Html.TextAreaFor(m => m.RewriteText, new { @class = "text large tokenized" })
                         <span class="hint">@T("The text to write for this field. It may include HTML. {Text} can be used to inject the current property text.")</span>
                     </div>
                 </div>

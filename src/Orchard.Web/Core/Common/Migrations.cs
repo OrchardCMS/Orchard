@@ -136,5 +136,46 @@ namespace Orchard.Core.Common {
 
             return 6;
         }
+
+        public int UpdateFrom6() {
+            // Studying SQL Server query execution plans we noticed that when the system
+            // tries to find content items for requests such as
+            // "The items of type TTT owned by me, ordered from the most recent"
+            // the existing indexes are not used. SQL Server does an index scan on the
+            // Primary key for CommonPartRecord. This may lead to annoying deadlocks when
+            // there are two concurrent transactions that are doing both this kind of query
+            // as well as an update (or insert) in the CommonPartRecord.
+            // Tests show that this can be easily fixed by adding a non-clustered index
+            // with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}.
+            // That means we need three indexes (one for each DateTime) to support ordering
+            // on either of them.
+
+            // The queries we analyzed look like (in pseudo sql)
+            // SELECT TOP (N) *
+            // FROM
+            //   ContentItemVersionRecord this_
+            //   inner join ContentItemRecord contentite1_ on this_.ContentItemRecord_id=contentite1_.Id
+            //   inner join CommonPartRecord commonpart2_ on contentite1_.Id=commonpart2.Id
+            //   left outer join ContentTypeRecord contenttyp6_ on contentite1_.ContentType_id=contenttyp6_.Id
+            // WHERE
+            //   contentite1.ContentType_id = {TTT}
+            //   and commonpart2_.OwnerId = {userid}
+            //   and this_.Published = 1
+            // ORDER BY
+            //   commonpart2_PublishedUtc desc
+
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation",
+                    nameof(CommonPartRecord.OwnerId),
+                    nameof(CommonPartRecord.CreatedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification",
+                    nameof(CommonPartRecord.OwnerId),
+                    nameof(CommonPartRecord.ModifiedUtc));
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication",
+                    nameof(CommonPartRecord.OwnerId),
+                    nameof(CommonPartRecord.PublishedUtc));
+            });
+            return 7;
+        }
     }
 }
