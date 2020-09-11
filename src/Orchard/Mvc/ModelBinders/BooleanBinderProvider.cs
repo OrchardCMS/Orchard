@@ -17,7 +17,7 @@ namespace Orchard.Mvc.ModelBinders {
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext) {
             var value = false;
             try {
-                value = (bool)bindingContext.ValueProvider.GetValue(bindingContext.ModelName).ConvertTo(typeof(bool));
+                value = Convert.ToBoolean(bindingContext.ValueProvider.GetValue(bindingContext.ModelName).AttemptedValue);
             } catch {
                 bindingContext.ModelState.AddModelError(bindingContext.ModelName, new FormatException());
             }
