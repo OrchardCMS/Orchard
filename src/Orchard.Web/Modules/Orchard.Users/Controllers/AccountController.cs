@@ -94,10 +94,6 @@ namespace Orchard.Users.Controllers {
 
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
-                if (ModelState["rememberMe"].Errors.Any()) {
-                    // We need to remove "remeberMe" from ModelState because the Html.CheckBox() in LogOn.cshtml view throws exception if ModelState contains non-convertable value
-                    ModelState.Remove("rememberMe");
-                }
                 var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
                 return new ShapeResult(this, shape);
             }
