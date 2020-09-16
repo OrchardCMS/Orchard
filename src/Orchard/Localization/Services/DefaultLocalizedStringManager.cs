@@ -49,26 +49,26 @@ namespace Orchard.Localization.Services {
         ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        public Tuple<string, string> GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+        public FormatForScope GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
             var culture = LoadCulture(cultureName);
             foreach (var scope in scopes) {
                 string scopedKey = (scope + "|" + text).ToLowerInvariant();
                 if (culture.Translations.ContainsKey(scopedKey)) {
-                    return new Tuple<string, string>(culture.Translations[scopedKey], scope);
+                    return new FormatForScope(culture.Translations[scopedKey], scope);
                 }
             }
             string genericKey = ("|" + text).ToLowerInvariant();
             if (culture.Translations.ContainsKey(genericKey)) {
-                return new Tuple<string, string>(culture.Translations[genericKey], null);
+                return new FormatForScope(culture.Translations[genericKey], null);
             }
 
             foreach (var scope in scopes) {
                 string parent_text = GetParentTranslation(scope, text, cultureName);
                 if (!parent_text.Equals(text)) {
-                    return new Tuple<string, string>(parent_text, scope);
+                    return new FormatForScope(parent_text, scope);
                 }
             }
-            return new Tuple<string, string>(text, scopes.FirstOrDefault());
+            return new FormatForScope(text, scopes.FirstOrDefault());
         }
 
         // This will translate a string into a string in the target cultureName.

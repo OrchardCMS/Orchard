@@ -29,15 +29,14 @@ namespace Orchard.Localization {
 
             if (workContext != null) {
                 var currentCulture = workContext.CurrentCulture;
-                string localizedFormat;
-                Tuple<string,string> localizedFormatScope = _localizedStringManager.GetLocalizedString(_scopes, textHint, currentCulture);
-                scope = localizedFormatScope.Item2;
+                FormatForScope localizedFormatScope = _localizedStringManager.GetLocalizedString(_scopes, textHint, currentCulture);
+                scope = localizedFormatScope.Scope;
                 // localization arguments are HTML-encoded unless they implement IHtmlString
 
                 return args.Length == 0
-                ? new LocalizedString(localizedFormatScope.Item1, scope, textHint, args)
+                ? new LocalizedString(localizedFormatScope.Format, scope, textHint, args)
 				: new LocalizedString(
-                    String.Format(GetFormatProvider(currentCulture), localizedFormatScope.Item1, args.Select(Encode).ToArray()),
+                    String.Format(GetFormatProvider(currentCulture), localizedFormatScope.Format, args.Select(Encode).ToArray()),
                     scope, 
                     textHint, 
                     args);

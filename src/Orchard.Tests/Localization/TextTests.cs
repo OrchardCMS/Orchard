@@ -19,7 +19,7 @@ namespace Orchard.Tests.Localization {
             var mockLocalizedManager = new Mock<ILocalizedStringManager>();
             mockLocalizedManager
                 .Setup(x => x.GetLocalizedString(new List<string> { It.IsAny<string>() }, It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(new System.Tuple<string, string>("foo {0}", null));
+                .Returns(new FormatForScope("foo {0}", null));
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(new StubCultureSelector("fr-CA")).As<ICultureSelector>();

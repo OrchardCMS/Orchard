@@ -25,6 +25,7 @@ namespace Orchard.Localization {
             if (userProperty != null) {
                 List<string> scopes = new List<string>();
                 var type = registration.Activator.LimitType;
+                // we don't need this behavior on CLR types, so that's an optimization
                 while (!type.Namespace.Equals("System")) {
                     scopes.Add(type.FullName);
                     type = type.BaseType;
