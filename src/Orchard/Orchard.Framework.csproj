@@ -191,6 +191,7 @@
     <Compile Include="Data\Migration\Schema\DropUniqueConstraintCommand.cs" />
     <Compile Include="Environment\Extensions\Models\LifecycleStatus.cs" />
     <Compile Include="Environment\ShellBuilders\ICompositionStrategy.cs" />
+    <Compile Include="Localization\FormatForScope.cs" />
     <Compile Include="Locking\ILockingProvider.cs" />
     <Compile Include="Locking\LockingProvider.cs" />
     <Compile Include="Mvc\ModelBinders\BooleanBinderProvider.cs" />
