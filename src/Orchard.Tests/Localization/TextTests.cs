@@ -5,6 +5,7 @@ using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
+using System.Collections.Generic;
 using System.Web;
 
 namespace Orchard.Tests.Localization {
@@ -17,8 +18,8 @@ namespace Orchard.Tests.Localization {
         public void Init() {
             var mockLocalizedManager = new Mock<ILocalizedStringManager>();
             mockLocalizedManager
-                .Setup(x => x.GetLocalizedString(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns("foo {0}");
+                .Setup(x => x.GetLocalizedString(new List<string> { It.IsAny<string>() }, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new FormatForScope("foo {0}", null));
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(new StubCultureSelector("fr-CA")).As<ICultureSelector>();

@@ -4,43 +4,45 @@ using Orchard.Localization.Services;
 using Orchard.Logging;
 using System.Web;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Orchard.Localization {
     public class Text : IText {
-        private readonly string _scope;
+        private readonly IEnumerable<string> _scopes;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ILocalizedStringManager _localizedStringManager;
 
-        public Text(string scope, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
-            _scope = scope;
+        public Text(IEnumerable<string> scopes, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
+            _scopes = scopes;
             _workContextAccessor = workContextAccessor;
             _localizedStringManager = localizedStringManager;
             Logger = NullLogger.Instance;
         }
 
+
         public ILogger Logger { get; set; }
 
         public LocalizedString Get(string textHint, params object[] args) {
-            Logger.Debug("{0} localizing '{1}'", _scope, textHint);
-
+            Logger.Debug("{0} localizing '{1}'", _scopes.FirstOrDefault(), textHint);
+            string scope = null;
             var workContext = _workContextAccessor.GetContext();
-            
+
             if (workContext != null) {
                 var currentCulture = workContext.CurrentCulture;
-                var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
-
+                FormatForScope localizedFormatScope = _localizedStringManager.GetLocalizedString(_scopes, textHint, currentCulture);
+                scope = localizedFormatScope.Scope;
                 // localization arguments are HTML-encoded unless they implement IHtmlString
 
                 return args.Length == 0
-                ? new LocalizedString(localizedFormat, _scope, textHint, args)
+                ? new LocalizedString(localizedFormatScope.Format, scope, textHint, args)
 				: new LocalizedString(
-                    String.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray()), 
-                    _scope, 
+                    String.Format(GetFormatProvider(currentCulture), localizedFormatScope.Format, args.Select(Encode).ToArray()),
+                    scope, 
                     textHint, 
                     args);
             }
 
-            return new LocalizedString(textHint, _scope, textHint, args);
+            return new LocalizedString(textHint, scope, textHint, args);
         }
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {
