@@ -51,6 +51,7 @@ namespace Orchard.Localization.Services {
 
         public FormatForScope GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
             var culture = LoadCulture(cultureName);
+            text = text ?? string.Empty; // prevent NREs with this string
             foreach (var scope in scopes) {
                 string scopedKey = (scope + "|" + text).ToLowerInvariant();
                 if (culture.Translations.ContainsKey(scopedKey)) {
