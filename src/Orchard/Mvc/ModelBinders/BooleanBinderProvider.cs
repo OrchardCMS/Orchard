@@ -16,7 +16,16 @@ namespace Orchard.Mvc.ModelBinders {
         }
 
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext) {
+            // returning null from here allows the downstream method to set its own default
             var value = false;
+            if (bindingContext != null) {
+                if (bindingContext.ValueProvider
+                    ?.GetValue(bindingContext.ModelName) == null) {
+                    // this is the case where we are not receiving a possible value for the boolean.
+                    // Returning null is ok here, and will let the downstream method set its own defaults.
+                    return null;
+                }
+            }
             try {
                 var attemptedValues = bindingContext.ValueProvider
                     .GetValue(bindingContext.ModelName)
@@ -34,6 +43,7 @@ namespace Orchard.Mvc.ModelBinders {
                 // because those won't give us here a list of possible values to aggregate.
             } catch {
                 bindingContext.ModelState.AddModelError(bindingContext.ModelName, new FormatException());
+                return null;
             }
             return value;
         }
