@@ -194,7 +194,6 @@
     <Compile Include="Localization\FormatForScope.cs" />
     <Compile Include="Locking\ILockingProvider.cs" />
     <Compile Include="Locking\LockingProvider.cs" />
-    <Compile Include="Mvc\ModelBinders\BooleanBinderProvider.cs" />
     <Compile Include="Mvc\Updater.cs" />
     <Compile Include="Recipes\Models\ConfigurationContext.cs" />
     <Compile Include="Recipes\Models\RecipeBuilderStepConfigurationContext.cs" />
