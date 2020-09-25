@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
@@ -12,12 +11,12 @@ using Orchard.UI.Admin;
 namespace Orchard.Email.Controllers {
     [Admin]
     public class EmailAdminController : Controller {
-        private readonly ISmtpChannel _smtpChannel;
-        private readonly IOrchardServices _orchardServices;
+        private readonly ISmtpChannel smtpChannel;
+        private readonly IOrchardServices orchardServices;
 
         public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices) {
-            _smtpChannel = smtpChannel;
-            _orchardServices = orchardServices;
+            this.smtpChannel = smtpChannel;
+            this.orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -29,14 +28,13 @@ namespace Orchard.Email.Controllers {
             ILogger logger = null;
             try {
                 var fakeLogger = new FakeLogger();
-                var smtpChannelComponent = _smtpChannel as Component;
-                if (smtpChannelComponent != null) {
+                if (smtpChannel is Component smtpChannelComponent) {
                     logger = smtpChannelComponent.Logger;
                     smtpChannelComponent.Logger = fakeLogger;
                 }
 
                 // Temporarily update settings so that the test will actually use the specified host, port, etc.
-                var smtpSettings = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+                var smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
 
                 smtpSettings.FromAddress = testSettings.FromAddress;
                 smtpSettings.FromName = testSettings.FromName;
@@ -48,18 +46,19 @@ namespace Orchard.Email.Controllers {
                 smtpSettings.UseDefaultCredentials = testSettings.UseDefaultCredentials;
                 smtpSettings.UserName = testSettings.UserName;
                 smtpSettings.Password = testSettings.Password;
+                smtpSettings.ListUnsubscribe = testSettings.ListUnsubscribe;
 
                 if (!smtpSettings.IsValid()) {
                     fakeLogger.Error("Invalid settings.");
                 }
                 else {
-                    _smtpChannel.Process(new Dictionary<string, object> {
+                    smtpChannel.Process(new Dictionary<string, object> {
                         {"Recipients", testSettings.To},
                         {"Subject", T("Orchard CMS - SMTP settings test email").Text}
                     });
                 }
 
-                if (!String.IsNullOrEmpty(fakeLogger.Message)) {
+                if (!string.IsNullOrEmpty(fakeLogger.Message)) {
                     return Json(new { error = fakeLogger.Message });
                 }
 
@@ -69,26 +68,22 @@ namespace Orchard.Email.Controllers {
                 return Json(new { error = e.Message });
             }
             finally {
-                var smtpChannelComponent = _smtpChannel as Component;
-                if (smtpChannelComponent != null) {
+                if (smtpChannel is Component smtpChannelComponent) {
                     smtpChannelComponent.Logger = logger;
                 }
 
                 // Undo the temporarily changed SMTP settings.
-                _orchardServices.TransactionManager.Cancel();
+                orchardServices.TransactionManager.Cancel();
             }
         }
 
         private class FakeLogger : ILogger {
             public string Message { get; set; }
 
-            public bool IsEnabled(LogLevel level) {
-                return true;
-            }
+            public bool IsEnabled(LogLevel level) => true;
 
-            public void Log(LogLevel level, Exception exception, string format, params object[] args) {
+            public void Log(LogLevel level, Exception exception, string format, params object[] args) =>
                 Message = exception == null ? format : exception.Message;
-            }
         }
 
         public class TestSmtpSettings {
@@ -103,6 +98,7 @@ namespace Orchard.Email.Controllers {
             public string UserName { get; set; }
             public string Password { get; set; }
             public string To { get; set; }
+            public string ListUnsubscribe { get; set; }
         }
     }
 }

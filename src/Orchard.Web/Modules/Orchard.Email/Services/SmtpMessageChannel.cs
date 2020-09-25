@@ -162,6 +162,10 @@ namespace Orchard.Email.Services {
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(smtpSettings.ListUnsubscribe)){
+                mailMessage.Headers.Add("List-Unsubscribe", smtpSettings.ListUnsubscribe);
+            }
+
             return mailMessage;
         }
 

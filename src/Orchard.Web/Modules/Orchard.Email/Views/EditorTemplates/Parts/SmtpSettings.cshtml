@@ -3,7 +3,6 @@
 @{
     var smtpClient = new SmtpClient();
 }
-
 <fieldset>
     <legend>@T("Email")</legend>
     <div>
@@ -45,9 +44,7 @@
         <label for="@Html.FieldIdFor(m => m.RequireCredentials)" class="forcheckbox">@T("Require credentials")</label>
         @Html.ValidationMessage("RequireCredentials", "*")
     </div>
-
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
-
         <div>
             @Html.RadioButtonFor(m => m.UseDefaultCredentials, false, new { id = "customCredentialsOption", name = "UseDefaultCredentials" })
             <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
@@ -74,6 +71,11 @@
                 <span class="hint">@T("The password for authentication.")</span>
             </span>
         </div>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ListUnsubscribe)">@T("List-Unsubscribe header")</label>
+        @Html.TextBoxFor(m => m.ListUnsubscribe, new { @class = "text medium" })
+        <span class="hint">@T("A mailto:link to unsubscribe a user when clicking unsubscribe option")</span>
     </div>
 </fieldset>
 <fieldset>
@@ -104,6 +106,7 @@
                     useDefaultCredentials = $("input[name='@Html.NameFor(m => m.UseDefaultCredentials)']"),
                     userName = $("#@Html.FieldIdFor(m => m.UserName)"),
                     password = $("#@Html.FieldIdFor(m => m.Password)"),
+                    listUnsubscribe = $("#@Html.FieldIdFor(m => m.ListUnsubscribe)"),
                     to = $("#emailtestto");
 
                 $("#emailtestsend").click(function () {
@@ -118,6 +121,7 @@
                         useDefaultCredentials: useDefaultCredentials.filter(':checked').val(),
                         userName: userName.val(),
                         password: password.val(),
+                        listUnsubscribe: listUnsubscribe.val(),
                         to: to.val(),
                         __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
                     })

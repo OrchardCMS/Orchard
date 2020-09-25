@@ -63,6 +63,17 @@ namespace Orchard.Email.Models {
             set => password.Value = value;
         }
 
+        // Hotmail only supports the mailto:link. When a user clicks on the 'unsubscribe' option in Hotmail. 
+        // Hotmail tries to read the mailto:link in the List-Unsubscribe header. 
+        // If the mailto:link is missing, it moves all the messages to the Junk folder.
+        // The mailto:link is supported by Gmail, Hotmail, Yahoo, AOL, ATT, Time Warner and Comcast; 
+        // European ISPs such as GMX, Libero, Ziggo, Orange, BTInternet; Russian ISPs such as mail.ru and Yandex; 
+        // and the Chinese domains qq.com, naver.com etc. So most ISPs support (and prefer) mailto:link.
+        public string ListUnsubscribe {
+            get => this.Retrieve(x => x.ListUnsubscribe);
+            set => this.Store(x => x.ListUnsubscribe, value);
+        }
+
         public bool IsValid() {
             var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
             if (section != null && !string.IsNullOrWhiteSpace(section.Network.Host)) {
