@@ -1,72 +1,79 @@
 ﻿using System.Configuration;
 using System.Net.Configuration;
 using Orchard.ContentManagement;
-using System;
 using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart {
-        private readonly ComputedField<string> _password = new ComputedField<string>();
+        private readonly ComputedField<string> password = new ComputedField<string>();
+        private readonly LazyField<string> addressPlaceholder = new LazyField<string>();
+        internal LazyField<string> AddressPlaceholderField => addressPlaceholder;
 
-        public ComputedField<string> PasswordField {
-            get { return _password; }
+        public ComputedField<string> PasswordField => password;
+
+        public string FromAddress {
+            get => this.Retrieve(x => x.FromAddress);
+            set => this.Store(x => x.FromAddress, value);
         }
 
-        public string Address {
-            get { return this.Retrieve(x => x.Address); }
-            set { this.Store(x => x.Address, value); }
+        public string FromName {
+            get => this.Retrieve(x => x.FromName);
+            set => this.Store(x => x.FromName, value);
         }
 
-        private readonly LazyField<string> _addressPlaceholder = new LazyField<string>();
-        internal LazyField<string> AddressPlaceholderField { get { return _addressPlaceholder; } }
-        public string AddressPlaceholder { get { return _addressPlaceholder.Value; } }
+        public string ReplyTo {
+            get => this.Retrieve(x => x.ReplyTo);
+            set => this.Store(x => x.ReplyTo, value);
+        }
+
+        public string AddressPlaceholder => addressPlaceholder.Value;
 
         public string Host {
-            get { return this.Retrieve(x => x.Host); }
-            set { this.Store(x => x.Host, value); }
+            get => this.Retrieve(x => x.Host);
+            set => this.Store(x => x.Host, value);
         }
 
         public int Port {
-            get { return this.Retrieve(x => x.Port, 25); }
-            set { this.Store(x => x.Port, value); }
+            get => this.Retrieve(x => x.Port, 25);
+            set => this.Store(x => x.Port, value);
         }
 
         public bool EnableSsl {
-            get { return this.Retrieve(x => x.EnableSsl); }
-            set { this.Store(x => x.EnableSsl, value); }
+            get => this.Retrieve(x => x.EnableSsl);
+            set => this.Store(x => x.EnableSsl, value);
         }
 
         public bool RequireCredentials {
-            get { return this.Retrieve(x => x.RequireCredentials); }
-            set { this.Store(x => x.RequireCredentials, value); }
+            get => this.Retrieve(x => x.RequireCredentials);
+            set => this.Store(x => x.RequireCredentials, value);
         }
 
         public bool UseDefaultCredentials {
-            get { return this.Retrieve(x => x.UseDefaultCredentials); }
-            set { this.Store(x => x.UseDefaultCredentials, value); }
+            get => this.Retrieve(x => x.UseDefaultCredentials);
+            set => this.Store(x => x.UseDefaultCredentials, value);
         }
 
         public string UserName {
-            get { return this.Retrieve(x => x.UserName); }
-            set { this.Store(x => x.UserName, value); }
+            get => this.Retrieve(x => x.UserName);
+            set => this.Store(x => x.UserName, value);
         }
 
         public string Password {
-            get { return _password.Value; }
-            set { _password.Value = value; }
+            get => password.Value;
+            set => password.Value = value;
         }
 
         public bool IsValid() {
             var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
-            if (section != null && !String.IsNullOrWhiteSpace(section.Network.Host)) {
+            if (section != null && !string.IsNullOrWhiteSpace(section.Network.Host)) {
                 return true;
             }
 
-            if (String.IsNullOrWhiteSpace(Address)) {
+            if (string.IsNullOrWhiteSpace(FromAddress)) {
                 return false;
             }
 
-            if (!String.IsNullOrWhiteSpace(Host) && Port == 0) {
+            if (!string.IsNullOrWhiteSpace(Host) && Port == 0) {
                 return false;
             }
 

@@ -7,10 +7,20 @@
 <fieldset>
     <legend>@T("Email")</legend>
     <div>
-        <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
-        @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
-        @Html.ValidationMessage("Address", "*")
+        <label for="@Html.FieldIdFor(m => m.FromAddress)">@T("Sender email address")</label>
+        @Html.TextBoxFor(m => m.FromAddress, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
+        @Html.ValidationMessage("FromAddress", "*")
         <span class="hint">@T("The default email address to use as a sender.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.FromName)">@T("Sender name")</label>
+        @Html.TextBoxFor(m => m.FromName, new { @class = "text medium" })
+        <span class="hint">@T("The default value to use as a sender name.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ReplyTo)">@T("Reply to address")</label>
+        @Html.TextBoxFor(m => m.ReplyTo, new { @class = "text medium" })
+        <span class="hint">@T("The default email address to use for reply to")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
@@ -84,7 +94,9 @@
                 var url = "@Url.Action("TestSettings", "EmailAdmin", new {area = "Orchard.Email"})",
                     error = $("#emailtesterror"),
                     info = $("#emailtestinfo"),
-                    from = $("#@Html.FieldIdFor(m => m.Address)"),
+                    fromAddress = $("#@Html.FieldIdFor(m => m.FromAddress)"),
+                    fromName = $("#@Html.FieldIdFor(m => m.FromName)"),
+                    replyTo = $("#@Html.FieldIdFor(m => m.ReplyTo)"),
                     host = $("#@Html.FieldIdFor(m => m.Host)"),
                     port = $("#@Html.FieldIdFor(m => m.Port)"),
                     enableSsl = $("#@Html.FieldIdFor(m => m.EnableSsl)"),
@@ -96,7 +108,9 @@
 
                 $("#emailtestsend").click(function () {
                     $.post(url, {
-                        from: from.val(),
+                        fromAddress: fromAddress.val(),
+                        fromName: fromName.val(),
+                        replyTo: replyTo.val(),
                         host: host.val(),
                         port: port.val(),
                         enableSsl: enableSsl.prop("checked"),

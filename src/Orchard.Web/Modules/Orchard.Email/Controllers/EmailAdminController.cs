@@ -38,7 +38,9 @@ namespace Orchard.Email.Controllers {
                 // Temporarily update settings so that the test will actually use the specified host, port, etc.
                 var smtpSettings = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
 
-                smtpSettings.Address = testSettings.From;
+                smtpSettings.FromAddress = testSettings.FromAddress;
+                smtpSettings.FromName = testSettings.FromName;
+                smtpSettings.ReplyTo = testSettings.ReplyTo;
                 smtpSettings.Host = testSettings.Host;
                 smtpSettings.Port = testSettings.Port;
                 smtpSettings.EnableSsl = testSettings.EnableSsl;
@@ -72,7 +74,7 @@ namespace Orchard.Email.Controllers {
                     smtpChannelComponent.Logger = logger;
                 }
 
-                // Undo the temporarily changed smtp settings.
+                // Undo the temporarily changed SMTP settings.
                 _orchardServices.TransactionManager.Cancel();
             }
         }
@@ -90,7 +92,9 @@ namespace Orchard.Email.Controllers {
         }
 
         public class TestSmtpSettings {
-            public string From { get; set; }
+            public string FromAddress { get; set; }
+            public string FromName { get; set; }
+            public string ReplyTo { get; set; }
             public string Host { get; set; }
             public int Port { get; set; }
             public bool EnableSsl { get; set; }
