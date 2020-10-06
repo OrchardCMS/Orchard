@@ -13,10 +13,10 @@ using System.IO;
 
 namespace Orchard.Email.Services {
     public class SmtpMessageChannel : Component, ISmtpChannel, IDisposable {
-        private readonly SmtpSettingsPart smtpSettings;
-        private readonly IShapeFactory shapeFactory;
-        private readonly IShapeDisplay shapeDisplay;
-        private readonly Lazy<SmtpClient> smtpClientField;
+        private readonly SmtpSettingsPart _smtpSettings;
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
+        private readonly Lazy<SmtpClient> _smtpClientField;
         public static readonly string MessageType = "Email";
 
         public SmtpMessageChannel(
@@ -24,23 +24,23 @@ namespace Orchard.Email.Services {
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay) {
 
-            this.shapeFactory = shapeFactory;
-            this.shapeDisplay = shapeDisplay;
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
 
-            smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
-            smtpClientField = new Lazy<SmtpClient>(CreateSmtpClient);
+            _smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+            _smtpClientField = new Lazy<SmtpClient>(CreateSmtpClient);
         }
 
         public void Dispose() {
-            if (!smtpClientField.IsValueCreated) {
+            if (!_smtpClientField.IsValueCreated) {
                 return;
             }
 
-            smtpClientField.Value.Dispose();
+            _smtpClientField.Value.Dispose();
         }
 
         public void Process(IDictionary<string, object> parameters) {
-            if (!smtpSettings.IsValid()) {
+            if (!_smtpSettings.IsValid()) {
                 return;
             }
 
@@ -68,7 +68,7 @@ namespace Orchard.Email.Services {
             var mailMessage = CreteMailMessage(parameters, emailMessage);
 
             try {
-                smtpClientField.Value.Send(mailMessage);
+                _smtpClientField.Value.Send(mailMessage);
             }
             catch (Exception e) {
                 Logger.Error(e, "Could not send email");
@@ -78,13 +78,13 @@ namespace Orchard.Email.Services {
         private MailMessage CreteMailMessage(IDictionary<string, object> parameters, EmailMessage emailMessage) {
 
             // Apply default Body alteration for SmtpChannel.
-            var template = shapeFactory.Create("Template_Smtp_Wrapper", Arguments.From(new {
+            var template = _shapeFactory.Create("Template_Smtp_Wrapper", Arguments.From(new {
                 Content = new MvcHtmlString(emailMessage.Body)
             }));
 
             var mailMessage = new MailMessage {
                 Subject = emailMessage.Subject,
-                Body = shapeDisplay.Display(template),
+                Body = _shapeDisplay.Display(template),
                 IsBodyHtml = true
             };
 
@@ -120,13 +120,13 @@ namespace Orchard.Email.Services {
 
             var senderAddress =
                 !string.IsNullOrWhiteSpace(emailMessage.FromAddress) ? emailMessage.FromAddress :
-                !string.IsNullOrWhiteSpace(smtpSettings.FromAddress) ? smtpSettings.FromAddress :
+                !string.IsNullOrWhiteSpace(_smtpSettings.FromAddress) ? _smtpSettings.FromAddress :
                 // Take 'From' address from site settings or web.config.
                 ((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From;
 
             var senderName = !string.IsNullOrWhiteSpace(emailMessage.FromName)
                 ? emailMessage.FromName
-                : smtpSettings.FromName;
+                : _smtpSettings.FromName;
 
             var sender = (senderAddress, senderName) switch
             {
@@ -138,7 +138,7 @@ namespace Orchard.Email.Services {
 
             var replyTo =
                 !string.IsNullOrWhiteSpace(emailMessage.ReplyTo) ? ParseRecipients(emailMessage.ReplyTo) :
-                !string.IsNullOrWhiteSpace(smtpSettings.ReplyTo) ? new[] { smtpSettings.ReplyTo } :
+                !string.IsNullOrWhiteSpace(_smtpSettings.ReplyTo) ? new[] { _smtpSettings.ReplyTo } :
                 Array.Empty<string>();
 
             foreach (var recipient in replyTo) {
@@ -162,8 +162,8 @@ namespace Orchard.Email.Services {
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(smtpSettings.ListUnsubscribe)){
-                mailMessage.Headers.Add("List-Unsubscribe", smtpSettings.ListUnsubscribe);
+            if (!string.IsNullOrWhiteSpace(_smtpSettings.ListUnsubscribe)){
+                mailMessage.Headers.Add("List-Unsubscribe", _smtpSettings.ListUnsubscribe);
             }
 
             return mailMessage;
@@ -171,24 +171,24 @@ namespace Orchard.Email.Services {
 
         private SmtpClient CreateSmtpClient() {
             // If no properties are set in the dashboard, use the web.config value.
-            if (string.IsNullOrWhiteSpace(smtpSettings.Host)) {
+            if (string.IsNullOrWhiteSpace(_smtpSettings.Host)) {
                 return new SmtpClient();
             }
 
             var smtpClient = new SmtpClient {
-                UseDefaultCredentials = smtpSettings.RequireCredentials && smtpSettings.UseDefaultCredentials
+                UseDefaultCredentials = _smtpSettings.RequireCredentials && _smtpSettings.UseDefaultCredentials
             };
 
-            if (!smtpClient.UseDefaultCredentials && !string.IsNullOrWhiteSpace(smtpSettings.UserName)) {
-                smtpClient.Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password);
+            if (!smtpClient.UseDefaultCredentials && !string.IsNullOrWhiteSpace(_smtpSettings.UserName)) {
+                smtpClient.Credentials = new NetworkCredential(_smtpSettings.UserName, _smtpSettings.Password);
             }
 
-            if (smtpSettings.Host != null) {
-                smtpClient.Host = smtpSettings.Host;
+            if (_smtpSettings.Host != null) {
+                smtpClient.Host = _smtpSettings.Host;
             }
 
-            smtpClient.Port = smtpSettings.Port;
-            smtpClient.EnableSsl = smtpSettings.EnableSsl;
+            smtpClient.Port = _smtpSettings.Port;
+            smtpClient.EnableSsl = _smtpSettings.EnableSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
         }

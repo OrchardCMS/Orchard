@@ -11,12 +11,12 @@ using Orchard.UI.Admin;
 namespace Orchard.Email.Controllers {
     [Admin]
     public class EmailAdminController : Controller {
-        private readonly ISmtpChannel smtpChannel;
-        private readonly IOrchardServices orchardServices;
+        private readonly ISmtpChannel _smtpChannel;
+        private readonly IOrchardServices _orchardServices;
 
         public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices) {
-            this.smtpChannel = smtpChannel;
-            this.orchardServices = orchardServices;
+            _smtpChannel = smtpChannel;
+            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -28,13 +28,13 @@ namespace Orchard.Email.Controllers {
             ILogger logger = null;
             try {
                 var fakeLogger = new FakeLogger();
-                if (smtpChannel is Component smtpChannelComponent) {
+                if (_smtpChannel is Component smtpChannelComponent) {
                     logger = smtpChannelComponent.Logger;
                     smtpChannelComponent.Logger = fakeLogger;
                 }
 
                 // Temporarily update settings so that the test will actually use the specified host, port, etc.
-                var smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+                var smtpSettings = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
 
                 smtpSettings.FromAddress = testSettings.FromAddress;
                 smtpSettings.FromName = testSettings.FromName;
@@ -52,7 +52,7 @@ namespace Orchard.Email.Controllers {
                     fakeLogger.Error("Invalid settings.");
                 }
                 else {
-                    smtpChannel.Process(new Dictionary<string, object> {
+                    _smtpChannel.Process(new Dictionary<string, object> {
                         {"Recipients", testSettings.To},
                         {"Subject", T("Orchard CMS - SMTP settings test email").Text}
                     });
@@ -68,12 +68,12 @@ namespace Orchard.Email.Controllers {
                 return Json(new { error = e.Message });
             }
             finally {
-                if (smtpChannel is Component smtpChannelComponent) {
+                if (_smtpChannel is Component smtpChannelComponent) {
                     smtpChannelComponent.Logger = logger;
                 }
 
                 // Undo the temporarily changed SMTP settings.
-                orchardServices.TransactionManager.Cancel();
+                _orchardServices.TransactionManager.Cancel();
             }
         }
 

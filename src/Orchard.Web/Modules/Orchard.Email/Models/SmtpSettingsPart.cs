@@ -5,11 +5,9 @@ using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart {
-        private readonly ComputedField<string> password = new ComputedField<string>();
-        private readonly LazyField<string> addressPlaceholder = new LazyField<string>();
-        internal LazyField<string> AddressPlaceholderField => addressPlaceholder;
+        private readonly ComputedField<string> _password = new ComputedField<string>();
 
-        public ComputedField<string> PasswordField => password;
+        public ComputedField<string> PasswordField => _password;
 
         public string FromAddress {
             get => this.Retrieve(x => x.FromAddress);
@@ -26,7 +24,9 @@ namespace Orchard.Email.Models {
             set => this.Store(x => x.ReplyTo, value);
         }
 
-        public string AddressPlaceholder => addressPlaceholder.Value;
+        private readonly LazyField<string> _addressPlaceholder = new LazyField<string>();
+        internal LazyField<string> AddressPlaceholderField => _addressPlaceholder;
+        public string AddressPlaceholder => _addressPlaceholder.Value;
 
         public string Host {
             get => this.Retrieve(x => x.Host);
@@ -59,8 +59,8 @@ namespace Orchard.Email.Models {
         }
 
         public string Password {
-            get => password.Value;
-            set => password.Value = value;
+            get => _password.Value;
+            set => _password.Value = value;
         }
 
         // Hotmail only supports the mailto:link. When a user clicks on the 'unsubscribe' option in Hotmail. 
