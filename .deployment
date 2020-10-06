@@ -1,23 +1,34 @@
-; .deployment is actually an INI file and parsed by 
+; .deployment is actually an INI file and parsed by the following file
 ; https://raw.githubusercontent.com/projectkudu/kudu/master/Kudu.Core/Infrastructure/IniFile.cs
 
 ; Document of deployment with custom script
 ; https://github.com/projectkudu/kudu/wiki/Customizing-deployments#deploying-with-custom-script
 
 ; Document of configurable settings https://github.com/projectkudu/kudu/wiki/Configurable-settings
-; Runtime settings cannot be overrided in .deployment e.g. WEBSITE_NODE_DEFAULT_VERSION
+; Runtime settings cannot be overridden in .deployment e.g. WEBSITE_NODE_DEFAULT_VERSION
 ; More info https://github.com/projectkudu/kudu/wiki/Configurable-settings#runtime-settings
 
-; Define default Node.js version in WEBSITE_NODE_DEFAULT_VERSION App Setting
-; Find all Node.js versions from Kudu tool api/diagnostics/runtime
+# Define default node version in WEBSITE_NODE_DEFAULT_VERSION APP Setting
+# Find all Node.js versions from your AppService Kudu api/diagnostics/runtime
+# More info https://codesanook-reactjs-server-side-rendering.scm.azurewebsites.net/api/diagnostics/runtime
 
+; You can define a custom environment variable as 
+; CUSTOM_VARIABLE = my custom variable value
+; and read in a deploy.ps1 script as 
+; $Env:CUSTOM_VARIABLE
+
+; https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1#examples
 [config]
 COMMAND = PowerShell -NoProfile -NoLogo -ExecutionPolicy Unrestricted -Command "& "$(Join-Path -Path $(Get-Location) -ChildPath deploy.ps1)" 2>&1 | Write-Output"
+
+; Set additional environment variables
+; Timeout in seconds
+; Set to one hour
 SCM_COMMAND_IDLE_TIMEOUT = 3600
 
-MSBUILD_PATH = D:\Program Files (x86)\MSBuild-15.9.21.664\MSBuild\MSBuild\15.0\Bin\MSBuild.exe
-PROJECT_PATH = Orchard.proj
+; Variables for MSBuild 
+MSBUILD_PATH = D:\Program Files (x86)\MSBuild-16.4\MSBuild\Current\Bin\MSBuild.exe  
 SOLUTION_PATH = src/Orchard.sln
 
-; You can define a custom environment variable as CUSTOM_VARIABLE = my custom variable value
-; and use in a deploy.ps1 script as $Env:CUSTOM_VARIABLE.
+; For Azure deployment, we use custom MS Build at root of the project.
+PROJECT_PATH = Orchard.proj
