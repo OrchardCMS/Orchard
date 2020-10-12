@@ -14,7 +14,7 @@ if (-not (Get-Command -Name node -ErrorAction Ignore)) {
 	)
 }
 
-$ARTIFACTS = "$PSScriptRoot\..\artifacts"
+$ARTIFACTS = "$PSScriptRoot/../artifacts"
 # Set deployment source folder
 if (-not $Env:DEPLOYMENT_SOURCE) {
     'Set $DEPLOYMENT_SOURCE variable from the current directory'
@@ -23,16 +23,16 @@ if (-not $Env:DEPLOYMENT_SOURCE) {
 
 if (-not $Env:DEPLOYMENT_TARGET) {
     'Set $DEPLOYMENT_TARGET variable'
-    $Env:DEPLOYMENT_TARGET = "$ARTIFACTS\wwwroot"
+    $Env:DEPLOYMENT_TARGET = "$ARTIFACTS/wwwroot"
 }
 
 if (-not $Env:NEXT_MANIFEST_PATH) {
     'Set $NEXT_MANIFEST_PATH variable'
-    $Env:NEXT_MANIFEST_PATH = "$ARTIFACTS\manifest"
+    $Env:NEXT_MANIFEST_PATH = "$ARTIFACTS/manifest"
 
 	if (-not $Env:PREVIOUS_MANIFEST_PATH) {
 		'Set $PREVIOUS_MANIFEST_PATH variable'
-		$Env:PREVIOUS_MANIFEST_PATH = "$ARTIFACTS\manifest"
+		$Env:PREVIOUS_MANIFEST_PATH = "$ARTIFACTS/manifest"
 	}
 }
 
@@ -78,10 +78,12 @@ $nodeProjectsDir | Foreach-Object {
 
 # Build .NET project
 "Restore NuGet packages"
-Invoke-ExternalCommand -ScriptBlock { nuget restore "$Env:SOLUTION_PATH" }
+# REF https://docs.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-restore#options
+$msBuildDir = Split-Path -Path $Env:MSBUILD_PATH -Parent
+Invoke-ExternalCommand -ScriptBlock { ./lib/nuget/nuget.exe restore "$Env:SOLUTION_PATH" -MSBuildPath "$msBuildDir" }
 
 "Build .NET project to the pre-compiled directory"
-$preCompiledDir = "$Env:DEPLOYMENT_SOURCE\build\Precompiled"
+$preCompiledDir = "$Env:DEPLOYMENT_SOURCE/build/Precompiled"
 
 "Build .NET project to the temp directory"
 "Building the project with MSBuild to '$preCompiledDir'" 
