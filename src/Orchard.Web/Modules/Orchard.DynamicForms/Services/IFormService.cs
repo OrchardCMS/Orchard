@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.IO;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -20,6 +21,7 @@ namespace Orchard.DynamicForms.Services {
         Submission CreateSubmission(Submission submission);
         Submission GetSubmission(int id);
         IPageOfItems<Submission> GetSubmissions(string formName = null, int? skip = null, int? take = null);
+        Stream ExportSubmissions(string formName = null);
         void DeleteSubmission(Submission submission);
         int DeleteSubmissions(IEnumerable<int> submissionIds);
         void ReadElementValues(FormElement element, ReadElementValuesContext context);
