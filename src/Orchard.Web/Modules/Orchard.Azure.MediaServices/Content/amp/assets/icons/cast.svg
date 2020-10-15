@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+	 height="16px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+<g id="icons">
+	<rect x="-400" y="-382" display="none" fill="#3C454F" width="1200" height="934"/>
+	<g id="settings">
+	</g>
+	<g id="cast_2_">
+		<g>
+			<path fill="#FFFFFF" d="M12.286,2H8.714C7.771,2,7,2.771,7,3.714v8.571C7,13.229,7.771,14,8.714,14h3.571
+				C13.229,14,14,13.229,14,12.286V3.714C14,2.771,13.229,2,12.286,2z M13,12.286C13,12.68,12.679,13,12.286,13H8.714
+				C8.321,13,8,12.68,8,12.286V3.714C8,3.32,8.321,3,8.714,3h3.571C12.679,3,13,3.32,13,3.714V12.286z"/>
+			<circle fill="#FFFFFF" cx="10.5" cy="11" r="1"/>
+			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M3.287,3.4c-0.195-0.195-0.516-0.195-0.711,0
+				c-0.188,0.195-0.188,0.508,0,0.703c1.079,1.079,1.618,2.485,1.618,3.892c0,1.415-0.531,2.821-1.618,3.9
+				c-0.188,0.195-0.188,0.516,0,0.711c0.102,0.094,0.227,0.141,0.36,0.141c0.125,0,0.25-0.047,0.352-0.141
+				c1.274-1.274,1.907-2.946,1.907-4.611S4.553,4.666,3.287,3.4z"/>
+			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M1.708,4.978c-0.195-0.195-0.508-0.195-0.703,0
+				s-0.195,0.508,0,0.703c0.641,0.641,0.961,1.477,0.961,2.321c0,0.836-0.32,1.672-0.961,2.313c-0.195,0.195-0.195,0.516,0,0.711
+				c0.102,0.094,0.227,0.141,0.352,0.141c0.133,0,0.258-0.047,0.352-0.141c0.836-0.836,1.258-1.938,1.25-3.025
+				C2.966,6.909,2.544,5.815,1.708,4.978z"/>
+		</g>
+		<rect x="0" fill-rule="evenodd" clip-rule="evenodd" fill="none" width="16" height="16"/>
+	</g>
+	<g id="live_edge_5_">
+		<g>
+			<defs>
+				<rect id="SVGID_3_" x="330" y="10" width="36" height="4"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_3_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="5.029" y="8.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -0.6274 18.4853)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-2.971" y="8.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -2.9706 12.8284)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-10.971" y="8.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -5.3137 7.1716)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-18.971" y="8.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -7.6569 1.5147)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+			<g clip-path="url(#SVGID_2_)">
+				
+					<rect x="-26.971" y="8.586" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -10 -4.1421)" opacity="0.5" fill="#DAF0FA" width="33.941" height="2.828"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="quality_click">
+	<g id="check_copy_17_2_">
+	</g>
+</g>
+</svg>

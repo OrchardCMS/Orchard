@@ -1,0 +1,17 @@
+﻿.azuremediaplayer.amp-default-skin button {
+    margin: initial;
+    background: transparent;
+    border-radius: unset;
+    -webkit-border-radius: unset;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.azuremediaplayer.amp-default-skin > button:hover {
+    background-color: rgba(255,255,255,.1);
+}
+
+.azuremediaplayer.amp-default-skin.amp-size-s {
+    /* workaround for AMP style issue on small screens */
+    font-size: 400px !important;
+}

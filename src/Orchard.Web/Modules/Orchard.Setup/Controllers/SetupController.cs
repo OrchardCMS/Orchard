@@ -45,6 +45,7 @@ namespace Orchard.Setup.Controllers {
         }
 
         public ActionResult Index() {
+            var webconfigOverrides = WebconfigOverrides.Load();
             var initialSettings = _setupService.Prime();
             var recipes = _setupService.Recipes().ToList();
             string recipeDescription = null;
@@ -64,7 +65,9 @@ namespace Orchard.Setup.Controllers {
 
             return IndexViewResult(new SetupViewModel {
                 AdminUsername = "admin",
-                DatabaseIsPreconfigured = !String.IsNullOrEmpty(initialSettings.DataProvider),
+                DefaultRecipe = webconfigOverrides.DefaultRecipe ?? DefaultRecipe,
+                DatabaseIsPreconfigured = !String.IsNullOrEmpty(initialSettings.DataProvider) ||
+                                            !String.IsNullOrEmpty(webconfigOverrides.DataProvider),
                 Recipes = recipes,
                 RecipeDescription = recipeDescription
             });
@@ -74,6 +77,19 @@ namespace Orchard.Setup.Controllers {
         public ActionResult IndexPOST(SetupViewModel model) {
             // Sets the setup request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
             HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
+
+            // load defaults
+            var webconfigOverrides = WebconfigOverrides.Load();
+            var initialSettings = _setupService.Prime();
+
+            // Override database settings if were preconfigured in the web.config
+            if (webconfigOverrides.DataProvider != null)
+            {
+                SetupDatabaseType type;
+                Enum.TryParse(webconfigOverrides.DataProvider, out type);
+                model.DatabaseProvider = type;
+                model.DatabaseConnectionString = webconfigOverrides.DataConnectionString;
+            }
 
             var recipes = _setupService.Recipes().ToList();
 
@@ -108,8 +124,8 @@ namespace Orchard.Setup.Controllers {
                 foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
                     model.RecipeDescription = recipe.Description;
                 }
-                model.DatabaseIsPreconfigured = !String.IsNullOrEmpty(_setupService.Prime().DataProvider);
-
+                model.DatabaseIsPreconfigured = !String.IsNullOrEmpty(initialSettings.DataProvider) ||
+                                                !String.IsNullOrEmpty(webconfigOverrides.DataProvider);
                 return IndexViewResult(model);
             }
 
@@ -167,7 +183,8 @@ namespace Orchard.Setup.Controllers {
                 foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
                     model.RecipeDescription = recipe.Description;
                 }
-                model.DatabaseIsPreconfigured = !String.IsNullOrEmpty(_setupService.Prime().DataProvider);
+                model.DatabaseIsPreconfigured = !String.IsNullOrEmpty(initialSettings.DataProvider) ||
+                                                !String.IsNullOrEmpty(webconfigOverrides.DataProvider);
 
                 return IndexViewResult(model);
             }

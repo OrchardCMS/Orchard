@@ -99,16 +99,16 @@
       <HintPath>..\..\..\packages\Orchard.WindowsAzure.Diagnostics.2.7.0.0\lib\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client, Version=3.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.4.0.0\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client, Version=3.8.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.8.0.5\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer, Version=3.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.4.0.0\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer, Version=3.8.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.8.0.5\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.Common.BlobTransfer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption, Version=3.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.4.0.0\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption, Version=3.8.0.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\windowsazure.mediaservices.3.8.0.5\lib\net45\Microsoft.WindowsAzure.MediaServices.Client.Common.FileEncryption.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=5.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -173,9 +173,100 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\amp\assets\fonts\azuremediaplayer.svg" />
+    <Content Include="Content\amp\assets\icons\amslogo.png" />
+    <Content Include="Content\amp\assets\icons\amslogo.svg" />
+    <Content Include="Content\amp\assets\icons\amve-sprites.png" />
+    <Content Include="Content\amp\assets\icons\audio-only-a.svg" />
+    <Content Include="Content\amp\assets\icons\audio-only-b.svg" />
+    <Content Include="Content\amp\assets\icons\audio-track.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_closed-captioning.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_ellipsis.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_error.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_exit-fullscreen.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_expand.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-128x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-16x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-2x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-32x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-4x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-64x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward-8x.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fast-forward.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_frame-skip-backward.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_frame-skip-forward.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_fullscreen.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_go-to-live.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_mute.svg" />
+    <Content Include="Content\amp\assets\icons\Azure Media Player icons_pause.svg" />
+    <Content Include="Content\amp\assets\icons\buffering-rainbow-bg.png" />
+    <Content Include="Content\amp\assets\icons\buffering-rainbow.gif" />
+    <Content Include="Content\amp\assets\icons\camera-angle.svg" />
+    <Content Include="Content\amp\assets\icons\cast.svg" />
+    <Content Include="Content\amp\assets\icons\check.svg" />
+    <Content Include="Content\amp\assets\icons\closed-captioning.svg" />
+    <Content Include="Content\amp\assets\icons\ellipsis.svg" />
+    <Content Include="Content\amp\assets\icons\error.svg" />
+    <Content Include="Content\amp\assets\icons\exit-fullscreen.svg" />
+    <Content Include="Content\amp\assets\icons\expand.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-128x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-16x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-2x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-32x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-4x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-64x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward-8x.svg" />
+    <Content Include="Content\amp\assets\icons\fast-forward.svg" />
+    <Content Include="Content\amp\assets\icons\frame-skip-backward.svg" />
+    <Content Include="Content\amp\assets\icons\frame-skip-forward.svg" />
+    <Content Include="Content\amp\assets\icons\fullscreen.svg" />
+    <Content Include="Content\amp\assets\icons\go-to-live.svg" />
+    <Content Include="Content\amp\assets\icons\icons_zoom.svg" />
+    <Content Include="Content\amp\assets\icons\large-play-button.svg" />
+    <Content Include="Content\amp\assets\icons\live-edge-hover.gif" />
+    <Content Include="Content\amp\assets\icons\live-edge.gif" />
+    <Content Include="Content\amp\assets\icons\live.svg" />
+    <Content Include="Content\amp\assets\icons\mute.svg" />
+    <Content Include="Content\amp\assets\icons\next-track.svg" />
+    <Content Include="Content\amp\assets\icons\pause.svg" />
+    <Content Include="Content\amp\assets\icons\pip.svg" />
+    <Content Include="Content\amp\assets\icons\play-large-bg.svg" />
+    <Content Include="Content\amp\assets\icons\play-large.svg" />
+    <Content Include="Content\amp\assets\icons\play.svg" />
+    <Content Include="Content\amp\assets\icons\playback-speed-on.svg" />
+    <Content Include="Content\amp\assets\icons\playback-speed.svg" />
+    <Content Include="Content\amp\assets\icons\previous-track.svg" />
+    <Content Include="Content\amp\assets\icons\quality-1.svg" />
+    <Content Include="Content\amp\assets\icons\quality-2.svg" />
+    <Content Include="Content\amp\assets\icons\quality-3.svg" />
+    <Content Include="Content\amp\assets\icons\quality-4.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-128x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-16x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-2x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-32x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-4x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-64x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind-8x.svg" />
+    <Content Include="Content\amp\assets\icons\rewind.svg" />
+    <Content Include="Content\amp\assets\icons\scrubber-hover.svg" />
+    <Content Include="Content\amp\assets\icons\scrubber.svg" />
+    <Content Include="Content\amp\assets\icons\settings.svg" />
+    <Content Include="Content\amp\assets\icons\share.svg" />
+    <Content Include="Content\amp\assets\icons\skip-backward.svg" />
+    <Content Include="Content\amp\assets\icons\skip-forward.svg" />
+    <Content Include="Content\amp\assets\icons\sound-on.svg" />
+    <Content Include="Content\amp\assets\icons\subtitles.svg" />
+    <Content Include="Content\amp\assets\icons\volume-slider.svg" />
+    <Content Include="Content\amp\assets\icons\zoom.svg" />
+    <Content Include="Content\amp\azuremediaplayer.min.js" />
+    <Content Include="Content\amp\azuremediaplayer.min.css" />
+    <Content Include="Content\amp\stylefix.css" />
+    <Content Include="Content\amp\techs\SmoothStreamingPlayer.xap" />
+    <Content Include="Content\amp\techs\StrobeMediaPlayback.2.0.swf" />
     <Content Include="Content\expressInstall.swf" />
     <Content Include="Content\MSAdaptiveStreamingPlugin.swf" />
     <Content Include="Content\StrobeMediaPlayback.swf" />
+    <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Models\EncodingPreset.cs" />
     <Compile Include="Shapes\CloudVideoPlayerShape.cs" />
     <Compile Include="Helpers\BitExtensions.cs" />
@@ -551,6 +642,10 @@
   <ItemGroup>
     <None Include="Assets\JavaScript\Lib\MPEG Dash Notice.docx" />
     <Content Include="packages.config" />
+    <Content Include="Content\amp\assets\fonts\azuremediaplayer.eot" />
+    <Content Include="Content\amp\assets\fonts\azuremediaplayer.ttf" />
+    <Content Include="Content\amp\assets\fonts\azuremediaplayer.woff" />
+    <Content Include="Content\amp\assets\fonts\azuremediaplayer.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -559,6 +654,7 @@
     <Content Include="Assets\TypeScript\Typings\moment-node.d.ts" />
     <Content Include="Assets\TypeScript\Typings\URIjs.d.ts" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

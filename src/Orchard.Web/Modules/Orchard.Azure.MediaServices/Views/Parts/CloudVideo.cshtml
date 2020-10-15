@@ -1,9 +1,14 @@
 ﻿@using Orchard.ContentManagement;
 
+@{
+    var content = (IContent)Model.ContentPart;
+    var alternateText = content.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText;
+}
+
 @Display.CloudVideoPlayer(
     ContentPart: Model.ContentPart,
     ContentItem: Model.ContentPart.ContentItem,
-    AlternateText: Model.ContentPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
+    AlternateText: alternateText,
     AssetId: null,
     IgnoreIncludeInPlayer: false,
     AllowPrivateUrls: false,

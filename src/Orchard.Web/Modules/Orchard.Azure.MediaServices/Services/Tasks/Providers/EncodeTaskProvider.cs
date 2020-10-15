@@ -72,7 +72,7 @@ namespace Orchard.Azure.MediaServices.Services.Tasks.Providers {
 
             var task = tasks.AddNew(
                 viewModel.SelectedEncodingPreset,
-                _wamsClient.GetLatestMediaProcessorByName(MediaProcessorName.WindowsAzureMediaEncoder),
+                _wamsClient.GetLatestMediaProcessorByName(MediaProcessorName.MediaEncoderStandard),
                 !String.IsNullOrEmpty(encodingPreset.CustomXml) ? encodingPreset.CustomXml : encodingPreset.Name,
                 TaskOptions.None);
 

@@ -30,7 +30,7 @@
         @Html.ValidationMessageFor(m => m.EnableDynamicPackaging)
     </div>
     <p class="hint">@T("When checked, dynamic packaging assets will be created when encoding using one of the supported encoding presets for dynamic packaging.")</p>
-    <p class="hint">@T("NOTE: When enabling dynamic packaging you must ensure you have at least one unit of reserved capacity configured on your streaming origin.")</p>
+    <p class="hint">@T("NOTE: When enabling dynamic packaging you must ensure that your default streaming endpoint is either 'Standard' or 'Premium' type and it's in Running state.")</p>
 </fieldset>
 
 <fieldset>

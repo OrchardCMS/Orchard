@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MediaServices.Client;
-using Orchard;
 
 namespace Orchard.Azure.MediaServices.Services.Wams {
     public delegate void UpdateProgressAction(WamsUploadProgressInfo progressInfo);
@@ -20,6 +19,5 @@ namespace Orchard.Azure.MediaServices.Services.Wams {
         IJob CreateNewJob(string name);
         Task<WamsAssetInfo> CreateAssetAsync(string filename);
         Task<string> GetEncoderMetadataXml(IAsset asset);
-        Task<IEnumerable<string>> EnsureCorsIsEnabledAsync(params string[] origins);
     }
 }

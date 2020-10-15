@@ -74,10 +74,10 @@ namespace Orchard.Azure.MediaServices.Controllers {
                 return View("Index", viewModel);
             }
 
-            var presetPattern = new Regex(@"^[\w\s]*$");
+            var presetPattern = new Regex(@"^[\w\s\.]*$");
             foreach (var preset in viewModel.EncodingSettings.WamsEncodingPresets) {
                 if (!presetPattern.IsMatch(preset.Name)) {
-                    _services.Notifier.Error(T("The encoding preset name '{0}' is invalid. Encoding presets can only contain letters, numbers and spaces.", preset.Name));
+                    _services.Notifier.Error(T("The encoding preset name '{0}' is invalid. Encoding presets can only contain letters, numbers, spaces and dot character.", preset.Name));
                     return View("Index", viewModel);
                 }
             }
@@ -128,7 +128,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                         if (!originsToAdd.Contains(currentUrlOrigin))
                             originsToAdd.Add(currentUrlOrigin);
 
-                        var addedOrigins = _wamsClient.EnsureCorsIsEnabledAsync(originsToAdd.ToArray()).Result;
+                        var addedOrigins = StorageHelper.EnsureCorsIsEnabledAsync(settings.WamsAccountName, settings.WamsAccountKey, settings.StorageAccountKey, originsToAdd.ToArray()).Result;
 
                         if (addedOrigins.Any()) {
                             Logger.Information("CORS rules were added to the configured storage account for the following URLs: {0}.", String.Join("; ", addedOrigins));

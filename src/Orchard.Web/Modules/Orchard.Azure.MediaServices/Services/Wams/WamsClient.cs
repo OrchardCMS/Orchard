@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 using Orchard.Azure.MediaServices.Models;
 using Orchard.Azure.MediaServices.Services.TempFiles;
 using Microsoft.WindowsAzure.MediaServices.Client;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-using Newtonsoft.Json;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Logging;
 
@@ -291,59 +286,6 @@ namespace Orchard.Azure.MediaServices.Services.Wams {
                     Logger.Warning(ex, "Error while deleting temporary file '{0}'.", metadataFilename);
                 }
             }
-        }
-
-        public async Task<IEnumerable<string>> EnsureCorsIsEnabledAsync(params string[] origins) {
-            var storageAccount = new CloudStorageAccount(new StorageCredentials(Context.DefaultStorageAccount.Name, Settings.StorageAccountKey), false);
-            var client = storageAccount.CreateCloudBlobClient();
-            var serviceProperties = await client.GetServicePropertiesAsync().ConfigureAwait(continueOnCapturedContext: false);
-            var requiredHeaders = new[] { "accept", "x-ms-blob-content-type", "x-ms-blob-type", "x-ms-date", "x-ms-version", "content-disposition", "content-length", "content-range", "content-type" };
-            var requiredMethods = CorsHttpMethods.Put | CorsHttpMethods.Options;
-
-            if (serviceProperties.Cors == null)
-                serviceProperties.Cors = new CorsProperties();
-            
-            var rule = FindBestMatchingRule(serviceProperties, requiredHeaders, requiredMethods, origins);
-
-            if (rule == null) {
-                rule = new CorsRule {
-                    AllowedHeaders = requiredHeaders,
-                    AllowedMethods = requiredMethods,
-                    AllowedOrigins = new List<string>(),
-                    ExposedHeaders = new List<string> { "*" },
-                    MaxAgeInSeconds = 1800 // 30 minutes
-                };
-
-                serviceProperties.Cors.CorsRules.Add(rule);
-                Logger.Information("A new CORS rule has been added to the configured WAMS instance.");
-            }
-
-            var addedOrigins = new List<string>();
-            var settingsChanged = false;
-
-            foreach (var origin in origins.Where(origin => !rule.AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))) {
-                rule.AllowedOrigins.Add(origin);
-                addedOrigins.Add(origin);
-                settingsChanged = true;
-                Logger.Information("The following CORS origins were added to the configured WAMS instance: {0}", origin);
-            }
-
-            if (settingsChanged)
-                await client.SetServicePropertiesAsync(serviceProperties).ConfigureAwait(continueOnCapturedContext: false);
-
-            return addedOrigins.AsEnumerable();
-        }
-
-        private static CorsRule FindBestMatchingRule(ServiceProperties serviceProperties, IEnumerable<string> requiredHeaders, CorsHttpMethods requiredMethods, IEnumerable<string> origins) {
-            var query =
-                from rule in serviceProperties.Cors.CorsRules
-                let hasRequiredHeadersAndMethods = (rule.AllowedHeaders.Contains("*") || requiredHeaders.All(rule.AllowedHeaders.Contains)) && (rule.AllowedMethods & requiredMethods) == requiredMethods
-                let numberMatchingOrigins = origins.Count(x => rule.AllowedOrigins.Contains(x))
-                where hasRequiredHeadersAndMethods
-                orderby hasRequiredHeadersAndMethods descending, numberMatchingOrigins descending
-                select rule;
-
-            return query.FirstOrDefault();
         }
 
         private async Task<WamsLocatorInfo> CreateLocatorAsync(IAsset asset, string accessPolicyName, LocatorType type, TimeSpan duration) {
