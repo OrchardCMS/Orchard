@@ -7,3 +7,8 @@ OrchardVersion: 1.10.3
 Description: Module for processing Media e.g. image resizing
 Category: Media
 Dependencies: Orchard.Forms
+Features:
+    Orchard.MediaProcessingHtmlFilter:
+        Name: Media Processing HTML Filter
+        Description: Dynamically resizes images to their height and width attributes
+        Category: Media
