@@ -266,6 +266,7 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
     <CallTarget Targets="CopySqlCeBinaries" />
+      <calltarget targets="BuildAllModules"></calltarget>
   </Target>
   <Target Name="ExcludeRootBinariesDeployment">
     <ItemGroup>
@@ -306,4 +307,5 @@
     </ItemGroup>
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(RoslynFilesDestination)" Condition="!Exists('$(RoslynFilesDestination)csc.exe')" />
   </Target>
+    <target     name="BuildAllModules">     <itemgroup>         <allmodules include="$(ProjectDir)Modules\**\*.csproj" exclude="$(ProjectDir)Modules\**\*Tests*.csproj">         </allmodules>         <orchardmodules include="$(ProjectDir)..\Orchard\**\Orchard.Framework.csproj"></orchardmodules>     </itemgroup>     <msbuild projects="@(OrchardModules)" targets="Build" properties="Configuration=$(Configuration);"></msbuild>     <msbuild projects="@(AllModules)" targets="Build" properties="Configuration=$(Configuration);"></msbuild> </target>
 </Project>
