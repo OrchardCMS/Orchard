@@ -55,6 +55,7 @@
 .overlay h3 {
     padding-right:5px;
     font-size: 12px;
+    overflow: hidden;
     height: 1rem;
     white-space: nowrap;
     text-overflow: ellipsis;
