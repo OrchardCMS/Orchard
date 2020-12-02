@@ -57,10 +57,6 @@ namespace Orchard.Taxonomies.Handlers {
         }
 
         private void InitializerTermsLoader(TermsPart part) {
-            if (part._termParts != null) {
-                return;
-            }
-
             var queryHint = new QueryHints()
                 .ExpandRecords("ContentTypeRecord", "CommonPartRecord", "TermsPartRecord");
 
