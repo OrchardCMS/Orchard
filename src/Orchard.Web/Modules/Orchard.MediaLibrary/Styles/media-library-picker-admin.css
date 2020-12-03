@@ -48,13 +48,17 @@
     text-align: right;
     font-size: 12px;
     opacity: 0.6;
+    height: 40px;
+    overflow: hidden;
 }
 
 .overlay h3 {
     padding-right:5px;
     font-size: 12px;
-    height: 40px;
     overflow: hidden;
+    height: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .media-thumbnail {
