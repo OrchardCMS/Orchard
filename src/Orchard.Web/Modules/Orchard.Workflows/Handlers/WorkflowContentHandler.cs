@@ -58,15 +58,12 @@ namespace Orchard.Workflows.Handlers {
                         return;
                     }
 
-                    workflowManager.TriggerEvent(
-                        "ContentUpdated",
-                        context.ContentItem,
-                        () => new Dictionary<string, object> { { "Content", context.ContentItem } }
-                    );
-
                     if (context.ContentItem != null) { // sanity check
-                        if (_createdItems.Contains(context.ContentItem.Id)) {
-                            if (!_updatedItems.Contains(context.ContentItem.Id)) {
+                        if (!_updatedItems.Contains(context.ContentItem.Id)) {
+                            // in case a further update is invoked, this would prevent
+                            // the FirstUpdate event to be fired again
+                            _updatedItems.Add(context.ContentItem.Id);
+                            if (_createdItems.Contains(context.ContentItem.Id)) {
                                 // first update after creation of item
                                 workflowManager.TriggerEvent(
                                     "ContentFirstUpdated",
@@ -75,10 +72,14 @@ namespace Orchard.Workflows.Handlers {
                                 );
                             }
                         }
-                        // in case a further update is invoked, this would prevent
-                        // the FirstUpdate event to be fired again
-                        _updatedItems.Add(context.ContentItem.Id);
                     }
+
+                    workflowManager.TriggerEvent(
+                        "ContentUpdated",
+                        context.ContentItem,
+                        () => new Dictionary<string, object> { { "Content", context.ContentItem } }
+                    );
+
                 });
         }
     }
