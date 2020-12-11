@@ -8,14 +8,14 @@ namespace Orchard.Workflows.Handlers {
     public class WorkflowContentHandler : ContentHandler {
         // Used to memorize the ids of ContentItems for which we go through the
         // OnCreated handler.
-        private List<int> _createdItems;
+        private HashSet<int> _createdItems;
         // Used to memorize the ids of ContentItems for which we go through the
         // OnUpdated handler.
-        private List<int> _updatedItems;
+        private HashSet<int> _updatedItems;
 
         public WorkflowContentHandler(IWorkflowManager workflowManager) {
-            _createdItems = new List<int>();
-            _updatedItems = new List<int>();
+            _createdItems = new HashSet<int>();
+            _updatedItems = new HashSet<int>();
 
             OnPublished<ContentPart>(
                 (context, part) =>
@@ -44,12 +44,12 @@ namespace Orchard.Workflows.Handlers {
             OnCreated<ContentPart>(
                 (context, part) => {
 
-                    workflowManager.TriggerEvent("ContentCreated", context.ContentItem,
-                        () => new Dictionary<string, object> { { "Content", context.ContentItem } });
-
                     if (context.ContentItem != null) { // sanity check
                         _createdItems.Add(context.ContentItem.Id);
                     }
+
+                    workflowManager.TriggerEvent("ContentCreated", context.ContentItem,
+                        () => new Dictionary<string, object> { { "Content", context.ContentItem } });
                 });
 
             OnUpdated<ContentPart>(
