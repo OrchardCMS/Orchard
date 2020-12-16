@@ -187,6 +187,24 @@ namespace Orchard.ContentManagement {
         /// Sorts randomly
         /// </summary>
         void Random();
+
+        /// <summary>
+        /// Sort in ascending order, adding custom HQL strings
+        /// to the SELECT and ORDER BY statements
+        /// </summary>
+        /// <param name="propertyName">Name of the property</param>
+        /// <param name="additionalSelectOps">Additional HQL for the SELECT statement</param>
+        /// <param name="additionalOrderOps">Additional HQL for the ORDER BY statement</param>
+        void Asc(string propertyName, string additionalSelectOps, string additionalOrderOps);
+
+        /// <summary>
+        /// Sort in descending order, adding custom HQL strings
+        /// to the SELECT and ORDER BY statements
+        /// </summary>
+        /// <param name="propertyName">Name of the property</param>
+        /// <param name="additionalSelectOps">Additional HQL for the SELECT statement</param>
+        /// <param name="additionalOrderOps">Additional HQL for the ORDER BY statement</param>
+        void Desc(string propertyName, string additionalSelectOps, string additionalOrderOps);
     }
 }
 
