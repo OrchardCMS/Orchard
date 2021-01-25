@@ -144,12 +144,6 @@
     <Compile Include="Services\Environment\Configuration\DefaultPlatformConfigurationAccessor.cs" />
     <Compile Include="Services\Environment\Configuration\IPlatformConfigurationAccessor.cs" />
     <Compile Include="Services\Environment\AzureApplicationEnvironment.cs" />
-    <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -180,9 +174,6 @@
     <Compile Include="Services\Logging\AzureDiagnosticsAppender.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
