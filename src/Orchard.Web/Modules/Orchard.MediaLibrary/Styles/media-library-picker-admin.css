@@ -48,6 +48,8 @@
     text-align: right;
     font-size: 12px;
     opacity: 0.6;
+}
+.thumbnail .overlay {
     height: 40px;
     overflow: hidden;
 }
@@ -56,6 +58,8 @@
     padding-right:5px;
     font-size: 12px;
     overflow: hidden;
+}
+.thumbnail .overlay h3 {
     height: 1rem;
     white-space: nowrap;
     text-overflow: ellipsis;
