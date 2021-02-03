@@ -11,20 +11,26 @@ using System;
 using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Localization;
+using Orchard.CustomForms.Services;
 
 namespace Orchard.CustomForms.Drivers {
     public class CustomFormPartDriver : ContentPartDriver<CustomFormPart> {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IAuthorizationService _authService;
+        private readonly IEditorBuilderWrapper _editorBuilderWrapper;
 
         public CustomFormPartDriver(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
-            IAuthorizationService authService) {
+            IAuthorizationService authService,
+            IEditorBuilderWrapper editorBuilderWrapper) {
+
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _authService = authService;
+            _editorBuilderWrapper = editorBuilderWrapper;
+
             T = NullLocalizer.Instance;
         }
 
@@ -62,7 +68,7 @@ namespace Orchard.CustomForms.Drivers {
 
             return ContentShape("Parts_CustomForm_Wrapper", () => {
                 return shapeHelper.Parts_CustomForm_Wrapper()
-                    .Editor(_orchardServices.ContentManager.BuildEditor(contentItem))
+                    .Editor(_editorBuilderWrapper.BuildEditor(contentItem))
                     .ContentPart(part);
             });
         }

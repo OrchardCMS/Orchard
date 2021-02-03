@@ -26,6 +26,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -150,6 +151,8 @@
     <Compile Include="Rules\CustomFormEvents.cs" />
     <Compile Include="Rules\IRulesManager.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Services\EditorBuilderWrapper.cs" />
+    <Compile Include="Services\IEditorBuilderWrapper.cs" />
     <Compile Include="ViewModels\CustomFormIndexViewModel.cs" />
     <Compile Include="ViewModels\CustomFormPartEditViewModel.cs" />
   </ItemGroup>
@@ -176,9 +179,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Parts.CustomForm.Wrapper.cshtml" />
   </ItemGroup>

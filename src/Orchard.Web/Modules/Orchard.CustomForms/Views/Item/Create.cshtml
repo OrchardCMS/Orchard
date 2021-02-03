@@ -33,4 +33,18 @@
             <button type="submit" name="submit.Publish" value="submit.Publish">@publishButtonText</button>
         }
     </fieldset>
+
+    
+    <div class="edit-item-secondary group">
+        @if (Model.Actions != null) {
+            <div class="edit-item-actions">
+                @Display(Model.Actions)
+            </div>
+        }
+        @if (Model.Sidebar != null) {
+            <div class="edit-item-sidebar group">
+                @Display(Model.Sidebar)
+            </div>
+        }
+    </div>
 }
