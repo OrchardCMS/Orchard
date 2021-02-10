@@ -13,6 +13,7 @@ using Orchard.Core.Contents.Settings;
 using Orchard.CustomForms.Activities;
 using Orchard.CustomForms.Models;
 using Orchard.CustomForms.Rules;
+using Orchard.CustomForms.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -35,6 +36,7 @@ namespace Orchard.CustomForms.Controllers {
         private readonly IRulesManager _rulesManager;
         private readonly ITokenizer _tokenizer;
         private readonly IWorkflowManager _workflowManager;
+        private readonly IEditorBuilderWrapper _editorBuilderWrapper;
 
         public ItemController(
             IOrchardServices orchardServices,
@@ -44,7 +46,9 @@ namespace Orchard.CustomForms.Controllers {
             IShapeFactory shapeFactory,
             IRulesManager rulesManager,
             ITokenizer tokenizer,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            IEditorBuilderWrapper editorBuilderWrapper) {
+
             Services = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
@@ -52,6 +56,8 @@ namespace Orchard.CustomForms.Controllers {
             _rulesManager = rulesManager;
             _tokenizer = tokenizer;
             _workflowManager = workflowManager;
+            _editorBuilderWrapper = editorBuilderWrapper;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -99,7 +105,7 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditor(contentItem);
+            var model = _editorBuilderWrapper.BuildEditor(contentItem);
             var routeValues = _contentManager.GetItemMetadata(form).DisplayRouteValues;
             if (contentId > 0) {
                 routeValues.Add("contentId", contentId);
@@ -166,7 +172,7 @@ namespace Orchard.CustomForms.Controllers {
             if(customForm.SaveContentItem && contentId <= 0)
                 _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var model = _editorBuilderWrapper.UpdateEditor(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
