@@ -15,6 +15,7 @@ namespace Orchard.Core.Settings.Descriptor {
         private readonly IRepository<ShellDescriptorRecord> _shellDescriptorRepository;
         private readonly IShellDescriptorManagerEventHandler _events;
         private readonly ShellSettings _shellSettings;
+        private ShellDescriptorRecord _shellDescriptorRecord;
         private readonly ILockingProvider _lockingProvider;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;

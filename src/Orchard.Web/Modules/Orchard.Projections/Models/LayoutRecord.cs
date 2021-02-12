@@ -12,6 +12,7 @@ namespace Orchard.Projections.Models {
         public virtual string Description { get; set; }
         public virtual string Category { get; set; }
         public virtual string Type { get; set; }
+        [StringLengthMax]
         public virtual string State { get; set; }
 
         public virtual int Display { get; set; }

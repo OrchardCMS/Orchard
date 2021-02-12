@@ -128,8 +128,7 @@ namespace Orchard.Email.Services {
                 ? emailMessage.FromName
                 : _smtpSettings.FromName;
 
-            var sender = (senderAddress, senderName) switch
-            {
+            var sender = (senderAddress, senderName) switch {
                 (string address, string name) => new MailAddress(address, name),
                 (string address, null) => new MailAddress(address),
                 _ => throw new InvalidOperationException("No sender email address")

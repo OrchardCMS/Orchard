@@ -50,11 +50,20 @@
     opacity: 0.6;
     height: 40px;
 }
+.thumbnail .overlay {
+    height: 40px;
+    overflow: hidden;
+}
 
 .overlay h3 {
     padding-right:5px;
     font-size: 12px;
     overflow: hidden;
+}
+.thumbnail .overlay h3 {
+    height: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .overlay .publication-status {
