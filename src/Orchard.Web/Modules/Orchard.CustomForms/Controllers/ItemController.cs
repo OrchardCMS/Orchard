@@ -158,10 +158,21 @@ namespace Orchard.CustomForms.Controllers {
             var customForm = form.As<CustomFormPart>();
 
             ContentItem contentItem;
-            if (contentId > 0)
-                contentItem = _contentManager.Get(contentId,VersionOptions.DraftRequired);
-            else
+            if (contentId > 0) {
+                contentItem = _contentManager.Get(contentId, VersionOptions.DraftRequired);
+
+                if (customForm.UseContentTypePermissions
+                    && contentItem != null
+                    && !Services.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
+                    return new HttpUnauthorizedResult();
+            } else {
                 contentItem = _contentManager.New(customForm.ContentType);
+
+                if (customForm.UseContentTypePermissions
+                    && contentItem != null
+                    && !Services.Authorizer.Authorize(Core.Contents.Permissions.CreateContent, contentItem))
+                    return new HttpUnauthorizedResult();
+            }
 
             if (contentItem == null || contentItem.ContentType != customForm.ContentType)
                 return new HttpUnauthorizedResult();
