@@ -37,7 +37,9 @@ namespace Orchard.Users.Events {
 
         public void Approved(IUser user) { }
 
-        public void Moderate(IUser user) { }
+        public void Moderate(IUser user) { 
+            user.As<UserPart>().LastLogoutUtc = _clock.UtcNow;
+        }
 
         public void LoggingIn(string userNameOrEmail, string password) { }
 
