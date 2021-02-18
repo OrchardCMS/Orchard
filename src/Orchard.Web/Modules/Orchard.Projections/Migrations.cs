@@ -332,6 +332,9 @@ namespace Orchard.Projections {
             return 5;
         }
 
+#pragma warning disable CS0618
+        // disable compiler warning regarding the fact that RewriteOutput is obsolete
+        // because this migration is handling just that.
         public int UpdateFrom5() {
             SchemaBuilder.AlterTable("PropertyRecord", table => table
                 .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
@@ -342,5 +345,6 @@ namespace Orchard.Projections {
 
             return 6;
         }
+#pragma warning restore CS0618
     }
 }
