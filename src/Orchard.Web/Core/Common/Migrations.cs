@@ -202,11 +202,11 @@ namespace Orchard.Core.Common {
 
             return 8;
         }
-        public int UpdateFrom7() {
+        public int UpdateFrom8() {
             SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
                 .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
 
-            return 8;
+            return 9;
         }
     }
 }
