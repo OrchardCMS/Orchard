@@ -32,8 +32,13 @@
         $('.button.addSelected').on('click', function () {
             var itemsToAdd = new Array();
             for (var i = 0; i < sessionStorage.length; i++) {
-                var data = window.sessionStorage.getItem(sessionStorage.key(i));
-                itemsToAdd.push(JSON.parse(data));
+                var key = sessionStorage.key(i);
+                // only add the item if the key is an integer: other scripts may be
+                // adding stuff to sessionStorage
+                if (!isNaN(key - parseInt(key))) {
+                    var data = window.sessionStorage.getItem(sessionStorage.key(i));
+                    itemsToAdd.push(JSON.parse(data));
+                }
             }
             window.sessionStorage.clear();
             window.opener.jQuery[query("callback")](itemsToAdd);

@@ -46,7 +46,7 @@
                         <div class="thumbnail">
                             @Display(BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
-                                <h3>@Html.ItemDisplayText(contentItem)</h3>
+                                <h3 title="@Html.ItemDisplayText(contentItem)">@Html.ItemDisplayText(contentItem)</h3>
                                 <p class="publication-status" data-bind="text: publicationStatus">
                                     @(contentItem.IsPublished() ? "" : T("Draft").Text)
                                     @{

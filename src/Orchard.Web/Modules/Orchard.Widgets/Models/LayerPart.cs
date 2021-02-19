@@ -29,5 +29,10 @@ namespace Orchard.Widgets.Models {
             get { return Retrieve(x => x.LayerRule); }
             set { Store(x => x.LayerRule, value); }
         }
+
+        public static string AllLayersCacheEvictSignal =
+            "LayerPart_AllLayers_EvictCache";
+        public static string AllLayersCacheKey =
+            "LayerPart_AllLayers_CacheKey";
     }
 }

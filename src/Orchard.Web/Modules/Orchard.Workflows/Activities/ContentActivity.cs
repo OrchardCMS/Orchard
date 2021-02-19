@@ -78,6 +78,16 @@ namespace Orchard.Workflows.Activities {
         }
     }
 
+    public class ContentFirstUpdatedActivity : ContentActivity {
+        public override string Name {
+            get { return "ContentFirstUpdated"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("Content is updated for the first time."); }
+        }
+    }
+
     public class ContentPublishedActivity : ContentActivity {
         public override string Name {
             get { return "ContentPublished"; }

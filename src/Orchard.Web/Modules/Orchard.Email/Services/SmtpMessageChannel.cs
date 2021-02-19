@@ -128,13 +128,13 @@ namespace Orchard.Email.Services {
                 ? emailMessage.FromName
                 : _smtpSettings.FromName;
 
-            var sender = (senderAddress, senderName) switch
-            {
-                (string address, string name) => new MailAddress(address, name),
-                (string address, null) => new MailAddress(address),
-                _ => throw new InvalidOperationException("No sender email address")
-            };
-            mailMessage.From = sender;
+            if (senderAddress != null && senderName != null) {
+                mailMessage.From = new MailAddress(senderAddress, senderName);
+            } else if (senderAddress != null && senderName == null) {
+                mailMessage.From = new MailAddress(senderAddress);
+            } else if (senderAddress == null && senderName == null) {
+                throw new InvalidOperationException("No sender email address");
+            }
 
             var replyTo =
                 !string.IsNullOrWhiteSpace(emailMessage.ReplyTo) ? ParseRecipients(emailMessage.ReplyTo) :
@@ -162,7 +162,7 @@ namespace Orchard.Email.Services {
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(_smtpSettings.ListUnsubscribe)){
+            if (!string.IsNullOrWhiteSpace(_smtpSettings.ListUnsubscribe)) {
                 mailMessage.Headers.Add("List-Unsubscribe", _smtpSettings.ListUnsubscribe);
             }
 

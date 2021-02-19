@@ -76,6 +76,7 @@ namespace Orchard.OutputCache.Filters {
         private string _invariantCacheKey;
         private bool _transformRedirect;
         private bool _isCachingRequest;
+        private IEnumerable<string> _ignoredRelativePaths;
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
 
@@ -330,7 +331,7 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // Don't cache ignored URLs.
-            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, CacheSettings.IgnoredUrls)) {
+            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath)) {
                 Logger.Debug("Request for item '{0}' ignored because the URL is configured as ignored.", itemDescriptor);
                 return false;
             }
@@ -504,6 +505,19 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
+        private IEnumerable<string> IgnoredRelativePaths {
+            get {
+                return _ignoredRelativePaths
+                    ?? (_ignoredRelativePaths = _cacheManager.Get($"{CacheSettings.CacheKey}_IgnoredUrls", true, ContextBoundObject => {
+                        ContextBoundObject.Monitor(_signals.When(CacheSettings.CacheKey));
+                        return CacheSettings.IgnoredUrls
+                            ?.Select(s => s.TrimStart(new[] { '~' }).Trim())
+                            ?.Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"))
+                            ?? Enumerable.Empty<string>();
+                    }));
+            }
+        }
+
         private void ServeCachedItem(ActionExecutingContext filterContext, CacheItem cacheItem) {
             var response = filterContext.HttpContext.Response;
             var request = filterContext.HttpContext.Request;
@@ -588,6 +602,37 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
+        protected virtual bool IsIgnoredUrl(string url) {
+            if (IgnoredRelativePaths == null || !IgnoredRelativePaths.Any()) {
+                return false;
+            }
+
+            url = url.TrimStart(new[] { '~' });
+
+            if (string.IsNullOrWhiteSpace(_shellSettings.RequestUrlPrefix)) {
+                foreach (var relativePath in IgnoredRelativePaths) {
+                    if (String.Equals(relativePath, url, StringComparison.OrdinalIgnoreCase)) {
+                        return true;
+                    }
+                }
+            } else {
+                // if there is a RequestUrlPrefix, we want to check by also removing it from the
+                // url we are verifying, because the configuration might have been done without it
+                var tmp = url.TrimStart(new[] { '/' });
+                if (tmp.StartsWith(_shellSettings.RequestUrlPrefix)) {
+                    tmp = tmp.Substring(_shellSettings.RequestUrlPrefix.Length);
+                }
+                foreach (var relativePath in IgnoredRelativePaths) {
+                    if (String.Equals(relativePath, url, StringComparison.OrdinalIgnoreCase)
+                        || String.Equals(relativePath, tmp, StringComparison.OrdinalIgnoreCase)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         protected virtual bool IsIgnoredUrl(string url, IEnumerable<string> ignoredUrls) {
             if (ignoredUrls == null || !ignoredUrls.Any()) {
                 return false;
@@ -610,6 +655,29 @@ namespace Orchard.OutputCache.Filters {
                     return true;
                 }
             }
+            // repeat the check by removing the RequestUrlPrefix if it exists.
+            if (!string.IsNullOrWhiteSpace(_shellSettings.RequestUrlPrefix)) {
+                var tmp = url.TrimStart(new[] { '/' });
+                if (tmp.StartsWith(_shellSettings.RequestUrlPrefix)) {
+                    tmp = tmp.Substring(_shellSettings.RequestUrlPrefix.Length);
+                    foreach (var ignoredUrl in ignoredUrls) {
+                        var relativePath = ignoredUrl.TrimStart(new[] { '~' }).Trim();
+                        if (String.IsNullOrWhiteSpace(relativePath)) {
+                            continue;
+                        }
+
+                        // Ignore comments
+                        if (relativePath.StartsWith("#")) {
+                            continue;
+                        }
+
+                        if (String.Equals(relativePath, tmp, StringComparison.OrdinalIgnoreCase)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
 
             return false;
         }
