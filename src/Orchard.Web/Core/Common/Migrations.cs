@@ -34,6 +34,18 @@ namespace Orchard.Core.Common {
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
+                    // This originally in UpdateFrom8
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id", "Container_id");
+                    // This originally in UpdateFrom6
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation",
+                        nameof(CommonPartRecord.OwnerId),
+                        nameof(CommonPartRecord.CreatedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification",
+                        nameof(CommonPartRecord.OwnerId),
+                        nameof(CommonPartRecord.ModifiedUtc));
+                    table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication",
+                        nameof(CommonPartRecord.OwnerId),
+                        nameof(CommonPartRecord.PublishedUtc));
                 });
 
             SchemaBuilder.CreateTable("CommonPartVersionRecord",
@@ -49,10 +61,13 @@ namespace Orchard.Core.Common {
                     table.CreateIndex($"IDX_{nameof(CommonPartVersionRecord)}_{nameof(CommonPartVersionRecord.PublishedUtc)}", nameof(CommonPartVersionRecord.PublishedUtc));
                 });
 
-            SchemaBuilder.CreateTable("IdentityPartRecord",
-                table => table
+            SchemaBuilder
+                .CreateTable("IdentityPartRecord",table => table
                     .ContentPartRecord()
-                    .Column<string>("Identifier", column => column.WithLength(255))
+                    .Column<string>("Identifier", column => column.WithLength(255)))
+                .AlterTable(nameof(IdentityPartRecord), table => table
+                    // This originally in UpdateFrom7
+                    .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier))
                 );
 
             ContentDefinitionManager.AlterPartDefinition("BodyPart", builder => builder
@@ -67,7 +82,7 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 6;
+            return 9;
         }
 
         public int UpdateFrom1() {
@@ -184,6 +199,12 @@ namespace Orchard.Core.Common {
                 table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id",
                     "Container_id");
             });
+
+            return 8;
+        }
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
+                .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
 
             return 8;
         }
