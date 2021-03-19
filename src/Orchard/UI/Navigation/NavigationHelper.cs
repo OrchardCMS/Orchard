@@ -124,7 +124,7 @@ namespace Orchard.UI.Navigation {
                     string appPath = currentRequest.ApplicationPath ?? "/";
                     string requestUrl = currentRequest.Path.StartsWith(appPath) ? currentRequest.Path.Substring(appPath.Length) : currentRequest.Path;
 
-                    string modelUrl = menuItem.Href.Replace("~/", appPath);
+                    string modelUrl = menuItem.Href?.Replace("~/", appPath) ?? "";
                     modelUrl = modelUrl.StartsWith(appPath) ? modelUrl.Substring(appPath.Length) : modelUrl;
 
                     if (requestUrl.Equals(modelUrl, StringComparison.OrdinalIgnoreCase) || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/", StringComparison.OrdinalIgnoreCase))) {
