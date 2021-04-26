@@ -14,6 +14,7 @@ namespace Orchard.Localization.Drivers {
         private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
         private readonly IContentManager _contentManager;
+        private string _selectedLanguage = string.Empty;
 
         public LocalizationPartDriver(ICultureManager cultureManager, ILocalizationService localizationService, IContentManager contentManager) {
             _cultureManager = cultureManager;
@@ -59,12 +60,26 @@ namespace Orchard.Localization.Drivers {
                 RetrieveMissingCultures(masterContentItem.As<LocalizationPart>(), true) :
                 RetrieveMissingCultures(part, part.Culture != null);
 
+            
+            // if localizationpart is present remove it from the list of missingcultures
+            if (part.Culture != null && missingCultures.Contains(part.Culture.Culture)) { 
+                missingCultures.Remove(part.Culture.Culture);
+            }
+
+            bool displayLanguageSelection = true;
+            if (string.IsNullOrEmpty(_selectedLanguage)) {
+                if (part.Culture != null && !string.IsNullOrEmpty(part.Culture.Culture)) {
+                    displayLanguageSelection = false;
+                }
+            }
+
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
                 MissingCultures = missingCultures,
                 ContentItem = part,
                 MasterContentItem = masterContentItem,
-                ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
+                ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations },
+                DisplayLanguageSelection = displayLanguageSelection
             };
 
             return ContentShape("Parts_Localization_ContentTranslations_Edit",
@@ -73,15 +88,16 @@ namespace Orchard.Localization.Drivers {
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
-            if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)
-                // GetCulture(part) is checked against null value, because the content
-                // culture has to be set only if it's not set already.
-                && GetCulture(part) == null
+            updater.TryUpdateModel(model, TemplatePrefix, null, null);
+            // GetCulture(part) is checked against null value, because the content
+            // culture has to be set only if it's not set already.
+            if (GetCulture(part) == null
                 // model.SelectedCulture is checked against null value, because the editor
                 // group may not contain LocalizationPart when the content item is saved for
                 // the first time.
                 && !string.IsNullOrEmpty(model.SelectedCulture)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
+                _selectedLanguage = model.SelectedCulture;
             }
 
             return Editor(part, shapeHelper);

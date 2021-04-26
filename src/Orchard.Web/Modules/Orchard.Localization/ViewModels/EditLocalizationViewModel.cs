@@ -8,5 +8,6 @@ namespace Orchard.Localization.ViewModels {
         public IContent ContentItem { get; set; }
         public IContent MasterContentItem { get; set; }
         public ContentLocalizationsViewModel ContentLocalizations { get; set; }
+        public bool DisplayLanguageSelection { get; set; }
     }
 }
