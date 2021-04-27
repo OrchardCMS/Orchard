@@ -617,7 +617,7 @@ namespace Orchard.OutputCache.Filters {
             // with a fresh new __RequestVerificationToken hidden field.
             // What we do is to replace every <input name="__RequestVerificationToken " value="{the-value}" /> with
             //                                <$request-verification-token-beacon-for-hidden-field />
-            if (!_cacheSettings.VaryByAuthenticationState || _workContext.CurrentUser != null) {
+            if (PreventCachingRequestVerificationToken()) {
                 string patternRegion = "<\\s*input\\s*.*name\\s*=\\s*\"__RequestVerificationToken\"\\s*.*value\\s*=\\s*\"" +
                                        "(?<value>[\\w-]*)" +
                                        "\"\\s*/>";
@@ -635,7 +635,7 @@ namespace Orchard.OutputCache.Filters {
             // with a fresh new __RequestVerificationToken hidden field.
             // What we do is to replace every <$request-verification-token-beacon-for-hidden-field /> with
             //                                <input name="__RequestVerificationToken " value="{the-fresh-new-value}" />
-            if (!_cacheSettings.VaryByAuthenticationState || _workContext.CurrentUser != null) {
+            if (PreventCachingRequestVerificationToken()) {
                 var outputString = encoding.GetString(source);
                 var antiForgeyToken = new HtmlHelper(new ViewContext(), new ViewDataContainer()).AntiForgeryTokenOrchard();
                 var resultString = outputString.Replace(REQUEST_VERIFICATION_TOKEN_BEACON_TAG, antiForgeyToken.ToString());
@@ -643,6 +643,10 @@ namespace Orchard.OutputCache.Filters {
                 return encoding.GetBytes(resultString);
             }
             return source;
+        }
+
+        private bool PreventCachingRequestVerificationToken() {
+            return _cacheSettings.CacheAuthenticatedRequests && (!_cacheSettings.VaryByAuthenticationState || _workContext.CurrentUser != null);
         }
 
         protected virtual bool IsIgnoredUrl(string url) {
