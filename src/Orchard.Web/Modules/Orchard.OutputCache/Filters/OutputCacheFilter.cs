@@ -618,12 +618,8 @@ namespace Orchard.OutputCache.Filters {
             if (PreventCachingRequestVerificationToken()) {
                 var outputString = encoding.GetString(source);
                 if (outputString.IndexOf("__RequestVerificationToken", StringComparison.InvariantCultureIgnoreCase) >= 0) {
-                    var begin = DateTime.Now;
                     var resultString = Regex.Replace(outputString, REQUEST_VERIFICATION_TOKEN_PATTERN, REQUEST_VERIFICATION_TOKEN_BEACON_TAG, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromMilliseconds(2000));
-                    var end = DateTime.Now;
-                    Logger.Error((end - begin).TotalMilliseconds.ToString());
                     return encoding.GetBytes(resultString);
-
                 }
             }
             return source;
