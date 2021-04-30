@@ -29,6 +29,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.OutputCache.Filters {
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter, IDisposable {
         private const string REQUEST_VERIFICATION_TOKEN_BEACON_TAG = "<$request-verification-token-beacon-for-hidden-field />";
+        private const string REQUEST_VERIFICATION_TOKEN_PATTERN = "<\\s*input\\s*.*name\\s*=\\s*\"__RequestVerificationToken\"\\s*.*value\\s*=\\s*\"(?<value>[\\w-]*)\"\\s*/>";
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
 
@@ -618,14 +619,15 @@ namespace Orchard.OutputCache.Filters {
             // What we do is to replace every <input name="__RequestVerificationToken " value="{the-value}" /> with
             //                                <$request-verification-token-beacon-for-hidden-field />
             if (PreventCachingRequestVerificationToken()) {
-                string patternRegion = "<\\s*input\\s*.*name\\s*=\\s*\"__RequestVerificationToken\"\\s*.*value\\s*=\\s*\"" +
-                                       "(?<value>[\\w-]*)" +
-                                       "\"\\s*/>";
-                RegexOptions regexOptions = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
-                Regex reg = new Regex(patternRegion, regexOptions);
                 var outputString = encoding.GetString(source);
-                var resultString = reg.Replace(outputString, REQUEST_VERIFICATION_TOKEN_BEACON_TAG);
-                return encoding.GetBytes(resultString);
+                if (outputString.IndexOf("__RequestVerificationToken", StringComparison.InvariantCultureIgnoreCase) >= 0) {
+                    var begin = DateTime.Now;
+                    var resultString = Regex.Replace(outputString, REQUEST_VERIFICATION_TOKEN_PATTERN, REQUEST_VERIFICATION_TOKEN_BEACON_TAG, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromMilliseconds(2000));
+                    var end = DateTime.Now;
+                    Logger.Error((end - begin).TotalMilliseconds.ToString());
+                    return encoding.GetBytes(resultString);
+
+                }
             }
             return source;
         }
