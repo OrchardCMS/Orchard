@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 [*.cs]
 csharp_new_line_before_open_brace = none
 dotnet_sort_system_directives_first = true
+
+[*.yml]
+indent_size = 2
