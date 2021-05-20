@@ -10,6 +10,7 @@ using Orchard.Environment.Descriptor.Models;
 using System.Linq;
 using System.Collections;
 using System;
+using System.Text;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -46,12 +47,25 @@ namespace Orchard.Localization.Services {
             Logger = NullLogger.Instance;
         }
 
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
         public FormatForScope GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
             var result = InnerGetLocalizedString(scopes, text, cultureName);
             if (result == null) {
+                /*
+                 * Log out messages that look like what we would have in the .po files
+                 * Prepend that with a line telling the target culture for which the localization is missing
+                msgctxt "Orchard.Users.Activities.CreateUserActivity"
+                msgid "InvalidPassword"
+                msgstr "**InvelidPassword**"
+                 */
+                var sb = new StringBuilder();
+                sb.AppendLine("CULTURE " + cultureName);
+                sb.AppendLine("msgctxt \"" + scopes.FirstOrDefault() + "\"");
+                sb.AppendLine("msgid \"" + text + "\"");
+                sb.AppendLine("msgstr \"**" + text + "**\"");
+                Logger.Error(sb.ToString());
                 return new FormatForScope(text, scopes.FirstOrDefault());
             }
             return result;
