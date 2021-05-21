@@ -61,10 +61,15 @@ namespace Orchard.Localization.Services {
                 msgstr "**InvelidPassword**"
                  */
                 var sb = new StringBuilder();
+                // The configured appender for the localizations file will only consider
+                // messages that contain "##CULTURE##"
                 sb.AppendLine("##CULTURE## " + cultureName);
+                // These three lines math those found in .po files.
                 sb.AppendLine("msgctxt \"" + scopes.FirstOrDefault() + "\"");
                 sb.AppendLine("msgid \"" + text + "\"");
                 sb.AppendLine("msgstr \"**" + text + "**\"");
+                // to enable/disable logging this information, search in log4net.config
+                // for the logger named Orchard.Localization.Services.DefaultLocalizedStringManager
                 Logger.Information(sb.ToString());
                 return new FormatForScope(text, scopes.FirstOrDefault());
             }
