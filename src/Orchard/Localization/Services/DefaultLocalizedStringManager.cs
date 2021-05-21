@@ -61,11 +61,11 @@ namespace Orchard.Localization.Services {
                 msgstr "**InvelidPassword**"
                  */
                 var sb = new StringBuilder();
-                sb.AppendLine("CULTURE " + cultureName);
+                sb.AppendLine("##CULTURE## " + cultureName);
                 sb.AppendLine("msgctxt \"" + scopes.FirstOrDefault() + "\"");
                 sb.AppendLine("msgid \"" + text + "\"");
                 sb.AppendLine("msgstr \"**" + text + "**\"");
-                Logger.Error(sb.ToString());
+                Logger.Information(sb.ToString());
                 return new FormatForScope(text, scopes.FirstOrDefault());
             }
             return result;
