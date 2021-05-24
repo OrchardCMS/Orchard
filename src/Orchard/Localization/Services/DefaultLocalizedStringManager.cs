@@ -50,6 +50,14 @@ namespace Orchard.Localization.Services {
         public bool DisableMonitoring { get; set; }
 
         public FormatForScope GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+            var result = InnerGetLocalizedString(scopes, text, cultureName);
+            if (result == null) {
+                return new FormatForScope(text, scopes.FirstOrDefault());
+            }
+            return result;
+        }
+
+        protected FormatForScope InnerGetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
             var culture = LoadCulture(cultureName);
             text = text ?? string.Empty; // prevent NREs with this string
             foreach (var scope in scopes) {
@@ -69,7 +77,7 @@ namespace Orchard.Localization.Services {
                     return new FormatForScope(parent_text, scope);
                 }
             }
-            return new FormatForScope(text, scopes.FirstOrDefault());
+            return null;
         }
 
         // This will translate a string into a string in the target cultureName.
