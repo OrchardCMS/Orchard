@@ -1,26 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using System.Web.Security;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
+using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Utility.Extensions;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using System.Web.Mvc;
-using System.Web.Security;
-using Orchard.Services;
-using System.Collections.Generic;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -262,15 +257,25 @@ namespace Orchard.Users.Controllers {
             ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
             ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
             ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
-            ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
-                       .CurrentSite.As<SecuritySettingsPart>()
-                       .ShouldInvalidateAuthOnPasswordChanged;
+            var shouldSignout = _orchardServices.WorkContext
+                .CurrentSite.As<SecuritySettingsPart>()
+                .ShouldInvalidateAuthOnPasswordChanged;
+            ViewData["InvalidateOnPasswordChange"] = shouldSignout;
 
             if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
                 return View();
             }
 
             if (PasswordChangeIsSuccess(currentPassword, newPassword, _orchardServices.WorkContext.CurrentUser.UserName)) {
+                if (shouldSignout) {
+                    _authenticationService.SignOut();
+
+                    var loggedUser = _authenticationService.GetAuthenticatedUser();
+                    if (loggedUser != null) {
+                        _userEventHandler.LoggedOut(loggedUser);
+                    }
+
+                }
                 return RedirectToAction("ChangePasswordSuccess");
             }
             else {
