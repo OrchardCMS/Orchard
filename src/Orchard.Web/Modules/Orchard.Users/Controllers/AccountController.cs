@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
@@ -257,15 +257,25 @@ namespace Orchard.Users.Controllers {
             ViewData["UppercaseRequirement"] = membershipSettings.GetPasswordUppercaseRequirement();
             ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
             ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
-            ViewData["InvalidateOnPasswordChange"] = _orchardServices.WorkContext
+            var shouldSignout = _orchardServices.WorkContext
                 .CurrentSite.As<SecuritySettingsPart>()
                 .ShouldInvalidateAuthOnPasswordChanged;
+            ViewData["InvalidateOnPasswordChange"] = shouldSignout;
 
             if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
                 return View();
             }
 
             if (PasswordChangeIsSuccess(currentPassword, newPassword, _orchardServices.WorkContext.CurrentUser.UserName)) {
+                if (shouldSignout) {
+                    _authenticationService.SignOut();
+
+                    var loggedUser = _authenticationService.GetAuthenticatedUser();
+                    if (loggedUser != null) {
+                        _userEventHandler.LoggedOut(loggedUser);
+                    }
+
+                }
                 return RedirectToAction("ChangePasswordSuccess");
             }
             else {
