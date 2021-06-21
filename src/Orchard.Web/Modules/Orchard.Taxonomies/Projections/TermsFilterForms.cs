@@ -48,8 +48,13 @@ namespace Orchard.Taxonomies.Projections {
                                 Id: "operator-is-all-of", Name: "Operator",
                                 Title: T("Is all of"), Value: "1"
                                 )
-                            )
-                        );
+                            ),
+                        _ExcludeChildren: Shape.Checkbox(
+                            Id: "ExcludeChildren", Name: "ExcludeChildren",
+                            Title: T("Automatically exclude children terms in filtering"),
+                            Value: "true"
+                        )
+                    );
 
                     foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
                         f._Terms.Add(new SelectListItem { Value = String.Empty, Text = taxonomy.Name });
