@@ -27,6 +27,7 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
+            Services.ContentManager.Create(comment);
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
             if (!ModelState.IsValidField("Comments.Author")) {
@@ -46,8 +47,6 @@ namespace Orchard.Comments.Controllers {
             }
 
             if (ModelState.IsValid) {
-                Services.ContentManager.Create(comment);
-
                 var commentPart = comment.As<CommentPart>();
 
                 // ensure the comments are not closed on the container, as the html could have been tampered manually
@@ -57,13 +56,13 @@ namespace Orchard.Comments.Controllers {
                 }
 
                 var commentsPart = Services.ContentManager.Get(commentPart.CommentedOn).As<CommentsPart>();
-           
+
                 // is it a response to another comment ?
                 if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
                     var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
                     if(replied != null) {
                         var repliedPart = replied.As<CommentPart>();
-                            
+
                         // what is the next position after the anwered comment
                         if(repliedPart != null) {
                             // the next comment is the one right after the RepliedOn one, at the same level
@@ -93,7 +92,7 @@ namespace Orchard.Comments.Controllers {
                             }
                         }
                     }
-                        
+
                 }
                 else {
                     // new comment, last in position
