@@ -9,6 +9,7 @@ using Orchard.Services;
 using Orchard.Localization;
 using Orchard.Comments.Services;
 using Orchard.UI.Notify;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Drivers {
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
@@ -225,6 +226,34 @@ namespace Orchard.Comments.Drivers {
                     var repliedOnIdentity = _contentManager.GetItemMetadata(repliedOn).Identity;
                     context.Element(part.PartDefinition.Name).SetAttributeValue("RepliedOn", repliedOnIdentity.ToString());
                 }
+            }
+        }
+
+        protected override void Cloning(CommentPart originalPart, CommentPart clonePart, CloneContentContext context) {
+            clonePart.Author = originalPart.Author;
+            clonePart.SiteName = originalPart.SiteName;
+            clonePart.UserName = originalPart.UserName;
+            clonePart.Email = originalPart.Email;
+            clonePart.Position = originalPart.Position;
+            clonePart.Status = originalPart.Status;
+            clonePart.CommentDateUtc = originalPart.CommentDateUtc;
+            clonePart.CommentText = originalPart.CommentText;
+            var commentedOn = _contentManager.Get(originalPart.CommentedOn);
+            if (commentedOn != null) {
+                clonePart.CommentedOn = originalPart.CommentedOn;
+            }
+            if (originalPart.RepliedOn.HasValue) {
+                var repliedOn = _contentManager.Get(originalPart.RepliedOn.Value);
+                if (repliedOn != null) {
+                    clonePart.RepliedOn = originalPart.RepliedOn;
+                }
+            }
+            else {
+                clonePart.RepliedOn = null;
+            }
+            var commentedOnContainer = _contentManager.Get(originalPart.CommentedOnContainer);
+            if (commentedOnContainer != null) {
+                clonePart.CommentedOnContainer = originalPart.CommentedOnContainer;
             }
         }
     }

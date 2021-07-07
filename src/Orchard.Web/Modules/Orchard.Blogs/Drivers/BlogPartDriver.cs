@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogPartDriver : ContentPartDriver<BlogPart> {
@@ -65,6 +66,12 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PostCount", part.PostCount);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FeedProxyUrl", part.FeedProxyUrl);
+        }
+
+        protected override void Cloning(BlogPart originalPart, BlogPart clonePart, CloneContentContext context) {
+            clonePart.Description = originalPart.Description;
+            clonePart.PostCount = originalPart.PostCount;
+            clonePart.FeedProxyUrl = originalPart.FeedProxyUrl;
         }
     }
 }

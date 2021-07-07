@@ -185,6 +185,20 @@ namespace Orchard.ContentPermissions.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "PreviewOwnContent", s => part.PreviewOwnContent = s);
         }
 
+        protected override void Cloning(ContentPermissionsPart originalPart, ContentPermissionsPart clonePart, CloneContentContext context) {
+            clonePart.Enabled = originalPart.Enabled;
+            clonePart.ViewContent = originalPart.ViewContent;
+            clonePart.EditContent = originalPart.EditContent;
+            clonePart.PublishContent = originalPart.PublishContent;
+            clonePart.DeleteContent = originalPart.DeleteContent;
+            clonePart.PreviewContent = originalPart.PreviewContent;
+            clonePart.ViewOwnContent = originalPart.ViewOwnContent;
+            clonePart.EditOwnContent = originalPart.EditOwnContent;
+            clonePart.PublishOwnContent = originalPart.PublishOwnContent;
+            clonePart.DeleteOwnContent = originalPart.DeleteOwnContent;
+            clonePart.PreviewOwnContent = originalPart.PreviewOwnContent;
+        }
+
         private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings) {
             // reset permissions the user can't change
             if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, part.ContentItem)) {

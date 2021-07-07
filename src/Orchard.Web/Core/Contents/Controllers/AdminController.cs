@@ -410,7 +410,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Clone(int id) {
+        public ActionResult Clone(int id, string returnUrl) {
             var originalContentItem = _contentManager.GetLatest(id);
 
             if (!Services.Authorizer.Authorize(Permissions.ViewContent, originalContentItem, T("You do not have permission to view existing content.")))
@@ -435,8 +435,13 @@ namespace Orchard.Core.Contents.Controllers {
                 ? T("The content has been cloned as a draft.")
                 : T("The {0} has been cloned as a draft.", originalContentItem.TypeDefinition.DisplayName));
 
-            var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
-            return RedirectToRoute(adminRouteValues);
+            if (string.IsNullOrWhiteSpace(returnUrl)) {
+                var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
+                return RedirectToRoute(adminRouteValues);
+            }
+            else {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            }
         }
 
         [HttpPost]

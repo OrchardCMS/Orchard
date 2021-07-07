@@ -177,5 +177,11 @@ namespace Orchard.Autoroute.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCulturePattern", part.Record.UseCulturePattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.PromoteToHomePage);
         }
+
+        protected override void Cloning(AutoroutePart originalPart, AutoroutePart clonePart, CloneContentContext context) {
+            clonePart.CustomPattern = originalPart.CustomPattern;
+            clonePart.UseCustomPattern = originalPart.UseCustomPattern;
+            clonePart.UseCulturePattern = originalPart.UseCulturePattern;
+        }
     }
 }

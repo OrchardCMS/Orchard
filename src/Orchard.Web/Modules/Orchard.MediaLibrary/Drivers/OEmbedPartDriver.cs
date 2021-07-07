@@ -76,6 +76,6 @@ namespace Orchard.MediaLibrary.Drivers {
                 cloneElement.Add(partCloneElement);
                 partCloneElement.Add(partOriginalElement.Elements());
             }
-        }
+        }        
     }
 }

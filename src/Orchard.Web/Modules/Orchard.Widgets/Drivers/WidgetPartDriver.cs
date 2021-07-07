@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -103,6 +104,15 @@ namespace Orchard.Widgets.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("RenderTitle", part.RenderTitle);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CssClasses", part.CssClasses);
+        }
+
+        protected override void Cloning(WidgetPart originalPart, WidgetPart clonePart, CloneContentContext context) {
+            clonePart.Title = originalPart.Title;
+            clonePart.Position = originalPart.Position;
+            clonePart.Zone = originalPart.Zone;
+            clonePart.RenderTitle = originalPart.RenderTitle;
+            clonePart.Name = originalPart.Name;
+            clonePart.CssClasses = originalPart.CssClasses;
         }
     }
 }

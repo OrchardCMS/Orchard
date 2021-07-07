@@ -51,5 +51,10 @@ namespace Orchard.Tags.Drivers {
             part.Slug = context.Attribute(part.PartDefinition.Name, "Slug");
             part.Buckets = Convert.ToInt32(context.Attribute(part.PartDefinition.Name, "Buckets"));
         }
+
+        protected override void Cloning(TagCloudPart originalPart, TagCloudPart clonePart, CloneContentContext context) {
+            clonePart.Slug = originalPart.Slug;
+            clonePart.Buckets = originalPart.Buckets;
+        }
     }
 }

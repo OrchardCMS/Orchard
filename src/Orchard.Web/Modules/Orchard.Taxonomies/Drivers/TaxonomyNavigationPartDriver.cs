@@ -131,5 +131,14 @@ namespace Orchard.Taxonomies.Drivers {
                 part.TermId = term.Id;
             }
         }
+
+        protected override void Cloning(TaxonomyNavigationPart originalPart, TaxonomyNavigationPart clonePart, CloneContentContext context) {
+            clonePart.DisplayContentCount = originalPart.DisplayContentCount;
+            clonePart.DisplayRootTerm = originalPart.DisplayRootTerm;
+            clonePart.HideEmptyTerms = originalPart.HideEmptyTerms;
+            clonePart.LevelsToDisplay = originalPart.LevelsToDisplay;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.TermId = originalPart.TermId;
+        }
     }
 }

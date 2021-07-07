@@ -27,6 +27,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 part.Length = int.Parse(length)
             );
         }
+        
         protected override void Cloning(AudioPart originalPart, AudioPart clonePart, CloneContentContext context) {
             clonePart.Length = originalPart.Length;
         }

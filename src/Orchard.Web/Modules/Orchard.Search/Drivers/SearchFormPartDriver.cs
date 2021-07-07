@@ -56,5 +56,10 @@ namespace Orchard.Search.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "OverrideIndex", x => part.OverrideIndex = XmlHelper.Parse<bool>(x));
             context.ImportAttribute(part.PartDefinition.Name, "SelectedIndex", x => part.SelectedIndex = x);
         }
+
+        protected override void Cloning(SearchFormPart originalPart, SearchFormPart clonePart, CloneContentContext context) {
+            clonePart.OverrideIndex = originalPart.OverrideIndex;
+            clonePart.SelectedIndex = originalPart.SelectedIndex;
+        }
     }
 }
