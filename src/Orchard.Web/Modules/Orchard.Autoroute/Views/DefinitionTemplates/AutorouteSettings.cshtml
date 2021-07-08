@@ -20,6 +20,13 @@
 </fieldset>
 <fieldset>
     <div>
+        @Html.CheckBoxFor(m => m.AllowSetAsHomePage)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowSetAsHomePage)">@T("Allow set as home page")</label>
+        <span class="hint">@T("Allow the user to set a content item to display in a main content zone of the home page")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
         @Html.CheckBoxFor(m => m.AutomaticAdjustmentOnEdit)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AutomaticAdjustmentOnEdit)">@T("Automatically regenerate when editing content")</label>
         <span class="hint">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
