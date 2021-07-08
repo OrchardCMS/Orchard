@@ -1,34 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds.Models;
-using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Mvc.Extensions;
-using Orchard.Services;
-using Orchard.Utility.Extensions;
 using Orchard.Core.Feeds;
 using Orchard.Tags.Services;
 using Orchard.Localization;
 using System.Web.Routing;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.Tags.Feeds {
+namespace Orchard.Tags.Feeds
+{
     [OrchardFeature("Orchard.Tags.Feeds")]
     public class TagFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
         private readonly ITagService _tagService;
 
         public TagFeedQuery(
-            IContentManager contentManager, 
-            IEnumerable<IHtmlFilter> htmlFilters,
+            IContentManager contentManager,
             ITagService tagService) {
             _contentManager = contentManager;
             _tagService = tagService;
-            _htmlFilters = htmlFilters;
 
             T = NullLocalizer.Instance;
         }

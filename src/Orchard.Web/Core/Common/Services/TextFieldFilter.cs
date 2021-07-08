@@ -4,10 +4,10 @@ using Orchard.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Common.Services {
-    public class TextFieldFilter : IHtmlFilter {
-        public string ProcessContent(string text, string flavor) {
+    public class TextFieldFilter : HtmlFilter {
+        public override string ProcessContent(string text, HtmlFilterContext context) {
             // Flavor is null for a normal input/text field
-            return flavor == null || string.Equals(flavor, "textarea", StringComparison.OrdinalIgnoreCase) ? ReplaceNewLines(text) : text;
+            return context.Flavor == null || String.Equals(context.Flavor, "textarea", StringComparison.OrdinalIgnoreCase) ? ReplaceNewLines(text) : text;
         }
 
         private static string ReplaceNewLines(string text) {

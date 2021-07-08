@@ -20,3 +20,4 @@ Features:
         Description: Evaluates tokens in a body.
         Category: Content
         Dependencies: Orchard.Tokens
+        Priority: -1
