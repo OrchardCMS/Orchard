@@ -27,6 +27,7 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
+            Services.ContentManager.Create(comment, VersionOptions.Draft);
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
             if (!ModelState.IsValidField("Comments.Author")) {
@@ -46,8 +47,7 @@ namespace Orchard.Comments.Controllers {
             }
 
             if (ModelState.IsValid) {
-                Services.ContentManager.Create(comment, VersionOptions.Draft);
-                Services.ContentManager.UpdateEditor(comment, this);
+                
                 Services.ContentManager.Publish(comment.ContentItem);
 
                 var commentPart = comment.As<CommentPart>();
@@ -66,7 +66,7 @@ namespace Orchard.Comments.Controllers {
                     if(replied != null) {
                         var repliedPart = replied.As<CommentPart>();
                             
-                        // what is the next position after the anwered comment
+                        // what is the next position after the answered comment
                         if(repliedPart != null) {
                             // the next comment is the one right after the RepliedOn one, at the same level
                             var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
@@ -122,7 +122,6 @@ namespace Orchard.Comments.Controllers {
                 if (siteSettings.NotificationEmail) {
                     _commentService.SendNotificationEmail(commentPart);
                 }
-
             }
             else {
                 Services.TransactionManager.Cancel();
