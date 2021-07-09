@@ -5,7 +5,7 @@ using System.Web.Routing;
 using Orchard.Mvc.Routes;
 using Orchard.OpenId.Services;
 
-namespace Orchard.Azure.Authentication {
+namespace Orchard.OpenId.Routes {
     public class OpenIdRoutes : IRouteProvider {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
 
@@ -38,6 +38,57 @@ namespace Orchard.Azure.Authentication {
                 new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
+                        "Users/Account/LogOn",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOn" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOn" }
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 10,
+                    Route = new Route(
+                        "Users/Account/LogOff",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOff" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","LogOff" }
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 10,
+                    Route = new Route(
+                        "Users/Account/AccessDenied",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","AccessDenied" }
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.OpenId"},
+                            {"controller", "Account"},
+                            {"action","AccessDenied" }
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = -20,
+                    Route = new Route(
                         "Users/Account/{action}",
                         new RouteValueDictionary {
                             {"area", "Orchard.OpenId"},
@@ -50,6 +101,7 @@ namespace Orchard.Azure.Authentication {
                         },
                         new MvcRouteHandler())
                 },
+
                 new RouteDescriptor {
                     Priority = 10,
                     Route = new Route(
