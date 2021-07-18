@@ -53,6 +53,10 @@ namespace Orchard.Projections.FilterEditors.Forms {
                         Value = Convert.ToString(StringOperator.ContainsAnyIfProvided),
                         Text = T("Contains any word (if any is provided)").Text
                     });
+                    f._Operator.Add(new SelectListItem {
+                        Value = Convert.ToString(StringOperator.ContainsAllIfProvided),
+                        Text = T("Contains all words (if any is provided)").Text
+                    });
 
                     return f;
                 };
@@ -100,6 +104,12 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     var predicates3 = values3.Skip(1)
                         .Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
                     return x => x.Disjunction(y => y.Like(property, values3[0], HqlMatchMode.Anywhere), predicates3);
+                case StringOperator.ContainsAllIfProvided:
+                    if (string.IsNullOrWhiteSpace((string)value))
+                        return x => x.IsNotEmpty("Id"); // basically, return every possible ContentItem
+                    var values4 = Convert.ToString(value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var predicates4 = values4.Skip(1).Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
+                    return x => x.Conjunction(y => y.Like(property, values4[0], HqlMatchMode.Anywhere), predicates4);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -135,12 +145,18 @@ namespace Orchard.Projections.FilterEditors.Forms {
                         fieldName,
                         new LocalizedString(string.Join("', '",
                             value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                case StringOperator.ContainsAllIfProvided:
+                    return T("{0} contains all '{1}' (or '{1}' is empty)",
+                        fieldName,
+                        new LocalizedString(string.Join("', '",
+                            value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                    
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
     }
-
+                             
     public enum StringOperator {
         Equals,
         NotEquals,
@@ -152,6 +168,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
         Ends,
         NotEnds,
         NotContains,
-        ContainsAnyIfProvided
+        ContainsAnyIfProvided,
+        ContainsAllIfProvided
     }
 }
