@@ -183,6 +183,8 @@
     <Compile Include="Services\DraftFieldIndexService.cs" />
     <Compile Include="Services\IDraftFieldIndexService.cs" />
     <Compile Include="Services\IProjectionManagerExtension.cs" />
+    <Compile Include="Settings\ProjectionPartEditorEvents.cs" />
+    <Compile Include="Settings\ProjectionPartSettings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />
@@ -331,6 +333,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\DefinitionTemplates\ProjectionPartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
