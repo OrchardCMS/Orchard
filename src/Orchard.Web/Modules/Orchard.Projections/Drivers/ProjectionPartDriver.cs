@@ -16,6 +16,7 @@ using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
+using Orchard.Projections.Settings;
 using Orchard.Projections.ViewModels;
 using Orchard.Tokens;
 using Orchard.UI.Navigation;
@@ -224,28 +225,50 @@ namespace Orchard.Projections.Drivers {
         protected override DriverResult Editor(ProjectionPart part, dynamic shapeHelper) {
             return ContentShape("Parts_ProjectionPart_Edit",
                                 () => {
+                                    var model = new ProjectionPartEditViewModel();
 
-                                    var model = new ProjectionPartEditViewModel {
-                                        DisplayPager = part.Record.DisplayPager,
-                                        Items = part.Record.Items,
-                                        ItemsPerPage = part.Record.ItemsPerPage,
-                                        Skip = part.Record.Skip,
-                                        PagerSuffix = part.Record.PagerSuffix,
-                                        MaxItems = part.Record.MaxItems,
-                                        QueryLayoutRecordId = "-1",
-                                    };
-
-                                    // concatenated Query and Layout ids for the view
-                                    if (part.Record.QueryPartRecord != null) {
-                                        model.QueryLayoutRecordId = part.Record.QueryPartRecord.Id + ";";
-                                    }
-
-                                    if (part.Record.LayoutRecord != null) {
-                                        model.QueryLayoutRecordId += part.Record.LayoutRecord.Id.ToString();
+                                    // for create read the setting values
+                                    var settings = part.TypePartDefinition.Settings.GetModel<ProjectionPartSettings>();
+                                    if (part.Id == 0) {
+                                        model = new ProjectionPartEditViewModel {
+                                            DisplayPager = settings.DisplayPager,
+                                            Items = settings.Items,
+                                            Skip = settings.Skip,
+                                            PagerSuffix = settings.PagerSuffix,
+                                            MaxItems = settings.MaxItems,
+                                            QueryLayoutRecordId = settings.QueryLayoutRecordId
+                                        };
                                     }
                                     else {
-                                        model.QueryLayoutRecordId += "-1";
+                                        model = new ProjectionPartEditViewModel {
+                                            DisplayPager = part.Record.DisplayPager,
+                                            Items = part.Record.Items,
+                                            ItemsPerPage = part.Record.ItemsPerPage,
+                                            Skip = part.Record.Skip,
+                                            PagerSuffix = part.Record.PagerSuffix,
+                                            MaxItems = part.Record.MaxItems,
+                                            QueryLayoutRecordId = "-1"
+                                        };
+                                        // concatenated Query and Layout ids for the view
+                                        if (part.Record.QueryPartRecord != null) {
+                                            model.QueryLayoutRecordId = part.Record.QueryPartRecord.Id + ";";
+                                        }
+
+                                        if (part.Record.LayoutRecord != null) {
+                                            model.QueryLayoutRecordId += part.Record.LayoutRecord.Id.ToString();
+                                        }
+                                        else {
+                                            model.QueryLayoutRecordId += "-1";
+                                        }
                                     }
+
+                                    // lock fields
+                                    model.LockEditingItems = settings.LockEditingItems;
+                                    model.LockEditingSkip = settings.LockEditingSkip;
+                                    model.LockEditingMaxItems = settings.LockEditingMaxItems;
+                                    model.LockEditingPagerSuffix = settings.LockEditingPagerSuffix;
+                                    model.LockEditingDisplayPager = settings.LockEditingDisplayPager;
+
 
                                     // populating the list of queries and layouts
                                     var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
@@ -272,22 +295,21 @@ namespace Orchard.Projections.Drivers {
         protected override DriverResult Editor(ProjectionPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new ProjectionPartEditViewModel();
 
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+            updater.TryUpdateModel(model, Prefix, null, null);
 
-                var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] {';'});
+            var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] {';'});
 
-                part.Record.DisplayPager = model.DisplayPager;
-                part.Record.Items = model.Items;
-                part.Record.ItemsPerPage = model.ItemsPerPage;
-                part.Record.Skip = model.Skip;
-                part.Record.MaxItems = model.MaxItems;
-                part.Record.PagerSuffix = (model.PagerSuffix ?? String.Empty).Trim();
-                part.Record.QueryPartRecord = _queryRepository.Get(Int32.Parse(queryLayoutIds[0]));
-                part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Id == Int32.Parse(queryLayoutIds[1]));
+            part.Record.DisplayPager = model.DisplayPager;
+            part.Record.Items = model.Items;
+            part.Record.ItemsPerPage = model.ItemsPerPage;
+            part.Record.Skip = model.Skip;
+            part.Record.MaxItems = model.MaxItems;
+            part.Record.PagerSuffix = (model.PagerSuffix ?? String.Empty).Trim();
+            part.Record.QueryPartRecord = _queryRepository.Get(Int32.Parse(queryLayoutIds[0]));
+            part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Id == Int32.Parse(queryLayoutIds[1]));
 
-                if(!String.IsNullOrWhiteSpace(part.Record.PagerSuffix) && !String.Equals(part.Record.PagerSuffix.ToSafeName(), part.Record.PagerSuffix, StringComparison.OrdinalIgnoreCase)) {
-                    updater.AddModelError("PagerSuffix", T("Suffix should not contain special characters."));
-                }
+            if(!String.IsNullOrWhiteSpace(part.Record.PagerSuffix) && !String.Equals(part.Record.PagerSuffix.ToSafeName(), part.Record.PagerSuffix, StringComparison.OrdinalIgnoreCase)) {
+                updater.AddModelError("PagerSuffix", T("Suffix should not contain special characters."));
             }
 
             return Editor(part, shapeHelper);

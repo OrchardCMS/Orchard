@@ -24,6 +24,14 @@ namespace Orchard.Projections.ViewModels {
         public string QueryLayoutRecordId { get; set; }
 
         public IEnumerable<QueryRecordEntry> QueryRecordEntries { get; set; }
+
+        // manage Lock items
+        public bool LockEditingItems { get; set; }
+        public bool LockEditingSkip { get; set; }
+        public bool LockEditingMaxItems { get; set; }
+        public bool LockEditingPagerSuffix { get; set; }
+        public bool LockEditingDisplayPager { get; set; }
+
     }
 
     public class QueryRecordEntry {
