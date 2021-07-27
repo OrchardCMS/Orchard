@@ -239,10 +239,10 @@ namespace Orchard.OutputCache.Filters {
                             Logger.Debug("Response for item '{0}' will not be cached because status code was set to {1} during rendering.", _cacheKey, response.StatusCode);
                             return;
                         }
-
-                        var cachedOutput = ReplaceRequestVerificationTokenWithBeaconTag(output, response.ContentEncoding);
-
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                            _workContext = _workContextAccessor.GetContext(filterContext.HttpContext);
+                            var cachedOutput = ReplaceRequestVerificationTokenWithBeaconTag(output, response.ContentEncoding);
+
                             var cacheItem = new CacheItem() {
                                 CachedOnUtc = _now,
                                 Duration = cacheDuration,
@@ -651,7 +651,10 @@ namespace Orchard.OutputCache.Filters {
         }
 
         private bool PreventCachingRequestVerificationToken() {
-            return _cacheSettings.CacheAuthenticatedRequests && (!_cacheSettings.VaryByAuthenticationState || _workContext.CurrentUser != null);
+            return _cacheSettings.CacheAuthenticatedRequests
+                && (!_cacheSettings.VaryByAuthenticationState
+                    // ask for the WorkContext again so it refreshes in case the scope has been disposed
+                    || _workContext.CurrentUser != null);
         }
 
         protected virtual bool IsIgnoredUrl(string url) {
