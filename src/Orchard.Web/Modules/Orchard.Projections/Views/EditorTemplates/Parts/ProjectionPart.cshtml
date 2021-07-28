@@ -5,6 +5,12 @@
 @{
     var selectedQueryRecordId = -1;
 }
+
+@helper HintFromLockedField(string errorMessage) {
+    <span class="hint">@errorMessage</span>
+    <span class="hint">@T("This field is locked from the settings, cannot be modified.")</span>
+}
+
 <fieldset>
     @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
     <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
@@ -33,9 +39,9 @@
 <fieldset>
     <div>
         @if (Model.LockEditingItems) {
-            <label>@T("Items to display")</label><span>@Model.Items</span>
+            <label class="sub">@T("Items to display"): </label><span>@Model.Items</span>
             @Html.HiddenFor(m => m.Items)
-            <span class="hint">@T("The number of items to display. If equals 0 no limit. When using pagination, this is the number of items per page.")</span>
+            @HintFromLockedField(T("The number of items to display. If equals 0 no limit. When using pagination, this is the number of items per page.").Text)
         }
         else {
             @Html.LabelFor(m => m.Items, T("Items to display"))
@@ -46,33 +52,35 @@
 
     <div>
         @if (Model.LockEditingSkip) {
-            <label>@T("Offset")</label><span>@Model.Skip</span>
+            <label class="sub">@T("Offset"): </label><span>@Model.Skip</span>
             @Html.HiddenFor(m => m.Skip)
+            @HintFromLockedField(T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).").Text)
         }
         else {
             @Html.LabelFor(m => m.Skip, T("Offset"))
             @Html.TextBoxFor(m => m.Skip, new { @class = "text small" })
+            <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
         }
-        <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
     </div>
 
     <div>
         @if (Model.LockEditingMaxItems) {
-            <label>@T("Maximum items")</label><span>@Model.MaxItems</span>
+            <label class="sub">@T("Maximum items"): </label><span>@Model.MaxItems</span>
             @Html.HiddenFor(m => m.MaxItems)
+            @HintFromLockedField(T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.").Text)
         }
         else {
             @Html.LabelFor(m => m.MaxItems, T("Maximum items"))
             @Html.TextBoxFor(m => m.MaxItems, new { @class = "text small" })
+            <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
         }
-        <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
     </div>
 
     <div>
         @if (Model.LockEditingPagerSuffix) {
-            if (!string.IsNullOrEmpty(Model.PagerSuffix)) { 
-                <label>@T("Suffix")</label><span>@Model.PagerSuffix</span>
-                <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
+            if (!string.IsNullOrEmpty(Model.PagerSuffix)) {
+                <label class="sub">@T("Suffix"): </label><span>@Model.PagerSuffix</span>
+                @HintFromLockedField(T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.").Text)
             }
             @Html.HiddenFor(m => m.PagerSuffix)
         }
@@ -85,7 +93,7 @@
 
     <div>
         @if (Model.LockEditingDisplayPager) {
-            <label>@T("Show pager")</label>
+            <label class="sub">@T("Show pager"): </label>
             if (Model.DisplayPager) {
                 <span>@T("True")</span>
             }
@@ -93,7 +101,7 @@
                 <span>@T("False")</span>
             }
             @Html.HiddenFor(m => m.DisplayPager)
-            <span class="hint">@T("Flag used to add a pager to the list.")</span>
+            @HintFromLockedField(T("Flag used to add a pager to the list.").Text)
         }
         else {
             @Html.CheckBoxFor(m => m.DisplayPager)
@@ -104,11 +112,11 @@
 </fieldset>
 
 @using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
-    })(jQuery);
+    <script type="text/javascript">
+        //<![CDATA[
+        (function ($) {
+            $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+        })(jQuery);
 //]]>
-</script>
+    </script>
 }

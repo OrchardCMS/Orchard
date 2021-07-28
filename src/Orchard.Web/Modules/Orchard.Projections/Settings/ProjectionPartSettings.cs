@@ -4,8 +4,14 @@ using Orchard.Projections.ViewModels;
 
 namespace Orchard.Projections.Settings {
     public class ProjectionPartSettings {
+        public ProjectionPartSettings() {
+            FilterQueryRecordsId = new List<string>();
+        }
+
         public string QueryLayoutRecordId { get; set; }
         public IEnumerable<QueryRecordEntry> QueryRecordEntries { get; set; }
+        public IEnumerable<string> FilterQueryRecordsId { get; set; }
+        public string FilterQueryRecordId { get; set; }
         public int Items { get; set; }
         public bool LockEditingItems { get; set; }
         [DisplayName("Offset")]

@@ -34,6 +34,9 @@ namespace Orchard.Projections.Settings {
             if (definition.PartDefinition.Name == "ProjectionPart") {
                 var model = definition.Settings.GetModel<ProjectionPartSettings>();
                 model.QueryRecordEntries = GetQueriesRecordEntry();
+                if (!string.IsNullOrWhiteSpace(model.FilterQueryRecordId)) {
+                    model.FilterQueryRecordsId = model.FilterQueryRecordId.Split('&');
+                }
                 yield return DefinitionTemplate(model);
             }
         }
@@ -47,9 +50,19 @@ namespace Orchard.Projections.Settings {
             model.QueryRecordEntries = GetQueriesRecordEntry();
 
 
-            if (updateModel.TryUpdateModel(model, "ProjectionPartSettings", null, null)) {
+            if(updateModel.TryUpdateModel(model, "ProjectionPartSettings", null, null)) { 
+                if (model.FilterQueryRecordsId != null && model.FilterQueryRecordsId.Count()>0) {
+                    // check if default query selected is in filter queries list
+                    if (!model.FilterQueryRecordsId.Contains(model.QueryLayoutRecordId)) {
+                        updateModel.AddModelError("ProjectionPart", T("The default query must be a part of the filtered queries"));
+                    }
+
+                    model.FilterQueryRecordId = string.Join("&", model.FilterQueryRecordsId);
+                }
+
                 builder
                     .WithSetting("ProjectionPartSettings.QueryLayoutRecordId", model.QueryLayoutRecordId)
+                    .WithSetting("ProjectionPartSettings.FilterQueryRecordId", model.FilterQueryRecordId)
                     .WithSetting("ProjectionPartSettings.Items", model.Items.ToString())
                     .WithSetting("ProjectionPartSettings.LockEditingItems", model.LockEditingItems.ToString())
                     .WithSetting("ProjectionPartSettings.Skip", model.Skip.ToString())
@@ -61,7 +74,6 @@ namespace Orchard.Projections.Settings {
                     .WithSetting("ProjectionPartSettings.DisplayPager", model.DisplayPager.ToString())
                     .WithSetting("ProjectionPartSettings.LockEditingDisplayPager", model.LockEditingDisplayPager.ToString());
             }
-
             yield return DefinitionTemplate(model);
         }
 
@@ -72,7 +84,7 @@ namespace Orchard.Projections.Settings {
             List<QueryRecordEntry> records = new List<QueryRecordEntry>();
             records.Add(new QueryRecordEntry {
                 Id = -1,
-                Name=T("No default query").Text,
+                Name = T("No default").Text,
                 LayoutRecordEntries = new List<LayoutRecordEntry>()
             });
 
