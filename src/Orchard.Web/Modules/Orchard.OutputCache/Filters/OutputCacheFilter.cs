@@ -237,6 +237,7 @@ namespace Orchard.OutputCache.Filters {
                             return;
                         }
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                            // ask for the WorkContext again so it refreshes in case the scope has been disposed
                             _workContext = _workContextAccessor.GetContext(filterContext.HttpContext);
                             var cachedOutput = ReplaceRequestVerificationTokenWithBeaconTag(output, response.ContentEncoding);
 
@@ -650,7 +651,6 @@ namespace Orchard.OutputCache.Filters {
         private bool PreventCachingRequestVerificationToken() {
             return _cacheSettings.CacheAuthenticatedRequests
                 && (!_cacheSettings.VaryByAuthenticationState
-                    // ask for the WorkContext again so it refreshes in case the scope has been disposed
                     || _workContext.CurrentUser != null);
         }
 
