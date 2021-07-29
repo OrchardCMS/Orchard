@@ -271,29 +271,36 @@ namespace Orchard.Projections.Drivers {
 
                                     // populating the list of queries and layouts
                                     var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
+                                    model.QueryRecordEntries = Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
+                                           .Select(x => new QueryRecordEntry {
+                                               Id = x.Id,
+                                               Name = x.Name,
+                                               LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {
+                                                   Id = l.Id,
+                                                   Description = GetLayoutDescription(layouts, l)
+                                               })
+                                           });
 
-                                    // if any values, use default list of the settings 
+                                    // if any values, use default list of the settings
                                     if (!string.IsNullOrWhiteSpace(settings.FilterQueryRecordId)) {
-                                      // add logic
-                                    }
-                                    else {
-                                        model.QueryRecordEntries = Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
-                                            .Select(x => new QueryRecordEntry {
-                                                Id = x.Id,
-                                                Name = x.Name,
-                                                LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {
-                                                    Id = l.Id,
-                                                    Description = GetLayoutDescription(layouts, l)
-                                                })
+                                        var filterQueryRecordId = settings.FilterQueryRecordId.Split('&');
+                                        model.QueryRecordIdFilterEntries = filterQueryRecordId
+                                            .Select(x => new QueryRecordFilterEntry {
+                                                Id = x.Split(';')[0],
+                                                LayoutId = x.Split(';')[1]
                                             });
                                     }
+                                    else {
+                                        model.QueryRecordIdFilterEntries = new List<QueryRecordFilterEntry>();
+                                    }
+
                                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
                                 });
         }
-        
+
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {
             var descriptor = layouts.FirstOrDefault(x => l.Category == x.Category && l.Type == x.Type);
-            return String.IsNullOrWhiteSpace(l.Description) ? descriptor.Display(new LayoutContext {State = FormParametersHelper.ToDynamic(l.State)}).Text : l.Description;
+            return String.IsNullOrWhiteSpace(l.Description) ? descriptor.Display(new LayoutContext { State = FormParametersHelper.ToDynamic(l.State) }).Text : l.Description;
         }
 
         protected override DriverResult Editor(ProjectionPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -303,7 +310,7 @@ namespace Orchard.Projections.Drivers {
 
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] {';'});
+            var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] { ';' });
 
             // check the setting, if it is unlocked, assign the setting value
             if (settings.LockEditingDisplayPager) {
@@ -340,7 +347,7 @@ namespace Orchard.Projections.Drivers {
             part.Record.QueryPartRecord = _queryRepository.Get(Int32.Parse(queryLayoutIds[0]));
             part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Id == Int32.Parse(queryLayoutIds[1]));
 
-            if(!String.IsNullOrWhiteSpace(part.Record.PagerSuffix) && !String.Equals(part.Record.PagerSuffix.ToSafeName(), part.Record.PagerSuffix, StringComparison.OrdinalIgnoreCase)) {
+            if (!String.IsNullOrWhiteSpace(part.Record.PagerSuffix) && !String.Equals(part.Record.PagerSuffix.ToSafeName(), part.Record.PagerSuffix, StringComparison.OrdinalIgnoreCase)) {
                 updater.AddModelError("PagerSuffix", T("Suffix should not contain special characters."));
             }
 

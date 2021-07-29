@@ -24,6 +24,7 @@ namespace Orchard.Projections.ViewModels {
         public string QueryLayoutRecordId { get; set; }
 
         public IEnumerable<QueryRecordEntry> QueryRecordEntries { get; set; }
+        public IEnumerable<QueryRecordFilterEntry> QueryRecordIdFilterEntries { get; set; }
 
         // manage Lock items
         public bool LockEditingItems { get; set; }
@@ -43,5 +44,9 @@ namespace Orchard.Projections.ViewModels {
     public class LayoutRecordEntry {
         public int Id { get; set; }
         public string Description { get; set; }
+    }
+    public class QueryRecordFilterEntry {
+        public string Id { get; set; }
+        public string LayoutId { get; set; }
     }
 }

@@ -4,6 +4,8 @@
 
 @{
     var selectedQueryRecordId = -1;
+
+    var filterQuery = Model.QueryRecordIdFilterEntries.Any();
 }
 
 @helper HintFromLockedField(string errorMessage) {
@@ -11,30 +13,43 @@
     <span class="hint">@T("This field is locked from the settings, cannot be modified.")</span>
 }
 
-<fieldset>
-    @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
-    <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
-        @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
-            <optgroup label="@queryRecord.Name">
-                @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
-                @if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
-                    selectedQueryRecordId = queryRecord.Id;
-                }
+    <fieldset>
+        @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
+        @{
+            // if any values, use default list of the settings
+            <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
+                @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
+                    // check condition for design option group
+                    bool designDefaultQuery = Model.QueryRecordIdFilterEntries.Any(x => x.Id == queryRecord.Id.ToString() && x.LayoutId == "-1");
+                    bool designAnotherLayout = Model.QueryRecordIdFilterEntries.Any(x => queryRecord.LayoutRecordEntries.Select(q => q.Id.ToString()).Contains(x.LayoutId));
 
-                @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
-                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
-                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
-                        selectedQueryRecordId = queryRecord.Id;
+
+                    if(!filterQuery || designDefaultQuery || designAnotherLayout) { 
+                        <optgroup label="@queryRecord.Name">
+                            @if (!filterQuery || designDefaultQuery) {
+                                @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
+                                if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
+                                    selectedQueryRecordId = queryRecord.Id;
+                                }
+                            }
+                            @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
+                                if (!filterQuery || Model.QueryRecordIdFilterEntries.Any(x => x.Id == queryRecord.Id.ToString() && x.LayoutId == layoutRecord.Id.ToString())) {
+                                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
+                                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
+                                        selectedQueryRecordId = queryRecord.Id;
+                                    }
+                                }
+                            }
+                        </optgroup>
                     }
                 }
-            </optgroup>
+            </select>
         }
-    </select>
-    @if (selectedQueryRecordId != -1) {
-        @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
-    }
-    <span class="hint">@T("The query to display.")</span>
-</fieldset>
+        @if (selectedQueryRecordId != -1) {
+            @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
+        }
+        <span class="hint">@T("The query to display.")</span>
+    </fieldset>
 
 <fieldset>
     <div>
