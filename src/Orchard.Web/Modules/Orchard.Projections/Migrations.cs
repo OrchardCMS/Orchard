@@ -1,4 +1,7 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -11,9 +14,14 @@ using Orchard.Projections.Models;
 namespace Orchard.Projections {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
+        private readonly IRepository<LayoutRecord> _layoutRepository;
 
-        public Migrations(IRepository<MemberBindingRecord> memberBindingRepository) {
+
+        public Migrations(
+            IRepository<MemberBindingRecord> memberBindingRepository,
+            IRepository<LayoutRecord> layoutRepository) {
             _memberBindingRepository = memberBindingRepository;
+            _layoutRepository = layoutRepository;
             T = NullLocalizer.Instance;
         }
 
@@ -310,6 +318,18 @@ namespace Orchard.Projections {
             SchemaBuilder.AlterTable("QueryPartRecord", table => table
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
+                     column => column.Unlimited()));
+
+            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
+            foreach (var layout in layoutRecords) {
+               layout.GUIdentifier = Guid.NewGuid().ToString();
+            }
+
+            return 6;
         }
     }
 }

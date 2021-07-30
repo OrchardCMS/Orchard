@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.Projections.ViewModels {
@@ -10,7 +11,7 @@ namespace Orchard.Projections.ViewModels {
         [Required, Range(0, int.MaxValue)]
         public int ItemsPerPage { get; set; }
         
-        [Required, Range(0, int.MaxValue)]
+        [Required, Range(0, int.MaxValue),DisplayName("Offset")]
         public int Skip { get; set; }
 
         public string PagerSuffix { get; set; }
