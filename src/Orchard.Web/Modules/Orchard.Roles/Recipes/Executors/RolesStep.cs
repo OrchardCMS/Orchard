@@ -40,7 +40,7 @@ namespace Orchard.Roles.Recipes.Executors {
                     var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
 
                     // Union to keep existing permissions.
-                    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
+                    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)).ToList());
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error while importing role '{0}'.", roleName);
