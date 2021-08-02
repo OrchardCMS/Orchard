@@ -183,8 +183,7 @@ namespace Orchard.Projections.Settings {
                     stringIds += "-1";
                 }
                 else {
-                    var layoutId = ids[1];
-                    var recordLayout = _layoutRepository.Fetch(l => l.GUIdentifier == layoutId).FirstOrDefault();
+                    var recordLayout = _layoutRepository.Fetch(l => l.GUIdentifier == ids[1]).FirstOrDefault();
                     if(recordLayout != null) {
                         stringIds += recordLayout.Id.ToString();
                     }

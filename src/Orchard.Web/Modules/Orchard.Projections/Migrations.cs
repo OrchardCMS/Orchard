@@ -322,7 +322,7 @@ namespace Orchard.Projections {
 
         public int UpdateFrom5() {
             SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
-                     column => column.Unlimited()));
+                     column => column.WithLength(68)));
 
             var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
             foreach (var layout in layoutRecords) {
