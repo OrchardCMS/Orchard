@@ -141,7 +141,10 @@ namespace Orchard.Projections.Settings {
                 
                 List<string> identityForFilterQuery = new List<string>();
                 foreach (var record in settings.IdentityFilterQueryRecord.Split('&').ToList()) {
-                    identityForFilterQuery.Add(GetQueryLayoutRecord(record));
+                    var correctId = GetQueryLayoutRecord(record);
+                    if (!string.IsNullOrEmpty(correctId)) {
+                        identityForFilterQuery.Add(correctId);
+                    }
                 }
                 settings.FilterQueryRecordId = string.Join("&", identityForFilterQuery);
                 
@@ -173,25 +176,18 @@ namespace Orchard.Projections.Settings {
                 var ciIdentity = _contentManager.ResolveIdentity(new ContentIdentity(ids[0]));
                 if (ciIdentity != null) {
                     stringIds = ciIdentity.Id.ToString() + ";";
-                }
-                else {
-                    Services.Notifier.Error(T("ProjectionPart - Query - The loaded id {0} does not exist", ids[0]));
-                }
 
-                if (ids[1] == "-1") {
-                    // default layout
-                    stringIds += "-1";
-                }
-                else {
-                    var recordLayout = _layoutRepository.Fetch(l => l.GUIdentifier == ids[1]).FirstOrDefault();
-                    if(recordLayout != null) {
-                        stringIds += recordLayout.Id.ToString();
+                    if (ids[1] == "-1") {
+                        // default layout
+                        stringIds += "-1";
                     }
                     else {
-                        Services.Notifier.Error(T("ProjectionPart - Layout of query - The loaded id {0} does not exist", ids[1]));
+                        var recordLayout = _layoutRepository.Fetch(l => l.GUIdentifier == ids[1]).FirstOrDefault();
+                        if (recordLayout != null) {
+                            stringIds += recordLayout.Id.ToString();
+                        }
                     }
                 }
-
                 return stringIds;
             }
         }

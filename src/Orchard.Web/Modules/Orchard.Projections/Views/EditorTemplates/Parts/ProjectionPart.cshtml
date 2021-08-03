@@ -6,6 +6,7 @@
     var selectedQueryRecordId = -1;
 
     var filterQuery = Model.QueryRecordIdFilterEntries.Any();
+    var checkQuery = false;
 }
 
 @helper HintFromLockedField(string errorMessage) {
@@ -24,12 +25,13 @@
                     bool designAnotherLayout = Model.QueryRecordIdFilterEntries.Any(x => queryRecord.LayoutRecordEntries.Select(q => q.Id.ToString()).Contains(x.LayoutId));
 
 
-                    if(!filterQuery || designDefaultQuery || designAnotherLayout) { 
+                    if (!filterQuery || designDefaultQuery || designAnotherLayout) {
                         <optgroup label="@queryRecord.Name">
                             @if (!filterQuery || designDefaultQuery) {
                                 @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
                                 if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
                                     selectedQueryRecordId = queryRecord.Id;
+                                    checkQuery = true;
                                 }
                             }
                             @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
@@ -37,6 +39,7 @@
                                     @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
                                     if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
                                         selectedQueryRecordId = queryRecord.Id;
+                                        checkQuery = true;
                                     }
                                 }
                             }
@@ -44,6 +47,9 @@
                     }
                 }
             </select>
+            if (!checkQuery && Model.PartId != 0) {
+                <label class="info">@T("The previously selected query is no longer available.")</label>
+            }
         }
         @if (selectedQueryRecordId != -1) {
             @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })

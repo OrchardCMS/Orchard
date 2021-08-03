@@ -262,6 +262,8 @@ namespace Orchard.Projections.Drivers {
                                         }
                                     }
 
+                                    model.PartId = part.Id;
+
                                     // lock fields
                                     model.LockEditingItems = settings.LockEditingItems;
                                     model.LockEditingSkip = settings.LockEditingSkip;
@@ -310,8 +312,8 @@ namespace Orchard.Projections.Drivers {
 
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] { ';' });
-
+            model.PartId = part.Id;
+            
             // check the setting, if it is unlocked, assign the setting value
             if (settings.LockEditingDisplayPager) {
                 part.Record.DisplayPager = settings.DisplayPager;
@@ -344,6 +346,9 @@ namespace Orchard.Projections.Drivers {
             else {
                 part.Record.PagerSuffix = (model.PagerSuffix ?? String.Empty).Trim();
             }
+
+            var queryLayoutIds = model.QueryLayoutRecordId.Split(new[] { ';' });
+
             part.Record.QueryPartRecord = _queryRepository.Get(Int32.Parse(queryLayoutIds[0]));
             part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts.FirstOrDefault(x => x.Id == Int32.Parse(queryLayoutIds[1]));
 
@@ -371,7 +376,7 @@ namespace Orchard.Projections.Drivers {
         protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
             // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
-            if (query != null) {
+            if (query != null && context.GetItemFromSession(query).As<QueryPart>()!=null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
                 int layoutIndexValue;
