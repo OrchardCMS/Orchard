@@ -35,7 +35,7 @@ namespace Orchard.Roles.Recipes.Executors {
                         role = _roleService.GetRoleByName(roleName);
                     }
 
-                    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Trim());
                     // Only import permissions for currenlty installed modules.
                     var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
 
