@@ -22,6 +22,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("TrimStart:*", T("TrimStart:<chars|number>"), T("Trims the specified characters or number of them from the beginning of the string."))
                 .Token("UrlEncode", T("Url Encode"), T("Encodes a URL string."), "Text")
                 .Token("HtmlEncode", T("Html Encode"), T("Encodes an HTML string."), "Text")
+                .Token("HtmlDecode", T("HtmlDecode"), T("Decodes an HTML string."), "Text")
                 .Token("JavaScriptEncode", T("JavaScript Encode"), T("Encodes a JavaScript string."), "Text")
                 .Token("LineEncode", T("Line Encode"), T("Replaces new lines with <br /> tags."), "Text")
                 ;
@@ -53,6 +54,8 @@ namespace Orchard.Tokens.Providers {
                 .Chain("UrlEncode", "Text", HttpUtility.UrlEncode)
                 .Token("HtmlEncode", HttpUtility.HtmlEncode)
                 .Chain("HtmlEncode", "Text", HttpUtility.HtmlEncode)
+                .Token("HtmlDecode", HttpUtility.HtmlDecode)
+                .Chain("HtmlDecode", "Text", HttpUtility.HtmlDecode)
                 .Token("JavaScriptEncode", HttpUtility.JavaScriptStringEncode)
                 .Chain("JavaScriptEncode", "Text", HttpUtility.JavaScriptStringEncode)
                 .Token("LineEncode", text => ReplaceNewLineCharacters(text))
