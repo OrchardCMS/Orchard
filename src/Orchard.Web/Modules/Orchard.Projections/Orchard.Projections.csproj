@@ -141,6 +141,10 @@
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
       <Name>Orchard.Forms</Name>
@@ -183,6 +187,8 @@
     <Compile Include="Services\DraftFieldIndexService.cs" />
     <Compile Include="Services\IDraftFieldIndexService.cs" />
     <Compile Include="Services\IProjectionManagerExtension.cs" />
+    <Compile Include="Settings\ProjectionPartEditorEvents.cs" />
+    <Compile Include="Settings\ProjectionPartSettings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />
@@ -331,6 +337,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\DefinitionTemplates\ProjectionPartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
