@@ -41,7 +41,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(secureActionUrl);
+                filterContext.Result = new RedirectResult(secureActionUrl, true);
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(insecureActionUrl);
+                filterContext.Result = new RedirectResult(insecureActionUrl, true);
             }
         }
 
