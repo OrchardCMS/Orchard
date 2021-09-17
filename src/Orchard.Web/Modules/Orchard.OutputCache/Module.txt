@@ -22,6 +22,6 @@ Features:
         Dependencies: Orchard.OutputCache
     Orchard.OutputCache.CacheByRole:
         Name: Cache By Role
-		Description: Adds the user role in the cache key
-		Category: Performance
-		Dependencies: Orchard.OutputCache, Orchard.Caching
+        Description: Adds the user role in the cache key
+        Category: Performance
+        Dependencies: Orchard.OutputCache, Orchard.Caching
