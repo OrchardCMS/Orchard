@@ -10,7 +10,7 @@ using Orchard.Security;
 
 namespace Orchard.OutputCache.Filters {
     [OrchardFeature("Orchard.OutputCache.CacheByRole")]
-    public class CacheByRoleFilter : FilterProvider, IActionFilter, IResultFilter, ICachingEventHandler {
+    public class CacheByRoleFilter : ICachingEventHandler {
         private readonly IAuthenticationService _authenticationService;
         public CacheByRoleFilter(IAuthenticationService authenticationService) {
             _authenticationService = authenticationService;
@@ -29,18 +29,6 @@ namespace Orchard.OutputCache.Filters {
                     key.Append("UserRoles=empty-role;");
                 }
             }
-        }
-
-        public void OnActionExecuted(ActionExecutedContext filterContext) {
-        }
-
-        public void OnActionExecuting(ActionExecutingContext filterContext) {
-        }
-
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-        }
-
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
         }
     }
 }
