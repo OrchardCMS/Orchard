@@ -57,6 +57,12 @@ namespace Orchard.OutputCache.Handlers {
         }
 
         private void EvictCache(string role) {
+            // this condition works correctly, even if it has a false problem inside it, a borderline case,
+            // if you create a role with the pipe inside and a similar name such as:
+            // role1: aa|bb
+            // role2: a|b
+            // when the cache key with role a|b is evicted,
+            // the cache key containing aa|bb is also evicted.
             var cacheItems = _workContext.HttpContext.Cache.AsParallel()
                  .Cast<DictionaryEntry>()
                  .Select(x => x.Value)
