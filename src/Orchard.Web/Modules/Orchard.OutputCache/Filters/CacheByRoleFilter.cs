@@ -26,7 +26,7 @@ namespace Orchard.OutputCache.Filters {
                         String.Join("|",roles.OrderBy(r => r))+";");
                 }
                 else {
-                    key.Append("UserRoles=empty-role;");
+                    key.Append("UserRoles=;");
                 }
             }
         }
