@@ -137,16 +137,21 @@ namespace Orchard.Projections.Settings {
                 var settings = part.Settings.GetModel<ProjectionPartSettings>();
 
                 // from identity part of the query and guid of the layout find reference
-                settings.QueryLayoutRecordId = GetQueryLayoutRecord(settings.IdentityQueryLayoutRecord);
+                settings.QueryLayoutRecordId = string.IsNullOrWhiteSpace(settings.IdentityQueryLayoutRecord)
+                    ? "-1" : GetQueryLayoutRecord(settings.IdentityQueryLayoutRecord);
                 
-                List<string> identityForFilterQuery = new List<string>();
-                foreach (var record in settings.IdentityFilterQueryRecord.Split('&').ToList()) {
-                    var correctId = GetQueryLayoutRecord(record);
-                    if (!string.IsNullOrEmpty(correctId)) {
-                        identityForFilterQuery.Add(correctId);
+                if (!string.IsNullOrWhiteSpace(settings.IdentityFilterQueryRecord)) {
+                    List<string> identityForFilterQuery = new List<string>();
+                    foreach (var record in settings.IdentityFilterQueryRecord.Split('&').ToList()) {
+                        var correctId = GetQueryLayoutRecord(record);
+                        if (!string.IsNullOrEmpty(correctId)) {
+                            identityForFilterQuery.Add(correctId);
+                        }
                     }
+                    settings.FilterQueryRecordId = string.Join("&", identityForFilterQuery);
+                } else {
+                    settings.FilterQueryRecordId = string.Empty;
                 }
-                settings.FilterQueryRecordId = string.Join("&", identityForFilterQuery);
                 
                 _contentDefinitionManager.AlterTypeDefinition(context.ContentTypeDefinition.Name, cfg => cfg
                      .WithPart(part.PartDefinition.Name,
