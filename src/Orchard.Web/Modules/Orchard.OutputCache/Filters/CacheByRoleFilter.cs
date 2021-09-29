@@ -11,6 +11,7 @@ namespace Orchard.OutputCache.Filters {
     [OrchardFeature("Orchard.OutputCache.CacheByRole")]
     public class CacheByRoleFilter : ICachingEventHandler {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthorizer _authorizer;
         private readonly IRepository<UserRolesPartRecord> _userRolesRepo;
         private readonly IRepository<RoleRecord> _roleRepo;
         private readonly IRepository<RolesPermissionsRecord> _rolesPermissionsRepo;
@@ -18,11 +19,13 @@ namespace Orchard.OutputCache.Filters {
 
         public CacheByRoleFilter(
             IAuthenticationService authenticationService,
+            IAuthorizer authorizer,
             IRepository<UserRolesPartRecord> userRolesRepo,
             IRepository<RoleRecord> roleRepo,
             IRepository<RolesPermissionsRecord> rolesPermissionsRepo,
             IRepository<PermissionRecord> permissionRepo) {
             _authenticationService = authenticationService;
+            _authorizer = authorizer;
             _userRolesRepo = userRolesRepo;
             _roleRepo = roleRepo;
             _rolesPermissionsRepo = rolesPermissionsRepo;
@@ -30,56 +33,113 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void KeyGenerated(StringBuilder key) {
+            IEnumerable<UserPermission> userRolesPermissions = new List<UserPermission>();
+            IQueryable<UserPermission> userRolesPermissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
+            IQueryable<UserPermission> permissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
+
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (currentUser != null) {
+                // add the Authenticated role and its permissions
+                // the Authenticated role is not assigned to the current user
+                permissionsQuery = GetPermissioFromRole("Authenticated");
 
-                IQueryable<UserPermission> userRolesPermissionsQuery = _userRolesRepo
-                    .Table.Where(usr => usr.UserId == currentUser.Id)
-                    .Join(
-                        _roleRepo.Table,
-                        ur => ur.Role.Id,
-                        r => r.Id,
-                        (ur, r) => new { ContentItemRecord = r }
-                    )
-                    .Join(
-                        _rolesPermissionsRepo.Table,
-                        obj => obj.ContentItemRecord,
-                        rp => rp.Role,
-                        (obj, rp) => rp
-                    )
-                    .Join(
-                        _permissionRepo.Table,
-                        rp => rp.Permission.Id,
-                        p => p.Id,
-                        (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.Name, FeatureName = p.FeatureName }
-                    );
-
-                IEnumerable<UserPermission> userRolesPermissions = userRolesPermissionsQuery.ToList();
-
-                if (userRolesPermissions.Any()) {
-                    var roles = userRolesPermissions
-                        .Select(r => r.RoleName)
-                        .Distinct()
-                        .OrderBy(r => r)
-                        .ToList();
-                    
-                    var permissions = userRolesPermissions
-                        .OrderBy(p => p.FeatureName)
-                        .ThenBy(p => p.PermissionName)
-                        .Select(p => p.FeatureName+"."+ p.PermissionName)
-                        .Distinct();
-
-                    key.Append("UserRoles=" + String.Join(";", roles).GetHashCode() + ";UserPermissions="+ String.Join(";", permissions).GetHashCode() + ";");
+                if (_authorizer.Authorize(StandardPermissions.SiteOwner)) {
+                    // the site owner has no permissions
+                    // get the roles of the site owner
+                    userRolesPermissionsQuery = _userRolesRepo
+                      .Table.Where(usr => usr.UserId == currentUser.Id)
+                      .Join(
+                          _roleRepo.Table,
+                          ur => ur.Role.Id,
+                          r => r.Id,
+                          (ur, r) => r
+                      )
+                      .Select(urp=>new UserPermission { RoleName = urp.Name })
+                      .OrderBy(urp=>urp.RoleName);
+                } else {
+                    userRolesPermissionsQuery = _userRolesRepo
+                        // get user roles and permissions
+                        .Table.Where(usr => usr.UserId == currentUser.Id)
+                        // given the ids of the roles related to the user
+                        // join with the RoleRecord table
+                        // get the role name
+                        .Join(
+                            _roleRepo.Table,
+                            ur => ur.Role.Id,
+                            r => r.Id,
+                            (ur, r) => new { ContentItemRecord = r }
+                        )
+                        // join table RolePermissionRecord
+                        // for each role, get id of role permissions
+                        .Join(
+                            _rolesPermissionsRepo.Table,
+                            obj => obj.ContentItemRecord,
+                            rp => rp.Role,
+                            (obj, rp) => rp
+                        )
+                        // join PermissionRecord
+                        // for each id permission get feature and permission name
+                        .Join(
+                            _permissionRepo.Table,
+                            rp => rp.Permission.Id,
+                            p => p.Id,
+                            (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.FeatureName + "." + p.Name }
+                        )
+                        .OrderBy(urp=>urp.RoleName)
+                        .ThenBy(urp=>urp.PermissionName);
                 }
-                else {
-                    key.Append("UserRoles=;UserPermissions=;");
-                }
+            } else {
+                // the anonymous user has no roles, get its permissions
+                permissionsQuery = GetPermissioFromRole("Anonymous");
             }
+
+            if (userRolesPermissionsQuery.Any() || permissionsQuery.Any()) {
+                userRolesPermissions = userRolesPermissionsQuery.ToList()
+                    .Union(permissionsQuery.ToList());
+                
+                var userRoles = String.Join(";", userRolesPermissions
+                    .OrderBy(r=>r.RoleName)
+                    .Select(r => r.RoleName)
+                    .Distinct());
+
+                var userPermissions = String.Join(";", userRolesPermissions
+                    .OrderBy(p=>p.PermissionName)
+                    .Select(p => p.PermissionName)
+                    .Distinct());
+
+
+                key.Append(string.Format("UserRoles={0};UserPermissions={1};",
+                    userRoles.GetHashCode(),
+                    userPermissions.GetHashCode()));
+            } else {
+                key.Append("UserRoles=;UserPermissions=;");
+            }
+        }
+
+        private IQueryable<UserPermission> GetPermissioFromRole(string role) {
+            return _roleRepo
+                .Table.Where(r => r.Name == role)
+                .Join(
+                    _rolesPermissionsRepo.Table,
+                    r => r.Id,
+                    rp => rp.Role.Id,
+                    (obj, rp) => rp
+                )
+                .Join(
+                    _permissionRepo.Table,
+                    rp => rp.Permission.Id,
+                    p => p.Id,
+                    (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.FeatureName + "." + p.Name }
+                )
+                .OrderBy(rp => rp.PermissionName);
         }
     }
     public class UserPermission {
+        public UserPermission() {
+            RoleName = string.Empty;
+            PermissionName = string.Empty;
+        }
         public string RoleName { get; set; }
         public string PermissionName { get; set; }
-        public string FeatureName { get; set; }
     }
 }
