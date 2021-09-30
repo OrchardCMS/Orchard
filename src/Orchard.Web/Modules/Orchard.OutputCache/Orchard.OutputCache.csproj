@@ -105,7 +105,6 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Filters\CacheByRoleFilter.cs" />
-    <Compile Include="Handlers\CacheByRoleHandler.cs" />
     <Compile Include="Handlers\CacheItemInvalidationHandler.cs" />
     <Compile Include="ICachingEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
