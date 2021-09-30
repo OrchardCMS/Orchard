@@ -33,7 +33,7 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void KeyGenerated(StringBuilder key) {
-            HashSet<UserPermission> userRolesPermissions = new HashSet<UserPermission>();
+            List<UserPermission> userRolesPermissions = new List<UserPermission>();
             IQueryable<UserPermission> userRolesPermissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
             IQueryable<UserPermission> permissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
 
@@ -91,23 +91,23 @@ namespace Orchard.OutputCache.Filters {
             }
 
             if (userRolesPermissionsQuery.Any()) {
-                userRolesPermissions.UnionWith(userRolesPermissionsQuery
+                userRolesPermissions.AddRange(userRolesPermissionsQuery
                     .OrderBy(urp => urp.RoleName)
                     .ThenBy(urp => urp.PermissionName)
-                    .ToHashSet());
+                    .ToList());
             }
             if (permissionsQuery.Any()) {
-                userRolesPermissions.UnionWith(permissionsQuery
+                userRolesPermissions.AddRange(permissionsQuery
                     .OrderBy(urp => urp.RoleName)
                     .ThenBy(urp => urp.PermissionName)
-                    .ToHashSet());
+                    .ToList());
             }
 
             if (userRolesPermissions.Any()) {
                 
                 var userRoles = String.Join(";", userRolesPermissions
                     .Select(r => r.RoleName)
-                    // .Distinct() // roles should already be unique
+                    .Distinct()
                     .OrderBy(s => s));
 
                 var userPermissions = String.Join(";", userRolesPermissions
@@ -148,19 +148,5 @@ namespace Orchard.OutputCache.Filters {
         }
         public string RoleName { get; set; }
         public string PermissionName { get; set; }
-
-        public override int GetHashCode() {
-            return $"{RoleName}.{PermissionName}".GetHashCode();
-        }
-        public override bool Equals(object obj) {
-            var other = (UserPermission)obj;
-            if (other != null) {
-                return ((RoleName == null && other.RoleName == null)
-                        || (RoleName != null && RoleName.Equals(other.RoleName)))
-                    && ((PermissionName == null && other.PermissionName == null)
-                        || (PermissionName != null && PermissionName.Equals(other.PermissionName)));
-            }
-            return false;
-        }
     }
 }
