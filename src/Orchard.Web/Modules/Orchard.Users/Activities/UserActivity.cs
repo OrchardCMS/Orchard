@@ -128,7 +128,7 @@ namespace Orchard.Users.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("User send challenge email."); }
+            get { return T("User sent challenge email."); }
         }
     }
 
