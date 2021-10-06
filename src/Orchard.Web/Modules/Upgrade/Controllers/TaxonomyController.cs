@@ -64,7 +64,7 @@ namespace Upgrade.Controllers {
             ViewBag.CanMigrate = false;
 
             if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
-                _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in upgrade the terms' weights."));
+                _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in order to upgrade the terms' weights."));
             } else {
                 ViewBag.CanMigrate = true;
             }
