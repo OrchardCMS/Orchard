@@ -2,13 +2,23 @@
 
 @using Orchard.ContentManagement
 
+@{
+    var selectedMenuId = -1;
+}
+
 <fieldset>
     @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
     <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
     @foreach(ContentItem menu in Model.Menus) {
         @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
+        if (Model.CurrentMenuId == menu.Id) {
+            selectedMenuId = menu.Id;
+        }
     }
     </select>
+    @if (selectedMenuId != -1) {
+        @Html.ActionLink(T("Edit Menu").Text, "Index", new { area = "Navigation", menuId = selectedMenuId }, new { })
+    }
     <span class="hint">@T("Select which menu you want to display")</span>
 </fieldset>
 
