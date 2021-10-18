@@ -70,7 +70,7 @@
                 var url = anchor.attr("href");
                 // Now I need to replace the last part of the url (menuId = ###).
                 var newUrl = url.substr(0, url.lastIndexOf("?") + 1);
-                newUrl = newUrl + selected;
+                newUrl = newUrl + "menuId=" + selected;
                 anchor.attr("href", newUrl);
             });
         })(jQuery);
