@@ -52,7 +52,7 @@
             }
         }
         @if (selectedQueryRecordId != -1) {
-            @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
+            @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { id = "editQueryLink-" + Model.PartId.ToString() })
         }
         <span class="hint">@T("The query to display.")</span>
     </fieldset>
@@ -137,7 +137,21 @@
         //<![CDATA[
         (function ($) {
             $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+
+            $("#@Html.FieldIdFor(m => m.QueryLayoutRecordId)").change(function (sender) {
+                var selected = $(this).val();
+                // Removing layout id
+                selected = selected.substr(0, selected.indexOf(';'));
+
+                var anchor = $("#editQueryLink-@Model.PartId.ToString()");
+                var url = anchor.attr("href");
+                // Now I need to replace the last part of the url (which is the QueryLayoutRecordId) with the selected id to make to link work properly.
+                var newUrl = url.substr(0, url.lastIndexOf("/") + 1);
+                newUrl = newUrl + selected;
+                anchor.attr("href", newUrl);
+            });
         })(jQuery);
+
 //]]>
     </script>
 }
