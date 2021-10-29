@@ -147,7 +147,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                 _transactionManager.Cancel();
 
                 Logger.Error(ex, "Error while deleting asset with ID {0}.", id);
-                _notifier.Error(T("Ar error occurred while deleting the asset '{0}':\n{1}", asset.Name, ex.Message));
+                _notifier.Error(T("An error occurred while deleting the asset '{0}':\n{1}", asset.Name, ex.Message));
             }
 
             return Redirect(Url.ItemEditUrl(cloudVideoPart));
