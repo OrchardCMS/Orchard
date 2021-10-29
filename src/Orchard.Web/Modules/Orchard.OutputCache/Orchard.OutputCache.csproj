@@ -104,6 +104,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Filters\CacheByRoleFilter.cs" />
     <Compile Include="Handlers\CacheItemInvalidationHandler.cs" />
     <Compile Include="ICachingEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,6 +120,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
+      <Name>Orchard.Roles</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

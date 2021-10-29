@@ -20,3 +20,8 @@ Features:
         Description: Activates a provider that stores output cache data in the App_Data folder.
         Category: Performance
         Dependencies: Orchard.OutputCache
+    Orchard.OutputCache.CacheByRole:
+        Name: Cache By Role
+        Description: Adds the user role in the cache key
+        Category: Performance
+        Dependencies: Orchard.OutputCache, Orchard.Roles
