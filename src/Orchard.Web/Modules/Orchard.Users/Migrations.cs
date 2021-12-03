@@ -23,12 +23,36 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc")
-                );
+                    .Column<DateTime>("LastPasswordChangeUtc"))
+                    .Column<bool>("ForcePasswordChange"))
+                .AlterTable("UserPartRecord", table => table
+                    .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"))
+                // users are most commonly searched by NormalizedUserName and or Email
+                .AlterTable("UserPartRecord", table => table
+                    .CreateIndex($"IDX_UserPartRecord_NameAndEmail", "NormalizedUserName", "Email"));
+
+            //Password History Table    
+            SchemaBuilder
+                .CreateTable("PasswordHistoryRecord", table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("UserPartRecord_Id")
+                    .Column<string>("Password")
+                    .Column<string>("PasswordFormat")
+                    .Column<string>("HashAlgorithm")
+                    .Column<string>("PasswordSalt")
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1))))
+                .AlterTable("PasswordHistoryRecord", table => table
+                        .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
+
+            // Queryable bool to tell which users should not be suspended automatically
+            SchemaBuilder
+                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                    .ContentPartRecord()
+                    .Column<bool>("SaveFromSuspension"));
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 5;
+            return 9;
         }
 
         public int UpdateFrom1() {
@@ -73,6 +97,39 @@ namespace Orchard.Users {
                     "Email");
             });
             return 6;
+        }
+        
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("UserPartRecord", table => table
+                .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"));
+
+            return 7;
+        }
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable("UserPartRecord", table => {
+                table.AddColumn<bool>("ForcePasswordChange");
+            });
+            SchemaBuilder
+                .CreateTable("PasswordHistoryRecord", table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("UserPartRecord_Id")
+                    .Column<string>("Password")
+                    .Column<string>("PasswordFormat")
+                    .Column<string>("HashAlgorithm")
+                    .Column<string>("PasswordSalt")
+                    .Column<DateTime>("LastPasswordChangeUtc"))
+                .AlterTable("PasswordHistoryRecord", table => table
+                    .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
+            return 8;
+    }
+
+        public int UpdateFrom8() {
+            SchemaBuilder
+                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                    .ContentPartRecord()
+                    .Column<bool>("SaveFromSuspension"));
+
+            return 9;
         }
     }
 }

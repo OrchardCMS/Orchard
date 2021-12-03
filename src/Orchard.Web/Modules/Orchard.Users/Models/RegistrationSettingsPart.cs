@@ -91,5 +91,15 @@ namespace Orchard.Users.Models {
             get { return this.Retrieve(x => x.PasswordFormat, MembershipPasswordFormat.Hashed); }
             set { this.Store(x => x.PasswordFormat, value); }
         }
+
+        public bool EnablePasswordHistoryPolicy {
+            get { return this.Retrieve(x => x.EnablePasswordHistoryPolicy); }
+            set { this.Store(x => x.EnablePasswordHistoryPolicy, value); }
+        }
+        [Range(1, int.MaxValue, ErrorMessage = "The minimum password reuse limit must be at least 1.")]
+        public int PasswordReuseLimit {
+            get { return this.Retrieve(x => x.PasswordReuseLimit, 5); }
+            set { this.Store(x => x.PasswordReuseLimit, value); }
+        }
     }
 }

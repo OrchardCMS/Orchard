@@ -192,7 +192,7 @@ namespace Orchard.Users.Controllers {
 
             IDictionary<string, LocalizedString> validationErrors;
 
-            if (!_userService.PasswordMeetsPolicies(createModel.Password, out validationErrors)) {
+            if (!_userService.PasswordMeetsPolicies(createModel.Password, null, out validationErrors)) {
                 ModelState.AddModelErrors(validationErrors);
             }
 
@@ -202,7 +202,8 @@ namespace Orchard.Users.Controllers {
                                                   createModel.UserName,
                                                   createModel.Password,
                                                   createModel.Email,
-                                                  null, null, true));
+                                                  null, null, true,
+                                                  createModel.ForcePasswordChange));
             }
 
             var model = Services.ContentManager.UpdateEditor(user, this);

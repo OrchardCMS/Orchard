@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserCreateViewModel  {
+    public class UserCreateViewModel {
         [Required]
         public string UserName { get; set; }
 
@@ -15,5 +15,8 @@ namespace Orchard.Users.ViewModels {
 
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        public bool ForcePasswordChange { get; set; }
+
     }
 }

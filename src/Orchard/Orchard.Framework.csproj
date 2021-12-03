@@ -214,11 +214,16 @@
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
     <Compile Include="Localization\Services\LocalizationStreamParser.cs" />
     <Compile Include="Mvc\Html\LinkExtensions.cs" />
+    <Compile Include="Security\IPasswordHistoryService.cs" />
+    <Compile Include="Security\IPasswordService.cs" />
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\IUserDataProvider.cs" />
     <Compile Include="Security\NullAccountValidationService.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
+    <Compile Include="Security\PasswordContext.cs" />
+    <Compile Include="Security\PasswordExtensions.cs" />
+    <Compile Include="Security\PasswordHistoryEntry.cs" />
     <Compile Include="Security\Providers\BaseUserDataProvider.cs" />
     <Compile Include="Security\Providers\DefaultSecurityService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
