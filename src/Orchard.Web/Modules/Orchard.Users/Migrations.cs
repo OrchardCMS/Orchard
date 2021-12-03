@@ -23,13 +23,17 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1))))
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
+                    .Column<bool>("ForcePasswordChange"))
                 .AlterTable("UserPartRecord", table => table
-                    .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"));
+                    .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"))
+                // users are most commonly searched by NormalizedUserName and or Email
+                .AlterTable("UserPartRecord", table => table
+                    .CreateIndex($"IDX_UserPartRecord_NameAndEmail", "NormalizedUserName", "Email"));
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 6;
+            return 8;
         }
 
         public int UpdateFrom1() {
@@ -78,6 +82,13 @@ namespace Orchard.Users {
                     "Email");
             });
             return 7;
+        }
+        public int UpdateFrom7() {
+            // users are most commonly searched by NormalizedUserName and or Email
+            SchemaBuilder.AlterTable("UserPartRecord", table => {
+                table.AddColumn<bool>("ForcePasswordChange");
+            });
+            return 8;
         }
     }
 }

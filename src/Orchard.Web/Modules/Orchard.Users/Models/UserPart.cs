@@ -81,5 +81,13 @@ namespace Orchard.Users.Models {
             get { return Retrieve(x => x.LastPasswordChangeUtc); }
             set { Store(x => x.LastPasswordChangeUtc, value); }
         }
+        /// <summary>
+        /// Set to true means that the user must change the password at next logon
+        /// </summary>
+        public bool ForcePasswordChange {
+            get { return Retrieve(x => x.ForcePasswordChange); }
+            set { Store(x => x.ForcePasswordChange, value); }
+        }
+
     }
 }

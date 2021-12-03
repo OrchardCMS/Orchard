@@ -29,7 +29,11 @@ namespace Orchard.Users.Events {
 
         public void AccessDenied(IUser user) { }
 
-        public void ChangedPassword(IUser user, string password) { }
+        public void ChangedPassword(IUser user, string password) {
+            // If password has changed set to false the Force Password Change flag
+            if (user.As<UserPart>().ForcePasswordChange)
+                user.As<UserPart>().ForcePasswordChange = false;
+        }
 
         public void SentChallengeEmail(IUser user) { }
 

@@ -202,7 +202,8 @@ namespace Orchard.Users.Controllers {
                                                   createModel.UserName,
                                                   createModel.Password,
                                                   createModel.Email,
-                                                  null, null, true));
+                                                  null, null, true,
+                                                  createModel.ForcePasswordChange));
             }
 
             var model = Services.ContentManager.UpdateEditor(user, this);

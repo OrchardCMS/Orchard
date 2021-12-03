@@ -50,7 +50,7 @@ namespace Orchard.Users.Commands {
                 return;
             }
 
-            var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true));
+            var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true, false));
             if (user == null) {
                 Context.Output.WriteLine(T("Could not create user {0}. The authentication provider returned an error", UserName));
                 return;

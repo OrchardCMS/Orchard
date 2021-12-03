@@ -72,6 +72,7 @@ namespace Orchard.Users.Services {
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
             user.HashAlgorithm = PBKDF2;
             user.CreatedUtc = _clock.UtcNow;
+            user.ForcePasswordChange = createUserParams.ForcePasswordChange;
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null) {

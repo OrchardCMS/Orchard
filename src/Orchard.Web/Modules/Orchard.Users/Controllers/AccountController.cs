@@ -99,6 +99,9 @@ namespace Orchard.Users.Controllers {
                 _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
                 return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
             }
+            if (user != null && user.As<UserPart>().ForcePasswordChange) {
+                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
+            }
 
             _authenticationService.SignIn(user, rememberMe);
             _userEventHandler.LoggedIn(user);
@@ -155,7 +158,7 @@ namespace Orchard.Users.Controllers {
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
                 // No need to report this to IUserEventHandler because _membershipService does that for us
-                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false));
+                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false, false));
 
                 if (user != null) {
                     if (user.As<UserPart>().EmailStatus == UserStatus.Pending) {
@@ -286,9 +289,10 @@ namespace Orchard.Users.Controllers {
         [AlwaysAccessible]
         public ActionResult ChangeExpiredPassword(string username) {
             var membershipSettings = _membershipService.GetSettings();
-            var lastPasswordChangeUtc = _membershipService.GetUser(username).As<UserPart>().LastPasswordChangeUtc;
-
-            if (lastPasswordChangeUtc.Value.AddDays(membershipSettings.PasswordExpirationTimeInDays) > _clock.UtcNow) {
+            var userPart = _membershipService.GetUser(username).As<UserPart>();
+            var lastPasswordChangeUtc = userPart.LastPasswordChangeUtc;
+            if (lastPasswordChangeUtc.Value.AddDays(membershipSettings.PasswordExpirationTimeInDays) > _clock.UtcNow &&
+                    !userPart.ForcePasswordChange) {
                 return RedirectToAction("LogOn");
             }
 
@@ -319,6 +323,7 @@ namespace Orchard.Users.Controllers {
             }
 
             if (PasswordChangeIsSuccess(currentPassword, newPassword, username)) {
+
                 return RedirectToAction("ChangePasswordSuccess");
             }
             else {
@@ -333,7 +338,6 @@ namespace Orchard.Users.Controllers {
                 if (validated != null) {
                     _membershipService.SetPassword(validated, newPassword);
                     _userEventHandler.ChangedPassword(validated, newPassword);
-
                     // if security settings tell to invalidate on password change fire the LoggedOut event
                     if (_orchardServices.WorkContext.CurrentSite.As<SecuritySettingsPart>().ShouldInvalidateAuthOnPasswordChanged) {
                         _userEventHandler.LoggedOut(validated);
