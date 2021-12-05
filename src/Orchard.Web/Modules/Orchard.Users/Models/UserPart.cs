@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Security;
 using System;
+using System.Linq;
 using System.Web.Security;
 
 namespace Orchard.Users.Models {
@@ -88,6 +89,5 @@ namespace Orchard.Users.Models {
             get { return Retrieve(x => x.ForcePasswordChange); }
             set { Store(x => x.ForcePasswordChange, value); }
         }
-
     }
 }

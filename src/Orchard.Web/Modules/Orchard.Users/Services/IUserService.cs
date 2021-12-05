@@ -1,5 +1,6 @@
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,6 @@ namespace Orchard.Users.Services {
         string CreateNonce(IUser user, TimeSpan delay);
         bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc);
 
-        bool PasswordMeetsPolicies(string password, out IDictionary<string, LocalizedString> validationErrors);
+        bool PasswordMeetsPolicies(string password, IUser user, out IDictionary<string, LocalizedString> validationErrors);
     }
 }

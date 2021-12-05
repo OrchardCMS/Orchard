@@ -31,6 +31,18 @@ namespace Orchard.Users {
                 .AlterTable("UserPartRecord", table => table
                     .CreateIndex($"IDX_UserPartRecord_NameAndEmail", "NormalizedUserName", "Email"));
 
+            //Password History Table    
+            SchemaBuilder
+                .CreateTable("PasswordHistoryRecord", table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("UserPartRecord_Id")
+                    .Column<string>("Password")
+                    .Column<string>("PasswordFormat")
+                    .Column<string>("HashAlgorithm")
+                    .Column<string>("PasswordSalt"))
+                .AlterTable("PasswordHistoryRecord", table => table
+                        .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
+
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
             return 8;
@@ -84,10 +96,20 @@ namespace Orchard.Users {
             return 7;
         }
         public int UpdateFrom7() {
-            // users are most commonly searched by NormalizedUserName and or Email
             SchemaBuilder.AlterTable("UserPartRecord", table => {
                 table.AddColumn<bool>("ForcePasswordChange");
             });
+            SchemaBuilder
+                .CreateTable("PasswordHistoryRecord", table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<int>("UserPartRecord_Id")
+                    .Column<string>("Password")
+                    .Column<string>("PasswordFormat")
+                    .Column<string>("HashAlgorithm")
+                    .Column<string>("PasswordSalt")
+                    .Column<DateTime>("CreatedUtc"))
+                .AlterTable("PasswordHistoryRecord", table => table
+                    .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
             return 8;
         }
     }

@@ -51,7 +51,7 @@ namespace Orchard.Users.Drivers{
                             _membershipService.SetPassword(actUser, editModel.Password);
                         }
                    	IDictionary<string, LocalizedString> validationErrors;
-                   	if (!_userService.PasswordMeetsPolicies(editModel.Password, out validationErrors)) {
+                   	if (!_userService.PasswordMeetsPolicies(editModel.Password, part, out validationErrors)) {
                         	updater.AddModelErrors(validationErrors);
                     	}
                     }

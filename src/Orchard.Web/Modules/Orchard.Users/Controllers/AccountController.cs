@@ -265,7 +265,7 @@ namespace Orchard.Users.Controllers {
                 .ShouldInvalidateAuthOnPasswordChanged;
             ViewData["InvalidateOnPasswordChange"] = shouldSignout;
 
-            if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
+            if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword, _orchardServices.WorkContext.CurrentUser)) {
                 return View();
             }
 
@@ -318,7 +318,7 @@ namespace Orchard.Users.Controllers {
                 SpecialCharacterRequirement: membershipSettings.GetPasswordSpecialRequirement(),
                 NumberRequirement: membershipSettings.GetPasswordNumberRequirement());
 
-            if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
+            if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword, _membershipService.GetUser(username))) {
                 return View(viewModel);
             }
 
@@ -387,7 +387,7 @@ namespace Orchard.Users.Controllers {
             ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
             ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
 
-            ValidatePassword(newPassword);
+            ValidatePassword(newPassword, user);
 
             if (!string.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
@@ -447,7 +447,7 @@ namespace Orchard.Users.Controllers {
         }
 
         #region Validation Methods
-        private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword) {
+        private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword, IUser user) {
             if (string.IsNullOrEmpty(currentPassword)) {
                 ModelState.AddModelError("currentPassword", T("You must specify a current password."));
             }
@@ -456,7 +456,7 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("newPassword", T("The new password must be different from the current password."));
             }
 
-            ValidatePassword(newPassword);
+            ValidatePassword(newPassword, user);
 
             if (!string.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
@@ -528,7 +528,7 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
 
-            ValidatePassword(password);
+            ValidatePassword(password, null);
 
             if (!string.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
@@ -536,8 +536,8 @@ namespace Orchard.Users.Controllers {
             return ModelState.IsValid;
         }
 
-        private void ValidatePassword(string password) {
-            if (!_userService.PasswordMeetsPolicies(password, out IDictionary<string, LocalizedString> validationErrors)) {
+        private void ValidatePassword(string password, IUser user) {
+            if (!_userService.PasswordMeetsPolicies(password, user, out IDictionary<string, LocalizedString> validationErrors)) {
                 foreach (var error in validationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }

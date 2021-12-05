@@ -192,7 +192,7 @@ namespace Orchard.Users.Controllers {
 
             IDictionary<string, LocalizedString> validationErrors;
 
-            if (!_userService.PasswordMeetsPolicies(createModel.Password, out validationErrors)) {
+            if (!_userService.PasswordMeetsPolicies(createModel.Password, null, out validationErrors)) {
                 ModelState.AddModelErrors(validationErrors);
             }
 
