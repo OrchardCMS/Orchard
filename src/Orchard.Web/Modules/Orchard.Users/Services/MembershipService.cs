@@ -204,7 +204,7 @@ namespace Orchard.Users.Services {
             }
 
             userPart.PasswordFormat = MembershipPasswordFormat.Hashed;
-            userPart.Password = _passwordService.ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
+            userPart.Password = PasswordExtensions.ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
             userPart.PasswordSalt = Convert.ToBase64String(saltBytes);
         }
 

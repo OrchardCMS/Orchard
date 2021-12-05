@@ -138,6 +138,7 @@
     <Compile Include="Services\MembershipValidationService.cs" />
     <Compile Include="Services\PasswordChangedDateUserDataProvider.cs" />
     <Compile Include="Services\PasswordHistoryService.cs" />
+    <Compile Include="Services\PasswordService.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />

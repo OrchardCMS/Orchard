@@ -213,8 +213,8 @@
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\IUserDataProvider.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
-    <Compile Include="Security\PasswordService.cs" />
     <Compile Include="Security\PasswordContext.cs" />
+    <Compile Include="Security\PasswordExtensions.cs" />
     <Compile Include="Security\Providers\BaseUserDataProvider.cs" />
     <Compile Include="Security\Providers\DefaultSecurityService.cs" />
     <Compile Include="Security\Providers\DefaultSslSettingsProvider.cs" />
