@@ -146,7 +146,7 @@ namespace Orchard.Users.Services {
             if (user == null)
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if (user == null || !_passwordService.Equals(new PasswordContext {
+            if (user == null || !_passwordService.IsMatch(new PasswordContext {
                 Password = user.Password,
                 HashAlgorithm = user.HashAlgorithm,
                 PasswordFormat = user.PasswordFormat,

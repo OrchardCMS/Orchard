@@ -39,7 +39,8 @@ namespace Orchard.Users {
                     .Column<string>("Password")
                     .Column<string>("PasswordFormat")
                     .Column<string>("HashAlgorithm")
-                    .Column<string>("PasswordSalt"))
+                    .Column<string>("PasswordSalt")
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1))))
                 .AlterTable("PasswordHistoryRecord", table => table
                         .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
 
@@ -107,7 +108,7 @@ namespace Orchard.Users {
                     .Column<string>("PasswordFormat")
                     .Column<string>("HashAlgorithm")
                     .Column<string>("PasswordSalt")
-                    .Column<DateTime>("CreatedUtc"))
+                    .Column<DateTime>("LastPasswordChangeUtc"))
                 .AlterTable("PasswordHistoryRecord", table => table
                     .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
             return 8;

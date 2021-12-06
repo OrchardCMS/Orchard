@@ -18,20 +18,21 @@ namespace Orchard.Users.Services {
 
         public void CreateEntry(UserPart user) {
             _historyRepository.Create(new PasswordHistoryRecord {
+                UserPartRecord = user.Record,
                 HashAlgorithm = user.HashAlgorithm,
                 Password = user.Password,
                 PasswordFormat = user.PasswordFormat,
                 PasswordSalt = user.PasswordSalt,
-                CreatedUtc = user.CreatedUtc,
+                LastPasswordChangeUtc = user.LastPasswordChangeUtc,
             });
         }
 
         public bool MatchLastPasswords(string plaintextPassword, int howManyPasswords, UserPart user) {
             if (user == null)
                 return false;
-            var lastPasswords = _historyRepository.Fetch(x => x.UserPartRecord.Id == user.Id).OrderByDescending(x => x.CreatedUtc).Take(howManyPasswords);
+            var lastPasswords = _historyRepository.Fetch(x => x.UserPartRecord.Id == user.Id).OrderByDescending(x => x.LastPasswordChangeUtc).Take(howManyPasswords);
             foreach (var password in lastPasswords) {
-                if (_passwordService.Equals(new PasswordContext {
+                if (_passwordService.IsMatch(new PasswordContext {
                     PasswordSalt = password.PasswordSalt,
                     HashAlgorithm = password.HashAlgorithm,
                     Password = password.Password,

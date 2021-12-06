@@ -336,6 +336,7 @@ namespace Orchard.Users.Controllers {
                 var validated = _membershipService.ValidateUser(username, currentPassword, out List<LocalizedString> validationErrors);
 
                 if (validated != null) {
+                    _userEventHandler.ChangingPassword(validated, newPassword);
                     _membershipService.SetPassword(validated, newPassword);
                     _userEventHandler.ChangedPassword(validated, newPassword);
                     // if security settings tell to invalidate on password change fire the LoggedOut event
@@ -396,6 +397,7 @@ namespace Orchard.Users.Controllers {
             if (!ModelState.IsValid) {
                 return View();
             }
+            _userEventHandler.ChangingPassword(user, newPassword);
 
             _membershipService.SetPassword(user, newPassword);
 
