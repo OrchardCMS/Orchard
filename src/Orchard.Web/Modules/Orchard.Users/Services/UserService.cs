@@ -234,10 +234,9 @@ namespace Orchard.Users.Services {
                     validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainSpecialCharacters,
                         T("The password must contain at least one special character."));
                 }
-                //TODO: Add a settings for this
-                if (true) {
-                    var enforcePasswordHistory = 5;
-                    if (_passwordHistoryService.MatchLastPasswords(password, enforcePasswordHistory, user != null ? user.As<UserPart>() : null)) {
+                if (settings.EnablePasswordHistoryPolicy) {
+                    var enforcePasswordHistory = settings.GetPasswordReuseLimit();
+                    if (_passwordHistoryService.PasswordMatchLastOnes(password, user, enforcePasswordHistory)) {
                         validationErrors.Add(UserPasswordValidationResults.PasswordHasAlreadyBeenUsed,
                             T.Plural("You cannot reuse the last password.", "You cannot reuse none of last {0} passwords.", enforcePasswordHistory));
                     }

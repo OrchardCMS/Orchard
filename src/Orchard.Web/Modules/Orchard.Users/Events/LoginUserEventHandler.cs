@@ -12,7 +12,7 @@ namespace Orchard.Users.Events {
     public class LoginUserEventHandler : IUserEventHandler {
         private readonly IClock _clock;
         private readonly IPasswordHistoryService _passwordHistoryService;
-        private UserPart beforeChangingPasswordUser;
+        private PasswordHistoryEntry _freezedPasswordEntry;
 
         public LoginUserEventHandler(IClock clock, IPasswordHistoryService passwordHistoryService) {
             _clock = clock;
@@ -34,7 +34,15 @@ namespace Orchard.Users.Events {
         public void AccessDenied(IUser user) { }
 
         public void ChangingPassword(IUser user, string password) {
-            beforeChangingPasswordUser = user.As<UserPart>();
+            var userPart = user.As<UserPart>();
+            _freezedPasswordEntry = new PasswordHistoryEntry {
+                User = user,
+                Password = userPart.Password,
+                PasswordSalt = userPart.PasswordSalt,
+                HashAlgorithm = userPart.HashAlgorithm,
+                PasswordFormat = userPart.PasswordFormat,
+                LastPasswordChangeUtc = userPart.LastPasswordChangeUtc
+            };
         }
 
         public void ChangedPassword(IUser user, string password) {
@@ -43,7 +51,7 @@ namespace Orchard.Users.Events {
                 user.As<UserPart>().ForcePasswordChange = false;
 
             // Store in the password history the previous password
-            _passwordHistoryService.CreateEntry(beforeChangingPasswordUser);
+            _passwordHistoryService.CreateEntry(_freezedPasswordEntry);
         }
 
         public void SentChallengeEmail(IUser user) { }
