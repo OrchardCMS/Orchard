@@ -35,7 +35,8 @@ namespace Orchard.Users.Services {
             var lastPasswords = _historyRepository
                                     .Fetch(x => x.UserPartRecord.Id == user.Id)
                                     .OrderByDescending(x => x.LastPasswordChangeUtc)
-                                    .Take(count)
+                                    //because we append the last password (stored within the UserPart) we take 1 less password from history
+                                    .Take(count - 1) 
                                     .Select(x => new PasswordHistoryEntry {
                                         Password = x.Password,
                                         PasswordSalt = x.PasswordSalt,
@@ -44,7 +45,15 @@ namespace Orchard.Users.Services {
                                         LastPasswordChangeUtc = x.LastPasswordChangeUtc,
                                         User = user
                                     });
-            return lastPasswords;
+            return lastPasswords
+                //we append the last used password stored within the UserPart
+                .Append(new PasswordHistoryEntry {
+                    Password = user.As<UserPart>().Password,
+                    PasswordSalt = user.As<UserPart>().PasswordSalt,
+                    HashAlgorithm = user.As<UserPart>().HashAlgorithm,
+                    PasswordFormat = user.As<UserPart>().PasswordFormat,
+                    LastPasswordChangeUtc = user.As<UserPart>().LastPasswordChangeUtc,
+                    User = user });
         }
 
         public bool PasswordMatchLastOnes(string password, IUser user, int count) {

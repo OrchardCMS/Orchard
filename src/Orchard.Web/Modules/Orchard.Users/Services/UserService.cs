@@ -237,7 +237,7 @@ namespace Orchard.Users.Services {
                 if (settings.EnablePasswordHistoryPolicy) {
                     var enforcePasswordHistory = settings.GetPasswordReuseLimit();
                     if (_passwordHistoryService.PasswordMatchLastOnes(password, user, enforcePasswordHistory)) {
-                        validationErrors.Add(UserPasswordValidationResults.PasswordHasAlreadyBeenUsed,
+                        validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotMeetHistoryPolicy,
                             T.Plural("You cannot reuse the last password.", "You cannot reuse none of last {0} passwords.", enforcePasswordHistory));
                     }
                 }

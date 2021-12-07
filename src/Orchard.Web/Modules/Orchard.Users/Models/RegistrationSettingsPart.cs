@@ -96,7 +96,7 @@ namespace Orchard.Users.Models {
             get { return this.Retrieve(x => x.EnablePasswordHistoryPolicy); }
             set { this.Store(x => x.EnablePasswordHistoryPolicy, value); }
         }
-        [Range(2, int.MaxValue, ErrorMessage = "The minimum password reuse limit must be at least 2.")]
+        [Range(1, int.MaxValue, ErrorMessage = "The minimum password reuse limit must be at least 1.")]
         public int PasswordReuseLimit {
             get { return this.Retrieve(x => x.PasswordReuseLimit, 5); }
             set { this.Store(x => x.PasswordReuseLimit, value); }
