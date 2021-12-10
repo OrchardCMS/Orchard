@@ -115,6 +115,7 @@
     <Compile Include="Forms\CreateUserForm.cs" />
     <Compile Include="Handlers\ApproveUserHandler.cs" />
     <Compile Include="Handlers\SecuritySettingsPartHandler.cs" />
+    <Compile Include="Handlers\UserSuspensionSettingsPartHandler.cs" />
     <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Migrations.cs" />
@@ -129,10 +130,12 @@
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
     <Compile Include="Models\UserStatus.cs" />
+    <Compile Include="Models\UserSuspensionSettingsPart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApproveUserService.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
+    <Compile Include="Services\InactiveUserSuspensionBackgroundTask.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
     <Compile Include="Services\PasswordChangedDateUserDataProvider.cs" />
@@ -236,6 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\EditorTemplates\Parts\Users.SuspensionSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\ChangeExpiredPassword.cshtml" />
