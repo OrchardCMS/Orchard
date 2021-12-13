@@ -113,5 +113,14 @@ namespace Orchard.Users {
                     .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
             return 8;
         }
+
+        public int UpdateFrom8() {
+            SchemaBuilder
+                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                    .ContentPartRecord()
+                    .Column<bool>("SaveFromSuspension"));
+
+            return 9;
+        }
     }
 }

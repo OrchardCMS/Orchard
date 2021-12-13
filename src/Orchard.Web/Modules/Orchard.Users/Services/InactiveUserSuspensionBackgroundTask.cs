@@ -22,6 +22,7 @@ namespace Orchard.Users.Services {
         private readonly IContentManager _contentManager;
         private readonly IUserEventHandler _userEventHandlers;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEnumerable<IUserSuspensionConditionProvider> _userSuspensionConditionProviders;
 
         public InactiveUserSuspensionBackgroundTask(
             IDistributedLockService distributedLockService,
@@ -29,7 +30,8 @@ namespace Orchard.Users.Services {
             IClock clock,
             IContentManager contentManager,
             IUserEventHandler userEventHandlers,
-            IAuthorizationService authorizationService) {
+            IAuthorizationService authorizationService,
+            IEnumerable<IUserSuspensionConditionProvider> userSuspensionConditionProviders) {
 
             _distributedLockService = distributedLockService;
             _siteService = siteService;
@@ -37,6 +39,7 @@ namespace Orchard.Users.Services {
             _contentManager = contentManager;
             _userEventHandlers = userEventHandlers;
             _authorizationService = authorizationService;
+            _userSuspensionConditionProviders = userSuspensionConditionProviders;
         }
 
 
@@ -54,68 +57,35 @@ namespace Orchard.Users.Services {
 
                         Logger.Debug("Checking for inactive users.");
                         // Get all inactive users (last logon older than the configured timespan)
-                        var thresholdDate = _clock.UtcNow - TimeSpan.FromDays(GetSettings().MinimumSweepInterval);
-                        var inactiveUsersQuery = _contentManager
-                            .Query<UserPart, UserPartRecord>()
-                            .Where(upr => upr.RegistrationStatus == UserStatus.Approved
-                                && upr.EmailStatus == UserStatus.Approved
-                                && upr.LastLoginUtc >= thresholdDate);
+                        var thresholdDate = _clock.UtcNow - TimeSpan.FromDays(GetSettings().AllowedInactivityDays);
+                        IContentQuery<UserPart> inactiveUsersQuery = _contentManager
+                            .Query<UserPart>()
+                            .Where<UserPartRecord>(upr =>
+                                // user is enabled
+                                upr.RegistrationStatus == UserStatus.Approved
+                                && upr.EmailStatus == UserStatus.Approved)
+                            .Where<UserPartRecord>(upr =>
+                                // The last login happened a long time ago
+                                (upr.LastLoginUtc != null && upr.LastLoginUtc <= thresholdDate)
+                                // The user never logged in AND was created a long time ago
+                                || (upr.LastLoginUtc == null && upr.CreatedUtc <= thresholdDate)
+                                );
                         // If providers could alter the query we'd be able to immediately limit the number
                         // of ContentItems we'll fetch, and as a consequence the number of operations later.
                         // However, such conditions would make users immune from being suspended.
+                        foreach (var provider in _userSuspensionConditionProviders) {
+                            inactiveUsersQuery = provider.AlterQuery(inactiveUsersQuery);
+                        }
                         var inactiveUsers = inactiveUsersQuery.List();
                         // By default, all inactive users should be suspended, except SiteOwner.
                         foreach (var userUnderTest in inactiveUsers.Where(up => !IsSiteOwner(up))) {
 
-                            // Ask providers whether users should be processed
-                            // - Site owners should be left alone
-                            // - By Role:
-                            //   - e.g. Authenticated should not be disabled, but Editor should
-                            // - Flag on the User
-
-                            // One way to set this up:
-                            // For each user we consider two "scores" initialized at int.MinValue:
-                            // - SuspendScore
-                            // - SafeScore
-                            // At the end if SuspendSore >= SafeScore we suspend the user.
-                            // - We have already excluded users with the SiteOwner permission from this.
-                            // - Each provider should work on principle with a specific value it can use,
-                            //   and it would always assign that value to either SafeScore or SuspendScore
-                            //   for the user under test. For security, suspending the user should usually
-                            //   take priority, hence the condition for suspension is SuspendScore >= SafeScore.
-                            // The value/score assigned by a specific provider is a measure of how specific
-                            // its corresponding configuration/test is for a user. If for a user we have
-                            // already assigned a score that is higher than what a provider would use, then
-                            // that provider won't run and especially won't reassign the score.
-                            // For example:
-                            // - RoleProvider is based on a configuration for user Roles.
-                            //   - It uses a score of 100.
-                            //   - In its configuration, each role can be marked as either Protected,
-                            //     ToSuspend, Neither.
-                            //   - If a user being process has a Protected role, RoleProvider wants to assign
-                            //     100 to their SafeScore.
-                            //   - If a user under test has a ToSuspend role, RoleProvider wants to assign
-                            //     100 to their SuspendScore.
-                            //   - Roles that aren't marked as Protected or ToSuspend are ignored in this
-                            //     RoleProvider.
-                            //   - According to this RoleProvider, if a user under test has both Protected
-                            //     and ToSuspend roles, then they should be suspendend, because that would
-                            //     result in SuspendScore == SafeScore.
-                            // - FlagProvider is based on a "NeverSuspendThisUser" flag on a ContentPart
-                            //   attached to Users.
-                            //   - It has a score of 200. This is higher than the RoleProvider above, because
-                            //     the flag on the single user is more specific.
-                            //   - If a user under test has that flag set, FlagProvider wants to assign 200
-                            //     to their SafeScore.
-                            var suspendScore = int.MinValue;
-                            var safeScore = int.MinValue;
-
-                            // Use providers to determine the "suspension" operation?
-                            // - Disable user?
-                            // - Remove role?
-
+                            // Ask providers whether users should be processed/disabled
+                            var saveTheUser = _userSuspensionConditionProviders
+                                .Aggregate(false, (prev, scp) => prev || scp.UserIsProtected(userUnderTest));
+                            
                             // Suspend the users that have gotten this far.
-                            if (suspendScore >= safeScore) {
+                            if (!saveTheUser) {
                                 DisableUser(userUnderTest);
                             }
                         }
@@ -149,7 +119,10 @@ namespace Orchard.Users.Services {
 
         private bool IsItTimeToSweep() {
             var settings = GetSettings();
-            if (settings.SuspendInactiveUsers && settings.MinimumSweepInterval > 0) {
+            if (settings.SuspendInactiveUsers) {
+                if (settings.MinimumSweepInterval <= 0) {
+                    return true;
+                }
                 var lastSweep = settings.LastSweepUtc ?? DateTime.MinValue;
                 var now = _clock.UtcNow;
                 var interval = TimeSpan.FromHours(settings.MinimumSweepInterval);
