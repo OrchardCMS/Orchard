@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Security;
@@ -13,7 +12,6 @@ using Orchard.Users.Events;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
-    // [OrchardFeature("AutomatedUserModeration")]?
     public class InactiveUserSuspensionBackgroundTask : Component, IBackgroundTask {
 
         private readonly IDistributedLockService _distributedLockService;
@@ -83,7 +81,7 @@ namespace Orchard.Users.Services {
                             // Ask providers whether users should be processed/disabled
                             var saveTheUser = _userSuspensionConditionProviders
                                 .Aggregate(false, (prev, scp) => prev || scp.UserIsProtected(userUnderTest));
-                            
+
                             // Suspend the users that have gotten this far.
                             if (!saveTheUser) {
                                 DisableUser(userUnderTest);

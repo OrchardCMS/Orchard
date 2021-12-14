@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Drivers {
-    // [OrchardFeature("AutomatedUserModeration")]?
     public class ProtectUserFromSuspensionPartDriver : ContentPartDriver<ProtectUserFromSuspensionPart> {
 
         public ProtectUserFromSuspensionPartDriver() { }

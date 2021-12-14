@@ -44,9 +44,15 @@ namespace Orchard.Users {
                 .AlterTable("PasswordHistoryRecord", table => table
                         .CreateIndex($"IDX_UserPartRecord_Id", "UserPartRecord_Id"));
 
+            // Queryable bool to tell which users should not be suspended automatically
+            SchemaBuilder
+                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                    .ContentPartRecord()
+                    .Column<bool>("SaveFromSuspension"));
+
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
-            return 8;
+            return 9;
         }
 
         public int UpdateFrom1() {

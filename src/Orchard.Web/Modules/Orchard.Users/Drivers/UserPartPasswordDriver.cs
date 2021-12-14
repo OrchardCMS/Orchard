@@ -1,4 +1,6 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -6,8 +8,6 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
-using System.Collections.Generic;
-using System.Web.Mvc;
 
 namespace Orchard.Users.Drivers {
 
