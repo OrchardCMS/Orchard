@@ -8,6 +8,7 @@ namespace Orchard.Users.Handlers {
     public class ApproveUserHandler : ContentHandler {
         private readonly IApproveUserService _approveUserService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        const string AWS_KEY = "XQMOED0FK1ENBT4UHG3TY5BZL6FH7EGT8YOPSDF9NPSDU0FKT0WEUR0LKG0SDDFR"
 
         public ApproveUserHandler(
            IApproveUserService approveUserService,
