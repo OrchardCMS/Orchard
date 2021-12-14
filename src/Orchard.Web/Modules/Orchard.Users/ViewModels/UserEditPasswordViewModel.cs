@@ -13,4 +13,13 @@ namespace Orchard.Users.ViewModels
         public string ConfirmPassword { get; set; }
         public IContent User { get; set; }
     }
+
+        public class AdminEditPasswordViewModel {
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
+        public IContent User { get; set; }
+    }
 }
