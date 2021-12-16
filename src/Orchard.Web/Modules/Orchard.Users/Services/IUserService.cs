@@ -8,6 +8,7 @@ namespace Orchard.Users.Services {
     public interface IUserService : IDependency {
         bool VerifyUserUnicity(string userName, string email);
         bool VerifyUserUnicity(int id, string userName, string email);
+        UserPart GetUserByNameOrEmail(string usernameOrEmail);
 
         void SendChallengeEmail(IUser user, Func<string, string> createUrl);
         IUser ValidateChallenge(string challengeToken);

@@ -158,8 +158,7 @@ namespace Orchard.Users.Services {
         }
 
         public bool SendLostPasswordEmail(string usernameOrEmail, Func<string, string> createUrl) {
-            var lowerName = usernameOrEmail.ToLowerInvariant();
-            var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName).List().FirstOrDefault();
+            var user = GetUserByNameOrEmail(usernameOrEmail);
 
             if (user != null) {
                 string nonce = CreateNonce(user, DelayToResetPassword);
@@ -244,6 +243,15 @@ namespace Orchard.Users.Services {
             }
 
             return validationErrors.Count == 0;
+        }
+
+        public UserPart GetUserByNameOrEmail(string usernameOrEmail) {
+            var lowerName = usernameOrEmail.ToLowerInvariant();
+            return _contentManager
+                .Query<UserPart, UserPartRecord>()
+                .Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName)
+                .Slice(0, 1)
+                .FirstOrDefault();
         }
     }
 }

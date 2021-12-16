@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -185,6 +186,28 @@ namespace Orchard.Users.Controllers {
                 }
 
                 ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
+            } else {
+                // Not a new registration, but perhaps we already have that user and they
+                // haven't validated their email address. This doesn't care whether there
+                // were other issues with the registration attempt that caused its validation
+                // to fail: if the user exists and still has to confimr their email, the
+                // challenge email is sent again.
+                if (ModelState["userExists"] != null
+                    && ModelState["userExists"].Errors.Count > 0
+                    && membershipSettings.UsersMustValidateEmail) {
+                    var user = _userService.GetUserByNameOrEmail(email);
+                    if (user != null && user.EmailStatus == UserStatus.Pending) {
+                        var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                        if (string.IsNullOrWhiteSpace(siteUrl)) {
+                            siteUrl = HttpContext.Request.ToRootUrlString();
+                        }
+
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
+
+                        _userEventHandler.SentChallengeEmail(user);
+                        return RedirectToAction("ChallengeEmailSent", new { ReturnUrl = returnUrl });
+                    }
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -228,6 +251,48 @@ namespace Orchard.Users.Controllers {
             _orchardServices.Notifier.Information(T("If your username or email is correct, we will send you an email with a link to reset your password."));
 
             return RedirectToAction("LogOn");
+        }
+
+        [AlwaysAccessible]
+        public ActionResult RequestChallengeEmail() {
+            // ensure users can request lost password
+            var membershipSettings = _membershipService.GetSettings();
+            if (!membershipSettings.UsersMustValidateEmail) {
+                return HttpNotFound();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [AlwaysAccessible]
+        public ActionResult RequestChallengeEmail(string username) {
+            // ensure users can request lost password
+            var membershipSettings = _membershipService.GetSettings();
+            if (!membershipSettings.UsersMustValidateEmail) {
+                return HttpNotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(username)) {
+                ModelState.AddModelError("username", T("You must specify a username or e-mail."));
+                return View();
+            }
+            // Get the user
+            var user = _userService.GetUserByNameOrEmail(username);
+            if (user != null && user.EmailStatus == UserStatus.Pending) {
+                var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                if (string.IsNullOrWhiteSpace(siteUrl)) {
+                    siteUrl = HttpContext.Request.ToRootUrlString();
+                }
+
+                _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
+
+                _userEventHandler.SentChallengeEmail(user);
+
+            }
+            _orchardServices.Notifier.Information(T("If your username or email is correct, we will send you an email with a link to validate your address."));
+
+            return RedirectToAction("ChallengeEmailSent");
         }
 
         [Authorize]

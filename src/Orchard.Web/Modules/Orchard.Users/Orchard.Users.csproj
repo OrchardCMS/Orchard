@@ -247,6 +247,7 @@
     <None Include="packages.config" />
     <Content Include="Views\EditorTemplates\Parts\Users.SuspensionSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.ProtectFromSuspension.cshtml" />
+    <Content Include="Views\Account\RequestChallengeEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\ChangeExpiredPassword.cshtml" />
