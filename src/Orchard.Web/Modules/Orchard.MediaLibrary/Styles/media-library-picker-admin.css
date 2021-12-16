@@ -54,6 +54,10 @@
     height: 40px;
     overflow: hidden;
 }
+.thumbnail .overlay {
+    height: 40px;
+    overflow: hidden;
+}
 
 .overlay h3 {
     padding-right:5px;

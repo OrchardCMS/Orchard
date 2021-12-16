@@ -4,71 +4,154 @@
 
 @{
     var selectedQueryRecordId = -1;
+
+    var filterQuery = Model.QueryRecordIdFilterEntries.Any();
+    var checkQuery = false;
 }
 
-<fieldset>
-    @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
-    <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
-        @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
-            <optgroup label="@queryRecord.Name">
-                @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
-                @if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
-                    selectedQueryRecordId = queryRecord.Id;
-                }
+@helper HintFromLockedField(string errorMessage) {
+    <span class="hint">@errorMessage</span>
+    <span class="hint">@T("This field is locked from the settings, cannot be modified.")</span>
+}
 
-                @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
-                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
-                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
-                        selectedQueryRecordId = queryRecord.Id;
+    <fieldset>
+        @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
+        @{
+            // if any values, use default list of the settings
+            <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
+                @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
+                    // check condition for design option group
+                    bool designDefaultQuery = Model.QueryRecordIdFilterEntries.Any(x => x.Id == queryRecord.Id.ToString() && x.LayoutId == "-1");
+                    bool designAnotherLayout = Model.QueryRecordIdFilterEntries.Any(x => queryRecord.LayoutRecordEntries.Select(q => q.Id.ToString()).Contains(x.LayoutId));
+
+
+                    if (!filterQuery || designDefaultQuery || designAnotherLayout) {
+                        <optgroup label="@queryRecord.Name">
+                            @if (!filterQuery || designDefaultQuery) {
+                                @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
+                                if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
+                                    selectedQueryRecordId = queryRecord.Id;
+                                    checkQuery = true;
+                                }
+                            }
+                            @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
+                                if (!filterQuery || Model.QueryRecordIdFilterEntries.Any(x => x.Id == queryRecord.Id.ToString() && x.LayoutId == layoutRecord.Id.ToString())) {
+                                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
+                                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
+                                        selectedQueryRecordId = queryRecord.Id;
+                                        checkQuery = true;
+                                    }
+                                }
+                            }
+                        </optgroup>
                     }
                 }
-            </optgroup>
+            </select>
+            if (!checkQuery && Model.PartId != 0) {
+                <label class="info">@T("The previously selected query is no longer available.")</label>
+            }
         }
-    </select>
-    @if (selectedQueryRecordId != -1) {
-        @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
-    }
-    <span class="hint">@T("The query to display.")</span>
-</fieldset>
+        @if (selectedQueryRecordId != -1) {
+            @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { id = "editQueryLink-" + Model.PartId.ToString() })
+        }
+        <span class="hint">@T("The query to display.")</span>
+    </fieldset>
 
 <fieldset>
     <div>
-        @Html.LabelFor(m => m.Items, T("Items to display"))
-        @Html.TextBoxFor(m => m.Items, new { @class = "text small" })
-        <span class="hint">@T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page.")</span>
+        @if (Model.LockEditingItems) {
+            <label class="sub">@T("Items to display"): </label><span>@Model.Items</span>
+            @Html.HiddenFor(m => m.Items)
+            @HintFromLockedField(T("The number of items to display. If equals 0 no limit. When using pagination, this is the number of items per page.").Text)
+        }
+        else {
+            @Html.LabelFor(m => m.Items, T("Items to display"))
+            @Html.TextBoxFor(m => m.Items, new { @class = "text small" })
+            <span class="hint">@T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page.")</span>
+        }
     </div>
 
     <div>
-        @Html.LabelFor(m => m.Skip, T("Offset"))
-        @Html.TextBoxFor(m => m.Skip, new { @class = "text small" })
-        <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
+        @if (Model.LockEditingSkip) {
+            <label class="sub">@T("Offset"): </label><span>@Model.Skip</span>
+            @Html.HiddenFor(m => m.Skip)
+            @HintFromLockedField(T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).").Text)
+        }
+        else {
+            @Html.LabelFor(m => m.Skip, T("Offset"))
+            @Html.TextBoxFor(m => m.Skip, new { @class = "text small" })
+            <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
+        }
     </div>
 
     <div>
-        @Html.LabelFor(m => m.MaxItems, T("Maximum items"))
-        @Html.TextBoxFor(m => m.MaxItems, new { @class = "text small" })
-        <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
+        @if (Model.LockEditingMaxItems) {
+            <label class="sub">@T("Maximum items"): </label><span>@Model.MaxItems</span>
+            @Html.HiddenFor(m => m.MaxItems)
+            @HintFromLockedField(T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.").Text)
+        }
+        else {
+            @Html.LabelFor(m => m.MaxItems, T("Maximum items"))
+            @Html.TextBoxFor(m => m.MaxItems, new { @class = "text small" })
+            <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
+        }
     </div>
 
     <div>
-        @Html.LabelFor(m => m.PagerSuffix, T("Suffix"))
-        @Html.TextBoxFor(m => m.PagerSuffix, new { @class = "text" })
-        <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
+        @if (Model.LockEditingPagerSuffix) {
+            if (!string.IsNullOrEmpty(Model.PagerSuffix)) {
+                <label class="sub">@T("Suffix"): </label><span>@Model.PagerSuffix</span>
+                @HintFromLockedField(T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.").Text)
+            }
+            @Html.HiddenFor(m => m.PagerSuffix)
+        }
+        else {
+            @Html.LabelFor(m => m.PagerSuffix, T("Suffix"))
+            @Html.TextBoxFor(m => m.PagerSuffix, new { @class = "text small" })
+            <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
+        }
     </div>
 
     <div>
-        @Html.CheckBoxFor(m => m.DisplayPager)
-        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DisplayPager)">@T("Show pager")</label>
-        <span class="hint">@T("Check to add a pager to the list.")</span>
+        @if (Model.LockEditingDisplayPager) {
+            <label class="sub">@T("Show pager"): </label>
+            if (Model.DisplayPager) {
+                <span>@T("True")</span>
+            }
+            else {
+                <span>@T("False")</span>
+            }
+            @Html.HiddenFor(m => m.DisplayPager)
+            @HintFromLockedField(T("Flag used to add a pager to the list.").Text)
+        }
+        else {
+            @Html.CheckBoxFor(m => m.DisplayPager)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DisplayPager)">@T("Show pager")</label>
+            <span class="hint">@T("Check to add a pager to the list.")</span>
+        }
     </div>
 </fieldset>
 
 @using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
-    })(jQuery);
+    <script type="text/javascript">
+        //<![CDATA[
+        (function ($) {
+            $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+
+            $("#@Html.FieldIdFor(m => m.QueryLayoutRecordId)").change(function (sender) {
+                var selected = $(this).val();
+                // Removing layout id
+                selected = selected.substr(0, selected.indexOf(';'));
+
+                var anchor = $("#editQueryLink-@Model.PartId.ToString()");
+                var url = anchor.attr("href");
+                // Now I need to replace the last part of the url (which is the QueryLayoutRecordId) with the selected id to make to link work properly.
+                var newUrl = url.substr(0, url.lastIndexOf("/") + 1);
+                newUrl = newUrl + selected;
+                anchor.attr("href", newUrl);
+            });
+        })(jQuery);
+
 //]]>
-</script>
+    </script>
 }
