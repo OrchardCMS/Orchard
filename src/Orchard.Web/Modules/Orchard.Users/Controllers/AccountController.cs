@@ -266,9 +266,7 @@ namespace Orchard.Users.Controllers {
                 _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
 
                 _userEventHandler.SentChallengeEmail(user);
-
             }
-            _orchardServices.Notifier.Information(T("If your username or email is correct, we will send you an email with a link to validate your address."));
 
             return RedirectToAction("ChallengeEmailSent");
         }
