@@ -186,28 +186,6 @@ namespace Orchard.Users.Controllers {
                 }
 
                 ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
-            } else {
-                // Not a new registration, but perhaps we already have that user and they
-                // haven't validated their email address. This doesn't care whether there
-                // were other issues with the registration attempt that caused its validation
-                // to fail: if the user exists and still has to confimr their email, the
-                // challenge email is sent again.
-                if (ModelState["userExists"] != null
-                    && ModelState["userExists"].Errors.Count > 0
-                    && membershipSettings.UsersMustValidateEmail) {
-                    var user = _userService.GetUserByNameOrEmail(email);
-                    if (user != null && user.EmailStatus == UserStatus.Pending) {
-                        var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
-                        if (string.IsNullOrWhiteSpace(siteUrl)) {
-                            siteUrl = HttpContext.Request.ToRootUrlString();
-                        }
-
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
-
-                        _userEventHandler.SentChallengeEmail(user);
-                        return RedirectToAction("ChallengeEmailSent", new { ReturnUrl = returnUrl });
-                    }
-                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -254,19 +232,19 @@ namespace Orchard.Users.Controllers {
         }
 
         [AlwaysAccessible]
-        public ActionResult RequestChallengeEmail() {
+        public ActionResult RequestChallengeEmail(string email = null) {
             // ensure users can request lost password
             var membershipSettings = _membershipService.GetSettings();
             if (!membershipSettings.UsersMustValidateEmail) {
                 return HttpNotFound();
             }
 
-            return View();
+            return View(model: email);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("RequestChallengeEmail")]
         [AlwaysAccessible]
-        public ActionResult RequestChallengeEmail(string username) {
+        public ActionResult RequestChallengeEmailPOST(string username) {
             // ensure users can request lost password
             var membershipSettings = _membershipService.GetSettings();
             if (!membershipSettings.UsersMustValidateEmail) {
@@ -532,7 +510,6 @@ namespace Orchard.Users.Controllers {
             return ModelState.IsValid;
         }
 
-
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
 
@@ -592,6 +569,29 @@ namespace Orchard.Users.Controllers {
                 return false;
 
             if (!_userService.VerifyUserUnicity(userName, email)) {
+                // Not a new registration, but perhaps we already have that user and they
+                // haven't validated their email address. This doesn't care whether there
+                // were other issues with the registration attempt that caused its validation
+                // to fail: if the user exists and still has to confirm their email, we show
+                // a link to the action from which the challenge email is sent again.
+                var membershipSettings = _membershipService.GetSettings();
+                if (membershipSettings.UsersMustValidateEmail) {
+                    var user = _userService.GetUserByNameOrEmail(email);
+                    if (user == null) {
+                        user = _userService.GetUserByNameOrEmail(userName);
+                    }
+                    if (user != null && user.EmailStatus == UserStatus.Pending) {
+                        // We can't have links in the "text" of a ModelState Error. We are using a notifier
+                        // to provide the user with an option to ask for a new challenge email.
+                        _orchardServices.Notifier.Warning(
+                            T("User with that username and/or email already exists. Follow <a href=\"{0}\">this link</a> if you want to receive a new email to validate your address.",
+                                Url.Action(actionName: "RequestChallengeEmail", routeValues: new { email = email })));
+                        // In creating the link above we use the email that was written in the form
+                        // rather than the actual user's email address to prevent exploiting this
+                        // for information discovery.
+                    }
+                }
+                // We should add the error to the ModelState anyway.
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
 

@@ -1,11 +1,20 @@
-﻿<h1>@Html.TitleForPage(T("Confirm Email Address").ToString())</h1>
+﻿@model string 
+@{
+    var prefill = (string)Model;
+}
+
+<h1>@Html.TitleForPage(T("Confirm Email Address").ToString())</h1>
 <p>@T("Please enter your username or email address. You will receive a link via email to validate your address.")</p>
 @using (Html.BeginFormAntiForgeryPost()) { 
     <fieldset>
         <legend>@T("Account Information")</legend>
         <div>
             <label for="username">@T("Username or E-mail:")</label>
-            @Html.TextBox("username") 
+            @if (string.IsNullOrWhiteSpace(prefill)) {
+                @Html.TextBox("username") 
+            } else {
+                @Html.TextBox("username", value: prefill) 
+            }
             @Html.ValidationMessage("username") 
         </div>
         <div>
