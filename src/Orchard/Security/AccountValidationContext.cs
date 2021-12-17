@@ -15,7 +15,7 @@ namespace Orchard.Security {
 
         // Results
         public IDictionary<string, LocalizedString> ValidationErrors { get; set; }
-        public bool ValidationSuccessful { get; set; }
+        public bool ValidationSuccessful { get { return !ValidationErrors.Any(); } }
 
         // Things to validate
         public string UserName { get; set; }

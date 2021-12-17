@@ -502,14 +502,12 @@ namespace Orchard.Users.Controllers {
 
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 context.ValidationErrors.Add("userExists", T("User with that username and/or email already exists."));
-                context.ValidationSuccessful &= false;
             }
 
             _accountValidationService.ValidatePassword(context);
 
             if (!string.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 context.ValidationErrors.Add("_FORM", T("The new password and confirmation password do not match."));
-                context.ValidationSuccessful &= false;
             }
 
             if (!context.ValidationSuccessful) {
