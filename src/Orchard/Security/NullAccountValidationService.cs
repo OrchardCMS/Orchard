@@ -12,27 +12,15 @@ namespace Orchard.Security {
     /// interface is actually used in a tenant, another implementation is assumed to have suppressed it.
     /// </summary>
     public class NullAccountValidationService : IAccountValidationService {
-        public bool ValidateEmail(string email) {
+        public bool ValidateEmail(AccountValidationContext context) {
             throw new NotImplementedException();
         }
 
-        public bool ValidateEmail(string email, out IDictionary<string, LocalizedString> validationErrors) {
+        public bool ValidatePassword(AccountValidationContext context) {
             throw new NotImplementedException();
         }
 
-        public bool ValidatePassword(string password) {
-            throw new NotImplementedException();
-        }
-
-        public bool ValidatePassword(string password, out IDictionary<string, LocalizedString> validationErrors) {
-            throw new NotImplementedException();
-        }
-
-        public bool ValidateUserName(string userName) {
-            throw new NotImplementedException();
-        }
-
-        public bool ValidateUserName(string userName, out IDictionary<string, LocalizedString> validationErrors) {
+        public bool ValidateUserName(AccountValidationContext context) {
             throw new NotImplementedException();
         }
     }
