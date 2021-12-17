@@ -20,57 +20,55 @@ namespace Orchard.Users.Services {
 
         public Localizer T { get; set; }
 
-        public bool ValidateEmail(string email) {
+        public bool ValidatePassword(AccountValidationContext context) {
             IDictionary<string, LocalizedString> validationErrors;
-            return ValidateEmail(email, out validationErrors);
+            context.ValidationSuccessful &= _userService.PasswordMeetsPolicies(context.Password, out validationErrors);
+            if (validationErrors != null && validationErrors.Any()) {
+                foreach (var err in validationErrors) {
+                    if (!context.ValidationErrors.ContainsKey(err.Key)) {
+                        context.ValidationErrors.Add(err);
+                    }
+                }
+            } else {
+                context.ValidationSuccessful &= true;
+            }
+
+            return context.ValidationSuccessful;
         }
 
-        public bool ValidateEmail(string email, out IDictionary<string, LocalizedString> validationErrors) {
-            validationErrors = new Dictionary<string, LocalizedString>();
-            if (String.IsNullOrEmpty(email)) {
-                validationErrors.Add("email", T("You must specify an email address."));
-                return false;
+        public bool ValidateUserName(AccountValidationContext context) {
+
+            if (string.IsNullOrWhiteSpace(context.UserName)) {
+                context.ValidationErrors.Add("username", T("You must specify a username."));
+                context.ValidationSuccessful &= false;
+            } else if (context.UserName.Length >= UserPart.MaxUserNameLength) {
+                context.ValidationErrors.Add("username", T("The username you provided is too long."));
+                context.ValidationSuccessful &= false;
+            } else {
+                context.ValidationSuccessful &= true;
             }
-            if (email.Length >= UserPart.MaxEmailLength) {
-                validationErrors.Add("email", T("The email address you provided is too long."));
-                return false;
-            }
-            if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+
+            return context.ValidationSuccessful;
+        }
+
+        public bool ValidateEmail(AccountValidationContext context) {
+
+            if (string.IsNullOrWhiteSpace(context.Email)) {
+                context.ValidationErrors.Add("email", T("You must specify an email address."));
+                context.ValidationSuccessful &= false;
+            } else if (context.Email.Length >= UserPart.MaxEmailLength) {
+                context.ValidationErrors.Add("email", T("The email address you provided is too long."));
+                context.ValidationSuccessful &= false;
+            } else if (!Regex.IsMatch(context.Email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
                 // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                validationErrors.Add("email", T("You must specify a valid email address."));
-                return false;
+                context.ValidationErrors.Add("email", T("You must specify a valid email address."));
+                context.ValidationSuccessful &= false;
+            } else {
+                context.ValidationSuccessful &= true;
             }
 
-            return true;
+            return context.ValidationSuccessful;
         }
-
-        public bool ValidatePassword(string password) {
-            IDictionary<string, LocalizedString> validationErrors;
-            return ValidatePassword(password, out validationErrors);
-        }
-
-        public bool ValidatePassword(string password, out IDictionary<string, LocalizedString> validationErrors) {
-            return _userService.PasswordMeetsPolicies(password, out validationErrors);
-        }
-
-        public bool ValidateUserName(string userName) {
-            IDictionary<string, LocalizedString> validationErrors;
-            return ValidateUserName(userName, out validationErrors);
-        }
-
-        public bool ValidateUserName(string userName, out IDictionary<string, LocalizedString> validationErrors) {
-            validationErrors = new Dictionary<string, LocalizedString>();
-
-            if (String.IsNullOrEmpty(userName)) {
-                validationErrors.Add("username", T("You must specify a username."));
-                return false;
-            }
-            if (userName.Length >= UserPart.MaxUserNameLength) {
-                validationErrors.Add("username", T("The username you provided is too long."));
-                return false;
-            }
-
-            return true;
-        }
+        
     }
 }

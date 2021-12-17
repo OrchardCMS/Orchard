@@ -203,6 +203,7 @@
     <Compile Include="Reports\Services\ReportsCoordinator.cs" />
     <Compile Include="Reports\Services\ReportsManager.cs" />
     <Compile Include="Reports\Services\ReportsPersister.cs" />
+    <Compile Include="Security\AccountValidationContext.cs" />
     <Compile Include="Security\IAccountValidationService.cs" />
     <Compile Include="Security\IMembershipSettings.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />

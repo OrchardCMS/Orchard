@@ -494,48 +494,53 @@ namespace Orchard.Users.Controllers {
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
 
-            IDictionary<string, LocalizedString> validationErrors;
+            var context = new AccountValidationContext {
+                UserName = userName,
+                Email = email,
+                Password = password
+            };
 
-            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
-            if (!validate) {
-                foreach (var error in validationErrors) {
+            _accountValidationService.ValidateUserName(context);
+            _accountValidationService.ValidateEmail(context);
+            // Don't do the other validations if we already know we failed
+            if (!context.ValidationSuccessful) {
+                foreach (var error in context.ValidationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
-            }
-
-            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
-            if (!validate) {
-                foreach (var error in validationErrors) {
-                    ModelState.AddModelError(error.Key, error.Value);
-                }
-            }
-            
-            if (!validate)
                 return false;
-
+            }
 
             if (!_userService.VerifyUserUnicity(userName, email)) {
-                ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
+                context.ValidationErrors.Add("userExists", T("User with that username and/or email already exists."));
+                context.ValidationSuccessful &= false;
             }
 
-            ValidatePassword(password);
-
+            _accountValidationService.ValidatePassword(context);
+            
             if (!string.Equals(password, confirmPassword, StringComparison.Ordinal)) {
-                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
+                context.ValidationErrors.Add("_FORM", T("The new password and confirmation password do not match."));
+                context.ValidationSuccessful &= false;
+            }
+
+            if (!context.ValidationSuccessful) {
+                foreach (var error in context.ValidationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
 
             return ModelState.IsValid;
         }
 
         private void ValidatePassword(string password) {
-            IDictionary<string, LocalizedString> validationErrors;
+            var context = new AccountValidationContext {
+                Password = password
+            };
 
-            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
-                foreach (var error in validationErrors) {
+            if (!_accountValidationService.ValidatePassword(context)) {
+                foreach (var error in context.ValidationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
             }
-            
         }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
