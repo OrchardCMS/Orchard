@@ -16,6 +16,8 @@ namespace Orchard.Users.Services {
             IUserService userService) {
 
             _userService = userService;
+
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
