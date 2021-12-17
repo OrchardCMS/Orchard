@@ -277,8 +277,7 @@ namespace Orchard.Users.Controllers {
 
                 }
                 return RedirectToAction("ChangePasswordSuccess");
-            }
-            else {
+            } else {
                 return ChangePassword();
             }
         }
@@ -321,8 +320,7 @@ namespace Orchard.Users.Controllers {
 
             if (PasswordChangeIsSuccess(currentPassword, newPassword, username)) {
                 return RedirectToAction("ChangePasswordSuccess");
-            }
-            else {
+            } else {
                 return View(viewModel);
             }
         }
@@ -344,11 +342,7 @@ namespace Orchard.Users.Controllers {
                     return true;
                 }
 
-                ModelState.AddModelError("_FORM",
-                                         T("The current password is incorrect or the new password is invalid."));
-                return false;
-            }
-            catch {
+            } catch {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
 
                 return false;
@@ -386,13 +380,7 @@ namespace Orchard.Users.Controllers {
             ViewData["SpecialCharacterRequirement"] = membershipSettings.GetPasswordSpecialRequirement();
             ViewData["NumberRequirement"] = membershipSettings.GetPasswordNumberRequirement();
 
-            ValidatePassword(newPassword);
-
-            if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
-                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
-            }
-
-            if (!ModelState.IsValid) {
+            if (!ValidatePassword(newPassword, confirmPassword)) {
                 return View();
             }
 
@@ -454,15 +442,12 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("newPassword", T("The new password must be different from the current password."));
             }
 
-            ValidatePassword(newPassword);
-
-            if ( !String.Equals(newPassword, confirmPassword, StringComparison.Ordinal) ) {
-                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
+            if (!ModelState.IsValid) {
+                return false;
             }
 
-            return ModelState.IsValid;
+            return ValidatePassword(newPassword, confirmPassword);
         }
-
 
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
@@ -471,7 +456,9 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("userNameOrEmail", T("You must specify a username or e-mail."));
                 validate = false;
             }
-            if (String.IsNullOrEmpty(password)) {
+            // Here we don't do the "full" validation of the password, because policies may have
+            // changed since its creation and that should not prevent a user from logging in.
+            if (string.IsNullOrEmpty(password)) {
                 ModelState.AddModelError("password", T("You must specify a password."));
                 validate = false;
             }
@@ -527,16 +514,25 @@ namespace Orchard.Users.Controllers {
             return ModelState.IsValid;
         }
 
-        private void ValidatePassword(string password) {
+        private bool ValidatePassword(string password) {
             var context = new AccountValidationContext {
                 Password = password
             };
-
-            if (!_accountValidationService.ValidatePassword(context)) {
+            var result = _accountValidationService.ValidatePassword(context);
+            if (!result) {
                 foreach (var error in context.ValidationErrors) {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
             }
+            return result;
+        }
+
+        private bool ValidatePassword(string password, string confirmPassword) {
+            if (!string.Equals(password, confirmPassword, StringComparison.Ordinal)) {
+                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
+                return false;
+            }
+            return ValidatePassword(password);
         }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
