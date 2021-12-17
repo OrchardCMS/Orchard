@@ -347,6 +347,9 @@ namespace Orchard.Users.Controllers {
 
                 return false;
             }
+            // unknown error
+            ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
+            return false;
         }
 
         [AlwaysAccessible]

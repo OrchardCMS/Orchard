@@ -130,7 +130,6 @@
     <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AccountValidationService.cs" />
     <Compile Include="Services\ApproveUserService.cs" />
     <Compile Include="Services\AccountValidationService.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
