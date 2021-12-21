@@ -154,10 +154,9 @@ namespace Orchard.Tests.Modules.Users.Services {
             var user2Record = userRepository.Get(user2.Id);
             Assert.That(user1Record.PasswordSalt, Is.Not.EqualTo(user2Record.PasswordSalt));
             Assert.That(user1Record.Password, Is.Not.EqualTo(user2Record.Password));
-
-            List<LocalizedString> validationErrors;
-            Assert.That(_membershipService.ValidateUser("a", "b", out validationErrors), Is.Not.Null);
-            Assert.That(_membershipService.ValidateUser("d", "b", out validationErrors), Is.Not.Null);
+            
+            Assert.That(_membershipService.ValidateUser("a", "b"), Is.Not.Null);
+            Assert.That(_membershipService.ValidateUser("d", "b"), Is.Not.Null);
         }
 
         [Test]
@@ -165,11 +164,10 @@ namespace Orchard.Tests.Modules.Users.Services {
             _membershipService.CreateUser(new CreateUserParams("test-user", "test-password", "c", null, null, true, false));
             _session.Flush();
             _session.Clear();
-
-            List<LocalizedString> validationErrors;
-            var validate1 = _membershipService.ValidateUser("test-user", "bad-password", out validationErrors);
-            var validate2 = _membershipService.ValidateUser("bad-user", "test-password", out validationErrors);
-            var validate3 = _membershipService.ValidateUser("test-user", "test-password", out validationErrors);
+            
+            var validate1 = _membershipService.ValidateUser("test-user", "bad-password");
+            var validate2 = _membershipService.ValidateUser("bad-user", "test-password");
+            var validate3 = _membershipService.ValidateUser("test-user", "test-password");
 
             Assert.That(validate1, Is.Null);
             Assert.That(validate2, Is.Null);

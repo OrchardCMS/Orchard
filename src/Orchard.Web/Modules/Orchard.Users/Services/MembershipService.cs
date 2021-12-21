@@ -139,9 +139,8 @@ namespace Orchard.Users.Services {
             return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
-        public IUser ValidateUser(string userNameOrEmail, string password, out List<LocalizedString> validationErrors) {
+        public IUser ValidateUser(string userNameOrEmail, string password) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLowerInvariant();
-            validationErrors = new List<LocalizedString>();
 
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
 
@@ -154,15 +153,14 @@ namespace Orchard.Users.Services {
                 PasswordFormat = user.PasswordFormat,
                 PasswordSalt = user.PasswordSalt
             }, password)) {
-                validationErrors.Add(T("The username or e-mail or password provided is incorrect."));
                 return null;
             }
 
             if (user.EmailStatus != UserStatus.Approved)
-                validationErrors.Add(T("You must verify your email"));
+                return null;
 
             if (user.RegistrationStatus != UserStatus.Approved)
-                validationErrors.Add(T("You must be approved before being able to login"));
+                return null;
 
             return user;
         }

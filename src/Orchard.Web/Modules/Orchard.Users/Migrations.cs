@@ -23,7 +23,7 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc"))
+                    .Column<DateTime>("LastPasswordChangeUtc")
                     .Column<bool>("ForcePasswordChange"))
                 .AlterTable("UserPartRecord", table => table
                     .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"))
@@ -105,6 +105,7 @@ namespace Orchard.Users {
 
             return 7;
         }
+
         public int UpdateFrom7() {
             SchemaBuilder.AlterTable("UserPartRecord", table => {
                 table.AddColumn<bool>("ForcePasswordChange");

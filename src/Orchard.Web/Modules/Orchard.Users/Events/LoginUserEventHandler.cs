@@ -45,7 +45,7 @@ namespace Orchard.Users.Events {
             };
         }
 
-        public void ChangedPassword(IUser user, string password) {
+        public void ChangedPassword(IUser user) {
             // If password has changed set to false the Force Password Change flag
             if (user.As<UserPart>().ForcePasswordChange)
                 user.As<UserPart>().ForcePasswordChange = false;
