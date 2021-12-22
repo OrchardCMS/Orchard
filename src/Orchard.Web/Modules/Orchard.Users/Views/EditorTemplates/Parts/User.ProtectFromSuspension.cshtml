@@ -1,7 +1,0 @@
-﻿@model Orchard.Users.Models.ProtectUserFromSuspensionPart
-<fieldset>
-    @Html.CheckBoxFor(m => m.SaveFromSuspension)
-    @Html.LabelFor(m => m.SaveFromSuspension,
-        T("User will not be automatically suspended by periodic sweeps.").Text,
-        new { @class = "forcheckbox" })
-</fieldset>
