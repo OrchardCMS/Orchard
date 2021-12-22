@@ -11,7 +11,7 @@ namespace Orchard.Users.Services {
 
             // Don't fetch the users that are protected from suspension
             query = query
-                .Where<ProtectUserFromSuspensionPartRecord>(pr => !pr.SaveFromSuspension);
+                .Where<UserSecurityConfigurationPartRecord>(pr => !pr.SaveFromSuspension);
 
             return query;
         }
@@ -20,7 +20,7 @@ namespace Orchard.Users.Services {
         public bool UserIsProtected(UserPart userPart) {
 
             return userPart
-                .As<ProtectUserFromSuspensionPart>()
+                .As<UserSecurityConfigurationPart>()
                 .SaveFromSuspension;
         }
     }

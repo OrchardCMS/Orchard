@@ -46,9 +46,10 @@ namespace Orchard.Users {
 
             // Queryable bool to tell which users should not be suspended automatically
             SchemaBuilder
-                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                .CreateTable("UserSecurityConfigurationPartRecord", table => table
                     .ContentPartRecord()
-                    .Column<bool>("SaveFromSuspension"));
+                    .Column<bool>("SaveFromSuspension")
+                    .Column<bool>("PreventPasswordExpiration"));
 
             ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
 
@@ -122,9 +123,10 @@ namespace Orchard.Users {
 
         public int UpdateFrom8() {
             SchemaBuilder
-                .CreateTable("ProtectUserFromSuspensionPartRecord", table => table
+                .CreateTable("UserSecurityConfigurationPartRecord", table => table
                     .ContentPartRecord()
-                    .Column<bool>("SaveFromSuspension"));
+                    .Column<bool>("SaveFromSuspension")
+                    .Column<bool>("PreventPasswordExpiration"));
 
             return 9;
         }

@@ -166,7 +166,12 @@ namespace Orchard.Users.Services {
         }
 
         public bool PasswordIsExpired(IUser user, int days) {
-            return user.As<UserPart>().LastPasswordChangeUtc.Value.AddDays(days) < _clock.UtcNow;
+            // TODO: add providers to extend this
+            var passwordIsExpired = user.As<UserPart>().LastPasswordChangeUtc.Value.AddDays(days) < _clock.UtcNow;
+            var securityPart = user.As<UserSecurityConfigurationPart>();
+            var preventExpiration = securityPart != null && securityPart.PreventPasswordExpiration;
+            return passwordIsExpired
+                && !preventExpiration;
         }
 
         public void SetPassword(IUser user, string password) {

@@ -3,22 +3,22 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Drivers {
-    public class ProtectUserFromSuspensionPartDriver : ContentPartDriver<ProtectUserFromSuspensionPart> {
+    public class UserSecurityConfigurationPartDriver : ContentPartDriver<UserSecurityConfigurationPart> {
 
-        public ProtectUserFromSuspensionPartDriver() { }
+        public UserSecurityConfigurationPartDriver() { }
 
         protected override DriverResult Editor(
-            ProtectUserFromSuspensionPart part, dynamic shapeHelper) {
+            UserSecurityConfigurationPart part, dynamic shapeHelper) {
 
-            return ContentShape("Parts_User_ProtectFromSuspension_Edit",
+            return ContentShape("Parts_User_UserSecurityConfiguration_Edit",
                 () => shapeHelper.EditorTemplate(
-                    TemplateName: "Parts/User.ProtectFromSuspension",
+                    TemplateName: "Parts/User.UserSecurityConfiguration",
                     Model: part,
                     Prefix: Prefix
                     ));
         }
         protected override DriverResult Editor(
-            ProtectUserFromSuspensionPart part, IUpdateModel updater, dynamic shapeHelper) {
+            UserSecurityConfigurationPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }
