@@ -1093,6 +1093,11 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\NHibernate\NHibernate.Linq\NHibernate.Linq.csproj">
+      <Project>{2cf9a83a-bc40-4485-a763-bff59b2ebdad}</Project>
+      <Name>NHibernate.Linq</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
