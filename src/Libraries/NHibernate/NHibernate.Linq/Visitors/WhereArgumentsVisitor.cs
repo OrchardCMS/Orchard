@@ -143,7 +143,7 @@ namespace NHibernate.Linq.Visitors
 				foreach (string entityName in ((IEntityPersister)metaData).EntityMetamodel.SubclassEntityNames)
 				{
 					var metadata = session.SessionFactory.GetClassMetadata(entityName);
-					disjunction.Add(Property.ForName(memberName).Eq(metadata.GetMappedClass(EntityMode.Poco)));
+					disjunction.Add(Property.ForName(memberName).Eq(metadata.MappedClass));
 				}
 				visitor.CurrentCriteria.Add(disjunction);
 			}
@@ -348,7 +348,7 @@ namespace NHibernate.Linq.Visitors
 			//TODO: this won't work for collections of values
 			var containedEntity = QueryUtil.GetExpressionValue(containsExpression);
 			var collectionIdPropertyName = visitor.MemberName + "." + arg.ElementExpression.MetaData.IdentifierPropertyName;
-			var idValue = arg.ElementExpression.MetaData.GetIdentifier(containedEntity, EntityMode.Poco);
+			var idValue = arg.ElementExpression.MetaData.GetIdentifier(containedEntity);
 
 			query.Add(Restrictions.Eq(collectionIdPropertyName, idValue));
 

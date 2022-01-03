@@ -52,7 +52,7 @@ namespace NHibernate.Linq.Util
 
 			if (criteria is DetachedCriteriaAdapter)
 			{
-				DetachedCriteriaAdapter adapter = (DetachedCriteriaAdapter)criteria;
+				var adapter = (DetachedCriteriaAdapter)criteria;
 				return adapter.DetachedCriteria.EntityOrClassName;
 			}
 			throw new NotSupportedException("criteria must be of type CriteriaImpl or DetachedCriteriaAdapter.");
@@ -60,7 +60,7 @@ namespace NHibernate.Linq.Util
 
 		public static IProjection GetProjection(this ICriteria criteria)
 		{
-			CriteriaImpl impl = criteria as CriteriaImpl;
+			var impl = criteria as CriteriaImpl;
 			if (impl != null)
 			{
 				return impl.Projection;
@@ -72,7 +72,7 @@ namespace NHibernate.Linq.Util
 		{
 			if (criteria is DetachedCriteriaAdapter)
 			{
-				DetachedCriteriaAdapter adapter = (DetachedCriteriaAdapter)criteria;
+				var adapter = (DetachedCriteriaAdapter)criteria;
 				return GetRootType(adapter.DetachedCriteria, adapter.Session);
 			}
 			return GetRootType(GetRootCriteria(criteria));
@@ -87,7 +87,7 @@ namespace NHibernate.Linq.Util
 
 		private static CriteriaImpl GetRootCriteria(ICriteria criteria)
 		{
-			CriteriaImpl impl = criteria as CriteriaImpl;
+			var impl = criteria as CriteriaImpl;
 			if (impl != null)
 				return impl;
 			return GetRootCriteria(((CriteriaImpl.Subcriteria)criteria).Parent);
@@ -116,7 +116,7 @@ namespace NHibernate.Linq.Util
 			if (persister == null)
 				throw new InvalidOperationException("Could not find entity named: " + criteria.EntityOrClassName);
 
-			return persister.GetMappedClass(EntityMode.Poco);
+			return persister.MappedClass;
 		}
 	}
 }

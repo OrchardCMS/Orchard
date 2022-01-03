@@ -153,7 +153,8 @@ namespace NHibernate.Linq.Util
 			throw new NotSupportedException();
 		}
 
-		public ICriteria SetFetchMode(string associationPath, FetchMode mode)
+        [Obsolete("Use Fetch instead")]
+        public ICriteria SetFetchMode(string associationPath, FetchMode mode)
 		{
 			return detachedCriteria.SetFetchMode(associationPath, mode).Adapt(session);
 		}

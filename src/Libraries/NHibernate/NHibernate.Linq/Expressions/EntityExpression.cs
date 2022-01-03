@@ -53,7 +53,7 @@ namespace NHibernate.Linq.Expressions
 
 		public virtual string GetAliasedIdentifierPropertyName()
 		{
-			if (this.NodeType == NHibernateExpressionType.RootEntity)
+			if ((NHibernateExpressionType)this.NodeType == NHibernateExpressionType.RootEntity)
 			{
 				return this.MetaData.IdentifierPropertyName;
 			}

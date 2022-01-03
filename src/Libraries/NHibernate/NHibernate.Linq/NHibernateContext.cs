@@ -134,7 +134,7 @@ namespace NHibernate.Linq
 			}
 
 			// Get the property to use to add the resource to
-			object collection = metadata.GetPropertyValue(targetResource, propertyName, EntityMode.Poco);
+			object collection = metadata.GetPropertyValue(targetResource, propertyName);
 
 			// Try with IList implementation first (its faster)
 			if (collection is IList)
@@ -171,7 +171,7 @@ namespace NHibernate.Linq
 		{
 			// Get the metadata
 			IClassMetadata metadata = session.SessionFactory.GetClassMetadata(fullTypeName);
-			object newResource = metadata.Instantiate(null, EntityMode.Poco);
+			object newResource = metadata.Instantiate(null);
 
 			// We can't save it to the session as it may not be valid yet
 			// This happens if the key is a non-initancable key (e.g. Northwind.Customers)
@@ -246,11 +246,11 @@ namespace NHibernate.Linq
 			// If 
 			if (metadata.IdentifierPropertyName == propertyName)
 			{
-				return metadata.GetIdentifier(targetResource, EntityMode.Poco);
+				return metadata.GetIdentifier(targetResource);
 			}
 			else
 			{
-				return metadata.GetPropertyValue(targetResource, propertyName, EntityMode.Poco);
+				return metadata.GetPropertyValue(targetResource, propertyName);
 			}
 		}
 
@@ -269,7 +269,7 @@ namespace NHibernate.Linq
 			}
 
 			// Get the property to use to remove the resource to
-			object collection = metadata.GetPropertyValue(targetResource, propertyName, EntityMode.Poco);
+			object collection = metadata.GetPropertyValue(targetResource, propertyName);
 
 			// Try with IList implementation first (its faster)
 			if (collection is IList)
@@ -300,12 +300,12 @@ namespace NHibernate.Linq
 			// but only make a local copy as we're only using it to set the default fields
 			// Get the metadata
 			IClassMetadata metadata = session.SessionFactory.GetClassMetadata(resource.GetType().ToString());
-			object tempCopy = metadata.Instantiate(null, EntityMode.Poco);
+			object tempCopy = metadata.Instantiate(null);
 
 			// Copy the default non-keys
 			foreach (string propName in metadata.PropertyNames)
 			{
-				object value = metadata.GetPropertyValue(tempCopy, propName, EntityMode.Poco);
+				object value = metadata.GetPropertyValue(tempCopy, propName);
 				update.SetValue(resource, propName, value);
 			}
 
@@ -389,11 +389,11 @@ namespace NHibernate.Linq
 			// See if its the Key property first
 			if (metadata.IdentifierPropertyName == propertyName)
 			{
-				metadata.SetIdentifier(targetResource, propertyValue, EntityMode.Poco);
+				metadata.SetIdentifier(targetResource, propertyValue);
 			}
 			else // Else set the property
 			{
-				metadata.SetPropertyValue(targetResource, propertyName, propertyValue, EntityMode.Poco);
+				metadata.SetPropertyValue(targetResource, propertyName, propertyValue);
 			}
 		}
 

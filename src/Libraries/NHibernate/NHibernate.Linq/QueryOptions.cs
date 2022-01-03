@@ -49,7 +49,7 @@ namespace NHibernate.Linq
 		{
 			action += criteria =>
 			  {
-				  criteria.SetFetchMode(path, FetchMode.Eager);
+                  criteria.Fetch(SelectMode.Fetch, path);
 			  };
 		}
 	}

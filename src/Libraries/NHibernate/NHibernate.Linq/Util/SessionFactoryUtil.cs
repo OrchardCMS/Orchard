@@ -13,8 +13,8 @@ namespace NHibernate.Linq.Util
 			{
 				if (item.Value.HasProxy)
 				{
-					var proxyType = factory.GetEntityPersister(item.Key).GetConcreteProxyClass(EntityMode.Poco);
-					if (proxyType != item.Value.GetMappedClass(EntityMode.Poco) && !dict.ContainsKey(proxyType))
+					var proxyType = factory.GetEntityPersister(item.Key).ConcreteProxyClass;
+					if (proxyType != item.Value.MappedClass && !dict.ContainsKey(proxyType))
 					{
 						dict.Add(proxyType, item.Key);
 					}
@@ -30,12 +30,12 @@ namespace NHibernate.Linq.Util
 			var dict = new Dictionary<string, System.Type>();
 			foreach (var item in metaData)
 			{
-				var type = item.Value.GetMappedClass(EntityMode.Poco);
+				var type = item.Value.MappedClass;
 
 				dict.Add(item.Key, type);
 				if (item.Value.HasProxy)
 				{
-					var proxyType = factory.GetEntityPersister(item.Key).GetConcreteProxyClass(EntityMode.Poco);
+					var proxyType = factory.GetEntityPersister(item.Key).ConcreteProxyClass;
 					if (proxyType != type && !dict.ContainsKey(proxyType.FullName))
 					{
 						dict.Add(proxyType.FullName, proxyType);

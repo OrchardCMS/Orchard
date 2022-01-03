@@ -1,15 +1,21 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
 namespace NHibernate.Linq.Expressions
 {
 	public abstract class NHibernateExpression : Expression
 	{
-		new public NHibernateExpressionType NodeType
-		{
-			get { return (NHibernateExpressionType)base.NodeType; }
-		}
 
 		public NHibernateExpression(NHibernateExpressionType nodeType, System.Type type)
-			: base((ExpressionType)nodeType, type) { }
-	}
+			: base() {
+
+            _nodeType = nodeType;
+            _type = type;
+        }
+
+        private readonly NHibernateExpressionType _nodeType;
+        public override ExpressionType NodeType { get { return (ExpressionType)_nodeType; } }
+        private readonly System.Type _type;
+        public override System.Type Type { get { return _type; } }
+    }
 }
