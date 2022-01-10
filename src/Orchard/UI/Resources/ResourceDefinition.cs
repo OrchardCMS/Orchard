@@ -287,7 +287,7 @@ namespace Orchard.UI.Resources {
                     return HostingEnvironment.MapPath(url.Split(new[] { '?' })[0]);
                 }
                 if (!String.IsNullOrEmpty(BasePath)) {
-                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url));
+                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url.Split(new[] { '?' })[0]));
                 }
             }
             return null;
