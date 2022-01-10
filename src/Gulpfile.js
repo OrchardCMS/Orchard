@@ -10,7 +10,8 @@ var fs = require("fs"),
     plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-    sass = require("gulp-sass"),
+    //sass = require('gulp-sass')(require('sass')),
+    sass = require('gulp-sass'),
     postcss = require("gulp-postcss"),
     autoprefixer = require("autoprefixer"),
     cssnano = require("cssnano"),
@@ -225,8 +226,10 @@ function buildJsPipeline(assetGroup, doConcat, doRebuild) {
     var typeScriptOptions = { allowJs: true, noImplicitAny: true, noEmitOnError: true };
     if (assetGroup.typeScriptOptions)
         typeScriptOptions = Object.assign(typeScriptOptions, assetGroup.typeScriptOptions); // Merge override options from asset group if any.
-    if (doConcat)
+    if (doConcat) {
         typeScriptOptions.outFile = assetGroup.outputFileName;
+        typeScriptOptions.module = "system";
+    }
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             newer({
