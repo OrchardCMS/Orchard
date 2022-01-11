@@ -1,7 +1,7 @@
 ﻿@{
     var additionalClasses = "";
-    if (Model.Parent != null) {
-        if (Model.Parent == "Row") {
+    if (Model.ParentType != null) {
+        if (Model.ParentType == "Row") {
             additionalClasses += "row";
         }
     }
