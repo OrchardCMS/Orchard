@@ -227,8 +227,9 @@ function buildJsPipeline(assetGroup, doConcat, doRebuild) {
         typeScriptOptions = Object.assign(typeScriptOptions, assetGroup.typeScriptOptions); // Merge override options from asset group if any.
     if (doConcat) {
         typeScriptOptions.outFile = assetGroup.outputFileName;
-        typeScriptOptions.module = "system";
+        typeScriptOptions.module = "amd";
     }
+    //console.log("FileName '" + typeScriptOptions.outFile + "' outputPath '" + assetGroup.outputPath + "' outpuDir '" + assetGroup.outputDir + "' contcat= " + doConcat.toString());
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             newer({

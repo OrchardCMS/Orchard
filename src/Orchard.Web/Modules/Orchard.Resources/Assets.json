@@ -102,28 +102,6 @@
         "output": "Scripts/underscore.js"
     },
     {
-        "inputs": [ "Assets/scss/Bootstrap/bootstrap.scss" ],
-        "output": "Styles/bootstrap.css"
-    },
-    {
-        "inputs": [            
-            "Assets/Js/Bootstrap/alert.js",
-            "Assets/Js/Bootstrap/button.js",
-            "Assets/Js/Bootstrap/carousel.js",
-            "Assets/Js/Bootstrap/collapse.js",
-            "Assets/Js/Bootstrap/dropdown.js",
-            "Assets/Js/Bootstrap/index.js",
-            "Assets/Js/Bootstrap/modal.js",
-            "Assets/Js/Bootstrap/tooltip.js",
-            "Assets/Js/Bootstrap/popover.js",
-            "Assets/Js/Bootstrap/scrollspy.js",
-            "Assets/Js/Bootstrap/tab.js",
-            "Assets/Js/Bootstrap/toast.js",            
-            "Assets/Js/Bootstrap/util.js"
-        ],
-        "output": "Scripts/bootstrap.js"
-    },
-    {
         "inputs": [ "Assets/Less/FontAwesome/font-awesome.less" ],
         "output": "Styles/font-awesome.css"
     },
