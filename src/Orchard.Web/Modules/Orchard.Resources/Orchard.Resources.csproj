@@ -386,8 +386,6 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-af.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-af.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-am.js" />

@@ -6,11 +6,11 @@ namespace Orchard.Resources {
             var manifest = builder.Add();
 
             // jQuery.
-            manifest.DefineScript("jQuery").SetUrl("jquery.min.js", "jquery.js").SetVersion("3.3.1").SetCdn("//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js", "//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js");
+            manifest.DefineScript("jQuery").SetUrl("jquery.min.js", "jquery.js").SetVersion("3.6.0").SetCdn("//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js", "//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js");
 
             // jQuery UI (full package).
-            manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.12.1").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.js");
-            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.12.1");
+            manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.13.0").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.0/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.0/jquery-ui.js");
+            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.13.0");
             manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI"); // Right now no customization in the styles, but the resource might be used later.
 
             // DEPRECATED for 1.10: Resources for jQuery UI individual components. This now only
