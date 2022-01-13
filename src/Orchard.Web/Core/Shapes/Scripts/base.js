@@ -194,7 +194,7 @@
             link.text(button.text())
             .addClass(button.attr("class"))
             .click(function () { _this.submit(); return false; })
-            .unload(function () { _this = 0; });
+            .on("unload", function () { _this = 0; });
             _this.replaceWith(link);
             _this.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(_this);
