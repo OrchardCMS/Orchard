@@ -91,7 +91,8 @@
                                     select (from f in Model.Features where f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase) select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
-                var showDisable = categoryName.ToString() != "Core";
+                var showDisable = categoryName.ToString() != "Core"
+                                || lifecycleStatus == LifecycleStatus.Deprecated; // we should always be able to disable deprecated features even if they are categorized as "Core"
                 var showEnable = Model.IsAllowed(feature.Descriptor.Extension) && !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
 
                 if (missingDependencies.Any()) {

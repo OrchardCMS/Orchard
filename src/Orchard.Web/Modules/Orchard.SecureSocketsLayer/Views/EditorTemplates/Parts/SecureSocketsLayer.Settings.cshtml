@@ -19,6 +19,11 @@
             @Html.Hint(T("(Mandatory) The host name non-secured traffic should be redirected to (e.g. localhost:30321, mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. dev.127-0-0-1.org.uk:4333)."))
         </div>
         <div>
+            @Html.EditorFor(m => m.UsePermanentRedirect)
+            <label for="@Html.FieldIdFor(m => m.UsePermanentRedirect)" class="forcheckbox">@T("Enable Permanent redirection")</label>
+            @Html.ValidationMessage("UsePermanentRedirect", "*")
+        </div>
+        <div>
             @Html.EditorFor(m => m.SecureEverything)
             <label for="@Html.FieldIdFor(m => m.SecureEverything)" class="forcheckbox">@T("Force SSL on all pages")</label>
             @Html.ValidationMessage("SecureEverything", "*")

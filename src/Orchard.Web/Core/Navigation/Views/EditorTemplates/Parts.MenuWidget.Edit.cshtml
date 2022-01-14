@@ -2,13 +2,23 @@
 
 @using Orchard.ContentManagement
 
+@{
+    var selectedMenuId = -1;
+}
+
 <fieldset>
     @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
     <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
     @foreach(ContentItem menu in Model.Menus) {
         @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
+        if (Model.CurrentMenuId == menu.Id) {
+            selectedMenuId = menu.Id;
+    }
     }
     </select>
+    @if (selectedMenuId != -1) {
+        @Html.ActionLink(T("Edit Menu").Text, "Index", new { area = "Navigation", menuId = selectedMenuId }, new { id = "editMenuLink" })
+    }
     <span class="hint">@T("Select which menu you want to display")</span>
 </fieldset>
 
@@ -49,3 +59,20 @@
     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowFullMenu)">@T("No filter on selected page")</label>
     <span class="hint">@T("Check for the menu to be displayed without filtering the selected current page.")</span>
 </fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        (function($) {
+            $("#@Html.FieldIdFor(m => m.CurrentMenuId)").change(function (sender) {
+                var selected = $(this).val();
+
+                var anchor = $("#editMenuLink");
+                var url = anchor.attr("href");
+                // Now I need to replace the last part of the url (menuId = ###).
+                var newUrl = url.substr(0, url.lastIndexOf("?") + 1);
+                newUrl = newUrl + "menuId=" + selected;
+                anchor.attr("href", newUrl);
+            });
+        })(jQuery);
+    </script>
+}
