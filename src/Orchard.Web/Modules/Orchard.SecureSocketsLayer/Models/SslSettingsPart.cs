@@ -6,6 +6,7 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 namespace Orchard.SecureSocketsLayer.Models {
     public class SslSettings {
         public bool Enabled { get; set; }
+        public bool UsePermanentRedirect { get; set; }
         public string Urls { get; set; }
         public bool SecureEverything { get; set; }
         public bool CustomEnabled { get; set; }
@@ -35,6 +36,14 @@ namespace Orchard.SecureSocketsLayer.Models {
                 return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
             }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("Enabled", value.ToString()); }
+        }
+
+        public bool UsePermanentRedirect {
+            get {
+                var attributeValue = this.As<InfosetPart>().Get<SslSettingsPart>("UsePermanentRedirect");
+                return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
+            }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("UsePermanentRedirect", value.ToString()); }
         }
 
         public bool CustomEnabled {

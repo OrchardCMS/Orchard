@@ -29,7 +29,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
             var secure =
                 (user != null && user.Identity.IsAuthenticated) ||
                 _sslService.ShouldBeSecure(filterContext);
-
+            var usePermanentRedirect = settings.UsePermanentRedirect;
             var request = filterContext.HttpContext.Request;
 
             // redirect to a secured connection ?
@@ -41,7 +41,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(secureActionUrl);
+                filterContext.Result = new RedirectResult(secureActionUrl, usePermanentRedirect);
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(insecureActionUrl);
+                filterContext.Result = new RedirectResult(insecureActionUrl, usePermanentRedirect);
             }
         }
 

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +17,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
+using Orchard.Mvc.Html;
 using Orchard.OutputCache.Helpers;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
@@ -25,7 +27,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.OutputCache.Filters {
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter, IDisposable {
-
+        private const string REQUEST_VERIFICATION_TOKEN_BEACON_TAG = "<$request-verification-token-beacon-for-hidden-field />";
+        private const string REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG = "<input name=\"__RequestVerificationToken\"";
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
 
@@ -76,6 +79,7 @@ namespace Orchard.OutputCache.Filters {
         private string _invariantCacheKey;
         private bool _transformRedirect;
         private bool _isCachingRequest;
+        private bool _etagNeedsRefresh;
         private IEnumerable<string> _ignoredRelativePaths;
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -237,13 +241,16 @@ namespace Orchard.OutputCache.Filters {
                             Logger.Debug("Response for item '{0}' will not be cached because status code was set to {1} during rendering.", _cacheKey, response.StatusCode);
                             return;
                         }
-
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                            // ask for the WorkContext again so it refreshes in case the scope has been disposed
+                            _workContext = _workContextAccessor.GetContext(filterContext.HttpContext);
+                            var cachedOutput = ReplaceRequestVerificationTokenWithBeaconTag(output, response.ContentEncoding);
+
                             var cacheItem = new CacheItem() {
                                 CachedOnUtc = _now,
                                 Duration = cacheDuration,
                                 GraceTime = cacheGraceTime,
-                                Output = output,
+                                Output = cachedOutput,
                                 ContentType = response.ContentType,
                                 QueryString = filterContext.HttpContext.Request.Url.Query,
                                 CacheKey = _cacheKey,
@@ -532,25 +539,40 @@ namespace Orchard.OutputCache.Filters {
             }
             
             // Shorcut action execution.
-            filterContext.Result = new FileContentResult(cacheItem.Output, cacheItem.ContentType);
+            filterContext.Result = new FileContentResult(
+                ReplaceBeaconTagWithFreshRequestVerificationToken(cacheItem.Output, response.ContentEncoding), // replace the beacon created by the ReplaceRequestVerificationTokenWithBeacon method witha fresh new one
+                cacheItem.ContentType);
             response.StatusCode = cacheItem.StatusCode;
 
             // Add ETag header
+            var itemETag = cacheItem.ETag;
             if (HttpRuntime.UsingIntegratedPipeline && response.Headers.Get("ETag") == null && cacheItem.ETag != null) {
-                response.Headers["ETag"] = cacheItem.ETag;
+                if (_etagNeedsRefresh) {
+                    // Add ETag header for the newly created item
+                    var newEtag = Guid.NewGuid().ToString("n");
+                    itemETag = "";
+                    if (HttpRuntime.UsingIntegratedPipeline) {
+                        if (response.Headers.Get("ETag") == null) {
+                            response.Headers["ETag"] = newEtag;
+                            itemETag = newEtag;
+            }
+                    }
+                }
+                else {
+                    response.Headers["ETag"] = itemETag;
+                }
             }
 
             // Check ETag in request
             // https://www.w3.org/2005/MWI/BPWG/techs/CachingWithETag.html
             var etag = request.Headers["If-None-Match"];
-            if (!String.IsNullOrEmpty(etag)) {
-                if (String.Equals(etag, cacheItem.ETag, StringComparison.Ordinal)) {
+            if (!String.IsNullOrEmpty(etag) && !_etagNeedsRefresh) {
+                if (String.Equals(etag, itemETag, StringComparison.Ordinal)) {
                     // ETag matches the cached item, we return a 304
                     filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotModified);
                     return;
                 }
             }
-
             ApplyCacheControl(response);
         }
 
@@ -602,6 +624,50 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
+        private byte[] ReplaceRequestVerificationTokenWithBeaconTag(byte[] source, Encoding encoding) {
+            // Because of the __RequestVerificationToken hidden field vary by the user, before caching the output, we need to replace the 
+            // __RequestVerificationToken hidden field with a "beacon" text that will be replaced before rendering the page
+            // with a fresh new __RequestVerificationToken hidden field.
+            // What we do is to replace every <input name="__RequestVerificationToken" value="{the-value}" /> with
+            //                                <$request-verification-token-beacon-for-hidden-field />
+            if (PreventCachingRequestVerificationToken()) {
+                var outputString = encoding.GetString(source);
+                var resultString = new StringBuilder();
+                var startIndex = 0;
+                var verificationTokenTagStartIndex = outputString.IndexOf(REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG, startIndex); //searches in the outputString first byte of RequestVerificationToken input tag
+                while (verificationTokenTagStartIndex >= 0) {
+                    resultString.Append(outputString.Substring(startIndex, verificationTokenTagStartIndex - startIndex)); //appends to resultString the text before RequestVerificationToken input tag
+                    resultString.Append(REQUEST_VERIFICATION_TOKEN_BEACON_TAG); //appends the beacon placeholder tag
+                    startIndex = outputString.IndexOf("/>", verificationTokenTagStartIndex) + 2; // set the new starting index after the replaced RequestVerificationToken input tag
+                    verificationTokenTagStartIndex = outputString.IndexOf(REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG, startIndex);// searches in the outputString next first byte of RequestVerificationToken input tag
+                }
+                resultString.Append(outputString.Substring(startIndex)); // completes the resultString appending the remaining characters
+                return encoding.GetBytes(resultString.ToString());
+            }
+            return source;
+        }
+
+        private byte[] ReplaceBeaconTagWithFreshRequestVerificationToken(byte[] source, Encoding encoding) {
+            // Because of the __RequestVerificationToken hidden field vary by the user, we replace the beacon generated by the ReplaceRequestVerificationTokenWithBeacon method
+            // with a fresh new __RequestVerificationToken hidden field.
+            // What we do is to replace every <$request-verification-token-beacon-for-hidden-field /> with
+            //                                <input name="__RequestVerificationToken " value="{the-fresh-new-value}" />
+            if (PreventCachingRequestVerificationToken()) {
+                var outputString = encoding.GetString(source);
+                var antiForgeyToken = new HtmlHelper(new ViewContext(), new ViewDataContainer()).AntiForgeryTokenOrchard();
+                var resultString = outputString.Replace(REQUEST_VERIFICATION_TOKEN_BEACON_TAG, antiForgeyToken.ToString());
+                _etagNeedsRefresh = outputString != resultString;
+                return encoding.GetBytes(resultString);
+            }
+            return source;
+        }
+
+        private bool PreventCachingRequestVerificationToken() {
+            return _cacheSettings.CacheAuthenticatedRequests
+                && (!_cacheSettings.VaryByAuthenticationState
+                    || _workContext.CurrentUser != null);
+        }
+
         protected virtual bool IsIgnoredUrl(string url) {
             if (IgnoredRelativePaths == null || !IgnoredRelativePaths.Any()) {
                 return false;
@@ -615,7 +681,8 @@ namespace Orchard.OutputCache.Filters {
                         return true;
                     }
                 }
-            } else {
+            }
+            else {
                 // if there is a RequestUrlPrefix, we want to check by also removing it from the
                 // url we are verifying, because the configuration might have been done without it
                 var tmp = url.TrimStart(new[] { '/' });

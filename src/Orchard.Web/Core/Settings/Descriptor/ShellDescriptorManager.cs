@@ -18,7 +18,6 @@ namespace Orchard.Core.Settings.Descriptor {
         private readonly ILockingProvider _lockingProvider;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
-        
         public ShellDescriptorManager(
             IRepository<ShellDescriptorRecord> shellDescriptorRepository,
             IShellDescriptorManagerEventHandler events,

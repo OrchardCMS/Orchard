@@ -176,7 +176,8 @@ namespace Orchard.AuditTrail.Services {
                 Properties = properties,
                 EventData = eventData,
                 EventFilterKey = eventFilterKey,
-                EventFilterData = eventFilterData
+                EventFilterData = eventFilterData,
+                EventDescriptor = eventDescriptor
             };
 
             _auditTrailEventHandlers.Create(context);
