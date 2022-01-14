@@ -51,7 +51,7 @@ namespace Orchard.Users.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(UserIndexOptions options, PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewUsers, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -102,7 +102,10 @@ namespace Orchard.Users.Controllers {
 
             var model = new UsersIndexViewModel {
                 Users = results
-                    .Select(x => new UserEntry { User = x.Record })
+                    .Select(x => new UserEntry {
+                        UserPart = x,
+                        User = x.Record
+                    })
                     .ToList(),
                     Options = options,
                     Pager = pagerShape
