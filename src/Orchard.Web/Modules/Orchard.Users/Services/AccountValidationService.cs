@@ -24,7 +24,7 @@ namespace Orchard.Users.Services {
 
         public bool ValidatePassword(AccountValidationContext context) {
             IDictionary<string, LocalizedString> validationErrors;
-            _userService.PasswordMeetsPolicies(context.Password, out validationErrors);
+            _userService.PasswordMeetsPolicies(context.Password, context.User, out validationErrors);
             if (validationErrors != null && validationErrors.Any()) {
                 foreach (var err in validationErrors) {
                     if (!context.ValidationErrors.ContainsKey(err.Key)) {

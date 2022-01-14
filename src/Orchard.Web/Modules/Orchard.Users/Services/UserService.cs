@@ -4,6 +4,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Messaging.Services;
+using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Settings;
@@ -30,17 +31,19 @@ namespace Orchard.Users.Services {
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ISiteService _siteService;
+        private readonly IPasswordHistoryService _passwordHistoryService;
 
         public UserService(
-            IContentManager contentManager, 
-            IMembershipService membershipService, 
-            IClock clock, 
-            IMessageService messageService, 
-            ShellSettings shellSettings, 
+            IContentManager contentManager,
+            IMembershipService membershipService,
+            IClock clock,
+            IMessageService messageService,
+            ShellSettings shellSettings,
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IPasswordHistoryService passwordHistoryService) {
 
             _contentManager = contentManager;
             _membershipService = membershipService;
@@ -50,7 +53,7 @@ namespace Orchard.Users.Services {
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
             _siteService = siteService;
-
+            _passwordHistoryService = passwordHistoryService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -62,8 +65,8 @@ namespace Orchard.Users.Services {
             string normalizedUserName = userName.ToLowerInvariant();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
-                                   .Where(user => 
-                                          user.NormalizedUserName == normalizedUserName || 
+                                   .Where(user =>
+                                          user.NormalizedUserName == normalizedUserName ||
                                           user.Email == email)
                                    .List().Any()) {
                 return false;
@@ -143,7 +146,7 @@ namespace Orchard.Users.Services {
                     ChallengeUrl = url
                 }));
                 template.Metadata.Wrappers.Add("Template_User_Wrapper");
-                
+
                 var parameters = new Dictionary<string, object> {
                             {"Subject", T("Verification E-Mail").Text},
                             {"Body", _shapeDisplay.Display(template)},
@@ -155,8 +158,7 @@ namespace Orchard.Users.Services {
         }
 
         public bool SendLostPasswordEmail(string usernameOrEmail, Func<string, string> createUrl) {
-            var lowerName = usernameOrEmail.ToLowerInvariant();
-            var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName).List().FirstOrDefault();
+            var user = GetUserByNameOrEmail(usernameOrEmail);
 
             if (user != null) {
                 string nonce = CreateNonce(user, DelayToResetPassword);
@@ -199,7 +201,7 @@ namespace Orchard.Users.Services {
             return user;
         }
 
-        public bool PasswordMeetsPolicies(string password, out IDictionary<string, LocalizedString> validationErrors) {
+        public bool PasswordMeetsPolicies(string password, IUser user, out IDictionary<string, LocalizedString> validationErrors) {
             validationErrors = new Dictionary<string, LocalizedString>();
             var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
 
@@ -231,9 +233,25 @@ namespace Orchard.Users.Services {
                     validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotContainSpecialCharacters,
                         T("The password must contain at least one special character."));
                 }
+                if (settings.EnablePasswordHistoryPolicy) {
+                    var enforcePasswordHistory = settings.GetPasswordReuseLimit();
+                    if (_passwordHistoryService.PasswordMatchLastOnes(password, user, enforcePasswordHistory)) {
+                        validationErrors.Add(UserPasswordValidationResults.PasswordDoesNotMeetHistoryPolicy,
+                            T.Plural("You cannot reuse the last password.", "You cannot reuse none of last {0} passwords.", enforcePasswordHistory));
+                    }
+                }
             }
 
             return validationErrors.Count == 0;
+        }
+
+        public UserPart GetUserByNameOrEmail(string usernameOrEmail) {
+            var lowerName = usernameOrEmail.ToLowerInvariant();
+            return _contentManager
+                .Query<UserPart, UserPartRecord>()
+                .Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName)
+                .Slice(0, 1)
+                .FirstOrDefault();
         }
     }
 }

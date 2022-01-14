@@ -39,6 +39,11 @@ namespace Orchard.Users.Events {
         void AccessDenied(IUser user);
 
         /// <summary>
+        /// Called before a user has changed password
+        /// </summary>
+        void ChangingPassword(IUser user, string password);
+
+        /// <summary>
         /// Called after a user has changed password
         /// </summary>
         void ChangedPassword(IUser user, string password);
