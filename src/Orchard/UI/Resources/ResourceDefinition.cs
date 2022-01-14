@@ -8,6 +8,8 @@ using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
     public class ResourceDefinition {
+        private static readonly char[] _queryStringChars = new [] { '?' };
+        
         private static readonly Dictionary<string, string> _resourceTypeTagNames = new Dictionary<string, string> {
             { "script", "script" },
             { "stylesheet", "link" }
@@ -284,10 +286,10 @@ namespace Orchard.UI.Resources {
         private string GetPhysicalPath(string url) {
             if (!String.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute) && !url.StartsWith("//")) {
                 if (VirtualPathUtility.IsAbsolute(url) || VirtualPathUtility.IsAppRelative(url)) {
-                    return HostingEnvironment.MapPath(url.Split(new[] { '?' })[0]);
+                    return HostingEnvironment.MapPath(url.Split(_queryStringChars)[0]);
                 }
                 if (!String.IsNullOrEmpty(BasePath)) {
-                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url));
+                    return HostingEnvironment.MapPath(VirtualPathUtility.Combine(BasePath, url.Split(_queryStringChars)[0]));
                 }
             }
             return null;
