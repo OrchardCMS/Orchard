@@ -1,4 +1,7 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -11,12 +14,16 @@ using Orchard.Projections.Models;
 namespace Orchard.Projections {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
+        private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
-
+        
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
+            IRepository<LayoutRecord> layoutRepository,
             IRepository<PropertyRecord> propertyRecordRepository) {
+
             _memberBindingRepository = memberBindingRepository;
+            _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
 
             T = NullLocalizer.Instance;
@@ -200,6 +207,7 @@ namespace Orchard.Projections {
                     .WithPart("ProjectionPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "5"))
                     .Creatable()
+                    .Listable()
                     .DisplayedAs("Projection")
                 );
 
@@ -257,7 +265,25 @@ namespace Orchard.Projections {
                 .CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id")
             );
 
-            return 1;
+            SchemaBuilder.CreateTable("NavigationQueryPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<int>("Items")
+                    .Column<int>("Skip")
+                    .Column<int>("QueryPartRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithPart("NavigationQueryPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Query Link")
+                    .WithSetting("Description", "Injects menu items from a Query")
+                    .WithSetting("Stereotype", "MenuItem")
+                    .WithIdentity()
+                );
+
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -346,5 +372,18 @@ namespace Orchard.Projections {
             return 6;
         }
 #pragma warning restore CS0618
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
+                     column => column.WithLength(68)));
+
+            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
+            foreach (var layout in layoutRecords) {
+                layout.GUIdentifier = Guid.NewGuid().ToString();
+            }
+
+            return 7;
+        }
+
     }
 }

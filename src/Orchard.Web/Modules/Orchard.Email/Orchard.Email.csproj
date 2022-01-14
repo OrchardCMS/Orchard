@@ -100,7 +100,9 @@
     <Compile Include="Activities\EmailActivity.cs" />
     <Compile Include="Controllers\EmailAdminController.cs" />
     <Compile Include="Forms\MailForms.cs" />
-    <Compile Include="Forms\EmailForm.cs" />
+    <Compile Include="Forms\EmailForm.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\SmtpSettingsPartDriver.cs" />
     <Compile Include="Handlers\SmtpSettingsPartHandler.cs" />
