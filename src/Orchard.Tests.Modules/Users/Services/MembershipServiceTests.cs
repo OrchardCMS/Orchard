@@ -103,6 +103,7 @@ namespace Orchard.Tests.Modules.Users.Services
             builder.RegisterInstance(_workContextAccessor.Object).As<IWorkContextAccessor>();
 
             _container = builder.Build();
+            _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.ContentItem.Weld(new RegistrationSettingsPart());
             _membershipValidationService = _container.Resolve<IMembershipValidationService>();
             _membershipService = _container.Resolve<IMembershipService>();
         }

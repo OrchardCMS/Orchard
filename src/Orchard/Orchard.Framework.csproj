@@ -203,6 +203,8 @@
     <Compile Include="Reports\Services\ReportsCoordinator.cs" />
     <Compile Include="Reports\Services\ReportsManager.cs" />
     <Compile Include="Reports\Services\ReportsPersister.cs" />
+    <Compile Include="Security\AccountValidationContext.cs" />
+    <Compile Include="Security\IAccountValidationService.cs" />
     <Compile Include="Security\IMembershipSettings.cs" />
     <Compile Include="Security\IMembershipValidationService.cs" />
     <Compile Include="Localization\Services\ILocalizationStreamParser.cs" />
@@ -211,6 +213,7 @@
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\ISslSettingsProvider.cs" />
     <Compile Include="Security\IUserDataProvider.cs" />
+    <Compile Include="Security\NullAccountValidationService.cs" />
     <Compile Include="Security\NullMembershipService.cs" />
     <Compile Include="Security\Providers\BaseUserDataProvider.cs" />
     <Compile Include="Security\Providers\DefaultSecurityService.cs" />
