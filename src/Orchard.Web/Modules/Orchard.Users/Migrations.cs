@@ -23,7 +23,7 @@ namespace Orchard.Users {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("LastLoginUtc")
                     .Column<DateTime>("LastLogoutUtc")
-                    .Column<DateTime>("LastPasswordChangeUtc")
+                    .Column<DateTime>("LastPasswordChangeUtc", c => c.WithDefault(new DateTime(1990, 1, 1)))
                     .Column<bool>("ForcePasswordChange"))
                 .AlterTable("UserPartRecord", table => table
                     .CreateIndex("IDX_UserPartRecord_NormalizedUserName", "NormalizedUserName"))
