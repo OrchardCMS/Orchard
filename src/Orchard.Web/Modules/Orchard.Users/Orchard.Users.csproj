@@ -104,6 +104,7 @@
     <Compile Include="Constants\UserPasswordValidationResults.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\UserSecurityConfigurationPartDriver.cs" />
     <Compile Include="Drivers\UserApprovePartDriver.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
     <Compile Include="Drivers\UserPartPasswordDriver.cs" />
@@ -114,7 +115,9 @@
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />
     <Compile Include="Handlers\ApproveUserHandler.cs" />
+    <Compile Include="Handlers\UserSecurityConfigurationPartHandler.cs" />
     <Compile Include="Handlers\SecuritySettingsPartHandler.cs" />
+    <Compile Include="Handlers\UserSuspensionSettingsPartHandler.cs" />
     <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Migrations.cs" />
@@ -122,19 +125,29 @@
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
     <Compile Include="Events\IUserEventHandler.cs" />
     <Compile Include="Models\MessageTypes.cs" />
+    <Compile Include="Models\PasswordHistoryRecord.cs" />
+    <Compile Include="Models\UserSecurityConfigurationPart.cs" />
+    <Compile Include="Models\UserSecurityConfigurationPartRecord.cs" />
     <Compile Include="Models\RegistrationSettingsPart.cs" />
     <Compile Include="Models\SecuritySettingsPart.cs" />
     <Compile Include="Models\UserPart.cs" />
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
     <Compile Include="Models\UserStatus.cs" />
+    <Compile Include="Models\UserSuspensionSettingsPart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApproveUserService.cs" />
+    <Compile Include="Services\AccountValidationService.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
+    <Compile Include="Services\InactiveUserSuspensionBackgroundTask.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\IUserSuspensionConditionProvider.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />
     <Compile Include="Services\PasswordChangedDateUserDataProvider.cs" />
+    <Compile Include="Services\PasswordHistoryService.cs" />
+    <Compile Include="Services\PasswordService.cs" />
+    <Compile Include="Services\ProtectSpecificUserConditionProvider.cs" />
     <Compile Include="Services\UserResolverSelector.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
@@ -229,10 +242,15 @@
     <Content Include="Views\Template.User.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\EditorTemplates\Parts\Users.SuspensionSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\User.UserSecurityConfiguration.cshtml" />
+    <Content Include="Views\Account\RequestChallengeEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\ChangeExpiredPassword.cshtml" />

@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.Security;
 using System;
+using System.Linq;
 using System.Web.Security;
 
 namespace Orchard.Users.Models {
@@ -80,6 +81,13 @@ namespace Orchard.Users.Models {
         public DateTime? LastPasswordChangeUtc {
             get { return Retrieve(x => x.LastPasswordChangeUtc); }
             set { Store(x => x.LastPasswordChangeUtc, value); }
+        }
+        /// <summary>
+        /// Set to true means that the user must change the password at next logon
+        /// </summary>
+        public bool ForcePasswordChange {
+            get { return Retrieve(x => x.ForcePasswordChange); }
+            set { Store(x => x.ForcePasswordChange, value); }
         }
     }
 }

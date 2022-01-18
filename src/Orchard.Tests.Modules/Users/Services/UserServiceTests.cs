@@ -124,7 +124,7 @@ namespace Orchard.Tests.Modules.Users.Services
 
         [Test]
         public void NonceShouldBeDecryptable() {
-            var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true));
+            var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true, false));
             var nonce = _userService.CreateNonce(user, new TimeSpan(1, 0, 0));
 
             Assert.That(nonce, Is.Not.Empty);
@@ -145,7 +145,7 @@ namespace Orchard.Tests.Modules.Users.Services
             Thread.CurrentThread.CurrentCulture = turkishCulture;
 
             // Create user lower case
-            _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true));
+            _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true, false));
 
             // Verify unicity with upper case which with turkish coallition would yeld admin with an i without the dot and therefore generate a different user name
             Assert.That(_userService.VerifyUserUnicity("ADMIN", "differentfoo@bar.com"), Is.False);

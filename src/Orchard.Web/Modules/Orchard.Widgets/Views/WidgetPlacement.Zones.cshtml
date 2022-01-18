@@ -2,6 +2,7 @@
 @using Orchard.Core.Contents;
 @using Orchard.Utility.Extensions;
 @using Orchard.Widgets.Models;
+@using Orchard.Localization.Models;
 @{
     Style.Require("WidgetsAdmin");
     IEnumerable<WidgetPart> widgets = Model.Widgets;
@@ -26,7 +27,8 @@
                     foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
                             @using (Html.BeginFormAntiForgeryPost()) {
-                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
+                                var contentLocalization = (widget.ContentItem.As<LocalizationPart>() != null && widget.ContentItem.As<LocalizationPart>().Culture != null) ? " (" + widget.ContentItem.As<LocalizationPart>().Culture.Culture + ")" : string.Empty;	
+                                <h3>@Html.ActionLink((HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName) + contentLocalization, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
                                 <ul class="widgets-actions action-links">
                                     @if (widget.HasPublished()) {
                                         if (widget.HasDraft()) {

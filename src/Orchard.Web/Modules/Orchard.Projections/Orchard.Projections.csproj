@@ -65,8 +65,8 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=4.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NHibernate.4.1.2.4000\lib\net40\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -141,6 +141,10 @@
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
       <Project>{98251EAE-A41B-47B2-AA91-E28B8482DA70}</Project>
       <Name>Orchard.Conditions</Name>
@@ -184,6 +188,8 @@
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
     <Compile Include="Models\QueryVersionScopeOptions.cs" />
+    <Compile Include="Settings\ProjectionPartEditorEvents.cs" />
+    <Compile Include="Settings\ProjectionPartSettings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />
@@ -332,6 +338,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\DefinitionTemplates\ProjectionPartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
