@@ -18,14 +18,17 @@
             @Html.Hidden("Roles[" + index + "].Name", entry.Name)
 
             <div>
-                @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)
+                @if (Model.AuthorizedRoleIds.Contains(entry.RoleId)) {
+                    @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)
+                } else {
+                    @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted, new { disabled = true })
+                }
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
             </div>
 
             index++;
         }
-    }
-    else {
+    } else {
         <p>@T("There are no roles.")</p>
     }
 </fieldset>
