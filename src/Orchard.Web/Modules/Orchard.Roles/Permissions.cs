@@ -12,7 +12,7 @@ namespace Orchard.Roles {
         private readonly IRepository<RoleRecord> _roleRepository;
 
         public static readonly Permission ManageRoles = new Permission { Description = "Managing Roles", Name = "ManageRoles" };
-        public static readonly Permission AssignRoles = new Permission { Description = "Assign Roles", Name = "AssignRoles", ImpliedBy = new [] { ManageRoles } };
+        public static readonly Permission AssignRoles = new Permission { Description = "Assign Roles", Name = "AssignRoles", ImpliedBy = new[] { ManageRoles } };
 
         public virtual Feature Feature { get; set; }
 
@@ -40,9 +40,7 @@ namespace Orchard.Roles {
             };
         }
 
-        public IEnumerable<Permission> GetPermissions() {
-            yield return ManageRoles;
-            yield return AssignRoles;
+        private IEnumerable<Permission> GetAssignRolePermissions() {
             var allRoleNames = _roleRepository.Table
                 .Select(r => r.Name)
                 .ToList()
@@ -50,6 +48,14 @@ namespace Orchard.Roles {
                 .Except(SystemRoles.GetSystemRoles());
             foreach (var roleName in allRoleNames) {
                 yield return CreatePermissionForAssignRole(roleName);
+            }
+        }
+
+        public IEnumerable<Permission> GetPermissions() {
+            yield return ManageRoles;
+            yield return AssignRoles;
+            foreach (var permission in GetAssignRolePermissions()) {
+                yield return permission;
             }
             yield break;
         }
