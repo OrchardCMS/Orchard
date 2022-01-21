@@ -74,13 +74,11 @@
                     </td>
                     <td>
                         <ul class="action-links">
-
-                            @* TODO: what permission should we check for the "Edit" Action *@
-                            <li class="action-link">
-                                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id })
-                            </li>
-                            
                             @if (canManageUser) {
+                                @* TODO: what permission should we check for the "Edit" Action *@
+                                <li class="action-link">
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id })
+                                </li>
                                 <li class="action-link">
                                     @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
                                 </li>

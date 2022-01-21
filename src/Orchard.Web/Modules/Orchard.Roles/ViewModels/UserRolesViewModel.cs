@@ -6,11 +6,13 @@ namespace Orchard.Roles.ViewModels {
     public class UserRolesViewModel {
         public UserRolesViewModel() {
             Roles = new List<UserRoleEntry>();
+            AuthorizedRoleIds = new List<int>();
         }
 
         public IUser User { get; set; }
         public IUserRoles UserRoles { get; set; }
         public IList<UserRoleEntry> Roles { get; set; }
+        public IList<int> AuthorizedRoleIds { get; set; }
     }
 
     public class UserRoleEntry {
