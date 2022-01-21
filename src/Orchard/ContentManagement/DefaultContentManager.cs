@@ -187,8 +187,8 @@ namespace Orchard.ContentManagement {
                             contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
                         }
 
-                        contentItemVersionCriteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
-                        contentItemVersionCriteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
+                        contentItemVersionCriteria.Fetch(SelectMode.Fetch, "ContentItemRecord");
+                        contentItemVersionCriteria.Fetch(SelectMode.Fetch, "ContentItemRecord.ContentType");
                         //contentItemVersionCriteria.SetMaxResults(1);
                     });
 
@@ -365,13 +365,13 @@ namespace Orchard.ContentManagement {
 
                 // locate hints that match properties in the ContentItemVersionRecord
                 foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                    contentItemVersionCriteria.Fetch(SelectMode.Fetch, hit.Hint);
                     hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
                 }
 
                 // locate hints that match properties in the ContentItemRecord
                 foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                    contentItemVersionCriteria.Fetch(SelectMode.Fetch, "ContentItemRecord." + hit.Hint);
                     hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
                 }
 
