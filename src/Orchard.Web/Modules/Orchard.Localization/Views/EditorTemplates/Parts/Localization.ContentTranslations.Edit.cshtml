@@ -27,7 +27,7 @@
                 </dl>
             }
 
-            if (Model.MissingCultures.Any()) {
+            if (Model.MissingCultures.Any() && Model.ContentItem.Id != 0) {
                 var contentItemId = Model.ContentItem.Id;
                 if (returnUrl != "") {
                     <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId, ReturnUrl = returnUrl }, new { itemprop = "UnsafeUrl" })</div>
@@ -36,8 +36,8 @@
                     <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId }, new { itemprop = "UnsafeUrl" })</div>
                 }
             }
-
-            @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
+            @Html.HiddenFor(m=>m.SelectedCulture)
+            @*@Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)*@
         }
         else {
             var masterContent = Model.MasterContentItem != null ? Model.MasterContentItem : Model.ContentLocalizations.Localizations.FirstOrDefault();
