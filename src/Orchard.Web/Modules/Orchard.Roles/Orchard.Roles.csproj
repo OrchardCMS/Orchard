@@ -216,6 +216,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Views\EditorTemplates\Parts\Roles.UserSuspensionSettings.cshtml" />
+    <Content Include="Views\Admin\Assign.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
