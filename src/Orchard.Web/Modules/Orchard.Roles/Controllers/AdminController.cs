@@ -233,17 +233,11 @@ namespace Orchard.Roles.Controllers {
 
             // this calls the same view used by the driver that lets users with higher
             // permissions do the same.
-            var editor = Shape.EditorTemplate(
-                TemplateName: "Parts/Roles.UserRoles",
-                Model: model,
-                Prefix: null);
-
-            return View(editor
-                .UserName(userRolesPart.As<IUser>()?.UserName));
+            return AssignView(model);
         }
 
         [HttpPost, ActionName("Assign"), Authorize]
-        public ActionResult AssignPOST(int id) {
+        public ActionResult AssignPOST(int id, string returnUrl) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
             // Get the user whose roles we want to assign
             var userRolesPart = _contentManager.Get<UserRolesPart>(id);
@@ -270,7 +264,7 @@ namespace Orchard.Roles.Controllers {
                 // same logic that is used in the UserRolesPartDriver:
                 var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == editModel.User.Id).ToArray();
                 var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
-                // The roles the user should ahve after the update (pending a verification that
+                // The roles the user should have after the update (pending a verification that
                 // the currentUser is allowed to assign them)
                 var targetRoleRecords = editModel.Roles.Where(x => x.Granted).Select(x => _roleService.GetRole(x.RoleId)).ToArray();
                 foreach (var addingRole in targetRoleRecords
@@ -289,7 +283,7 @@ namespace Orchard.Roles.Controllers {
                         // user has this role that they shouldn't
                         !targetRoleRecords.Contains(x.Role)
                         // && we are authorized to assign this role
-                        && authorizedRoleIds.Contains(x.Id))) {
+                        && authorizedRoleIds.Contains(x.Role.Id))) {
 
                     _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRolesPart.As<IUser>().UserName));
                     _userRolesRepository.Delete(removingRole);
@@ -298,19 +292,23 @@ namespace Orchard.Roles.Controllers {
             }
 
             if (!ModelState.IsValid) {
+                editModel.AuthorizedRoleIds = authorizedRoleIds;
                 // Something went wrong in the update
                 Services.TransactionManager.Cancel();
-
-                var editor = Shape.EditorTemplate(
-                    TemplateName: "Parts/Roles.UserRoles",
-                    Model: editModel,
-                    Prefix: null);
-
-                return View(editor
-                    .UserName(userRolesPart.As<IUser>()?.UserName));
+                return AssignView(editModel);
             }
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Assign", new { id = id }));
+        }
 
-            return RedirectToAction("Assign", new { id = id });
+        private ActionResult AssignView(UserRolesViewModel editModel) {
+
+            var editor = Shape.EditorTemplate(
+                TemplateName: "Parts/Roles.UserRoles",
+                Model: editModel,
+                Prefix: null);
+
+            return View(editor
+                .UserName(editModel.User?.UserName));
         }
     }
 }

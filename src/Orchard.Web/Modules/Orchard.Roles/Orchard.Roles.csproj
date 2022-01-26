@@ -137,6 +137,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Conditions\RoleCondition.cs" />
+    <Compile Include="Services\AssignRoleUserManagementActionsProvider.cs" />
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\RolesBasedAuthorizationService.cs" />
     <Compile Include="Services\RoleService.cs" />
