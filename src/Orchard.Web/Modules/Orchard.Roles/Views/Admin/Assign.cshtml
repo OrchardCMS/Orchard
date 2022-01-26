@@ -1,7 +1,9 @@
-﻿@{
+﻿@using Orchard.Utility.Extensions
+@{
     Layout.Title = T("Assign Roles").ToString();
 
     var userName = (string)Model.UserName ?? string.Empty;
+    var returnUrl = Request.QueryString["returnUrl"];
 }
 
 @using (Html.BeginFormAntiForgeryPost()) { 
@@ -19,7 +21,14 @@
         </div>
         <div class="edit-item-secondary group">
             <div class="edit-item-sidebar group">
-                <button type="submit">@T("Save")</button>
+                <fieldset class="save-button">
+                    <button class="primaryAction" type="submit">@T("Save")</button>
+                </fieldset>
+                @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+                    <fieldset class="cancel-button">
+                        <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+                    </fieldset>
+                }
             </div>
         </div>
     </div>

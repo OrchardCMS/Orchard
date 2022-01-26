@@ -103,7 +103,7 @@ namespace Orchard.Roles.Drivers {
                     // assigned to them.
                     var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == model.User.Id).ToArray();
                     var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
-                    // The roles the user should ahve after the update (pending a verification that
+                    // The roles the user should have after the update (pending a verification that
                     // the currentUser is allowed to assign them)
                     var targetRoleRecords = model.Roles.Where(x => x.Granted).Select(x => _roleService.GetRole(x.RoleId)).ToArray();
                     foreach (var addingRole in targetRoleRecords
@@ -122,7 +122,7 @@ namespace Orchard.Roles.Drivers {
                             // user has this role that they shouldn't
                             !targetRoleRecords.Contains(x.Role)
                             // && we are authorized to assign this role
-                            && authorizedRoleIds.Contains(x.Id))) {
+                            && authorizedRoleIds.Contains(x.Role.Id))) {
 
                         _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRolesPart.As<IUser>().UserName));
                         _userRolesRepository.Delete(removingRole);

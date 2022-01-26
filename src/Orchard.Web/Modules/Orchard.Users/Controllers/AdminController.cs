@@ -27,6 +27,7 @@ namespace Orchard.Users.Controllers {
         private readonly IUserService _userService;
         private readonly IUserEventHandler _userEventHandlers;
         private readonly ISiteService _siteService;
+        private readonly IEnumerable<IUserManagementActionsProvider> _userManagementActionsProviders;
 
         public AdminController(
             IOrchardServices services,
@@ -34,13 +35,15 @@ namespace Orchard.Users.Controllers {
             IUserService userService,
             IShapeFactory shapeFactory,
             IUserEventHandler userEventHandlers,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IEnumerable<IUserManagementActionsProvider> userManagementActionsProviders) {
 
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
             _userEventHandlers = userEventHandlers;
             _siteService = siteService;
+            _userManagementActionsProviders = userManagementActionsProviders;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -104,7 +107,9 @@ namespace Orchard.Users.Controllers {
                 Users = results
                     .Select(x => new UserEntry {
                         UserPart = x,
-                        User = x.Record
+                        User = x.Record,
+                        AdditionalActionLinks = _userManagementActionsProviders
+                            .SelectMany(p => p.UserActionLinks(x)).ToList()
                     })
                     .ToList(),
                     Options = options,

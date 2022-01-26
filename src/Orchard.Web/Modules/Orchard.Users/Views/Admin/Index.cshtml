@@ -71,7 +71,11 @@
                     } else { 
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
                     } 
-                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
+                        @if (canManageUser) {
+                            @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
+                        } else {
+                            @entry.User.UserName
+                        }
                 </td>
                 <td>
                     @entry.User.Email 
@@ -100,6 +104,11 @@
                                         @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
                                     </li>
                                 }
+                            }
+                            @foreach(var actionLink in entry.AdditionalActionLinks) {
+                                <li class="action-link">
+                                    @actionLink(Html)
+                                </li>
                             }
                         </ul>
                 </td>
