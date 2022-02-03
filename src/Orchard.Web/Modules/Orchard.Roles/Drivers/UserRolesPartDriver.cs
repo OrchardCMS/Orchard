@@ -10,6 +10,7 @@ using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Roles.Drivers {
     public class UserRolesPartDriver : ContentPartDriver<UserRolesPart> {
@@ -126,6 +127,18 @@ namespace Orchard.Roles.Drivers {
 
         protected override void Exporting(UserRolesPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", string.Join(",", part.Roles));
+        }
+
+        protected override void Cloning(UserRolesPart originalPart, UserRolesPart clonePart, CloneContentContext context) {
+            var cloneRoleRecords = _userRolesRepository
+                .Fetch(x => x.UserId == clonePart.ContentItem.Id)
+                .ToList()
+                .Select(x => x.Role)
+                .ToList();
+            var origRoleRecords = originalPart.Roles.Select(x => _roleService.GetRoleByName(x)).ToList();
+            foreach (var addingRole in origRoleRecords.Where(x => !cloneRoleRecords.Contains(x))) {
+                _userRolesRepository.Create(new UserRolesPartRecord { UserId = clonePart.ContentItem.Id, Role = addingRole });
+            }
         }
     }
 }

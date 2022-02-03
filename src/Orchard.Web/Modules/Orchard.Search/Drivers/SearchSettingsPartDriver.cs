@@ -89,5 +89,9 @@ namespace Orchard.Search.Drivers {
                 part.Store("SearchFields", value);
             });
         }
+
+        protected override void Cloning(SearchSettingsPart originalPart, SearchSettingsPart clonePart, CloneContentContext context) {
+            clonePart.SearchFields = originalPart.SearchFields;
+        }
     }
 }

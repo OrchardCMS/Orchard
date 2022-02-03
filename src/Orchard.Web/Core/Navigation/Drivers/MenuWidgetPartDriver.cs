@@ -223,5 +223,15 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ShowFullMenu", part.ShowFullMenu);
         }
 
+        protected override void Cloning(MenuWidgetPart originalPart, MenuWidgetPart clonePart, CloneContentContext context) {
+            clonePart.StartLevel = originalPart.StartLevel;
+            clonePart.Levels = originalPart.Levels;
+            clonePart.Breadcrumb = originalPart.Breadcrumb;
+            clonePart.AddCurrentPage = originalPart.AddCurrentPage;
+            clonePart.AddHomePage = originalPart.AddHomePage;
+            clonePart.ShowFullMenu = originalPart.ShowFullMenu;
+            clonePart.MenuContentItemId = originalPart.MenuContentItemId;
+        }
+
     }
 }

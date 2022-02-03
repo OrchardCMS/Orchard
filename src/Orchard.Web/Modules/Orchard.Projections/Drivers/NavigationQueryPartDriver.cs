@@ -83,5 +83,14 @@ namespace Orchard.Projections.Drivers {
                 }
             }
         }
+
+        protected override void Cloning(NavigationQueryPart originalPart, NavigationQueryPart clonePart, CloneContentContext context) {
+            clonePart.Items = originalPart.Items;
+            clonePart.Skip = originalPart.Skip;
+        }
+
+        protected override void Cloned(NavigationQueryPart originalPart, NavigationQueryPart clonePart, CloneContentContext context) {
+            clonePart.QueryPartRecord = originalPart.QueryPartRecord;
+        }
     }
 }

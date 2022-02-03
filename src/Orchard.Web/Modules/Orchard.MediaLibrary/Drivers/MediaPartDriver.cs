@@ -76,12 +76,12 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override void Cloning(MediaPart originalPart, MediaPart clonePart, CloneContentContext context) {
-            clonePart.Caption = originalPart.Caption;
-            clonePart.FileName = originalPart.FileName;
-            clonePart.FolderPath = originalPart.FolderPath;
-            clonePart.LogicalType = originalPart.LogicalType;
-            clonePart.AlternateText = originalPart.AlternateText;
             clonePart.MimeType = originalPart.MimeType;
+            clonePart.Caption = originalPart.Caption;
+            clonePart.AlternateText = originalPart.AlternateText;
+            clonePart.FolderPath = originalPart.FolderPath;
+            clonePart.FileName = originalPart.FileName;
+            clonePart.LogicalType = originalPart.LogicalType;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
@@ -113,6 +114,12 @@ namespace Orchard.Core.Navigation.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+        }
+
+        protected override void Cloning(MenuPart originalPart, MenuPart clonePart, CloneContentContext context) {
+            clonePart.MenuText = originalPart.MenuText;
+            clonePart.MenuPosition = originalPart.MenuPosition;
+            clonePart.Menu = context.CloneContentItem;
         }
     }
 }

@@ -97,12 +97,14 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         }
 
         public override void Cloning(CloneContentContext context) {
+            context.Logger = Logger;
             foreach (var contentPartDriver in _drivers) {
                 contentPartDriver.Cloning(context);
             }
         }
 
         public override void Cloned(CloneContentContext context) {
+            context.Logger = Logger;
             foreach (var contentPartDriver in _drivers) {
                 contentPartDriver.Cloned(context);
             }

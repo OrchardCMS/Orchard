@@ -179,5 +179,17 @@ namespace Orchard.Core.Containers.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("AdminMenuImageSet", part.AdminMenuImageSet);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemCount", part.ItemCount);
         }
+
+        protected override void Cloning(ContainerPart originalPart, ContainerPart clonePart, CloneContentContext context) {
+            clonePart.ItemContentTypes = originalPart.ItemContentTypes;
+            clonePart.ItemsShown = originalPart.ItemsShown;
+            clonePart.Paginated = originalPart.Paginated;
+            clonePart.PageSize = originalPart.PageSize;
+            clonePart.ShowOnAdminMenu = originalPart.ShowOnAdminMenu;
+            clonePart.AdminMenuText = originalPart.AdminMenuText;
+            clonePart.AdminMenuPosition = originalPart.AdminMenuPosition;
+            clonePart.AdminMenuImageSet = originalPart.AdminMenuImageSet;
+            clonePart.ItemCount = originalPart.ItemCount;
+        }
     }
 }

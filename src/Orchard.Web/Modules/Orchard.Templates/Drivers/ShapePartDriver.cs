@@ -101,6 +101,11 @@ namespace Orchard.Templates.Drivers {
             }
         }
 
+        protected override void Cloning(ShapePart originalPart, ShapePart clonePart, CloneContentContext context) {
+            clonePart.Template = originalPart.Template;
+            clonePart.RenderingMode = originalPart.RenderingMode;
+        }
+
         private bool ValidateShapeName(ShapePart part, IUpdateModel updater) {
             var titleViewModel = new TitleViewModel();
             if (!updater.TryUpdateModel(titleViewModel, "Title", null, null))

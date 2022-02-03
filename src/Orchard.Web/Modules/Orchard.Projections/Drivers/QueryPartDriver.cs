@@ -285,5 +285,11 @@ namespace Orchard.Projections.Drivers {
                 ZeroIsEmpty = Convert.ToBoolean(property.Attribute("ZeroIsEmpty").Value),
             };
         }
+
+        protected override void Cloning(QueryPart originalPart, QueryPart clonePart, CloneContentContext context) {
+            clonePart.Record.SortCriteria = originalPart.SortCriteria;
+            clonePart.Record.FilterGroups = originalPart.FilterGroups;
+            clonePart.Record.Layouts = originalPart.Layouts;
+        }
     }
 }

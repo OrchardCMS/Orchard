@@ -109,5 +109,10 @@ namespace Orchard.ArchiveLater.Drivers {
                     .SetAttributeValue("ScheduledArchiveUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
             }
         }
+
+        protected override void Cloning(ArchiveLaterPart originalPart, ArchiveLaterPart clonePart, CloneContentContext context) {
+            clonePart.ScheduledArchiveUtc.Value = originalPart.ScheduledArchiveUtc.Value;
+        }
+
     }
 }

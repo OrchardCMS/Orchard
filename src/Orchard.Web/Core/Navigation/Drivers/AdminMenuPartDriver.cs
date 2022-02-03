@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Settings;
 using Orchard.Localization;
@@ -93,6 +94,12 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("AdminMenuText", part.AdminMenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("AdminMenuPosition", part.AdminMenuPosition);
             context.Element(part.PartDefinition.Name).SetAttributeValue("OnAdminMenu", part.OnAdminMenu);
+        }
+
+        protected override void Cloning(AdminMenuPart originalPart, AdminMenuPart clonePart, CloneContentContext context) {
+            clonePart.AdminMenuText = originalPart.AdminMenuText;
+            clonePart.AdminMenuPosition = originalPart.AdminMenuPosition;
+            clonePart.OnAdminMenu = originalPart.OnAdminMenu;
         }
     }
 }
