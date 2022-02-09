@@ -137,6 +137,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Conditions\RoleCondition.cs" />
+    <Compile Include="Services\AssignRoleUserManagementActionsProvider.cs" />
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\RolesBasedAuthorizationService.cs" />
     <Compile Include="Services\RoleService.cs" />
@@ -216,6 +217,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Views\EditorTemplates\Parts\Roles.UserSuspensionSettings.cshtml" />
+    <Content Include="Views\Admin\Assign.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

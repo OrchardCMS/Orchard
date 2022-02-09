@@ -140,7 +140,9 @@
     <Compile Include="Services\ApproveUserService.cs" />
     <Compile Include="Services\AccountValidationService.cs" />
     <Compile Include="Services\AuthenticationRedirectionFilter.cs" />
+    <Compile Include="Services\DefaultUserManagementActionsProvider.cs" />
     <Compile Include="Services\InactiveUserSuspensionBackgroundTask.cs" />
+    <Compile Include="Services\IUserManagementActionsProvider.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\IUserSuspensionConditionProvider.cs" />
     <Compile Include="Services\MembershipValidationService.cs" />

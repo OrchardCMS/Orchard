@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
@@ -10,8 +12,14 @@ namespace Orchard.Users.ViewModels {
     }
 
     public class UserEntry {
+        public UserEntry() {
+            AdditionalActionLinks = new List<Func<HtmlHelper, MvcHtmlString>>();
+        }
+
+        public UserPart UserPart { get; set; }
         public UserPartRecord User { get; set; }
         public bool IsChecked { get; set; }
+        public List<Func<HtmlHelper, MvcHtmlString>> AdditionalActionLinks { get; set; }
     }
 
     public class UserIndexOptions {
