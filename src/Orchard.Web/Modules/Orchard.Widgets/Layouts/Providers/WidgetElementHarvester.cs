@@ -47,9 +47,28 @@ namespace Orchard.Widgets.Layouts.Providers {
                     Importing = ImportElement,
                     StateBag = new Dictionary<string, object> {
                         { "ContentTypeName", contentTypeDefinition.Name }
-                    }
+                    },
+                    LayoutSaving = LayoutSaving
                 };
             });
+        }
+
+        private void LayoutSaving(ElementSavingContext context) {
+            // I need to save the widget element container.
+            var element = (Widget)context.Element;
+            if (element == null) {
+                return;
+            }
+            var widgetId = element.WidgetId;
+            var widget = _contentManager.Value.Get(widgetId.Value, VersionOptions.Latest);
+            if (widget == null) {
+                return;
+            }
+
+            var commonPart = widget.As<ICommonPart>();
+            if (commonPart != null) {
+                commonPart.Container = context.Content;
+            }
         }
 
         private void Displaying(ElementDisplayingContext context) {
