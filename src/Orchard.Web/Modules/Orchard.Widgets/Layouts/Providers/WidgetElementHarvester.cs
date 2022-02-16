@@ -13,6 +13,7 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Models;
 using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Widgets.Layouts.Elements;
@@ -185,6 +186,18 @@ namespace Orchard.Widgets.Layouts.Providers {
                 return;
 
             var widget = context.Session.GetItemFromSession(widgetIdentity);
+
+            // I need to create a new widget and save the new one.
+            // This is to avoid the fact the very same element ending up in multiple layouts, causing issues when e.g. deleting a LayoutWidget of a cloned ContentItem (which would delete the elements of multiple layouts).
+            // I only do this when the container of the original element is different then the container of the cloned element, to ensure doing it when cloning elements and avoid doing the same when importing content.
+            var cp = widget.As<ICommonPart>();
+            if (cp != null) {
+                var lp = cp.Container.As<LayoutPart>();
+                if (lp != null && lp.Id != context.Layout.Id) {
+                    widget = _contentManager.Value.Clone(widget);
+                }
+            }
+
             var element = (Widget)context.Element;
 
             element.WidgetId = widget != null ? widget.Id : default(int?);
