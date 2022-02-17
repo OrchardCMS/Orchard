@@ -1,0 +1,13 @@
+﻿@model Orchard.Users.Models.UserSecurityConfigurationPart
+<fieldset>
+    @Html.CheckBoxFor(m => m.SaveFromSuspension)
+    @Html.LabelFor(m => m.SaveFromSuspension,
+        T("User will not be automatically suspended by periodic sweeps.").Text,
+        new { @class = "forcheckbox" })
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.PreventPasswordExpiration)
+    @Html.LabelFor(m => m.PreventPasswordExpiration,
+        T("User will not be required to renew their password when it's expired.").Text,
+        new { @class = "forcheckbox" })
+</fieldset>

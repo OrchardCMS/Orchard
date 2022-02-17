@@ -62,6 +62,9 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -100,6 +103,7 @@
     <Compile Include="Commands\RoleCommands.cs" />
     <Compile Include="Constants\SystemRoles.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\RolesUserSuspensionSettingsPartDriver.cs" />
     <Compile Include="Drivers\UserTaskDriver.cs" />
     <Compile Include="Events\IRoleEventHandler.cs" />
     <Compile Include="Events\PermissionAddedContext.cs" />
@@ -115,6 +119,8 @@
     <Compile Include="Extensions\UserRolesExtensions.cs" />
     <Compile Include="Forms\SelectRolesForms.cs" />
     <Compile Include="Forms\UserTaskForms.cs" />
+    <Compile Include="Handlers\RolesUserSuspensionSettingsPartHandler.cs" />
+    <Compile Include="Models\RolesUserSuspensionSettingsPart.cs" />
     <Compile Include="Recipes\Builders\RolesStep.cs" />
     <Compile Include="Recipes\Executors\RolesStep.cs" />
     <Compile Include="Migrations.cs" />
@@ -131,12 +137,15 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Conditions\RoleCondition.cs" />
+    <Compile Include="Services\AssignRoleUserManagementActionsProvider.cs" />
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\RolesBasedAuthorizationService.cs" />
     <Compile Include="Services\RoleService.cs" />
+    <Compile Include="Services\RolesUserSuspensionConditionProvider.cs" />
     <Compile Include="ViewModels\RoleCreateViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />
     <Compile Include="ViewModels\RolesIndexViewModel.cs" />
+    <Compile Include="ViewModels\RolesUserSuspensionSettingsViewModel.cs" />
     <Compile Include="ViewModels\UserRolesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +175,10 @@
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
       <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
@@ -203,6 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\EditorTemplates\Parts\Roles.UserSuspensionSettings.cshtml" />
+    <Content Include="Views\Admin\Assign.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -89,5 +89,9 @@ namespace Orchard.Users.Handlers {
                                          user,
                                          () => new Dictionary<string, object> { { "User", user } });
         }
+
+        //TODO evaluate if we need a workflow event for this
+        public void ChangingPassword(Security.IUser user, string password) {
+        }
     }
 }

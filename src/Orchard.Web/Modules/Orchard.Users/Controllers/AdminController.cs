@@ -27,6 +27,7 @@ namespace Orchard.Users.Controllers {
         private readonly IUserService _userService;
         private readonly IUserEventHandler _userEventHandlers;
         private readonly ISiteService _siteService;
+        private readonly IEnumerable<IUserManagementActionsProvider> _userManagementActionsProviders;
 
         public AdminController(
             IOrchardServices services,
@@ -34,13 +35,15 @@ namespace Orchard.Users.Controllers {
             IUserService userService,
             IShapeFactory shapeFactory,
             IUserEventHandler userEventHandlers,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IEnumerable<IUserManagementActionsProvider> userManagementActionsProviders) {
 
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
             _userEventHandlers = userEventHandlers;
             _siteService = siteService;
+            _userManagementActionsProviders = userManagementActionsProviders;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -51,7 +54,7 @@ namespace Orchard.Users.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(UserIndexOptions options, PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewUsers, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -102,7 +105,12 @@ namespace Orchard.Users.Controllers {
 
             var model = new UsersIndexViewModel {
                 Users = results
-                    .Select(x => new UserEntry { User = x.Record })
+                    .Select(x => new UserEntry {
+                        UserPart = x,
+                        User = x.Record,
+                        AdditionalActionLinks = _userManagementActionsProviders
+                            .SelectMany(p => p.UserActionLinks(x)).ToList()
+                    })
                     .ToList(),
                     Options = options,
                     Pager = pagerShape
@@ -192,7 +200,7 @@ namespace Orchard.Users.Controllers {
 
             IDictionary<string, LocalizedString> validationErrors;
 
-            if (!_userService.PasswordMeetsPolicies(createModel.Password, out validationErrors)) {
+            if (!_userService.PasswordMeetsPolicies(createModel.Password, null, out validationErrors)) {
                 ModelState.AddModelErrors(validationErrors);
             }
 
@@ -202,7 +210,8 @@ namespace Orchard.Users.Controllers {
                                                   createModel.UserName,
                                                   createModel.Password,
                                                   createModel.Email,
-                                                  null, null, true));
+                                                  null, null, true,
+                                                  createModel.ForcePasswordChange));
             }
 
             var model = Services.ContentManager.UpdateEditor(user, this);

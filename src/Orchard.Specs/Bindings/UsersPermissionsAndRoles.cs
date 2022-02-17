@@ -40,7 +40,7 @@ namespace Orchard.Specs.Bindings {
                     var memberShipService = environment.Resolve<IMembershipService>();
                     var roleService = environment.Resolve<IRoleService>();
                     var userRoleRepository = environment.Resolve<IRepository<UserRolesPartRecord>>();
-                    var user = memberShipService.CreateUser(new CreateUserParams(username, "qwerty123!", username + "@foo.com", "", "", true));
+                    var user = memberShipService.CreateUser(new CreateUserParams(username, "qwerty123!", username + "@foo.com", "", "", true, false));
 
                     foreach (var roleName in roles.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)) {
                         var role = roleService.GetRoleByName(roleName);

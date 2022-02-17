@@ -1,3 +1,7 @@
 ﻿@model dynamic
 <h1>@Html.TitleForPage(T("Challenge Email").ToString()) </h1>
 <p>@T("Your email address could not be validated.") </p>
+<p>
+    @T("Follow <a href=\"{0}\">this link</a> to request a new challenge email.",
+        Url.Action("RequestChallengeEmail"))
+</p>

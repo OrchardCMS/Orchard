@@ -15,5 +15,11 @@
         public static bool GetPasswordSpecialRequirement(this IMembershipSettings membershipSettings) {
             return membershipSettings.EnableCustomPasswordPolicy ? membershipSettings.EnablePasswordSpecialRequirement : false;
         }
+        public static bool GetPasswordHistoryRequirement(this IMembershipSettings membershipSettings) {
+            return membershipSettings.EnablePasswordHistoryPolicy ? membershipSettings.EnablePasswordHistoryPolicy : false;
+        }
+        public static int GetPasswordReuseLimit(this IMembershipSettings membershipSettings) {
+            return membershipSettings.EnablePasswordHistoryPolicy ? membershipSettings.PasswordReuseLimit : 5;
+        }
     }
 }

@@ -19,5 +19,7 @@ namespace Orchard.Security {
         bool EnablePasswordExpiration { get; set; }
         int PasswordExpirationTimeInDays { get; set; }
         MembershipPasswordFormat PasswordFormat { get; set; }
+        bool EnablePasswordHistoryPolicy { get; set; }
+        int PasswordReuseLimit { get; set; }
     }
 }

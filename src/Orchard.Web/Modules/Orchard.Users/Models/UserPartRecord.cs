@@ -1,5 +1,7 @@
 using Orchard.ContentManagement.Records;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Security;
 
 namespace Orchard.Users.Models {
@@ -20,5 +22,6 @@ namespace Orchard.Users.Models {
         public virtual DateTime? LastLoginUtc { get; set; }
         public virtual DateTime? LastLogoutUtc { get; set; }
         public virtual DateTime? LastPasswordChangeUtc { get; set; }
+        public virtual bool ForcePasswordChange { get; set; }
     }
 }
