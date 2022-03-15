@@ -64,7 +64,7 @@ namespace Orchard.Users.Drivers {
                             // I need to store current password in a variable to save it in the PasswordHistoryRepository.
                             _userEventHandler.ChangingPassword(actUser, editModel.Password);                         
                             _membershipService.SetPassword(actUser, editModel.Password);
-                            _userEventHandler.ChangedPassword(actUser);
+                            _userEventHandler.ChangedPassword(actUser, editModel.Password);
                         }
                     }
                 }
