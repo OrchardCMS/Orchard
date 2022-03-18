@@ -1,9 +1,14 @@
 ﻿@using Orchard.ContentManagement
+@using Orchard.Environment.Configuration
 @using Orchard.Environment.Descriptor.Models
 @using Orchard.Localization
-
+@using Orchard.Mvc.Extensions
 @{
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    if (!string.IsNullOrWhiteSpace(urlPrefix)) {
+        urlPrefix += "/";
+    }
 }
 
 <script type="text/javascript">
@@ -12,6 +17,7 @@
     var directionality = "@WorkContext.GetTextDirection((IContent)Model.ContentItem)";
     var language = "@Model.Language";
     var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId("Text") : null)";
+    var baseOrchardPath = "@Url.MakeAbsolute("/")@urlPrefix";
 </script>
 
 @{

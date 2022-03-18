@@ -55,7 +55,7 @@ namespace Orchard.Widgets.Layouts.Providers {
         }
 
         private void LayoutSaving(ElementSavingContext context) {
-            // I need to save the widget element container.
+            // First, widget element container has to be stored.
             var element = (Widget)context.Element;
             if (element == null) {
                 return;
@@ -187,9 +187,9 @@ namespace Orchard.Widgets.Layouts.Providers {
 
             var widget = context.Session.GetItemFromSession(widgetIdentity);
 
-            // I need to create a new widget and save the new one.
+            // A new widget needs to be created and saved.
             // This is to avoid the fact the very same element ending up in multiple layouts, causing issues when e.g. deleting a LayoutWidget of a cloned ContentItem (which would delete the elements of multiple layouts).
-            // I only do this when the container of the original element is different then the container of the cloned element, to ensure doing it when cloning elements and avoid doing the same when importing content.
+            // The new widget is needed only when the container of the original element is different from the container of the cloned element, to ensure doing it when cloning elements and avoid doing the same when importing content.
             var cp = widget.As<ICommonPart>();
             if (cp != null) {
                 var lp = cp.Container.As<LayoutPart>();
