@@ -39,7 +39,7 @@
 
                         var newContent = '';
                         for (var i = 0; i < selectedData.length; i++) {
-                            var renderMedia = location.href.substr(0, adminIndex) + "/Admin/Orchard.MediaLibrary/MediaItem/" + selectedData[i].id + "?displayType=Raw";
+                            var renderMedia = baseOrchardPath + "/Admin/Orchard.MediaLibrary/MediaItem/" + selectedData[i].id + "?displayType=Raw";
                             $.ajax({
                                 async: false,
                                 type: 'GET',
