@@ -231,6 +231,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
+            // check manage permission on any user
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
@@ -238,6 +239,11 @@ namespace Orchard.Users.Controllers {
 
             if (user == null)
                 return HttpNotFound();
+
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
 
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
@@ -256,6 +262,11 @@ namespace Orchard.Users.Controllers {
 
             if (user == null)
                 return HttpNotFound();
+
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
 
             string previousName = user.UserName;
 
@@ -306,6 +317,11 @@ namespace Orchard.Users.Controllers {
             if (user == null)
                 return HttpNotFound();
 
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
             if (string.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal)) {
                 Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account."));
             }
@@ -330,6 +346,11 @@ namespace Orchard.Users.Controllers {
             if (user == null)
                 return HttpNotFound();
 
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
             var siteUrl = Services.WorkContext.CurrentSite.BaseUrl;
 
             if (string.IsNullOrWhiteSpace(siteUrl)) {
@@ -352,6 +373,11 @@ namespace Orchard.Users.Controllers {
             if (user == null)
                 return HttpNotFound();
 
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
             user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
                 Services.Notifier.Success(T("User {0} approved", user.UserName));
             _userEventHandlers.Approved(user);
@@ -368,6 +394,11 @@ namespace Orchard.Users.Controllers {
 
             if (user == null)
                 return HttpNotFound();
+
+            // check manage permission on specific user
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers,
+                user, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
 
             if (string.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
                 Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
