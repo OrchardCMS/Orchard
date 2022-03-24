@@ -14,6 +14,8 @@ namespace Orchard.Roles.Security {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRoleService _roleService;
 
+        private Lazy<IAuthorizationService> _authorizationService;
+
         private string _superUserName;
         public ManageUserByRoleSecurityEventHandler(
             IWorkContextAccessor workContextAccessor,
@@ -23,6 +25,8 @@ namespace Orchard.Roles.Security {
             _roleService = roleService;
 
             _superUserName = _workContextAccessor.GetContext().CurrentSite.SuperUser;
+            _authorizationService = new Lazy<IAuthorizationService>(() =>
+                _workContextAccessor.GetContext().Resolve<IAuthorizationService>());
         }
         public void Adjust(CheckAccessContext context) {
             if (!context.Granted
@@ -43,23 +47,21 @@ namespace Orchard.Roles.Security {
                             context.Adjusted = true;
                         }
                     } else {
-                        // We allow the adjustments even if the user who's going to be managed is the
-                        // SuperUser because:
-                        // - retrocompatibility
-                        // - If we don't, we may end up in a situation where nobody is able to manage
-                        //   SuperUsers/SiteOwners
+                        // We prevent Manage permissions on specific roles to affect the SuperUser. Only users
+                        // that actually have the full ManageUsers permissions will be able to manage them.
+                        if(!IsSuperUser(managed)) {
+                            // Checking permission to manage a specific user
+                            // The user we are attempting to manage must belong to to a subset of
+                            // all those roles.
+                            var theirRoleNames = managed
+                                .GetRuntimeUserRoles()
+                                // Never have to manage explicitly Anonymous or Authenticated roles
+                                .Except(SystemRoles.GetSystemRoles());
 
-                        // Checking permission to manage a specific user
-                        // The user we are attempting to manage must belong to to a subset of
-                        // all those roles.
-                        var theirRoleNames = managed
-                            .GetRuntimeUserRoles()
-                            // Never have to manage explicitly Anonymous or Authenticated roles
-                            .Except(SystemRoles.GetSystemRoles());
-
-                        if (GrantPermission(theirRoleNames, manager, managed)) {
-                            context.Granted = true;
-                            context.Adjusted = true;
+                            if (GrantPermission(theirRoleNames, manager, managed)) {
+                                context.Granted = true;
+                                context.Adjusted = true;
+                            }
                         }
                     }
                 }
@@ -70,25 +72,34 @@ namespace Orchard.Roles.Security {
             IEnumerable<string> roleNamesToCheck,
             IUser manager, IUser managed) {
 
-            IAuthorizationService authService;
-            if (_workContextAccessor.GetContext().TryResolve<IAuthorizationService>(out authService)) {
+            if (_authorizationService.Value != null) {
                 if (managed == null) {
                     // not checking on a specific user, so permission on any role is fine
                     return roleNamesToCheck.Any(rn =>
-                        authService.TryCheckAccess(
+                        _authorizationService.Value.TryCheckAccess(
                             ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
                             manager, managed));
                 } else {
                     // checking permissions on a specific user, so we need to have permissions
                     // to manage all their roles
                     return roleNamesToCheck.All(rn =>
-                        authService.TryCheckAccess(
+                        _authorizationService.Value.TryCheckAccess(
                             ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
                             manager, managed));
                 }
             }
             // if we can't test, fail the test
             return false;
+        }
+
+        private bool IsSuperUser(IUser user) {
+
+            var isSuperUser = string.Equals(user.UserName, _superUserName);
+            // We could be testing the SiteOwner permission as well but:
+            // - user can only have that permission if they belong to a Role the Permission is assigned to.
+            // - if we can manage that role, then there's no reason why we should prevent it from being
+            //   managed here.
+            return isSuperUser;
         }
 
         public void Checking(CheckAccessContext context) { }
