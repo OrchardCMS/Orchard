@@ -27,7 +27,15 @@ namespace Orchard.Roles.Security {
             _superUserName = _workContextAccessor.GetContext().CurrentSite.SuperUser;
             _authorizationService = new Lazy<IAuthorizationService>(() =>
                 _workContextAccessor.GetContext().Resolve<IAuthorizationService>());
+            _allRoleNames = _roleService
+                .GetRoles()
+                .Select(r => r.Name)
+                .Except(SystemRoles.GetSystemRoles());
         }
+
+        // memorize this to avoid fetching this information potentially several times per request
+        private IEnumerable<string> _allRoleNames;
+
         public void Adjust(CheckAccessContext context) {
             if (!context.Granted
                 && context.Permission == UserPermissions.ManageUsers) {
@@ -40,8 +48,7 @@ namespace Orchard.Roles.Security {
                     if (managed == null) {
                         // Not checking permission to manage a specific user
                         // Any "manage" permission is probably fine?
-                        var rolesToCheck = _roleService.GetRoles()
-                            .Select(r => r.Name).Except(SystemRoles.GetSystemRoles());
+                        var rolesToCheck = _allRoleNames;
                         if (GrantPermission(rolesToCheck, manager, null)) {
                             context.Granted = true;
                             context.Adjusted = true;
@@ -82,10 +89,22 @@ namespace Orchard.Roles.Security {
                 } else {
                     // checking permissions on a specific user, so we need to have permissions
                     // to manage all their roles
-                    return roleNamesToCheck.All(rn =>
-                        _authorizationService.Value.TryCheckAccess(
-                            ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
-                            manager, managed));
+                    if (roleNamesToCheck.Any()) {
+                        return roleNamesToCheck.All(rn =>
+                            _authorizationService.Value.TryCheckAccess(
+                                ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
+                                manager, managed));
+                    } else {
+                        // if the specific user has no assigned role, they are just an "Authenticated" user.
+                        // Enumerable.All applied to that would return true, which may not be correct. We
+                        // only wish to return true if the user has any of the ManageUserByRole Permission.
+                        // To verify that, we test across all possible roles.
+                        return _allRoleNames
+                            .Any(rn =>
+                               _authorizationService.Value.TryCheckAccess(
+                                   ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
+                                   manager, managed));
+                    }
                 }
             }
             // if we can't test, fail the test
