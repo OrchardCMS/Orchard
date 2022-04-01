@@ -153,10 +153,13 @@
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Scripts\orchard-blogs-archives.js" />
+    <Content Include="Scripts\orchard-blogs-archives.min.js" />
     <Content Include="Styles\images\menu.blog.png" />
     <Content Include="Styles\menu.blog-admin.css" />
     <Content Include="Styles\orchard-blogs-admin.css" />
+    <Content Include="Styles\orchard-blogs-admin.min.css" />
     <Content Include="Styles\orchard-blogs-archives.css" />
+    <Content Include="Styles\orchard-blogs-archives.min.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
