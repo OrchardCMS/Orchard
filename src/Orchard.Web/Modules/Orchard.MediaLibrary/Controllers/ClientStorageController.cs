@@ -186,8 +186,7 @@ namespace Orchard.MediaLibrary.Controllers {
                                 progress = 1.0
                             });
                         }
-                    }
-                    else {
+                    } else {
                         // it changes the media file name
                         replaceMedia.FileName = filename;
                     }
