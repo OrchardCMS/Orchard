@@ -7,14 +7,22 @@ namespace Orchard.Security {
         private readonly string _passwordQuestion;
         private readonly string _passwordAnswer;
         private readonly bool _isApproved;
+        private readonly bool _forcePasswordChange;
+        
+        public CreateUserParams(string username, string password, string email)
+            : this(username, password, email, string.Empty, string.Empty, true, false) { }
 
-        public CreateUserParams(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved) {
+        public CreateUserParams(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved)
+            : this(username, password, email, passwordQuestion, passwordAnswer, isApproved, false) { }
+
+        public CreateUserParams(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, bool forcePasswordChange) {
             _username = username;
             _password = password;
             _email = email;
             _passwordQuestion = passwordQuestion;
             _passwordAnswer = passwordAnswer;
             _isApproved = isApproved;
+            _forcePasswordChange = forcePasswordChange;
         }
 
         public string Username {
@@ -39,6 +47,10 @@ namespace Orchard.Security {
 
         public bool IsApproved {
             get { return _isApproved; }
+        }
+
+        public bool ForcePasswordChange {
+            get { return _forcePasswordChange; }
         }
     }
 }

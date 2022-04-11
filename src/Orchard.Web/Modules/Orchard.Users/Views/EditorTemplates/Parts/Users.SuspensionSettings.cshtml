@@ -1,0 +1,33 @@
+﻿@using Orchard.Localization.Models;
+@using Orchard.Localization.Services;
+@model Orchard.Users.Models.UserSuspensionSettingsPart
+@{
+    var _dateLocalizationServices = WorkContext.Resolve<IDateLocalizationServices>();
+    var _dateTimeLocalization = WorkContext.Resolve<IDateTimeFormatProvider>();
+    var lastSweepDateString = _dateLocalizationServices
+        .ConvertToLocalizedString(
+            Model.LastSweepUtc,
+            _dateTimeLocalization.ShortDateTimeFormat,
+            new DateLocalizationOptions() { NullText = T("Never").Text });
+}
+<fieldset>
+    <legend>@T("Automated User Moderation")</legend>
+    <div>
+        @Html.EditorFor(m => m.SuspendInactiveUsers)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SuspendInactiveUsers)">
+            @T("Automatically suspend users after a period of inactivity.")
+        </label>
+        <div data-controllerid="@Html.FieldIdFor(m => m.SuspendInactiveUsers)" style="margin-left: 30px;">
+            <div>
+                <label for="@Html.FieldIdFor(m => m.AllowedInactivityDays)">@T("Allowed inactivity days. Users will be suspended only if this period is more than 0 days.")</label>
+                @Html.TextBoxFor(m => m.AllowedInactivityDays, new { @class = "text medium", @Value = Model.AllowedInactivityDays })
+                @Html.ValidationMessage("AllowedInactivityDays", "*")
+            </div>
+            <div>
+                <label for="@Html.FieldIdFor(m => m.MinimumSweepInterval)">@T("Minimum time in hours between runs checking for users to suspend. (Last time checked: {0})", lastSweepDateString)</label>
+                @Html.TextBoxFor(m => m.MinimumSweepInterval, new { @class = "text medium", @Value = Model.MinimumSweepInterval })
+                @Html.ValidationMessage("MinimumSweepInterval", "*")
+            </div>
+        </div>
+    </div>
+</fieldset>

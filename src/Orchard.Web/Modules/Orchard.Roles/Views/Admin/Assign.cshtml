@@ -1,0 +1,35 @@
+﻿@using Orchard.Utility.Extensions
+@{
+    Layout.Title = T("Assign Roles").ToString();
+
+    var userName = (string)Model.UserName ?? string.Empty;
+    var returnUrl = Request.QueryString["returnUrl"];
+}
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="edit-item">
+        <div class="edit-item-primary">
+            <div class="edit-item-content">
+                <fieldset>
+                    <legend>@T("Assign roles for user {0}", userName)</legend>
+        
+                    @* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
+                    @Display(Model)
+                </fieldset>
+            </div>
+        </div>
+        <div class="edit-item-secondary group">
+            <div class="edit-item-sidebar group">
+                <fieldset class="save-button">
+                    <button class="primaryAction" type="submit">@T("Save")</button>
+                </fieldset>
+                @if (!String.IsNullOrWhiteSpace(returnUrl) && Request.IsLocalUrl(returnUrl)) {
+                    <fieldset class="cancel-button">
+                        <a id="button-cancel" href="@returnUrl" class="button">@T("Cancel")</a>
+                    </fieldset>
+                }
+            </div>
+        </div>
+    </div>
+ } 

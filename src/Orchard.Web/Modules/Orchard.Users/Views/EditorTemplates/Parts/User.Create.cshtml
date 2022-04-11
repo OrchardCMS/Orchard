@@ -19,3 +19,7 @@
     @Html.PasswordFor(m=>m.ConfirmPassword, new { @class = "text medium" })
     @Html.ValidationMessageFor(m=>m.ConfirmPassword, "*")
 </fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.ForcePasswordChange)
+    @Html.LabelFor(m => m.ForcePasswordChange, T("User must change password at next logon").Text, new { @class = "forcheckbox" })
+</fieldset>

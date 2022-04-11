@@ -1,5 +1,6 @@
 @model Orchard.Users.ViewModels.UsersIndexViewModel
 @using Orchard.Core.Shapes;
+@using Orchard.Users;
 @using Orchard.Users.Models;
 @using Orchard.Users.ViewModels;
 
@@ -58,6 +59,7 @@
                 </tr>
             </thead>
             @foreach (var entry in Model.Users) { 
+                var canManageUser = Authorizer.Authorize(Permissions.ManageUsers, entry.UserPart);
             <tr>
                 <td>
                     <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
@@ -69,22 +71,46 @@
                     } else { 
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
                     } 
-                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
+                        @if (canManageUser) {
+                            @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
+                        } else {
+                            @entry.User.UserName
+                        }
                 </td>
                 <td>
                     @entry.User.Email 
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    }
-                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                    } 
+                        <ul class="action-links">
+                            @if (canManageUser) {
+                                @* TODO: what permission should we check for the "Edit" Action *@
+                                <li class="action-link">
+                                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id })
+                                </li>
+                                <li class="action-link">
+                                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                                </li>
+                                if (entry.User.RegistrationStatus == UserStatus.Pending) {
+                                    <li class="action-link">
+                                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                    </li>
+                                } else {
+                                    <li class="action-link">
+                                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                    </li>
+                                }
+                                if (entry.User.EmailStatus == UserStatus.Pending) {
+                                    <li class="action-link">
+                                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                                    </li>
+                                }
+                            }
+                            @foreach(var actionLink in entry.AdditionalActionLinks) {
+                                <li class="action-link">
+                                    @actionLink(Html)
+                                </li>
+                            }
+                        </ul>
                 </td>
                 <td>
                     @if (entry.User.CreatedUtc != null) {

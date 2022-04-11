@@ -76,7 +76,8 @@ namespace Orchard.Users.Activities {
                     email,
                     isApproved: approved,
                     passwordQuestion: null,
-                    passwordAnswer: null));
+                    passwordAnswer: null,
+                    forcePasswordChange: false));
 
             workflowContext.Content = user;
 
