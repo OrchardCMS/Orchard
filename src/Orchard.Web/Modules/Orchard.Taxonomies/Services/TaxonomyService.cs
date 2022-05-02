@@ -223,6 +223,10 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart GetTerm(int id) {
+            // If term id isn't valid, return null without executing the query.
+            if (id <= 0) {
+                return null;
+            }
             return GetTermsQuery()
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
