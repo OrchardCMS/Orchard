@@ -64,10 +64,6 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public virtual TaxonomyPart GetTaxonomy(int id) {
-            // If id isn't valid, return null without executing the query.
-            if (id <= 0) {
-                return null;
-            }
             return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
