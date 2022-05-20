@@ -17,17 +17,17 @@
     }
 
     // Code Mirror
-    Script.Include("CodeMirror/codemirror.js");
+    Script.Include("CodeMirror/codemirror.js").AtHead();
     Style.Include("CodeMirror/codemirror.css");
-    Script.Include("CodeMirror/razor.js");
+    Script.Include("CodeMirror/razor.js").AtHead();
     Style.Include("CodeMirror/razor.css");
-    Script.Include("CodeMirror/javascript.js");
-    Style.Include("CodeMirror/javascript.css");
-    Script.Include("CodeMirror/css.js");
+    Script.Include("CodeMirror/javascript.js").AtHead();
+    Style.Include("CodeMirror/javascript.css").AtHead();
+    Script.Include("CodeMirror/css.js").AtHead();
     Style.Include("CodeMirror/css.css");
-    Script.Include("CodeMirror/htmlmixed.js");
+    Script.Include("CodeMirror/htmlmixed.js").AtHead();
 
-    Script.Include("jquery.tmpl.min.js");
+    Script.Include("jquery.tmpl.min.js").AtHead();
 }
 
 <script class="shape-tracing-wrapper" shape-id="@Model.ShapeId" shape-type="@Model.Metadata.Type" shape-hint="@Model.Hint"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.ShapeId"></script>
