@@ -21,8 +21,17 @@ namespace Orchard.Core.Contents.Drivers {
         protected override DriverResult Editor(ContentPart part, dynamic shapeHelper) {
             var results = new List<DriverResult> { ContentShape("Content_SaveButton", saveButton => saveButton) };
 
-            if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+            if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
                 results.Add(ContentShape("Content_PublishButton", publishButton => publishButton));
+
+                if (part.ContentItem.IsPublished()) {
+                    results.Add(ContentShape("Content_UnpublishButton", unpublishButton => unpublishButton));
+                }
+            }              
+
+            if (!part.ContentItem.IsNew()) {
+                results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));
+            }
 
             return Combined(results.ToArray());
         }

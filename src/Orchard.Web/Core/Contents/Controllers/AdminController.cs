@@ -352,6 +352,49 @@ namespace Orchard.Core.Contents.Controllers {
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int id, string returnUrl) {
+            var content = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (content == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, content, T("Couldn't unpublish content")))
+                return new HttpUnauthorizedResult();
+
+            if (!content.IsPublished()) {
+                return new HttpUnauthorizedResult();
+            }
+
+            _contentManager.Unpublish(content);
+
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(content.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", content.TypeDefinition.DisplayName));
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id, string returnUrl) {
+            var content = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (content == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, content, T("You do not have permission to delete content.")))
+                return new HttpUnauthorizedResult();
+
+            if (content != null) {
+                _contentManager.Remove(content);
+                Services.Notifier.Information(string.IsNullOrWhiteSpace(content.TypeDefinition.DisplayName)
+                    ? T("That content has been removed.")
+                    : T("That {0} has been removed.", content.TypeDefinition.DisplayName));
+            }
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
+
         private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
