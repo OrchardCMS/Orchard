@@ -141,21 +141,7 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST (int blogId, int postId, string returnUrl) {
-            var blog = _blogService.Get(blogId, VersionOptions.Latest);
-            if (blog == null)
-                return HttpNotFound();
-
-            var post = _blogPostService.Get(postId, VersionOptions.Latest);
-            if (post == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, post, T("Couldn't delete blog post")))
-                return new HttpUnauthorizedResult();
-
-            _blogPostService.Delete(post);
-            Services.Notifier.Information(T("Blog post was successfully deleted"));
-
-            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
+            return Delete(blogId, postId);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -179,21 +165,7 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl) {
-            var blog = _blogService.Get(blogId, VersionOptions.Latest);
-            if (blog == null)
-                return HttpNotFound();
-
-            var post = _blogPostService.Get(postId, VersionOptions.Latest);
-            if (post == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, post, T("Couldn't unpublish blog post")))
-                return new HttpUnauthorizedResult();
-
-            _blogPostService.Unpublish(post);
-            Services.Notifier.Information(T("Blog post successfully unpublished."));
-
-            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
+            return Unpublish(blogId, postId);
         }
 
         public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
