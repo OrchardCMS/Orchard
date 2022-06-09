@@ -139,6 +139,26 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST (int blogId, int postId, string returnUrl) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+            if (blog == null)
+                return HttpNotFound();
+
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
+            if (post == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, post, T("Couldn't delete blog post")))
+                return new HttpUnauthorizedResult();
+
+            _blogPostService.Delete(post);
+            Services.Notifier.Information(T("Blog post was successfully deleted"));
+
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
+        }
+
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -154,6 +174,26 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+            if (blog == null)
+                return HttpNotFound();
+
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
+            if (post == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, post, T("Couldn't unpublish blog post")))
+                return new HttpUnauthorizedResult();
+
+            _blogPostService.Unpublish(post);
+            Services.Notifier.Information(T("Blog post successfully unpublished."));
+
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {

@@ -363,10 +363,6 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, content, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();
 
-            if (!content.IsPublished()) {
-                return new HttpUnauthorizedResult();
-            }
-
             _contentManager.Unpublish(content);
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(content.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", content.TypeDefinition.DisplayName));
