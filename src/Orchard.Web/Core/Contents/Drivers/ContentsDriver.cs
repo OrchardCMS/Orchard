@@ -29,7 +29,7 @@ namespace Orchard.Core.Contents.Drivers {
                 }
             }              
 
-            if (!part.ContentItem.IsNew()) {
+            if (part.ContentItem.Id > 0) {
                 results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));
             }
 

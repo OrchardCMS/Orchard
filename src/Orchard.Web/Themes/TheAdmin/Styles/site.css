@@ -1130,14 +1130,14 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     padding:0;
 }
 
-fieldset.publish-button, fieldset.delete-button, fieldset.save-button {
+fieldset.publish-button, fieldset.delete-button, fieldset.save-button, fieldset.unpublish-button {
     clear:none;
     float:left;
 }
 fieldset.save-button {
     clear:left;
 }
-fieldset.publish-button {
+fieldset.publish-button, fieldset.unpublish-button {
     margin: 0 12px 0 0;
     padding: 0 12px;
     border-right:1px solid #ccc;
@@ -1495,13 +1495,13 @@ html.dir-rtl {
     margin-left:inherit;
     margin-right:10px;
 }
-.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button {
+.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button, .dir-rtl fieldset.unpublish-button {
     float:right;
 }
 .dir-rtl fieldset.save-button {
     clear:right;
 }
-.dir-rtl fieldset.publish-button {
+.dir-rtl fieldset.publish-button, .dir-rtl fieldset.unpublish-button {
     margin: 0 0 0 12px ;
 }
 .dir-rtl fieldset.delete-button {

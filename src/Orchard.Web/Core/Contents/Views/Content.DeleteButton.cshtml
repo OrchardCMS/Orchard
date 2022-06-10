@@ -3,7 +3,7 @@
 @using Orchard.Utility.Extensions
 
 @if (Authorizer.Authorize(Permissions.DeleteContent, (IContent)Model.ContentItem)) {
-    <fieldset class="save-button">
+    <fieldset class="delete-button">
         <button type="submit" name="submit.Delete" value="submit.Delete">@T("Delete")</button>
     </fieldset>
 }

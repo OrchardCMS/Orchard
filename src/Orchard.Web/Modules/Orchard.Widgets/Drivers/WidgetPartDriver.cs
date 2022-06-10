@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -38,6 +39,10 @@ namespace Orchard.Widgets.Drivers {
             if (widgetPart.Id > 0)
                 results.Add(ContentShape("Widget_DeleteButton",
                     deleteButton => deleteButton));
+
+            if (widgetPart.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
+                results.Add(ContentShape("Widget_UnpublishButton", unpublishButton => unpublishButton));
+            }
 
             return Combined(results.ToArray());
         }
