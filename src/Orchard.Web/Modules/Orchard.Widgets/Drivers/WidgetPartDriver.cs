@@ -36,10 +36,6 @@ namespace Orchard.Widgets.Drivers {
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
             };
 
-            if (widgetPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
-
             return Combined(results.ToArray());
         }
 

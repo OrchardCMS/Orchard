@@ -4,6 +4,6 @@
 
 @if (Authorizer.Authorize(Permissions.DeleteContent, (IContent)Model.ContentItem)) {
     <fieldset class="delete-button">
-        <button type="submit" name="submit.Delete" value="submit.Delete">@T("Delete")</button>
+        <button type="submit" name="submit.Delete" value="submit.Delete" itemprop="RemoveUrl">@T("Delete")</button>
     </fieldset>
 }

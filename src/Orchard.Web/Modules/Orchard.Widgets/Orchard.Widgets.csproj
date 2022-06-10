@@ -211,9 +211,6 @@
     <Content Include="Views\EditorTemplates\Parts.Widgets.WidgetPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Widget.DeleteButton.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
