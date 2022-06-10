@@ -40,10 +40,6 @@ namespace Orchard.Widgets.Drivers {
                 results.Add(ContentShape("Widget_DeleteButton",
                     deleteButton => deleteButton));
 
-            if (widgetPart.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
-                results.Add(ContentShape("Widget_UnpublishButton", unpublishButton => unpublishButton));
-            }
-
             return Combined(results.ToArray());
         }
 
