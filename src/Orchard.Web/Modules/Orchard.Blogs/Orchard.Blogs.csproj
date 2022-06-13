@@ -157,6 +157,7 @@
     <Content Include="Styles\menu.blog-admin.css" />
     <Content Include="Styles\orchard-blogs-admin.css" />
     <Content Include="Styles\orchard-blogs-archives.css" />
+    <None Include="Views\BlobPosts_NavigationTabs.cshtml" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />

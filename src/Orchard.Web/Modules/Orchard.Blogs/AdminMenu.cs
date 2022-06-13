@@ -41,12 +41,44 @@ namespace Orchard.Blogs {
             if (singleBlog != null)
                 menu.Add(T("New Post"), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogId = singleBlog.Id}).Permission(Permissions.MetaListOwnBlogs));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.MetaListOwnBlogs));
 
             menu.Add(T("New Blog"), "1.2",
                      item =>
                      item.Action("Create", "BlogAdmin", new { area = "Orchard.Blogs" }).Permission(Permissions.ManageBlogs));
 
+        }
+    }
+    public class BlogPostsLocalNavigationProvider : INavigationProvider {
+        private readonly IBlogService _blogService;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public BlogPostsLocalNavigationProvider(
+            IBlogService blogService,
+            IAuthorizationService authorizationService,
+            IWorkContextAccessor workContextAccessor) {
+
+            T = NullLocalizer.Instance;
+            _blogService = blogService;
+            _authorizationService = authorizationService;
+            _workContextAccessor = workContextAccessor;
+        }
+
+        public Localizer T { get; set; }
+
+        public string MenuName {
+            get { return "blogposts-navigation"; }
+        }
+        public void GetNavigation(NavigationBuilder builder) {
+            var blogId = 0;
+            int.TryParse(_workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData.Values["blogId"]?.ToString(), out blogId);
+            if (blogId > 0) {
+                builder.Add(T("Blog posts"),
+                    item => item.Action("Item", "BlogAdmin", new { area = "Orchard.Blogs", blogId })
+                        .LocalNav()
+                        .Permission(Permissions.MetaListOwnBlogs));
+            }
         }
     }
 }
