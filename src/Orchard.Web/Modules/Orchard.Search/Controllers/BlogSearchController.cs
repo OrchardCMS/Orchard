@@ -66,7 +66,6 @@ namespace Orchard.Search.Controllers {
 
         public ActionResult Index(int blogId, PagerParameters pagerParameters, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var adminSearchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
@@ -90,6 +89,8 @@ namespace Orchard.Search.Controllers {
                     // filter by Blog
                     searchBuilder
                         .WithField("container-id", blogId)
+                        .Mandatory()
+                        .NotAnalyzed()
                         .AsFilter();
 
                     foreach (var searchableType in searchableTypes) {
