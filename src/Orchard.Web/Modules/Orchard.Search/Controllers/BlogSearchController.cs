@@ -145,10 +145,16 @@ namespace Orchard.Search.Controllers {
 
             // Adds LocalMenus; 
             var menuItems = _navigationManager.BuildMenu("blogposts-navigation");
+            var request = Services.WorkContext.HttpContext.Request;
+
+            // Set the currently selected path
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, request.RequestContext.RouteData);
+
             // Populate local nav
             dynamic localMenuShape = Shape.LocalMenu().MenuName("local-admin");
-            NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);
-            Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
+            //NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, selectedPath);
+            NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);            						Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
+
 
             return View(viewModel);
         }

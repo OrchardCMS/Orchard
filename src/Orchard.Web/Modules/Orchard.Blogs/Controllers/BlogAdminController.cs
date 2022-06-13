@@ -12,6 +12,7 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
+using System.Collections.Generic;
 
 namespace Orchard.Blogs.Controllers {
 
@@ -183,8 +184,14 @@ namespace Orchard.Blogs.Controllers {
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
             // Adds LocalMenus; 
             var menuItems = _navigationManager.BuildMenu("blogposts-navigation");
+            var request = Services.WorkContext.HttpContext.Request;
+
+            // Set the currently selected path
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, request.RequestContext.RouteData);
+
             // Populate local nav
             dynamic localMenuShape = Shape.LocalMenu().MenuName("local-admin");
+            // NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, selectedPath);
             NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);
             Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
 
