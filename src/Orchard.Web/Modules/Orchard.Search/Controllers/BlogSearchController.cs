@@ -152,9 +152,9 @@ namespace Orchard.Search.Controllers {
 
             // Populate local nav
             dynamic localMenuShape = Shape.LocalMenu().MenuName("local-admin");
-            //NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, selectedPath);
-            NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);            						Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
 
+            NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);
+            Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
 
             return View(viewModel);
         }
