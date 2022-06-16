@@ -98,6 +98,7 @@
     <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
     <Compile Include="Common\Extensions\CommonMetaDataExtensions.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorPermissions.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
     <Compile Include="Common\DateEditor\DateEditorDriver.cs" />

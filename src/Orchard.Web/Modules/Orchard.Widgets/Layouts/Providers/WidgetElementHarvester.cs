@@ -13,6 +13,7 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Models;
 using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Widgets.Layouts.Elements;
@@ -47,9 +48,28 @@ namespace Orchard.Widgets.Layouts.Providers {
                     Importing = ImportElement,
                     StateBag = new Dictionary<string, object> {
                         { "ContentTypeName", contentTypeDefinition.Name }
-                    }
+                    },
+                    LayoutSaving = LayoutSaving
                 };
             });
+        }
+
+        private void LayoutSaving(ElementSavingContext context) {
+            // First, widget element container has to be stored.
+            var element = (Widget)context.Element;
+            if (element == null) {
+                return;
+            }
+            var widgetId = element.WidgetId;
+            var widget = _contentManager.Value.Get(widgetId.Value, VersionOptions.Latest);
+            if (widget == null) {
+                return;
+            }
+
+            var commonPart = widget.As<ICommonPart>();
+            if (commonPart != null) {
+                commonPart.Container = context.Content;
+            }
         }
 
         private void Displaying(ElementDisplayingContext context) {
@@ -166,6 +186,18 @@ namespace Orchard.Widgets.Layouts.Providers {
                 return;
 
             var widget = context.Session.GetItemFromSession(widgetIdentity);
+
+            // A new widget needs to be created and saved.
+            // This is to avoid the fact the very same element ending up in multiple layouts, causing issues when e.g. deleting a LayoutWidget of a cloned ContentItem (which would delete the elements of multiple layouts).
+            // The new widget is needed only when the container of the original element is different from the container of the cloned element, to ensure doing it when cloning elements and avoid doing the same when importing content.
+            var cp = widget.As<ICommonPart>();
+            if (cp != null) {
+                var lp = cp.Container.As<LayoutPart>();
+                if (lp != null && lp.Id != context.Layout.Id) {
+                    widget = _contentManager.Value.Clone(widget);
+                }
+            }
+
             var element = (Widget)context.Element;
 
             element.WidgetId = widget != null ? widget.Id : default(int?);
