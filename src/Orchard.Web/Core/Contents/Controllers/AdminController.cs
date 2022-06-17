@@ -352,12 +352,26 @@ namespace Orchard.Core.Contents.Controllers {
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
+        /// <summary>
+        /// This action is specific to the submit button of the edit form.
+        /// Unpublish logic is the same of the Unpublish action, which is called by the content list.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int id, string returnUrl) {
             return Unpublish(id, returnUrl);
         }
 
+        /// <summary>
+        /// This action is specific to the submit button of the edit form.
+        /// Delete logic is the same of the Remove action, which is called by the content list.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST(int id, string returnUrl) {
