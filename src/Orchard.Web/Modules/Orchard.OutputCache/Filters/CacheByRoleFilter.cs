@@ -52,10 +52,10 @@ namespace Orchard.OutputCache.Filters {
                           _roleRepo.Table,
                           ur => ur.Role.Id,
                           r => r.Id,
-                          (ur, r) => r
-                      )
-                      .Select(urp=>new UserPermission { RoleName = urp.Name });
-                } else {
+                          (ur, r) => new UserPermission { RoleName = r.Name }
+                      );
+                }
+                else {
                     userRolesPermissionsQuery = _userRolesRepo
                         // get user roles and permissions
                         .Table.Where(usr => usr.UserId == currentUser.Id)
@@ -85,26 +85,23 @@ namespace Orchard.OutputCache.Filters {
                             (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.FeatureName + "." + p.Name }
                         );
                 }
-            } else {
+            }
+            else {
                 // the anonymous user has no roles, get its permissions
                 permissionsQuery = GetPermissioFromRole("Anonymous");
             }
 
             if (userRolesPermissionsQuery.Any()) {
                 userRolesPermissions.AddRange(userRolesPermissionsQuery
-                    .OrderBy(urp => urp.RoleName)
-                    .ThenBy(urp => urp.PermissionName)
                     .ToList());
             }
             if (permissionsQuery.Any()) {
                 userRolesPermissions.AddRange(permissionsQuery
-                    .OrderBy(urp => urp.RoleName)
-                    .ThenBy(urp => urp.PermissionName)
                     .ToList());
             }
 
             if (userRolesPermissions.Any()) {
-                
+
                 var userRoles = String.Join(";", userRolesPermissions
                     .Select(r => r.RoleName)
                     .Distinct()
@@ -119,7 +116,8 @@ namespace Orchard.OutputCache.Filters {
                 key.Append(string.Format("UserRoles={0};UserPermissions={1};",
                     userRoles.GetHashCode(),
                     userPermissions.GetHashCode()));
-            } else {
+            }
+            else {
                 key.Append("UserRoles=;UserPermissions=;");
             }
         }
