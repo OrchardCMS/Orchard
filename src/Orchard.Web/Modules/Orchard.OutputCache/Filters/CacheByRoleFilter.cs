@@ -24,6 +24,7 @@ namespace Orchard.OutputCache.Filters {
             IRepository<RoleRecord> roleRepo,
             IRepository<RolesPermissionsRecord> rolesPermissionsRepo,
             IRepository<PermissionRecord> permissionRepo) {
+
             _authenticationService = authenticationService;
             _authorizer = authorizer;
             _userRolesRepo = userRolesRepo;
@@ -33,6 +34,8 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void KeyGenerated(StringBuilder key) {
+            // Can the queries in this method be optimized away so that their results can be memorized
+            // at least within the scope of a request?
             List<UserPermission> userRolesPermissions = new List<UserPermission>();
             IQueryable<UserPermission> userRolesPermissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
             IQueryable<UserPermission> permissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
@@ -44,12 +47,14 @@ namespace Orchard.OutputCache.Filters {
                 permissionsQuery = GetPermissionsFromRole("Authenticated");
 
                 if (_authorizer.Authorize(StandardPermissions.SiteOwner)) {
-                    // the site owner has no permissions store into the database
-                    // but has all permissions de facto
+                    // The SuperUser is a SiteOwner that has no assigned role. To properly manage
+                    // that case we make up a "fake" UserPermission here to add to SiteOwners. We
+                    // just need to make sure that the role we use there doesn't actually exist.
                     userRolesPermissions.Add(new UserPermission {
-                        RoleName = "SiteOwner",
-                        PermissionName = "AllPermissions"
+                        RoleName = SiteOwnerRoleName(),
+                        PermissionName = "AllPermissions" // A SiteOWner has all Permissions
                     });
+                    // A user with the SiteOwner permission may also have other roles
                     userRolesPermissionsQuery = _userRolesRepo
                       .Table.Where(usr => usr.UserId == currentUser.Id)
                       .Join(
@@ -58,6 +63,9 @@ namespace Orchard.OutputCache.Filters {
                           r => r.Id,
                           (ur, r) => new UserPermission { RoleName = r.Name }
                       );
+                    // Since SiteOwners have all permissions, we don't need to query for them here.
+                    // We still query for their roles, because we may be displaying different stuff
+                    // to users with different roles, even when they happen to have all permissions.
                 }
                 else {
                     userRolesPermissionsQuery = _userRolesRepo
@@ -124,6 +132,30 @@ namespace Orchard.OutputCache.Filters {
             else {
                 key.Append("UserRoles=;UserPermissions=;");
             }
+        }
+
+        private const string _siteOwnerRoleName = "SiteOwnerRole";
+        private IEnumerable<string> _siteOwnerRoleNames;
+        private string SiteOwnerRoleName() {
+            if (_siteOwnerRoleNames == null) {
+                // memorize this so it's only executed once per request
+                _siteOwnerRoleNames = _roleRepo.Table
+                    .Where(rr => rr.Name.StartsWith(_siteOwnerRoleName))
+                    .Select(rr => rr.Name)
+                    .ToList()
+                    .Distinct() // sanity check
+                    ;
+            }
+
+            var roleName = _siteOwnerRoleName;
+            if (_siteOwnerRoleNames.Any() && _siteOwnerRoleNames.Contains(roleName)) {
+                // compute unique and repeatable roleName
+                var i = 0;
+                do {
+                    roleName = $"{_siteOwnerRoleName}-{i}";
+                } while (_siteOwnerRoleNames.Contains(roleName));
+            }
+            return roleName;
         }
 
         private IQueryable<UserPermission> GetPermissionsFromRole(string role) {
