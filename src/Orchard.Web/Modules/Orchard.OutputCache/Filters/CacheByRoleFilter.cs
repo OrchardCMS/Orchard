@@ -41,11 +41,15 @@ namespace Orchard.OutputCache.Filters {
             if (currentUser != null) {
                 // add the Authenticated role and its permissions
                 // the Authenticated role is not assigned to the current user
-                permissionsQuery = GetPermissioFromRole("Authenticated");
+                permissionsQuery = GetPermissionsFromRole("Authenticated");
 
                 if (_authorizer.Authorize(StandardPermissions.SiteOwner)) {
-                    // the site owner has no permissions
-                    // get the roles of the site owner
+                    // the site owner has no permissions store into the database
+                    // but has all permissions de facto
+                    userRolesPermissions.Add(new UserPermission {
+                        RoleName = "SiteOwner",
+                        PermissionName = "AllPermissions"
+                    });
                     userRolesPermissionsQuery = _userRolesRepo
                       .Table.Where(usr => usr.UserId == currentUser.Id)
                       .Join(
@@ -88,7 +92,7 @@ namespace Orchard.OutputCache.Filters {
             }
             else {
                 // the anonymous user has no roles, get its permissions
-                permissionsQuery = GetPermissioFromRole("Anonymous");
+                permissionsQuery = GetPermissionsFromRole("Anonymous");
             }
 
             if (userRolesPermissionsQuery.Any()) {
@@ -122,7 +126,7 @@ namespace Orchard.OutputCache.Filters {
             }
         }
 
-        private IQueryable<UserPermission> GetPermissioFromRole(string role) {
+        private IQueryable<UserPermission> GetPermissionsFromRole(string role) {
             return _roleRepo
                 .Table.Where(r => r.Name == role)
                 .Join(
