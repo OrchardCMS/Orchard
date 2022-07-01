@@ -153,6 +153,7 @@ namespace Orchard.OutputCache.Filters {
                 var i = 0;
                 do {
                     roleName = $"{_siteOwnerRoleName}-{i}";
+                    i++;
                 } while (_siteOwnerRoleNames.Contains(roleName));
             }
             return roleName;
