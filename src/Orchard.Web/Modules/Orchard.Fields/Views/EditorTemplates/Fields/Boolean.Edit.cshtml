@@ -13,17 +13,17 @@
         case SelectionMode.Radiobutton:
             if (settings.Optional) {
                 <div>
-                    <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-unknown" value="" @if(!Model.Value.HasValue) { <text>checked="checked"</text> } />
-                    <label for="radio-unknown" class="forcheckbox">@T.Encode(settings.NotSetLabel)</label>
+                    <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="@Html.FieldIdFor(m => m.Value)-radio-unknown" value="" @if(!Model.Value.HasValue) { <text>checked="checked"</text> } />
+                    <label for="@Html.FieldIdFor(m => m.Value)-radio-unknown" class="forcheckbox">@T.Encode(settings.NotSetLabel)</label>
                 </div>
             }
             <div>
-                <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-true" value="true" @if (Model.Value.HasValue && Model.Value.Value) { <text>checked="checked"</text> } />
-                <label for="radio-true" class="forcheckbox">@T.Encode(settings.OnLabel)</label>
+                <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="@Html.FieldIdFor(m => m.Value)-radio-true" value="true" @if (Model.Value.HasValue && Model.Value.Value) { <text>checked="checked"</text> } />
+                <label for="@Html.FieldIdFor(m => m.Value)-radio-true" class="forcheckbox">@T.Encode(settings.OnLabel)</label>
             </div>
             <div>
-                <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="radio-false" value="false" @if (Model.Value.HasValue && !Model.Value.Value) { <text>checked="checked"</text> } />
-                <label for="radio-false" class="forcheckbox">@T.Encode(settings.OffLabel)</label>
+                <input type="radio" name="@Html.FieldNameFor(m => m.Value)" id="@Html.FieldIdFor(m => m.Value)-radio-false" value="false" @if (Model.Value.HasValue && !Model.Value.Value) { <text>checked="checked"</text> } />
+                <label for="@Html.FieldIdFor(m => m.Value)-radio-false" class="forcheckbox">@T.Encode(settings.OffLabel)</label>
             </div>
         break;
         case SelectionMode.Dropdown:   
