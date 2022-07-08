@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="BlogPostLocalNavigationProvider.cs" />
     <Compile Include="Commands\BlogWidgetCommands.cs" />
     <Compile Include="Controllers\RemoteBlogPublishingController.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
