@@ -42,7 +42,7 @@ namespace Orchard.Blogs {
             if (singleBlog != null)
                 menu.Add(T("New Post"), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogId = singleBlog.Id}).Permission(Permissions.MetaListOwnBlogs));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.MetaListOwnBlogs));
 
             menu.Add(T("New Blog"), "1.2",
                      item =>

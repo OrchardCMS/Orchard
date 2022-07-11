@@ -97,6 +97,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="BlogsLocalizationExtensions\Handlers\BlogPostPartHandler.cs" />
     <Compile Include="BlogsLocalizationExtensions\Migrations\Migrations.cs" />
+    <Compile Include="BlogPostLocalNavigationProvider.cs" />
     <Compile Include="Commands\BlogWidgetCommands.cs" />
     <Compile Include="Controllers\RemoteBlogPublishingController.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
