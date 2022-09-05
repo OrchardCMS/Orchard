@@ -171,6 +171,8 @@ namespace Orchard.MediaProcessing.Services {
                                             }
                                         }
                                     }
+                                    // the storage provider may have altered the filepath
+                                    filterContext.FilePath = newFile.GetPath();
                                 }
                             }
                             catch(Exception e) {
