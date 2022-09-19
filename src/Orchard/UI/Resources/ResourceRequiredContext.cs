@@ -6,7 +6,7 @@ namespace Orchard.UI.Resources {
         public ResourceDefinition Resource { get; set; }
         public RequireSettings Settings { get; set; }
 
-        public string GetResourceUrl(RequireSettings baseSettings, string appPath, bool ssl, IResourceFileHashProvider resourceFileHashProvider) {
+        public string GetResourceUrl(RequireSettings baseSettings, string appPath, IResourceFileHashProvider resourceFileHashProvider) {
             return Resource.ResolveUrl(baseSettings == null ? Settings : baseSettings.Combine(Settings), appPath, resourceFileHashProvider);
         }
 
