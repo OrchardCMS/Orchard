@@ -105,11 +105,15 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         private string GetResourceUrl(string shapeUrl, string fileVirtualPath) {
             if (string.IsNullOrEmpty(shapeUrl)) return fileVirtualPath;
 
-            return GetPathFromRelativeUrl(shapeUrl) == GetPathFromRelativeUrl(fileVirtualPath) ? shapeUrl : fileVirtualPath;
+            return GetPathFromRelativeUrl(shapeUrl).Equals(GetPathFromRelativeUrl(fileVirtualPath), StringComparison.InvariantCultureIgnoreCase) ?
+                shapeUrl : fileVirtualPath;
         }
 
         private string GetPathFromRelativeUrl(string url) {
-            var path = url.TrimStart('~');
+            // normalize urls that could be like ~/ or /OrchardLocal/ or /OrchardLocal/tenant-prefix
+            // driving them to a ~/ format
+            var appRelativeUrl = System.Web.VirtualPathUtility.ToAppRelative(url);
+            var path = appRelativeUrl.TrimStart('~');
             var indexOfQueryString = path.IndexOf('?');
 
             return indexOfQueryString >= 0 ? path.Substring(0, indexOfQueryString) : path;
