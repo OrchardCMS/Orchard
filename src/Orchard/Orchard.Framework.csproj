@@ -118,6 +118,7 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.Transactions" />
@@ -458,7 +459,9 @@
     <Compile Include="UI\Navigation\NavigationHelper.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
+    <Compile Include="UI\Resources\IResourceFileHashProvider.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
+    <Compile Include="UI\Resources\ResourceFileHashProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />

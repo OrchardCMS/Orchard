@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using System.Linq;
 
 namespace Orchard.UI.Resources {
     public class RequireSettings {
@@ -13,6 +12,7 @@ namespace Orchard.UI.Resources {
         public string Culture { get; set; }
         public bool DebugMode { get; set; }
         public bool CdnMode { get; set; }
+        public bool FileHashMode { get; set; }
         public ResourceLocation Location { get; set; }
         public string Condition { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
@@ -69,8 +69,17 @@ namespace Orchard.UI.Resources {
             return UseCdn(true);
         }
 
-        public RequireSettings UseCdn(bool cdn) {
-            CdnMode |= cdn;
+        public RequireSettings UseCdn(bool cdnMode) {
+            CdnMode |= cdnMode;
+            return this;
+        }
+
+        public RequireSettings UseFileHash() {
+            return UseFileHash(true);
+        }
+
+        public RequireSettings UseFileHash(bool fileHashMode) {
+            FileHashMode |= fileHashMode;
             return this;
         }
 
@@ -132,6 +141,7 @@ namespace Orchard.UI.Resources {
                 .WithBasePath(BasePath).WithBasePath(other.BasePath)
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)
+                .UseFileHash(FileHashMode).UseFileHash(other.FileHashMode)
                 .UseCulture(Culture).UseCulture(other.Culture)
                 .UseCondition(Condition).UseCondition(other.Condition)
                 .Define(InlineDefinition).Define(other.InlineDefinition);

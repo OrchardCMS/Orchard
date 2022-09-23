@@ -8,7 +8,7 @@ namespace Orchard.Core.Settings.ViewModels {
     public class SiteSettingsPartViewModel  {
         public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
-		public IEnumerable<string> SiteCalendars { get; set; }
+        public IEnumerable<string> SiteCalendars { get; set; }
         public IEnumerable<TimeZoneInfo> TimeZones { get; set; }
 
         [HiddenInput(DisplayValue = false)]
@@ -49,6 +49,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public bool UseCdn {
             get { return Site.UseCdn; }
             set { Site.UseCdn = value; }
+        }
+
+        public bool UseFileHash {
+            get { return Site.UseFileHash; }
+            set { Site.UseFileHash = value; }
         }
 
         public int PageSize {

@@ -15,6 +15,7 @@ namespace Orchard.Core.Settings.Handlers {
             siteSettingsPart.SiteName = "My Orchard Project Application";
             siteSettingsPart.PageTitleSeparator = " - ";
             siteSettingsPart.SiteTimeZone = TimeZoneInfo.Local.Id;
+            siteSettingsPart.UseFileHash = true;
         }
     }
 }
