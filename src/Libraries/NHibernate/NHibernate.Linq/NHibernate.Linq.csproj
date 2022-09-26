@@ -1,0 +1,142 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NHibernate.Linq</RootNamespace>
+    <AssemblyName>NHibernate.Linq</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\NH.Linq.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;USING_NET_35_SP1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate, Version=5.3.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NHibernate.5.3.10\lib\net461\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq.EagerFetching, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Remotion.Linq.EagerFetching.2.2.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Expressions\CollectionAccessExpression.cs" />
+    <Compile Include="Expressions\NHibernateExpression.cs" />
+    <Compile Include="Expressions\QuerySourceExpression.cs" />
+    <Compile Include="INHibernateQueryable.cs" />
+    <Compile Include="QueryOptions.cs" />
+    <Compile Include="Transform\TypeSafeConstructorMemberInitResultTransformer.cs" />
+    <Compile Include="Util\SessionFactoryUtil.cs" />
+    <Compile Include="Visitors\BinaryBooleanReducer.cs" />
+    <Compile Include="Visitors\BinaryCriterionType.cs" />
+    <Compile Include="Visitors\BinaryCriterionVisitor.cs" />
+    <Compile Include="Visitors\BinaryCriterionDelegates.cs" />
+    <Compile Include="Visitors\AssociationVisitor.cs" />
+    <Compile Include="CriteriaResultReader.cs" />
+    <Compile Include="Visitors\BinaryExpressionOrderer.cs" />
+    <Compile Include="Visitors\CollectionAliasVisitor.cs" />
+    <Compile Include="Visitors\RootVisitor.cs" />
+    <Compile Include="Visitors\EntityExpressionVisitor.cs" />
+    <Compile Include="Visitors\Evaluator.cs" />
+    <Compile Include="Expressions\EntityExpression.cs" />
+    <Compile Include="Expressions\NHibernateExpressionType.cs" />
+    <Compile Include="Expressions\PropertyAccessExpression.cs" />
+    <Compile Include="Visitors\InheritanceVisitor.cs" />
+    <Compile Include="Visitors\MemberNameVisitor.cs" />
+    <Compile Include="Visitors\ImmediateResultsVisitor.cs" />
+    <Compile Include="Visitors\NHibernateExpressionVisitor.cs" />
+    <Compile Include="NHibernateQueryProvider.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="QueryProvider.cs" />
+    <Compile Include="Visitors\PropertyToMethodVisitor.cs" />
+    <Compile Include="Visitors\SelectManyVisitor.cs" />
+    <Compile Include="Transform\LinqJoinResultsTransformer.cs" />
+    <Compile Include="Util\DetachedCriteriaAdapter.cs" />
+    <Compile Include="Util\CriteriaUtil.cs" />
+    <Compile Include="Expressions\SqlFunctionAttribute.cs" />
+    <Compile Include="Expressions\SqlFunctionExpression.cs" />
+    <Compile Include="Expressions\SqlAggregateFunctionProjection.cs" />
+    <Compile Include="Visitors\GroupingArgumentsVisitor.cs" />
+    <Compile Include="Transform\LinqGroupingResultTransformer.cs" />
+    <Compile Include="NHibernateExtensions.cs" />
+    <Compile Include="IDbMethods.cs" />
+    <Compile Include="Visitors\ExpressionVisitor.cs" />
+    <Compile Include="Util\LinqUtil.cs" />
+    <Compile Include="NHibernateContext.cs" />
+    <Compile Include="Visitors\NHibernateQueryTranslator.cs" />
+    <Compile Include="Util\QueryUtil.cs" />
+    <Compile Include="Visitors\SelectArgumentsVisitor.cs" />
+    <Compile Include="SqlClient\SqlClientExtensions.cs" />
+    <Compile Include="Util\TypeSystem.cs" />
+    <Compile Include="Visitors\WhereArgumentsVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\NH.Linq.snk">
+      <Link>NH.Linq.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

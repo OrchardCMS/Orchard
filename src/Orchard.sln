@@ -263,6 +263,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF3909B0-1DDD-4D8A-9919-56FC438E25E2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		..\DeploymentUtility.psm1 = ..\DeploymentUtility.psm1
 		NuGet.config = NuGet.config
 		Rebracer.xml = Rebracer.xml
 		WebEssentials-Settings.json = WebEssentials-Settings.json
@@ -277,6 +278,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Conditions", "Orchard.Web\Modules\Orchard.Conditions\Orchard.Conditions.csproj", "{98251EAE-A41B-47B2-AA91-E28B8482DA70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Resources", "Orchard.Web\Modules\Orchard.Resources\Orchard.Resources.csproj", "{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{53A0F089-D9BD-46D7-92E0-5F57D0F9AC3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NHibernate", "NHibernate", "{1342D7F1-1A77-4AF2-9CE4-EAFC60428040}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Linq", "Libraries\NHibernate\NHibernate.Linq\NHibernate.Linq.csproj", "{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1104,6 +1111,16 @@ Global
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1191,9 +1208,11 @@ Global
 		{90EBEE36-B5CD-42A8-A21B-76270E2C5D24} = {DF3909B0-1DDD-4D8A-9919-56FC438E25E2}
 		{98251EAE-A41B-47B2-AA91-E28B8482DA70} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{1342D7F1-1A77-4AF2-9CE4-EAFC60428040} = {53A0F089-D9BD-46D7-92E0-5F57D0F9AC3E}
+		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD} = {1342D7F1-1A77-4AF2-9CE4-EAFC60428040}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3585D970-275B-4363-9F61-CD37CFC9DCD3}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		SolutionGuid = {3585D970-275B-4363-9F61-CD37CFC9DCD3}
 	EndGlobalSection
 EndGlobal

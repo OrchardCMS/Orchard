@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NHibernate.Criterion;
 using NHibernate.SqlCommand;
 using NHibernate.Transform;
@@ -151,7 +153,8 @@ namespace NHibernate.Linq.Util
 			throw new NotSupportedException();
 		}
 
-		public ICriteria SetFetchMode(string associationPath, FetchMode mode)
+        [Obsolete("Use Fetch instead")]
+        public ICriteria SetFetchMode(string associationPath, FetchMode mode)
 		{
 			return detachedCriteria.SetFetchMode(associationPath, mode).Adapt(session);
 		}
@@ -240,11 +243,34 @@ namespace NHibernate.Linq.Util
 			throw new NotSupportedException();
 		}
 
-		#endregion
+        public Task<IList> ListAsync(CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotSupportedException();
+        }
 
-		#region ICloneable Members
+        public Task<object> UniqueResultAsync(CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotSupportedException();
+        }
 
-		public object Clone()
+        public Task ListAsync(IList results, CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotSupportedException();
+        }
+
+        public Task<IList<T>> ListAsync<T>(CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotSupportedException();
+        }
+
+        public Task<T> UniqueResultAsync<T>(CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotSupportedException();
+        }
+
+        IFutureEnumerable<T> ICriteria.Future<T>() {
+            throw new NotSupportedException();
+        }
+        #endregion
+
+        #region ICloneable Members
+
+        public object Clone()
 		{
 			throw new NotSupportedException();
 		}
@@ -277,5 +303,6 @@ namespace NHibernate.Linq.Util
             _readOnlyInitialized = true;
             return this;
         }
+
     }
 }

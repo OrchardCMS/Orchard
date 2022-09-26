@@ -186,8 +186,8 @@ namespace Orchard.ContentManagement {
             
             criteria.ApplyVersionOptionsRestrictions(_versionOptions);
 
-            criteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
-            criteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
+            criteria.Fetch(SelectMode.Fetch, "ContentItemRecord");
+            criteria.Fetch(SelectMode.Fetch, "ContentItemRecord.ContentType");
 
             // TODO: put 'removed false' filter in place
             if (skip != 0) {
@@ -234,13 +234,13 @@ namespace Orchard.ContentManagement {
 
             // locate hints that match properties in the ContentItemVersionRecord
             foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                contentItemVersionCriteria.Fetch(SelectMode.Fetch, hit.Hint);
                 hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
             }
 
             // locate hints that match properties in the ContentItemRecord
             foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                contentItemVersionCriteria.Fetch(SelectMode.Fetch, "ContentItemRecord." + hit.Hint);
                 hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
             }
 
