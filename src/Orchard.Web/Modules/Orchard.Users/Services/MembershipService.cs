@@ -171,13 +171,14 @@ namespace Orchard.Users.Services {
             // Null check on LastPasswordChangeUtc.
             // If this is null, use CreatedUtc as if it's the last password change date.
             // If both are null, consider the password to be expired.
-            var date = user.As<UserPart>().LastPasswordChangeUtc.Value;
-            if (date == null) {
-                date = user.As<UserPart>().CreatedUtc.Value;
-            }
             var passwordIsExpired = true;
+            DateTime? date = null;
+            date = user.As<UserPart>().LastPasswordChangeUtc;                       
+            if (date == null) {
+                date = user.As<UserPart>().CreatedUtc;
+            }
             if (date != null) {
-                passwordIsExpired = date.AddDays(days) < _clock.UtcNow;
+                passwordIsExpired = date.Value.AddDays(days) < _clock.UtcNow;
             }
             var securityPart = user.As<UserSecurityConfigurationPart>();
             var preventExpiration = securityPart != null && securityPart.PreventPasswordExpiration;
