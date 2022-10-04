@@ -342,7 +342,7 @@ namespace Orchard.Users.Controllers {
             var passwordIsActuallyExpired = membershipSettings.EnableCustomPasswordPolicy
                 && membershipSettings.EnablePasswordExpiration
                 && _membershipService.PasswordIsExpired(userPart, membershipSettings.PasswordExpirationTimeInDays);
-            if (!passwordIsActuallyExpired) {
+            if (!passwordIsActuallyExpired && !userPart.ForcePasswordChange) {
                 return RedirectToAction("LogOn");
             }
 
