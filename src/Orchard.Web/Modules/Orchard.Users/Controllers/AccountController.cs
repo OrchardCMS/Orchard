@@ -332,7 +332,11 @@ namespace Orchard.Users.Controllers {
             var membershipSettings = _membershipService.GetSettings();
             var userPart = _membershipService.GetUser(username).As<UserPart>();
             var lastPasswordChangeUtc = userPart.LastPasswordChangeUtc;
-            if (lastPasswordChangeUtc.Value.AddDays(membershipSettings.PasswordExpirationTimeInDays) > _clock.UtcNow &&
+            // If there is no last password change date, use user creation date.
+            if (lastPasswordChangeUtc == null) {
+                lastPasswordChangeUtc = userPart.CreatedUtc;
+            }
+            if (lastPasswordChangeUtc != null && lastPasswordChangeUtc.Value.AddDays(membershipSettings.PasswordExpirationTimeInDays) > _clock.UtcNow &&
                     !userPart.ForcePasswordChange) {
                 return RedirectToAction("LogOn");
             }
