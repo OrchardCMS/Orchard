@@ -34,6 +34,7 @@ namespace Orchard.Taxonomies.Controllers {
             _localizationService = localizationService;
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
