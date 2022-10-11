@@ -108,9 +108,7 @@ namespace Orchard.ContentPicker.Drivers {
                     .Select(context.GetItemFromSession)
                     .Select(contentItem => contentItem.Id).ToArray();
             }
-            else {
-                field.Ids = new int[0];
-            }
+            // If nothing about the field is inside the context, field is not modified.
         }
 
         protected override void Exporting(ContentPart part, Fields.ContentPickerField field, ExportContentContext context) {
