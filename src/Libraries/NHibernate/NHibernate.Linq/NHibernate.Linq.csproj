@@ -120,6 +120,7 @@
     <Compile Include="Visitors\SelectArgumentsVisitor.cs" />
     <Compile Include="SqlClient\SqlClientExtensions.cs" />
     <Compile Include="Util\TypeSystem.cs" />
+    <Compile Include="Visitors\UtcDateTimeExpressionVisitor.cs" />
     <Compile Include="Visitors\WhereArgumentsVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
