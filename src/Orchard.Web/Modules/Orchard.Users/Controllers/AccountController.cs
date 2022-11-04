@@ -329,15 +329,20 @@ namespace Orchard.Users.Controllers {
 
         [AlwaysAccessible]
         public ActionResult ChangeExpiredPassword(string username) {
-            var membershipSettings = _membershipService.GetSettings();
-            var userPart = _membershipService.GetUser(username).As<UserPart>();
-            var lastPasswordChangeUtc = userPart.LastPasswordChangeUtc;
-            // If there is no last password change date, use user creation date.
-            if (lastPasswordChangeUtc == null) {
-                lastPasswordChangeUtc = userPart.CreatedUtc;
+            if (string.IsNullOrWhiteSpace(username)) {
+                return RedirectToAction("LogOn");
             }
-            if (lastPasswordChangeUtc != null && lastPasswordChangeUtc.Value.AddDays(membershipSettings.PasswordExpirationTimeInDays) > _clock.UtcNow &&
-                    !userPart.ForcePasswordChange) {
+            var userPart = _membershipService.GetUser(username)?.As<UserPart>();
+            if (userPart == null) {
+                // user not valid / doesn't exist
+                return RedirectToAction("LogOn");
+            }
+            var membershipSettings = _membershipService.GetSettings();
+            // if the password hasn't actually expired for the user, redirect to logon
+            var passwordIsActuallyExpired = membershipSettings.EnableCustomPasswordPolicy
+                && membershipSettings.EnablePasswordExpiration
+                && _membershipService.PasswordIsExpired(userPart, membershipSettings.PasswordExpirationTimeInDays);
+            if (!passwordIsActuallyExpired && !userPart.ForcePasswordChange) {
                 return RedirectToAction("LogOn");
             }
 
