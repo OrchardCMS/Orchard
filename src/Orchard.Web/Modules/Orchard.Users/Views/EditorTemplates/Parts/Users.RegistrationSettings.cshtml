@@ -13,6 +13,37 @@
         @Html.EditorFor(m => m.UsersCanRegister)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
+
+    <div>
+        @Html.EditorFor(m => m.EnableCustomUsernamePolicy)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomUsernamePolicy)">@T("Username must meet custom requirements")</label>
+        <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomUsernamePolicy)" style="margin-left: 30px;">
+            <div>
+                <label for="@Html.FieldIdFor(m => m.MinimumUsernameLength)">@T("Minimum Username length")</label>
+                @Html.TextBoxFor(m => m.MinimumUsernameLength, new { @class = "text medium", @Value = Model.MinimumUsernameLength })
+                @Html.ValidationMessage("MinimumUsernameLength", "*")
+            </div>
+            <div>
+                <label for="@Html.FieldIdFor(m => m.MaximumUsernameLength)">@T("Maximum Username length")</label>
+                @Html.TextBoxFor(m => m.MaximumUsernameLength, new { @class = "text medium", @Value = Model.MaximumUsernameLength })
+                @Html.ValidationMessage("MaximumUsernameLength", "*")
+            </div>
+            <div>
+                @Html.EditorFor(m => m.ForbidUsernameWhitespace)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ForbidUsernameWhitespace)">@T("Username must not contain whitespaces")</label>
+            </div>
+            <div>
+                @Html.EditorFor(m => m.ForbidUsernameSpecialChars)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ForbidUsernameSpecialChars)">@T("Username must not contain special characters")</label>
+                <div data-controllerid="@Html.FieldIdFor(m => m.ForbidUsernameSpecialChars)" style="margin-left: 30px;">
+                    @Html.EditorFor(m => m.AllowEmailAsUsername)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowEmailAsUsername)">@T("Username can be an email")</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div>
         @Html.EditorFor(m => m.EnableCustomPasswordPolicy)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomPasswordPolicy)">@T("Passwords must meet custom requirements")</label>
@@ -126,4 +157,5 @@
             @Html.ValidationMessage("NotificationsRecipients", "*")
             <span class="hint">@T("The usernames to send the notifications to (e.g., \"admin, user1, ...\").")</span>
         </div>
+    </div>
 </fieldset>

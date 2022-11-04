@@ -35,13 +35,16 @@ namespace Orchard.Users.Services {
 
             return context.ValidationSuccessful;
         }
-
         public bool ValidateUserName(AccountValidationContext context) {
+            IDictionary<string, LocalizedString> validationErrors;
+            _userService.UsernameMeetsPolicies(context.UserName, out validationErrors);
 
-            if (string.IsNullOrWhiteSpace(context.UserName)) {
-                context.ValidationErrors.Add("username", T("You must specify a username."));
-            } else if (context.UserName.Length >= UserPart.MaxUserNameLength) {
-                context.ValidationErrors.Add("username", T("The username you provided is too long."));
+            if (validationErrors != null && validationErrors.Any()) {
+                foreach (var err in validationErrors) {
+                    if (!context.ValidationErrors.ContainsKey(err.Key)) {
+                        context.ValidationErrors.Add(err);
+                    }
+                }
             }
 
             return context.ValidationSuccessful;

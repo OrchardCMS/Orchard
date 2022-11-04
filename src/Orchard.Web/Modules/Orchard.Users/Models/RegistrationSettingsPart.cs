@@ -1,5 +1,6 @@
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Users.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Security;
 
@@ -100,6 +101,41 @@ namespace Orchard.Users.Models {
         public int PasswordReuseLimit {
             get { return this.Retrieve(x => x.PasswordReuseLimit, 5); }
             set { this.Store(x => x.PasswordReuseLimit, value); }
+        }
+
+        public bool EnableCustomUsernamePolicy {
+            get { return this.Retrieve(x => x.EnableCustomUsernamePolicy); }
+            set { this.Store(x => x.EnableCustomUsernamePolicy, value); }
+        }
+
+        [Range(3, UserPart.MaxUserNameLength, ErrorMessage = "The minimum username length must be between 3 and 255.")]
+        [UsernameValidLength]
+        public int MinimumUsernameLength {
+            get { return this.Retrieve(x => x.MinimumUsernameLength, 3); }
+            set { this.Store(x => x.MinimumUsernameLength, value); }
+       
+        }
+
+        [Range(3, UserPart.MaxUserNameLength, ErrorMessage = "The maximum username length must be between 3 and 255.")]
+        [UsernameValidLength]
+        public int MaximumUsernameLength {
+            get { return this.Retrieve(x => x.MaximumUsernameLength, 3); }
+            set { this.Store(x => x.MaximumUsernameLength, value); }
+        }
+
+        public bool ForbidUsernameSpecialChars {
+            get { return this.Retrieve(x => x.ForbidUsernameSpecialChars); }
+            set { this.Store(x => x.ForbidUsernameSpecialChars, value); }
+        }
+
+        public bool AllowEmailAsUsername {
+            get { return this.Retrieve(x => x.AllowEmailAsUsername); }
+            set { this.Store(x => x.AllowEmailAsUsername, value); }
+        }
+
+        public bool ForbidUsernameWhitespace {
+            get { return this.Retrieve(x => x.ForbidUsernameWhitespace); }
+            set { this.Store(x => x.ForbidUsernameWhitespace, value); }
         }
     }
 }
