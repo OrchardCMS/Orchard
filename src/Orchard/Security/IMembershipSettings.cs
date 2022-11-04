@@ -21,5 +21,11 @@ namespace Orchard.Security {
         MembershipPasswordFormat PasswordFormat { get; set; }
         bool EnablePasswordHistoryPolicy { get; set; }
         int PasswordReuseLimit { get; set; }
+        bool EnableCustomUsernamePolicy { get; set; }
+        int MinimumUsernameLength { get; set; }
+        int MaximumUsernameLength { get; set; }
+        bool ForbidUsernameSpecialChars { get; set; }
+        bool AllowEmailAsUsername {get; set;}
+        bool ForbidUsernameWhitespace { get; set; }
     }
 }

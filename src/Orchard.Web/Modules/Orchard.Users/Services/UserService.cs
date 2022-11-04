@@ -245,6 +245,45 @@ namespace Orchard.Users.Services {
             return validationErrors.Count == 0;
         }
 
+
+
+        public bool UsernameMeetsPolicies(string username, out IDictionary<string, LocalizedString> validationErrors) {
+            validationErrors = new Dictionary<string, LocalizedString>();
+            var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
+
+            if (string.IsNullOrEmpty(username)) {
+                validationErrors.Add(UsernameValidationResults.UsernameIsTooShort,
+                    T("The username can't be empty."));
+                return false;
+            }
+
+            if (settings.EnableCustomUsernamePolicy) {
+                if (username.Length < settings.GetMinimumUsernameLength()) {
+                    validationErrors.Add(UsernameValidationResults.UsernameIsTooShort,
+                        T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength()));
+                }
+
+                if (username.Length > settings.GetMaximumUsernameLength()) {
+                    validationErrors.Add(UsernameValidationResults.UsernameIsTooLong,
+                        T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength()));
+                }
+
+                if (settings.ForbidUsernameWhitespace && username.Any(x => char.IsWhiteSpace(x))) {
+                    validationErrors.Add(UsernameValidationResults.UsernameContainsWhitespaces,
+                        T("The username must not contain whitespaces."));
+                }
+
+                if (settings.ForbidUsernameSpecialChars && Regex.Match(username, "[^a-zA-Z0-9]").Success) {
+                    if (!settings.AllowEmailAsUsername || !Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                        validationErrors.Add(UsernameValidationResults.UsernameContainsSpecialChars,
+                        T("The username must not contain special characters."));
+                    }
+
+                }
+            }
+            return validationErrors.Count == 0;
+        }
+
         public UserPart GetUserByNameOrEmail(string usernameOrEmail) {
             var lowerName = usernameOrEmail.ToLowerInvariant();
             return _contentManager

@@ -183,12 +183,18 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
+            IDictionary<string, LocalizedString> validationErrors;
+
             if (!string.IsNullOrEmpty(createModel.UserName)) {
-                if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
+                if (!_userService.UsernameMeetsPolicies(createModel.UserName, out validationErrors)) {
+                    ModelState.AddModelErrors(validationErrors);
+                }
+                else if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
-            
+
+         
             if (!Regex.IsMatch(createModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
                 // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
                 ModelState.AddModelError("Email", T("You must specify a valid email address."));
@@ -198,11 +204,12 @@ namespace Orchard.Users.Controllers {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
-            IDictionary<string, LocalizedString> validationErrors;
+           
 
             if (!_userService.PasswordMeetsPolicies(createModel.Password, null, out validationErrors)) {
                 ModelState.AddModelErrors(validationErrors);
             }
+
 
             var user = Services.ContentManager.New<IUser>("User");
             if (ModelState.IsValid) {
@@ -274,7 +281,12 @@ namespace Orchard.Users.Controllers {
 
             var editModel = new UserEditViewModel { User = user };
             if (TryUpdateModel(editModel)) {
-                if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
+                IDictionary<string, LocalizedString> validationErrors;
+
+                if (!_userService.UsernameMeetsPolicies(editModel.UserName, out validationErrors)) {
+                    ModelState.AddModelErrors(validationErrors);
+                }
+                else if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
                 else if (!Regex.IsMatch(editModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
