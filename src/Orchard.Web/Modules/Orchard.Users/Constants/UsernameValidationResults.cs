@@ -6,3 +6,4 @@
         public const string UsernameContainsSpecialChars = "UsernameContainsSpecialChars";
     }
 }
+
