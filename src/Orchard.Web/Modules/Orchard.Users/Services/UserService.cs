@@ -257,6 +257,13 @@ namespace Orchard.Users.Services {
                 return false;
             }
 
+            // Validate username length to check it's not over 255.
+            if (username.Length > UserPart.MaxUserNameLength) {
+                validationErrors.Add(UsernameValidationResults.UsernameIsTooLong,
+                    T("The username can't be longer than {0} characters.", UserPart.MaxUserNameLength));
+                return false;
+            }
+
             if (settings.EnableCustomUsernamePolicy) {
                 if (username.Length < settings.GetMinimumUsernameLength()) {
                     validationErrors.Add(UsernameValidationResults.UsernameIsTooShort,
@@ -278,7 +285,6 @@ namespace Orchard.Users.Services {
                         validationErrors.Add(UsernameValidationResults.UsernameContainsSpecialChars,
                         T("The username must not contain special characters."));
                     }
-
                 }
             }
             return validationErrors.Count == 0;

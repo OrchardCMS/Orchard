@@ -108,18 +108,18 @@ namespace Orchard.Users.Models {
             set { this.Store(x => x.EnableCustomUsernamePolicy, value); }
         }
 
-        [Range(3, UserPart.MaxUserNameLength, ErrorMessage = "The minimum username length must be between 3 and 255.")]
+        [Range(1, UserPart.MaxUserNameLength, ErrorMessage = "The minimum username length must be between 1 and 255.")]
         [UsernameValidLength]
         public int MinimumUsernameLength {
-            get { return this.Retrieve(x => x.MinimumUsernameLength, 3); }
+            get { return this.Retrieve(x => x.MinimumUsernameLength, 1); }
             set { this.Store(x => x.MinimumUsernameLength, value); }
        
         }
 
-        [Range(3, UserPart.MaxUserNameLength, ErrorMessage = "The maximum username length must be between 3 and 255.")]
+        [Range(1, UserPart.MaxUserNameLength, ErrorMessage = "The maximum username length must be between 1 and 255.")]
         [UsernameValidLength]
         public int MaximumUsernameLength {
-            get { return this.Retrieve(x => x.MaximumUsernameLength, 3); }
+            get { return this.Retrieve(x => x.MaximumUsernameLength, UserPart.MaxUserNameLength); }
             set { this.Store(x => x.MaximumUsernameLength, value); }
         }
 
