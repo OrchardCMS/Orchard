@@ -282,8 +282,9 @@ namespace Orchard.Users.Controllers {
             var editModel = new UserEditViewModel { User = user };
             if (TryUpdateModel(editModel)) {
                 IDictionary<string, LocalizedString> validationErrors;
-
-                if (!_userService.UsernameMeetsPolicies(editModel.UserName, out validationErrors)) {
+                // Check if username is actually edited.
+                // If it's not edited, don't check for policies to avoid forcing the change of previously valid usernames.
+                if (!user.UserName.Equals(editModel.UserName) && !_userService.UsernameMeetsPolicies(editModel.UserName, out validationErrors)) {
                     ModelState.AddModelErrors(validationErrors);
                 }
                 else if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
