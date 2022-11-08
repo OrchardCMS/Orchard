@@ -36,13 +36,13 @@ namespace Orchard.Users.Services {
             return context.ValidationSuccessful;
         }
         public bool ValidateUserName(AccountValidationContext context) {
-            IDictionary<string, LocalizedString> validationErrors;
+           List <UsernameValidationError> validationErrors;
             _userService.UsernameMeetsPolicies(context.UserName, out validationErrors);
 
             if (validationErrors != null && validationErrors.Any()) {
                 foreach (var err in validationErrors) {
                     if (!context.ValidationErrors.ContainsKey(err.Key)) {
-                        context.ValidationErrors.Add(err);
+                        context.ValidationErrors.Add(err.Key, err.ErrorMessage);
                     }
                 }
             }

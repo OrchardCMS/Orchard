@@ -247,43 +247,43 @@ namespace Orchard.Users.Services {
 
 
 
-        public bool UsernameMeetsPolicies(string username, out IDictionary<string, LocalizedString> validationErrors) {
-            validationErrors = new Dictionary<string, LocalizedString>();
+        public bool UsernameMeetsPolicies(string username, out List<UsernameValidationError> validationErrors) {
+            validationErrors = new List<UsernameValidationError>();
             var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
 
             if (string.IsNullOrEmpty(username)) {
-                validationErrors.Add(UsernameValidationResults.UsernameIsTooShort,
-                    T("The username can't be empty."));
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameIsTooShort,
+                    T("The username must not be empty."))); 
                 return false;
             }
 
             // Validate username length to check it's not over 255.
             if (username.Length > UserPart.MaxUserNameLength) {
-                validationErrors.Add(UsernameValidationResults.UsernameIsTooLong,
-                    T("The username can't be longer than {0} characters.", UserPart.MaxUserNameLength));
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameIsTooLong,
+                    T("The username can't be longer than {0} characters.", UserPart.MaxUserNameLength)));
                 return false;
             }
 
             if (settings.EnableCustomUsernamePolicy) {
                 if (username.Length < settings.GetMinimumUsernameLength()) {
-                    validationErrors.Add(UsernameValidationResults.UsernameIsTooShort,
-                        T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength()));
+                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooShort,
+                        T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength())));
                 }
 
                 if (username.Length > settings.GetMaximumUsernameLength()) {
-                    validationErrors.Add(UsernameValidationResults.UsernameIsTooLong,
-                        T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength()));
+                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooLong,
+                        T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength())));
                 }
 
                 if (settings.ForbidUsernameWhitespace && username.Any(x => char.IsWhiteSpace(x))) {
-                    validationErrors.Add(UsernameValidationResults.UsernameContainsWhitespaces,
-                        T("The username must not contain whitespaces."));
+                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameContainsWhitespaces,
+                        T("The username must not contain whitespaces.")));
                 }
 
                 if (settings.ForbidUsernameSpecialChars && Regex.Match(username, "[^a-zA-Z0-9]").Success) {
                     if (!settings.AllowEmailAsUsername || !Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                        validationErrors.Add(UsernameValidationResults.UsernameContainsSpecialChars,
-                        T("The username must not contain special characters."));
+                        validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameContainsSpecialChars,
+                        T("The username must not contain special characters.")));
                     }
                 }
             }

@@ -19,6 +19,10 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableCustomUsernamePolicy)">@T("Username must meet custom requirements")</label>
         <div data-controllerid="@Html.FieldIdFor(m => m.EnableCustomUsernamePolicy)" style="margin-left: 30px;">
             <div>
+                @Html.EditorFor(m => m.BypassPoliciesFromBackoffice)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.BypassPoliciesFromBackoffice)">@T("Allow backend users to bypass the custom policies and show a warning when that happens.")</label>
+            </div>
+            <div>
                 <label for="@Html.FieldIdFor(m => m.MinimumUsernameLength)">@T("Minimum Username length")</label>
                 @Html.TextBoxFor(m => m.MinimumUsernameLength, new { @class = "text medium", @Value = Model.MinimumUsernameLength })
                 @Html.ValidationMessage("MinimumUsernameLength", "*")
