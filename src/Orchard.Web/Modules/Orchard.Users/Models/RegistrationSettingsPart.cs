@@ -137,6 +137,13 @@ namespace Orchard.Users.Models {
             get { return this.Retrieve(x => x.ForbidUsernameWhitespace); }
             set { this.Store(x => x.ForbidUsernameWhitespace, value); }
         }
+
+        public bool BypassPoliciesFromBackoffice {
+            get { return this.Retrieve(x => x.BypassPoliciesFromBackoffice); }
+            set { this.Store(x => x.BypassPoliciesFromBackoffice, value); }
+        }
+
+
     }
 }
 

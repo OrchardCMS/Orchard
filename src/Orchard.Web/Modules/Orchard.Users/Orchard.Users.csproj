@@ -157,6 +157,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\UsernameValidationError.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
     <Compile Include="ViewModels\UserEditPasswordViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />

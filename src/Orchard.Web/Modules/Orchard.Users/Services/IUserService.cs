@@ -20,6 +20,6 @@ namespace Orchard.Users.Services {
         bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc);
 
         bool PasswordMeetsPolicies(string password, IUser user, out IDictionary<string, LocalizedString> validationErrors);
-        bool UsernameMeetsPolicies(string username, out IDictionary<string, LocalizedString> validationErrors);
+        bool UsernameMeetsPolicies(string username, out List<UsernameValidationError> validationErrors);
     }
 }

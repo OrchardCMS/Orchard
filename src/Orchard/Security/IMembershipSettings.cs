@@ -27,5 +27,7 @@ namespace Orchard.Security {
         bool ForbidUsernameSpecialChars { get; set; }
         bool AllowEmailAsUsername {get; set;}
         bool ForbidUsernameWhitespace { get; set; }
+        bool BypassPoliciesFromBackoffice { get; set; }
+
     }
 }
