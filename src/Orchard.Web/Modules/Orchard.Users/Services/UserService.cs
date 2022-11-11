@@ -247,7 +247,7 @@ namespace Orchard.Users.Services {
 
 
 
-        public bool UsernameMeetsPolicies(string username, out List<UsernameValidationError> validationErrors) {
+        public bool UsernameMeetsPolicies(string username, string email,  out List<UsernameValidationError> validationErrors) {
             validationErrors = new List<UsernameValidationError>();
             var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
 
@@ -264,15 +264,27 @@ namespace Orchard.Users.Services {
                 return false;
             }
 
-            if (settings.EnableCustomUsernamePolicy) {
+            var usernameIsEmail = Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase);
+
+            if (usernameIsEmail && !username.Equals(email, StringComparison.OrdinalIgnoreCase)){
+                validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameAndEmailMustMatch,
+                        T("If the username is an email it must match the specified email address.")));
+            }
+
+            if (settings.EnableCustomUsernamePolicy) {                
+
                 if (username.Length < settings.GetMinimumUsernameLength()) {
-                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooShort,
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooShort,
                         T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength())));
+                    }                    
                 }
 
                 if (username.Length > settings.GetMaximumUsernameLength()) {
-                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooLong,
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooLong,
                         T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength())));
+                    }
                 }
 
                 if (settings.ForbidUsernameWhitespace && username.Any(x => char.IsWhiteSpace(x))) {
@@ -281,7 +293,7 @@ namespace Orchard.Users.Services {
                 }
 
                 if (settings.ForbidUsernameSpecialChars && Regex.Match(username, "[^a-zA-Z0-9]").Success) {
-                    if (!settings.AllowEmailAsUsername || !Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
                         validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameContainsSpecialChars,
                         T("The username must not contain special characters.")));
                     }

@@ -37,7 +37,7 @@ namespace Orchard.Users.Services {
         }
         public bool ValidateUserName(AccountValidationContext context) {
            List <UsernameValidationError> validationErrors;
-            _userService.UsernameMeetsPolicies(context.UserName, out validationErrors);
+            _userService.UsernameMeetsPolicies(context.UserName, context.Email, out validationErrors);
 
             if (validationErrors != null && validationErrors.Any()) {
                 foreach (var err in validationErrors) {
