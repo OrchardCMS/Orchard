@@ -267,8 +267,9 @@ namespace Orchard.Users.Services {
             var usernameIsEmail = Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase);
 
             if (usernameIsEmail && !username.Equals(email, StringComparison.OrdinalIgnoreCase)){
-                validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameAndEmailMustMatch,
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameAndEmailMustMatch,
                         T("If the username is an email it must match the specified email address.")));
+                return false;
             }
 
             if (settings.EnableCustomUsernamePolicy) {                
@@ -294,7 +295,7 @@ namespace Orchard.Users.Services {
 
                 if (settings.ForbidUsernameSpecialChars && Regex.Match(username, "[^a-zA-Z0-9]").Success) {
                     if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
-                        validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameContainsSpecialChars,
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameContainsSpecialChars,
                         T("The username must not contain special characters.")));
                     }
                 }

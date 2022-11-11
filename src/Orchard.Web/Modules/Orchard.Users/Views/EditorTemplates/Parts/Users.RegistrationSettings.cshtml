@@ -1,6 +1,7 @@
 @model Orchard.Users.Models.RegistrationSettingsPart
 @using Orchard.Messaging.Services;
 @using System.Web.Security;
+@using Orchard.Users.Models;
 
 @{
     var messageManager = WorkContext.Resolve<IMessageManager>();
@@ -25,11 +26,13 @@
             <div>
                 <label for="@Html.FieldIdFor(m => m.MinimumUsernameLength)">@T("Minimum Username length")</label>
                 @Html.TextBoxFor(m => m.MinimumUsernameLength, new { @class = "text medium", @Value = Model.MinimumUsernameLength })
+                <span class="hint">@T("Minimum value allowed is 1")</span>
                 @Html.ValidationMessage("MinimumUsernameLength", "*")
             </div>
             <div>
                 <label for="@Html.FieldIdFor(m => m.MaximumUsernameLength)">@T("Maximum Username length")</label>
                 @Html.TextBoxFor(m => m.MaximumUsernameLength, new { @class = "text medium", @Value = Model.MaximumUsernameLength })
+                <span class="hint">@T("Maximum value allowed is {0}", UserPart.MaxUserNameLength)</span>
                 @Html.ValidationMessage("MaximumUsernameLength", "*")
             </div>
             <div>
