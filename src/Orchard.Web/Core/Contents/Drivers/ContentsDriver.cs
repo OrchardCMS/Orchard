@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Contents.Settings;
+using Orchard.UI.Admin;
 
 namespace Orchard.Core.Contents.Drivers {
     public class ContentsDriver : ContentPartDriver<ContentPart> {
@@ -27,7 +28,9 @@ namespace Orchard.Core.Contents.Drivers {
             }              
 
             if (part.Id > 0) {
-                results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));
+                if (AdminFilter.IsApplied(System.Web.HttpContext.Current.Request.RequestContext)) {
+                    results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));                    
+                }
             }
 
             return Combined(results.ToArray());
