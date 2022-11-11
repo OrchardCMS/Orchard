@@ -196,7 +196,7 @@ namespace Orchard.Users.Controllers {
             var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
 
             if (!string.IsNullOrEmpty(createModel.UserName)) {
-                usernameMeetsPolicies = _userService.UsernameMeetsPolicies(createModel.UserName, out usernameValidationErrors);
+                usernameMeetsPolicies = _userService.UsernameMeetsPolicies(createModel.UserName, createModel.Email, out usernameValidationErrors);
                 if (!usernameMeetsPolicies) {
                     // If this setting is enabled we'd like to show the warning message but we can't right now
                     // because we didn't create the user yet (and maybe we won't if some other validation fails)
@@ -325,7 +325,7 @@ namespace Orchard.Users.Controllers {
             var editModel = new UserEditViewModel { User = user };
             if (TryUpdateModel(editModel)) {
                 List<UsernameValidationError> validationErrors;
-                bool usernameMeetsPolicies = _userService.UsernameMeetsPolicies(editModel.UserName, out validationErrors);
+                bool usernameMeetsPolicies = _userService.UsernameMeetsPolicies(editModel.UserName, editModel.Email, out validationErrors);
                 var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
                 // Username has been modified
                 if (!previousName.Equals(editModel.UserName)) {                    
@@ -336,7 +336,7 @@ namespace Orchard.Users.Controllers {
                         }
                     }
                     else if (!usernameMeetsPolicies) {
-                        // If warnings dont have to be bypassed we show everyone of them as errors
+                        // If warnings don't have to be bypassed we show everyone of them as errors
                         ShowWarningAsErrors(validationErrors);
                     }
                 }
