@@ -274,14 +274,16 @@ namespace Orchard.Users.Services {
 
             if (settings.EnableCustomUsernamePolicy) {                
 
-                if (username.Length < settings.GetMinimumUsernameLength()) {
+                /// If the Maximum username length is smaller than the Minimum username length settings ignore this setting 
+                if (settings.GetMaximumUsernameLength() >= settings.GetMinimumUsernameLength() && username.Length < settings.GetMinimumUsernameLength()) {
                     if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
                         validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooShort,
                         T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength())));
                     }                    
                 }
 
-                if (username.Length > settings.GetMaximumUsernameLength()) {
+                /// If the Minimum username length is greater than the Maximum username length settings ignore this setting 
+                if (settings.GetMaximumUsernameLength() >= settings.GetMinimumUsernameLength() && username.Length > settings.GetMaximumUsernameLength()) {
                     if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
                         validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooLong,
                         T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength())));
