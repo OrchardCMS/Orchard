@@ -100,7 +100,6 @@
     <Compile Include="Activities\CreateUserActivity.cs" />
     <Compile Include="Activities\UserActivity.cs" />
     <Compile Include="Activities\UserIsApprovedActivity.cs" />
-    <Compile Include="Annotations\UsernameValidLengthAttribute.cs" />
     <Compile Include="Commands\UserCommands.cs" />
     <Compile Include="Constants\UsernameValidationResults.cs" />
     <Compile Include="Constants\UserPasswordValidationResults.cs" />

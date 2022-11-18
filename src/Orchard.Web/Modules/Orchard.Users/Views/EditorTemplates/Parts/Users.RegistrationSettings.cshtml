@@ -27,12 +27,14 @@
                 <label for="@Html.FieldIdFor(m => m.MinimumUsernameLength)">@T("Minimum Username length")</label>
                 @Html.TextBoxFor(m => m.MinimumUsernameLength, new { @class = "text medium", @Value = Model.MinimumUsernameLength })
                 <span class="hint">@T("Minimum value allowed is 1")</span>
+                <span class="hint">@T("If this value is greater than the value set for Maximum Username length this setting will be ignored.")</span>
                 @Html.ValidationMessage("MinimumUsernameLength", "*")
             </div>
             <div>
                 <label for="@Html.FieldIdFor(m => m.MaximumUsernameLength)">@T("Maximum Username length")</label>
                 @Html.TextBoxFor(m => m.MaximumUsernameLength, new { @class = "text medium", @Value = Model.MaximumUsernameLength })
                 <span class="hint">@T("Maximum value allowed is {0}", UserPart.MaxUserNameLength)</span>
+                <span class="hint">@T("If this value is smaller than the value set for Minimum Username length this setting will be ignored.")</span>
                 @Html.ValidationMessage("MaximumUsernameLength", "*")
             </div>
             <div>
