@@ -207,8 +207,8 @@ namespace Orchard.Users.Controllers {
                     }
                     // Show fatal errors anyway
                     ShowFatalErrors(usernameValidationErrors);
-                }
-                else if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
+                }               
+                if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
