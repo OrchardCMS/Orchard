@@ -17,7 +17,7 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         private readonly ShellSettings _shellSettings;
 
-        public void Configure(ICacheConfigurationProperties cache) {
+        public void Configure(CacheConfigurationProperties cache) {
             cache.Provider<AzureCacheProvider>();
             cache.UseQueryCache = true;
             cache.RegionsPrefix = _shellSettings.Name;

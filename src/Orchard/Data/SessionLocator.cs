@@ -73,9 +73,10 @@ namespace Orchard.Data {
             if (_session != null) {
 
                 // IsActive is true if the transaction hasn't been committed or rolled back
-                if (_session.Transaction != null && _session.Transaction.IsActive) {
+                var transaction = _session.GetCurrentTransaction();
+                if (transaction != null && transaction.IsActive) {
                     Logger.Debug("Rolling back transaction");
-                    _session.Transaction.Rollback();
+                    transaction.Rollback();
                 }
 
                 DisposeSession();
@@ -91,9 +92,10 @@ namespace Orchard.Data {
 
                 try {
                     // IsActive is true if the transaction hasn't been committed or rolled back
-                    if (_session.Transaction != null && _session.Transaction.IsActive) {
+                    var transaction = _session.GetCurrentTransaction();
+                    if (transaction != null && transaction.IsActive) {
                         Logger.Debug("Committing transaction");
-                        _session.Transaction.Commit();
+                        transaction.Commit();
                     }
                 }
                 finally {
@@ -116,7 +118,9 @@ namespace Orchard.Data {
 
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
             Logger.Debug("Opening NHibernate session");
-            _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            var sessionBuilder = sessionFactory.WithOptions()
+                .Interceptor(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            _session = sessionBuilder.OpenSession();
             // When BeginTransaction fails, the exception will be propagated so that
             // global exception handling code will dispose this session.
             _session.BeginTransaction(level);
@@ -192,9 +196,9 @@ namespace Orchard.Data {
                 return retVal.Length == 0 ? null : retVal;
             }
 
-            object IInterceptor.Instantiate(string entityName, EntityMode entityMode, object id) {
+            object IInterceptor.Instantiate(string entityName, object id) {
                 if (_interceptors.Length == 0) return null;
-                return _interceptors.Invoke(i => i.Instantiate(entityName, entityMode, id), _logger).FirstOrDefault(r => r != null);
+                return _interceptors.Invoke(i => i.Instantiate(entityName, id), _logger).FirstOrDefault(r => r != null);
             }
 
             string IInterceptor.GetEntityName(object entity) {

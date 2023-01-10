@@ -11,12 +11,18 @@ namespace Orchard.Azure.Services.Caching.Database {
         private DataCache _dataCache;
         private DataCacheFactory _dataCacheFactory;
 
-        public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
-            
+        [Obsolete]
+        ICache ICacheProvider.BuildCache(string regionName, IDictionary<string, string> properties) {
+
+            return BuildCache(regionName, properties);
+        }
+
+        public CacheBase BuildCache(string regionName, IDictionary<string, string> properties) {
+
             if (_dataCache == null) {
                 throw new InvalidOperationException("Can't call this method when provider is in stopped state.");
             }
-            
+
             TimeSpan? expiration = null;
             string expirationString;
             if (properties.TryGetValue(NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString) || properties.TryGetValue("cache.default_expiration", out expirationString)) {

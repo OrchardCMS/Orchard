@@ -12,7 +12,7 @@ namespace SysCache.Services {
             _shellSettings = shellSettings;
         }
 
-        public void Configure(ICacheConfigurationProperties cache) {
+        public void Configure(CacheConfigurationProperties cache) {
             cache.Provider<NHibernate.Caches.SysCache2.SysCacheProvider>();
             cache.UseQueryCache = true;
             cache.RegionsPrefix = _shellSettings.Name;

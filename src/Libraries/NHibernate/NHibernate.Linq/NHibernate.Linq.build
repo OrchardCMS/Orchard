@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<project 
+	name="NHibernate.Linq" 
+	default="build" 
+	xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd"
+>
+
+	<property name="root.dir" value="../.." />
+	<include buildfile="${root.dir}/common-project.xml" />
+
+	<target name="init" depends="common.init">
+		<property name="assembly.description" value="A linq provider for NHibernate" />
+		<property name="assembly.allow-partially-trusted-callers" value="true" />
+
+		<assemblyfileset id="project.references" basedir="${bin.dir}" defaultexcludes="false">
+			<include name="System.dll" />
+			<include name="System.Core.dll" />
+			<include name="System.Linq.Dynamic.dll"/>
+			<include name="System.Xml.dll" />
+			<include name="Iesi.Collections.dll" />
+			<include name="NHibernate.dll" />
+			<include name="log4net.dll" />
+			<include name="System.Data.Services.dll" />
+			<include name="Antlr3.Runtime.dll" />
+
+		</assemblyfileset>
+
+		<resourcefileset id="project.resources" prefix="NHibernate.Linq" dynamicprefix="true">
+			<include name="*.xsd" />
+			<include name="**/*.xml" />
+			<exclude name="bin/**/*.xml" />
+		</resourcefileset>
+		
+		<fileset id="project.sources">
+			<include name="**/*.cs" />
+		</fileset>
+	</target>
+
+	<target name="generate-assemblyinfo" depends="init common.generate-assemblyinfo" />
+
+	<target name="build" description="Build NHibernate.Linq"
+		depends="generate-assemblyinfo common.compile-dll">
+	</target>
+
+</project>
