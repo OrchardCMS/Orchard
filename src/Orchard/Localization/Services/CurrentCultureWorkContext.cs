@@ -34,7 +34,7 @@ namespace Orchard.Localization.Services {
                 .Select(c => c.GetCulture(httpContext))
                 .Where(c => c != null)
                 .OrderByDescending(c => c.Priority)
-                .FirstOrDefault(c => !String.IsNullOrEmpty(c.CultureName) && supportedCultures.Any(s => s == c.CultureName));
+                .FirstOrDefault(c => !String.IsNullOrEmpty(c.CultureName) && supportedCultures.Any(s => s.Equals(c.CultureName, StringComparison.OrdinalIgnoreCase)));
 
             return culture == null ? String.Empty : culture.CultureName;
         }
