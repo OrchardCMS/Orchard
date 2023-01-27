@@ -101,6 +101,7 @@
     <Compile Include="Activities\UserActivity.cs" />
     <Compile Include="Activities\UserIsApprovedActivity.cs" />
     <Compile Include="Commands\UserCommands.cs" />
+    <Compile Include="Constants\UsernameValidationResults.cs" />
     <Compile Include="Constants\UserPasswordValidationResults.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\UsernameValidationError.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
     <Compile Include="ViewModels\UserEditPasswordViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />

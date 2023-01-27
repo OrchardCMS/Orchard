@@ -245,6 +245,66 @@ namespace Orchard.Users.Services {
             return validationErrors.Count == 0;
         }
 
+
+
+        public bool UsernameMeetsPolicies(string username, string email,  out List<UsernameValidationError> validationErrors) {
+            validationErrors = new List<UsernameValidationError>();
+            var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
+
+            if (string.IsNullOrEmpty(username)) {
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameIsTooShort,
+                    T("The username must not be empty."))); 
+                return false;
+            }
+
+            // Validate username length to check it's not over 255.
+            if (username.Length > UserPart.MaxUserNameLength) {
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameIsTooLong,
+                    T("The username can't be longer than {0} characters.", UserPart.MaxUserNameLength)));
+                return false;
+            }
+
+            var usernameIsEmail = Regex.IsMatch(username, UserPart.EmailPattern, RegexOptions.IgnoreCase);
+
+            if (usernameIsEmail && !username.Equals(email, StringComparison.OrdinalIgnoreCase)){
+                validationErrors.Add(new UsernameValidationError(Severity.Fatal, UsernameValidationResults.UsernameAndEmailMustMatch,
+                        T("If the username is an email it must match the specified email address.")));
+                return false;
+            }
+
+            if (settings.EnableCustomUsernamePolicy) {                
+
+                /// If the Maximum username length is smaller than the Minimum username length settings ignore this setting 
+                if (settings.GetMaximumUsernameLength() >= settings.GetMinimumUsernameLength() && username.Length < settings.GetMinimumUsernameLength()) {
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooShort,
+                        T("You must specify a username of {0} or more characters.", settings.GetMinimumUsernameLength())));
+                    }                    
+                }
+
+                /// If the Minimum username length is greater than the Maximum username length settings ignore this setting 
+                if (settings.GetMaximumUsernameLength() >= settings.GetMinimumUsernameLength() && username.Length > settings.GetMaximumUsernameLength()) {
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameIsTooLong,
+                        T("You must specify a username of at most {0} characters.", settings.GetMaximumUsernameLength())));
+                    }
+                }
+
+                if (settings.ForbidUsernameWhitespace && username.Any(x => char.IsWhiteSpace(x))) {
+                    validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameContainsWhitespaces,
+                        T("The username must not contain whitespaces.")));
+                }
+
+                if (settings.ForbidUsernameSpecialChars && Regex.Match(username, "[^a-zA-Z0-9]").Success) {
+                    if (!settings.AllowEmailAsUsername || !usernameIsEmail) {
+                        validationErrors.Add(new UsernameValidationError(Severity.Warning, UsernameValidationResults.UsernameContainsSpecialChars,
+                        T("The username must not contain special characters.")));
+                    }
+                }
+            }
+            return validationErrors.Count == 0;
+        }
+
         public UserPart GetUserByNameOrEmail(string usernameOrEmail) {
             var lowerName = usernameOrEmail.ToLowerInvariant();
             return _contentManager
@@ -255,3 +315,4 @@ namespace Orchard.Users.Services {
         }
     }
 }
+
