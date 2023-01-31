@@ -19,6 +19,8 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.Utility.Extensions;
+using Orchard.Mvc.Html;
+using Orchard.Users.Constants;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
@@ -28,6 +30,7 @@ namespace Orchard.Users.Controllers {
         private readonly IUserEventHandler _userEventHandlers;
         private readonly ISiteService _siteService;
         private readonly IEnumerable<IUserManagementActionsProvider> _userManagementActionsProviders;
+        private readonly UrlHelper _urlHelper;
 
         public AdminController(
             IOrchardServices services,
@@ -36,7 +39,8 @@ namespace Orchard.Users.Controllers {
             IShapeFactory shapeFactory,
             IUserEventHandler userEventHandlers,
             ISiteService siteService,
-            IEnumerable<IUserManagementActionsProvider> userManagementActionsProviders) {
+            IEnumerable<IUserManagementActionsProvider> userManagementActionsProviders,
+            UrlHelper urlHelper) {
 
             Services = services;
             _membershipService = membershipService;
@@ -44,6 +48,7 @@ namespace Orchard.Users.Controllers {
             _userEventHandlers = userEventHandlers;
             _siteService = siteService;
             _userManagementActionsProviders = userManagementActionsProviders;
+            _urlHelper = urlHelper;
 
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -183,12 +188,35 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
+            IDictionary<string, LocalizedString> validationErrors;
+            List<UsernameValidationError> usernameValidationErrors = new List<UsernameValidationError>();
+
+
+            bool usernameMeetsPolicies = true;
+            var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
+
             if (!string.IsNullOrEmpty(createModel.UserName)) {
+                usernameMeetsPolicies = _userService.UsernameMeetsPolicies(createModel.UserName, createModel.Email, out usernameValidationErrors);
+                if (!usernameMeetsPolicies) {
+                    // If this setting is enabled we'd like to show the warning message but we can't right now
+                    // because we didn't create the user yet (and maybe we won't if some other validation fails)
+                    // and we can't generate the link to the edit page properly so here we only handle the
+                    // situation where we have to show warnings as errors.
+                    if (!settings.BypassPoliciesFromBackoffice) {
+                        ShowWarningAsErrors(usernameValidationErrors);
+                    }
+                    // Show fatal errors anyway
+                    ShowFatalErrors(usernameValidationErrors);
+                }               
                 if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
-            
+            else {
+                AddModelError(UsernameValidationResults.UsernameIsTooShort, T("The username must not be empty."));
+            }
+
+         
             if (!Regex.IsMatch(createModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
                 // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
                 ModelState.AddModelError("Email", T("You must specify a valid email address."));
@@ -198,11 +226,11 @@ namespace Orchard.Users.Controllers {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
-            IDictionary<string, LocalizedString> validationErrors;
-
+           
             if (!_userService.PasswordMeetsPolicies(createModel.Password, null, out validationErrors)) {
                 ModelState.AddModelErrors(validationErrors);
             }
+
 
             var user = Services.ContentManager.New<IUser>("User");
             if (ModelState.IsValid) {
@@ -212,6 +240,12 @@ namespace Orchard.Users.Controllers {
                                                   createModel.Email,
                                                   null, null, true,
                                                   createModel.ForcePasswordChange));
+            }
+
+            // Now that the user has been created we check if we have to show the warning since now we can generate the link
+            // to the user edit page
+            if (!usernameMeetsPolicies && settings.BypassPoliciesFromBackoffice && usernameValidationErrors.Any(uve => uve.Severity == Severity.Warning)) {
+                    Services.Notifier.Warning(T("The username <a href=\"{0}\">{1}</a> doesn't meet the custom requirements.", _urlHelper.ItemEditUrl(user), createModel.UserName));
             }
 
             var model = Services.ContentManager.UpdateEditor(user, this);
@@ -253,6 +287,22 @@ namespace Orchard.Users.Controllers {
             return View(model);
         }
 
+        private void ShowWarningAsErrors(List<UsernameValidationError> validationErrors) {
+            if (validationErrors.Any(uve => uve.Severity == Severity.Warning)) {
+                foreach (var uve in validationErrors.Where(uve => uve.Severity == Severity.Warning)) {
+                    AddModelError(uve.Key, uve.ErrorMessage);
+                }
+            }
+        }
+
+        private void ShowFatalErrors(List<UsernameValidationError> validationErrors) {
+            if (validationErrors.Any(uve => uve.Severity == Severity.Fatal)) {
+                foreach (var uve in validationErrors.Where(uve => uve.Severity == Severity.Fatal)) {
+                    AddModelError(uve.Key, uve.ErrorMessage);
+                }
+            }
+        }
+
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
@@ -274,10 +324,34 @@ namespace Orchard.Users.Controllers {
 
             var editModel = new UserEditViewModel { User = user };
             if (TryUpdateModel(editModel)) {
-                if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
-                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
+                List<UsernameValidationError> validationErrors;
+                bool usernameMeetsPolicies = _userService.UsernameMeetsPolicies(editModel.UserName, editModel.Email, out validationErrors);
+                var settings = _siteService.GetSiteSettings().As<RegistrationSettingsPart>();
+                // Username has been modified
+                if (!previousName.Equals(editModel.UserName)) {                    
+                    if (!usernameMeetsPolicies && settings.BypassPoliciesFromBackoffice) {
+                        // If warnings have to be bypassed and there's at least one warning we show a generic warning message
+                        if (validationErrors.Any(uve => uve.Severity == Severity.Warning)) {
+                            Services.Notifier.Warning(T("The username <a href=\"{0}\">{1}</a> doesn't meet the custom requirements.", _urlHelper.ItemEditUrl(user), editModel.UserName));
+                        }
+                    }
+                    else if (!usernameMeetsPolicies) {
+                        // If warnings don't have to be bypassed we show everyone of them as errors
+                        ShowWarningAsErrors(validationErrors);
+                    }
                 }
-                else if (!Regex.IsMatch(editModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                else {
+                    if (!usernameMeetsPolicies && settings.BypassPoliciesFromBackoffice) {
+                        // If warnings have to be bypassed and there's at least one warning we show a generic warning message
+                        if (validationErrors.Any(uve => uve.Severity == Severity.Warning)) {
+                            Services.Notifier.Warning(T("The username <a href=\"{0}\">{1}</a> doesn't meet the custom requirements.", _urlHelper.ItemEditUrl(user), editModel.UserName));
+                        }
+                    }
+                }
+                // Show every Fatal validation error
+                ShowFatalErrors(validationErrors);
+
+                if (!Regex.IsMatch(editModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
                     // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
                     ModelState.AddModelError("Email", T("You must specify a valid email address."));
                 }
@@ -288,6 +362,10 @@ namespace Orchard.Users.Controllers {
                     }
 
                     user.NormalizedUserName = editModel.UserName.ToLowerInvariant();
+                }
+
+                if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
+                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
 
@@ -423,3 +501,4 @@ namespace Orchard.Users.Controllers {
     }
 
 }
+
