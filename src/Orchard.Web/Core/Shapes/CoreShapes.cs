@@ -101,8 +101,10 @@ namespace Orchard.Core.Shapes {
                     int level = menuItem.Level;
 
                     menuItem.Metadata.Alternates.Add("MenuItem__level__" + level);
-                    menuItem.Metadata.Alternates.Add("MenuItem__" + EncodeAlternateElement(menu.MenuName));
-                    menuItem.Metadata.Alternates.Add("MenuItem__" + EncodeAlternateElement(menu.MenuName) + "__level__" + level);
+                    if (menu != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItem__" + EncodeAlternateElement(menu.MenuName));
+                        menuItem.Metadata.Alternates.Add("MenuItem__" + EncodeAlternateElement(menu.MenuName) + "__level__" + level);
+                    }
                 });
 
             builder.Describe("MenuItemLink")
