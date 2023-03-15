@@ -53,8 +53,10 @@ namespace Orchard.Roles.Events {
         }
 
         public void UserAdded(UserAddedContext context) {
+            // Content of workflow event is the user
+            var content = context.User.ContentItem;
             _workflowManager.TriggerEvent("OnRoleEvent",
-                null,
+                content,
                 () => new Dictionary<string, object> {
                     { "Role", context.Role },
                     { "User", context.User },
@@ -62,8 +64,10 @@ namespace Orchard.Roles.Events {
         }
 
         public void UserRemoved(UserRemovedContext context) {
+            // Content of workflow event is the user
+            var content = context.User.ContentItem;
             _workflowManager.TriggerEvent("OnRoleEvent",
-               null,
+               content,
                () => new Dictionary<string, object> {
                     { "Role", context.Role },
                     { "User", context.User },
