@@ -1,6 +1,7 @@
 name: Build Crowdin Translation Packages
 
 on:
+  pull_request:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * *"
