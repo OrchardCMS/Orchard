@@ -305,7 +305,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{06A3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4C95F27D-A872-481F-A9AF-851DB178C186}"
 	ProjectSection(SolutionItems) = preProject
-		..\.github\workflows\build-crowdin-translation-packages.yaml = ..\.github\workflows\build-crowdin-translation-packages.yaml
+		..\.github\workflows\build-crowdin-translation-packages.yml = ..\.github\workflows\build-crowdin-translation-packages.yml
 	EndProjectSection
 EndProject
 Global
