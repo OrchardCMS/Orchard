@@ -7,7 +7,10 @@ on:
     - cron: "0 6 * * *"
 
 jobs:
-  run-script:
+  build-crowdin-translation-packages:
+    defaults:
+      run:
+        shell: pwsh
     runs-on: ubuntu-latest
 
     steps:
