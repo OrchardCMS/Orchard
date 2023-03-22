@@ -15,7 +15,23 @@ jobs:
 
     steps:
       - name: Orchard CMS
-        run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms/export?key=${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS }}').Content
+        uses: andrii-bodnar/crowdin-request-action@89be02e430161df6ecf6f638c71b8c853f4b2b0e # 0.0.2
+        with:
+          route: POST /projects/{projectId}/translations/builds
+          projectId: 46524
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
 
       - name: Orchard CMS Gallery
-        run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms-gallery/export?key=${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS_GALLERY }}').Content
+        uses: andrii-bodnar/crowdin-request-action@89be02e430161df6ecf6f638c71b8c853f4b2b0e # 0.0.2
+        with:
+          route: POST /projects/{projectId}/translations/builds
+          projectId: 63766
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+      # - name: Orchard CMS
+      #   run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms/export?key=${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS }}').Content
+
+      # - name: Orchard CMS Gallery
+      #   run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms-gallery/export?key=${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS_GALLERY }}').Content
