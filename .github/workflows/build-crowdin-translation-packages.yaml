@@ -1,0 +1,21 @@
+name: Build Crowdin Translation Packages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Orchard CMS
+        env:
+          CROWDIN_API_KEY: ${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS }}
+        run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms/export?key=${{ env.CROWDIN_API_KEY }}').Content
+
+      - name: Orchard CMS Gallery
+        env:
+          CROWDIN_API_KEY: ${{ secrets.CROWDIN_API_KEY_ORCHARD_CMS_GALLERY }}
+        run: (Invoke-WebRequest -Uri 'https://api.crowdin.com/api/project/orchard-cms-gallery/export?key=${{ env.CROWDIN_API_KEY }}').Content

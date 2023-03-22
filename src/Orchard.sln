@@ -301,6 +301,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NHibernate", "NHibernate", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Linq", "Libraries\NHibernate\NHibernate.Linq\NHibernate.Linq.csproj", "{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{06A32C3C-10A2-472E-B725-5AF102E92C6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4C95F27D-A872-481F-A9AF-851DB178C186}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build-crowdin-translation-packages.yaml = ..\.github\workflows\build-crowdin-translation-packages.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -1278,6 +1285,7 @@ Global
 		{8EE141BE-7217-4F5B-8214-3146BEFA07E3} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{1342D7F1-1A77-4AF2-9CE4-EAFC60428040} = {53A0F089-D9BD-46D7-92E0-5F57D0F9AC3E}
 		{2CF9A83A-BC40-4485-A763-BFF59B2EBDAD} = {1342D7F1-1A77-4AF2-9CE4-EAFC60428040}
+		{4C95F27D-A872-481F-A9AF-851DB178C186} = {06A32C3C-10A2-472E-B725-5AF102E92C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
