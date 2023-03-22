@@ -1,0 +1,30 @@
+name: Build Crowdin Translation Packages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  build-crowdin-translation-packages:
+    defaults:
+      run:
+        shell: pwsh
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Orchard CMS
+        uses: andrii-bodnar/crowdin-request-action@aac9a865d62b37060b0ce530db5ac5cfca02dd2c # 0.0.2
+        with:
+          route: POST /projects/{projectId}/translations/builds
+          projectId: 46524
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+      - name: Orchard CMS Gallery
+        uses: andrii-bodnar/crowdin-request-action@aac9a865d62b37060b0ce530db5ac5cfca02dd2c # 0.0.2
+        with:
+          route: POST /projects/{projectId}/translations/builds
+          projectId: 63766
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
