@@ -69,12 +69,12 @@ namespace Orchard.Taxonomies.Controllers {
                         } else {
                             // If there is no valid localization, firstTermForCulture is null.
                             // To avoid that, use the first checked term (if any is checked).
-                            var firstTerm = terms.FirstOrDefault(t => t.IsChecked = appliedTerms.Select(x => x.Id).Contains(t.Id));
-                            if (firstTerm != null) {
-                                firstTermIdForCulture = firstTerm.Id;
+                            firstTermForCulture = appliedTerms.FirstOrDefault(t => terms.Any(x => x.Id == t.Id));
+                            if (firstTermForCulture != null) {
+                                firstTermIdForCulture = firstTermForCulture.Id;
                             }
                         }
-                        terms.ForEach(t => t.IsChecked = appliedTerms.Select(x => x.Id).Contains(t.Id));
+                        terms.ForEach(t => t.IsChecked = appliedTerms.Any(x => x.Id == t.Id));
                     }
                     viewModel = new TaxonomyFieldViewModel {
                         DisplayName = taxonomyField.DisplayName,
