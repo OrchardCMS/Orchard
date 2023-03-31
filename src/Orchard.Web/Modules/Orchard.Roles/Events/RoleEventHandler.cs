@@ -14,7 +14,7 @@ namespace Orchard.Roles.Events {
                null,
                () => new Dictionary<string, object> {
                     { "Role", context.Role },
-                    { "Action", "RoleCreated" } });
+                    { "Action", "Created" } });
         }
 
         public void PermissionAdded(PermissionAddedContext context) {
@@ -40,7 +40,7 @@ namespace Orchard.Roles.Events {
                null,
                () => new Dictionary<string, object> {
                     { "Role", context.Role },
-                    { "Action", "RoleRemoved" } });
+                    { "Action", "Removed" } });
         }
 
         public void Renamed(RoleRenamedContext context) {
@@ -49,7 +49,7 @@ namespace Orchard.Roles.Events {
                () => new Dictionary<string, object> {
                     { "PreviousName", context.PreviousRoleName },
                     { "NewName", context.NewRoleName },
-                    { "Action", "RoleRenamed" } });
+                    { "Action", "Renamed" } });
         }
 
         public void UserAdded(UserAddedContext context) {
