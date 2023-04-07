@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Management;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Extensions;
@@ -30,6 +31,11 @@ namespace Orchard.Taxonomies.Services {
                 .Where(r => r.Title == name)
                 .List()
                 .FirstOrDefault();
+            // Null check on taxonomyPart
+            // It can be null in the case of a TaxonomyField with not taxonomy selected (misconfiguration).
+            if (taxonomyPart == null) {
+                return null;
+            }
             if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
                 return taxonomyPart;
             else {
