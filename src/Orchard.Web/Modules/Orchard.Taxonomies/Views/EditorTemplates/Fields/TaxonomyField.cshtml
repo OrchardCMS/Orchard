@@ -26,7 +26,7 @@
     <ul class="terms">
         @if (Model.Settings.SingleChoice && !settings.Required) {
             <li>
-                <input type="radio" value="0" name="@Html.FieldNameFor(m => m.SingleTermId)" id="@noSelectionId" data-term="@T("No selection")" />
+                <input type="radio" value="0" @if (Model.SingleTermId == 0) { <text> checked="checked" </text> } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@noSelectionId" data-term="@T("No selection")" />
                 <label class="forcheckbox" for="@noSelectionId">@T("No selection")</label>
             </li>
         }
