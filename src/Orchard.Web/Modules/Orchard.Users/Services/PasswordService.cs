@@ -8,6 +8,7 @@ using System.Web.Helpers;
 using System.Web.Security;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
+using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
     public class PasswordService : IPasswordService {
@@ -56,6 +57,12 @@ namespace Orchard.Users.Services {
                 if (String.IsNullOrEmpty(keepOldConfiguration) || keepOldConfiguration.Equals("false", StringComparison.OrdinalIgnoreCase)) {
                     context.HashAlgorithm = DefaultHashAlgorithm;
                     context.Password = PasswordExtensions.ComputeHashBase64(context.HashAlgorithm, saltBytes, plaintextPassword);
+                    // Actually persist the migration of the algorithm
+                    var pwdUser = context.User as UserPart;
+                    if (pwdUser != null) {
+                        pwdUser.HashAlgorithm = context.HashAlgorithm;
+                        pwdUser.Password = context.Password;
+                    }
                 }
             }
 

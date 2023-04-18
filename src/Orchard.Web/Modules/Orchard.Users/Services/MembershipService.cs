@@ -150,7 +150,8 @@ namespace Orchard.Users.Services {
                 Password = user.Password,
                 HashAlgorithm = user.HashAlgorithm,
                 PasswordFormat = user.PasswordFormat,
-                PasswordSalt = user.PasswordSalt
+                PasswordSalt = user.PasswordSalt,
+                User = user
             }, password)) {
                 validationErrors.Add(T("The username or e-mail or password provided is incorrect."));
                 return null;
