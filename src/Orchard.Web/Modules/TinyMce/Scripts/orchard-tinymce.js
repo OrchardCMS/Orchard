@@ -1,5 +1,8 @@
 ﻿var mediaPlugins = "";
+var contentPickerPlugins = "";
+var contentPickerButtons = "";
 
+//TODO: manage concatenation and buttons
 if (mediaPickerEnabled) {
     mediaPlugins += " mediapicker";
 }
@@ -8,14 +11,22 @@ if (mediaLibraryEnabled) {
     mediaPlugins += " medialibrary";
 }
 
+
+//TODO: manage concatenation and buttons
+//TODO: manage global scope variables
+if (contenPickerEnabled && tokensHtmlFilterEnabled) {
+    contentPickerPlugins += " orchardcontentlinks"
+    contentPickerButtons += "orchardlink"
+}
+
 tinyMCE.init({
     selector: "textarea.tinymce",
     theme: "modern",
     schema: "html5",
     plugins: [
-        "advlist, anchor, autolink, autoresize, charmap, code, colorpicker, contextmenu, directionality, emoticons, fullscreen, hr, image, insertdatetime, link, lists, media, nonbreaking, pagebreak, paste, preview, print, searchreplace, table, template, textcolor, textpattern, visualblocks, visualchars, wordcount" + mediaPlugins
+        "advlist, anchor, autolink, autoresize, charmap, code, colorpicker, contextmenu, directionality, emoticons, fullscreen, hr, image, insertdatetime, link, lists, media, nonbreaking, pagebreak, paste, preview, print, searchreplace, table, template, textcolor, textpattern, visualblocks, visualchars, wordcount" + (contentPickerPlugins != "" ? ", " + contentPickerPlugins : "") + (mediaPlugins != "" ? ", " + mediaPlugins : "")
     ],
-    toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | " + mediaPlugins + " link unlink charmap | code fullscreen",
+    toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | " + mediaPlugins + " link " + contentPickerButtons + " unlink charmap | code fullscreen",
     convert_urls: false,
     valid_elements: "*[*]",
     // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
@@ -27,7 +38,7 @@ tinyMCE.init({
     auto_focus: autofocus,
     directionality: directionality,
     setup: function (editor) {
-        $(document).bind("localization.ui.directionalitychanged", function(event, directionality) {
+        $(document).bind("localization.ui.directionalitychanged", function (event, directionality) {
             editor.getBody().dir = directionality;
         });
 

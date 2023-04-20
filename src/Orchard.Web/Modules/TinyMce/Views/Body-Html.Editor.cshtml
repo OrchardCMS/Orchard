@@ -14,6 +14,8 @@
 <script type="text/javascript">
     var mediaPickerEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaPicker") ? "true" : "false");
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
+    var contenPickerEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.ContentPicker") ? "true" : "false");
+    var tokensHtmlFilterEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.Tokens.HtmlFilter") ? "true" : "false");
     var directionality = "@WorkContext.GetTextDirection((IContent)Model.ContentItem)";
     var language = "@Model.Language";
     var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId("Text") : null)";

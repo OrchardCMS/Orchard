@@ -248,6 +248,7 @@
     <Content Include="Scripts\plugins\nonbreaking\plugin.min.js" />
     <Content Include="Scripts\plugins\noneditable\plugin.js" />
     <Content Include="Scripts\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\plugins\orchardcontentlinks\plugin.js" />
     <Content Include="Scripts\plugins\pagebreak\plugin.js" />
     <Content Include="Scripts\plugins\pagebreak\plugin.min.js" />
     <Content Include="Scripts\plugins\paste\plugin.js" />
