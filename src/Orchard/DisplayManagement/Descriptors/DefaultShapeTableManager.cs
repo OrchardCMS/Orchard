@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Autofac.Features.Metadata;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -39,7 +41,11 @@ namespace Orchard.DisplayManagement.Descriptors {
         public ShapeTable GetShapeTable(string themeName) {
             return _cacheManager.Get(themeName ?? "", true, x => {
                 Logger.Information("Start building shape table");
+                var swtotal = new Stopwatch();
+                var swSort = new Stopwatch();
+                var swGroups = new Stopwatch();
 
+                swtotal.Start();
                 var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
                                                                (Feature)bindingStrategy.Metadata["Feature"] :
@@ -50,11 +56,27 @@ namespace Orchard.DisplayManagement.Descriptors {
                     return builder.BuildAlterations().ToReadOnlyCollection();
                 });
 
-                var alterations = alterationSets
-                .SelectMany(shapeAlterations => shapeAlterations)
-                .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
-                .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority)
-                .ToList();
+                var unsortedAlterations = alterationSets
+                    .SelectMany(shapeAlterations => shapeAlterations)
+                    .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
+
+                swGroups.Start();
+                // Group all ShapeAlterations by Feature, so we may more easily sort those by their
+                // priorities and dependencies. The reason for this is that we may often end up with
+                // order of magnitude more ShapeAlterations than Features, so sorting directly the
+                // former may end up being too expensive.
+                var alterationsByFeature = unsortedAlterations
+                    .GroupBy(sa => sa.Feature.Descriptor.Id)
+                    .Select(g => new AlterationGroup {
+                        Feature = g.First().Feature,
+                        Alterations = g
+                    });
+                var orderedGroups = alterationsByFeature
+                    .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
+                var alterations = orderedGroups
+                    .SelectMany(g => g.Alterations)
+                    .ToList();
+                swGroups.Stop();
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
@@ -64,8 +86,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                             return descriptor;
                         })).ToList();
 
-                foreach(var descriptor in descriptors) {
-                    foreach(var alteration in alterations.Where(a => a.ShapeType == descriptor.ShapeType).ToList()) {
+                foreach (var descriptor in descriptors) {
+                    foreach (var alteration in alterations.Where(a => a.ShapeType == descriptor.ShapeType).ToList()) {
                         var local = new ShapeDescriptor { ShapeType = descriptor.ShapeType };
                         alteration.Alter(local);
                         descriptor.BindingSources.Add(local.BindingSource);
@@ -78,6 +100,12 @@ namespace Orchard.DisplayManagement.Descriptors {
                 };
 
                 _shapeTableEventHandlersWork.Value.Invoke(ctx => ctx.ShapeTableCreated(result), Logger);
+                swtotal.Stop();
+
+                Logger.Information("Done building shape table");
+                Logger.Error($"GetShapeTable Theme {themeName}: Total   time {swtotal.Elapsed.TotalMilliseconds}");
+                Logger.Error($"GetShapeTable Theme {themeName}: Sorting time {swSort.Elapsed.TotalMilliseconds}");
+                Logger.Error($"GetShapeTable Theme {themeName}: Groups  time {swGroups.Elapsed.TotalMilliseconds}");
 
                 Logger.Information("Done building shape table");
                 return result;
@@ -131,5 +159,18 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
             return false;
         }
+
+        class AlterationGroup {
+            public Feature Feature { get; set; }
+            public IEnumerable<ShapeAlteration> Alterations { get; set; }
+        }
+        private static int GetPriority(AlterationGroup shapeAlteration) {
+            return shapeAlteration.Feature.Descriptor.Priority;
+        }
+
+        private static bool AlterationHasDependency(AlterationGroup item, AlterationGroup subject) {
+            return ExtensionManager.HasDependency(item.Feature.Descriptor, subject.Feature.Descriptor);
+        }
+
     }
 }
