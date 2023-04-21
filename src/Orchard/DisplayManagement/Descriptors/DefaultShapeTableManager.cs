@@ -41,11 +41,7 @@ namespace Orchard.DisplayManagement.Descriptors {
         public ShapeTable GetShapeTable(string themeName) {
             return _cacheManager.Get(themeName ?? "", true, x => {
                 Logger.Information("Start building shape table");
-                var swtotal = new Stopwatch();
-                var swSort = new Stopwatch();
-                var swGroups = new Stopwatch();
 
-                swtotal.Start();
                 var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
                                                                (Feature)bindingStrategy.Metadata["Feature"] :
@@ -60,10 +56,9 @@ namespace Orchard.DisplayManagement.Descriptors {
                     .SelectMany(shapeAlterations => shapeAlterations)
                     .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
 
-                swGroups.Start();
                 // Group all ShapeAlterations by Feature, so we may more easily sort those by their
                 // priorities and dependencies. The reason for this is that we may often end up with
-                // order of magnitude more ShapeAlterations than Features, so sorting directly the
+                // orders of magnitude more ShapeAlterations than Features, so sorting directly the
                 // former may end up being too expensive.
                 var alterationsByFeature = unsortedAlterations
                     .GroupBy(sa => sa.Feature.Descriptor.Id)
@@ -76,7 +71,6 @@ namespace Orchard.DisplayManagement.Descriptors {
                 var alterations = orderedGroups
                     .SelectMany(g => g.Alterations)
                     .ToList();
-                swGroups.Stop();
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
@@ -100,12 +94,6 @@ namespace Orchard.DisplayManagement.Descriptors {
                 };
 
                 _shapeTableEventHandlersWork.Value.Invoke(ctx => ctx.ShapeTableCreated(result), Logger);
-                swtotal.Stop();
-
-                Logger.Information("Done building shape table");
-                Logger.Error($"GetShapeTable Theme {themeName}: Total   time {swtotal.Elapsed.TotalMilliseconds}");
-                Logger.Error($"GetShapeTable Theme {themeName}: Sorting time {swSort.Elapsed.TotalMilliseconds}");
-                Logger.Error($"GetShapeTable Theme {themeName}: Groups  time {swGroups.Elapsed.TotalMilliseconds}");
 
                 Logger.Information("Done building shape table");
                 return result;
