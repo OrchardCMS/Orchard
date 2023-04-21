@@ -11,7 +11,7 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
             if (!textLink || textLink == "") {
                 textLink = returnData.displayText;
             }
-                editor.insertContent("<a href=\"#{Content:(" + returnData.id.toString() + ").DisplayUrl}\">" + textLink + "</a>");
+                editor.insertContent("<a href=\"#{ContentManager.Get:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
 
         };
         $[callbackName].data = data;
