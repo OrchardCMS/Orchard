@@ -10,6 +10,13 @@ using Orchard.Logging;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
 using Orchard.Exceptions;
+using System.Diagnostics;
+using NHibernate.Cfg;
+using NHibernate.Linq.Functions;
+using System.Web.Http.Results;
+using System.Threading;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
@@ -21,6 +28,11 @@ namespace Orchard.Environment.Extensions {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+
+        /// <summary>
+        ///  Allow disabling parallel behavior through HostComponents.config
+        /// </summary>
+        public bool ParallelizationDisabled { get; set; }
 
         public ExtensionManager(
             IEnumerable<IExtensionFolders> folders,
@@ -36,8 +48,11 @@ namespace Orchard.Environment.Extensions {
             _loaders = loaders.OrderBy(x => x.Order).ToArray();
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+
+            _md5 = MD5.Create();
         }
 
+        private MD5 _md5;
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
         public ExtensionDescriptor GetExtension(string id) {
@@ -91,10 +106,34 @@ namespace Orchard.Environment.Extensions {
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             Logger.Information("Loading features");
 
-            var result =
-                _parallelCacheContext
-                .RunInParallel(featureDescriptors, descriptor => _cacheManager.Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
-                .ToArray();
+            // generate a cachekey by hashing the ids of all feature descriptors
+            var cacheKey = BitConverter.ToString(
+                _md5.ComputeHash(
+                    Encoding.UTF8.GetBytes(
+                        string.Join(";",
+                            featureDescriptors
+                                .Select(fd => fd.Id)
+                                .OrderBy(x => x)))));
+
+
+            var result = _cacheManager.Get(cacheKey,
+                true,
+                ctk => {
+                    if (ParallelizationDisabled) {
+                        Logger.Error("Serial");
+                        return featureDescriptors.Select(descriptor => _cacheManager
+                            .Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
+                            .ToArray();
+                    }
+                    else {
+                        Logger.Error("Parallel");
+                        return _parallelCacheContext
+                            .RunInParallel(featureDescriptors,
+                                descriptor => _cacheManager
+                                    .Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
+                            .ToArray();
+                    }
+                });
 
             Logger.Information("Done loading features");
             return result;
