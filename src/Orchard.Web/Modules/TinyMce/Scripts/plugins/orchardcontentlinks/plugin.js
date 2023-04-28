@@ -11,7 +11,7 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
             if (!textLink || textLink == "") {
                 textLink = returnData.displayText;
             }
-                editor.insertContent("<a href=\"#{ContentManager.Get:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
+            editor.insertContent("<a href=\"#{ContentManager.Get:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
 
         };
         $[callbackName].data = data;
@@ -24,7 +24,9 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
             baseUrl = baseUrl.substr(0, baseUrl.length - 1);
         var url = baseUrl + "/Admin/Orchard.ContentPicker?";
         url += "callback=" + callbackName + "&" + (new Date() - 0);
-
+        if ($("#" + editor.id).data("content-types")) {
+            url += "&types=" + $("#" + editor.id).data("content-types");
+        }
         var w = window.open(url, "_blank", data.windowFeatures || "width=685,height=700,status=no,toolbar=no,location=no,menubar=no,resizable=no,scrollbars=yes");
     }
 
