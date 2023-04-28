@@ -15,7 +15,8 @@ namespace Orchard.Layouts.Drivers {
 
         protected override EditorResult OnBuildEditor(Html element, ElementEditorContext context) {
             var viewModel = new HtmlEditorViewModel {
-                Text = element.Content
+                Text = element.Content,
+                Part = ((dynamic)context.Content.ContentItem).LayoutPart
             };
             var editor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.Html", Model: viewModel);
 
