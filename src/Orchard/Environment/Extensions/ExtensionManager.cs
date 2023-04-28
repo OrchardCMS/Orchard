@@ -120,13 +120,11 @@ namespace Orchard.Environment.Extensions {
                 true,
                 ctk => {
                     if (ParallelizationDisabled) {
-                        Logger.Error("Serial");
                         return featureDescriptors.Select(descriptor => _cacheManager
                             .Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
                             .ToArray();
                     }
                     else {
-                        Logger.Error("Parallel");
                         return _parallelCacheContext
                             .RunInParallel(featureDescriptors,
                                 descriptor => _cacheManager
