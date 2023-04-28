@@ -220,6 +220,8 @@
     <Content Include="Scripts\plugins\help\plugin.min.js" />
     <Content Include="Scripts\plugins\hr\plugin.js" />
     <Content Include="Scripts\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\plugins\htmlsnippets\plugin.js" />
+    <Content Include="Scripts\plugins\htmlsnippets\plugin.min.js" />
     <Content Include="Scripts\plugins\imagetools\plugin.js" />
     <Content Include="Scripts\plugins\imagetools\plugin.min.js" />
     <Content Include="Scripts\plugins\image\plugin.js" />
