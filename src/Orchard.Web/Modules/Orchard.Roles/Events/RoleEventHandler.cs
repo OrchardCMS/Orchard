@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Events {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class RoleEventHandler : IRoleEventHandler {
         private readonly IWorkflowManager _workflowManager;
 

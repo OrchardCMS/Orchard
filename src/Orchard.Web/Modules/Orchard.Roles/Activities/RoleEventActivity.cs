@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Activities {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class RoleEventActivity : Event {
         public Localizer T { get; set; }
 
