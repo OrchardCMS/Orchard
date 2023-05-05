@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Autofac.Features.Metadata;
 using Orchard.Caching;
@@ -20,6 +19,16 @@ namespace Orchard.DisplayManagement.Descriptors {
         private readonly ICacheManager _cacheManager;
         private readonly IParallelCacheContext _parallelCacheContext;
         private readonly Work<IEnumerable<IShapeTableEventHandler>> _shapeTableEventHandlersWork;
+
+        /// <summary>
+        /// Group all ShapeAlterations by Feature, so we may more easily sort those by their
+        /// priorities and dependencies. The reason for this is that we may often end up with
+        /// orders of magnitude more ShapeAlterations than Features, so sorting directly the
+        /// former may end up being too expensive.
+        /// We can enable this through HostComponents.config as a safety measure in case this
+        /// breaks some frontend.
+        /// </summary>
+        public bool GroupByFeatures { get; set; }
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
@@ -52,25 +61,36 @@ namespace Orchard.DisplayManagement.Descriptors {
                     return builder.BuildAlterations().ToReadOnlyCollection();
                 });
 
-                var unsortedAlterations = alterationSets
-                    .SelectMany(shapeAlterations => shapeAlterations)
-                    .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
+                List<ShapeAlteration> alterations;
+                if (GroupByFeatures) {
+                    var unsortedAlterations = alterationSets
+                        .SelectMany(shapeAlterations => shapeAlterations)
+                        .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
 
-                // Group all ShapeAlterations by Feature, so we may more easily sort those by their
-                // priorities and dependencies. The reason for this is that we may often end up with
-                // orders of magnitude more ShapeAlterations than Features, so sorting directly the
-                // former may end up being too expensive.
-                var alterationsByFeature = unsortedAlterations
-                    .GroupBy(sa => sa.Feature.Descriptor.Id)
-                    .Select(g => new AlterationGroup {
-                        Feature = g.First().Feature,
-                        Alterations = g
-                    });
-                var orderedGroups = alterationsByFeature
-                    .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
-                var alterations = orderedGroups
-                    .SelectMany(g => g.Alterations)
-                    .ToList();
+                    // Group all ShapeAlterations by Feature, so we may more easily sort those by their
+                    // priorities and dependencies. The reason for this is that we may often end up with
+                    // orders of magnitude more ShapeAlterations than Features, so sorting directly the
+                    // former may end up being too expensive.
+                    var alterationsByFeature = unsortedAlterations
+                        .GroupBy(sa => sa.Feature.Descriptor.Id)
+                        .Select(g => new AlterationGroup {
+                            Feature = g.First().Feature,
+                            Alterations = g
+                        });
+                    var orderedGroups = alterationsByFeature
+                        .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
+                    alterations = orderedGroups
+                        .SelectMany(g => g.Alterations)
+                        .ToList();
+                }
+                else {
+                    alterations = alterationSets
+                        .SelectMany(shapeAlterations => shapeAlterations)
+                        .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
+                        .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority)
+                        .ToList();
+                }
+
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
