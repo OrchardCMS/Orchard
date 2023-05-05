@@ -10,7 +10,7 @@
             if (!textLink || textLink == "") {
                 textLink = returnData.displayText;
             }
-            editor.insertContent("<a href=\"#{ContentManager.Get:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
+            editor.insertContent("<a href=\"#{ContentItem.Id:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
 
         };
         $[callbackName].data = data;
@@ -39,7 +39,7 @@
     // Adds a menu item to the tools menu
     editor.addMenuItem('orchardlink ', {
         text: 'content link',
-        //image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAEABHAPK/xSSIAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAvElEQVRIx+2VsRHCMAxFH3AwAR075CjSpGOfLEU6nAKmoIICJohHYANoVPjAji0nNLn8OxeSvny2vmTDDCUOQOfYb1mptpU9grDKDX12N20Nvq88OH+ZkLQGDFA7vho4SWwQdkADPIHS8ZfiOwonC1s5+R2oPPFKYka46hpegCtQ9PD3wA0452qwiXBWwlnklqhNKFGrKVFI5EdA5EYrsm8OQm1qPG0anaPRB216eI3wXNvYh2P/+eHM+MEHpr9Js1lOQvUAAAAASUVORK5CYII=',
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAABb0lEQVRIibWW223CQBBFDxEFUAIdJNHsf6CCkApiKgBXAFSAUgFJBdCB4X9HogSX4A6Sjx0rK8cGY5P7sw9Z93h3HvYAk4jbAk/cpgLYqPpz0wODCJDZ9NTSfBVBpk2QKuCk6tdt3EXcN5BGoFrIQ8u3bdIZeAZyIBNxf664LwBVnwPTJkhvgEGKJsiwp/dCxE2i9RFYAlsD9gIcgRHwUtkv4kVngKqf1u2LuHUMvUsMLunfAVevSMQtCUf+UvWHWwEXTyDidoSMGAF7EZfcDWDmCTC3gM6BnYgb9wZYoSSEXlP2l3LsDCiAQzTPgXd+KzMDzqr+2Amg6t+AmXXViUHGBs0MWJv7rQB25yszWpn5xsYjoR0XVYNrGkbmCSGQr4SsyYG8qWLbqjxBAqSq/hP4MNDYQL1UFloBPEbzPeEENxdWEyAl5PiIEOCcjndeVfxNngELM08NdOtfBlgnLWM3qHvC8n7bwbzUWdWnAD+rk38HDdeC5gAAAABJRU5ErkJggg==',
         context: 'insert',
         onclick: contentPickerAction
     });
@@ -48,7 +48,6 @@
         getMetadata: function () {
             return {
                 name: "Orchard content link plugin"
-                //url: "http://exampleplugindocsurl.com"
             };
         }
     };

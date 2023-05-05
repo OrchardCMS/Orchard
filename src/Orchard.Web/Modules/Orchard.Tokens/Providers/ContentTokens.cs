@@ -26,8 +26,8 @@ namespace Orchard.Tokens.Providers {
         public Localizer T { get; set; }
 
         public void Describe(DescribeContext context) {
-            context.For("ContentManager", T("Content Manager"), T("Content Manager"))
-                .Token("Get:*", T("Specific Content Item"), T("The content item with specified id."), "Text");
+            context.For("ContentItem", T("Content Items"), T("The context to access specific content items."))
+                .Token("Id:*", T("Content Item by Id"), T("The content item with the specified id."));
 
             context.For("Content", T("Content Items"), T("Content Items"))
                 .Token("Id", T("Content Id"), T("Numeric primary key value of content."))
@@ -74,34 +74,34 @@ namespace Orchard.Tokens.Providers {
         }
 
         public void Evaluate(EvaluateContext context) {
-            context.For<IContentManager>("ContentManager", _contentManager)
+            context.For<IContentManager>("ContentItem", _contentManager)
                 .Token(
-                        token => token.StartsWith("Get:", StringComparison.OrdinalIgnoreCase) ? ContentManagerGetToken(token) : "",
+                        token => token.StartsWith("Id:", StringComparison.OrdinalIgnoreCase) ? ContentManagerGetToken(token) : "",
                         (token, cm) => {
-                            // token is Get:*
+                            // token is Id:*
                             if (token != "") {
-                                var id = token.Substring("Get:".Length);
+                                var id = token.Substring("Id:".Length);
                                 return cm.Get(Convert.ToInt32(id));
                             }
                             else { return null; }
                         })
                 .Chain(
                     token => {
-                        var cleanToken = ContentManagerGetToken(token); // is Get:*
+                        var cleanToken = ContentManagerGetToken(token); // is Id:*
                         if (string.IsNullOrWhiteSpace(cleanToken)) return null;
                         int cleanTokenLength = cleanToken.Length;
                         var subTokens = token.Length > cleanTokenLength ? token.Substring(cleanToken.Length + 1) : "";
                         return new Tuple<string, string>(
-                            cleanToken, //The specific Token Item:*, it is the key
+                            cleanToken, //The specific Token Id:*, it is the key
                             subTokens //The subsequent Tokens (i.e Fields.PartName.FieldName)
                             );
                     },
                     "Content",
                     (token, cm) => {
-                        // token is Get:*
+                        // token is Id:*
 
                         if (token != "") {
-                            var id = token.Substring("Get:".Length);
+                            var id = token.Substring("Id:".Length);
                             return cm.Get(Convert.ToInt32(id));
                         }
                         else { return null; }
@@ -235,7 +235,7 @@ namespace Orchard.Tokens.Providers {
             return bodyPart.Text;
         }
 
-        //returns Get:* Token
+        //returns Id:* Token
         private static string ContentManagerGetToken(string token) {
             string tokenPrefix, result;
             int chainIndex, tokenLength;
