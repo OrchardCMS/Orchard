@@ -7,7 +7,7 @@
         @Html.ValidationMessageFor(m => m.Text)
     }
     else {
-       @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor, Required: Model.Settings.Required, ContentItem: Model.ContentItem)
+       @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor, Required: Model.Settings.Required, ContentItem: Model.ContentItem, Field: Model.Field)
     }
     @if (HasText(Model.Settings.Hint)) {
     <span class="hint">@Model.Settings.Hint</span>

@@ -250,6 +250,8 @@
     <Content Include="Scripts\plugins\nonbreaking\plugin.min.js" />
     <Content Include="Scripts\plugins\noneditable\plugin.js" />
     <Content Include="Scripts\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\plugins\orchardcontentlinks\plugin.js" />
+    <Content Include="Scripts\plugins\orchardcontentlinks\plugin.min.js" />
     <Content Include="Scripts\plugins\pagebreak\plugin.js" />
     <Content Include="Scripts\plugins\pagebreak\plugin.min.js" />
     <Content Include="Scripts\plugins\paste\plugin.js" />
@@ -317,6 +319,8 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
+    <Compile Include="Settings\ContentLinksSettings.cs" />
+    <Compile Include="Settings\EditorEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\orchard-tinymce.css" />
@@ -379,7 +383,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\DefinitionTemplates\ContentLinksSettings.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
