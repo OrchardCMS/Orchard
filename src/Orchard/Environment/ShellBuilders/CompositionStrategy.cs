@@ -197,7 +197,7 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         private static bool IsRecord(Type type) {
-            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records")) &&
+            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records") || type.Name.EndsWith("Record")) &&
                    type.GetProperty("Id") != null &&
                    (type.GetProperty("Id").GetAccessors()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&
