@@ -106,7 +106,10 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void AllDataTypesCanBeQueried() {
-            var dt = DateTime.Now;
+            var now = DateTime.Now;
+            // NHibernate stores DateTime values with seconds-precision, so everything below that needs to be truncated
+            // so that the query works correctly. Thanks to https://stackoverflow.com/a/1005222 for elegant solution.
+            now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond));
 
             _manager.Create<LambdaPart>("lambda", init => {
                 init.Record.BooleanStuff = true;
@@ -116,7 +119,7 @@ namespace Orchard.Tests.ContentManagement {
                 init.Record.IntegerStuff = 0;
                 init.Record.LongStuff = 0;
                 init.Record.StringStuff = "0";
-                init.Record.DateTimeStuff = dt;
+                init.Record.DateTimeStuff = now;
             });
             _session.Flush();
 
@@ -144,7 +147,7 @@ namespace Orchard.Tests.ContentManagement {
             lambda = _manager.HqlQuery().Where(alias => alias.ContentPartRecord<LambdaRecord>(), x => x.Eq("StringStuff", "0")).List();
             Assert.That(lambda.Count(), Is.EqualTo(1));
 
-            lambda = _manager.HqlQuery().Where(alias => alias.ContentPartRecord<LambdaRecord>(), x => x.Eq("DateTimeStuff", dt)).List();
+            lambda = _manager.HqlQuery().Where(alias => alias.ContentPartRecord<LambdaRecord>(), x => x.Eq("DateTimeStuff", now)).List();
             Assert.That(lambda.Count(), Is.EqualTo(1));
         }
 
