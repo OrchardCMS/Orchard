@@ -1,5 +1,5 @@
 ﻿@model Orchard.Layouts.ViewModels.HtmlEditorViewModel
 <fieldset>
     @Html.LabelFor(m => m.Text, T("HTML"))
-    @Display.Body_Editor(EditorFlavor: "html", Text: Model.Text, AutoFocus: true)
+    @Display.Body_Editor(EditorFlavor: "html", Text: Model.Text, AutoFocus: true, Part: Model.Part)
 </fieldset>

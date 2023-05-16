@@ -19,14 +19,14 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Projections.Settings {
     public class ProjectionPartEditorEvents : ContentDefinitionEditorEventsBase, IContentDefinitionEventHandler {
-        private readonly IProjectionManager _projectionManager;
+        private readonly IProjectionManagerExtension _projectionManager;
         private readonly IContentManager _contentManager;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public ProjectionPartEditorEvents(
             IOrchardServices services,
-            IProjectionManager projectionManager,
+            IProjectionManagerExtension projectionManager,
             IContentManager contentManager,
             IRepository<LayoutRecord> layoutRepository,
             IContentDefinitionManager contentDefinitionManager) {

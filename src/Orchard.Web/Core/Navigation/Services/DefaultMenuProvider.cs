@@ -23,17 +23,27 @@ namespace Orchard.Core.Navigation.Services {
                 if (menuPart != null) {
                     var part = menuPart;
 
-                    string culture = null;
-                    // fetch the culture of the content menu item, if any
-                    var localized = part.As<ILocalizableAspect>();
-                    if (localized != null) {
-                        culture = localized.Culture;
+                    var showItem = true;
+                    // If the menu item is a ContentMenuItemPart (from Orchard.ContentPicker), check the ContentItem is published.
+                    // If there is no published version of the ContentItem, the item must not be added to NavigationBuilder.
+                    var cmip = ((dynamic)part).ContentMenuItemPart;
+                    if (cmip != null) {
+                        showItem = cmip.Content != null;
                     }
 
-                    if (part.Is<MenuItemPart>())
-                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Url(part.As<MenuItemPart>().Url).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
-                    else
-                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
+                    if (showItem) {
+                        string culture = null;
+                        // fetch the culture of the content menu item, if any
+                        var localized = part.As<ILocalizableAspect>();
+                        if (localized != null) {
+                            culture = localized.Culture;
+                        }
+
+                        if (part.Is<MenuItemPart>())
+                            builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Url(part.As<MenuItemPart>().Url).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
+                        else
+                            builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
+                    }
                 }
             }
         }

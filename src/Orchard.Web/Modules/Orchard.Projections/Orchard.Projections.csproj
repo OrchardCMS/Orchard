@@ -201,6 +201,8 @@
     <Compile Include="Models\QueryVersionScopeOptions.cs" />
     <Compile Include="Settings\ProjectionPartEditorEvents.cs" />
     <Compile Include="Settings\ProjectionPartSettings.cs" />
+    <Compile Include="Settings\ProjectionPartEditorEvents.cs" />
+    <Compile Include="Settings\ProjectionPartSettings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Descriptors\Layout\LayoutComponentResult.cs" />
     <Compile Include="Descriptors\Layout\LayoutContext.cs" />

@@ -99,6 +99,7 @@
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
     <Compile Include="Common\Extensions\CommonMetaDataExtensions.cs" />
     <Compile Include="Common\Extensions\ContentItemExtensions.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorPermissions.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
     <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
@@ -605,12 +606,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
+    <Content Include="Navigation\Views\Admin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\Admin\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

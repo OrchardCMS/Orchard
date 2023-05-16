@@ -21,7 +21,6 @@ namespace Orchard.Projections {
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
             IRepository<PropertyRecord> propertyRecordRepository) {
-
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
@@ -356,6 +355,18 @@ namespace Orchard.Projections {
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
 
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
+                     column => column.WithLength(68)));
+
+            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
+            foreach (var layout in layoutRecords) {
+               layout.GUIdentifier = Guid.NewGuid().ToString();
+            }
+
+            return 6;
         }
 
 #pragma warning disable CS0618
