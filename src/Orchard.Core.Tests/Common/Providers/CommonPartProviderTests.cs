@@ -177,7 +177,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
         }
 
-        class UpdatModelStub : IUpdateModel {
+        class UpdateModelStub : IUpdateModel {
 
             ModelStateDictionary _modelState = new ModelStateDictionary();
 
@@ -219,7 +219,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             item.Owner = user;
 
-            var updater = new UpdatModelStub() { Owner = null };
+            var updater = new UpdateModelStub() { Owner = null };
 
             contentManager.UpdateEditor(item.ContentItem, updater);
         }
@@ -236,7 +236,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             item.Owner = user;
 
-            var updater = new UpdatModelStub() { Owner = "" };
+            var updater = new UpdateModelStub() { Owner = "" };
 
             _container.Resolve<DefaultShapeTableManagerTests.TestShapeProvider>().Discover =
                 b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
@@ -259,7 +259,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             item.Owner = user;
 
-            var updater = new UpdatModelStub() { Owner = "" };
+            var updater = new UpdateModelStub() { Owner = "" };
 
             _container.Resolve<DefaultShapeTableManagerTests.TestShapeProvider>().Discover =
                 b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
@@ -384,7 +384,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             _clock.Advance(TimeSpan.FromMinutes(1));
             var editUtc = _clock.UtcNow;
 
-            var updater = new UpdatModelStub() { Owner = "" };
+            var updater = new UpdateModelStub() { Owner = "" };
             contentManager.UpdateEditor(item.ContentItem, updater);
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
