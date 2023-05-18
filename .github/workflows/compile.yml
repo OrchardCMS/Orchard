@@ -18,5 +18,8 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore src/Orchard.sln
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.3.1
+
       - name: Compile
         run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true
