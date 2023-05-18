@@ -8,7 +8,7 @@ jobs:
     name: Compile
     defaults:
       run:
-        shell: cmd
+        shell: pwsh
     runs-on: windows-latest
 
     steps:
