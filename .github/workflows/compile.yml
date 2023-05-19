@@ -21,8 +21,11 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Test
-        run: msbuild Orchard.proj /m /t:Test /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true
+      - name: Compile
+        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true
 
       - name: Test
+        run: msbuild Orchard.proj /m /t:Test
+
+      - name: Spec
         run: msbuild Orchard.proj /m /t:Spec
