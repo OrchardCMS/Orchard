@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Navigation.Models;
@@ -11,13 +12,22 @@ namespace Orchard.Core.Navigation.Services {
 
         public DefaultMenuProvider(IContentManager contentManager) {
             _contentManager = contentManager;
+
+            _menuPartsMemory = new Dictionary<int, IEnumerable<MenuPart>>();
         }
 
+        // Prevent doing the same query for MenuParts more than once on a same request
+        // in case we are building the same menu several times.
+        private Dictionary<int, IEnumerable<MenuPart>> _menuPartsMemory;
+
         public void GetMenu(IContent menu, NavigationBuilder builder) {
-            var menuParts = _contentManager
-                .Query<MenuPart, MenuPartRecord>()
-                .Where(x => x.MenuId == menu.Id)
-                .List();
+            if (!_menuPartsMemory.ContainsKey(menu.Id)) {
+                _menuPartsMemory[menu.Id] = _contentManager
+                    .Query<MenuPart, MenuPartRecord>()
+                    .Where(x => x.MenuId == menu.Id)
+                    .List();
+            }
+            var menuParts = _menuPartsMemory[menu.Id];
 
             foreach (var menuPart in menuParts) {
                 if (menuPart != null) {
