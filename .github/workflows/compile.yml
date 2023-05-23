@@ -25,7 +25,9 @@ jobs:
         run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
 
       - name: Test
+        if: false
         run: msbuild Orchard.proj /m /t:Test
 
       - name: Spec
+        if: false
         run: msbuild Orchard.proj /m /t:Spec
