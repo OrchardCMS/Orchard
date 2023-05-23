@@ -22,7 +22,15 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Compile
-        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError /bl:Orchard.binlog
+
+      - name: Upload MSBuild Binary Log
+        uses: actions/upload-artifact@v3.1.1
+        if: success() || failure()
+        with:
+          name: Orchard-${{ github.sha }}-${{ github.run_number }}.binlog
+          path: Orchard.binlog
+          if-no-files-found: ignore
 
       - name: Test
         if: false
