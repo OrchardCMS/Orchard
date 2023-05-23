@@ -758,7 +758,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 271
         testRunner.And("I should see \"<h1[^>]*>.*?My Post 11.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 272
-        testRunner.And("I should not see \"<h1[^>]*>.*?My Post 10.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I should not see \"My Post 2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 273
     testRunner.When("I go to \"my-blog?page=2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 274
@@ -768,7 +768,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 276
         testRunner.And("I should see \"<h1[^>]*>.*?My Post 2.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 277
-        testRunner.And("I should not see \"<h1[^>]*>.*?My Post 3.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I should not see \"My Post 3\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

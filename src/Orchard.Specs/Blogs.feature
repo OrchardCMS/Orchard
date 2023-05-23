@@ -269,12 +269,12 @@ Scenario: I can create browse blog posts on several pages
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 12.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 11.*?</h1>"
-        And I should not see "<h1[^>]*>.*?My Post 10.*?</h1>"
+        And I should not see "My Post 2"
     When I go to "my-blog?page=2"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 1.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 2.*?</h1>"
-        And I should not see "<h1[^>]*>.*?My Post 3.*?</h1>"
+        And I should not see "My Post 3"
 
 Scenario: I can create a new blog with a percent sign in the title and it gets stripped out of the slug
        Given I have installed Orchard
