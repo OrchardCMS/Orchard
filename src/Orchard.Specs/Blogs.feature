@@ -171,6 +171,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 1 |
@@ -179,6 +180,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 2 |
@@ -187,6 +189,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 3 |
@@ -195,6 +198,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 4 |
@@ -203,6 +207,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 5 |
@@ -211,6 +216,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 6 |
@@ -219,6 +225,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 7 |
@@ -227,6 +234,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 8 |
@@ -235,6 +243,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 9 |
@@ -243,6 +252,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 10 |
@@ -251,6 +261,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 11 |
@@ -259,6 +270,7 @@ Scenario: I can create browse blog posts on several pages
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
+        And I wait "1000"
         And I fill in
             | name | value |
             | Title.Title | My Post 12 |
