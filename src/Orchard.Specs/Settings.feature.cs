@@ -75,11 +75,15 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 10
-    testRunner.When("I have \"hu-HU\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Settings/Index\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 11
-    testRunner.And("I go to \"Admin/Settings/Index\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.Then("I should not see \"hu-HU\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 12
-    testRunner.Then("I should see \"<option selected=\"selected\">hu-HU</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.When("I have \"hu-HU\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 13
+        testRunner.And("I go to \"Admin/Settings/Index\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
+        testRunner.Then("I should see \"<option selected=\"selected\">hu-HU</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
