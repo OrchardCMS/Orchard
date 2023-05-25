@@ -1,0 +1,16 @@
+name: Compile
+
+on:
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: Compile
+    defaults:
+      run:
+        shell: cmd
+    runs-on: windows-latest
+
+    steps:
+      - name: Test
+        run: echo Test
