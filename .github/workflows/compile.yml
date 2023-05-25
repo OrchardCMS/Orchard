@@ -8,9 +8,33 @@ jobs:
     name: Compile
     defaults:
       run:
-        shell: cmd
+        shell: pwsh
     runs-on: windows-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v3.1.0
+
+      - name: Restore NuGet packages
+        run: nuget restore src/Orchard.sln
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Compile
+        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError /bl:Orchard.binlog
+
+      - name: Upload MSBuild Binary Log
+        uses: actions/upload-artifact@v3.1.1
+        if: success() || failure()
+        with:
+          name: Orchard-${{ github.sha }}-${{ github.run_number }}.binlog
+          path: Orchard.binlog
+          if-no-files-found: ignore
+
       - name: Test
-        run: echo Test
+        run: msbuild Orchard.proj /m /t:Test
+
+      - name: Spec
+        if: false
+        run: msbuild Orchard.proj /m /t:Spec
