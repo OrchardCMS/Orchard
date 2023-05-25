@@ -85,7 +85,7 @@
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 autoUpload: true,
-                @((settings.LimitConcurrentUploads != null && settings.LimitConcurrentUploads > 0) ? "limitConcurrentUploads:" + settings.LimitConcurrentUploads + "," : "")
+                @((settings.LimitConcurrentUploads > 0) ? "limitConcurrentUploads:" + settings.LimitConcurrentUploads + "," : "")
                 @if(Model.Replace == null) {
                 <text>
                 url: '@Url.Action("Upload")',
