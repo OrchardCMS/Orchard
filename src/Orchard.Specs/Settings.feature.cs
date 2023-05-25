@@ -19,21 +19,21 @@ namespace Orchard.Specs
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Media management")]
-    public partial class MediaManagementFeature
+    [NUnit.Framework.DescriptionAttribute("Settings")]
+    public partial class SettingsFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Media.feature"
+#line 1 "Settings.feature"
 #line hidden
         
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Media management", "  In order to reference images and such from content\r\n  As an author\r\n  I want to" +
-                    " access the Media Library", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Settings", "\r\nIn order to manage my site\r\nAs a privileged user\r\nI want to be able to see and " +
+                    "change site settings", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -66,22 +66,24 @@ namespace Orchard.Specs
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Media admin is available")]
-        public virtual void MediaAdminIsAvailable()
+        [NUnit.Framework.DescriptionAttribute("Adding a new site culture and selecting it as the default works")]
+        public virtual void AddingANewSiteCultureAndSelectingItAsTheDefaultWorks()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Media admin is available", ((string[])(null)));
-#line 6
-this.ScenarioSetup(scenarioInfo);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Adding a new site culture and selecting it as the default works", ((string[])(null)));
 #line 7
+this.ScenarioSetup(scenarioInfo);
+#line 9
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 8
-    testRunner.And("I have installed \"Orchard.MediaLibrary\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+    testRunner.When("I go to \"Admin/Settings/Index\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 11
-    testRunner.When("I go to \"Admin/Orchard.MediaLibrary\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Then("I should not see \"hu-HU\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 12
-    testRunner.Then("I should see \"Media Library\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.When("I have \"hu-HU\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 13
-    testRunner.And("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I go to \"Admin/Settings/Index\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
+        testRunner.Then("I should see \"<option selected=\"selected\">hu-HU</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

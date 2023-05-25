@@ -163,7 +163,7 @@ Scenario: Creating and using date time fields in another culture
         And I go to "Admin/ContentTypes/"
     Then I should see "Event"
 
-    # Adding a Date field
+    # Adding a Date field and changing its settings
     When I go to "Admin/ContentTypes/Edit/Event"
         And I follow "Add Field"
         And I fill in
@@ -174,15 +174,15 @@ Scenario: Creating and using date time fields in another culture
         And I hit "Save"
         And I am redirected
     Then I should see "The \"Date of the event\" field has been added."
-
-    # Date & Time are inputted based on current culture
-    When I have "fr-FR" as the default culture
-        And I go to "Admin/ContentTypes/Edit/Event"
+    When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in
             | name                                     | value       |
             | Fields[EventDate].DateTimeFieldSettings.Display  | DateAndTime |
             | Fields[EventDate].DateTimeFieldSettings.Required | true        |
         And I hit "Save"
+
+    # Date & Time are validated based on current culture
+    When I have "fr-FR" as the default culture
     When I go to "Admin/Contents/Create/Event"
         And I fill in
             | name                        | value      |
