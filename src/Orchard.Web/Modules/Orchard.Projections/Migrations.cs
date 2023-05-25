@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -16,7 +15,7 @@ namespace Orchard.Projections {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
-        
+
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
@@ -355,18 +354,6 @@ namespace Orchard.Projections {
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
 
             return 5;
-        }
-
-        public int UpdateFrom5() {
-            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
-                     column => column.WithLength(68)));
-
-            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
-            foreach (var layout in layoutRecords) {
-               layout.GUIdentifier = Guid.NewGuid().ToString();
-            }
-
-            return 6;
         }
 
 #pragma warning disable CS0618
