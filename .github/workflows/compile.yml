@@ -36,5 +36,4 @@ jobs:
         run: msbuild Orchard.proj /m /t:Test
 
       - name: Spec
-        if: false
         run: msbuild Orchard.proj /m /t:Spec
