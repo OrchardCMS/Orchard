@@ -188,11 +188,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Settings.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Settings.feature</DependentUpon>
-    </Compile>
     <Compile Include="Text.feature.cs">
       <DependentUpon>Text.feature</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -365,10 +360,6 @@
       <DependentUpon>HostComponents.config</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="Settings.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.feature.cs</LastGenOutput>
-    </None>
     <None Include="Text.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Text.feature.cs</LastGenOutput>
