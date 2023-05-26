@@ -152,6 +152,7 @@
   <ItemGroup>
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
+    <Compile Include="Data\MapAsRecordAttribute.cs" />
     <Compile Include="Data\Migration\Interpreters\PostgreSqlCommandInterpreter.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\DefaultPlacementParseMatchProviders.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\IPlacementParseMatchProvider.cs" />
