@@ -123,9 +123,6 @@
     <Compile Include="Visitors\WhereArgumentsVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\NH.Linq.snk">
-      <Link>NH.Linq.snk</Link>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
