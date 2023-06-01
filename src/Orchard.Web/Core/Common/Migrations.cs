@@ -34,9 +34,9 @@ namespace Orchard.Core.Common {
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.CreatedUtc)}", nameof(CommonPartRecord.CreatedUtc));
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.ModifiedUtc)}", nameof(CommonPartRecord.ModifiedUtc));
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_{nameof(CommonPartRecord.PublishedUtc)}", nameof(CommonPartRecord.PublishedUtc));
-                    // This originally in UpdateFrom8
+                    // This originally in UpdateFrom7
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id", "Container_id");
-                    // This originally in UpdateFrom6
+                    // This originally in UpdateFrom8
                     table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation",
                         nameof(CommonPartRecord.OwnerId),
                         nameof(CommonPartRecord.CreatedUtc));
@@ -66,7 +66,7 @@ namespace Orchard.Core.Common {
                     .ContentPartRecord()
                     .Column<string>("Identifier", column => column.WithLength(255)))
                 .AlterTable(nameof(IdentityPartRecord), table => table
-                    // This originally in UpdateFrom7
+                    // This originally in UpdateFrom6
                     .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
 
             ContentDefinitionManager.AlterPartDefinition("BodyPart", builder => builder
