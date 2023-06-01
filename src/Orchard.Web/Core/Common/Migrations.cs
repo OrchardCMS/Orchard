@@ -80,7 +80,7 @@ namespace Orchard.Core.Common {
             ContentDefinitionManager.AlterPartDefinition("IdentityPart", builder => builder
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
-            
+
             return 9;
         }
 
@@ -156,6 +156,23 @@ namespace Orchard.Core.Common {
         }
 
         public int UpdateFrom6() {
+            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
+                .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
+
+            return 7;
+        }
+
+        public int UpdateFrom7() {
+            // The Container_Id is basically a foreign key, used in several queries
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
+                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id",
+                    "Container_id");
+            });
+
+            return 8;
+        }
+
+        public int UpdateFrom8() {
             // Studying SQL Server query execution plans we noticed that when the system
             // tries to find content items for requests such as
             // "The items of type TTT owned by me, ordered from the most recent"
@@ -192,22 +209,6 @@ namespace Orchard.Core.Common {
                 table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication",
                     nameof(CommonPartRecord.OwnerId),
                     nameof(CommonPartRecord.PublishedUtc));
-            });
-            return 7;
-        }
-
-        public int UpdateFrom7() {
-            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
-                .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
-
-            return 8;
-        }
-
-        public int UpdateFrom8() {
-            // The Container_Id is basically a foreign key, used in several queries
-            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id",
-                    "Container_id");
             });
 
             return 9;
