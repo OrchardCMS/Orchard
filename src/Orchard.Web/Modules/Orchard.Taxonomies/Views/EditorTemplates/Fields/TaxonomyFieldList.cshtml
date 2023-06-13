@@ -5,29 +5,18 @@
     Script.Require("jQuery");
     var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.', '_');
     using (Script.Foot()) {
-        <script type="text/javascript">
+    <script type="text/javascript">
             //<![CDATA[
             $(document).ready(function () {
                 var pageurl = '@Url.Action("GetTaxonomy", "LocalizedTaxonomy", new { area = "Orchard.Taxonomies" })';
-                function filterTaxonomyCulture(culture) {
+                function @("filterTaxonomyCulture_" + Model.PartName + "_" + Model.FieldName)(culture) {
                     $.ajax({
                         url: pageurl,
                         data: { contentTypeName: '@Model.ContentType', taxonomyFieldName: '@Model.FieldName', contentId: @Model.Id, culture: culture },
                         success: function (html) {
                             var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
-                            var checkedItems = $(".terms input[checked='checked']", container);
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
-
-                            $("input", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).each(function () {
-                                $(this).prop("checked", false);
-                            });
-
-                            // Check back previously selected items.
-                            checkedItems.each(function () {
-                                var idToCheck = this.id;
-                                $("input[id='" + idToCheck + "']", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).prop("checked", true);
-                            });
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
                             @if (Model.Setting.Autocomplete) {
@@ -150,13 +139,21 @@
                                     alert("@T("Loading taxonomy fail, Retry")");
                                 });
                 }
-                $("#Localization_SelectedCulture").on('change', function () {
+                $("#Localization_SelectedCulture").on('change', function (p) {
                     var optionSelected = $("option:selected", this);
-                    filterTaxonomyCulture($("#Localization_SelectedCulture").val());
+                    var refreshTerms = false;
+                    if (p != undefined) {
+                        if (p == "@(Model.PartName + "_" + Model.FieldName)") {
+                            refreshTerms = true;
+                        }
+                    }
+                    if (refreshTerms) {
+                        @("filterTaxonomyCulture_" + Model.PartName + "_" + Model.FieldName)($("#Localization_SelectedCulture").val());
+                    }
                 });
-                $("#Localization_SelectedCulture").trigger("change");
+                $("#Localization_SelectedCulture").trigger("change", "@(Model.PartName + "_" + Model.FieldName)");
             });
             //]]>
-        </script>
+    </script>
     }
 }
