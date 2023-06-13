@@ -5,7 +5,7 @@
     Script.Require("jQuery");
     var Taxonomyprefix = ((ViewData)).TemplateInfo.HtmlFieldPrefix.Replace('.', '_');
     using (Script.Foot()) {
-    <script type="text/javascript">
+        <script type="text/javascript">
             //<![CDATA[
             $(document).ready(function () {
                 var pageurl = '@Url.Action("GetTaxonomy", "LocalizedTaxonomy", new { area = "Orchard.Taxonomies" })';
@@ -20,13 +20,13 @@
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
 
                             $("input", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).each(function () {
-                                //$(this).prop("checked", false);
+                                $(this).prop("checked", false);
                             });
 
                             // Check back previously selected items.
                             checkedItems.each(function () {
                                 var idToCheck = this.id;
-                                $("input[id='" + idToCheck + "']", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).attr("checked", "checked");
+                                $("input[id='" + idToCheck + "']", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).prop("checked", true);
                             });
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
@@ -157,6 +157,6 @@
                 $("#Localization_SelectedCulture").trigger("change");
             });
             //]]>
-    </script>
+        </script>
     }
 }
