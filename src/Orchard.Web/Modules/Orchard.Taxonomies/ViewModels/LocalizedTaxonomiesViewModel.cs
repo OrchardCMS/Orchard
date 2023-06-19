@@ -7,6 +7,7 @@ namespace Orchard.Taxonomies.ViewModels {
         public string ContentType { get; set; }
         public string FieldName { get; set; }
         public int Id { get; set; }
+        public string PartName { get; set; }
         public TaxonomyFieldSettings Setting { get; set; }
     }
 }
