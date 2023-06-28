@@ -3,6 +3,7 @@ using System.Linq;
 using log4net;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 
@@ -12,20 +13,20 @@ namespace Orchard.Recipes.Services {
         private readonly IRecipeScheduler _recipeScheduler;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
         private readonly IRepository<RecipeStepResultRecord> _recipeStepResultRecordRepository;
-        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RecipeManager(
             IRecipeStepQueue recipeStepQueue,
             IRecipeScheduler recipeScheduler,
             IRecipeExecuteEventHandler recipeExecuteEventHandler,
             IRepository<RecipeStepResultRecord> recipeStepResultRecordRepository,
-            IWorkContextAccessor workContextAccessor) {
+            IHttpContextAccessor httpContextAccessor) {
 
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
             _recipeStepResultRecordRepository = recipeStepResultRecordRepository;
-            _workContextAccessor = workContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
 
             RecipeExecutionTimeout = 600;
         }
@@ -57,9 +58,9 @@ namespace Orchard.Recipes.Services {
             }
 
             // Sets the request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
-            var workContext = _workContextAccessor.GetContext();
-            if (workContext?.HttpContext != null) {
-                workContext.HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
+            var httpContext = _httpContextAccessor.Current();
+            if (httpContext != null) {
+                httpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
             }
 
             var executionId = Guid.NewGuid().ToString("n");

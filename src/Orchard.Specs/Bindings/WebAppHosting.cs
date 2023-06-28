@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using Castle.Core.Logging;
 using HtmlAgilityPack;
@@ -366,6 +367,11 @@ namespace Orchard.Specs.Bindings {
             else {
                 Assert.Fail("Expected to be redirected but no Location header returned");
             }
+        }
+
+        [When(@"I wait ""(.*)""")]
+        public void WhenIWait(int waitMilliseconds) {
+            Thread.Sleep(waitMilliseconds);
         }
 
         [Then(@"the status should be (.*) ""(.*)""")]

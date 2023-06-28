@@ -426,10 +426,8 @@ this.ScenarioSetup(scenarioInfo);
         testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 176
     testRunner.Then("I should see \"The \\\"Date of the event\\\" field has been added.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 179
-    testRunner.When("I have \"fr-FR\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 180
-        testRunner.And("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 177
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -440,10 +438,12 @@ this.ScenarioSetup(scenarioInfo);
             table16.AddRow(new string[] {
                         "Fields[EventDate].DateTimeFieldSettings.Required",
                         "true"});
-#line 181
+#line 178
         testRunner.And("I fill in", ((string)(null)), table16, "And ");
-#line 185
+#line 182
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 185
+    testRunner.When("I have \"fr-FR\" as the default culture", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 186
     testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden

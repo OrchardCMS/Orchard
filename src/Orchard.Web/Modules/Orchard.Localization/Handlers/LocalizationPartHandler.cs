@@ -31,22 +31,26 @@ namespace Orchard.Localization.Handlers {
 
         protected static void PropertySetHandlers(ActivatedContentContext context, LocalizationPart localizationPart) {
             localizationPart.CultureField.Setter(cultureRecord => {
-                localizationPart.Record.CultureId = cultureRecord != null ? cultureRecord.Id : 0;
+                localizationPart.Store<LocalizationPart, LocalizationPartRecord, int>(r => r.CultureId,
+                    cultureRecord != null ? cultureRecord.Id : 0);
                 return cultureRecord;
             });
-            
+
             localizationPart.MasterContentItemField.Setter(masterContentItem => {
-                localizationPart.Record.MasterContentItemId = masterContentItem.ContentItem.Id;
+                localizationPart.Store<LocalizationPart, LocalizationPartRecord, int>(r => r.MasterContentItemId,
+                    masterContentItem.ContentItem.Id);
                 return masterContentItem;
-            });            
+            });
         }
 
         protected void LazyLoadHandlers(LocalizationPart localizationPart) {
-            localizationPart.CultureField.Loader(() => 
-                _cultureManager.GetCultureById(localizationPart.Record.CultureId));
+            localizationPart.CultureField.Loader(() =>
+                _cultureManager.GetCultureById(
+                    localizationPart.Retrieve<LocalizationPart, LocalizationPartRecord, int>(r => r.CultureId)));
 
             localizationPart.MasterContentItemField.Loader(() =>
-                _contentManager.Get(localizationPart.Record.MasterContentItemId, VersionOptions.AllVersions));
+                _contentManager.Get(
+                    localizationPart.Retrieve<LocalizationPart, LocalizationPartRecord, int>(r => r.MasterContentItemId), VersionOptions.AllVersions));
         }
     }
 }

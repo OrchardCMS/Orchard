@@ -395,6 +395,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be created.</param>
         /// <param name="inputStream">The stream to be saved.</param>
         /// <exception cref="ArgumentException">If the stream can't be saved due to access permissions.</exception>
+        /// <exception cref="OrchardException">If the path is invalid.</exception>
         public void SaveStream(string path, Stream inputStream) {
             // Create the file.
             // The CreateFile method will map the still relative path

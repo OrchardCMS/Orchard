@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1738
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -285,8 +285,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Conditions", "Orcha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Resources", "Orchard.Web\Modules\Orchard.Resources\Orchard.Resources.csproj", "{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.Tests", "Orchard.Azure.Tests\Orchard.Azure.Tests.csproj", "{1CC62F45-E6FF-43D5-84BF-509A1085D994}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.OpenId", "Orchard.Web\Modules\Orchard.OpenId\Orchard.OpenId.csproj", "{42E217C1-E163-4B6B-9E8F-42BEE21B6896}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Glimpse", "Orchard.Web\Modules\Orchard.Glimpse\Orchard.Glimpse.csproj", "{71E17466-D937-49D7-8C7D-77CCBAB8CCF4}"
@@ -306,6 +304,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4C95F27D-A872-481F-A9AF-851DB178C186}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\build-crowdin-translation-packages.yml = ..\.github\workflows\build-crowdin-translation-packages.yml
+		..\.github\workflows\compile.yml = ..\.github\workflows\compile.yml
 	EndProjectSection
 EndProject
 Global
@@ -1134,16 +1133,6 @@ Global
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Coverage|Any CPU.Build.0 = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.FxCop|Any CPU.Build.0 = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42E217C1-E163-4B6B-9E8F-42BEE21B6896}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
 		{42E217C1-E163-4B6B-9E8F-42BEE21B6896}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
 		{42E217C1-E163-4B6B-9E8F-42BEE21B6896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1278,7 +1267,6 @@ Global
 		{90EBEE36-B5CD-42A8-A21B-76270E2C5D24} = {DF3909B0-1DDD-4D8A-9919-56FC438E25E2}
 		{98251EAE-A41B-47B2-AA91-E28B8482DA70} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{D4E8F7C8-2DB2-4C50-A422-DA1DF1E3CC73} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
-		{1CC62F45-E6FF-43D5-84BF-509A1085D994} = {74E681ED-FECC-4034-B9BD-01B0BB1BDECA}
 		{42E217C1-E163-4B6B-9E8F-42BEE21B6896} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{71E17466-D937-49D7-8C7D-77CCBAB8CCF4} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{A17BE797-D4AF-4CB4-A9FD-AE7BA09A95BD} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
@@ -1288,7 +1276,7 @@ Global
 		{4C95F27D-A872-481F-A9AF-851DB178C186} = {06A32C3C-10A2-472E-B725-5AF102E92C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
 		SolutionGuid = {3585D970-275B-4363-9F61-CD37CFC9DCD3}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
 	EndGlobalSection
 EndGlobal
