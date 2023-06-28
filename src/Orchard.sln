@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33627.172
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1738
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -306,7 +306,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4C95F27D-A872-481F-A9AF-851DB178C186}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\build-crowdin-translation-packages.yml = ..\.github\workflows\build-crowdin-translation-packages.yml
-		..\.github\workflows\compile.yml = ..\.github\workflows\compile.yml
 	EndProjectSection
 EndProject
 Global
@@ -1289,7 +1288,7 @@ Global
 		{4C95F27D-A872-481F-A9AF-851DB178C186} = {06A32C3C-10A2-472E-B725-5AF102E92C6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3585D970-275B-4363-9F61-CD37CFC9DCD3}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		SolutionGuid = {3585D970-275B-4363-9F61-CD37CFC9DCD3}
 	EndGlobalSection
 EndGlobal
