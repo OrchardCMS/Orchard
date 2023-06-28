@@ -33,7 +33,7 @@ namespace Orchard.Specs
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Media management", "  In order to reference images and such from content\r\n  As an author\r\n  I want to" +
-                    " upload and manage files in a media folder", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    " access the Media Library", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -75,44 +75,13 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
-        testRunner.And("I have installed \"Orchard.Media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("I have installed \"Orchard.MediaLibrary\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 11
-    testRunner.When("I go to \"admin/media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Orchard.MediaLibrary\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 12
-    testRunner.Then("I should see \"Media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"Media Library\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 13
-        testRunner.And("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 16
-    testRunner.When("I go to \"admin/media/create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table1.AddRow(new string[] {
-                        "Name",
-                        "Hello World"});
-#line 17
-        testRunner.And("I fill in", ((string)(null)), table1, "And ");
-#line 20
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 22
-    testRunner.Then("I should see \"Media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 23
-        testRunner.And("I should see \"Hello World\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 24
-        testRunner.And("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
-    testRunner.When("I go to \"admin/media/edit?name=..\\..\\bin&mediaPath=..\\..\\bin\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 28
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 29
-    testRunner.Then("I should see \"Media\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 30
-        testRunner.And("I should see \"Editing failed: Invalid path\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
-        testRunner.And("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("the status should be 200 \"OK\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

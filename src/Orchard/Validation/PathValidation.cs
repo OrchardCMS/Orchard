@@ -15,7 +15,7 @@ namespace Orchard.Validation {
         /// <param name="basePath">The base path which boundaries are not to be transposed.</param>
         /// <param name="mappedPath">The path to determine.</param>
         /// <rereturns>The mapped path if valid.</rereturns>
-        /// <exception cref="ArgumentException">If the path is invalid.</exception>
+        /// <exception cref="OrchardException">If the path is invalid.</exception>
         public static string ValidatePath(string basePath, string mappedPath) {
             bool valid = false;
 
