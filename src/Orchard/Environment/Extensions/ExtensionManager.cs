@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions {
         private readonly ICacheManager _cacheManager;
         private readonly IParallelCacheContext _parallelCacheContext;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-
+       
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
@@ -107,14 +107,16 @@ namespace Orchard.Environment.Extensions {
             Logger.Information("Loading features");
 
             // generate a cachekey by hashing the ids of all feature descriptors
-            var cacheKey = BitConverter.ToString(
-                _md5.ComputeHash(
-                    Encoding.UTF8.GetBytes(
-                        string.Join(";",
-                            featureDescriptors
-                                .Select(fd => fd.Id)
-                                .OrderBy(x => x)))));
-
+            string cacheKey;
+            lock (_md5) {
+                cacheKey = BitConverter.ToString(
+                    _md5.ComputeHash(
+                        Encoding.UTF8.GetBytes(
+                            string.Join(";",
+                                featureDescriptors
+                                    .Select(fd => fd.Id)
+                                    .OrderBy(x => x)))));
+            }
 
             var result = _cacheManager.Get(cacheKey,
                 true,
