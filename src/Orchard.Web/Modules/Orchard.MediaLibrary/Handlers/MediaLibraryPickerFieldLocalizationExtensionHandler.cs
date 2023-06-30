@@ -61,7 +61,8 @@ namespace Orchard.MediaLibrary.Handlers {
                                 if (contentCulture == mediaCulture) {
                                     // The content culture and the media culture match
                                     mediaIds.Add(mediaItem.Id);
-                                } else {
+                                } 
+                                else {
                                     if (mediaCulture == null) {
                                         // The media has not a culture, so it takes the content culture
                                         _localizationServices.SetContentCulture(mediaItem, contentCulture);
@@ -70,7 +71,8 @@ namespace Orchard.MediaLibrary.Handlers {
                                             "{0}: the media item {1} was culture neutral and it has been localized",
                                             field.DisplayName,
                                             mediaItem.As<MediaPart>().FileName));
-                                    } else {
+                                    } 
+                                    else {
                                         // The media has a culture
                                         var localizedMedia = _localizationServices.GetLocalizedContentItem(mediaItem, contentCulture);
                                         if (localizedMedia != null) {
@@ -80,7 +82,8 @@ namespace Orchard.MediaLibrary.Handlers {
                                                 "{0}: the media item {1} has been replaced by its localized version",
                                                 field.DisplayName,
                                                 mediaItem.As<MediaPart>().FileName));
-                                        } else {
+                                        } 
+                                        else {
                                             if (!settings.RemoveItemsWithoutLocalization) {
                                                 // The media supports translations but have not a localized version, so it will be cloned in the right language
                                                 var clonedMedia = _contentManager.Clone(mediaItem);
@@ -95,7 +98,8 @@ namespace Orchard.MediaLibrary.Handlers {
                                                     "{0}: a localized version of media item {1} has been created",
                                                     field.DisplayName,
                                                     mediaItem.As<MediaPart>().FileName));
-                                            } else {
+                                            } 
+                                            else {
                                                 _orchardServices.Notifier.Warning(T(
                                                     "{0}: the media item {1} has been removed from the field because its culture differs from content's culture",
                                                     field.DisplayName,
@@ -105,10 +109,12 @@ namespace Orchard.MediaLibrary.Handlers {
                                         }
                                     }
                                 }
-                            } else if (mediaItem != null && !mediaIsLocalizable) {
+                            } 
+                            else if (mediaItem != null && !mediaIsLocalizable) {
                                 if (!settings.RemoveItemsWithNoLocalizationPart) {
                                     mediaIds.Add(mediaItem.Id);
-                                } else {
+                                } 
+                                else {
                                     _orchardServices.Notifier.Warning(T(
                                         "{0}: the media item {1} has been removed from the field because culture neutral",
                                         field.DisplayName,
