@@ -312,7 +312,7 @@ namespace Orchard.ContentManagement {
                 .ToArray();
             // We only need to query for those contents we did not have in session.
             var indexedIdsToQuery = ids
-                .Select((val, idx) => new {Index = idx, Id = val})
+                .Select((val, idx) => new { Index = idx, Id = val })
                 .Where(indexedId => allVersionRecords[indexedId.Index] == null)
                 .ToArray();
 
@@ -333,7 +333,7 @@ namespace Orchard.ContentManagement {
                     else if (options.IsDraft || options.IsDraftRequired) {
                         contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
                     }
-                }).ToArray();
+                });
 
                 // Replace null values in the first collection with the records we fetched. Now we have all
                 // records we were looking for, rather than only those from session.
@@ -341,6 +341,7 @@ namespace Orchard.ContentManagement {
                 var currentIndexedId = indexedIdsToQuery[0];
                 foreach (var foundRecord in contentItemVersionRecords) {
                     var foundRecordId = foundRecord.ContentItemRecord.Id;
+                    // This assumes that the results from the query are in the order of the ids we passed
                     while (currentIndexedId.Id != foundRecordId) {
                         currentIndex++;
                         if (currentIndex >= indexedIdsToQuery.Length) {
@@ -364,9 +365,9 @@ namespace Orchard.ContentManagement {
                 .ToDictionary(g => g.Key);
 
             return ids.SelectMany(id => {
-                    IGrouping<int, ContentItem> values;
-                    return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
-                }).AsPart<T>().ToArray();
+                IGrouping<int, ContentItem> values;
+                return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
+            }).AsPart<T>().ToArray();
         }
 
 
