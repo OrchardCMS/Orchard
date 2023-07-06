@@ -1,8 +1,9 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Net.Configuration;
 using Orchard.ContentManagement;
-using System;
 using Orchard.ContentManagement.Utilities;
+using Orchard.Email.Services;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart {
@@ -31,19 +32,27 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.Port, value); }
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
+        // EmailMessagingChannel is obsolete, but we need to mention it here.
+        [Obsolete($"To keep configuration compatible with {nameof(EmailMessagingChannel)}.")]
+#pragma warning restore CS0618 // Type or member is obsolete
         public bool EnableSsl {
-            get { return this.Retrieve(x => x.EnableSsl); }
-            set { this.Store(x => x.EnableSsl, value); }
+            get { return EncryptionMethod != SmtpEncryptionMethod.None; }
+        }
+
+        public SmtpEncryptionMethod EncryptionMethod {
+            get { return this.Retrieve(x => x.EncryptionMethod, SmtpEncryptionMethod.None); }
+            set { this.Store(x => x.EncryptionMethod, value); }
+        }
+
+        public bool AutoSelectEncryption {
+            get { return this.Retrieve(x => x.AutoSelectEncryption, true); }
+            set { this.Store(x => x.AutoSelectEncryption, value); }
         }
 
         public bool RequireCredentials {
             get { return this.Retrieve(x => x.RequireCredentials); }
             set { this.Store(x => x.RequireCredentials, value); }
-        }
-
-        public bool UseDefaultCredentials {
-            get { return this.Retrieve(x => x.UseDefaultCredentials); }
-            set { this.Store(x => x.UseDefaultCredentials, value); }
         }
 
         public string UserName {
