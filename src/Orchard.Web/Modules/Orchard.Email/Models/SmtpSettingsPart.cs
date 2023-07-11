@@ -37,7 +37,7 @@ namespace Orchard.Email.Models {
         [Obsolete($"To keep configuration compatible with {nameof(EmailMessagingChannel)}.")]
 #pragma warning restore CS0618 // Type or member is obsolete
         public bool EnableSsl {
-            get { return EncryptionMethod != SmtpEncryptionMethod.None; }
+            get { return this.Retrieve(x => x.EnableSsl); }
         }
 
         public SmtpEncryptionMethod EncryptionMethod {
