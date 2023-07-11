@@ -27,18 +27,21 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.EncryptionMethod)">@T("Encryption method to use")</label>
-        <select for="@Html.FieldIdFor(m => m.EncryptionMethod)" name="@Html.NameOf(m => m.EncryptionMethod)" disabled="@Model.AutoSelectEncryption">
+        <select for="@Html.FieldIdFor(m => m.EncryptionMethod)"
+                id="@Html.FieldIdFor(m => m.EncryptionMethod)"
+                name="@Html.FieldNameFor(m => m.EncryptionMethod)"
+                disabled="@Model.AutoSelectEncryption">
             @Html.SelectOption(
                 Model.EncryptionMethod,
                 SmtpEncryptionMethod.None,
                 String.Join(String.Empty, T("None").ToString(), " - ", T("Connect to server using insecure connection.").ToString()))
             @Html.SelectOption(
                 Model.EncryptionMethod,
-                SmtpEncryptionMethod.None,
+                SmtpEncryptionMethod.SslTls,
                 String.Join(String.Empty, T("SSL/TLS").ToString(), " - ", T("Connect to server using SSL/TSL secure connection.").ToString()))
             @Html.SelectOption(
                 Model.EncryptionMethod,
-                SmtpEncryptionMethod.None,
+                SmtpEncryptionMethod.StartTls,
                 String.Join(String.Empty, T("STARTTLS").ToString(), " - ", T("Connect to server using insecure connection and upgrade to secure using SSL/TLS.").ToString()))
         </select>
         @Html.ValidationMessage("EncryptionMethod", "*")
