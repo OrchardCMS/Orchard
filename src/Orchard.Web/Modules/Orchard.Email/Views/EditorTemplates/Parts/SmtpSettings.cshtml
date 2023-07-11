@@ -21,7 +21,7 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
-        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
+        @Html.TextBoxFor(m => m.Port, new { type = "number", placeholder = smtpClient.Port, min = 1, max = 65535 })
         @Html.ValidationMessage("Port", "*")
         <span class="hint">@T("The SMTP server port, usually 25.")</span>
     </div>
@@ -59,7 +59,7 @@
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
         <div>
             <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-            @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text medium" })
             @Html.ValidationMessage("UserName", "*")
             <span class="hint">@T("The username for authentication.")</span>
         </div>
