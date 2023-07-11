@@ -29,7 +29,7 @@ namespace TinyMce.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (!_contentLinksDependenciesEnabled || !_htmlFields.Any(x => x.Equals(builder.Name, StringComparison.InvariantCultureIgnoreCase)))
+            if (!_contentLinksDependenciesEnabled || !_htmlFields.Any(x => x.Equals(builder.FieldType, StringComparison.InvariantCultureIgnoreCase)))
                 yield break;
 
             var model = new ContentLinksSettings();
