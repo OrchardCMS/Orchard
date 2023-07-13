@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Net.Configuration;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
-using Orchard.Email.Services;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart {
@@ -32,19 +31,22 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.Port, value); }
         }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        // EmailMessagingChannel is obsolete, but we need to mention it here.
-        [Obsolete($"To keep configuration compatible with {nameof(EmailMessagingChannel)}.")]
-#pragma warning restore CS0618 // Type or member is obsolete
+        [Obsolete($"Use {nameof(AutoSelectEncryption)} and/or {nameof(EncryptionMethod)} instead.")]
         public bool EnableSsl => this.Retrieve(x => x.EnableSsl);
 
         public SmtpEncryptionMethod EncryptionMethod {
-            get { return this.Retrieve(x => x.EncryptionMethod); }
+#pragma warning disable CS0618 // Type or member is obsolete
+            // Reading EnableSsl is necessary to keep the correct settings during the upgrade to MailKit.
+            get { return this.Retrieve(x => x.EncryptionMethod, EnableSsl ? SmtpEncryptionMethod.SslTls : SmtpEncryptionMethod.None); }
+#pragma warning restore CS0618 // Type or member is obsolete
             set { this.Store(x => x.EncryptionMethod, value); }
         }
 
         public bool AutoSelectEncryption {
-            get { return this.Retrieve(x => x.AutoSelectEncryption, true); }
+#pragma warning disable CS0618 // Type or member is obsolete
+            // Reading EnableSsl is necessary to keep the correct settings during the upgrade to MailKit.
+            get { return this.Retrieve(x => x.AutoSelectEncryption, !EnableSsl); }
+#pragma warning restore CS0618 // Type or member is obsolete
             set { this.Store(x => x.AutoSelectEncryption, value); }
         }
 
