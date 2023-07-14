@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
@@ -9,10 +10,12 @@ using Orchard.Data.Migration;
 namespace Orchard.Core.Common {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<IdentityPartRecord> _identityPartRepository;
+        private readonly ISessionFactoryHolder _sessionFactoryHolder;
 
 
-        public Migrations(IRepository<IdentityPartRecord> identityPartRepository) {
+        public Migrations(IRepository<IdentityPartRecord> identityPartRepository, ISessionFactoryHolder sessionFactoryHolder) {
             _identityPartRepository = identityPartRepository;
+            _sessionFactoryHolder = sessionFactoryHolder;
         }
 
 
@@ -155,24 +158,60 @@ namespace Orchard.Core.Common {
             return 6;
         }
 
+        // When upgrading from version 6 of 1.10.x, we'll just execute the same steps, but in a different order.
         public int UpdateFrom6() {
-            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table
-                .CreateIndex($"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}", nameof(IdentityPartRecord.Identifier)));
+            // This is the original step of the dev branch.
+            AddIndexForIdentityPartRecordIdentifier();
 
             return 7;
         }
 
         public int UpdateFrom7() {
-            // The Container_Id is basically a foreign key, used in several queries
-            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_Container_id",
-                    "Container_id");
-            });
+            // This is the original step of the dev branch.
+            AddIndexForCommonPartRecordContainerId();
+
+            // When upgrading from version 7 of 1.10.x, this index isn't created yet, so we need to run this step
+            // "again". On the other hand, AddIndexesForCommonPartOwner in UpdateFrom8 won't do anything, because those
+            // indexes were added in the 1.10.x version of UpdateFrom6.
+            AddIndexForIdentityPartRecordIdentifier();
 
             return 8;
         }
 
         public int UpdateFrom8() {
+            // This is the original step of the dev branch.
+            AddIndexesForCommonPartOwner();
+
+            // When upgrading from version 8 of 1.10.x, this index isn't created yet, so we need to run this step
+            // "again"
+            AddIndexForCommonPartRecordContainerId();
+
+            return 9;
+        }
+
+        // This change was originally UpdateFrom7 on 1.10.x and UpdateFrom6 on dev.
+        private void AddIndexForIdentityPartRecordIdentifier() {
+            var indexName = $"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}";
+
+            if (IndexExists(nameof(IdentityPartRecord), indexName)) return;
+
+            SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table.CreateIndex(
+                indexName,
+                nameof(IdentityPartRecord.Identifier)));
+        }
+
+        // This change was originally UpdateFrom8 on 1.10.x and UpdateFrom7 on dev.
+        private void AddIndexForCommonPartRecordContainerId() {
+            var indexName = $"IDX_{nameof(CommonPartRecord)}_Container_id";
+
+            if (IndexExists(nameof(CommonPartRecord), indexName)) return;
+
+            // Container_Id is used in several queries like a foreign key.
+            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => table.CreateIndex(indexName, "Container_id"));
+        }
+
+        // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
+        private void AddIndexesForCommonPartOwner() {
             // Studying SQL Server query execution plans we noticed that when the system
             // tries to find content items for requests such as
             // "The items of type TTT owned by me, ordered from the most recent"
@@ -198,9 +237,12 @@ namespace Orchard.Core.Common {
             //   and this_.Published = 1
             // ORDER BY
             //   commonpart2_PublishedUtc desc
+            var createdUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation";
+
+            if (IndexExists(nameof(CommonPartRecord), createdUtcIndexName)) return;
 
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation",
+                table.CreateIndex(createdUtcIndexName,
                     nameof(CommonPartRecord.OwnerId),
                     nameof(CommonPartRecord.CreatedUtc));
                 table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification",
@@ -210,8 +252,21 @@ namespace Orchard.Core.Common {
                     nameof(CommonPartRecord.OwnerId),
                     nameof(CommonPartRecord.PublishedUtc));
             });
+        }
 
-            return 9;
+        private bool IndexExists(string tableName, string indexName) {
+            // Database-agnostic way of checking the existence of an index.
+            using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                var connection = session.Connection;
+
+                if (connection == null) {
+                    throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+                }
+
+                return connection.GetSchema("Indexes").Rows.Cast<DataRow>().Any(row =>
+                    row["TABLE_NAME"].ToString() == SchemaBuilder.TableDbName(tableName)
+                    && row["INDEX_NAME"].ToString() == indexName);
+            }
         }
     }
 }
