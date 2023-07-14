@@ -1,21 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Core.Common {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<IdentityPartRecord> _identityPartRepository;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly ShellSettings _shellSettings;
+
+        private IList<string> existingIndexNames;
 
 
-        public Migrations(IRepository<IdentityPartRecord> identityPartRepository, ISessionFactoryHolder sessionFactoryHolder) {
+        public Migrations(
+            IRepository<IdentityPartRecord> identityPartRepository,
+            ISessionFactoryHolder sessionFactoryHolder,
+            ShellSettings shellSettings) {
             _identityPartRepository = identityPartRepository;
             _sessionFactoryHolder = sessionFactoryHolder;
+            _shellSettings = shellSettings;
         }
 
 
@@ -255,18 +265,23 @@ namespace Orchard.Core.Common {
         }
 
         private bool IndexExists(string tableName, string indexName) {
-            // Database-agnostic way of checking the existence of an index.
-            using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
-                var connection = session.Connection;
+            if (existingIndexNames == null) {
+                // Database-agnostic way of checking the existence of an index.
+                using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                    var connection = session.Connection;
 
-                if (connection == null) {
-                    throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+                    if (connection == null) {
+                        throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+                    }
+
+                    existingIndexNames = connection.GetSchema("Indexes").Rows.Cast<DataRow>().Select(row =>
+                        $"{row["TABLE_NAME"]}.{row["INDEX_NAME"]}").ToList();
                 }
-
-                return connection.GetSchema("Indexes").Rows.Cast<DataRow>().Any(row =>
-                    row["TABLE_NAME"].ToString() == SchemaBuilder.TableDbName(tableName)
-                    && row["INDEX_NAME"].ToString() == indexName);
             }
+
+            var indexNamePrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
+                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
+            return existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{indexNamePrefix}{indexName}");
         }
     }
 }
