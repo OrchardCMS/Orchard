@@ -40,9 +40,9 @@ namespace Orchard.Email.Controllers {
                 smtpSettings.Address = testSettings.From;
                 smtpSettings.Host = testSettings.Host;
                 smtpSettings.Port = testSettings.Port;
-                smtpSettings.EnableSsl = testSettings.EnableSsl;
+                smtpSettings.AutoSelectEncryption = testSettings.AutoSelectEncryption;
+                smtpSettings.EncryptionMethod = testSettings.EncryptionMethod;
                 smtpSettings.RequireCredentials = testSettings.RequireCredentials;
-                smtpSettings.UseDefaultCredentials = testSettings.UseDefaultCredentials;
                 smtpSettings.UserName = testSettings.UserName;
                 smtpSettings.Password = testSettings.Password;
 
@@ -64,10 +64,10 @@ namespace Orchard.Email.Controllers {
                     return Json(new { error = fakeLogger.Message });
                 }
 
-                return Json(new {status = T("Message sent.").Text});
+                return Json(new { status = T("Message sent.").Text });
             }
             catch (Exception e) {
-                return Json(new {error = e.Message});
+                return Json(new { error = e.Message });
             }
             finally {
                 var smtpChannelComponent = _smtpChannel as Component;
@@ -97,9 +97,9 @@ namespace Orchard.Email.Controllers {
             public string ReplyTo { get; set; }
             public string Host { get; set; }
             public int Port { get; set; }
-            public bool EnableSsl { get; set; }
+            public SmtpEncryptionMethod EncryptionMethod { get; set; }
+            public bool AutoSelectEncryption { get; set; }
             public bool RequireCredentials { get; set; }
-            public bool UseDefaultCredentials { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
             public string To { get; set; }
