@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
@@ -7,6 +8,7 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Projections.Models;
 
@@ -15,14 +17,22 @@ namespace Orchard.Projections {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
+        private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly ShellSettings _shellSettings;
+
+        private HashSet<string> _existingColumnNames = new HashSet<string>();
 
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
-            IRepository<PropertyRecord> propertyRecordRepository) {
+            IRepository<PropertyRecord> propertyRecordRepository,
+            ISessionFactoryHolder sessionFactoryHolder,
+            ShellSettings shellSettings) {
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
+            _sessionFactoryHolder = sessionFactoryHolder;
+            _shellSettings = shellSettings;
 
             T = NullLocalizer.Instance;
         }
@@ -356,32 +366,79 @@ namespace Orchard.Projections {
             return 5;
         }
 
-#pragma warning disable CS0618
-        // disable compiler warning regarding the fact that RewriteOutput is obsolete
-        // because this migration is handling just that.
+        // When upgrading from version 5 of 1.10.x (up until version 7), we'll just execute the same steps, but in a
+        // different order.
         public int UpdateFrom5() {
+            // This is the original step of the dev branch.
+            MigratePropertyRecordToRewriteOutputCondition();
+
+            return 6;
+        }
+
+        public int UpdateFrom6() {
+            // This is the original step of the dev branch.
+            AddLayoutRecordGuid();
+
+            // When upgrading from version 6 of 1.10.x, this column isn't created yet, so we need to run this step
+            // "again".
+            MigratePropertyRecordToRewriteOutputCondition();
+
+            return 7;
+        }
+
+        // This change was originally UpdateFrom5 on dev (but didn't exist on 1.10.x).
+        private void MigratePropertyRecordToRewriteOutputCondition() {
+            if (ColumnExists("PropertyRecord", "RewriteOutputCondition")) return;
+
             SchemaBuilder.AlterTable("PropertyRecord", table => table
                 .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
             );
 
             foreach (var property in _propertyRecordRepository.Table)
+#pragma warning disable CS0618 // Type or member is obsolete
+                // Reading this obsolete property to migrate its data to a new one.
                 if (property.RewriteOutput) property.RewriteOutputCondition = "true";
+#pragma warning restore CS0618 // Type or member is obsolete
 
-            return 6;
+            ColumnAdded("PropertyRecord", "RewriteOutputCondition");
         }
-#pragma warning restore CS0618
 
-        public int UpdateFrom6() {
-            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
-                     column => column.WithLength(68)));
+        // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
+        private void AddLayoutRecordGuid() {
+            if (ColumnExists("LayoutRecord", "GUIdentifier")) return;
+
+            SchemaBuilder.AlterTable("LayoutRecord", table =>
+                table.AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
 
             var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
             foreach (var layout in layoutRecords) {
                 layout.GUIdentifier = Guid.NewGuid().ToString();
             }
 
-            return 7;
+            ColumnAdded("LayoutRecord", "GUIdentifier");
         }
 
+        private bool ColumnExists(string tableName, string columnName) {
+            if (!_existingColumnNames.Any()) {
+                // Database-agnostic way of checking the existence of a column.
+                using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                    var connection = session.Connection ?? throw new InvalidOperationException(
+                        "The database connection object should derive from DbConnection to check if a column exists.");
+
+                    var columns = connection.GetSchema("Columns").Rows.Cast<DataRow>();
+
+                    if (!string.IsNullOrEmpty(_shellSettings.DataTablePrefix)) {
+                        columns = columns.Where(row => row["TABLE_NAME"].ToString().StartsWith($"{_shellSettings.DataTablePrefix}_"));
+                    }
+
+                    _existingColumnNames = columns.Select(row => $"{row["TABLE_NAME"]}.{row["COLUMN_NAME"]}").ToHashSet();
+                }
+            }
+
+            return _existingColumnNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{columnName}");
+        }
+
+        private void ColumnAdded(string tableName, string columnName) =>
+            _existingColumnNames.Add($"{SchemaBuilder.TableDbName(tableName)}.{columnName}");
     }
 }

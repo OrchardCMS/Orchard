@@ -167,7 +167,8 @@ namespace Orchard.Core.Common {
             return 6;
         }
 
-        // When upgrading from version 6 of 1.10.x, we'll just execute the same steps, but in a different order.
+        // When upgrading from version 6 of 1.10.x (up until version 9), we'll just execute the same steps, but in a
+        // different order.
         public int UpdateFrom6() {
             // This is the original step of the dev branch.
             AddIndexForIdentityPartRecordIdentifier();
@@ -208,7 +209,7 @@ namespace Orchard.Core.Common {
                 indexName,
                 nameof(IdentityPartRecord.Identifier)));
 
-            _existingIndexNames.Add(indexName);
+            IndexCreated(nameof(IdentityPartRecord), indexName);
         }
 
         // This change was originally UpdateFrom8 on 1.10.x and UpdateFrom7 on dev.
@@ -220,22 +221,18 @@ namespace Orchard.Core.Common {
             // Container_Id is used in several queries like a foreign key.
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => table.CreateIndex(indexName, "Container_id"));
 
-            _existingIndexNames.Add(indexName);
+            IndexCreated(nameof(CommonPartRecord), indexName);
         }
 
         // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
         private void AddIndexesForCommonPartOwner() {
-            // Studying SQL Server query execution plans we noticed that when the system
-            // tries to find content items for requests such as
-            // "The items of type TTT owned by me, ordered from the most recent"
-            // the existing indexes are not used. SQL Server does an index scan on the
-            // Primary key for CommonPartRecord. This may lead to annoying deadlocks when
-            // there are two concurrent transactions that are doing both this kind of query
-            // as well as an update (or insert) in the CommonPartRecord.
-            // Tests show that this can be easily fixed by adding a non-clustered index
-            // with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}.
-            // That means we need three indexes (one for each DateTime) to support ordering
-            // on either of them.
+            // Studying SQL Server query execution plans we noticed that when the system tries to find content items for
+            // requests such as "The items of type TTT owned by me, ordered from the most recent" the existing indexes
+            // are not used. SQL Server does an index scan on the Primary key for CommonPartRecord. This may lead to
+            // annoying deadlocks when there are two concurrent transactions that are doing both this kind of query as
+            // well as an update (or insert) in the CommonPartRecord. Tests show that this can be easily fixed by adding
+            // a non-clustered index with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}. That
+            // means we need three indexes (one for each DateTime) to support ordering on either of them.
 
             // The queries we analyzed look like (in pseudo sql)
             // SELECT TOP (N) *
@@ -262,9 +259,9 @@ namespace Orchard.Core.Common {
                 table.CreateIndex(publishedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.PublishedUtc));
             });
 
-            _existingIndexNames.Add(createdUtcIndexName);
-            _existingIndexNames.Add(modifiedUtcIndexName);
-            _existingIndexNames.Add(publishedUtcIndexName);
+            IndexCreated(nameof(CommonPartRecord), createdUtcIndexName);
+            IndexCreated(nameof(CommonPartRecord), modifiedUtcIndexName);
+            IndexCreated(nameof(CommonPartRecord), publishedUtcIndexName);
         }
 
         private bool IndexExists(string tableName, string indexName) {
@@ -288,6 +285,13 @@ namespace Orchard.Core.Common {
             }
 
             return _existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
+        }
+
+        private void IndexCreated(string tableName, string indexName) {
+            var tenantTablesPrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
+                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
+
+            _existingIndexNames.Add($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
         }
     }
 }
