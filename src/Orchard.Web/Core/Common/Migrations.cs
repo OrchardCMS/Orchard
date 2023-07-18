@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
@@ -16,7 +15,7 @@ namespace Orchard.Core.Common {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly ShellSettings _shellSettings;
 
-        private IList<string> existingIndexNames;
+        private HashSet<string> _existingIndexNames = new HashSet<string>();
 
 
         public Migrations(
@@ -208,6 +207,8 @@ namespace Orchard.Core.Common {
             SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table.CreateIndex(
                 indexName,
                 nameof(IdentityPartRecord.Identifier)));
+
+            _existingIndexNames.Add(indexName);
         }
 
         // This change was originally UpdateFrom8 on 1.10.x and UpdateFrom7 on dev.
@@ -218,6 +219,8 @@ namespace Orchard.Core.Common {
 
             // Container_Id is used in several queries like a foreign key.
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => table.CreateIndex(indexName, "Container_id"));
+
+            _existingIndexNames.Add(indexName);
         }
 
         // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
@@ -248,40 +251,43 @@ namespace Orchard.Core.Common {
             // ORDER BY
             //   commonpart2_PublishedUtc desc
             var createdUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation";
+            var modifiedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification";
+            var publishedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication";
 
             if (IndexExists(nameof(CommonPartRecord), createdUtcIndexName)) return;
 
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex(createdUtcIndexName,
-                    nameof(CommonPartRecord.OwnerId),
-                    nameof(CommonPartRecord.CreatedUtc));
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification",
-                    nameof(CommonPartRecord.OwnerId),
-                    nameof(CommonPartRecord.ModifiedUtc));
-                table.CreateIndex($"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication",
-                    nameof(CommonPartRecord.OwnerId),
-                    nameof(CommonPartRecord.PublishedUtc));
+                table.CreateIndex(createdUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.CreatedUtc));
+                table.CreateIndex(modifiedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.ModifiedUtc));
+                table.CreateIndex(publishedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.PublishedUtc));
             });
+
+            _existingIndexNames.Add(createdUtcIndexName);
+            _existingIndexNames.Add(modifiedUtcIndexName);
+            _existingIndexNames.Add(publishedUtcIndexName);
         }
 
         private bool IndexExists(string tableName, string indexName) {
-            if (existingIndexNames == null) {
+            var tenantTablesPrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
+                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
+
+            if (!_existingIndexNames.Any()) {
                 // Database-agnostic way of checking the existence of an index.
                 using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
-                    var connection = session.Connection;
+                    var connection = session.Connection ?? throw new InvalidOperationException(
+                        "The database connection object should derive from DbConnection to check if an index exists.");
 
-                    if (connection == null) {
-                        throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+                    var indexes = connection.GetSchema("Indexes").Rows.Cast<DataRow>();
+
+                    if (!string.IsNullOrEmpty(tenantTablesPrefix)) {
+                        indexes = indexes.Where(row => row["TABLE_NAME"].ToString().StartsWith(tenantTablesPrefix));
                     }
 
-                    existingIndexNames = connection.GetSchema("Indexes").Rows.Cast<DataRow>().Select(row =>
-                        $"{row["TABLE_NAME"]}.{row["INDEX_NAME"]}").ToList();
+                    _existingIndexNames = indexes.Select(row => $"{row["TABLE_NAME"]}.{row["INDEX_NAME"]}").ToHashSet();
                 }
             }
 
-            var indexNamePrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
-                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
-            return existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{indexNamePrefix}{indexName}");
+            return _existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
         }
     }
 }
