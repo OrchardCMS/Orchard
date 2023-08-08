@@ -4,8 +4,8 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.Taxonomies.Services;
 using Orchard.Localization;
+using Orchard.Taxonomies.Services;
 
 namespace Orchard.Taxonomies.Settings {
     public class TaxonomyFieldEditorEvents : ContentDefinitionEditorEventsBase {
@@ -49,7 +49,7 @@ namespace Orchard.Taxonomies.Settings {
 
         private TaxonomyFieldSettings GetCurrentSettings(ContentPartFieldDefinition definition) {
             var model = definition.Settings.GetModel<TaxonomyFieldSettings>();
-            model.Taxonomies = _taxonomyService.GetTaxonomies().Where(tax => !tax.ContentItem.HasDraft());
+            model.Taxonomies = _taxonomyService.GetTaxonomies();
             return model;
         }
 
