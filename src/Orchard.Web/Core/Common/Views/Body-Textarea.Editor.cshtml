@@ -1,5 +1,10 @@
 ﻿@{
-    var htmlAttributes = new Dictionary<string, object>();
+
+    var htmlAttributes = (Dictionary<string, object>)Model.HtmlAttributes;
+
+    if (htmlAttributes == null) {
+        htmlAttributes = new Dictionary<string, object>();
+    }
 
     if (Model.Required == true) {
         htmlAttributes["required"] = "required";

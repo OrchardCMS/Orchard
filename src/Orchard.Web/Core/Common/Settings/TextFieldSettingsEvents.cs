@@ -34,9 +34,10 @@ namespace Orchard.Core.Common.Settings {
                 builder.WithSetting("TextFieldSettings.Hint", model.Settings.Hint);
                 builder.WithSetting("TextFieldSettings.Required", model.Settings.Required.ToString(CultureInfo.InvariantCulture));
                 builder.WithSetting("TextFieldSettings.DefaultValue", model.Settings.DefaultValue);
-
-                yield return DefinitionTemplate(model);
+                builder.WithSetting("TextFieldSettings.MaxLength", model.Settings.MaxLength.ToString());               
             }
+
+            yield return DefinitionTemplate(model);
         }
     }
 }

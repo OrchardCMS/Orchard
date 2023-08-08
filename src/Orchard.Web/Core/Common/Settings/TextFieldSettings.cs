@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.Core.Common.Settings {
 
@@ -8,5 +9,8 @@ namespace Orchard.Core.Common.Settings {
         public bool Required { get; set; }
         public string Hint { get; set; }
         public string DefaultValue { get; set; }
+        [Range(0, int.MaxValue)]
+        [DisplayName("Maximum Length")]
+        public int MaxLength { get; set; }
     }
 }

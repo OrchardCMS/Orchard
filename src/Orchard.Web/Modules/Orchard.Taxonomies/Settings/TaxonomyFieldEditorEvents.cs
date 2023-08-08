@@ -20,8 +20,7 @@ namespace Orchard.Taxonomies.Settings {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             if (definition.FieldDefinition.Name == "TaxonomyField") {
-                var model = definition.Settings.GetModel<TaxonomyFieldSettings>();
-                model.Taxonomies = _taxonomyService.GetTaxonomies();
+                var model = GetCurrentSettings(definition);
                 yield return DefinitionTemplate(model);
             }
         }
@@ -31,7 +30,8 @@ namespace Orchard.Taxonomies.Settings {
                 yield break;
             }
 
-            var model = new TaxonomyFieldSettings();
+            // Init this model preventively so if the TryUpdateModel doesn't execute correctly it doesn't cause an error
+            var model = GetCurrentSettings(builder.Current);
 
             if (updateModel.TryUpdateModel(model, "TaxonomyFieldSettings", null, null)) {
                 builder
@@ -43,8 +43,15 @@ namespace Orchard.Taxonomies.Settings {
                     .WithSetting("TaxonomyFieldSettings.AllowCustomTerms", model.AllowCustomTerms.ToString())
                     .WithSetting("TaxonomyFieldSettings.Hint", model.Hint);
             }
-
+            
             yield return DefinitionTemplate(model);
         }
+
+        private TaxonomyFieldSettings GetCurrentSettings(ContentPartFieldDefinition definition) {
+            var model = definition.Settings.GetModel<TaxonomyFieldSettings>();
+            model.Taxonomies = _taxonomyService.GetTaxonomies().Where(tax => !tax.ContentItem.HasDraft());
+            return model;
+        }
+
     }
 }
