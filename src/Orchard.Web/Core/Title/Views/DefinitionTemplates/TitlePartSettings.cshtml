@@ -1,0 +1,8 @@
+﻿@model Orchard.Core.Title.Settings.TitlePartSettings
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
+    @Html.EditorFor(m => m.MaxLength, new { htmlAttributes = new { min = 0, max = 1024 } })
+    <span class="hint">@T("Maximum length allowed for the title. Setting the value to 0 means the maximum allowed length is 1024 characters.")</span>
+    @Html.ValidationMessageFor(m => m.MaxLength)
+</fieldset>
