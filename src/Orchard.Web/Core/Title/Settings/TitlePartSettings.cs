@@ -6,8 +6,11 @@ using System.Linq;
 using System.Web;
 
 namespace Orchard.Core.Title.Settings {
+
+    
     public class TitlePartSettings {
-        [Range(0, 1024)]
+        public const int MAX_TITLE_LENGTH = 1024;
+        [Range(0, MAX_TITLE_LENGTH)]
         [DisplayName("Maximum Length")]
         public int MaxLength {get; set;}
 
