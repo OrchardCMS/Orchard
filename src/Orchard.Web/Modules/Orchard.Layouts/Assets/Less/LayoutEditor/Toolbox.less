@@ -1,11 +1,51 @@
 ﻿@import "Variables.less";
 
+body {
+    .layout-toolbox-item {
+        border: 1px solid @gray-border;
+        background-color: #fff;
+        padding: (@container-padding - 3) @container-padding;
+        cursor: default;
+        list-style-type: none;
+
+        i {
+            display: inline-block;
+            width: 16px;
+            font: normal normal normal 14px/1 FontAwesome;
+        }
+
+        + .layout-toolbox-item {
+            margin-top: @container-padding / 3;
+        }
+    }
+}
+
 .layout-editor {
     > .layout-toolbox-wrapper {
-        position: relative;
-        margin-left: @container-padding;
-        width: 220px;
+        margin-left: 12px;
+        width: 218px;
+        -webkit-flex-shrink: 0;
+        -ms-flex-negative: 0;
         flex-shrink: 0;
+        max-height: calc(100vh - 80px);
+        overflow-x: clip;
+        overflow-y: auto;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+
+        &::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgb(0, 0, 0, .3);
+            border-radius: 1px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.3);
+        }
 
         > .layout-toolbox {
             border: 1px solid @gray-border;
@@ -33,7 +73,7 @@
                     display: block;
                     margin-bottom: @container-padding / 3;
                     text-decoration: none;
-                
+
                     &:before {
                         display: inline-block;
                         width: 10px;
@@ -43,7 +83,7 @@
                         content: "\f0d7";
                     }
                 }
-            
+
                 &.collapsed {
                     .layout-toolbox-group-heading:before {
                         content: "\f0da";

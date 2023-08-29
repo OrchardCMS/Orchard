@@ -145,6 +145,8 @@
                                 connectWith: _(parentClasses).map(function (e) { return "#" + editorId + " " + e + ":not(.layout-container-sealed) > .layout-element-wrapper > .layout-children"; }).join(", "),
                                 placeholder: placeholderClasses,
                                 "ui-floating": floating,
+                                helper: "clone",
+                                appendTo: "body",
                                 create: function (e, ui) {
                                     e.target.isToolbox = true; // Will indicate to connected sortables that dropped items were sent from toolbox.
                                 },
