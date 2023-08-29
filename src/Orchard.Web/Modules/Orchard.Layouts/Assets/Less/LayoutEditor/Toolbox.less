@@ -27,9 +27,12 @@ body {
         -webkit-flex-shrink: 0;
         -ms-flex-negative: 0;
         flex-shrink: 0;
+        /* forcing the toolbox height to be smaller than the viewport height
+            so it is always visible and scrollable*/
         max-height: calc(100vh - 80px);
         overflow-x: clip;
         overflow-y: auto;
+        /* forcing the toolbox to stay sticked at the the top of its container */
         position: -webkit-sticky;
         position: sticky;
         top: 0;
