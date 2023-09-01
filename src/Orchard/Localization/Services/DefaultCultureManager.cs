@@ -89,7 +89,7 @@ namespace Orchard.Localization.Services {
         public CultureRecord GetCultureByName(string cultureName) {
             var cultures = GetAllCulturesByName();
             CultureRecord result;
-            cultures.TryGetValue(cultureName, out result);
+            cultures.TryGetValue(cultureName ?? "", out result);
 
             return result;
         }
