@@ -1,6 +1,7 @@
-﻿@model Orchard.Core.Title.Settings.TitlePartSettings
+﻿@using Orchard.Core.Title.Settings;
+@model TitlePartSettings
 @{
-    var maxLength = Model.MaxLength;
+    var maxLength = TitlePartSettings.MAX_TITLE_LENGTH;
 }
 
 <fieldset>
