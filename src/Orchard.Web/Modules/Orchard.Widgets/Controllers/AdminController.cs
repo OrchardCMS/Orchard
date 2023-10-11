@@ -63,6 +63,8 @@ namespace Orchard.Widgets.Controllers {
 
             IEnumerable<LayerPart> layers = _widgetsService.GetLayers().OrderBy(x => x.Name).ToList();
 
+
+
             if (!layers.Any()) {
                 Services.Notifier.Error(T("There are no widget layers defined. A layer will need to be added in order to add widgets to any part of the site."));
                 return RedirectToAction("AddLayer");
@@ -84,14 +86,27 @@ namespace Orchard.Widgets.Controllers {
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
             string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
-            var widgets = _widgetsService.GetWidgets();
+            //Only when "ContentWidgets" layer is explicitly chosen the widgets are listed, not by default (for performance reasons)
+            IEnumerable<WidgetPart> widgets;
+            var IdLayerContentWidget = layers.Where(x => x.Name.ToLowerInvariant() == "contentwidgets").Select(x => x.Id).FirstOrDefault();
+            if (IdLayerContentWidget > 0) {
+                //Ok the layer exists
+                var IdsLayers = layers.Where(x => x.Name.ToLowerInvariant() != "contentwidgets").Select(x => x.Id).ToList().ToArray();
+                if (layerId != null && (int)layerId == IdLayerContentWidget) {
+                    //If ContentWidgets is chosen explicitly then IdsLayers is not filtered, note that the editors should be advised that this can take lot of time
+                    IdsLayers = layers.Select(x => x.Id).ToList().ToArray();
+                }
+                widgets = _widgetsService.GetWidgets(IdsLayers);
+            }
+            else {
+                widgets = _widgetsService.GetWidgets();
+            }
 
             if (!String.IsNullOrWhiteSpace(culture)) {
                 widgets = widgets.Where(x => {
                     if (x.Has<ILocalizableAspect>()) {
                         return String.Equals(x.As<ILocalizableAspect>().Culture, culture, StringComparison.InvariantCultureIgnoreCase);
                     }
-
                     return false;
                 }).ToList();
             }
