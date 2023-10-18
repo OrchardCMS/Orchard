@@ -6,6 +6,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
+using Orchard.Mvc;
 using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Helpers;
@@ -13,6 +14,7 @@ using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.Taxonomies.ViewModels;
+using Orchard.UI.Admin;
 
 namespace Orchard.Taxonomies.Controllers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -22,20 +24,24 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ILocalizationService _localizationService;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public LocalizedTaxonomyController(
                 IContentDefinitionManager contentDefinitionManager,
                 ILocalizationService localizationService,
                 ITaxonomyService taxonomyService,
-                ITaxonomyExtensionsService taxonomyExtensionsService) {
+                ITaxonomyExtensionsService taxonomyExtensionsService,
+            IHttpContextAccessor httpContextAccessor) {
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
             _localizationService = localizationService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, bool isAdmin = false) {
+
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);

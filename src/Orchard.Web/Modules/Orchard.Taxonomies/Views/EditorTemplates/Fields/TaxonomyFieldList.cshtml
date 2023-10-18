@@ -1,4 +1,5 @@
 ﻿@using Orchard.Utility.Extensions;
+@using Orchard.UI.Admin;
 @model  Orchard.Taxonomies.ViewModels.LocalizedTaxonomiesViewModel
 
 @{
@@ -8,21 +9,32 @@
     var partField = Model.PartName + "_" + Model.FieldName;
     var functionName = "filterTaxonomyCulture_" + partField;
 
+    var isAdmin = AdminFilter.IsApplied(Request.RequestContext);
+
     using (Script.Foot()) {
-        <script type="text/javascript">
+    <script type="text/javascript">
                         //<![CDATA[
             $(document).ready(function () {
                 var pageurl = '@Url.Action("GetTaxonomy", "LocalizedTaxonomy", new { area = "Orchard.Taxonomies" })';
                 function @(functionName)(culture) {
                     $.ajax({
-                            url: pageurl,
-                        data: { contentTypeName: '@Model.ContentType', taxonomyFieldName: '@Model.FieldName', contentId: @Model.Id, culture: culture },
+                        url: pageurl,
+                        data: {
+                            contentTypeName: '@Model.ContentType',
+                            taxonomyFieldName: '@Model.FieldName',
+                            contentId: @Model.Id,
+                            culture: culture,
+                            @if (isAdmin) { <text>isAdmin: @isAdmin.ToString().ToLowerInvariant() </text>}
+                            },
                         success: function (html) {
-                                    var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
+                            var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
 
-                            $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+                            $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] label")
+                                .expandoControl(function (controller) {
+                                    return controller.nextAll(".expando");
+                                }, { collapse: true, remember: false });
                             @if (Model.Setting.Autocomplete) {
                                 <text>
                                     var createTermCheckbox = function($wrapper, tag, checked) {
@@ -143,14 +155,21 @@
                         alert("@T("Loading taxonomy fail, Retry")");
                     });
                 }
-                $("#Localization_SelectedCulture").on('change', function (p) {
-                    var optionSelected = $("option:selected", this);
+                $("#Localization_SelectedCulture").on('change', function (ev, pf) {
+                    //ev: jquery event
+                    //pf: Orchard's field differentiator
                     var refreshTerms = false;
-                    if (p != undefined) {
-                        if (p == "@(partField)") {
+                    if (pf != undefined) {
+                        // refresh of terms invoked from a field
+                        if (pf == "@(partField)") {
+                            // refresh of terms invoked from this field
                             refreshTerms = true;
                         }
+                    } else {
+                        // refresh of terms invoked by changing the content's culture
+                        refreshTerms = true;
                     }
+
                     if (refreshTerms) {
                         @(functionName)($("#Localization_SelectedCulture").val());
                     }
@@ -158,6 +177,6 @@
                 $("#Localization_SelectedCulture").trigger("change", "@(partField)");
             });
             //]]>
-        </script>
+    </script>
     }
 }
