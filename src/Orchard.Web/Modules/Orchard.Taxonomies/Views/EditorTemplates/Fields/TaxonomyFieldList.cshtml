@@ -31,10 +31,24 @@
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
 
-                            $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend")
-                                .expandoControl(function (controller) {
-                                    return controller.nextAll(".expando");
-                                }, { collapse: true, remember: false });
+                            // try to init expando controls until we manage to
+                            var interval = setInterval(InitExpando, 10);
+                            function InitExpando() {
+                                // the script to initialize expando controls requires them to have a rendered size on screen.
+                                // That is not the case when they are in a different tab, because in that case they are basically
+                                // set to display=none. By retrying here until they get on screen we get around that issue.
+                                $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend")
+                                    .expandoControl(function (controller) {
+                                        return controller.nextAll(".expando");
+                                    }, { collapse: true, remember: false });
+
+                                var glyph = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend .expando-glyph-container");
+                                if (glyph && glyph.length) {
+                                    console.log("clear retry");
+                                    clearInterval(interval);
+                                }
+                            }
+
                             @if (Model.Setting.Autocomplete) {
                                 <text>
                                     var createTermCheckbox = function($wrapper, tag, checked) {
@@ -154,6 +168,7 @@
                         alert("@T("Loading taxonomy fail, Retry")");
                     });
                 }
+
                 $("#Localization_SelectedCulture").on('change', function (ev, pf) {
                     //ev: jquery event
                     //pf: Orchard's field differentiator
