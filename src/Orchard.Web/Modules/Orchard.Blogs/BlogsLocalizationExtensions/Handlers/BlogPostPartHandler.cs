@@ -64,7 +64,8 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 var blogids = new HashSet<int> { blog.As<BlogPart>().ContentItem.Id };
 
                 //seek for same culture blog
-                var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w => w.As<LocalizationPart>().Culture == blogPostCulture);
+                var realBlog = _localizationService.GetLocalizations(blog)
+                    .SingleOrDefault(w => w.Culture?.Culture == blogPostCulture.Culture);
                 if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
                     blogPost.As<ICommonPart>().Container = realBlog;
                     if (blogPost.Has<AutoroutePart>()) {
