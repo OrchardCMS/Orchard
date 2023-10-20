@@ -37,7 +37,8 @@ namespace Orchard.MediaLibrary.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                localField._contentItems = new Lazy<IEnumerable<MediaPart>>(() => _contentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
+                // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                localField._contentItems = new Lazy<IEnumerable<MediaPart>>(() => contentItem.ContentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
             }
         }
     }
