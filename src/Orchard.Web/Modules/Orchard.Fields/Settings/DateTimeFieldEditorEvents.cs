@@ -42,6 +42,7 @@ namespace Orchard.Fields.Settings {
                 builder.WithSetting("DateTimeFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
                 model.DefaultValue = model.Editor == null ? model.DefaultValue : _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                 builder.WithSetting("DateTimeFieldSettings.DefaultValue", model.DefaultValue.HasValue ? model.DefaultValue.Value.ToString(CultureInfo.InvariantCulture) : String.Empty);
+                builder.WithSetting("DateTimeFieldSettings.AllowDisplayOptionsOverride", model.AllowDisplayOptionsOverride.ToString(CultureInfo.InvariantCulture));
 
                 yield return DefinitionTemplate(model);
             }

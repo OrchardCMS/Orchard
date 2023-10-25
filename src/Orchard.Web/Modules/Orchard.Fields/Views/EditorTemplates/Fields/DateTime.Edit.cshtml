@@ -1,9 +1,15 @@
 ﻿@model Orchard.Fields.ViewModels.DateTimeFieldViewModel
 
+
 <fieldset>
     <label for="@Html.FieldIdFor(m => Model.Editor.Date)" @if (Model.IsRequired) { <text> class="required" </text> }>@Model.Name</label>
     @Html.EditorFor(m => m.Editor)
-    @if (HasText(Model.Hint)) {
+    @if (Model.AllowDisplayOptionsOverride) {
+        <span class="hint">SPECIFICAMI QUESTO</span>
+    }
+
+    @if (HasText(Model.Hint))
+    {
         <span class="hint">@Model.Hint</span>
     }
 </fieldset>

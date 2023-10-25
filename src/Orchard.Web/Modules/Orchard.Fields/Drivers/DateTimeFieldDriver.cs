@@ -96,12 +96,13 @@ namespace Orchard.Fields.Drivers {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
+                AllowDisplayOptionsOverride = settings.AllowDisplayOptionsOverride,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
                     ShowDate = showDate,
                     ShowTime = showTime,
-                }
+                }                
             };
 
             return ContentShape("Fields_DateTime_Edit", GetDifferentiator(field, part),
