@@ -42,23 +42,27 @@ namespace Orchard.Fields.Drivers {
                     var options = new DateLocalizationOptions();
 
                     // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
-                    if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                    if (field.Display == DateTimeFieldDisplays.DateOnly) {
                         options.EnableTimeZoneConversion = false;
                     }
 
                     // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-                    if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                    if (field.Display == DateTimeFieldDisplays.TimeOnly) {
                         options.EnableCalendarConversion = false;
                         options.IgnoreDate = true;
                     }
 
-                    var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
-                    var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
+                    var showDate = field.Display == DateTimeFieldDisplays.DateAndTime || field.Display == DateTimeFieldDisplays.DateOnly;
+                    var showTime = field.Display == DateTimeFieldDisplays.DateAndTime || field.Display == DateTimeFieldDisplays.TimeOnly;
+                    
 
+                    DateTimeFieldDisplays displayOption = field.Display;
                     var viewModel = new DateTimeFieldViewModel {
                         Name = field.DisplayName,
                         Hint = settings.Hint,
                         IsRequired = settings.Required,
+                        AllowDisplayOptionsOverride = settings.AllowDisplayOptionsOverride,
+                        DisplayOption = displayOption,
                         Editor = new DateTimeEditor() {
                             Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                             Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
@@ -78,25 +82,33 @@ namespace Orchard.Fields.Drivers {
             var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
-            // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
-            if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                options.EnableTimeZoneConversion = false;
+            // If AllowDisplayOptionsOverride is true, both the date selector and the time selector will be shown
+            var showDate = true;
+            var showTime = true;
+            
+            DateTimeFieldDisplays displayOption = field.Display;
+            if (!settings.AllowDisplayOptionsOverride) {
+                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                    options.EnableTimeZoneConversion = false;
+                }
+
+                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                    options.EnableCalendarConversion = false;
+                    options.IgnoreDate = true;
+                }
+
+                showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+                showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
             }
-
-            // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-            if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
-                options.EnableCalendarConversion = false;
-                options.IgnoreDate = true;
-            }
-
-            var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
-            var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
-
+            
             var viewModel = new DateTimeFieldViewModel {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
                 AllowDisplayOptionsOverride = settings.AllowDisplayOptionsOverride,
+                DisplayOption = displayOption,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
@@ -118,19 +130,25 @@ namespace Orchard.Fields.Drivers {
 
                 var options = new DateLocalizationOptions();
 
-                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    options.EnableTimeZoneConversion = false;
-                }
+                var showDate = true;
+                var showTime = true;
 
-                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-                if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
-                    options.EnableCalendarConversion = false;
-                    options.IgnoreDate = true;
-                }
+                field.Display = viewModel.DisplayOption;
 
-                var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
-                var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
+                if (!settings.AllowDisplayOptionsOverride) {
+                    if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                        options.EnableTimeZoneConversion = false;
+                    }
+
+                    // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                    if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                        options.EnableCalendarConversion = false;
+                        options.IgnoreDate = true;
+                    }
+
+                    showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+                    showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
+                }
 
                 DateTime? value = null;
 
@@ -172,7 +190,8 @@ namespace Orchard.Fields.Drivers {
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(DateTime), T("Value"), T("The date and time value of the field."))
-                .Enumerate<DateTimeField>(() => field => new[] { field.DateTime });
+                .Enumerate<DateTimeField>(() => field => new[] { field.DateTime })
+                .Member("DisplayOption", typeof(string), T("DisplayOption"), T("The display option specific for this field"));               
         }
     }
 }

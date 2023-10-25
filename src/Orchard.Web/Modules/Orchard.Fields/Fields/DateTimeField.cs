@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.Fields.Settings;
+using Orchard.UI.Notify;
 
 namespace Orchard.Fields.Fields {
     public class DateTimeField : ContentField {
@@ -30,7 +32,25 @@ namespace Orchard.Fields.Fields {
         public DateTimeFieldDisplays Display {
             get {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                if (settings.AllowDisplayOptionsOverride) {
+                    if (Enum.TryParse(DisplayOption, out DateTimeFieldDisplays displayOption)){
+                        return displayOption;
+                    }                    
+                }                
                 return settings.Display;
+            }
+            set {
+                DisplayOption = value.ToString();                
+            }
+        }
+
+
+        protected string DisplayOption {
+            get {
+                return Storage.Get<string>("DisplayOption");                
+            }
+            set {
+                Storage.Set("DisplayOption", value ?? String.Empty);
             }
         }
     } 

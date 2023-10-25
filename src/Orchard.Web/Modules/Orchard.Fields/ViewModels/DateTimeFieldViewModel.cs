@@ -1,6 +1,7 @@
 ﻿using Orchard.Core.Common.ViewModels;
 using Orchard.Fields.Settings;
 
+
 namespace Orchard.Fields.ViewModels {
     public class DateTimeFieldViewModel {
         public string Name { get; set; }
@@ -8,6 +9,6 @@ namespace Orchard.Fields.ViewModels {
         public bool IsRequired { get; set; }
         public DateTimeEditor Editor { get; set; }
         public bool AllowDisplayOptionsOverride { get; set; }
-
+        public DateTimeFieldDisplays DisplayOption { get; set; }
     }
 }
