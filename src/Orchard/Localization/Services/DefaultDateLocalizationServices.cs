@@ -210,11 +210,19 @@ namespace Orchard.Localization.Services {
                 // conversion cannot wrap DateTime.MinValue around to the previous day, resulting in
                 // an undefined result. Instead we convert the date to a hard-coded date of 2000-01-01
                 // before the conversion, and back to the original date after.
-                if (!hasDate) {
+
+                var backupDate = new DateTime(dateValue.Year, dateValue.Month, dateValue.Day);
+                if (!hasDate || options.IgnoreDate) {
                     dateValue = new DateTime(2000, 1, 1, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 }
+                                
                 dateValue = ConvertFromSiteTimeZone(dateValue);
-                if (!hasDate) {
+
+                if (options.IgnoreDate) {
+                    backupDate = backupDate.AddDays((dateValue.Date - new DateTime(2000, 1, 1)).Days);
+                    dateValue = new DateTime(backupDate.Year, backupDate.Month, backupDate.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                }
+                else if (!hasDate) {
                     dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 }
             }

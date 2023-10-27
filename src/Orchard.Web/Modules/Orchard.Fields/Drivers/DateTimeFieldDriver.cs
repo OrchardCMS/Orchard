@@ -84,21 +84,20 @@ namespace Orchard.Fields.Drivers {
 
             // If AllowDisplayOptionsOverride is true, both the date selector and the time selector will be shown
             var showDate = true;
-            var showTime = true;
-            
-            DateTimeFieldDisplays displayOption = field.Display;
-            if (!settings.AllowDisplayOptionsOverride) {
-                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    options.EnableTimeZoneConversion = false;
-                }
+            var showTime = true;            
 
-                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-                if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
-                    options.EnableCalendarConversion = false;
-                    options.IgnoreDate = true;
-                }
+            // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+            if (field.Display == DateTimeFieldDisplays.DateOnly) {
+                options.EnableTimeZoneConversion = false;
+            }
 
+            // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+            if (field.Display == DateTimeFieldDisplays.TimeOnly) {
+                options.EnableCalendarConversion = false;
+                options.IgnoreDate = true;
+            }
+
+            if (!settings.AllowDisplayOptionsOverride) {               
                 showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
                 showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
             }
@@ -108,7 +107,7 @@ namespace Orchard.Fields.Drivers {
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
                 AllowDisplayOptionsOverride = settings.AllowDisplayOptionsOverride,
-                DisplayOption = displayOption,
+                DisplayOption = field.Display,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
@@ -135,17 +134,18 @@ namespace Orchard.Fields.Drivers {
 
                 field.Display = viewModel.DisplayOption;
 
-                if (!settings.AllowDisplayOptionsOverride) {
-                    if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                        options.EnableTimeZoneConversion = false;
-                    }
+                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+                if (field.Display == DateTimeFieldDisplays.DateOnly) {
+                    options.EnableTimeZoneConversion = false;
+                }
 
-                    // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-                    if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
-                        options.EnableCalendarConversion = false;
-                        options.IgnoreDate = true;
-                    }
+                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                if (field.Display == DateTimeFieldDisplays.TimeOnly) {
+                    options.EnableCalendarConversion = false;
+                    options.IgnoreDate = true;
+                }
 
+                if (!settings.AllowDisplayOptionsOverride) {    
                     showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
                     showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
                 }
@@ -165,11 +165,11 @@ namespace Orchard.Fields.Drivers {
                 // Hackish workaround to make sure a time-only field with an entered time equivalent to
                 // 00:00 UTC doesn't get stored as a full DateTime.MinValue in the database, resulting
                 // in it being interpreted as an empty value when subsequently retrieved.
-                if (value.HasValue && settings.Display == DateTimeFieldDisplays.TimeOnly && value == DateTime.MinValue) {
+                if (value.HasValue && field.Display == DateTimeFieldDisplays.TimeOnly && value == DateTime.MinValue) {
                     value = value.Value.AddDays(1);
                 }
 
-                if (settings.Required && (!value.HasValue || (settings.Display != DateTimeFieldDisplays.TimeOnly && value.Value.Date == DateTime.MinValue))) {
+                if (settings.Required && (!value.HasValue || (field.Display != DateTimeFieldDisplays.TimeOnly && value.Value.Date == DateTime.MinValue))) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", T(field.DisplayName)));
                 }
 
@@ -190,8 +190,7 @@ namespace Orchard.Fields.Drivers {
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(DateTime), T("Value"), T("The date and time value of the field."))
-                .Enumerate<DateTimeField>(() => field => new[] { field.DateTime })
-                .Member("DisplayOption", typeof(string), T("DisplayOption"), T("The display option specific for this field"));               
+                .Enumerate<DateTimeField>(() => field => new[] { field.DateTime });              
         }
     }
 }

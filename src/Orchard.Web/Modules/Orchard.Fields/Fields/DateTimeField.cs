@@ -12,15 +12,18 @@ namespace Orchard.Fields.Fields {
             get {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
                 var value = Storage.Get<DateTime>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                if (Display == DateTimeFieldDisplays.DateOnly) {
                     return new DateTime(value.Year, value.Month, value.Day);
                 }
+                /*if (Display == DateTimeFieldDisplays.TimeOnly) {
+                    return new DateTime(1, 1, 1, value.Hour, value.Minute, value.Second);
+                }*/
                 return value;
             }
 
             set {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                if (Display == DateTimeFieldDisplays.DateOnly) {
                     Storage.Set(new DateTime(value.Year, value.Month, value.Day));
                 }
                 else {
