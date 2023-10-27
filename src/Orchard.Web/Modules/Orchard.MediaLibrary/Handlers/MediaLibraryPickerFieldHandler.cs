@@ -9,16 +9,12 @@ using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Handlers {
     public class MediaLibraryPickerFieldHandler : ContentHandler {
-        private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public MediaLibraryPickerFieldHandler(
-            IContentManager contentManager, 
             IContentDefinitionManager contentDefinitionManager) {
             
-            _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
-
         }
 
         protected override void Loaded(LoadContentContext context) {

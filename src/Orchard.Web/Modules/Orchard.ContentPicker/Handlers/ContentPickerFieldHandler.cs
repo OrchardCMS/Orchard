@@ -6,14 +6,11 @@ using Orchard.ContentPicker.Fields;
 
 namespace Orchard.ContentPicker.Handlers {
     public class ContentPickerFieldHandler : ContentHandler {
-        private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public ContentPickerFieldHandler(
-            IContentManager contentManager, 
             IContentDefinitionManager contentDefinitionManager) {
             
-            _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
 
