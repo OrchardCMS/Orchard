@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -62,12 +62,39 @@ namespace Orchard.Localization.Services {
             return _workContextAccessor.GetContext().CurrentCulture;
         }
 
+        protected Dictionary<int, CultureRecord> GetAllCulturesById() {
+            return _cacheManager.Get("all_culture_records_by_id", true, context => {
+                context.Monitor(_signals.When("culturesChanged"));
+
+                return _cultureRepository.Table
+                    .ToDictionary(cr => cr.Id);
+            });
+        }
         public CultureRecord GetCultureById(int id) {
-            return _cultureRepository.Get(id);
+            var cultures = GetAllCulturesById();
+            CultureRecord result;
+            cultures.TryGetValue(id, out result);
+
+            return result;
         }
 
+        protected Dictionary<string, CultureRecord> GetAllCulturesByName() {
+            return _cacheManager.Get("all_culture_records_by_name", true, context => {
+                context.Monitor(_signals.When("culturesChanged"));
+
+                return _cultureRepository.Table
+                    .ToDictionary(cr => cr.Culture);
+            });
+        }
         public CultureRecord GetCultureByName(string cultureName) {
-            return _cultureRepository.Get(cr => cr.Culture == cultureName);
+            if (string.IsNullOrWhiteSpace(cultureName)) {
+                return null;
+            }
+            var cultures = GetAllCulturesByName();
+            CultureRecord result;
+            cultures.TryGetValue(cultureName, out result);
+
+            return result;
         }
 
         public string GetSiteCulture() {

@@ -18,6 +18,7 @@ namespace Orchard.SecureSocketsLayer.Handlers {
             Filters.Add(new ActivatingFilter<SslSettingsPart>("Site"));
 
             // Evict cached content when updated, removed or destroyed.
+            OnUpdated<SslSettingsPart>((context, part) => Invalidate(part));
             OnPublished<SslSettingsPart>((context, part) => Invalidate(part));
             OnRemoved<SslSettingsPart>((context, part) => Invalidate(part));
             OnDestroyed<SslSettingsPart>((context, part) => Invalidate(part));
