@@ -132,7 +132,6 @@ namespace Orchard.Localization.Services {
             var parts = DateTimeParts.FromDateTime(dateValue, offset);
 
             // INFO: No calendar conversion in this method - we expect the date component to be DateTime.MinValue and irrelevant anyway.
-
             return _dateFormatter.FormatDateTime(parts, _dateTimeFormatProvider.LongTimeFormat);
         }
 
@@ -211,6 +210,11 @@ namespace Orchard.Localization.Services {
                 // an undefined result. Instead we convert the date to a hard-coded date of 2000-01-01
                 // before the conversion, and back to the original date after.
 
+                // If the DateTime that's being converted has a date but we only need to consider its Time (ignoreDate = true)
+                // it's necessary to perform the trickery explained before. 
+                // In the same situation in some cases, the Date value will change when converting from local time to UTC
+                // (e.g. local time is UTC+2 and the time is set to 1 AM).
+                // To prevent this we save the original date value and, in those cases, use it to make sure the DateTime value is the same after the conversion.
                 var backupDate = new DateTime(dateValue.Year, dateValue.Month, dateValue.Day);
                 if (!hasDate || options.IgnoreDate) {
                     dateValue = new DateTime(2000, 1, 1, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
@@ -218,13 +222,15 @@ namespace Orchard.Localization.Services {
                                 
                 dateValue = ConvertFromSiteTimeZone(dateValue);
 
-                if (options.IgnoreDate) {
-                    backupDate = backupDate.AddDays((dateValue.Date - new DateTime(2000, 1, 1)).Days);
-                    dateValue = new DateTime(backupDate.Year, backupDate.Month, backupDate.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
-                }
-                else if (!hasDate) {
+                if (!hasDate) {
                     dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 }
+                else if (options.IgnoreDate) {
+                    // If we have to ignore the date during the conversions we use the hard-coded date of 2000-01-01 but we still adjust the backupDate value
+                    // based on the result of the conversion and use its newly calculated value as the date.
+                    backupDate = backupDate.AddDays((dateValue.Date - new DateTime(2000, 1, 1)).Days);
+                    dateValue = new DateTime(backupDate.Year, backupDate.Month, backupDate.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                }                
             }
 
             if (options.EnableTimeZoneConversion)

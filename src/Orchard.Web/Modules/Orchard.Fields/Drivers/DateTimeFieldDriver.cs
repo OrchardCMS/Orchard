@@ -82,7 +82,7 @@ namespace Orchard.Fields.Drivers {
             var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
-            // If AllowDisplayOptionsOverride is true, both the date selector and the time selector will be shown
+            // If the field's AllowDisplayOptionsOverride setting is set to true both the Date and Time editors will be shown anyway.
             var showDate = true;
             var showTime = true;            
 
@@ -96,7 +96,7 @@ namespace Orchard.Fields.Drivers {
                 options.EnableCalendarConversion = false;
                 options.IgnoreDate = true;
             }
-
+            // If the field's AllowDisplayOptionsOverride setting is set to false the Date and Time editors are shown based on the Display setting.
             if (!settings.AllowDisplayOptionsOverride) {               
                 showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
                 showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
@@ -129,6 +129,7 @@ namespace Orchard.Fields.Drivers {
 
                 var options = new DateLocalizationOptions();
 
+                // If the field's AllowDisplayOptionsOverride setting is set to true both the Date and Time editors will be shown anyway                
                 var showDate = true;
                 var showTime = true;
 
@@ -145,6 +146,7 @@ namespace Orchard.Fields.Drivers {
                     options.IgnoreDate = true;
                 }
 
+                // If the field's AllowDisplayOptionsOverride setting is set to false the Date and Time editors are shown based on the Display setting.
                 if (!settings.AllowDisplayOptionsOverride) {    
                     showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
                     showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
@@ -194,3 +196,4 @@ namespace Orchard.Fields.Drivers {
         }
     }
 }
+

@@ -15,9 +15,6 @@ namespace Orchard.Fields.Fields {
                 if (Display == DateTimeFieldDisplays.DateOnly) {
                     return new DateTime(value.Year, value.Month, value.Day);
                 }
-                /*if (Display == DateTimeFieldDisplays.TimeOnly) {
-                    return new DateTime(1, 1, 1, value.Hour, value.Minute, value.Second);
-                }*/
                 return value;
             }
 
@@ -46,7 +43,6 @@ namespace Orchard.Fields.Fields {
                 DisplayOption = value.ToString();                
             }
         }
-
 
         protected string DisplayOption {
             get {
