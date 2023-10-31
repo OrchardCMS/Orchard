@@ -53,6 +53,11 @@ namespace Orchard.Taxonomies.Projections {
                             Id: "ExcludeChildren", Name: "ExcludeChildren",
                             Title: T("Automatically exclude children terms in filtering"),
                             Value: "true"
+                        ),
+                        _TranslateTerms: Shape.Checkbox(
+                            Id: "TranslateTerms", Name: "TranslateTerms",
+                            Title: T("Automatically include terms' localizations in filtering"),
+                            Value: "true"
                         )
                     );
 
