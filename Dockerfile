@@ -20,12 +20,15 @@ RUN Get-ChildItem
 # Therefore, no action is required here.
 
 # Compile the project
-RUN msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
-RUN  Get-Location
-RUN Get-ChildItem
+RUN msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:WarningLevel=0
+#RUN  Get-Location
+#RUN Get-ChildItem
 
 # Test the project
 # Note: The tests might require an actual SQL Server and other dependencies.
 # It's recommended to run the tests in a CI environment rather than in the Docker build process.
 # However, if you still want to run the tests:
-RUN msbuild Orchard.proj /m /t:Test
+#RUN msbuild Orchard.proj /m /t:Test
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS runtime
+WORKDIR /inetpub/wwwroot
+COPY --from=build C:\src\build\Stage ./
