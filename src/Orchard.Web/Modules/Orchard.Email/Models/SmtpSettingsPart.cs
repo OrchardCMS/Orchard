@@ -37,7 +37,7 @@ namespace Orchard.Email.Models {
         public SmtpEncryptionMethod EncryptionMethod {
 #pragma warning disable CS0618 // Type or member is obsolete
             // Reading EnableSsl is necessary to keep the correct settings during the upgrade to MailKit.
-            get { return this.Retrieve(x => x.EncryptionMethod, EnableSsl ? SmtpEncryptionMethod.SslTls : SmtpEncryptionMethod.None); }
+            get { return this.Retrieve(x => x.EncryptionMethod, EnableSsl ? (Port == 587 ? SmtpEncryptionMethod.StartTls : SmtpEncryptionMethod.SslTls) : SmtpEncryptionMethod.None); }
 #pragma warning restore CS0618 // Type or member is obsolete
             set { this.Store(x => x.EncryptionMethod, value); }
         }
