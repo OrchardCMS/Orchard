@@ -3,7 +3,7 @@ WORKDIR /app
 
 
 # Set the shell to PowerShell for convenience.
-#SHELL ["powershell", "-Command"]
+SHELL ["powershell", "-Command"]
 
 # Restore NuGet packages
 WORKDIR /src
