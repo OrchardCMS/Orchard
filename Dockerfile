@@ -5,24 +5,14 @@ WORKDIR /app
 # Set the shell to PowerShell for convenience.
 SHELL ["powershell", "-Command"]
 
-# Restore NuGet packages
-WORKDIR /src
-RUN  Get-Location
-RUN Get-ChildItem
+# Copy source files
 COPY . .
-RUN  Get-Location
-RUN Get-ChildItem
-RUN nuget restore src/Orchard.sln
-RUN  Get-Location
-RUN Get-ChildItem
 
-# Add MSBuild to the PATH. The PATH is already set in the sdk image.
-# Therefore, no action is required here.
+# Restore NuGet packages
+RUN nuget restore src/Orchard.sln
 
 # Compile the project
 RUN msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:WarningLevel=0
-#RUN  Get-Location
-#RUN Get-ChildItem
 
 # Test the project
 # Note: The tests might require an actual SQL Server and other dependencies.
@@ -31,4 +21,6 @@ RUN msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:WarningLevel=0
 #RUN msbuild Orchard.proj /m /t:Test
 FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8 AS runtime
 WORKDIR /inetpub/wwwroot
-COPY --from=build C:\src\build\Stage ./
+
+# Copy build in to inetpub
+COPY --from=build /app/src/build/Stage ./
