@@ -42,7 +42,7 @@
             var $in = $(this);
             var allowedExtensions = ' @Model.AllowedExtensions ';
             var filename = $in.val();
-            var ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+            var ext = filename.slice(filename.lastIndexOf(".")).toLowerCase().replace('.','');
             var allowed = allowedExtensions == '  ' || allowedExtensions.indexOf(ext) != -1;
 
             if(!allowed) {
