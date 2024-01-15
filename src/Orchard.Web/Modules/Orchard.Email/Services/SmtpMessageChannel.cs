@@ -14,11 +14,10 @@ using Orchard.Logging;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Orchard.Email.Services {
-    public class SmtpMessageChannel : Component, ISmtpChannel, IDisposable {
+    public class SmtpMessageChannel : Component, ISmtpChannel {
         private readonly SmtpSettingsPart _smtpSettings;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
-        private readonly Lazy<SmtpClient> _smtpClientField;
         public static readonly string MessageType = "Email";
 
         public SmtpMessageChannel(
@@ -30,15 +29,6 @@ namespace Orchard.Email.Services {
             _shapeDisplay = shapeDisplay;
 
             _smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
-            _smtpClientField = new Lazy<SmtpClient>(CreateSmtpClient);
-        }
-
-        public void Dispose() {
-            if (!_smtpClientField.IsValueCreated) {
-                return;
-            }
-
-            _smtpClientField.Value.Dispose();
         }
 
         public void Process(IDictionary<string, object> parameters) {
@@ -116,7 +106,11 @@ namespace Orchard.Email.Services {
                     mailMessage.ReplyTo.AddRange(ParseRecipients(emailMessage.ReplyTo));
                 }
 
-                _smtpClientField.Value.Send(mailMessage);
+                using (var smtpClient = CreateSmtpClient()) {
+                    // CreateSmtpClient handles connection and authentication as well
+                    smtpClient.Send(mailMessage);
+                    smtpClient.Disconnect(true);
+                }
             }
             catch (Exception e) {
                 Logger.Error(e, "Could not send email");
