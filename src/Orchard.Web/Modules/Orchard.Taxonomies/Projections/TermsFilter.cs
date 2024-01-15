@@ -36,7 +36,10 @@ namespace Orchard.Taxonomies.Projections {
             var termIds = (string)context.State.TermIds;
 
             if (!String.IsNullOrEmpty(termIds)) {
-                var ids = termIds.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
+                var ids = termIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    // Int32.Parse throws for empty strings
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(Int32.Parse).ToArray();
 
                 if (ids.Length == 0) {
                     return;
