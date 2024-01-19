@@ -10,7 +10,7 @@ namespace Orchard.Core.Title {
             SchemaBuilder.CreateTable("TitlePartRecord", 
                 table => table
                     .ContentPartVersionRecord()
-                    .Column<string>("Title", column => column.WithLength(TitlePartSettings.MAX_TITLE_LENGTH))
+                    .Column<string>("Title", column => column.WithLength(TitlePartSettings.MaxTitleLength))
                 );
 
             ContentDefinitionManager.AlterPartDefinition("TitlePart", builder => builder
