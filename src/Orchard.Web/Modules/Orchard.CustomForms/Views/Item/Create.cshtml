@@ -1,7 +1,13 @@
 @using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
 @using Orchard.ContentManagement.Aspects;
+@using Orchard.ContentManagement.MetaData;
+@using Orchard.ContentManagement.MetaData.Models;
+@using Orchard.Core.Contents.Settings;
+
 @{
+    IContentDefinitionManager _contentDefinitionManager = WorkContext.Resolve<IContentDefinitionManager>();
+
     ContentItem customForm = Model.ContentItem;
     string returnUrl = Model.ReturnUrl;
     var metadata = customForm.ContentManager.GetItemMetadata(customForm);
@@ -14,6 +20,18 @@
 
     var submitButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.SubmitButtonText) ? T("Submit").Text : Model.ContentItem.CustomFormPart.SubmitButtonText;
     var publishButtonText = String.IsNullOrEmpty(Model.ContentItem.CustomFormPart.PublishButtonText) ? T("Publish").Text : Model.ContentItem.CustomFormPart.PublishButtonText;
+
+    var showPublishButton = Model.ContentItem.CustomFormPart.SavePublishContentItem;
+    // Read type definition to check if content is draftable
+    var typeDefinition = _contentDefinitionManager
+        .ListTypeDefinitions()
+        .Where(x => String.Equals(x.Name, Model.ContentItem.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase))
+        .FirstOrDefault();
+    if (typeDefinition != null) {
+        // Publish button has to be visible only if content is draftable AND is set to show the publish button
+        showPublishButton = showPublishButton &&
+            typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+    }
 }
 
 @Display(New.Parts_Title().Title(displayText))
@@ -29,8 +47,22 @@
         @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == false || Model.ContentItem.CustomFormPart.SaveContentItem == true) {
             <button type="submit" name="submit.Save" value="submit.Save">@submitButtonText</button>
         }
-        @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == true) {
+        @if (showPublishButton) {
             <button type="submit" name="submit.Publish" value="submit.Publish">@publishButtonText</button>
         }
     </fieldset>
+
+
+    <div class="edit-item-secondary group">
+        @if (Model.Actions != null) {
+            <div class="edit-item-actions">
+                @Display(Model.Actions)
+            </div>
+        }
+        @if (Model.Sidebar != null) {
+            <div class="edit-item-sidebar group">
+                @Display(Model.Sidebar)
+            </div>
+        }
+    </div>
 }
