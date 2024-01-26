@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 
@@ -22,8 +24,8 @@ namespace Orchard.Core.Navigation.Handlers {
             });
 
             OnActivated<MenuPart>(PropertySetHandlers);
-        }
 
+        }
         protected void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart) {
             menuPart.MenuField.Setter(menu => {
                 if (menu == null || menu.ContentItem == null) {

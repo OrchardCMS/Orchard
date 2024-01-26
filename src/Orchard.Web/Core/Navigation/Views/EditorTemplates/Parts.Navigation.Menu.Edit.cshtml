@@ -10,7 +10,8 @@
         <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
             <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
-                @foreach (ContentItem menu in Model.Menus) {
+                @foreach (ContentItem menu in Model.Menus)
+                {
                     @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
                 }
             </select>
@@ -19,18 +20,22 @@
             <label for="MenuText">@T("Menu text")</label>
             @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
             <span class="hint">@T("The text that should appear in the menu.")</span>
+            @Html.CheckBoxFor(m => m.VisibleAtFrontEnd)
+            <label for="@Html.FieldIdFor(m => m.VisibleAtFrontEnd)" class="forcheckbox">@T("Visible at frontend")</label>
+            <span class="hint">@T("If unchecked the content remain in the menu, but hidden at rendered frontend menu, even if published")</span>
         </div>
     </fieldset>
 
 }
 else {
 
-    <fieldset>
-        <label for="MenuText">@T("Menu text")</label>
-        @Html.TextBoxFor(m => m.MenuText, new { @class = "text medium", autofocus = "autofocus" })
-        <span class="hint">@T("The text that should appear in the menu.")</span>
-        @Html.Hidden(Html.NameOf(m => m.OnMenu), true)
-        @Html.Hidden(Html.NameOf(m => m.CurrentMenuId), !string.IsNullOrWhiteSpace(Request["menuId"]) ? Request["menuId"] : Model.CurrentMenuId.ToString())
-    </fieldset>
+<fieldset>
+    <label for="MenuText">@T("Menu text")</label>
+    @Html.TextBoxFor(m => m.MenuText, new { @class = "text medium", autofocus = "autofocus" })
+    <span class="hint">@T("The text that should appear in the menu.")</span>
+    @Html.Hidden(Html.NameOf(m => m.OnMenu), true)
+    @Html.Hidden(Html.NameOf(m => m.VisibleAtFrontEnd), true)
+    @Html.Hidden(Html.NameOf(m => m.CurrentMenuId), !string.IsNullOrWhiteSpace(Request["menuId"]) ? Request["menuId"] : Model.CurrentMenuId.ToString())
+</fieldset>
 
 }

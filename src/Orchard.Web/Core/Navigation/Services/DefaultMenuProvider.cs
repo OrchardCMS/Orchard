@@ -14,7 +14,6 @@ namespace Orchard.Core.Navigation.Services {
 
         public DefaultMenuProvider(IContentManager contentManager) {
             _contentManager = contentManager;
-
             _menuPartsMemory = new Dictionary<int, IEnumerable<MenuPart>>();
         }
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.UI.WebControls;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
@@ -12,7 +14,11 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.Navigation.Models;
+using Orchard.Core.Navigation.Services;
 using Orchard.Data;
+using Orchard.Data.Bags;
+using Orchard.Environment;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Logging;
@@ -32,13 +38,16 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
         private readonly ICultureFilter _cultureFilter;
+        private readonly ISignals _signals;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentDefinitionManager contentDefinitionManager,
             ISiteService siteService,
             ICultureManager cultureManager,
-            ICultureFilter cultureFilter) : base(orchardServices.ContentManager) {
+            ICultureFilter cultureFilter,
+            ISignals signals
+            ) : base(orchardServices.ContentManager) {
             Services = orchardServices;
             _contentManager = orchardServices.ContentManager;
             _transactionManager = orchardServices.TransactionManager;
@@ -46,7 +55,7 @@ namespace Orchard.Core.Contents.Controllers {
             _siteService = siteService;
             _cultureManager = cultureManager;
             _cultureFilter = cultureFilter;
-
+            _signals = signals;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = orchardServices.New;
@@ -394,31 +403,27 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Clone(int id, string returnUrl) {
-            var contentItem = _contentManager.GetLatest(id);
+            var originalContentItem = _contentManager.GetLatest(id);
 
-            if (contentItem == null)
-                return HttpNotFound();
-
-            if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Couldn't clone content")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, originalContentItem, T("Couldn't open original content")))
                 return new HttpUnauthorizedResult();
 
             // pass a dummy content to the authorization check to check for "own" variations
-            var dummyContent = _contentManager.New(contentItem.ContentType);
+            var dummyContent = _contentManager.New(originalContentItem.ContentType);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("You do not have permission to edit (or create) content.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContent, dummyContent, T("Couldn't create clone content")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                Services.ContentManager.Clone(contentItem);
-            }
-            catch (InvalidOperationException) {
-                Services.Notifier.Warning(T("Could not clone the content item."));
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
-            }
+            var cloneContentItem = _contentManager.Clone(originalContentItem);
 
             Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
-
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            if (string.IsNullOrWhiteSpace(returnUrl)) {
+                var adminRouteValues = _contentManager.GetItemMetadata(cloneContentItem).AdminRouteValues;
+                return RedirectToRoute(adminRouteValues);
+            }
+            else {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            }
         }
 
         [HttpPost]
@@ -477,6 +482,60 @@ namespace Orchard.Core.Contents.Controllers {
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
+
+        /// <summary>
+        /// Set VisibleAtFrontEnd flag for menuPart
+        /// </summary>
+        /// <param name="menu">The menu item</param>
+        /// <param name="value">Show->true or Hide->false</param>
+        private void VisibleAtFrontEnd(MenuPart menu, Boolean value) {
+            //var menuItems = _contentManager
+            //    .Query<MenuPart, MenuPartRecord>()
+            //    .Where(x => x.MenuId == menu.Menu.Id)
+            //    .List().Where(x => x.MenuPosition.StartsWith(menu.MenuPosition + "."))
+            //    .Select(x => x.As<MenuPart>())
+            //    .ToList();
+            //foreach (var menuItem in menuItems.Concat(new[] { menu })) {
+            //    menuItem.VisibleAtFrontEnd = value;
+            //}
+            menu.VisibleAtFrontEnd = value;
+            //Trigger the change of NavigationContentItems in modules that cache this type of content
+            _signals.Trigger("NavigationContentItems.Changed");
+        }
+
+        /// <summary>
+        /// Set VisibleAtFrontEnd to false on content's menuPart (for itself not for its children)
+        /// </summary>
+        /// <param name="id">ContentItem Id</param>
+        /// <param name="returnUrl">return Url</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Hide(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
+                return new HttpUnauthorizedResult();
+            MenuPart menuPart = contentItem.As<MenuPart>();
+            if (menuPart != null) 
+                VisibleAtFrontEnd(menuPart, false);
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
+
+        /// <summary>
+        /// Set VisibleAtFrontEnd to true on content's menuPart (for itself not for its children)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Show(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
+                return new HttpUnauthorizedResult();
+            MenuPart menuPart = contentItem.As<MenuPart>();
+            if (menuPart != null)
+                VisibleAtFrontEnd(menuPart, true);
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+        }
     }
 
     [Obsolete("Use Orchard.Mvc.FormValueRequiredAttribute instead.")]
@@ -492,4 +551,6 @@ namespace Orchard.Core.Contents.Controllers {
             return !string.IsNullOrEmpty(value);
         }
     }
+
+
 }
