@@ -5,6 +5,8 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
+using System.Collections;
+using System.Linq;
 
 namespace Orchard.Core.Navigation.Services {
     public class DefaultMenuProvider : IMenuProvider {
@@ -27,7 +29,23 @@ namespace Orchard.Core.Navigation.Services {
                     .Where(x => x.MenuId == menu.Id)
                     .List();
             }
-            var menuParts = _menuPartsMemory[menu.Id];
+            var menuParts = _menuPartsMemory[menu.Id].ToList<MenuPart>();
+
+            //List of hidden items
+            var menuPartsHidden = _contentManager
+                .Query<MenuPart, MenuPartRecord>()
+                .Where(x => x.MenuId == menu.Id && !x.VisibleAtFrontEnd)
+                .List();
+
+            //Removing from menuList the items with VisibleAtFrontEnd set to false
+            foreach (var itemHidden in menuPartsHidden) {
+                //Copy the list
+                MenuPart[] menuParts1 = new MenuPart[menuParts.Count];
+                menuParts.CopyTo(menuParts1);
+                foreach (var item in menuParts1)
+                    if (item.MenuPosition.StartsWith(itemHidden.MenuPosition))
+                        menuParts.Remove(item);
+            }
 
             foreach (var menuPart in menuParts) {
                 if (menuPart != null) {
