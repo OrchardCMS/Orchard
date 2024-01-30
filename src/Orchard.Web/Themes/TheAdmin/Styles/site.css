@@ -445,6 +445,7 @@ ul.menuItems {margin:6px 0 0 0;}
     margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
     clear:both;
+	width: auto;
 
      /*CSS3 properties*/
     -webkit-border-radius: 2px;

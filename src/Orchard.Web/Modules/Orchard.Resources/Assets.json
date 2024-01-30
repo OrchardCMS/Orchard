@@ -1,6 +1,6 @@
 [
     {
-        "inputs": [ "Assets/Js/jQuery/jquery-3.3.1.js" ],
+        "inputs": [ "Assets/Js/jQuery/jquery-3.6.0.js" ],
         "output": "Scripts/jquery.js"
     },
     {
@@ -30,12 +30,11 @@
         "output": "Scripts/jquery.cookie.js"
     },
     {
-        "inputs": [ "Assets/Js/jQuery/jquery.iframe-transport.js" ],
+        "inputs": [ "Assets/Js/FileUpload/jquery.iframe-transport.js" ],
         "output": "Scripts/jquery.iframe-transport.js"
     },
     {
         "inputs": [
-            "Assets/Js/FileUpload/jquery.iframe-transport.js",
             "Assets/Js/FileUpload/jquery.fileupload.js",
             "Assets/Js/FileUpload/jquery.fileupload-process.js",
             "Assets/Js/FileUpload/jquery.fileupload-validate.js"
@@ -101,28 +100,6 @@
     {
         "inputs": [ "Assets/Js/Underscore/underscore.js" ],
         "output": "Scripts/underscore.js"
-    },
-    {
-        "inputs": [ "Assets/scss/Bootstrap/bootstrap.scss" ],
-        "output": "Styles/bootstrap.css"
-    },
-    {
-        "inputs": [            
-            "Assets/Js/Bootstrap/alert.js",
-            "Assets/Js/Bootstrap/button.js",
-            "Assets/Js/Bootstrap/carousel.js",
-            "Assets/Js/Bootstrap/collapse.js",
-            "Assets/Js/Bootstrap/dropdown.js",
-            "Assets/Js/Bootstrap/index.js",
-            "Assets/Js/Bootstrap/modal.js",
-            "Assets/Js/Bootstrap/tooltip.js",
-            "Assets/Js/Bootstrap/popover.js",
-            "Assets/Js/Bootstrap/scrollspy.js",
-            "Assets/Js/Bootstrap/tab.js",
-            "Assets/Js/Bootstrap/toast.js",            
-            "Assets/Js/Bootstrap/util.js"
-        ],
-        "output": "Scripts/bootstrap.js"
     },
     {
         "inputs": [ "Assets/Less/FontAwesome/font-awesome.less" ],
