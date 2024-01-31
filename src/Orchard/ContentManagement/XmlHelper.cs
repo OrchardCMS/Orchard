@@ -1,374 +1,435 @@
-﻿using System;
-using System.Globalization;
+using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Xml;
 using System.Xml.Linq;
-using Orchard.Utility;
+using NUnit.Framework;
+using Orchard.ContentManagement;
 
-namespace Orchard.ContentManagement {
-    public static class XmlHelper {
-        /// <summary>
-        /// Like Add, but chainable.
-        /// </summary>
-        /// <param name="el">The parent element.</param>
-        /// <param name="children">The elements to add.</param>
-        /// <returns>Itself</returns>
-        public static XElement AddEl(this XElement el, params XElement[] children) {
-            el.Add(children.Cast<object>());
-            return el;
+namespace Orchard.Tests.ContentManagement {
+    [TestFixture]
+    public class XmlHelperTests {
+        private const string _testGuidString = "98f3dc0a-01c3-4975-bd52-1b4f5a678d73";
+
+        [Test]
+        public void AddEl() {
+            var el = new XElement("data");
+            el
+                .AddEl(new XElement("node1"), new XElement("node2"))
+                .AddEl(new XElement("node3"));
+
+            Assert.That(el.Descendants().Count(), Is.EqualTo(3));
+            Assert.That(el.Descendants().First().Name.ToString(), Is.EqualTo("node1"));
+            Assert.That(el.Descendants().ElementAt(1).Name.ToString(), Is.EqualTo("node2"));
+            Assert.That(el.Descendants().ElementAt(2).Name.ToString(), Is.EqualTo("node3"));
         }
 
-        /// <summary>
-        /// Gets the string value of an attribute, and null if the attribute doesn't exist.
-        /// </summary>
-        /// <param name="el">The element.</param>
-        /// <param name="name">The name of the attribute.</param>
-        /// <returns>The string value of the attribute if it exists, null otherwise.</returns>
-        public static string Attr(this XElement el, string name) {
-            var attr = el.Attribute(name);
-            return attr == null ? null : attr.Value;
+        [Test]
+        public void Val() {
+            var el = new XElement("data");
+            el = el.Val(123);
+            var val = el.Val<int>();
+
+            Assert.That(val, Is.EqualTo(123));
+            Assert.That(el.ToString(SaveOptions.DisableFormatting),
+                Is.EqualTo("<data>123</data>"));
         }
 
-        /// <summary>
-        /// Gets a typed value from an attribute.
-        /// </summary>
-        /// <typeparam name="T">The type of the value</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="name">The name of the attribute.</param>
-        /// <returns>The attribute value</returns>
-        public static T Attr<T>(this XElement el, string name) {
+        [Test]
+        public void Infinities() {
+            var el = new XElement("data")
+                .Attr("doubleplus", double.PositiveInfinity)
+                .Attr("doubleminus", double.NegativeInfinity)
+                .Attr("floatplus", float.PositiveInfinity)
+                .Attr("floatminus", float.NegativeInfinity);
 
-            var attr = el.Attribute(name);
-            return attr == null ? default(T) : Parse<T>(attr.Value);
+            Assert.That(el.Attr<string>("doubleplus"), Is.EqualTo("infinity"));
+            Assert.That(el.Attr<string>("doubleminus"), Is.EqualTo("-infinity"));
+            Assert.That(el.Attr<string>("floatplus"), Is.EqualTo("infinity"));
+            Assert.That(el.Attr<string>("floatminus"), Is.EqualTo("-infinity"));
+
+            Assert.That(double.IsPositiveInfinity(el.Attr<double>("doubleplus")), Is.True);
+            Assert.That(double.IsNegativeInfinity(el.Attr<double>("doubleminus")), Is.True);
+            Assert.That(double.IsPositiveInfinity(el.Attr<float>("floatplus")), Is.True);
+            Assert.That(double.IsNegativeInfinity(el.Attr<float>("floatminus")), Is.True);
         }
 
-        /// <summary>
-        /// Sets an attribute value. This is chainable.
-        /// </summary>
-        /// <typeparam name="T">The type of the value.</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="name">The attribute name.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>Itself</returns>
-        public static XElement Attr<T>(this XElement el, string name, T value) {
-            el.SetAttributeValue(name, ToString(value));
-            return el;
+        [Test]
+        public void StringToAttribute() {
+            var el = new XElement("data");
+            el.Attr("foo", "bar");
+
+            Assert.That(el.Attribute("foo").Value, Is.EqualTo("bar"));
         }
 
-        /// <summary>
-        /// Returns the text contents of a child element.
-        /// </summary>
-        /// <param name="el">The parent element.</param>
-        /// <param name="name">The name of the child element.</param>
-        /// <returns>The text for the child element, and null if it doesn't exist.</returns>
-        public static string El(this XElement el, string name) {
-            var childElement = el.Element(name);
-            return childElement == null ? null : childElement.Value;
+        [Test]
+        public void IntToAttribute() {
+            var el = new XElement("data");
+            el.Attr("foo", 42);
+
+            Assert.That(el.Attribute("foo").Value, Is.EqualTo("42"));
         }
 
-        /// <summary>
-        /// Creates and sets the value of a child element. This is chainable.
-        /// </summary>
-        /// <typeparam name="T">The type of the value.</typeparam>
-        /// <param name="el">The parent element.</param>
-        /// <param name="name">The name of the child element.</param>
-        /// <param name="value">The value to set.</param>
-        /// <returns>Itself</returns>
-        public static XElement El<T>(this XElement el, string name, T value) {
-            el.SetElementValue(name, value);
-            return el;
+        [Test]
+        public void BoolToAttribute() {
+            var el = new XElement("data");
+            el.Attr("foo", true);
+            el.Attr("bar", false);
+
+            Assert.That(el.Attribute("foo").Value, Is.EqualTo("true"));
+            Assert.That(el.Attribute("bar").Value, Is.EqualTo("false"));
         }
 
-        /// <summary>
-        /// Sets a property value from an attribute of the same name.
-        /// </summary>
-        /// <typeparam name="TTarget">The type of the target object.</typeparam>
-        /// <typeparam name="TProperty">The type of the target property</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="target">The target object.</param>
-        /// <param name="targetExpression">The property expression.</param>
-        /// <returns>Itself</returns>
-        public static XElement FromAttr<TTarget, TProperty>(this XElement el, TTarget target,
-            Expression<Func<TTarget, TProperty>> targetExpression) {
+        [Test]
+        public void DateTimeToAttribute() {
+            var el = new XElement("data");
+            el.Attr("foo", new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc));
 
-            if (target == null) return el;
-            var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
-            var name = propertyInfo.Name;
-            var attr = el.Attribute(name);
-
-            if (attr == null) return el;
-            propertyInfo.SetValue(target, el.Attr<TProperty>(name), null);
-            return el;
+            Assert.That(el.Attribute("foo").Value, Is.EqualTo("1970-05-21T13:55:21.934Z"));
         }
 
-        /// <summary>
-        /// Sets an attribute with the value of a property of the same name.
-        /// </summary>
-        /// <typeparam name="TTarget">The type of the object.</typeparam>
-        /// <typeparam name="TProperty">The type of the property.</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="target">The object.</param>
-        /// <param name="targetExpression">The property expression.</param>
-        /// <returns>Itself</returns>
-        public static XElement ToAttr<TTarget, TProperty>(this XElement el, TTarget target,
-            Expression<Func<TTarget, TProperty>> targetExpression) {
+        [Test]
+        public void GuidToAttribute() {
+            var el = new XElement("data");
+            el.Attr("guid", new Guid(_testGuidString));
 
-            if (target == null) return el;
-            var propertyInfo = ReflectionHelper<TTarget>.GetPropertyInfo(targetExpression);
-            var name = propertyInfo.Name;
-            var val = (TProperty)propertyInfo.GetValue(target, null);
-
-            el.Attr(name, ToString(val));
-            return el;
+            Assert.That(el.Attribute("guid").Value, Is.EqualTo(_testGuidString));
         }
 
-        /// <summary>
-        /// Gets the text value of an element as the specified type.
-        /// </summary>
-        /// <typeparam name="TValue">The type to parse the element as.</typeparam>
-        /// <param name="el">The element.</param>
-        /// <returns>The value of the element as type TValue.</returns>
-        public static TValue Val<TValue>(this XElement el) {
-            return Parse<TValue>(el.Value);
+        [Test]
+        public void DoubleFloatDecimalToAttribute() {
+            var el = new XElement("data");
+            el.Attr("double", 12.456D);
+            el.Attr("float", 12.457F);
+            el.Attr("decimal", 12.458M);
+
+            Assert.That(el.Attribute("double").Value, Is.EqualTo("12.456"));
+            Assert.That(el.Attribute("float").Value, Is.EqualTo("12.457"));
+            Assert.That(el.Attribute("decimal").Value, Is.EqualTo("12.458"));
         }
 
-        /// <summary>
-        /// Sets the value of an element.
-        /// </summary>
-        /// <typeparam name="TValue">The type of the value to set.</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="value">The value.</param>
-        /// <returns>The element.</returns>
-        public static XElement Val<TValue>(this XElement el, TValue value) {
-            el.SetValue(ToString(value));
-            return el;
+        [Test]
+        public void ReadAttribute() {
+            var el = XElement.Parse("<data foo=\"bar\"/>");
+
+            Assert.That(el.Attr("foo"), Is.EqualTo("bar"));
+            Assert.That(el.Attr("bar"), Is.Null);
         }
 
-        /// <summary>
-        /// Serializes the provided value as a string.
-        /// </summary>
-        /// <typeparam name="T">The type of the value.</typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>The string representation of the value.</returns>
-        public static string ToString<T>(T value) {
-            var type = typeof(T);
-            if (type == typeof(string) || type == typeof(char)) {
-                return Convert.ToString(value);
-            }
-            if ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null) &&
-                value == null &&
-                type != typeof(string)) {
+        [Test]
+        public void StringToElement() {
+            var el = new XElement("data");
+            el.El("foo", "bar");
 
-                return "null";
-            }
-
-            if (type == typeof(DateTime) || type == typeof(DateTime?)) {
-                return XmlConvert.ToString(Convert.ToDateTime(value),
-                    XmlDateTimeSerializationMode.Utc);
-            }
-
-            if (type == typeof(bool) ||
-                type == typeof(bool?)) {
-                return Convert.ToBoolean(value) ? "true" : "false";
-            }
-
-            if (type == typeof(int) ||
-                type == typeof(int?) ||
-                type == typeof(long) ||
-                type == typeof(long?)) {
-
-                return Convert.ToInt64(value).ToString(CultureInfo.InvariantCulture);
-            }
-
-            if (type == typeof(double) ||
-                type == typeof(double?)) {
-
-                var doubleValue = (double)(object)value;
-                if (double.IsPositiveInfinity(doubleValue)) {
-                    return "infinity";
-                }
-                if (double.IsNegativeInfinity(doubleValue)) {
-                    return "-infinity";
-                }
-                return doubleValue.ToString(CultureInfo.InvariantCulture);
-            }
-
-            if (type == typeof(float) ||
-                type == typeof(float?)) {
-
-                var floatValue = (float)(object)value;
-                if (float.IsPositiveInfinity(floatValue)) {
-                    return "infinity";
-                }
-                if (float.IsNegativeInfinity(floatValue)) {
-                    return "-infinity";
-                }
-                return floatValue.ToString(CultureInfo.InvariantCulture);
-            }
-
-            if (type == typeof(decimal) ||
-                type == typeof(decimal?)) {
-
-                var decimalValue = Convert.ToDecimal(value);
-                return decimalValue.ToString(CultureInfo.InvariantCulture);
-            }
-
-            if (type == typeof(Guid) || type == typeof(Guid?)) {
-                return value == null ? "null" : value.ToString();
-            }
-
-            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-
-            if (underlyingType.IsEnum) {
-                return value.ToString();
-            }
-
-            throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
+            Assert.That(el.Element("foo").Value, Is.EqualTo("bar"));
         }
 
-        /// <summary>
-        /// Parses a string value as the provided type.
-        /// </summary>
-        /// <typeparam name="T">The destination type</typeparam>
-        /// <param name="value">The string representation of the value to parse.</param>
-        /// <returns>The parsed value with type T.</returns>
-        public static T Parse<T>(string value) {
-            var type = typeof(T);
+        [Test]
+        public void IntToElement() {
+            var el = new XElement("data");
+            el.El("foo", 42);
 
-            if (type == typeof(string)) {
-                return (T)(object)value;
-            }
-            if (value == null ||
-                "null".Equals(value, StringComparison.Ordinal) &&
-                ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null))) {
-
-                return default(T);
-            }
-
-            if ("infinity".Equals(value, StringComparison.Ordinal)) {
-                if (type == typeof(float) || type == typeof(float?)) return (T)(object)float.PositiveInfinity;
-                if (type == typeof(double) || type == typeof(double?)) return (T)(object)double.PositiveInfinity;
-                throw new NotSupportedException(String.Format("Infinity not supported for type {0}", type.Name));
-            }
-            if ("-infinity".Equals(value, StringComparison.Ordinal)) {
-                if (type == typeof(float)) return (T)(object)float.NegativeInfinity;
-                if (type == typeof(double)) return (T)(object)double.NegativeInfinity;
-                throw new NotSupportedException(String.Format("Infinity not supported for type {0}", type.Name));
-            }
-            if (type == typeof(char) || type == typeof(char?)) {
-                return (T)(object)char.Parse(value);
-            }
-            if (type == typeof(int) || type == typeof(int?)) {
-                return (T)(object)int.Parse(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(long) || type == typeof(long?)) {
-                return (T)(object)long.Parse(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(bool) || type == typeof(bool?)) {
-                return (T)(object)value.Equals("true", StringComparison.Ordinal);
-            }
-            if (type == typeof(DateTime) || type == typeof(DateTime?)) {
-                return (T)(object)XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Utc);
-            }
-            if (type == typeof(double) || type == typeof(double?)) {
-                return (T)(object)double.Parse(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(float) || type == typeof(float?)) {
-                return (T)(object)float.Parse(value, CultureInfo.InvariantCulture);
-            }
-            if (type == typeof(decimal) || type == typeof(decimal?)) {
-                return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
-            }
-
-            if (type == typeof(Guid) || type == typeof(Guid?)) {
-                return (T)(object)Guid.Parse(value);
-            }
-
-            var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-
-            if (underlyingType.IsEnum) {
-                return (T)Enum.Parse(underlyingType, value);
-            }
-
-            throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
+            Assert.That(el.Element("foo").Value, Is.EqualTo("42"));
         }
 
-        /// <summary>
-        /// Gives context to an XElement, enabling chained property operations.
-        /// </summary>
-        /// <typeparam name="TContext">The type of the context.</typeparam>
-        /// <param name="el">The element.</param>
-        /// <param name="context">The context.</param>
-        /// <returns>The element with context.</returns>
-        public static XElementWithContext<TContext> With<TContext>(this XElement el, TContext context) {
-            return new XElementWithContext<TContext>(el, context);
+        [Test]
+        public void BoolToElement() {
+            var el = new XElement("data");
+            el.El("foo", true);
+            el.El("bar", false);
+
+            Assert.That(el.Element("foo").Value, Is.EqualTo("true"));
+            Assert.That(el.Element("bar").Value, Is.EqualTo("false"));
         }
 
-        /// <summary>
-        /// A wrapper for XElement, with context, for strongly-typed manipulation
-        /// of an XElement.
-        /// </summary>
-        /// <typeparam name="TContext">The type of the context.</typeparam>
-        public class XElementWithContext<TContext> {
-            public XElementWithContext(XElement element, TContext context) {
-                Element = element;
-                Context = context;
-            }
+        [Test]
+        public void DateTimeToElement() {
+            var el = new XElement("data");
+            el.El("foo", new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc));
 
-            public XElement Element { get; private set; }
-            public TContext Context { get; private set; }
+            Assert.That(el.Element("foo").Value, Is.EqualTo("1970-05-21T13:55:21.934Z"));
+        }
 
-            public static implicit operator XElement(XElementWithContext<TContext> elementWithContext) {
-                return elementWithContext.Element;
-            }
+        [Test]
+        public void DoubleFloatDecimalToElement() {
+            var el = new XElement("data");
+            el.El("double", 12.456D);
+            el.El("float", 12.457F);
+            el.El("decimal", 12.458M);
 
-            /// <summary>
-            /// Replaces the current context with a new one, enabling chained action on different objects.
-            /// </summary>
-            /// <typeparam name="TNewContext">The type of the new context.</typeparam>
-            /// <param name="context">The new context.</param>
-            /// <returns>A new XElementWithContext, that has the new context.</returns>
-            public XElementWithContext<TNewContext> With<TNewContext>(TNewContext context) {
-                return new XElementWithContext<TNewContext>(Element, context);
-            }
+            Assert.That(el.Element("double").Value, Is.EqualTo("12.456"));
+            Assert.That(el.Element("float").Value, Is.EqualTo("12.457"));
+            Assert.That(el.Element("decimal").Value, Is.EqualTo("12.458"));
+        }
 
-            /// <summary>
-            /// Sets the value of a context property as an attribute of the same name on the element.
-            /// </summary>
-            /// <typeparam name="TProperty">The type of the property.</typeparam>
-            /// <param name="targetExpression">The property expression.</param>
-            /// <returns>Itself</returns>
-            public XElementWithContext<TContext> ToAttr<TProperty>(
-                Expression<Func<TContext, TProperty>> targetExpression) {
-                Element.ToAttr(Context, targetExpression);
-                return this;
-            }
+        [Test]
+        public void GuidToElement() {
+            var el = new XElement("data");
+            el.El("guid", new Guid(_testGuidString));
 
-            /// <summary>
-            /// Gets an attribute on the element and sets the property of the same name on the context with its value.
-            /// </summary>
-            /// <typeparam name="TProperty">The type of the property.</typeparam>
-            /// <param name="targetExpression">The property expression.</param>
-            /// <returns>Itself</returns>
-            public XElementWithContext<TContext> FromAttr<TProperty>(
-                Expression<Func<TContext, TProperty>> targetExpression) {
-                Element.FromAttr(Context, targetExpression);
-                return this;
-            }
+            Assert.That(el.Element("guid").Value, Is.EqualTo(_testGuidString));
+        }
 
-            /// <summary>
-            /// Evaluates an attribute from an expression.
-            /// It's a nice strongly-typed way to read attributes.
-            /// </summary>
-            /// <typeparam name="TProperty">The type of the property.</typeparam>
-            /// <param name="expression">The property expression.</param>
-            /// <returns>The attribute, ready to be cast.</returns>
-            public TProperty Attr<TProperty>(Expression<Func<TContext, TProperty>> expression) {
-                var propertyInfo = ReflectionHelper<TContext>.GetPropertyInfo(expression);
-                var name = propertyInfo.Name;
-                return Element.Attr<TProperty>(name);
-            }
+        [Test]
+        public void ReadElement() {
+            var el = XElement.Parse("<data><foo>bar</foo></data>");
+
+            Assert.That(el.El("foo"), Is.EqualTo("bar"));
+            Assert.That(el.El("bar"), Is.Null);
+        }
+
+        [Test]
+        public void SerializeObject() {
+            var target = new Target {
+                AString = "foo",
+                AnInt = 42,
+                ABoolean = true,
+                ADate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
+                ADouble = 12.345D,
+                AFloat = 23.456F,
+                ADecimal = 34.567M,
+                AGuid = new Guid(_testGuidString),
+                ANullableInt = 42,
+                ANullableBoolean = true,
+                ANullableDate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
+                ANullableDouble = 12.345D,
+                ANullableFloat = 23.456F,
+                ANullableDecimal = 34.567M,
+                ANullableGuid = new Guid(_testGuidString)
+            };
+            var el = new XElement("data");
+            el.With(target)
+                .ToAttr(t => t.AString)
+                .ToAttr(t => t.AnInt)
+                .ToAttr(t => t.ABoolean)
+                .ToAttr(t => t.ADate)
+                .ToAttr(t => t.ADouble)
+                .ToAttr(t => t.AFloat)
+                .ToAttr(t => t.ADecimal)
+                .ToAttr(t => t.AGuid)
+                .ToAttr(t => t.ANullableInt)
+                .ToAttr(t => t.ANullableBoolean)
+                .ToAttr(t => t.ANullableDate)
+                .ToAttr(t => t.ANullableDouble)
+                .ToAttr(t => t.ANullableFloat)
+                .ToAttr(t => t.ANullableDecimal)
+                .ToAttr(t => t.ANullableGuid);
+
+
+            Assert.That(el.Attr("AString"), Is.EqualTo("foo"));
+            Assert.That(el.Attr("AnInt"), Is.EqualTo("42"));
+            Assert.That(el.Attr("ABoolean"), Is.EqualTo("true"));
+            Assert.That(el.Attr("ADate"), Is.EqualTo("1970-05-21T13:55:21.934Z"));
+            Assert.That(el.Attr("ADouble"), Is.EqualTo("12.345"));
+            Assert.That(el.Attr("AFloat"), Is.EqualTo("23.456"));
+            Assert.That(el.Attr("ADecimal"), Is.EqualTo("34.567"));
+            Assert.That(el.Attr("AGuid"), Is.EqualTo(_testGuidString));
+            Assert.That(el.Attr("ANullableInt"), Is.EqualTo("42"));
+            Assert.That(el.Attr("ANullableBoolean"), Is.EqualTo("true"));
+            Assert.That(el.Attr("ANullableDate"), Is.EqualTo("1970-05-21T13:55:21.934Z"));
+            Assert.That(el.Attr("ANullableDouble"), Is.EqualTo("12.345"));
+            Assert.That(el.Attr("ANullableFloat"), Is.EqualTo("23.456"));
+            Assert.That(el.Attr("ANullableDecimal"), Is.EqualTo("34.567"));
+            Assert.That(el.Attr("ANullableGuid"), Is.EqualTo(_testGuidString));
+        }
+
+        [Test]
+        public void DeSerializeObject() {
+            var target = new Target();
+            var el =
+                XElement.Parse(
+                    "<data AString=\"foo\" AnInt=\"42\" ABoolean=\"true\" " +
+                    "ADate=\"1970-05-21T13:55:21.934Z\" ADouble=\"12.345\" " +
+                    $"AFloat=\"23.456\" ADecimal=\"34.567\" AGuid=\"{_testGuidString}\" " +
+                    "ANullableInt=\"42\" ANullableBoolean=\"true\" " +
+                    "ANullableDate=\"1970-05-21T13:55:21.934Z\" ANullableDouble=\"12.345\" " +
+                    $"ANullableFloat=\"23.456\" ANullableDecimal=\"34.567\" ANullableGuid=\"{_testGuidString}\"/>");
+            el.With(target)
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.AnInt)
+                .FromAttr(t => t.ABoolean)
+                .FromAttr(t => t.ADate)
+                .FromAttr(t => t.ADouble)
+                .FromAttr(t => t.AFloat)
+                .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.AGuid)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
+
+            Assert.That(target.AString, Is.EqualTo("foo"));
+            Assert.That(target.AnInt, Is.EqualTo(42));
+            Assert.That(target.ABoolean, Is.True);
+            Assert.That(target.ADate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
+            Assert.That(target.ADouble, Is.EqualTo(12.345D));
+            Assert.That(target.AFloat, Is.EqualTo(23.456F));
+            Assert.That(target.ADecimal, Is.EqualTo(34.567M));
+            Assert.That(target.AGuid, Is.EqualTo(new Guid(_testGuidString)));
+            Assert.That(target.ANullableInt, Is.EqualTo(42));
+            Assert.That(target.ANullableBoolean, Is.True);
+            Assert.That(target.ANullableDate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
+            Assert.That(target.ANullableDouble, Is.EqualTo(12.345D));
+            Assert.That(target.ANullableFloat, Is.EqualTo(23.456F));
+            Assert.That(target.ANullableDecimal, Is.EqualTo(34.567M));
+            Assert.That(target.ANullableGuid, Is.EqualTo(new Guid(_testGuidString)));
+        }
+
+        [Test]
+        public void DeSerializeFromMissingAttributeLeavesValueIntact() {
+            var target = new Target {
+                AString = "foo",
+                AnInt = 42,
+                ABoolean = true,
+                ADate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
+                ADouble = 12.345D,
+                AFloat = 23.456F,
+                ADecimal = 34.567M,
+                AGuid = new Guid(_testGuidString),
+                ANullableInt = 42,
+                ANullableBoolean = true,
+                ANullableDate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
+                ANullableDouble = 12.345D,
+                ANullableFloat = 23.456F,
+                ANullableDecimal = 34.567M,
+                ANullableGuid = new Guid(_testGuidString)
+            };
+            var el = new XElement("data");
+            el.With(target)
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.AnInt)
+                .FromAttr(t => t.ABoolean)
+                .FromAttr(t => t.ADate)
+                .FromAttr(t => t.ADouble)
+                .FromAttr(t => t.AFloat)
+                .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.AGuid)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
+
+            Assert.That(target.AString, Is.EqualTo("foo"));
+            Assert.That(target.AnInt, Is.EqualTo(42));
+            Assert.That(target.ABoolean, Is.True);
+            Assert.That(target.ADate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
+            Assert.That(target.ADouble, Is.EqualTo(12.345D));
+            Assert.That(target.AFloat, Is.EqualTo(23.456F));
+            Assert.That(target.ADecimal, Is.EqualTo(34.567M));
+            Assert.That(target.AGuid, Is.EqualTo(new Guid(_testGuidString)));
+            Assert.That(target.ANullableInt, Is.EqualTo(42));
+            Assert.That(target.ANullableBoolean, Is.True);
+            Assert.That(target.ANullableDate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
+            Assert.That(target.ANullableDouble, Is.EqualTo(12.345D));
+            Assert.That(target.ANullableFloat, Is.EqualTo(23.456F));
+            Assert.That(target.ANullableDecimal, Is.EqualTo(34.567M));
+            Assert.That(target.ANullableGuid, Is.EqualTo(new Guid(_testGuidString)));
+        }
+
+        [Test]
+        public void AttrWithContext() {
+            var el = new XElement("data")
+                .With(new {foo = 123})
+                .ToAttr(o => o.foo);
+            var val = el.Attr(o => o.foo);
+
+            Assert.That(val, Is.EqualTo(123));
+        }
+
+        [Test]
+        public void ContextSwitch() {
+            var el = new XElement("data");
+            el.With(new {foo = "bar"})
+                .ToAttr(o => o.foo)
+                .With(new {bar = "baz"})
+                .ToAttr(o => o.bar);
+
+            Assert.That(el.Attr<string>("foo"), Is.EqualTo("bar"));
+            Assert.That(el.Attr<string>("bar"), Is.EqualTo("baz"));
+        }
+
+        [Test]
+        public void ImplicitConversion() {
+            var el = new XElement("data")
+                .With(new {foo = "bar"})
+                .ToAttr(o => o.foo);
+            Func<XElement, string> func = e => e.Attr<string>("foo");
+
+            Assert.That(func(el), Is.EqualTo("bar"));
+        }
+
+        [Test]
+        public void NullSerializes() {
+            var target = new Target();
+            var el = new XElement("data");
+            el.With(target)
+                .ToAttr(t => t.AString)
+                .ToAttr(t => t.ANullableInt)
+                .ToAttr(t => t.ANullableBoolean)
+                .ToAttr(t => t.ANullableDate)
+                .ToAttr(t => t.ANullableDouble)
+                .ToAttr(t => t.ANullableFloat)
+                .ToAttr(t => t.ANullableDecimal)
+                .ToAttr(t => t.ANullableGuid);
+
+            Assert.That(el.Attr("AString"), Is.EqualTo(""));
+            Assert.That(el.Attr("ANullableInt"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableBoolean"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableDate"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableDouble"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableFloat"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableDecimal"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableGuid"), Is.EqualTo("null"));
+        }
+
+        [Test]
+        public void DeSerializeNull() {
+            var target = new Target();
+            var el =
+                XElement.Parse(
+                    "<data AString=\"null\" ANullableInt=\"null\" ANullableBoolean=\"null\" " +
+                    "ANullableDate=\"null\" ANullableDouble=\"null\" " +
+                    "ANullableFloat=\"null\" ANullableDecimal=\"null\" ANullableGuid=\"null\"/>");
+            el.With(target)
+                .FromAttr(t => t.AString)
+                .FromAttr(t => t.ANullableInt)
+                .FromAttr(t => t.ANullableBoolean)
+                .FromAttr(t => t.ANullableDate)
+                .FromAttr(t => t.ANullableDouble)
+                .FromAttr(t => t.ANullableFloat)
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
+
+            Assert.That(target.AString, Is.EqualTo("null"));
+            Assert.That(target.ANullableInt, Is.Null);
+            Assert.That(target.ANullableBoolean, Is.Null);
+            Assert.That(target.ANullableDate, Is.Null);
+            Assert.That(target.ANullableDouble, Is.Null);
+            Assert.That(target.ANullableFloat, Is.Null);
+            Assert.That(target.ANullableDecimal, Is.Null);
+            Assert.That(target.ANullableGuid, Is.Null);
+        }
+
+        private class Target {
+            public string AString { get; set; }
+            public int AnInt { get; set; }
+            public bool ABoolean { get; set; }
+            public DateTime ADate { get; set; }
+            public double ADouble { get; set; }
+            public float AFloat { get; set; }
+            public decimal ADecimal { get; set; }
+            public Guid AGuid { get; set; }
+            public int? ANullableInt { get; set; }
+            public bool? ANullableBoolean { get; set; }
+            public DateTime? ANullableDate { get; set; }
+            public double? ANullableDouble { get; set; }
+            public float? ANullableFloat { get; set; }
+            public decimal? ANullableDecimal { get; set; }
+            public Guid? ANullableGuid { get; set; }
         }
     }
 }
