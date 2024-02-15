@@ -366,27 +366,21 @@ namespace Orchard.Projections {
             return 5;
         }
 
-        // When upgrading from version 5 of 1.10.x (up until version 7), we'll just execute the same steps, but in a
-        // different order.
-        public int UpdateFrom5() {
-            // This is the original step of the dev branch.
-            MigratePropertyRecordToRewriteOutputCondition();
+        // This step's logic is now executed in UpdateFrom6 as MigratePropertyRecordToRewriteOutputCondition to make
+        // sure that it's executed even when upgrading from version 6 of 1.10.x, which (as opposed to dev) executed the
+        // changes that make up AddLayoutRecordGuid in UpdateFrom6.
+        public int UpdateFrom5() => 6;
 
-            return 6;
-        }
-
+        // See UpdateFrom5 for explanation.
         public int UpdateFrom6() {
-            // This is the original step of the dev branch.
             AddLayoutRecordGuid();
 
-            // When upgrading from version 6 of 1.10.x, this column isn't created yet, so we need to run this step
-            // "again".
             MigratePropertyRecordToRewriteOutputCondition();
 
             return 7;
         }
 
-        // This change was originally UpdateFrom5 on dev (but didn't exist on 1.10.x).
+        // This change was originally in UpdateFrom5 on dev, but didn't exist on 1.10.x.
         private void MigratePropertyRecordToRewriteOutputCondition() {
             if (ColumnExists("PropertyRecord", "RewriteOutputCondition")) return;
 
@@ -399,8 +393,6 @@ namespace Orchard.Projections {
                 // Reading this obsolete property to migrate its data to a new one.
                 if (property.RewriteOutput) property.RewriteOutputCondition = "true";
 #pragma warning restore CS0618 // Type or member is obsolete
-
-            ColumnAdded("PropertyRecord", "RewriteOutputCondition");
         }
 
         // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
@@ -414,8 +406,6 @@ namespace Orchard.Projections {
             foreach (var layout in layoutRecords) {
                 layout.GUIdentifier = Guid.NewGuid().ToString();
             }
-
-            ColumnAdded("LayoutRecord", "GUIdentifier");
         }
 
         private bool ColumnExists(string tableName, string columnName) {
@@ -437,8 +427,5 @@ namespace Orchard.Projections {
 
             return _existingColumnNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{columnName}");
         }
-
-        private void ColumnAdded(string tableName, string columnName) =>
-            _existingColumnNames.Add($"{SchemaBuilder.TableDbName(tableName)}.{columnName}");
     }
 }

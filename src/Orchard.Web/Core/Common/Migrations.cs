@@ -167,33 +167,20 @@ namespace Orchard.Core.Common {
             return 6;
         }
 
-        // When upgrading from version 6 of 1.10.x (up until version 9), we'll just execute the same steps, but in a
-        // different order.
-        public int UpdateFrom6() {
-            // This is the original step of the dev branch.
-            AddIndexForIdentityPartRecordIdentifier();
+        // This step's logic is executed together with the original logic from UpdateFrom7 and UpdateFrom8 and in
+        // UpdateFrom8 to make sure that an upgrade is possible from version 6 of both 1.10.x and dev, which both
+        // included these steps, but in a different order.
+        public int UpdateFrom6() => 7;
 
-            return 7;
-        }
+        // See UpdateFrom6 for explanation.
+        public int UpdateFrom7() => 8;
 
-        public int UpdateFrom7() {
-            // This is the original step of the dev branch.
-            AddIndexForCommonPartRecordContainerId();
-
-            // When upgrading from version 7 of 1.10.x, this index isn't created yet, so we need to run this step
-            // "again". On the other hand, AddIndexesForCommonPartOwner in UpdateFrom8 won't do anything, because those
-            // indexes were added in the 1.10.x version of UpdateFrom6.
-            AddIndexForIdentityPartRecordIdentifier();
-
-            return 8;
-        }
-
+        // See UpdateFrom6 for explanation.
         public int UpdateFrom8() {
-            // This is the original step of the dev branch.
+            AddIndexForIdentityPartRecordIdentifier();
+
             AddIndexesForCommonPartOwner();
 
-            // When upgrading from version 8 of 1.10.x, this index isn't created yet, so we need to run this step
-            // "again"
             AddIndexForCommonPartRecordContainerId();
 
             return 9;
@@ -208,8 +195,6 @@ namespace Orchard.Core.Common {
             SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table.CreateIndex(
                 indexName,
                 nameof(IdentityPartRecord.Identifier)));
-
-            IndexCreated(nameof(IdentityPartRecord), indexName);
         }
 
         // This change was originally UpdateFrom8 on 1.10.x and UpdateFrom7 on dev.
@@ -220,8 +205,6 @@ namespace Orchard.Core.Common {
 
             // Container_Id is used in several queries like a foreign key.
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => table.CreateIndex(indexName, "Container_id"));
-
-            IndexCreated(nameof(CommonPartRecord), indexName);
         }
 
         // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
@@ -258,10 +241,6 @@ namespace Orchard.Core.Common {
                 table.CreateIndex(modifiedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.ModifiedUtc));
                 table.CreateIndex(publishedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.PublishedUtc));
             });
-
-            IndexCreated(nameof(CommonPartRecord), createdUtcIndexName);
-            IndexCreated(nameof(CommonPartRecord), modifiedUtcIndexName);
-            IndexCreated(nameof(CommonPartRecord), publishedUtcIndexName);
         }
 
         private bool IndexExists(string tableName, string indexName) {
@@ -285,13 +264,6 @@ namespace Orchard.Core.Common {
             }
 
             return _existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
-        }
-
-        private void IndexCreated(string tableName, string indexName) {
-            var tenantTablesPrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
-                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
-
-            _existingIndexNames.Add($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
         }
     }
 }
