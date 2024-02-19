@@ -26,7 +26,7 @@ namespace Orchard.Fields.Fields {
                     Value = String.Empty;
                 }
                 else {
-                    Value = Separator + string.Join(Separator.ToString(), value) + Separator;
+                    Value = string.Join(Separator.ToString(), value);
                 }
             }
         }
