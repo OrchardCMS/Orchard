@@ -4,12 +4,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Forms.Services;
 using Orchard.Logging;
+using Orchard.MediaLibrary.Models;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Media;
 using Orchard.MediaProcessing.Models;
@@ -44,7 +44,7 @@ namespace Orchard.MediaProcessing.Services {
 
         public ILogger Logger { get; set; }
 
-          public string GetImageProfileUrl(string path, string profileName) {
+        public string GetImageProfileUrl(string path, string profileName) {
             return GetImageProfileUrl(path, profileName, null, new FilterRecord[] { });
         }
 
@@ -69,41 +69,55 @@ namespace Orchard.MediaProcessing.Services {
             var filePath = _fileNameProvider.GetFileName(profileName, System.Web.HttpUtility.UrlDecode(path));
             bool process = false;
 
-            //after reboot the app cache is empty so we reload the image in the cache if it exists in the _Profiles folder
-            if (string.IsNullOrEmpty(filePath)) {
-                var profileFilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path)));
+            // Before checking everything else, ensure that the content item that needs to be processed has a ImagePart.
+            // If it's not the case (e.g. if media is a svg file), processing would throw a exception.
+            // If content item is null (it means it's not passed as a parameter of the ResizeMediaUrl call),
+            // this function processes the file like it did before this patch;
+            // this means it could possibly throw and log exceptions for svg files.
+            bool checkForProfile = (contentItem == null || contentItem.Has<ImagePart>());
 
-                if (_storageProvider.FileExists(profileFilePath)) {
-                    _fileNameProvider.UpdateFileName(profileName, System.Web.HttpUtility.UrlDecode(path), profileFilePath);
-                    filePath = profileFilePath;
+            if (checkForProfile) {
+                //after reboot the app cache is empty so we reload the image in the cache if it exists in the _Profiles folder
+                if (string.IsNullOrEmpty(filePath)) {
+                    var profileFilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path)));
+
+                    if (_storageProvider.FileExists(profileFilePath)) {
+                        _fileNameProvider.UpdateFileName(profileName, System.Web.HttpUtility.UrlDecode(path), profileFilePath);
+                        filePath = profileFilePath;
+                    }
                 }
-            }
-            
-            // if the filename is not cached, process it
-            if (string.IsNullOrEmpty(filePath)) {
-                Logger.Debug("FilePath is null, processing required, profile {0} for image {1}", profileName, path);
 
-                process = true;
-            }
+                // if the filename is not cached, process it
+                if (string.IsNullOrEmpty(filePath)) {
+                    Logger.Debug("FilePath is null, processing required, profile {0} for image {1}", profileName, path);
+
+                    process = true;
+                }
 
                 // the processd file doesn't exist anymore, process it
-            else if (!_storageProvider.FileExists(filePath)) {
-                Logger.Debug("Processed file no longer exists, processing required, profile {0} for image {1}", profileName, path);
+                else if (!_storageProvider.FileExists(filePath)) {
+                    Logger.Debug("Processed file no longer exists, processing required, profile {0} for image {1}", profileName, path);
 
-                process = true;
-            }
+                    process = true;
+                }
 
-            // if the original file is more recent, process it
-            else {
-                DateTime pathLastUpdated;
-                if (TryGetImageLastUpdated(path, out pathLastUpdated)) {
-                    var filePathLastUpdated = _storageProvider.GetFile(filePath).GetLastUpdated();
+                // if the original file is more recent, process it
+                else {
+                    DateTime pathLastUpdated;
+                    if (TryGetImageLastUpdated(path, out pathLastUpdated)) {
+                        var filePathLastUpdated = _storageProvider.GetFile(filePath).GetLastUpdated();
 
-                    if (pathLastUpdated > filePathLastUpdated) {
-                        Logger.Debug("Original file more recent, processing required, profile {0} for image {1}", profileName, path);
+                        if (pathLastUpdated > filePathLastUpdated) {
+                            Logger.Debug("Original file more recent, processing required, profile {0} for image {1}", profileName, path);
 
-                        process = true;
+                            process = true;
+                        }
                     }
+                }
+            } else {
+                // Since media with no ImagePart have no profile, filePath is null, so it's set again to its original path on the storage provider.
+                if (string.IsNullOrWhiteSpace(filePath)) {
+                    filePath = _storageProvider.GetStoragePath(path);
                 }
             }
 
@@ -117,11 +131,10 @@ namespace Orchard.MediaProcessing.Services {
                     profilePart = _profileService.GetImageProfileByName(profileName);
                     if (profilePart == null)
                         return String.Empty;
-                }
-                else {
+                } else {
                     profilePart = _services.ContentManager.New<ImageProfilePart>("ImageProfile");
                     profilePart.Name = profileName;
-                    foreach (var customFilter in customFilters) { 
+                    foreach (var customFilter in customFilters) {
                         profilePart.Filters.Add(customFilter);
                     }
                 }
@@ -174,8 +187,7 @@ namespace Orchard.MediaProcessing.Services {
                                     // the storage provider may have altered the filepath
                                     filterContext.FilePath = newFile.GetPath();
                                 }
-                            }
-                            catch(Exception e) {
+                            } catch (Exception e) {
                                 Logger.Error(e, "A profile could not be processed: " + path);
                             }
                         }
@@ -203,8 +215,7 @@ namespace Orchard.MediaProcessing.Services {
                 try {
                     var file = _storageProvider.GetFile(storagePath);
                     return file.OpenRead();
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     Logger.Error(e, "path:" + path + " storagePath:" + storagePath);
                 }
             }
@@ -236,7 +247,7 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         private string FormatProfilePath(string profileName, string path) {
-            
+
             var filenameWithExtension = Path.GetFileName(path) ?? "";
             var fileLocation = path.Substring(0, path.Length - filenameWithExtension.Length);
 
