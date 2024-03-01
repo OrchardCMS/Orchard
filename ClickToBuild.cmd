@@ -3,29 +3,16 @@
 REM Necessary for the InstallDir variable to work inside the MsBuild-finding loop below.
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-for /f "usebackq tokens=1* delims=: " %%i in (`lib\vswhere\vswhere -latest -version "[15.0,16.0)" -requires Microsoft.Component.MSBuild`) do (
+for /f "usebackq tokens=1* delims=: " %%i in (`lib\vswhere\vswhere -latest -version "[16.0,18.0)" -requires Microsoft.Component.MSBuild`) do (
   if /i "%%i"=="installationPath" (
 	set InstallDir=%%j
 	echo !InstallDir!
-	if exist "!InstallDir!\MSBuild\15.0\Bin\MSBuild.exe" (
-		echo "Using MSBuild from Visual Studio 2017"
-		set msbuild="!InstallDir!\MSBuild\15.0\Bin\MSBuild.exe"
+	if exist "!InstallDir!\MSBuild\Current\Bin\MSBuild.exe" (
+		echo "Using MSBuild from !InstallDir!"
+		set msbuild="!InstallDir!\MSBuild\Current\Bin\MSBuild.exe"
 		goto build
 	)
   )
-)
-
-FOR %%b in (
-       "%VS140COMNTOOLS%\vsvars32.bat"
-       "%VS120COMNTOOLS%\vsvars32.bat"
-       "%VS110COMNTOOLS%\vsvars32.bat"
-    ) do (
-    if exist %%b ( 
-		echo "Using MSBuild from %%b"
-		call %%b
-		set msbuild="msbuild"
-		goto build
-    )
 )
 
 echo "Unable to detect suitable environment. Build may not succeed."
