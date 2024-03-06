@@ -48,6 +48,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<string>("Value", c => c.WithLength(4000))
+                    .Column<string>("LatestValue", c => c.WithLength(4000))
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -56,6 +57,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<long>("Value")
+                    .Column<long>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -64,6 +66,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<double>("Value")
+                    .Column<double>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -72,8 +75,27 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<decimal>("Value")
+                    .Column<decimal>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
+
+            //Adds indexes for better performances in queries
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id");
+            });
 
             SchemaBuilder.CreateTable("FieldIndexPartRecord", table => table.ContentPartRecord());
 
@@ -89,6 +111,7 @@ namespace Orchard.Projections {
             SchemaBuilder.CreateTable("QueryPartRecord",
                 table => table
                     .ContentPartRecord()
+                    .Column<string>("VersionScope", c => c.WithLength(15))
             );
 
             SchemaBuilder.CreateTable("FilterGroupRecord",
@@ -127,6 +150,7 @@ namespace Orchard.Projections {
                     .Column<string>("Description", c => c.WithLength(255))
                     .Column<string>("State", c => c.Unlimited())
                     .Column<string>("DisplayType", c => c.WithLength(64))
+                    .Column<string>("GUIdentifier", column => column.WithLength(68))
                     .Column<int>("Display")
                     .Column<int>("QueryPartRecord_id")
                     .Column<int>("GroupProperty_id")
@@ -162,6 +186,7 @@ namespace Orchard.Projections {
                     .Column<bool>("HideEmpty")
 
                     .Column<bool>("RewriteOutput")
+                    .Column<string>("RewriteOutputCondition", c => c.Unlimited())
                     .Column<string>("RewriteText", c => c.Unlimited())
                     .Column<bool>("StripHtmlTags")
                     .Column<bool>("TrimLength")
@@ -260,19 +285,6 @@ namespace Orchard.Projections {
                 Description = T("The text from the Body part").Text
             });
 
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id")
-            );
-
             SchemaBuilder.CreateTable("NavigationQueryPartRecord",
                 table => table.ContentPartRecord()
                     .Column<int>("Items")
@@ -291,7 +303,7 @@ namespace Orchard.Projections {
                     .WithIdentity()
                 );
 
-            return 4;
+            return 7;
         }
 
         public int UpdateFrom1() {
@@ -314,7 +326,7 @@ namespace Orchard.Projections {
 
             ContentDefinitionManager.AlterTypeDefinition("ProjectionPage", cfg => cfg.Listable());
 
-            return 3;
+            return 2;
         }
 
         public int UpdateFrom2() {
@@ -336,29 +348,34 @@ namespace Orchard.Projections {
 
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
-            .AddColumn<string>("LatestValue", c => c.WithLength(4000)));
+                .AddColumn<string>("LatestValue", c => c.WithLength(4000)));
 
             SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table
-            .AddColumn<long>("LatestValue"));
+                .AddColumn<long>("LatestValue"));
 
             SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table
-            .AddColumn<double>("LatestValue"));
+                .AddColumn<double>("LatestValue"));
 
             SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table
-            .AddColumn<decimal>("LatestValue"));
+                .AddColumn<decimal>("LatestValue"));
 
             //Adds indexes for better performances in queries
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id");
+            });
 
             SchemaBuilder.AlterTable("QueryPartRecord", table => table
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
