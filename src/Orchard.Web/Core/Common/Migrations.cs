@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data;
 using Orchard.Data.Migration;
-using Orchard.Environment.Configuration;
 
 namespace Orchard.Core.Common {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<IdentityPartRecord> _identityPartRepository;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly ShellSettings _shellSettings;
 
-        private HashSet<string> _existingIndexNames = new HashSet<string>();
+        /// <summary>
+        /// When upgrading from "1.10.x" branch code committed after 1.10.3 to "dev" branch code or 1.11, merge
+        /// conflicts between "1.10.x" and "dev" caused by running the same migration steps in a different order need to
+        /// be resolved by instructing this migration to decide which steps need to be executed. If you're upgrading
+        /// under these conditions and your pre-upgrade migration version is 7 or 8, use HostComponents.config to
+        /// override one of these properties to true.
+        /// </summary>
+        public bool IsUpgradingFromOrchard_1_10_x_Version_7 { get; set; }
+        public bool IsUpgradingFromOrchard_1_10_x_Version_8 { get; set; }
 
-
-        public Migrations(
-            IRepository<IdentityPartRecord> identityPartRepository,
-            ISessionFactoryHolder sessionFactoryHolder,
-            ShellSettings shellSettings) {
+        public Migrations(IRepository<IdentityPartRecord> identityPartRepository) {
             _identityPartRepository = identityPartRepository;
-            _sessionFactoryHolder = sessionFactoryHolder;
-            _shellSettings = shellSettings;
         }
 
 
@@ -167,34 +164,59 @@ namespace Orchard.Core.Common {
             return 6;
         }
 
-        // When upgrading from version 6 of 1.10.x (up until version 9), we'll just execute the same steps, but in a
-        // different order.
         public int UpdateFrom6() {
-            // This is the original step of the dev branch.
             AddIndexForIdentityPartRecordIdentifier();
 
             return 7;
         }
 
         public int UpdateFrom7() {
-            // This is the original step of the dev branch.
             AddIndexForCommonPartRecordContainerId();
-
-            // When upgrading from version 7 of 1.10.x, this index isn't created yet, so we need to run this step
-            // "again". On the other hand, AddIndexesForCommonPartOwner in UpdateFrom8 won't do anything, because those
-            // indexes were added in the 1.10.x version of UpdateFrom6.
-            AddIndexForIdentityPartRecordIdentifier();
 
             return 8;
         }
 
         public int UpdateFrom8() {
-            // This is the original step of the dev branch.
-            AddIndexesForCommonPartOwner();
+            if (IsUpgradingFromOrchard_1_10_x_Version_7) {
+                AddIndexForIdentityPartRecordIdentifier();
+            }
+            else if (IsUpgradingFromOrchard_1_10_x_Version_8) {
+                AddIndexForCommonPartRecordContainerId();
+            }
+            else {
+                // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
 
-            // When upgrading from version 8 of 1.10.x, this index isn't created yet, so we need to run this step
-            // "again"
-            AddIndexForCommonPartRecordContainerId();
+                // Studying SQL Server query execution plans we noticed that when the system tries to find content items for
+                // requests such as "The items of type TTT owned by me, ordered from the most recent" the existing indexes
+                // are not used. SQL Server does an index scan on the Primary key for CommonPartRecord. This may lead to
+                // annoying deadlocks when there are two concurrent transactions that are doing both this kind of query as
+                // well as an update (or insert) in the CommonPartRecord. Tests show that this can be easily fixed by adding
+                // a non-clustered index with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}. That
+                // means we need three indexes (one for each DateTime) to support ordering on either of them.
+
+                // The queries we analyzed look like (in pseudo sql)
+                // SELECT TOP (N) *
+                // FROM
+                //   ContentItemVersionRecord this_
+                //   inner join ContentItemRecord contentite1_ on this_.ContentItemRecord_id=contentite1_.Id
+                //   inner join CommonPartRecord commonpart2_ on contentite1_.Id=commonpart2.Id
+                //   left outer join ContentTypeRecord contenttyp6_ on contentite1_.ContentType_id=contenttyp6_.Id
+                // WHERE
+                //   contentite1.ContentType_id = {TTT}
+                //   and commonpart2_.OwnerId = {userid}
+                //   and this_.Published = 1
+                // ORDER BY
+                //   commonpart2_PublishedUtc desc
+                var createdUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation";
+                var modifiedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification";
+                var publishedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication";
+
+                SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
+                    table.CreateIndex(createdUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.CreatedUtc));
+                    table.CreateIndex(modifiedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.ModifiedUtc));
+                    table.CreateIndex(publishedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.PublishedUtc));
+                });
+            }
 
             return 9;
         }
@@ -203,95 +225,17 @@ namespace Orchard.Core.Common {
         private void AddIndexForIdentityPartRecordIdentifier() {
             var indexName = $"IDX_{nameof(IdentityPartRecord)}_{nameof(IdentityPartRecord.Identifier)}";
 
-            if (IndexExists(nameof(IdentityPartRecord), indexName)) return;
-
             SchemaBuilder.AlterTable(nameof(IdentityPartRecord), table => table.CreateIndex(
                 indexName,
                 nameof(IdentityPartRecord.Identifier)));
-
-            IndexCreated(nameof(IdentityPartRecord), indexName);
         }
 
         // This change was originally UpdateFrom8 on 1.10.x and UpdateFrom7 on dev.
         private void AddIndexForCommonPartRecordContainerId() {
             var indexName = $"IDX_{nameof(CommonPartRecord)}_Container_id";
 
-            if (IndexExists(nameof(CommonPartRecord), indexName)) return;
-
             // Container_Id is used in several queries like a foreign key.
             SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => table.CreateIndex(indexName, "Container_id"));
-
-            IndexCreated(nameof(CommonPartRecord), indexName);
-        }
-
-        // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom8 on dev.
-        private void AddIndexesForCommonPartOwner() {
-            // Studying SQL Server query execution plans we noticed that when the system tries to find content items for
-            // requests such as "The items of type TTT owned by me, ordered from the most recent" the existing indexes
-            // are not used. SQL Server does an index scan on the Primary key for CommonPartRecord. This may lead to
-            // annoying deadlocks when there are two concurrent transactions that are doing both this kind of query as
-            // well as an update (or insert) in the CommonPartRecord. Tests show that this can be easily fixed by adding
-            // a non-clustered index with these keys: OwnerId, {one of PublishedUTC, ModifiedUTC, CreatedUTC}. That
-            // means we need three indexes (one for each DateTime) to support ordering on either of them.
-
-            // The queries we analyzed look like (in pseudo sql)
-            // SELECT TOP (N) *
-            // FROM
-            //   ContentItemVersionRecord this_
-            //   inner join ContentItemRecord contentite1_ on this_.ContentItemRecord_id=contentite1_.Id
-            //   inner join CommonPartRecord commonpart2_ on contentite1_.Id=commonpart2.Id
-            //   left outer join ContentTypeRecord contenttyp6_ on contentite1_.ContentType_id=contenttyp6_.Id
-            // WHERE
-            //   contentite1.ContentType_id = {TTT}
-            //   and commonpart2_.OwnerId = {userid}
-            //   and this_.Published = 1
-            // ORDER BY
-            //   commonpart2_PublishedUtc desc
-            var createdUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByCreation";
-            var modifiedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByModification";
-            var publishedUtcIndexName = $"IDX_{nameof(CommonPartRecord)}_OwnedBy_ByPublication";
-
-            if (IndexExists(nameof(CommonPartRecord), createdUtcIndexName)) return;
-
-            SchemaBuilder.AlterTable(nameof(CommonPartRecord), table => {
-                table.CreateIndex(createdUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.CreatedUtc));
-                table.CreateIndex(modifiedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.ModifiedUtc));
-                table.CreateIndex(publishedUtcIndexName, nameof(CommonPartRecord.OwnerId), nameof(CommonPartRecord.PublishedUtc));
-            });
-
-            IndexCreated(nameof(CommonPartRecord), createdUtcIndexName);
-            IndexCreated(nameof(CommonPartRecord), modifiedUtcIndexName);
-            IndexCreated(nameof(CommonPartRecord), publishedUtcIndexName);
-        }
-
-        private bool IndexExists(string tableName, string indexName) {
-            var tenantTablesPrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
-                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
-
-            if (!_existingIndexNames.Any()) {
-                // Database-agnostic way of checking the existence of an index.
-                using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
-                    var connection = session.Connection ?? throw new InvalidOperationException(
-                        "The database connection object should derive from DbConnection to check if an index exists.");
-
-                    var indexes = connection.GetSchema("Indexes").Rows.Cast<DataRow>();
-
-                    if (!string.IsNullOrEmpty(tenantTablesPrefix)) {
-                        indexes = indexes.Where(row => row["TABLE_NAME"].ToString().StartsWith(tenantTablesPrefix));
-                    }
-
-                    _existingIndexNames = indexes.Select(row => $"{row["TABLE_NAME"]}.{row["INDEX_NAME"]}").ToHashSet();
-                }
-            }
-
-            return _existingIndexNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
-        }
-
-        private void IndexCreated(string tableName, string indexName) {
-            var tenantTablesPrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix)
-                ? string.Empty : $"{_shellSettings.DataTablePrefix}_";
-
-            _existingIndexNames.Add($"{SchemaBuilder.TableDbName(tableName)}.{tenantTablesPrefix}{indexName}");
         }
     }
 }

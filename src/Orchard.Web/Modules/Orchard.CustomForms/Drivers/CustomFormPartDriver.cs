@@ -11,20 +11,26 @@ using System;
 using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Localization;
+using Orchard.CustomForms.Services;
 
 namespace Orchard.CustomForms.Drivers {
     public class CustomFormPartDriver : ContentPartDriver<CustomFormPart> {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IAuthorizationService _authService;
+        private readonly IEditorBuilderWrapper _editorBuilderWrapper;
 
         public CustomFormPartDriver(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
-            IAuthorizationService authService) {
+            IAuthorizationService authService,
+            IEditorBuilderWrapper editorBuilderWrapper) {
+
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _authService = authService;
+            _editorBuilderWrapper = editorBuilderWrapper;
+
             T = NullLocalizer.Instance;
         }
 
@@ -32,39 +38,43 @@ namespace Orchard.CustomForms.Drivers {
 
         protected override DriverResult Display(CustomFormPart part, string displayType, dynamic shapeHelper) {
             // this method is used by the widget to render the form when it is displayed
+            // Display CustomForm_Wrapper shape only if shape type is Detail.
+            if (displayType.Equals("Detail")) {
+                int contentId = 0;
+                var queryString = _orchardServices.WorkContext.HttpContext.Request.QueryString;
 
-            int contentId = 0;
-            var queryString = _orchardServices.WorkContext.HttpContext.Request.QueryString;
+                if (queryString.AllKeys.Contains("contentId")) {
+                    int.TryParse(queryString["contentId"], out contentId);
+                }
 
-            if (queryString.AllKeys.Contains("contentId")) {
-                int.TryParse(queryString["contentId"], out contentId);
-            }
+                ContentItem contentItem;
+                if (contentId > 0) {
+                    contentItem = _orchardServices.ContentManager.Get(contentId);
 
-            ContentItem contentItem;
-            if (contentId > 0) {
-                contentItem = _orchardServices.ContentManager.Get(contentId);
+                    if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
+                        return null;
+                } else {
+                    contentItem = _orchardServices.ContentManager.New(part.ContentType);
 
-                if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem))
+                    if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.CreateContent, contentItem))
+                        return null;
+                }
+
+                if (contentItem == null || contentItem.ContentType != part.ContentType)
                     return null;
-            } else {
-                contentItem = _orchardServices.ContentManager.New(part.ContentType);
 
-                if (part.UseContentTypePermissions && !_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.CreateContent, contentItem))
+                if (!contentItem.Has<ICommonPart>()) {
                     return null;
+                }
+
+                return ContentShape("Parts_CustomForm_Wrapper", () => {
+                    return shapeHelper.Parts_CustomForm_Wrapper()
+                        .Editor(_editorBuilderWrapper.BuildEditor(contentItem))
+                        .ContentPart(part);
+                });
             }
-
-            if (contentItem == null || contentItem.ContentType != part.ContentType)
-                return null;
-
-            if (!contentItem.Has<ICommonPart>()) {
-                return null;
-            }
-
-            return ContentShape("Parts_CustomForm_Wrapper", () => {
-                return shapeHelper.Parts_CustomForm_Wrapper()
-                    .Editor(_orchardServices.ContentManager.BuildEditor(contentItem))
-                    .ContentPart(part);
-            });
+            // Returning null avoids rendering the edit shape for current custom form.
+            return null;
         }
 
         protected override DriverResult Editor(CustomFormPart part, dynamic shapeHelper) {
