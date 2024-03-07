@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
@@ -8,7 +7,6 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
-using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Projections.Models;
 
@@ -17,22 +15,23 @@ namespace Orchard.Projections {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly ShellSettings _shellSettings;
 
-        private HashSet<string> _existingColumnNames = new HashSet<string>();
+        /// <summary>
+        /// When upgrading from "1.10.x" branch code committed after 1.10.3 to "dev" branch code or 1.11, merge
+        /// conflicts between "1.10.x" and "dev" caused by running the same migration steps in a different order need to
+        /// be resolved by instructing this migration to decide which steps need to be executed. If you're upgrading
+        /// under these conditions and your pre-upgrade migration version is 6, use HostComponents.config to override
+        /// this property to true.
+        /// </summary>
+        public bool IsUpgradingFromOrchard_1_10_x_Version_6 { get; set; }
 
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
-            IRepository<PropertyRecord> propertyRecordRepository,
-            ISessionFactoryHolder sessionFactoryHolder,
-            ShellSettings shellSettings) {
+            IRepository<PropertyRecord> propertyRecordRepository) {
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
-            _sessionFactoryHolder = sessionFactoryHolder;
-            _shellSettings = shellSettings;
 
             T = NullLocalizer.Instance;
         }
@@ -383,24 +382,32 @@ namespace Orchard.Projections {
             return 5;
         }
 
-        // This step's logic is now executed in UpdateFrom6 as MigratePropertyRecordToRewriteOutputCondition to make
-        // sure that it's executed even when upgrading from version 6 of 1.10.x, which (as opposed to dev) executed the
-        // changes that make up AddLayoutRecordGuid in UpdateFrom6.
-        public int UpdateFrom5() => 6;
-
-        // See UpdateFrom5 for explanation.
-        public int UpdateFrom6() {
-            AddLayoutRecordGuid();
-
+        public int UpdateFrom5() {
             MigratePropertyRecordToRewriteOutputCondition();
+
+            return 6;
+        }
+
+        public int UpdateFrom6() {
+            if (IsUpgradingFromOrchard_1_10_x_Version_6) {
+                MigratePropertyRecordToRewriteOutputCondition();
+            }
+            else {
+                // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
+                SchemaBuilder.AlterTable("LayoutRecord", table =>
+                    table.AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
+
+                var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
+                foreach (var layout in layoutRecords) {
+                    layout.GUIdentifier = Guid.NewGuid().ToString();
+                }
+            }
 
             return 7;
         }
 
         // This change was originally in UpdateFrom5 on dev, but didn't exist on 1.10.x.
         private void MigratePropertyRecordToRewriteOutputCondition() {
-            if (ColumnExists("PropertyRecord", "RewriteOutputCondition")) return;
-
             SchemaBuilder.AlterTable("PropertyRecord", table => table
                 .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
             );
@@ -410,39 +417,6 @@ namespace Orchard.Projections {
                 // Reading this obsolete property to migrate its data to a new one.
                 if (property.RewriteOutput) property.RewriteOutputCondition = "true";
 #pragma warning restore CS0618 // Type or member is obsolete
-        }
-
-        // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
-        private void AddLayoutRecordGuid() {
-            if (ColumnExists("LayoutRecord", "GUIdentifier")) return;
-
-            SchemaBuilder.AlterTable("LayoutRecord", table =>
-                table.AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
-
-            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
-            foreach (var layout in layoutRecords) {
-                layout.GUIdentifier = Guid.NewGuid().ToString();
-            }
-        }
-
-        private bool ColumnExists(string tableName, string columnName) {
-            if (!_existingColumnNames.Any()) {
-                // Database-agnostic way of checking the existence of a column.
-                using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
-                    var connection = session.Connection ?? throw new InvalidOperationException(
-                        "The database connection object should derive from DbConnection to check if a column exists.");
-
-                    var columns = connection.GetSchema("Columns").Rows.Cast<DataRow>();
-
-                    if (!string.IsNullOrEmpty(_shellSettings.DataTablePrefix)) {
-                        columns = columns.Where(row => row["TABLE_NAME"].ToString().StartsWith($"{_shellSettings.DataTablePrefix}_"));
-                    }
-
-                    _existingColumnNames = columns.Select(row => $"{row["TABLE_NAME"]}.{row["COLUMN_NAME"]}").ToHashSet();
-                }
-            }
-
-            return _existingColumnNames.Contains($"{SchemaBuilder.TableDbName(tableName)}.{columnName}");
         }
     }
 }
