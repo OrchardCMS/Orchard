@@ -62,10 +62,10 @@ namespace Orchard.Projections.Settings {
             model.QueryRecordEntries = GetQueriesRecordEntry();
 
 
-            if(updateModel.TryUpdateModel(model, "ProjectionPartSettings", null, null)) { 
-                if (model.FilterQueryRecordsId != null && model.FilterQueryRecordsId.Count()>0) {
+            if (updateModel.TryUpdateModel(model, "ProjectionPartSettings", null, null)) {
+                if (model.FilterQueryRecordsId != null && model.FilterQueryRecordsId.Count() > 0) {
                     // check if default query selected is in filter queries list
-                    if (!model.FilterQueryRecordsId.Contains(model.QueryLayoutRecordId) && model.QueryLayoutRecordId!="-1") {
+                    if (!model.FilterQueryRecordsId.Contains(model.QueryLayoutRecordId) && model.QueryLayoutRecordId != "-1") {
                         updateModel.AddModelError("ProjectionPart", T("The default query must be one of the selected queries"));
                     }
 
@@ -139,7 +139,7 @@ namespace Orchard.Projections.Settings {
                 // from identity part of the query and guid of the layout find reference
                 settings.QueryLayoutRecordId = string.IsNullOrWhiteSpace(settings.IdentityQueryLayoutRecord)
                     ? "-1" : GetQueryLayoutRecord(settings.IdentityQueryLayoutRecord);
-                
+
                 if (!string.IsNullOrWhiteSpace(settings.IdentityFilterQueryRecord)) {
                     List<string> identityForFilterQuery = new List<string>();
                     foreach (var record in settings.IdentityFilterQueryRecord.Split('&').ToList()) {
@@ -149,10 +149,11 @@ namespace Orchard.Projections.Settings {
                         }
                     }
                     settings.FilterQueryRecordId = string.Join("&", identityForFilterQuery);
-                } else {
+                }
+                else {
                     settings.FilterQueryRecordId = string.Empty;
                 }
-                
+
                 _contentDefinitionManager.AlterTypeDefinition(context.ContentTypeDefinition.Name, cfg => cfg
                      .WithPart(part.PartDefinition.Name,
                           pb => pb
@@ -203,7 +204,7 @@ namespace Orchard.Projections.Settings {
                 // if is present only -1, the default query has not been selected
                 return ids[0];
             }
-            else { 
+            else {
                 // ids[0] is id of query
                 // ids[1] is record id of layout
                 var identityQueryLayout = string.Empty;

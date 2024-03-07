@@ -2,7 +2,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.Data;
@@ -13,6 +12,7 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
+using System.Collections.Generic;
 
 namespace Orchard.Blogs.Controllers {
 
@@ -21,6 +21,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
+        private readonly INavigationManager _navigationManager;
         private readonly ITransactionManager _transactionManager;
         private readonly ISiteService _siteService;
 
@@ -29,6 +30,7 @@ namespace Orchard.Blogs.Controllers {
             IBlogService blogService,
             IBlogPostService blogPostService,
             IContentManager contentManager,
+            INavigationManager navigationManager,
             ITransactionManager transactionManager,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
@@ -36,6 +38,7 @@ namespace Orchard.Blogs.Controllers {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
+            _navigationManager = navigationManager;
             _transactionManager = transactionManager;
             _siteService = siteService;
             T = NullLocalizer.Instance;
@@ -151,10 +154,10 @@ namespace Orchard.Blogs.Controllers {
             list.AddRange(_blogService.Get(VersionOptions.Latest)
                 .Where(x => Services.Authorizer.Authorize(Permissions.MetaListOwnBlogs, x))
                 .Select(b => {
-                            var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
-                            blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
-                            return blog;
-                        }));
+                    var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
+                    blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
+                    return blog;
+                }));
 
             var viewModel = Services.New.ViewModel()
                 .ContentItems(list);
@@ -179,6 +182,18 @@ namespace Orchard.Blogs.Controllers {
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
+            // Adds LocalMenus; 
+            var menuItems = _navigationManager.BuildMenu("blogposts-navigation");
+            var request = Services.WorkContext.HttpContext.Request;
+
+            // Set the currently selected path
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, request.RequestContext.RouteData);
+
+            // Populate local nav
+            dynamic localMenuShape = Shape.LocalMenu().MenuName("local-admin");
+            // NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, selectedPath);
+            NavigationHelper.PopulateLocalMenu(Shape, localMenuShape, localMenuShape, menuItems);
+            Services.WorkContext.Layout.LocalNavigation.Add(localMenuShape);
 
             return View(blog);
         }

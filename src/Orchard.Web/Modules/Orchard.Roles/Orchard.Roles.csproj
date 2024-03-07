@@ -95,6 +95,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\RoleEventActivity.cs" />
     <Compile Include="Activities\UnassignRoleActivity.cs" />
     <Compile Include="Activities\AssignRoleActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Events\PermissionRoleContext.cs" />
     <Compile Include="Events\RoleContext.cs" />
     <Compile Include="Events\RoleCreatedContext.cs" />
+    <Compile Include="Events\RoleEventHandler.cs" />
     <Compile Include="Events\RoleRemovedContext.cs" />
     <Compile Include="Events\RoleRenamedContext.cs" />
     <Compile Include="Events\UserAddedContext.cs" />

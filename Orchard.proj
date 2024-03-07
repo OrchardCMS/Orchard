@@ -165,7 +165,7 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name="Spec" DependsOnTargets="Package-Stage">
+  <Target Name="Spec" DependsOnTargets="Compile">
     <!-- Running SpecFlow tests -->
     <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />

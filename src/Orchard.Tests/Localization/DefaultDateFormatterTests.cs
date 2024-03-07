@@ -13,7 +13,7 @@ using Orchard.Localization.Services;
 namespace Orchard.Tests.Localization {
 
     [TestFixture()]
-	[Category("longrunning")]
+    [Category("longrunning")]
     public class DefaultDateFormatterTests {
 
         [SetUp]

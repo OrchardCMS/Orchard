@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -16,6 +17,7 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
         }
 
         protected void Application_Start() {
+            AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
             RegisterRoutes(RouteTable.Routes);
             _container = OrchardStarter.CreateHostContainer(MvcSingletons);
             _host = _container.Resolve<IOrchardHost>();
@@ -29,6 +31,7 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
 
         protected void Application_BeginRequest() {
             Context.Items["originalHttpContext"] = Context;
+            HttpContext.Current.Response.AddHeader("X-Frame-Options", "SAMEORIGIN");
             _host.BeginRequest();
         }
 
@@ -66,7 +69,7 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
                     State = TenantState.Uninitialized
                 };
             }
-    
+
             return _host.CreateStandaloneEnvironment(settings);
         }
     }

@@ -2,6 +2,6 @@
 @using Orchard.Core.Common.ViewModels;
 <fieldset>
     <label>@T("Body")</label>
-    @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.EditorFlavor, Required: false, AutoFocus: false, ContentItem: Model.BodyPart.ContentItem)
+    @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.EditorFlavor, Required: false, AutoFocus: false, ContentItem: Model.BodyPart.ContentItem, Part: Model.BodyPart)
     @Html.ValidationMessageFor(m => m.Text)
 </fieldset>

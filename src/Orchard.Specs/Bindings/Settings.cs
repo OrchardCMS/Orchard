@@ -1,15 +1,7 @@
-﻿using System;
-using NUnit.Framework;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents;
-using Orchard.Data;
-using Orchard.Security;
-using Orchard.Security.Permissions;
+﻿using System.Linq;
+using Orchard.Localization.Services;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
-using Orchard.Localization.Services;
-using System.Linq;
 
 namespace Orchard.Specs.Bindings {
     [Binding]
@@ -20,7 +12,7 @@ namespace Orchard.Specs.Bindings {
 
             var webApp = Binding<WebAppHosting>();
             webApp.Host.Execute(() => {
-                using ( var environment = MvcApplication.CreateStandaloneEnvironment("Default") ) {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
                     var orchardServices = environment.Resolve<IOrchardServices>();
                     var cultureManager = environment.Resolve<ICultureManager>();
 
@@ -30,6 +22,11 @@ namespace Orchard.Specs.Bindings {
                     }
 
                     orchardServices.WorkContext.CurrentSite.SiteCulture = cultureName;
+
+                    // Restarting the shell to reset the cache, because the cache entry storing the list of available
+                    // cultures isn't invalidated by the signal in DefaultCultureManager.ListCultures when running
+                    // inside the test webhost.
+                    MvcApplication.RestartTenant("Default");
                 }
             });
         }

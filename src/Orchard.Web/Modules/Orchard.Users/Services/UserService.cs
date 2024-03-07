@@ -127,7 +127,11 @@ namespace Orchard.Users.Services {
             var user = _membershipService.GetUser(username);
             if (user == null)
                 return null;
-
+            
+            if (user.As<UserPart>().EmailStatus == UserStatus.Approved) {
+                return null;
+            }
+            
             user.As<UserPart>().EmailStatus = UserStatus.Approved;
 
             return user;
