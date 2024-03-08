@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -11,9 +9,7 @@ namespace Orchard.MediaLibrary.Handlers {
     public class MediaLibraryPickerFieldHandler : ContentHandler {
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public MediaLibraryPickerFieldHandler(
-            IContentDefinitionManager contentDefinitionManager) {
-
+        public MediaLibraryPickerFieldHandler(IContentDefinitionManager contentDefinitionManager) {
             _contentDefinitionManager = contentDefinitionManager;
         }
 
@@ -34,7 +30,8 @@ namespace Orchard.MediaLibrary.Handlers {
             foreach (var field in fields) {
                 var localField = field;
                 // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
-                localField._contentItems = new Lazy<IEnumerable<MediaPart>>(() => contentItem.ContentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
+                localField._contentItems.Loader(() =>
+                    contentItem.ContentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
             }
         }
     }
