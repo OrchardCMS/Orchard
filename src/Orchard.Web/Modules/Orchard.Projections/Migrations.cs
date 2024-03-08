@@ -166,7 +166,6 @@ namespace Orchard.Projections {
                     .Column<int>("Display")
                     .Column<int>("QueryPartRecord_id")
                     .Column<int>("GroupProperty_id")
-                    .Column<string>("GUIdentifier", column => column.WithLength(68))
                 );
 
             SchemaBuilder.CreateTable("PropertyRecord",
