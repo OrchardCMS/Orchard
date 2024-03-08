@@ -57,6 +57,7 @@ namespace Orchard.Email.Services {
                 FromName = Read(parameters, "FromName"),
                 Bcc = Read(parameters, "Bcc"),
                 Cc = Read(parameters, "CC"),
+                NotifyReadEmail = bool.TryParse(Read(parameters, "NotifyReadEmail"), out var notify) && notify,
                 Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments")
                     ? parameters["Attachments"]
                     : new List<string>()
@@ -131,6 +132,10 @@ namespace Orchard.Email.Services {
 
                 if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
                     mailMessage.ReplyTo.AddRange(ParseRecipients(emailMessage.ReplyTo));
+                }
+
+                if (emailMessage.NotifyReadEmail) {
+                    mailMessage.Headers.Add("Disposition-Notification-To", mailMessage.From.ToString());
                 }
 
                 _smtpClientField.Value.Send(mailMessage);
