@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Configuration;
 using System.Net.Mail;
@@ -55,7 +56,11 @@ namespace Orchard.Email.Services {
                 FromAddress = Read(parameters, "FromAddress"),
                 FromName = Read(parameters, "FromName"),
                 Bcc = Read(parameters, "Bcc"),
-                Cc = Read(parameters, "CC")
+                Cc = Read(parameters, "CC"),
+                Attachments = (IEnumerable<string>)(parameters.ContainsKey("Attachments")
+                    ? parameters["Attachments"]
+                    : new List<string>()
+                )
             };
 
             if (string.IsNullOrWhiteSpace(emailMessage.Recipients)) {
@@ -84,6 +89,15 @@ namespace Orchard.Email.Services {
                 if (!String.IsNullOrWhiteSpace(legacyMessage.Body)) {
                     mailBodyBuilder.TextBody = legacyMessage.IsBodyHtml ? null : legacyMessage.Body;
                     mailBodyBuilder.HtmlBody = legacyMessage.IsBodyHtml ? legacyMessage.Body : null;
+                }
+            }
+
+            foreach (var attachmentPath in emailMessage.Attachments) {
+                if (File.Exists(attachmentPath)) {
+                    mailBodyBuilder.Attachments.Add(attachmentPath);
+                }
+                else {
+                    throw new FileNotFoundException(T("One or more attachments not found.").Text);
                 }
             }
 
