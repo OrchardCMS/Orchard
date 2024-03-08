@@ -71,6 +71,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<AccountValidationService>().As<IAccountValidationService>();
+            builder.RegisterType<PasswordService>().As<IPasswordService>();
+            builder.RegisterType<PasswordHistoryService>().As<IPasswordHistoryService>();
 
             builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
