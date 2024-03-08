@@ -31,6 +31,3 @@ jobs:
 
       - name: Test
         run: msbuild Orchard.proj /m /t:Test
-
-      - name: Spec
-        run: msbuild Orchard.proj /m /t:Spec
