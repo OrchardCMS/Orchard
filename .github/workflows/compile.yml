@@ -15,15 +15,10 @@ jobs:
       run:
         shell: pwsh
     runs-on: windows-latest
-    strategy:
-      matrix:
-        branch: [dev, 1.10.x]
 
     steps:
       - name: Clone repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          ref: ${{ matrix.branch }}
 
       - name: Restore NuGet packages
         run: nuget restore src/Orchard.sln
