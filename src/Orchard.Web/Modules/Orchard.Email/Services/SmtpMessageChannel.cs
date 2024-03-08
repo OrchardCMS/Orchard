@@ -57,7 +57,7 @@ namespace Orchard.Email.Services {
                 Cc = Read(parameters, "CC")
             };
 
-            if (emailMessage.Recipients.Length == 0) {
+            if (string.IsNullOrWhiteSpace(emailMessage.Recipients)) {
                 Logger.Error("Email message doesn't have any recipient");
                 return;
             }
