@@ -52,7 +52,8 @@ namespace Orchard.Email.Services {
                 Subject = Read(parameters, "Subject"),
                 Recipients = Read(parameters, "Recipients"),
                 ReplyTo = Read(parameters, "ReplyTo"),
-                From = Read(parameters, "From"),
+                FromAddress = Read(parameters, "FromAddress"),
+                FromName = Read(parameters, "FromName"),
                 Bcc = Read(parameters, "Bcc"),
                 Cc = Read(parameters, "CC")
             };
@@ -100,15 +101,17 @@ namespace Orchard.Email.Services {
                 }
 
                 var fromAddress = default(MailboxAddress);
-                if (!String.IsNullOrWhiteSpace(emailMessage.From)) {
-                    fromAddress = MailboxAddress.Parse(emailMessage.From);
+                if (!String.IsNullOrWhiteSpace(emailMessage.FromAddress)) {
+                    fromAddress = MailboxAddress.Parse(emailMessage.FromAddress);
                 }
                 else {
                     // Take 'From' address from site settings or web.config.
-                    fromAddress = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
-                        ? MailboxAddress.Parse(_smtpSettings.Address)
+                    fromAddress = !String.IsNullOrWhiteSpace(_smtpSettings.FromAddress)
+                        ? MailboxAddress.Parse(_smtpSettings.FromAddress)
                         : MailboxAddress.Parse(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
                 }
+
+                fromAddress.Name = string.IsNullOrWhiteSpace(emailMessage.FromName) ? _smtpSettings.FromName : emailMessage.FromName;
 
                 mailMessage.From.Add(fromAddress);
 
