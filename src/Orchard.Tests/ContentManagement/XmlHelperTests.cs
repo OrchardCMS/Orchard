@@ -7,6 +7,8 @@ using Orchard.ContentManagement;
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
     public class XmlHelperTests {
+        private const string _testGuidString = "98f3dc0a-01c3-4975-bd52-1b4f5a678d73";
+
         [Test]
         public void AddEl() {
             var el = new XElement("data");
@@ -85,6 +87,14 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void GuidToAttribute() {
+            var el = new XElement("data");
+            el.Attr("guid", new Guid(_testGuidString));
+
+            Assert.That(el.Attribute("guid").Value, Is.EqualTo(_testGuidString));
+        }
+
+        [Test]
         public void DoubleFloatDecimalToAttribute() {
             var el = new XElement("data");
             el.Attr("double", 12.456D);
@@ -151,6 +161,14 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void GuidToElement() {
+            var el = new XElement("data");
+            el.El("guid", new Guid(_testGuidString));
+
+            Assert.That(el.Element("guid").Value, Is.EqualTo(_testGuidString));
+        }
+
+        [Test]
         public void ReadElement() {
             var el = XElement.Parse("<data><foo>bar</foo></data>");
 
@@ -168,12 +186,14 @@ namespace Orchard.Tests.ContentManagement {
                 ADouble = 12.345D,
                 AFloat = 23.456F,
                 ADecimal = 34.567M,
+                AGuid = new Guid(_testGuidString),
                 ANullableInt = 42,
                 ANullableBoolean = true,
                 ANullableDate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
                 ANullableDouble = 12.345D,
                 ANullableFloat = 23.456F,
-                ANullableDecimal = 34.567M
+                ANullableDecimal = 34.567M,
+                ANullableGuid = new Guid(_testGuidString)
             };
             var el = new XElement("data");
             el.With(target)
@@ -184,12 +204,14 @@ namespace Orchard.Tests.ContentManagement {
                 .ToAttr(t => t.ADouble)
                 .ToAttr(t => t.AFloat)
                 .ToAttr(t => t.ADecimal)
+                .ToAttr(t => t.AGuid)
                 .ToAttr(t => t.ANullableInt)
                 .ToAttr(t => t.ANullableBoolean)
                 .ToAttr(t => t.ANullableDate)
                 .ToAttr(t => t.ANullableDouble)
                 .ToAttr(t => t.ANullableFloat)
-                .ToAttr(t => t.ANullableDecimal);
+                .ToAttr(t => t.ANullableDecimal)
+                .ToAttr(t => t.ANullableGuid);
 
 
             Assert.That(el.Attr("AString"), Is.EqualTo("foo"));
@@ -199,12 +221,14 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(el.Attr("ADouble"), Is.EqualTo("12.345"));
             Assert.That(el.Attr("AFloat"), Is.EqualTo("23.456"));
             Assert.That(el.Attr("ADecimal"), Is.EqualTo("34.567"));
+            Assert.That(el.Attr("AGuid"), Is.EqualTo(_testGuidString));
             Assert.That(el.Attr("ANullableInt"), Is.EqualTo("42"));
             Assert.That(el.Attr("ANullableBoolean"), Is.EqualTo("true"));
             Assert.That(el.Attr("ANullableDate"), Is.EqualTo("1970-05-21T13:55:21.934Z"));
             Assert.That(el.Attr("ANullableDouble"), Is.EqualTo("12.345"));
             Assert.That(el.Attr("ANullableFloat"), Is.EqualTo("23.456"));
             Assert.That(el.Attr("ANullableDecimal"), Is.EqualTo("34.567"));
+            Assert.That(el.Attr("ANullableGuid"), Is.EqualTo(_testGuidString));
         }
 
         [Test]
@@ -214,10 +238,10 @@ namespace Orchard.Tests.ContentManagement {
                 XElement.Parse(
                     "<data AString=\"foo\" AnInt=\"42\" ABoolean=\"true\" " +
                     "ADate=\"1970-05-21T13:55:21.934Z\" ADouble=\"12.345\" " +
-                    "AFloat=\"23.456\" ADecimal=\"34.567\" " +
+                    $"AFloat=\"23.456\" ADecimal=\"34.567\" AGuid=\"{_testGuidString}\" " +
                     "ANullableInt=\"42\" ANullableBoolean=\"true\" " +
                     "ANullableDate=\"1970-05-21T13:55:21.934Z\" ANullableDouble=\"12.345\" " +
-                    "ANullableFloat=\"23.456\" ANullableDecimal=\"34.567\"/>");
+                    $"ANullableFloat=\"23.456\" ANullableDecimal=\"34.567\" ANullableGuid=\"{_testGuidString}\"/>");
             el.With(target)
                 .FromAttr(t => t.AString)
                 .FromAttr(t => t.AnInt)
@@ -226,12 +250,14 @@ namespace Orchard.Tests.ContentManagement {
                 .FromAttr(t => t.ADouble)
                 .FromAttr(t => t.AFloat)
                 .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.AGuid)
                 .FromAttr(t => t.ANullableInt)
                 .FromAttr(t => t.ANullableBoolean)
                 .FromAttr(t => t.ANullableDate)
                 .FromAttr(t => t.ANullableDouble)
                 .FromAttr(t => t.ANullableFloat)
-                .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
 
             Assert.That(target.AString, Is.EqualTo("foo"));
             Assert.That(target.AnInt, Is.EqualTo(42));
@@ -240,12 +266,14 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(target.ADouble, Is.EqualTo(12.345D));
             Assert.That(target.AFloat, Is.EqualTo(23.456F));
             Assert.That(target.ADecimal, Is.EqualTo(34.567M));
+            Assert.That(target.AGuid, Is.EqualTo(new Guid(_testGuidString)));
             Assert.That(target.ANullableInt, Is.EqualTo(42));
             Assert.That(target.ANullableBoolean, Is.True);
             Assert.That(target.ANullableDate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
             Assert.That(target.ANullableDouble, Is.EqualTo(12.345D));
             Assert.That(target.ANullableFloat, Is.EqualTo(23.456F));
             Assert.That(target.ANullableDecimal, Is.EqualTo(34.567M));
+            Assert.That(target.ANullableGuid, Is.EqualTo(new Guid(_testGuidString)));
         }
 
         [Test]
@@ -258,12 +286,14 @@ namespace Orchard.Tests.ContentManagement {
                 ADouble = 12.345D,
                 AFloat = 23.456F,
                 ADecimal = 34.567M,
+                AGuid = new Guid(_testGuidString),
                 ANullableInt = 42,
                 ANullableBoolean = true,
                 ANullableDate = new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc),
                 ANullableDouble = 12.345D,
                 ANullableFloat = 23.456F,
-                ANullableDecimal = 34.567M
+                ANullableDecimal = 34.567M,
+                ANullableGuid = new Guid(_testGuidString)
             };
             var el = new XElement("data");
             el.With(target)
@@ -274,12 +304,14 @@ namespace Orchard.Tests.ContentManagement {
                 .FromAttr(t => t.ADouble)
                 .FromAttr(t => t.AFloat)
                 .FromAttr(t => t.ADecimal)
+                .FromAttr(t => t.AGuid)
                 .FromAttr(t => t.ANullableInt)
                 .FromAttr(t => t.ANullableBoolean)
                 .FromAttr(t => t.ANullableDate)
                 .FromAttr(t => t.ANullableDouble)
                 .FromAttr(t => t.ANullableFloat)
-                .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
 
             Assert.That(target.AString, Is.EqualTo("foo"));
             Assert.That(target.AnInt, Is.EqualTo(42));
@@ -288,12 +320,14 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(target.ADouble, Is.EqualTo(12.345D));
             Assert.That(target.AFloat, Is.EqualTo(23.456F));
             Assert.That(target.ADecimal, Is.EqualTo(34.567M));
+            Assert.That(target.AGuid, Is.EqualTo(new Guid(_testGuidString)));
             Assert.That(target.ANullableInt, Is.EqualTo(42));
             Assert.That(target.ANullableBoolean, Is.True);
             Assert.That(target.ANullableDate, Is.EqualTo(new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc)));
             Assert.That(target.ANullableDouble, Is.EqualTo(12.345D));
             Assert.That(target.ANullableFloat, Is.EqualTo(23.456F));
             Assert.That(target.ANullableDecimal, Is.EqualTo(34.567M));
+            Assert.That(target.ANullableGuid, Is.EqualTo(new Guid(_testGuidString)));
         }
 
         [Test]
@@ -339,7 +373,8 @@ namespace Orchard.Tests.ContentManagement {
                 .ToAttr(t => t.ANullableDate)
                 .ToAttr(t => t.ANullableDouble)
                 .ToAttr(t => t.ANullableFloat)
-                .ToAttr(t => t.ANullableDecimal);
+                .ToAttr(t => t.ANullableDecimal)
+                .ToAttr(t => t.ANullableGuid);
 
             Assert.That(el.Attr("AString"), Is.EqualTo(""));
             Assert.That(el.Attr("ANullableInt"), Is.EqualTo("null"));
@@ -348,6 +383,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(el.Attr("ANullableDouble"), Is.EqualTo("null"));
             Assert.That(el.Attr("ANullableFloat"), Is.EqualTo("null"));
             Assert.That(el.Attr("ANullableDecimal"), Is.EqualTo("null"));
+            Assert.That(el.Attr("ANullableGuid"), Is.EqualTo("null"));
         }
 
         [Test]
@@ -357,7 +393,7 @@ namespace Orchard.Tests.ContentManagement {
                 XElement.Parse(
                     "<data AString=\"null\" ANullableInt=\"null\" ANullableBoolean=\"null\" " +
                     "ANullableDate=\"null\" ANullableDouble=\"null\" " +
-                    "ANullableFloat=\"null\" ANullableDecimal=\"null\"/>");
+                    "ANullableFloat=\"null\" ANullableDecimal=\"null\" ANullableGuid=\"null\"/>");
             el.With(target)
                 .FromAttr(t => t.AString)
                 .FromAttr(t => t.ANullableInt)
@@ -365,7 +401,8 @@ namespace Orchard.Tests.ContentManagement {
                 .FromAttr(t => t.ANullableDate)
                 .FromAttr(t => t.ANullableDouble)
                 .FromAttr(t => t.ANullableFloat)
-                .FromAttr(t => t.ANullableDecimal);
+                .FromAttr(t => t.ANullableDecimal)
+                .FromAttr(t => t.ANullableGuid);
 
             Assert.That(target.AString, Is.EqualTo("null"));
             Assert.That(target.ANullableInt, Is.Null);
@@ -374,6 +411,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(target.ANullableDouble, Is.Null);
             Assert.That(target.ANullableFloat, Is.Null);
             Assert.That(target.ANullableDecimal, Is.Null);
+            Assert.That(target.ANullableGuid, Is.Null);
         }
 
         private class Target {
@@ -384,12 +422,14 @@ namespace Orchard.Tests.ContentManagement {
             public double ADouble { get; set; }
             public float AFloat { get; set; }
             public decimal ADecimal { get; set; }
+            public Guid AGuid { get; set; }
             public int? ANullableInt { get; set; }
             public bool? ANullableBoolean { get; set; }
             public DateTime? ANullableDate { get; set; }
             public double? ANullableDouble { get; set; }
             public float? ANullableFloat { get; set; }
             public decimal? ANullableDecimal { get; set; }
+            public Guid? ANullableGuid { get; set; }
         }
     }
 }

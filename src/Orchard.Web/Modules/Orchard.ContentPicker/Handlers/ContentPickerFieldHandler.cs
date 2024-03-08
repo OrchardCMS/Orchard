@@ -6,14 +6,11 @@ using Orchard.ContentPicker.Fields;
 
 namespace Orchard.ContentPicker.Handlers {
     public class ContentPickerFieldHandler : ContentHandler {
-        private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public ContentPickerFieldHandler(
-            IContentManager contentManager, 
             IContentDefinitionManager contentDefinitionManager) {
             
-            _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
 
@@ -30,7 +27,8 @@ namespace Orchard.ContentPicker.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                field._contentItems.Loader(() => _contentManager.GetMany<ContentItem>(localField.Ids, VersionOptions.Published, QueryHints.Empty));
+                // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                field._contentItems.Loader(() => context.ContentItem.ContentManager.GetMany<ContentItem>(localField.Ids, VersionOptions.Published, QueryHints.Empty));
             }
         }
     }

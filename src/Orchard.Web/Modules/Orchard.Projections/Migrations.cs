@@ -98,6 +98,19 @@ namespace Orchard.Projections {
 
             SchemaBuilder.CreateTable("FieldIndexPartRecord", table => table.ContentPartRecord());
 
+            //Adds indexes for better performances in queries
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+
             // Query
 
             ContentDefinitionManager.AlterTypeDefinition("Query",
@@ -153,6 +166,7 @@ namespace Orchard.Projections {
                     .Column<int>("Display")
                     .Column<int>("QueryPartRecord_id")
                     .Column<int>("GroupProperty_id")
+                    .Column<string>("GUIdentifier", column => column.WithLength(68))
                 );
 
             SchemaBuilder.CreateTable("PropertyRecord",
@@ -243,6 +257,24 @@ namespace Orchard.Projections {
                     .DisplayedAs("Projection")
                 );
 
+            SchemaBuilder.CreateTable("NavigationQueryPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<int>("Items")
+                    .Column<int>("Skip")
+                    .Column<int>("QueryPartRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithIdentity()
+                    .WithPart("NavigationQueryPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Query Link")
+                    .WithSetting("Description", "Injects menu items from a Query")
+                    .WithSetting("Stereotype", "MenuItem")
+                );
+
             // Default Model Bindings - CommonPartRecord
 
             _memberBindingRepository.Create(new MemberBindingRecord {
@@ -283,24 +315,6 @@ namespace Orchard.Projections {
                 DisplayName = T("Body Part Text").Text,
                 Description = T("The text from the Body part").Text
             });
-
-            SchemaBuilder.CreateTable("NavigationQueryPartRecord",
-                table => table.ContentPartRecord()
-                    .Column<int>("Items")
-                    .Column<int>("Skip")
-                    .Column<int>("QueryPartRecord_id")
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
-                cfg => cfg
-                    .WithPart("NavigationQueryPart")
-                    .WithPart("MenuPart")
-                    .WithPart("CommonPart")
-                    .DisplayedAs("Query Link")
-                    .WithSetting("Description", "Injects menu items from a Query")
-                    .WithSetting("Stereotype", "MenuItem")
-                    .WithIdentity()
-                );
 
             return 7;
         }

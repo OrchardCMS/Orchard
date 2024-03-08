@@ -41,9 +41,9 @@ namespace Orchard.Email.Controllers {
                 smtpSettings.ReplyTo = testSettings.ReplyTo;
                 smtpSettings.Host = testSettings.Host;
                 smtpSettings.Port = testSettings.Port;
-                smtpSettings.EnableSsl = testSettings.EnableSsl;
+                smtpSettings.AutoSelectEncryption = testSettings.AutoSelectEncryption;
+                smtpSettings.EncryptionMethod = testSettings.EncryptionMethod;
                 smtpSettings.RequireCredentials = testSettings.RequireCredentials;
-                smtpSettings.UseDefaultCredentials = testSettings.UseDefaultCredentials;
                 smtpSettings.UserName = testSettings.UserName;
                 smtpSettings.Password = testSettings.Password;
                 smtpSettings.ListUnsubscribe = testSettings.ListUnsubscribe;
@@ -92,9 +92,9 @@ namespace Orchard.Email.Controllers {
             public string ReplyTo { get; set; }
             public string Host { get; set; }
             public int Port { get; set; }
-            public bool EnableSsl { get; set; }
+            public SmtpEncryptionMethod EncryptionMethod { get; set; }
+            public bool AutoSelectEncryption { get; set; }
             public bool RequireCredentials { get; set; }
-            public bool UseDefaultCredentials { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
             public string To { get; set; }

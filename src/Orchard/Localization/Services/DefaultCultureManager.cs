@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -87,6 +87,9 @@ namespace Orchard.Localization.Services {
             });
         }
         public CultureRecord GetCultureByName(string cultureName) {
+            if (string.IsNullOrWhiteSpace(cultureName)) {
+                return null;
+            }
             var cultures = GetAllCulturesByName();
             CultureRecord result;
             cultures.TryGetValue(cultureName, out result);

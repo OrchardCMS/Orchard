@@ -65,7 +65,8 @@ namespace Orchard.Taxonomies.Handlers {
                 var tempField = field.Name;
                 field.TermsField.Loader(() => {
                     var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
-                    var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
+                    // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                    var terms = part.ContentItem.ContentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
                     return terms.ToList();
                 });
             }
@@ -73,7 +74,8 @@ namespace Orchard.Taxonomies.Handlers {
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
             part._termParts.Loader(() => {
                 var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
-                var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
+                // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                var terms = part.ContentItem.ContentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
                 var publishedTermIds = terms.Select(t => t.Key);
                 return
