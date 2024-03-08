@@ -69,7 +69,7 @@ namespace Orchard.Email.Activities {
                 {"ReplyTo", replyTo},
                 {"Bcc", bcc},
                 {"CC", cc},
-                {"NotifyReadEmail",notifyReadEmail }
+                {"NotifyReadEmail", notifyReadEmail }
             };
 
             if (string.IsNullOrWhiteSpace(recipients)) {
