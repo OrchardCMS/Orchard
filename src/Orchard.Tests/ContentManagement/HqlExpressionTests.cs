@@ -943,31 +943,29 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        // This is a potentially flaky test, but failure due to randomness is extremely unlikely.
         public void ShouldSortRandomly() {
-            _manager.Create<LambdaPart>("lambda", init => {
-                init.Record.IntegerStuff = 1;
-            });
-
-            _manager.Create<LambdaPart>("lambda", init => {
-                init.Record.IntegerStuff = 2;
-            });
-
-            _manager.Create<LambdaPart>("lambda", init => {
-                init.Record.IntegerStuff = 3;
-            });
-            _session.Flush();
-
-            var result = _manager.HqlQuery().ForType("lambda").List();
-            Assert.That(result.Count(), Is.EqualTo(3));
-
-            var firstResults = new List<int>();
-
-            for (int i = 0; i < 10; i++) {
-                result = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.Named("civ"), order => order.Random()).List();
-                firstResults.Add(result.First().As<LambdaPart>().Record.IntegerStuff);
+            var itemCount = 10;
+            for (int i = 0; i < itemCount; i++) {
+                _manager.Create<LambdaPart>("lambda", init => {
+                    init.Record.IntegerStuff = i;
+                });
             }
 
-            Assert.That(firstResults.Distinct().Count(), Is.GreaterThan(1));
+            _session.Flush();
+
+            var items = _manager.HqlQuery().ForType("lambda").List();
+            Assert.That(items.Count(), Is.EqualTo(itemCount));
+
+            var results = new List<string>();
+
+            for (int i = 0; i < 10; i++) {
+                items = _manager.HqlQuery().Join(alias =>
+                    alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.Named("civ"), order => order.Random()).List();
+                results.Add(string.Join("", items.Select(item => item.As<LambdaPart>().Record.IntegerStuff)));
+            }
+
+            Assert.That(results.Distinct().Count(), Is.GreaterThan(1));
         }
 
         [Test]
