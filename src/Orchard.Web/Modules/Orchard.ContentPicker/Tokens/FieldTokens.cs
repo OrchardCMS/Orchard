@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.Events;
 using Orchard.ContentPicker.Fields;
+using Orchard.Events;
 using Orchard.Localization;
-using NHibernate.Util;
 
 namespace Orchard.ContentPicker.Tokens {
     public interface ITokenProvider : IEventHandler {
@@ -30,7 +30,7 @@ namespace Orchard.ContentPicker.Tokens {
             context.For<ContentPickerField>("ContentPickerField")
                 .Token("Content", (Func<ContentPickerField, object>)(field => field.Ids[0]))
                 .Chain("Content", "Content", (Func<ContentPickerField, object>)(field => {
-                    var id = field.Ids.Any() ? field.Ids[0] : 0; 
+                    var id = field.Ids.Any() ? field.Ids[0] : 0;
                     return _contentManager.Get(id);
                 }))
                 ;
