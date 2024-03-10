@@ -157,7 +157,7 @@
     <Content Include="Styles\admin-usertask.css" />
     <Content Include="Styles\workflows-activity-unassign-role.css" />
     <Content Include="Styles\workflows-activity-assign-role.css" />
-    <Content Include="Styles\workflows-activity-isinrole.css" />
+    <Content Include="Styles\workflows-activity-is-in-role.css" />
     <Content Include="Styles\workflows-activity-usertask.css" />
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
