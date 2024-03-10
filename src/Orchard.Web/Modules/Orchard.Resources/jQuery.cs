@@ -9,8 +9,8 @@ namespace Orchard.Resources {
             manifest.DefineScript("jQuery").SetUrl("jquery.min.js", "jquery.js").SetVersion("3.3.1").SetCdn("//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js", "//ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js");
 
             // jQuery UI (full package).
-            manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.12.1").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.js");
-            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.12.1");
+            manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.13.2").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.js");
+            manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.13.2");
             manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI"); // Right now no customization in the styles, but the resource might be used later.
 
             // DEPRECATED for 1.10: Resources for jQuery UI individual components. This now only
@@ -53,10 +53,10 @@ namespace Orchard.Resources {
 
             // jQuery Time Entry.
             manifest.DefineScript("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.css","TimeEntry/jquery.timeentry.css").SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.css", "TimeEntry/jquery.timeentry.css").SetVersion("2.0.1");
 
             // jQuery Date/Time Editor Enhancements.
-            manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.min.css","jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
+            manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
 
             // jQuery File Upload.
             manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload-full.min.js", "jquery.fileupload-full.js").SetVersion("9.11.2").SetDependencies("jQueryUI_Widget");
