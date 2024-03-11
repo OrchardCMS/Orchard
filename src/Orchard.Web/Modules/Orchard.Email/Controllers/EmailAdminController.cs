@@ -54,7 +54,9 @@ namespace Orchard.Email.Controllers {
                 else {
                     _smtpChannel.Process(new Dictionary<string, object> {
                         {"Recipients", testSettings.To},
-                        {"Subject", T("Orchard CMS - SMTP settings test email").Text}
+                        {"Subject", T("Orchard CMS - SMTP settings test email").Text},
+                        {"NotifyReadEmail", "true"},
+                        {"Attachments", new string[] { "C:\\Users\\Benedek\\Desktop\\test.txt", "C:\\Users\\Benedek\\Desktop\\test2.txt" } }
                     });
                 }
 
