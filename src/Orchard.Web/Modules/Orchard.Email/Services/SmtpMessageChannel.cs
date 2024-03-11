@@ -107,13 +107,7 @@ namespace Orchard.Email.Services {
             try {
                 mailMessage.To.AddRange(ParseRecipients(emailMessage.Recipients));
 
-                if (!String.IsNullOrWhiteSpace(emailMessage.Cc)) {
-                    mailMessage.Cc.AddRange(ParseRecipients(emailMessage.Cc));
-                }
-
-                if (!String.IsNullOrWhiteSpace(emailMessage.Bcc)) {
-                    mailMessage.Bcc.AddRange(ParseRecipients(emailMessage.Bcc));
-                }
+                mailMessage.Cc.AddRange(ParseRecipients(emailMessage.Cc));
 
                 var fromAddress = default(MailboxAddress);
                 if (!String.IsNullOrWhiteSpace(emailMessage.FromAddress)) {
@@ -126,6 +120,7 @@ namespace Orchard.Email.Services {
                         : MailboxAddress.Parse(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
                 }
 
+                mailMessage.Bcc.AddRange(ParseRecipients(emailMessage.Bcc));
                 fromAddress.Name = string.IsNullOrWhiteSpace(emailMessage.FromName) ? _smtpSettings.FromName : emailMessage.FromName;
 
                 mailMessage.From.Add(fromAddress);
@@ -199,7 +194,7 @@ namespace Orchard.Email.Services {
         }
 
         private IEnumerable<MailboxAddress> ParseRecipients(string recipients) {
-            return recipients.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+            return recipients?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .SelectMany(address => {
                     if (MailboxAddress.TryParse(address, out var mailboxAddress)) {
                         return new[] { mailboxAddress };
@@ -207,7 +202,7 @@ namespace Orchard.Email.Services {
 
                     Logger.Error("Invalid email address: {0}", address);
                     return Enumerable.Empty<MailboxAddress>();
-                });
+                }) ?? Enumerable.Empty<MailboxAddress>();
         }
     }
 }
