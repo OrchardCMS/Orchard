@@ -121,9 +121,9 @@ namespace Orchard.Email.Services {
                 fromAddress.Name = string.IsNullOrWhiteSpace(emailMessage.FromName) ? _smtpSettings.FromName : emailMessage.FromName;
                 mailMessage.From.Add(fromAddress);
 
-                if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
-                    mailMessage.ReplyTo.AddRange(ParseRecipients(emailMessage.ReplyTo));
-                }
+                mailMessage.ReplyTo.AddRange(ParseRecipients(string.IsNullOrWhiteSpace(emailMessage.ReplyTo)
+                    ? _smtpSettings.ReplyTo
+                    : emailMessage.ReplyTo));
 
                 if (emailMessage.NotifyReadEmail) {
                     mailMessage.Headers.Add("Disposition-Notification-To", mailMessage.From.ToString());
