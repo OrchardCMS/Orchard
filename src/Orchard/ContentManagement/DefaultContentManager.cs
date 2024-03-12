@@ -298,6 +298,15 @@ namespace Orchard.ContentManagement {
 
             return null;
         }
+        private void StoreVersionInSession(ContentItemVersionRecord versionRecord) {
+            var session = _contentManagerSession();
+            // allocate instance and set record property
+            var contentItem = New(versionRecord.ContentItemRecord.ContentType.Name);
+            contentItem.VersionRecord = versionRecord;
+
+            // store in session prior to loading to avoid some problems with simple circular dependencies
+            session.Store(contentItem);
+        }
 
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
             if (!ids.Any()) {
@@ -354,6 +363,7 @@ namespace Orchard.ContentManagement {
                     }
                     // found Index to replace the record we fetched to the null we had initially
                     allVersionRecords[currentIndexedId.Index] = foundRecord;
+                    StoreVersionInSession(foundRecord);
                 }
             }
 
