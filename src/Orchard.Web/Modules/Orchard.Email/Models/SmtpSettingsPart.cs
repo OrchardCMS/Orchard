@@ -31,7 +31,7 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.Port, value); }
         }
 
-        [Obsolete($"Use {nameof(AutoSelectEncryption)} and/or {nameof(EncryptionMethod)} instead.")]
+        [Obsolete("Use " + nameof(AutoSelectEncryption) + " and/or "+ nameof(EncryptionMethod) + " instead.")]
         public bool EnableSsl => this.Retrieve(x => x.EnableSsl);
 
         public SmtpEncryptionMethod EncryptionMethod {
