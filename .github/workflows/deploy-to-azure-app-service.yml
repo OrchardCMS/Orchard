@@ -1,0 +1,127 @@
+# How to use this GitHub Actions workflow
+
+# - Enable GitHub Action in your repository .
+# - Create Azure App Service code publish with .NET 4.8
+# - Add required GitHub Secrets:
+#   - NAME: AZURE_WEBAPP_NAME
+#     VALUE: Your Azure App Service name (only name, not a full URL)
+#   - NAME: AZURE_WEBAPP_PUBLISH_PROFILE
+#     VALUE: A content of downloaded publish profile from your App Service in Azure portal
+#     *** Before downloading a publish profile, please make sure you have set a configuration WEBSITE_WEBDEPLOY_USE_SCM = true.
+# - Push code to a main branch.
+# - GitHub Actions will automatic build and deploy the project to Azure App Service.
+
+name: Deploy Orchard CMS (.NET Framework) to Azure App Service
+
+# This workflow is triggered when pushing to a specific branch.
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Set MSBuild version to use. "[ or ]" means inclusive and "( or )" means exclusive.
+  # You can find release version at https://github.com/dotnet/msbuild/releases
+  MSBUILD_VERSION: "[16.9,17.0)"
+
+  NUGET_VERSION: 5.x # Set NuGet version to use.
+  NODE_VERSION: 10.x # Set Node.js version to use.
+
+  SOLUTION_PATH: src/Orchard.sln
+  # For Azure deployment, we use a custom MS Build at the root of the project.
+  PROJECT_PATH: Orchard.proj
+  PRECOMPILED_DIR: build/precompiled
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set supportedAppService variable
+        id: setvar
+        run: |
+          if [ -z "${{ secrets.AZURE_WEBAPP_NAME }}" ] # test -z return True if the length of String is zero.
+          then
+            echo "::set-output name=supportedAppService::0"
+            echo "No 'AZURE_WEBAPP_NAME' secret, skip deploy job."
+          else
+            echo "::set-output name=supportedAppService::1"
+          fi
+    outputs:
+      supportedAppService: ${{ steps.setvar.outputs.supportedAppService }}
+
+  deploy:
+    needs: [validate]
+    if: ${{ needs.validate.outputs.supportedAppService == 1 }} # Run deploy job when AZURE_WEBAPP_NAME is defined only
+    runs-on: windows-2019
+
+    # You can use default run to set default working directory.
+    # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_iddefaultsrun
+    defaults:
+      run:
+        # Use a specific shell.
+        # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#using-a-specific-shell
+        shell: powershell
+
+    steps:
+      - name: Checkout the latest source code from ${{ github.ref }} commit
+        # Find a release version https://github.com/actions/checkout/releases
+        uses: actions/checkout@v2
+
+      - name: Check if the project has Yarn Workspaces and set YARN_WORKSPACES_EXIST variable
+        working-directory: src # We need to change a working directory to a path that has workspaces package.json.
+        run: |
+          $workspaces_info_result = PowerShell -NoProfile -Command { yarn workspaces info 2>&1 | out-null; $LastExitCode }
+          # Use an environment file. https://github.community/t/empty-github-env-variables-on-powershell/147626/2
+          if($workspaces_info_result -eq 0) { echo "YARN_WORKSPACES_EXIST=1" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append }
+
+      # https://github.com/actions/setup-node
+      - name: Use Node.js version ${{ env.NODE_VERSION }}
+        if: ${{ env.YARN_WORKSPACES_EXIST == 1 }}
+        # Find a release version https://github.com/actions/setup-node/releases
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build all Node.js projects if Yarn Workspaces exist
+        if: ${{ env.YARN_WORKSPACES_EXIST == 1 }}
+        working-directory: src
+        run: |
+          node --version
+          npm install yarn@1.22.5 --global
+          yarn --version
+          yarn install
+          yarn workspaces run build
+
+      - name: Setup NuGet version ${{ env.NUGET_VERSION }}
+        # Find a release version. https://github.com/NuGet/setup-nuget/releases/
+        uses: NuGet/setup-nuget@v1
+        with:
+          nuget-version: ${{ env.NUGET_VERSION }}
+
+      - name: Restore NuGet packages
+        run: nuget restore ${{ env.SOLUTION_PATH }}
+
+      - name: Setup MSBuild version ${{ env.MSBUILD_VERSION }}
+        # Find a release version. https://github.com/microsoft/setup-msbuild/releases
+        uses: microsoft/setup-msbuild@v1
+        with:
+          vs-version: ${{ env.MSBUILD_VERSION }}
+
+      - name: Build a solution/project
+        run: |
+          msbuild -version
+          msbuild ${{ env.PROJECT_PATH }} `
+            /t:Precompiled `
+            /p:PreCompiledDir=${{ env.PRECOMPILED_DIR }} `
+            /verbosity:minimal `
+            /maxcpucount `
+            /nologo
+
+      - name: Deploy to Azure App Service using publish profile credentials
+        # Find a release version. https://github.com/Azure/webapps-deploy/releases
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          # Before downloading a publish profile, please make sure you have set a configuration WEBSITE_WEBDEPLOY_USE_SCM = true.
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.PRECOMPILED_DIR }}
