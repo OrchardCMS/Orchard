@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Orchard.MediaLibrary.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.MediaLibrary.ViewModels {
     public class MediaManagerFolderEditViewModel {

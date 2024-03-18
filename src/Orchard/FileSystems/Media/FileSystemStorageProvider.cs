@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Configuration;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
+using Orchard.Exceptions;
 using Orchard.Localization;
 using Orchard.Validation;
-using Orchard.Exceptions;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -209,12 +210,27 @@ namespace Orchard.FileSystems.Media {
             return true;
         }
 
+        private void ValidatePathCharacters(string path) {
+            //get the invalid characters from the web.config
+            string invalidChars = ((SystemWebSectionGroup)WebConfigurationManager.OpenWebConfiguration(null).GetSectionGroup("system.web")).HttpRuntime.RequestPathInvalidCharacters;
+            List<string> invalidCharacters = new List<string>();
+            invalidCharacters.AddRange(invalidChars.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
+            string cleanPath = string.Join("", path.Split(new string[] { Path.DirectorySeparatorChar.ToString(), "/" }, StringSplitOptions.RemoveEmptyEntries));
+            foreach (string c in invalidCharacters) {
+                if (cleanPath.Contains(c)) {
+                    throw new ArgumentException(T("The folder name cannot contain the '{0}' character.", c).ToString());
+                }
+            }
+        }
+
         /// <summary>
         /// Creates a folder in the storage provider.
         /// </summary>
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <exception cref="ArgumentException">If the folder already exists.</exception>
         public void CreateFolder(string path) {
+            ValidatePathCharacters(path);
+
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
             if (directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
@@ -243,6 +259,8 @@ namespace Orchard.FileSystems.Media {
         /// <param name="oldPath">The relative path to the folder to be renamed.</param>
         /// <param name="newPath">The relative path to the new folder.</param>
         public void RenameFolder(string oldPath, string newPath) {
+            ValidatePathCharacters(newPath);
+
             DirectoryInfo sourceDirectory = new DirectoryInfo(MapStorage(oldPath));
             if (!sourceDirectory.Exists) {
                 throw new ArgumentException(T("Directory {0} does not exist", oldPath).ToString());
@@ -403,7 +421,7 @@ namespace Orchard.FileSystems.Media {
 
             using (var outputStream = file.OpenWrite()) {
                 var buffer = new byte[8192];
-                for (; ; ) {
+                for (;;) {
 
                     var length = inputStream.Read(buffer, 0, buffer.Length);
                     if (length <= 0)

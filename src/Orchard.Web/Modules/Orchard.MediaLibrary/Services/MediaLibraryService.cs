@@ -6,13 +6,13 @@ using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
-using Orchard.Core.Title.Models;
-using Orchard.Validation;
 using Orchard.MediaLibrary.Providers;
+using Orchard.Validation;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -319,6 +319,12 @@ namespace Orchard.MediaLibrary.Services {
             };
         }
 
+        private void ValidatePathCharacters(string path, string paramName) {
+            foreach (string c in MediaFolder.InvalidNameCharacters) {
+                Argument.Validate(!path.Contains(c), paramName, T("The folder name cannot contain the '{0}' character.", c).ToString());
+            }
+        }
+
         /// <summary>
         /// Creates a media folder.
         /// </summary>
@@ -326,6 +332,7 @@ namespace Orchard.MediaLibrary.Services {
         /// <param name="folderName">The name of the folder to be created.</param>
         public void CreateFolder(string relativePath, string folderName) {
             Argument.ThrowIfNullOrEmpty(folderName, "folderName");
+            ValidatePathCharacters(folderName, "folderName");
 
             _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
         }
@@ -360,6 +367,7 @@ namespace Orchard.MediaLibrary.Services {
         public void RenameFolder(string folderPath, string newFolderName) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
+            ValidatePathCharacters(newFolderName, "newFolderName");
 
             try {
                 var parentIndex = folderPath.LastIndexOfAny(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
