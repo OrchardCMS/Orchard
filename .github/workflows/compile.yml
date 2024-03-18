@@ -27,7 +27,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Compile
-        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
 
       - name: Test
-        run: msbuild Orchard.proj /m /t:Test
+        run: msbuild Orchard.proj /m /v:minimal /t:Test
