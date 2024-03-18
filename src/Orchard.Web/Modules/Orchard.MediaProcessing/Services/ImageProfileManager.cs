@@ -15,6 +15,8 @@ using Orchard.MediaProcessing.Media;
 using Orchard.MediaProcessing.Models;
 using Orchard.Tokens;
 using Orchard.Utility.Extensions;
+using Orchard.Environment.Configuration;
+using Orchard.Caching;
 
 namespace Orchard.MediaProcessing.Services {
     public class ImageProfileManager : IImageProfileManager {
@@ -24,6 +26,8 @@ namespace Orchard.MediaProcessing.Services {
         private readonly IImageProcessingManager _processingManager;
         private readonly IOrchardServices _services;
         private readonly ITokenizer _tokenizer;
+        private readonly ISignals _signals;
+        private readonly IAppConfigurationAccessor _appConfigurationAccessor;
 
         public ImageProfileManager(
             IStorageProvider storageProvider,
@@ -31,13 +35,17 @@ namespace Orchard.MediaProcessing.Services {
             IImageProfileService profileService,
             IImageProcessingManager processingManager,
             IOrchardServices services,
-            ITokenizer tokenizer) {
+            ITokenizer tokenizer,
+            ISignals signals,
+            IAppConfigurationAccessor appConfigurationAccessor) {
             _storageProvider = storageProvider;
             _fileNameProvider = fileNameProvider;
             _profileService = profileService;
             _processingManager = processingManager;
             _services = services;
             _tokenizer = tokenizer;
+            _signals = signals;
+            _appConfigurationAccessor = appConfigurationAccessor;
 
             Logger = NullLogger.Instance;
         }
@@ -236,14 +244,66 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
+        public bool PurgeImageProfile(int id) {
+            var profile = _profileService.GetImageProfile(id);
+            try {
+                var folder = _storageProvider.Combine("_Profiles", GetHexHashCode(profile.Name));
+                _storageProvider.DeleteFolder(folder);
+                profile.FileNames.Clear();
+                _signals.Trigger("MediaProcessing_Saved_" + profile.Name);
+                return true;
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "Unable to purge image profile '{0}'", profile.Name);
+                return false;
+            }
+        }
+
+        public bool PurgeObsoleteImageProfiles() {
+            var profiles = _profileService.GetAllImageProfiles();
+            try {
+                if (profiles != null) {
+                    var validPaths = profiles.Select(profile => _storageProvider.Combine("_Profiles", GetHexHashCode(profile.Name)));
+                    foreach (var folder in _storageProvider.ListFolders("_Profiles").Select(f => f.GetPath())) {
+                        if (!validPaths.Any(v => folder.StartsWith(v))) {
+                            _storageProvider.DeleteFolder(folder);
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "Unable to purge obsolete image profiles");
+                return false;
+            }
+        }
+
         private string FormatProfilePath(string profileName, string path) {
-            
-            var filenameWithExtension = Path.GetFileName(path) ?? "";
-            var fileLocation = path.Substring(0, path.Length - filenameWithExtension.Length);
+            var normalizedPath = ShouldNormalizePath() ? NormalizePath(path) : path;
+            var filenameWithExtension = Path.GetFileName(normalizedPath) ?? "";
+            var fileLocation = normalizedPath.Substring(0, normalizedPath.Length - filenameWithExtension.Length);
 
             return _storageProvider.Combine(
-                _storageProvider.Combine(profileName.GetHashCode().ToString("x").ToLowerInvariant(), fileLocation.GetHashCode().ToString("x").ToLowerInvariant()),
+                _storageProvider.Combine(GetHexHashCode(profileName), GetHexHashCode(fileLocation)),
                     filenameWithExtension);
+        }
+
+        private string GetHexHashCode(string value) {
+            return value.GetHashCode().ToString("x").ToLowerInvariant();
+        }
+
+        private string NormalizePath(string path) {
+            //Slice at the protocol, if any. E.g. http:// or https://.
+            var index = path.IndexOf("//", StringComparison.OrdinalIgnoreCase);
+            //Slice at the first directory after the protocol or at 0 if no protocol specified.
+            index = path.IndexOf("/", index < 0 ? 0 : index + 2, StringComparison.OrdinalIgnoreCase);
+            //Return path from the first directory, replacing lcase 'media' (Azure container) with ucase 'Media' (filestorage).
+            return path.Substring(index < 1 ? 0 : index).Replace("media", "Media");
+        }
+
+        private bool ShouldNormalizePath() {
+            var normalizePath = _appConfigurationAccessor.GetConfiguration("Orchard.MediaProcessing.NormalizePath");
+            return string.IsNullOrEmpty(normalizePath) || normalizePath.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
