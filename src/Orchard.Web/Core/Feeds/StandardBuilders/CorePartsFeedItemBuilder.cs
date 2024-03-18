@@ -13,15 +13,15 @@ namespace Orchard.Core.Feeds.StandardBuilders {
     public class CorePartsFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IHtmlFilterRunner _htmlFilterRunner;
 
         public CorePartsFeedItemBuilder(
             IContentManager contentManager, 
             RouteCollection routes,
-            IEnumerable<IHtmlFilter> htmlFilters) {
+            IHtmlFilterRunner htmlFilterRunner) {
             _contentManager = contentManager;
             _routes = routes;
-            _htmlFilters = htmlFilters;
+            _htmlFilterRunner = htmlFilterRunner;
         }
 
         public void Populate(FeedContext context) {
@@ -29,8 +29,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
                 var inspector = new ItemInspector(
                     feedItem.Item,
-                    _contentManager.GetItemMetadata(feedItem.Item), 
-                    _htmlFilters);
+                    _contentManager.GetItemMetadata(feedItem.Item),
+                    _htmlFilterRunner);
 
                 // author is intentionally left empty as it could result in unwanted spam
 

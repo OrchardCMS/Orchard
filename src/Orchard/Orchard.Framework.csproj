@@ -434,7 +434,11 @@
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />
+    <Compile Include="Services\HtmlFilterContext.cs" />
+    <Compile Include="Services\HtmlFilterRunner.cs" />
     <Compile Include="Services\IClientHostAddressAccessor.cs" />
+    <Compile Include="Services\HtmlFilter.cs" />
+    <Compile Include="Services\IHtmlFilterRunner.cs" />
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />

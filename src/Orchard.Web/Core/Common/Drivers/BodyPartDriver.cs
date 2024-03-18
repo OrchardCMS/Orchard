@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using Orchard.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -15,13 +13,13 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.Drivers {
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IHtmlFilterRunner _htmlFilterRunner;
         private readonly RequestContext _requestContext;
 
         private const string TemplateName = "Parts.Common.Body";
 
-        public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters, RequestContext requestContext) {
-            _htmlFilters = htmlFilters;
+        public BodyPartDriver(IOrchardServices services, IHtmlFilterRunner htmlFilterRunner, RequestContext requestContext) {
+            _htmlFilterRunner = htmlFilterRunner;
             Services = services;
             _requestContext = requestContext;
         }
@@ -36,12 +34,12 @@ namespace Orchard.Core.Common.Drivers {
             return Combined(
                 ContentShape("Parts_Common_Body",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
+                                 var bodyText = _htmlFilterRunner.RunFilters(part.Text, GetFlavor(part), part);
                                  return shapeHelper.Parts_Common_Body(Html: new HtmlString(bodyText));
                              }),
                 ContentShape("Parts_Common_Body_Summary",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
+                                 var bodyText = _htmlFilterRunner.RunFilters(part.Text, GetFlavor(part), part);
                                  return shapeHelper.Parts_Common_Body_Summary(Html: new HtmlString(bodyText));
                              })
                 );

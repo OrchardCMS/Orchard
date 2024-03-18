@@ -322,7 +322,6 @@
     <Compile Include="Elements\Break.cs" />
     <Compile Include="Elements\UIElement.cs" />
     <Compile Include="Elements\PlaceableContentItem.cs" />
-    <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
@@ -378,9 +377,6 @@
     <Compile Include="Services\ElementEventContext.cs" />
     <Compile Include="Services\ElementEventHandlerBase.cs" />
     <Compile Include="Models\ElementSessionState.cs" />
-    <Compile Include="Services\ElementFilterProcessor.cs" />
-    <Compile Include="Services\IElementFilterProcessor.cs" />
-    <Compile Include="Services\IElementFilter.cs" />
     <Compile Include="Services\ICurrentControllerAccessor.cs" />
     <Compile Include="Services\IElementEventHandler.cs" />
     <Compile Include="Services\ILayoutEditorFactory.cs" />
