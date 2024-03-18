@@ -11,7 +11,7 @@
     <RootNamespace>Orchard.WarmupStarter</RootNamespace>
     <AssemblyName>Orchard.WarmupStarter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>default</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>

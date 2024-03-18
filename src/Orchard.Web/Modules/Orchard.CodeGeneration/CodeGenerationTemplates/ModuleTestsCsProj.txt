@@ -10,7 +10,7 @@
     <RootNamespace>$$ProjectName$$</RootNamespace>
     <AssemblyName>$$ProjectName$$</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>default</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
