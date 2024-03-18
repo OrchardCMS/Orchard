@@ -72,11 +72,12 @@ namespace Orchard.OpenId.Controllers
             }
 
             var membershipSettings = _membershipService.GetSettings();
+
             if (user != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
                 _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
-                return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
+                return RedirectToAction("ChangeExpiredPassword", "Account", new { Area = "Orchard.Users", username = user.UserName });
             }
 
             _authenticationService.SignIn(user, rememberMe);
