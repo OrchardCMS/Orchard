@@ -222,7 +222,7 @@ function buildJsPipeline(assetGroup, doConcat, doRebuild) {
     // Source maps are useless if neither concatenating nor transpiling.
     if ((!doConcat || assetGroup.inputPaths.length < 2) && !assetGroup.inputPaths.some(function (inputPath) { return path.extname(inputPath).toLowerCase() === ".ts"; }))
         generateSourceMaps = false;
-    var typeScriptOptions = { allowJs: true, noImplicitAny: true, noEmitOnError: true };
+    var typeScriptOptions = { allowJs: true, noImplicitAny: true, noEmitOnError: true, module: 'amd' };
     if (assetGroup.typeScriptOptions)
         typeScriptOptions = Object.assign(typeScriptOptions, assetGroup.typeScriptOptions); // Merge override options from asset group if any.
     if (doConcat)

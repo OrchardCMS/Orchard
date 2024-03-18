@@ -186,7 +186,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public string GenerateUniqueSlug(AutoroutePart part, IEnumerable<string> existingPaths) {
-            if (existingPaths == null || !existingPaths.Contains(part.Path))
+            if (existingPaths == null || !existingPaths.Contains(part.Path, StringComparer.OrdinalIgnoreCase))
                 return part.Path;
 
             var version = existingPaths.Select(s => GetSlugVersion(part.Path, s)).OrderBy(i => i).LastOrDefault();
@@ -287,7 +287,8 @@ namespace Orchard.Autoroute.Services {
 
         private static int? GetSlugVersion(string path, string potentialConflictingPath) {
             int v;
-            var slugParts = potentialConflictingPath.Split(new[] { path }, StringSplitOptions.RemoveEmptyEntries);
+            // Matching needs to ignore case, so both paths are forced to lowercase.
+            var slugParts = potentialConflictingPath.ToLower().Split(new[] { path.ToLower() }, StringSplitOptions.RemoveEmptyEntries);
 
             if (slugParts.Length == 0)
                 return 2;

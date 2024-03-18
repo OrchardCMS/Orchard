@@ -1,9 +1,12 @@
 ﻿@{
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
+    var htmlAttributes = (Dictionary<string, object>)Model.HtmlAttributes;
 
-    var htmlAttributes = new Dictionary<string, object> {
-        {"class", "text large"}
-    };
+    if (htmlAttributes == null) {
+        htmlAttributes = new Dictionary<string, object> {
+            {"class", "text large"}
+        };
+    }
 
     if (Model.Required == true) {
         htmlAttributes["required"] = "required";
