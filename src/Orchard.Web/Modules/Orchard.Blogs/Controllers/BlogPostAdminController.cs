@@ -139,6 +139,12 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST (int blogId, int postId, string returnUrl) {
+            return Delete(blogId, postId);
+        }
+
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -154,6 +160,12 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl) {
+            return Unpublish(blogId, postId);
         }
 
         public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {

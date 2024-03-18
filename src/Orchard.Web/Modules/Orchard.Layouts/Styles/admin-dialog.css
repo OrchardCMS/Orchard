@@ -1101,17 +1101,17 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     padding:0;
 }
 
-fieldset.publish-button, fieldset.delete-button, fieldset.save-button { 
+fieldset.publish-button, fieldset.delete-button, fieldset.save-button, fieldset.unpublish-button { 
     clear:none;
     float:left;
 }
 fieldset.save-button {
     clear:left;
 }
-fieldset.publish-button {
+fieldset.publish-button, fieldset.unpublish-button {
     margin: 0 12px 0 0;
     padding: 0 12px;
-    border-right:1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 fieldset.delete-button {
     margin: 0 0 0 12px;

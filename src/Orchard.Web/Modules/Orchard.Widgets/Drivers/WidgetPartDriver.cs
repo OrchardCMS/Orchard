@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -35,9 +36,10 @@ namespace Orchard.Widgets.Drivers {
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
             };
 
-            if (widgetPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
+            if (widgetPart.Id > 0 && widgetPart.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
+                results.Add(ContentShape("Content_UnpublishButton",
+                    unpublishButton => unpublishButton));
+            }
 
             return Combined(results.ToArray());
         }
@@ -45,16 +47,16 @@ namespace Orchard.Widgets.Drivers {
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(widgetPart, Prefix, null, null);
 
-            if(string.IsNullOrWhiteSpace(widgetPart.Title)) {
+            if (string.IsNullOrWhiteSpace(widgetPart.Title)) {
                 updater.AddModelError("Title", T("Title can't be empty."));
             }
-            
+
             // if there is a name, ensure it's unique
-            if(!string.IsNullOrWhiteSpace(widgetPart.Name)) {
+            if (!string.IsNullOrWhiteSpace(widgetPart.Name)) {
                 widgetPart.Name = widgetPart.Name.ToHtmlName();
 
                 var widgets = _contentManager.Query<WidgetPart, WidgetPartRecord>().Where(x => x.Name == widgetPart.Name && x.Id != widgetPart.Id).Count();
-                if(widgets > 0) {
+                if (widgets > 0) {
                     updater.AddModelError("Name", T("A Widget with the same Name already exists."));
                 }
             }
