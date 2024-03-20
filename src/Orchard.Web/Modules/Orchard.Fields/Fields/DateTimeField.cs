@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.Fields.Settings;
+using Orchard.UI.Notify;
 
 namespace Orchard.Fields.Fields {
     public class DateTimeField : ContentField {
@@ -10,7 +12,7 @@ namespace Orchard.Fields.Fields {
             get {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
                 var value = Storage.Get<DateTime>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                if (Display == DateTimeFieldDisplays.DateOnly) {
                     return new DateTime(value.Year, value.Month, value.Day);
                 }
                 return value;
@@ -18,7 +20,7 @@ namespace Orchard.Fields.Fields {
 
             set {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                if (Display == DateTimeFieldDisplays.DateOnly) {
                     Storage.Set(new DateTime(value.Year, value.Month, value.Day));
                 }
                 else {
@@ -30,7 +32,24 @@ namespace Orchard.Fields.Fields {
         public DateTimeFieldDisplays Display {
             get {
                 var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                if (settings.AllowDisplayOptionsOverride) {
+                    if (Enum.TryParse(DisplayOption, out DateTimeFieldDisplays displayOption)){
+                        return displayOption;
+                    }                    
+                }                
                 return settings.Display;
+            }
+            set {
+                DisplayOption = value.ToString();                
+            }
+        }
+
+        protected string DisplayOption {
+            get {
+                return Storage.Get<string>("DisplayOption");                
+            }
+            set {
+                Storage.Set("DisplayOption", value ?? String.Empty);
             }
         }
     } 

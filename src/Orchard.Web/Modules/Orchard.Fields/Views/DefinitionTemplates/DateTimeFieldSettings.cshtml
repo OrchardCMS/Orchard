@@ -2,13 +2,16 @@
 @using Orchard.Fields.Settings;
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Display)" class="forcheckbox">@T("Display options")</label>  
+    <label for="@Html.FieldIdFor(m => m.Display)" class="forcheckbox">@T("Display options")</label>
     <select id="@Html.FieldIdFor(m => m.Display)" name="@Html.FieldNameFor(m => m.Display)">
         @Html.SelectOption(DateTimeFieldDisplays.DateAndTime, Model.Display == DateTimeFieldDisplays.DateAndTime, T("Date and time").ToString())
         @Html.SelectOption(DateTimeFieldDisplays.DateOnly, Model.Display == DateTimeFieldDisplays.DateOnly, T("Date only").ToString())
         @Html.SelectOption(DateTimeFieldDisplays.TimeOnly, Model.Display == DateTimeFieldDisplays.TimeOnly, T("Time only").ToString())
-    </select> 
-
+    </select>
+    <div>
+        @Html.CheckBoxFor(m => m.AllowDisplayOptionsOverride) <label for="@Html.FieldIdFor(m => m.AllowDisplayOptionsOverride)" class="forcheckbox">@T("Allow override")</label>
+        <span class="hint">@T("Check to allow users to specify the Display options value in each content.")</span>
+    </div>
     @Html.ValidationMessageFor(m => m.Display)
 </fieldset>
 

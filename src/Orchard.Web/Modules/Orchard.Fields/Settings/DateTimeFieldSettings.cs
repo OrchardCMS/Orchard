@@ -15,5 +15,6 @@ namespace Orchard.Fields.Settings {
         public bool Required { get; set; }
         public DateTime? DefaultValue { get; set; }
         public DateTimeEditor Editor { get; set; }
+        public bool AllowDisplayOptionsOverride { get; set; }
     }
 }

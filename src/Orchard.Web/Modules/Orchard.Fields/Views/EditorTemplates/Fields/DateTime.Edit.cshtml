@@ -1,8 +1,18 @@
 ﻿@model Orchard.Fields.ViewModels.DateTimeFieldViewModel
+@using Orchard.Fields.Settings;
+
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => Model.Editor.Date)" @if (Model.IsRequired) { <text> class="required" </text> }>@Model.Name</label>
     @Html.EditorFor(m => m.Editor)
+    @if (Model.AllowDisplayOptionsOverride) {        
+        <select id="@Html.FieldIdFor(m => m.DisplayOption)" name="@Html.FieldNameFor(m => m.DisplayOption)">
+            @Html.SelectOption(DateTimeFieldDisplays.DateAndTime, Model.DisplayOption == DateTimeFieldDisplays.DateAndTime, T("Date and time").ToString())
+            @Html.SelectOption(DateTimeFieldDisplays.DateOnly, Model.DisplayOption == DateTimeFieldDisplays.DateOnly, T("Date only").ToString())
+            @Html.SelectOption(DateTimeFieldDisplays.TimeOnly, Model.DisplayOption == DateTimeFieldDisplays.TimeOnly, T("Time only").ToString())
+        </select>
+    }
+
     @if (HasText(Model.Hint)) {
         <span class="hint">@Model.Hint</span>
     }
