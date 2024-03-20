@@ -19,5 +19,6 @@ namespace Orchard.Core.Navigation.Models {
             get { return Record.AdminMenuPosition; }
             set { Record.AdminMenuPosition = value; }
         }
+
     }
 }

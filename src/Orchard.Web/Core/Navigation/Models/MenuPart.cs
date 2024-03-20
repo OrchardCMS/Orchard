@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 
@@ -22,6 +23,12 @@ namespace Orchard.Core.Navigation.Models {
         public string MenuPosition {
             get { return Record.MenuPosition; }
             set { Record.MenuPosition = value; }
+        }
+
+
+        public Boolean VisibleAtFrontEnd {
+            get { return Record.VisibleAtFrontEnd; }
+            set { Record.VisibleAtFrontEnd = value; }
         }
     }
 }

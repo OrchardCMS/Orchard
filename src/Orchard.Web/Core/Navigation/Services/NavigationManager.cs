@@ -67,9 +67,9 @@ namespace Orchard.Core.Navigation.Services {
 
         private IEnumerable<MenuItem> FinishMenu(ICollection<MenuItem> menuItems) {
             foreach (var menuItem in menuItems) {
-                menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
-                menuItem.Items = FinishMenu(menuItem.Items.ToArray());
-            }
+                    menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
+                    menuItem.Items = FinishMenu(menuItem.Items.ToArray());
+           }
 
             return menuItems;
         }
@@ -276,6 +276,7 @@ namespace Orchard.Core.Navigation.Services {
                 Position = SelectBestPositionValue(list.Select(x => x.Position)),
                 Permissions = list.SelectMany(x => x.Permissions).Distinct(),
                 Content = list.First().Content
+
             };
 
             return joined;

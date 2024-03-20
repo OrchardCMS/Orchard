@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
@@ -184,6 +185,16 @@ namespace Orchard.Core.Navigation {
             );
 
             return 7;
+        }
+
+        /// <summary>
+        /// Manage visibility of menuItem in frontEnd (default is true)
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateFrom7() {
+            SchemaBuilder
+                .AlterTable("MenuPartRecord", table => table.AddColumn<bool>("VisibleAtFrontEnd", c => c.WithDefault(true)));
+            return 8;
         }
     }
 }

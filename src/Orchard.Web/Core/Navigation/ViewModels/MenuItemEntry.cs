@@ -9,6 +9,7 @@ namespace Orchard.Core.Navigation.ViewModels {
         public string Text { get; set; }
         public string Url { get; set; }
         public string Position { get; set; }
+        public bool VisibleAtFrontEnd { get; set; }
 
         public ContentItem ContentItem { get; set; }
     }

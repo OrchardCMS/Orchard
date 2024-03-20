@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Navigation.Models {
@@ -9,5 +10,6 @@ namespace Orchard.Core.Navigation.Models {
         public virtual string MenuText { get; set; }
         public virtual string MenuPosition { get; set; }
         public virtual int MenuId { get; set; }
+        public virtual Boolean VisibleAtFrontEnd { get; set; }
     }
 }

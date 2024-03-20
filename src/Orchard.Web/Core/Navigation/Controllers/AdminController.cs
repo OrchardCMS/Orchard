@@ -21,6 +21,7 @@ using Orchard.Mvc.Html;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using System.Web.Routing;
+using Orchard.Time;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
@@ -129,6 +130,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 IsMenuItem = menuPart.Is<MenuItemPart>(),
                 Text = menuPart.MenuText,
                 Position = menuPart.MenuPosition,
+                VisibleAtFrontEnd = menuPart.VisibleAtFrontEnd,
                 Url = menuPart.Is<MenuItemPart>()
                               ? menuPart.As<MenuItemPart>().Url
                               : _navigationManager.GetUrl(null, Services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues),
@@ -248,6 +250,8 @@ namespace Orchard.Core.Navigation.Controllers {
             return View(model);
         }
 
+
+
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
@@ -295,5 +299,6 @@ namespace Orchard.Core.Navigation.Controllers {
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
+
     }
 }

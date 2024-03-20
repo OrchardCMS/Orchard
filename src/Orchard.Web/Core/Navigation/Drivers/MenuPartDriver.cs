@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -36,6 +37,7 @@ namespace Orchard.Core.Navigation.Drivers {
             }
         }
 
+
         protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
             var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
 
@@ -48,6 +50,7 @@ namespace Orchard.Core.Navigation.Drivers {
                     ContentItem = part.ContentItem,
                     Menus = allowedMenus,
                     OnMenu = part.Menu != null,
+                    VisibleAtFrontEnd = part.Menu != null ? part.VisibleAtFrontEnd : true,
                     MenuText = part.MenuText
                 };
 
@@ -64,6 +67,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
                     return null;
 
+                part.VisibleAtFrontEnd = model.VisibleAtFrontEnd;
                 part.MenuText = model.MenuText;
                 part.Menu = menu;
 
@@ -93,6 +97,11 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuPosition = position
             );
 
+            context.ImportAttribute(part.PartDefinition.Name, "VisibleAtFrontEnd", visibleAtFrontEnd =>
+                part.VisibleAtFrontEnd = Boolean.Parse(visibleAtFrontEnd)
+            );
+
+
             context.ImportAttribute(part.PartDefinition.Name, "Menu", menuIdentity => {
                 var menu = context.GetItemFromSession(menuIdentity);
                 if (menu != null) {
@@ -113,6 +122,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("VisibleAtFrontEnd", part.VisibleAtFrontEnd);
         }
     }
 }
