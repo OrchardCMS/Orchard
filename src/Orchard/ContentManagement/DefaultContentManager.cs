@@ -281,40 +281,103 @@ namespace Orchard.ContentManagement {
                 .Where(ci => ci != null); 
         }
 
+        private ContentItemVersionRecord VersionRecordFromSession(int id, VersionOptions options) {
+
+            var session = _contentManagerSession();
+            ContentItem contentItem;
+
+            if (options.VersionRecordId != 0) {
+                if (session.RecallVersionRecordId(options.VersionRecordId, out contentItem)) {
+                    return contentItem.VersionRecord;
+                }
+                return _contentItemVersionRepository.Get(options.VersionRecordId);
+            }
+            else if (session.RecallContentRecordId(id, out contentItem)) {
+                return contentItem.VersionRecord;
+            }
+
+            return null;
+        }
+        private void StoreVersionInSession(ContentItemVersionRecord versionRecord) {
+            var session = _contentManagerSession();
+            // allocate instance and set record property
+            var contentItem = New(versionRecord.ContentItemRecord.ContentType.Name);
+            contentItem.VersionRecord = versionRecord;
+
+            // store in session prior to loading to avoid some problems with simple circular dependencies
+            session.Store(contentItem);
+        }
+
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
             if (!ids.Any()) {
                 // since there are no ids, I have to get no item, so it makes
                 // sense to not do anything at all
                 return Enumerable.Empty<T>();
             }
-            var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) => {
-                contentItemCriteria.Add(Restrictions.In("Id", ids.ToArray()));
-                if (options.IsPublished) {
-                    contentItemVersionCriteria.Add(Restrictions.Eq("Published", true));
-                }
-                else if (options.IsLatest) {
-                    contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
-                }
-                else if (options.IsDraft && !options.IsDraftRequired) {
-                    contentItemVersionCriteria.Add(
-                        Restrictions.And(Restrictions.Eq("Published", false),
-                                        Restrictions.Eq("Latest", true)));
-                }
-                else if (options.IsDraft || options.IsDraftRequired) {
-                    contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
-                }
-            });
+            // For each Id passed, check if it's already held in the session, to avoid querying for it
+            // again. Where this collection has null values, it means the object wasn't in session.
+            var allVersionRecords = ids
+                .Select(id => VersionRecordFromSession(id, options))
+                .ToArray();
+            // We only need to query for those contents we did not have in session.
+            var indexedIdsToQuery = ids
+                .Select((val, idx) => new { Index = idx, Id = val })
+                .Where(indexedId => allVersionRecords[indexedId.Index] == null)
+                .ToArray();
 
-            var itemsById = contentItemVersionRecords
+            if (indexedIdsToQuery.Any()) {
+                var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) => {
+                    contentItemCriteria.Add(Restrictions.In("Id", indexedIdsToQuery.Select(o => o.Id).ToArray()));
+                    if (options.IsPublished) {
+                        contentItemVersionCriteria.Add(Restrictions.Eq("Published", true));
+                    }
+                    else if (options.IsLatest) {
+                        contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                    }
+                    else if (options.IsDraft && !options.IsDraftRequired) {
+                        contentItemVersionCriteria.Add(
+                            Restrictions.And(Restrictions.Eq("Published", false),
+                                            Restrictions.Eq("Latest", true)));
+                    }
+                    else if (options.IsDraft || options.IsDraftRequired) {
+                        contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                    }
+                });
+
+                // Replace null values in the first collection with the records we fetched. Now we have all
+                // records we were looking for, rather than only those from session.
+                var currentIndex = 0;
+                var currentIndexedId = indexedIdsToQuery[0];
+                foreach (var foundRecord in contentItemVersionRecords) {
+                    var foundRecordId = foundRecord.ContentItemRecord.Id;
+                    // This assumes that the results from the query are in the order of the ids we passed
+                    while (currentIndexedId.Id != foundRecordId) {
+                        currentIndex++;
+                        if (currentIndex >= indexedIdsToQuery.Length) {
+                            break;
+                        }
+                        currentIndexedId = indexedIdsToQuery[currentIndex];
+                    }
+                    if (currentIndexedId.Id != foundRecordId) {
+                        break;
+                    }
+                    // found Index to replace the record we fetched to the null we had initially
+                    allVersionRecords[currentIndexedId.Index] = foundRecord;
+                    StoreVersionInSession(foundRecord);
+                }
+            }
+
+            var itemsById = allVersionRecords
+                .Where(r => r != null)
                 .Select(r => Get(r.ContentItemRecord.Id, options.IsDraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
                 .Where(ci => ci != null)
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 
             return ids.SelectMany(id => {
-                    IGrouping<int, ContentItem> values;
-                    return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
-                }).AsPart<T>().ToArray();
+                IGrouping<int, ContentItem> values;
+                return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
+            }).AsPart<T>().ToArray();
         }
 
 
