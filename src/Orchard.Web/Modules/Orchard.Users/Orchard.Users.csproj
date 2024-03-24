@@ -16,6 +16,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>7.3</LangVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <RoslynCopyToOutDir>false</RoslynCopyToOutDir>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
