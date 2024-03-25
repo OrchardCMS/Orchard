@@ -22,6 +22,7 @@
                                     //<![CDATA[
             $(document).ready(function () {
                 var pageurl = '@controllerUrl';
+
                 function @(functionName)(culture) {
                     // Read currently selected values
                     var checkedTerms = $("input[type!='hidden']:checked", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']"));
@@ -39,6 +40,7 @@
                             taxonomyFieldName: '@Model.FieldName',
                             contentId: @Model.Id,
                             culture: culture,
+                            selectedValues: selectedValues,
                         success: function (html) {
                                     var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
 
