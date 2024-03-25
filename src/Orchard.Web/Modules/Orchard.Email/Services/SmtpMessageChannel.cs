@@ -154,12 +154,17 @@ namespace Orchard.Email.Services {
 
             var secureSocketOptions = SecureSocketOptions.Auto;
             if (!smtpConfiguration.AutoSelectEncryption) {
-                secureSocketOptions = smtpConfiguration.EncryptionMethod switch {
-                    SmtpEncryptionMethod.None => SecureSocketOptions.None,
-                    SmtpEncryptionMethod.SslTls => SecureSocketOptions.SslOnConnect,
-                    SmtpEncryptionMethod.StartTls => SecureSocketOptions.StartTls,
-                    _ => SecureSocketOptions.None,
-                };
+                switch (smtpConfiguration.EncryptionMethod) {
+                    case SmtpEncryptionMethod.SslTls:
+                        secureSocketOptions = SecureSocketOptions.SslOnConnect;
+                        break;
+                    case SmtpEncryptionMethod.StartTls:
+                        secureSocketOptions = SecureSocketOptions.StartTls;
+                        break;
+                    default:
+                        secureSocketOptions = SecureSocketOptions.None;
+                        break;
+                }
             }
 
             var smtpClient = new SmtpClient();
