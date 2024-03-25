@@ -15,7 +15,8 @@
     <AssemblyName>Orchard.Web</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>7.3</LangVersion>
-    <RoslynCopyToOutDir>false</RoslynCopyToOutDir>
+    <RoslynCopyToOutDir>true</RoslynCopyToOutDir>
+    <RoslynToolPath>$(MSBuildThisFileDirectory)..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\tools\roslyn-4.1.0</RoslynToolPath>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
@@ -274,16 +275,6 @@
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
     </PropertyGroup>
     <CallTarget Targets="ExcludeRootBinariesDeployment" />
-  </Target>
-  <Target Name="CopyRoslynFilesToOutputFolder" AfterTargets="AfterBuild">
-    <!-- Copying Roslyn tools and their dependencies to the "bin" folder for Dynamic Compilation. -->
-    <PropertyGroup>
-      <RoslynFilesDestination>$(ProjectDir)bin\roslyn\</RoslynFilesDestination>
-    </PropertyGroup>
-    <ItemGroup>
-      <RoslynFiles Include="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\tools\Roslyn-4.1.0\*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(RoslynFilesDestination)" Condition="!Exists('$(RoslynFilesDestination)csc.exe')" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
