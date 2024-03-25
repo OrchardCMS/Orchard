@@ -126,20 +126,17 @@
   </Target>
   
   <Target Name="Compile">
+    <CallTarget Targets="DevCompile"/>
     <!-- Compile to "OutputFolder" -->
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
-    <!-- Compile to "regular" output folder for devs using VS locally -->
-    <MSBuild
-      Projects="$(Solution)"
-      Targets="Build"
-      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
   </Target>
   
-  <Target Name="BuildViews">
-    <!-- To make sure that Roslyn tools are available, even if the Compile task was not called before this. -->
+  <Target Name="DevCompile">
+    <!-- To make sure that Roslyn tools are available, since it's included with Orchard.Web, which is not referenced by
+    other projects, so it will be built towards the end. -->
     <MSBuild
       Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
       Targets="CopyRoslynCompilerFilesToOutputDirectory" />
@@ -147,7 +144,7 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">
