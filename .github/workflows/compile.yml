@@ -1,16 +1,34 @@
 name: Compile
+# Compiles the solution and runs unit tests.
 
 on:
   workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - 1.10.x
 
 jobs:
   compile:
     name: Compile
     defaults:
       run:
-        shell: cmd
+        shell: pwsh
     runs-on: windows-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Restore NuGet packages
+        run: nuget restore src/Orchard.sln
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
+
+      - name: Compile
+        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+
       - name: Test
-        run: echo Test
+        run: msbuild Orchard.proj /m /t:Test

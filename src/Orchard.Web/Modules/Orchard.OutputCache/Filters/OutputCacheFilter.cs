@@ -192,7 +192,7 @@ namespace Orchard.OutputCache.Filters {
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
-  
+
                 if (!ResponseIsCacheable(filterContext)) {
                     filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     filterContext.HttpContext.Response.Cache.SetNoStore();
@@ -395,6 +395,9 @@ namespace Orchard.OutputCache.Filters {
             // Vary by theme.
             result.Add("theme", _workContext.CurrentTheme.Id.ToLowerInvariant());
 
+            // Vary for ajax vs "normal" calls
+            result.Add("isajax", filterContext.HttpContext.Request.IsAjaxRequest().ToString());
+
             // Vary by configured query string parameters.
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             foreach (var key in queryString.AllKeys) {
@@ -415,7 +418,7 @@ namespace Orchard.OutputCache.Filters {
             // Vary by configured request headers.
             var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
             foreach (var varyByRequestHeader in CacheSettings.VaryByRequestHeaders) {
-                if (requestHeaders[varyByRequestHeader]!=null)
+                if (requestHeaders[varyByRequestHeader] != null)
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 
@@ -537,7 +540,7 @@ namespace Orchard.OutputCache.Filters {
                 response.AddHeader("X-Cached-On", cacheItem.CachedOnUtc.ToString("r"));
                 response.AddHeader("X-Cached-Until", cacheItem.ValidUntilUtc.ToString("r"));
             }
-            
+
             // Shorcut action execution.
             filterContext.Result = new FileContentResult(
                 ReplaceBeaconTagWithFreshRequestVerificationToken(cacheItem.Output, response.ContentEncoding), // replace the beacon created by the ReplaceRequestVerificationTokenWithBeacon method witha fresh new one
@@ -555,7 +558,7 @@ namespace Orchard.OutputCache.Filters {
                         if (response.Headers.Get("ETag") == null) {
                             response.Headers["ETag"] = newEtag;
                             itemETag = newEtag;
-            }
+                        }
                     }
                 }
                 else {
@@ -806,7 +809,7 @@ namespace Orchard.OutputCache.Filters {
             // Ensure locks are released even after an unexpected exception
             Dispose(false);
         }
-        
+
     }
 
     public class ViewDataContainer : IViewDataContainer {

@@ -34,9 +34,26 @@ namespace Orchard.FileSystems.Media {
             _publicPath = appPath + "Media/" + settings.Name + "/";
 
             T = NullLocalizer.Instance;
+            MaxPathLength = 260;
         }
 
         public Localizer T { get; set; }
+
+        public int MaxPathLength {
+            get; set;
+            // The public setter allows injecting this from Sites.MyTenant.Config or Sites.config, by using
+            // an AutoFac component:
+            /*
+             <component instance-scope="per-lifetime-scope"
+                type="Orchard.FileSystems.Media.FileSystemStorageProvider, Orchard.Framework"
+                service="Orchard.FileSystems.Media.IStorageProvider">
+                <properties>
+                    <property name="MaxPathLength" value="500" />
+                </properties>
+            </component>
+
+             */
+        }
 
         /// <summary>
         /// Maps a relative path into the storage path.
@@ -335,6 +352,17 @@ namespace Orchard.FileSystems.Media {
             if (!Directory.Exists(dirName)) {
                 Directory.CreateDirectory(dirName);
             }
+            //Path.GetFileNameWithoutExtension(fileInfo.Name)
+            // If absolute path is longer than the maximum path length (260 characters), file cannot be saved.
+            if (fileInfo.FullName.Length > MaxPathLength) {
+                var fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                var extension = fileInfo.Extension;
+                // try to generate a shorter path for the file
+                var nameHash = fileName.GetHashCode().ToString("x");
+                // Hopefully this new path is short enough now
+                path = Combine(Path.GetDirectoryName(path), nameHash + extension);
+                fileInfo = new FileInfo(MapStorage(path));
+            }
             File.WriteAllBytes(fileInfo.FullName, new byte[0]);
 
             return new FileSystemStorageFile(Fix(path), fileInfo);
@@ -367,6 +395,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be created.</param>
         /// <param name="inputStream">The stream to be saved.</param>
         /// <exception cref="ArgumentException">If the stream can't be saved due to access permissions.</exception>
+        /// <exception cref="OrchardException">If the path is invalid.</exception>
         public void SaveStream(string path, Stream inputStream) {
             // Create the file.
             // The CreateFile method will map the still relative path

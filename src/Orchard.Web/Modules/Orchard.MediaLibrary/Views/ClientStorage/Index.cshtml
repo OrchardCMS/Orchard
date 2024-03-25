@@ -1,4 +1,7 @@
-﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
+﻿@using Orchard.MediaLibrary.Models;
+@using Orchard.ContentManagement;
+
+@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -12,6 +15,8 @@
 
         Script.Require("jQueryFileUpload").AtFoot();
         Script.Require("Knockout").AtFoot();
+
+        var settings = WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
     }
 
     @Display.Metas()
@@ -23,7 +28,7 @@
     <div id="clientstorage-main">
         <div id="message">@T("Click here, Drop files or Paste images")</div>
         <div id="fileupload">
-            <input type="file" name="files[]" @if(Model.Replace == null) { <text>multiple="multiple"</text> } >
+            <input type="file" name="files[]" @if (Model.Replace == null) {<text>multiple="multiple" </text>} />
             <ul id="fileupload-transfers" data-bind="foreach: transfers">
                 <li data-bind="css: status()" class="transfer">
                     <div class="media-thumbnail" data-bind="html: thumbnail(), visible: status() == 'success'"></div>
@@ -36,9 +41,9 @@
             </ul>
         </div>
     </div>
-        
+
     @using (Script.Foot()) {
-    <script type="text/javascript">
+        <script type="text/javascript">
         //<![CDATA[
         $(function () {
 
@@ -80,6 +85,7 @@
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 autoUpload: true,
+                @((settings.LimitConcurrentUploads > 0) ? "limitConcurrentUploads:" + settings.LimitConcurrentUploads + "," : "")
                 @if(Model.Replace == null) {
                 <text>
                 url: '@Url.Action("Upload")',
@@ -170,9 +176,9 @@
             });
         })
         //]]>
-    </script>
+        </script>
     }
-    
+
     @Display.FootScripts()
 </body>
 </html>

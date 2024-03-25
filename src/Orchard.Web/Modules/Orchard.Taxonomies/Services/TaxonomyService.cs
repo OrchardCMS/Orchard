@@ -32,6 +32,9 @@ namespace Orchard.Taxonomies.Services {
 
         private readonly HashSet<int> _processedTermPartIds = new HashSet<int>();
 
+        private Dictionary<string, TaxonomyPart> _taxonomiesByName;
+        private Dictionary<string, TaxonomyPart> _taxonomiesBySlug;
+
         public TaxonomyService(
             IRepository<TermContentItem> termContentItemRepository,
             IContentManager contentManager,
@@ -54,13 +57,21 @@ namespace Orchard.Taxonomies.Services {
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+
+            // initialize memorization structures
+            _taxonomiesByName = new Dictionary<string, TaxonomyPart>();
+            _taxonomiesBySlug = new Dictionary<string, TaxonomyPart>();
         }
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
+        private IEnumerable<TaxonomyPart> _taxonomies;
         public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            return GetTaxonomiesQuery().List();
+            if (_taxonomies == null) {
+                _taxonomies = GetTaxonomiesQuery().List();
+            }
+            return _taxonomies;
         }
 
         public virtual TaxonomyPart GetTaxonomy(int id) {
@@ -71,26 +82,32 @@ namespace Orchard.Taxonomies.Services {
             if (string.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentNullException("name");
             }
-
-            // include the record in the query to optimize the query plan
-            return GetTaxonomiesQuery()
-                .Join<TitlePartRecord>()
-                .Where(r => r.Title == name)
-                .List()
-                .FirstOrDefault();
+            if (!_taxonomiesByName.ContainsKey(name)) {
+                // include the record in the query to optimize the query plan
+                var t = GetTaxonomiesQuery()
+                    .Join<TitlePartRecord>()
+                    .Where(r => r.Title == name)
+                    .List()
+                    .FirstOrDefault();
+                _taxonomiesByName.Add(name, t);
+            }
+            return _taxonomiesByName[name];
         }
 
         public TaxonomyPart GetTaxonomyBySlug(string slug) {
             if (string.IsNullOrWhiteSpace(slug)) {
                 throw new ArgumentNullException("slug");
             }
-
-            return GetTaxonomiesQuery()
-                .Join<TitlePartRecord>()
-                .Join<AutoroutePartRecord>()
-                .Where(r => r.DisplayAlias == slug)
-                .List()
-                .FirstOrDefault();
+            if (!_taxonomiesBySlug.ContainsKey(slug)) {
+                var t = GetTaxonomiesQuery()
+                    .Join<TitlePartRecord>()
+                    .Join<AutoroutePartRecord>()
+                    .Where(r => r.DisplayAlias == slug)
+                    .List()
+                    .FirstOrDefault();
+                _taxonomiesBySlug.Add(slug, t);
+            }
+            return _taxonomiesBySlug[slug];
         }
 
         public void CreateTermContentType(TaxonomyPart taxonomy) {

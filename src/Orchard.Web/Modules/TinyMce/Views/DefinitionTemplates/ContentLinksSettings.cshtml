@@ -1,0 +1,8 @@
+﻿@model TinyMce.Settings.ContentLinksSettings
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DisplayedContentTypes)">@T("Html editor - Content Types and Parts")</label>
+        @Html.TextBoxFor(m => m.DisplayedContentTypes)
+        <span class="hint">@T("A comma separated value of all the content types or content parts to be linkable contents.")</span>
+    </div>
+</fieldset>

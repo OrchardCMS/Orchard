@@ -8,10 +8,13 @@ using NUnit.Framework;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
+using Orchard.Environment;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Tests.Localization;
+using Orchard.UI.Resources;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
@@ -29,8 +32,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
             builder.Register(ctx => _descriptor);
             builder.RegisterType<StylesheetBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterType<ResourceFileHashProvider>().As<IResourceFileHashProvider>();
             builder.RegisterInstance(_testViewEngine).As<IShapeTemplateViewEngine>();
             builder.RegisterInstance(_testVirtualPathProvider).As<IVirtualPathProvider>();
+            builder.RegisterInstance(new Work<WorkContext>(resolve => new StubWorkContext())).AsSelf();
 
             var extensionManager = new Mock<IExtensionManager>();
             builder.Register(ctx => extensionManager);

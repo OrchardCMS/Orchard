@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
@@ -96,7 +97,7 @@ namespace Orchard.Environment.ShellBuilders {
                 }
 
                 var feature = availableFeatures[shellFeature];
-                
+
                 foreach (var childDependency in ExpandDependenciesInternal(availableFeatures, feature.Dependencies, dependentFeatureDescriptor: feature))
                     yield return childDependency;
 
@@ -197,7 +198,12 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         private static bool IsRecord(Type type) {
-            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records")) &&
+            var mapAsRecordAttr = type.GetCustomAttributes(typeof(MapAsRecordAttribute), false)
+                .OfType<MapAsRecordAttribute>()
+                .FirstOrDefault();
+
+            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records") || mapAsRecordAttr?.Enabled == true) &&
+                   mapAsRecordAttr?.Enabled != false &&
                    type.GetProperty("Id") != null &&
                    (type.GetProperty("Id").GetAccessors()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&
