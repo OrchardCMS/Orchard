@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.Taxonomies.ViewModels;
-using Orchard.UI.Admin;
 
 namespace Orchard.Taxonomies.Controllers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -24,29 +21,25 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ILocalizationService _localizationService;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
-        private readonly RequestContext _requestContext;
 
         public LocalizedTaxonomyController(
             IContentDefinitionManager contentDefinitionManager,
             ILocalizationService localizationService,
             ITaxonomyService taxonomyService,
-            ITaxonomyExtensionsService taxonomyExtensionsService,
-            RequestContext requestContext) {
+            ITaxonomyExtensionsService taxonomyExtensionsService) {
 
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
             _localizationService = localizationService;
-            _requestContext = requestContext;
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, bool isAdmin = false) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
+            return GetTaxonomyInternal(contentTypeName, taxonomyFieldName, contentId, culture, selectedValues);
+        }
 
-            if (isAdmin) {
-                AdminFilter.Apply(_requestContext);
-            }
-
+        protected ActionResult GetTaxonomyInternal (string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
@@ -132,6 +125,5 @@ namespace Orchard.Taxonomies.Controllers {
             var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
             return PartialView(templateName, viewModel);
         }
-
     }
 }
