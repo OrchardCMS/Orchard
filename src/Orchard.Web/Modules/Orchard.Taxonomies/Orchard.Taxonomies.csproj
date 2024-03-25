@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminLocalizedTaxonomyController.cs" />
     <Compile Include="Controllers\LocalizedTaxonomyController.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyFieldDriver.cs" />
     <Compile Include="Drivers\LocalizedTaxonomyPartDriver.cs" />

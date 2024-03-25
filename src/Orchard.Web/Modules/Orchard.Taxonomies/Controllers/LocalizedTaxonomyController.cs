@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Taxonomies.Drivers;
-using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
@@ -24,10 +23,11 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
 
         public LocalizedTaxonomyController(
-                IContentDefinitionManager contentDefinitionManager,
-                ILocalizationService localizationService,
-                ITaxonomyService taxonomyService,
-                ITaxonomyExtensionsService taxonomyExtensionsService) {
+            IContentDefinitionManager contentDefinitionManager,
+            ILocalizationService localizationService,
+            ITaxonomyService taxonomyService,
+            ITaxonomyExtensionsService taxonomyExtensionsService) {
+
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
@@ -35,14 +35,19 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
+            return GetTaxonomyInternal(contentTypeName, taxonomyFieldName, contentId, culture, selectedValues);
+        }
+
+        protected ActionResult GetTaxonomyInternal (string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
             if (contentDefinition != null) {
                 var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == taxonomyFieldName).FirstOrDefault();
                 var contentTypePartDefinition = contentDefinition.Parts.Where(x => x.PartDefinition.Fields.Any(a => a.FieldDefinition.Name == "TaxonomyField" && a.Name == taxonomyFieldName)).FirstOrDefault();
-                ViewData.TemplateInfo.HtmlFieldPrefix = contentTypePartDefinition.PartDefinition.Name + "." + taxonomyField.Name;
+                var fieldPrefix = contentTypePartDefinition.PartDefinition.Name + "." + taxonomyField.Name;
+                ViewData.TemplateInfo.HtmlFieldPrefix = fieldPrefix;
                 if (taxonomyField != null) {
                     var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
                     // Getting the translated taxonomy and its terms
@@ -60,7 +65,33 @@ namespace Orchard.Taxonomies.Controllers {
                     List<TermPart> appliedTerms = new List<TermPart>();
                     int firstTermIdForCulture = 0;
                     if (contentId > 0) {
-                        appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
+                        var selectedIds = selectedValues.Split(',');
+                        var destinationTaxonomyCulture = taxonomy.As<LocalizationPart>()?.Culture?.Culture;
+                        foreach (var id in selectedIds) {
+                            if (!string.IsNullOrWhiteSpace(id)) {
+                                var intId = 0;
+                                int.TryParse(id, out intId);
+                                var originalTerm = _taxonomyService.GetTerm(intId);
+
+                                // The original term has to be added to applied terms in the following scenarios:
+                                // When the original term has no LocalizationPart, which means that, when creating the taxonomy, terms have been set to be culture neutral.
+                                // When the culture of the original term matches the culture of the taxonomy.
+                                // In any other scenario, get the localized term and add it to the applied terms list.
+                                // If no localization is found, nothing is added to the list for the current id.
+                                var otCulture = originalTerm.As<LocalizationPart>()?.Culture?.Culture;
+                                if (!originalTerm.Has<LocalizationPart>() || string.Equals(destinationTaxonomyCulture, otCulture)) {
+                                    appliedTerms.Add(originalTerm);
+                                } else {
+                                    // Get the localized term. If no localized term is found, no term should be added to applied terms list.
+                                    var t = _localizationService.GetLocalizedContentItem(originalTerm, culture);
+                                    if (t != null) {
+                                        // Localized term has been found
+                                        appliedTerms.Add(t.As<TermPart>());
+                                    }
+                                }
+
+                            }
+                        }
 
                         // It takes the first term localized with the culture in order to set correctly the TaxonomyFieldViewModel.SingleTermId
                         var firstTermForCulture = appliedTerms.FirstOrDefault(x => x.As<LocalizationPart>() != null && x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Culture == culture);
@@ -86,16 +117,13 @@ namespace Orchard.Taxonomies.Controllers {
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };
-                    if (taxonomySettings.Autocomplete)
+                    if (taxonomySettings.Autocomplete) {
                         autocomplete = true;
+                    }
                 }
             }
             var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
-            return View(templateName, viewModel);
-        }
-        private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
-            string fieldName = field != null ? field.Name : string.Empty;
-            return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions ?? VersionOptions.Published).Distinct(new TermPartComparer());
+            return PartialView(templateName, viewModel);
         }
     }
 }
