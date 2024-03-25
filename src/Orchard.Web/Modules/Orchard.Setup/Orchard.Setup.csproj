@@ -15,7 +15,6 @@
     <AssemblyName>Orchard.Setup</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>7.3</LangVersion>
-    <MvcBuildViews>false</MvcBuildViews>
     <RoslynCopyToOutDir>false</RoslynCopyToOutDir>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
