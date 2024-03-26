@@ -22,6 +22,7 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
         private readonly IMediaFolderProvider _mediaFolderProvider;
         private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
+        private readonly char[] InvalidCharacters;
 
         public MediaLibraryService(
             IOrchardServices orchardServices,
@@ -36,6 +37,8 @@ namespace Orchard.MediaLibrary.Services {
             _mediaFolderProvider = mediaFolderProvider;
 
             T = NullLocalizer.Instance;
+
+            InvalidCharacters = Path.GetInvalidFileNameChars().Union(HttpUnallowed).OrderBy(c => c).ToArray();
         }
 
         public Localizer T { get; set; }
@@ -146,12 +149,12 @@ namespace Orchard.MediaLibrary.Services {
 
         public string GetUniqueFilename(string folderPath, string filename) {
 
-            // remove any char which is unallowed in an HTTP request
-            foreach (var unallowedChar in HttpUnallowed) {
-                filename = filename.Replace(unallowedChar.ToString(), "");
+            // Removing characters the are forbidden on the file sytem or unallowed in an HTTP request.
+            foreach (var character in InvalidCharacters) {
+                filename = filename.Replace(character.ToString(), "");
             }
 
-            // compute a unique filename
+            // Generating a unique file name.
             var uniqueFilename = filename;
             var index = 1;
             while (_storageProvider.FileExists(_storageProvider.Combine(folderPath, uniqueFilename))) {
@@ -327,6 +330,8 @@ namespace Orchard.MediaLibrary.Services {
         public void CreateFolder(string relativePath, string folderName) {
             Argument.ThrowIfNullOrEmpty(folderName, "folderName");
 
+            ValidateFileOrFolderName(folderName);
+
             _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
         }
 
@@ -360,6 +365,8 @@ namespace Orchard.MediaLibrary.Services {
         public void RenameFolder(string folderPath, string newFolderName) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
+
+            ValidateFileOrFolderName(newFolderName);
 
             try {
                 var parentIndex = folderPath.LastIndexOfAny(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
@@ -402,6 +409,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(currentFileName, "currentFileName");
             Argument.ThrowIfNullOrEmpty(newFileName, "newFileName");
 
+            ValidateFileOrFolderName(newFileName);
+
             _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));
         }
 
@@ -418,8 +427,11 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(newFilename, "newFilename");
 
+            ValidateFileOrFolderName(newFilename);
+
             if (!_storageProvider.FolderExists(newPath))
                 _storageProvider.TryCreateFolder(newPath);
+
             _storageProvider.RenameFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(newPath, newFilename));
         }
 
@@ -433,6 +445,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(duplicatePath, "duplicatePath");
             Argument.ThrowIfNullOrEmpty(filename, "filename");
             Argument.ThrowIfNullOrEmpty(duplicateFilename, "duplicateFilename");
+
+            ValidateFileOrFolderName(duplicateFilename);
 
             _storageProvider.CopyFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(duplicatePath, duplicateFilename));
         }
@@ -462,6 +476,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(fileName, "fileName");
             Argument.ThrowIfNull(bytes, "bytes");
 
+            ValidateFileOrFolderName(fileName);
+
             return UploadMediaFile(folderPath, fileName, new MemoryStream(bytes));
         }
 
@@ -477,6 +493,8 @@ namespace Orchard.MediaLibrary.Services {
             Argument.ThrowIfNullOrEmpty(fileName, "fileName");
             Argument.ThrowIfNull(inputStream, "inputStream");
 
+            ValidateFileOrFolderName(fileName);
+
             string filePath = _storageProvider.Combine(folderPath, fileName);
             _storageProvider.SaveStream(filePath, inputStream);
 
@@ -491,6 +509,18 @@ namespace Orchard.MediaLibrary.Services {
         /// <returns>The combined path.</returns>
         public string Combine(string path1, string path2) {
             return _storageProvider.Combine(path1, path2);
+        }
+
+
+        /// <summary>
+        /// Validates file and folder names by throwing an exception if the name contains an invalid character.
+        /// </summary>
+        /// <param name="name">The name of the file or folder.</param>
+        private void ValidateFileOrFolderName(string name) {
+            if (name.IndexOfAny(InvalidCharacters) >= 0) {
+                throw new ArgumentException("The following characters cannot be used for file and folder names: " +
+                    string.Join(", ", InvalidCharacters.Where(c => (byte)c > 31)) + ".");
+            }
         }
     }
 }
