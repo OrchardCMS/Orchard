@@ -241,7 +241,7 @@ namespace Orchard.Comments.Services {
                 _messageService.Send("Email", parameters);
             }
             catch(Exception e) {
-                Logger.Error(e, "An unexpected error occured while sending a notification email");
+                Logger.Error(e, "An unexpected error occurred while sending a notification email");
             }
         }
 

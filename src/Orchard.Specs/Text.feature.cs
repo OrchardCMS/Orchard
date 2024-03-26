@@ -132,7 +132,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor",
                         "Large"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
@@ -149,7 +149,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
                         "true"});
 #line 45
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -177,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint",
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint",
                         "Subject of the event"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
@@ -197,7 +197,7 @@ this.ScenarioSetup(scenarioInfo);
                         "value"});
             table7.AddRow(new string[] {
                         "Event.Subject.Text",
-                        "Orchard Harvest 2013"});
+                        "Orchard Harvest 2015"});
 #line 68
     testRunner.When("I fill in", ((string)(null)), table7, "When ");
 #line 71
@@ -207,7 +207,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 73
     testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 74
-        testRunner.And("I should see \"Orchard Harvest 2013\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I should see \"Orchard Harvest 2015\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
@@ -215,108 +215,49 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
-                        "false"});
-            table8.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
-                        "Orchard Harvest 2014"});
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
+                        "Orchard Harvest 2016"});
 #line 78
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 82
+#line 81
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 83
+#line 82
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 83
+    testRunner.Then("I should see \"value=\\\"Orchard Harvest 2016\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 86
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Event.Subject.Text",
-                        ""});
-#line 84
-        testRunner.And("I fill in", ((string)(null)), table9, "And ");
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "true"});
 #line 87
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 88
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 89
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I fill in", ((string)(null)), table9, "And ");
 #line 90
-        testRunner.And("I should see \"Orchard Harvest 2014\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 93
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 91
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 92
+    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 95
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
-                        "true"});
-            table10.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
-                        "Orchard Harvest 2015"});
-#line 94
+                        "Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required",
+                        "false"});
+#line 96
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
-#line 98
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 99
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table11.AddRow(new string[] {
-                        "Event.Subject.Text",
-                        ""});
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 100
-        testRunner.And("I fill in", ((string)(null)), table11, "And ");
-#line 103
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 104
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 105
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 106
-        testRunner.And("I should see \"Orchard Harvest 2015\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 109
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table12.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
-                        "true"});
-            table12.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
-                        ""});
-#line 110
-        testRunner.And("I fill in", ((string)(null)), table12, "And ");
-#line 114
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 115
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 116
-    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 119
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table13.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.Required",
-                        "true"});
-            table13.AddRow(new string[] {
-                        "Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue",
-                        "Orchard Harvest 2015"});
-#line 120
-        testRunner.And("I fill in", ((string)(null)), table13, "And ");
-#line 124
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 125
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 126
+#line 101
     testRunner.Then("I should not see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

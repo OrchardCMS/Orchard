@@ -63,7 +63,12 @@ namespace Orchard.Email.Forms {
                                 Id: "Body", Name: "Body",
                                 Title: T("Body"),
                                 Description: T("The body of the email message."),
-                                Classes: new[] {"tokenized"})
+                                Classes: new[] {"tokenized"}),
+                            _NotifyReadEmail: New.Checkbox(
+                                Id: "NotifyReadEmail", Name: "NotifyReadEmail",
+                                Title: T("Notify email read"),
+                                Checked: false, Value: "true",
+                                Description: T("Notify when email sent gets read by the recipient."))
                             ));
 
                     if (jobsQueueEnabled) {

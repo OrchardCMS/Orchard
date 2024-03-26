@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Web;
 using Orchard.Localization;
 
 namespace Orchard.Localization {
@@ -27,6 +28,10 @@ namespace Orchard.Mvc.Html {
                 default:
                     return T(textPlural, new object[] {count}.Concat(args).ToArray());
             }
+        }
+
+        public static LocalizedString Encode(this Localizer T, string unsecureText) {
+            return T(HttpUtility.HtmlEncode(unsecureText));
         }
     }
 }

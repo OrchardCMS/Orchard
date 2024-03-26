@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Mvc;
+using Orchard.Settings;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager, IUnitOfWorkDependency {
@@ -19,12 +21,25 @@ namespace Orchard.UI.Resources {
         };
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
+        private readonly Lazy<IWorkContextAccessor> _wcaLazy;
+        private readonly Lazy<IHttpContextAccessor> _hcaLazy;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
         private const string NotIE = "!IE";
+
+
+        public ResourceManager(
+            IEnumerable<Meta<IResourceManifestProvider>> resourceProviders,
+            Lazy<IWorkContextAccessor> wcaLazy,
+            Lazy<IHttpContextAccessor> hcaLazy) {
+            _providers = resourceProviders;
+            _wcaLazy = wcaLazy;
+            _hcaLazy = hcaLazy;
+        }
+
 
         private static string ToAppRelativePath(string resourcePath) {
             if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
@@ -69,14 +84,14 @@ namespace Orchard.UI.Resources {
             }
 
             var tagBuilder = GetTagBuilder(resource, url);
-            
+
             if (attributes != null) {
                 // todo: try null value
                 tagBuilder.MergeAttributes(attributes, true);
             }
 
             writer.WriteLine(tagBuilder.ToString(resource.TagRenderMode));
-            
+
             if (!string.IsNullOrEmpty(condition)) {
                 if (condition == NotIE) {
                     writer.WriteLine("<!--<![endif]-->");
@@ -85,10 +100,6 @@ namespace Orchard.UI.Resources {
                     writer.WriteLine("<![endif]-->");
                 }
             }
-        }
-
-        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders) {
-            _providers = resourceProviders;
         }
 
         public IEnumerable<IResourceManifest> ResourceProviders {
@@ -152,7 +163,7 @@ namespace Orchard.UI.Resources {
 
             resourcePath = FixPath(resourcePath, relativeFromPath);
             resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
-            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
+            return Require(resourceType, ToAppRelativePath(GetResourceKey(resourcePath, resourceDebugPath))).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
         }
 
         public virtual void RegisterHeadScript(string script) {
@@ -317,7 +328,7 @@ namespace Orchard.UI.Resources {
             }
 
             var index = meta.Name ?? meta.HttpEquiv;
-            
+
             if (String.IsNullOrEmpty(index)) {
                 return;
             }
@@ -329,5 +340,22 @@ namespace Orchard.UI.Resources {
             _metas[index] = meta;
         }
 
+        private string GetResourceKey(string releasePath, string debugPath) {
+            bool debugMode;
+
+            switch (_wcaLazy.Value.GetContext().CurrentSite.ResourceDebugMode) {
+                case ResourceDebugMode.Enabled:
+                    debugMode = true;
+                    break;
+                case ResourceDebugMode.Disabled:
+                    debugMode = false;
+                    break;
+                default:
+                    debugMode = _hcaLazy.Value.Current()?.IsDebuggingEnabled ?? false;
+                    break;
+            }
+
+            return debugMode && !string.IsNullOrWhiteSpace(debugPath) ? debugPath : releasePath;
+        }
     }
 }

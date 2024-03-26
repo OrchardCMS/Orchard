@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -17,7 +19,7 @@ namespace Orchard.MediaLibrary.Controllers {
         private readonly IMediaLibraryService _mediaLibraryService;
 
         public FolderController(
-            IOrchardServices services, 
+            IOrchardServices services,
             IMediaLibraryService mediaManagerService
             ) {
             _mediaLibraryService = mediaManagerService;
@@ -32,12 +34,14 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create(string folderPath) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't create media folder")))
-                return new HttpUnauthorizedResult();
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath) || _mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, folderPath))) {
+                Services.Notifier.Error(T("Couldn't create media folder"));
+                return RedirectToAction("Index", "Admin", new { area = "Orchard.MediaLibrary", folderPath = folderPath });
+            }
 
             // If the user is trying to access a folder above his boundaries, redirect him to his home folder
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent) && !_mediaLibraryService.CanManageMediaFolder(folderPath)) {
+            if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return RedirectToAction("Create", new { folderPath = rootMediaFolder.MediaPath });
             }
 
@@ -51,33 +55,42 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't create media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                Services.Notifier.Error(T("Couldn't create media folder"));
                 return new HttpUnauthorizedResult();
+            }
 
             var viewModel = new MediaManagerFolderCreateViewModel();
             UpdateModel(viewModel);
 
-            if (!_mediaLibraryService.CanManageMediaFolder(viewModel.FolderPath)) {
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, viewModel.FolderPath)
+                || _mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, viewModel.FolderPath))) {
                 return new HttpUnauthorizedResult();
             }
 
             try {
-                _mediaLibraryService.CreateFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder created"));
+                bool valid = String.IsNullOrWhiteSpace(viewModel.Name) || Regex.IsMatch(viewModel.Name, @"^[^:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+$");
+                if (!valid) {
+                    throw new ArgumentException(T("Folder contains invalid characters").ToString());
+                }
+                else {
+                    _mediaLibraryService.CreateFolder(viewModel.FolderPath, viewModel.Name);
+                    Services.Notifier.Information(T("Media folder created"));
+                }
             }
             catch (ArgumentException argumentException) {
                 Services.Notifier.Error(T("Creating Folder failed: {0}", argumentException.Message));
                 Services.TransactionManager.Cancel();
                 return View(viewModel);
             }
-
             return RedirectToAction("Index", "Admin", new { area = "Orchard.MediaLibrary" });
-
         }
 
         public ActionResult Edit(string folderPath) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't edit media folder")))
-                return new HttpUnauthorizedResult();
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath) || _mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, folderPath))) {
+                Services.Notifier.Error(T("Couldn't edit media folder"));
+                return RedirectToAction("Index", "Admin", new { area = "Orchard.MediaLibrary", folderPath = folderPath });
+            }
 
             if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
@@ -88,6 +101,10 @@ namespace Orchard.MediaLibrary.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
+            // Shouldn't be able to rename Users folder
+            if (folderPath == "Users") {
+                return new HttpUnauthorizedResult();
+            }
 
             var viewModel = new MediaManagerFolderEditViewModel {
                 FolderPath = folderPath,
@@ -100,24 +117,33 @@ namespace Orchard.MediaLibrary.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
         public ActionResult Edit() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't edit media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                Services.Notifier.Error(T("Couldn't edit media folder"));
                 return new HttpUnauthorizedResult();
+            }
 
             var viewModel = new MediaManagerFolderEditViewModel();
             UpdateModel(viewModel);
 
-            if (!_mediaLibraryService.CanManageMediaFolder(viewModel.FolderPath)) {
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, viewModel.FolderPath) 
+                || _mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, viewModel.FolderPath))) {
                 return new HttpUnauthorizedResult();
             }
 
             // Shouldn't be able to rename the root folder
-            if(IsRootFolder(viewModel.FolderPath)) {
+            if (IsRootFolder(viewModel.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
 
             try {
-                _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
-                Services.Notifier.Information(T("Media folder renamed"));
+                bool valid = String.IsNullOrWhiteSpace(viewModel.Name) || Regex.IsMatch(viewModel.Name, @"^[^:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+$");
+                if (!valid) {
+                    throw new ArgumentException(T("Folder contains invalid characters").ToString());
+                }
+                else {
+                    _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
+                    Services.Notifier.Information(T("Media folder renamed"));
+                }
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Folder failed: {0}", exception.Message));
@@ -130,16 +156,18 @@ namespace Orchard.MediaLibrary.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Delete")]
         public ActionResult Delete() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't delete media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia)) {
+                Services.Notifier.Error(T("Couldn't delete media folder"));
                 return new HttpUnauthorizedResult();
+            }
 
             var viewModel = new MediaManagerFolderEditViewModel();
             UpdateModel(viewModel);
 
-            if (!_mediaLibraryService.CanManageMediaFolder(viewModel.FolderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.DeleteMediaContent, viewModel.FolderPath)) {
                 return new HttpUnauthorizedResult();
-
             }
+
             try {
                 _mediaLibraryService.DeleteFolder(viewModel.FolderPath);
                 Services.Notifier.Information(T("Media folder deleted"));
@@ -155,8 +183,11 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [HttpPost]
         public ActionResult Move(string folderPath, int[] mediaItemIds) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageOwnMedia, T("Couldn't move media items")))
+            // check permission on destination folder
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath)) {
+                Services.Notifier.Error(T("Couldn't move media items"));
                 return new HttpUnauthorizedResult();
+            }
 
             if (!_mediaLibraryService.CanManageMediaFolder(folderPath)) {
                 return new HttpUnauthorizedResult();
@@ -166,7 +197,20 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 // don't try to rename the file if there is no associated media file
                 if (!string.IsNullOrEmpty(media.FileName)) {
+                    // check permission on source folder
+                    if(!_mediaLibraryService.CheckMediaFolderPermission(Permissions.DeleteMediaContent, media.FolderPath)) {
+                        return new HttpUnauthorizedResult();
+                    }
+
+                    var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+
                     var uniqueFilename = _mediaLibraryService.GetUniqueFilename(folderPath, media.FileName);
+
+                    // skip file if the allowed extensions is defined and doesn't match
+                    if (!settings.IsFileAllowed(Path.GetFileName(uniqueFilename))) {
+                        continue;
+                    }
+
                     _mediaLibraryService.MoveFile(media.FolderPath, media.FileName, folderPath, uniqueFilename);
                     media.FileName = uniqueFilename;
                 }
@@ -179,7 +223,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
         private bool IsRootFolder(string folderPath) {
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
-            
+
             return rootMediaFolder == null ?
                 string.IsNullOrEmpty(folderPath) :
                 string.Equals(rootMediaFolder.MediaPath, folderPath, StringComparison.OrdinalIgnoreCase);

@@ -23,10 +23,10 @@ namespace Orchard.UI.Navigation {
         /// <param name="page">The page parameter.</param>
         /// <param name="pageSize">The page size parameter.</param>
         public Pager(ISite site, int? page, int? pageSize) {
-            Page = (int) (page != null ? (page > 0 ? page : PageDefault) : PageDefault);
-            PageSize = pageSize ?? site.PageSize;
+            Page = page == null || page == 0 ? PageDefault : page.Value;
 
-            if (site.MaxPageSize > 0 && PageSize > site.MaxPageSize) {
+            PageSize = pageSize ?? site.PageSize;
+            if (site.MaxPageSize > 0 && (PageSize == 0 || PageSize > site.MaxPageSize)) {
                 PageSize = site.MaxPageSize;
             }
         }

@@ -1,5 +1,4 @@
-﻿using System.Web.UI.WebControls;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -13,11 +12,13 @@ namespace Orchard.Blogs.Security {
             if (!context.Granted &&
                 context.Content.Is<ICommonPart>()) {
 
-                if (context.Permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name && context.Content.ContentItem.ContentType == "BlogPost") {
+                if (context.Content.ContentItem.ContentType == "BlogPost" && 
+                    BlogPostVariationExists(context.Permission)) {
                     context.Adjusted = true;
-                    context.Permission = Permissions.PublishBlogPost;
+                    context.Permission = GetBlogPostVariation(context.Permission);
                 }
-                else if (OwnerVariationExists(context.Permission) &&
+
+                if (OwnerVariationExists(context.Permission) &&
                     HasOwnership(context.User, context.Content)) {
                     context.Adjusted = true;
                     context.Permission = GetOwnerVariation(context.Permission);
@@ -70,6 +71,29 @@ namespace Orchard.Blogs.Security {
                 return Core.Contents.Permissions.ViewOwnContent;
             if (permission.Name == Permissions.MetaListBlogs.Name)
                 return Permissions.MetaListOwnBlogs;
+
+            return null;
+        }
+
+        private static bool BlogPostVariationExists(Permission permission)
+        {
+            return GetBlogPostVariation(permission) != null;
+        }
+
+        private static Permission GetBlogPostVariation(Permission permission)
+        {
+            if (permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name)
+                return Permissions.PublishBlogPost;
+            if (permission.Name == Orchard.Core.Contents.Permissions.PublishOwnContent.Name)
+                return Permissions.PublishOwnBlogPost;
+            if (permission.Name == Orchard.Core.Contents.Permissions.EditContent.Name)
+                return Permissions.EditBlogPost;
+            if (permission.Name == Orchard.Core.Contents.Permissions.EditOwnContent.Name)
+                return Permissions.EditOwnBlogPost;
+            if (permission.Name == Orchard.Core.Contents.Permissions.DeleteContent.Name)
+                return Permissions.DeleteBlogPost;
+            if (permission.Name == Orchard.Core.Contents.Permissions.DeleteOwnContent.Name)
+                return Permissions.DeleteOwnBlogPost;
 
             return null;
         }

@@ -10,10 +10,10 @@
 @if(settings.ModerateComments) {
 
      if (comment.Status != CommentStatus.Pending) {
-         @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+         @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
      }
      else {
-         @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+         @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
      }
     @T(" | ")
 }

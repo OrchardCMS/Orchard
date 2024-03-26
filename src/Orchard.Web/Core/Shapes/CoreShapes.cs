@@ -283,7 +283,7 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
             var unordered = ((IEnumerable<dynamic>)Shape).ToArray();
-            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab);
+            var tabbed = unordered.GroupBy(x => (string)x.Metadata.Tab ?? "");
 
             if (tabbed.Count() > 1) {
                 foreach (var tab in tabbed) {

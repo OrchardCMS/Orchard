@@ -71,14 +71,14 @@
 
 @helper ThumbnailUpload(string caption) {
     <fieldset>
-        <label>@T(caption)</label>
+        <label>@T.Encode(caption)</label>
         @AsyncUpload("ThumbnailFile", Html.FieldNameFor(m => m.WamsThumbnail), Model.WamsThumbnail, allowedExtensions : null)
     </fieldset>
 }
 
 @helper SubtitleUpload(string caption) {
     <fieldset>
-        <label>@T(caption)</label>
+        <label>@T.Encode(caption)</label>
         @if (Model.SubtitleLanguages.Any()) {
             @AsyncUpload("SubtitleFile", Html.FieldNameFor(m => m.WamsSubtitle), Model.WamsSubtitle)
             <div>

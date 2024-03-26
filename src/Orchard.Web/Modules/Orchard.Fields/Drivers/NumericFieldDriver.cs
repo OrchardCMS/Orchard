@@ -5,7 +5,6 @@ using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Fields.ViewModels;
 using Orchard.Localization;
-using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,11 +14,9 @@ namespace Orchard.Fields.Drivers {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Numeric.Edit";
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly ITokenizer _tokenizer;
 
-        public NumericFieldDriver(IOrchardServices services, ITokenizer tokenizer) {
+        public NumericFieldDriver(IOrchardServices services) {
             Services = services;
-            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
 
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
@@ -46,10 +43,13 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, NumericField field, dynamic shapeHelper) {
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
                 () => {
+                    var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
+                    var value = part.IsNew() && field.Value == null ? settings.DefaultValue : Convert.ToString(field.Value, _cultureInfo.Value);
+
                     var model = new NumericFieldViewModel {
                         Field = field,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>(),
-                        Value = Convert.ToString(field.Value, _cultureInfo.Value)
+                        Settings = settings,
+                        Value = value
                     };
 
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: GetPrefix(field, part));
@@ -64,10 +64,6 @@ namespace Orchard.Fields.Drivers {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
 
-                if (String.IsNullOrWhiteSpace(viewModel.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-                    viewModel.Value = _tokenizer.Replace(settings.DefaultValue, new Dictionary<string, object> { { "Content", part.ContentItem } });
-                }
-
                 field.Value = null;
 
                 if (String.IsNullOrWhiteSpace(viewModel.Value)) {
@@ -76,7 +72,7 @@ namespace Orchard.Fields.Drivers {
                     }
                 }
                 else if (!Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} or its default value is an invalid number", field.DisplayName));
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", T(field.DisplayName)));
                 }
                 else {
 
@@ -93,10 +89,10 @@ namespace Orchard.Fields.Drivers {
                     // checking the number of decimals
                     if (Math.Round(value, settings.Scale) != value) {
                         if (settings.Scale == 0) {
-                            updater.AddModelError(GetPrefix(field, part), T("The field {0} must be an integer", field.DisplayName));
+                            updater.AddModelError(GetPrefix(field, part), T("The field {0} must be an integer", T(field.DisplayName)));
                         }
                         else {
-                            updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}", field.DisplayName, settings.Scale));
+                            updater.AddModelError(GetPrefix(field, part), T("Invalid number of digits for {0}, max allowed: {1}", T(field.DisplayName), settings.Scale));
                         }
                     }
                 }
@@ -106,12 +102,17 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Importing(ContentPart part, NumericField field, ImportContentContext context) {
-            context.ImportAttribute(field.FieldDefinition.Name + "." + field.Name, "Value", v => field.Value = decimal.Parse(v, CultureInfo.InvariantCulture), () => field.Value = (decimal?)null);
+            Action empty = (() => field.Value = (decimal?)null);
+            var element = context.Data.Element(field.FieldDefinition.Name + "." + field.Name);
+            // If element is not in the ImportContentContext, field must not be reset.
+            if (element == null) {
+                empty = () => { };
+            }
+            context.ImportAttribute(field.FieldDefinition.Name + "." + field.Name, "Value", v => field.Value = decimal.Parse(v, CultureInfo.InvariantCulture), empty);
         }
 
         protected override void Exporting(ContentPart part, NumericField field, ExportContentContext context) {
-            if (field.Value.HasValue)
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", field.Value.Value.ToString(CultureInfo.InvariantCulture));
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Value", !field.Value.HasValue ? String.Empty : field.Value.Value.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void Describe(DescribeMembersContext context) {

@@ -15,7 +15,8 @@ namespace Orchard.MediaLibrary.Providers {
             builder.AddImageSet("clientstorage")
                 .Add(T("My Computer"), "5", 
                     menu => menu.Action("Index", "ClientStorage", new { area = "Orchard.MediaLibrary" })
-                        .Permission(Permissions.ManageOwnMedia));
+                        .Permission(Permissions.ManageOwnMedia)
+                        .Permission(Permissions.ImportMediaContent));
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Orchard.Tags.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TagRecord> GetTags() {
-            return _tagRepository.Table.ToList();
+            return _tagRepository.Table.OrderBy(x => x.TagName).ToList();
         }
 
         public IEnumerable<TagRecord> GetTagsByNameSnippet(string snippet, int maxCount = 10) {
@@ -191,20 +191,22 @@ namespace Orchard.Tags.Services {
         }
 
         public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {
-            var tags = tagNamesForContentItem.Select(CreateTag);
-            var newTagsForContentItem = new List<TagRecord>(tags);
+            var newTagsForContentItem = tagNamesForContentItem.Where(s => s != null).ToList();
             var currentTagsForContentItem = contentItem.As<TagsPart>().Record.Tags;
 
             foreach (var tagContentItem in currentTagsForContentItem) {
-                if (!newTagsForContentItem.Contains(tagContentItem.TagRecord)) {
+                var newTag = newTagsForContentItem.FirstOrDefault(t => t.Equals(tagContentItem.TagRecord.TagName, StringComparison.OrdinalIgnoreCase));
+
+                if (newTag == null) {
                     _contentTagRepository.Delete(tagContentItem);
                 }
-
-                newTagsForContentItem.Remove(tagContentItem.TagRecord);
+                else {
+                    newTagsForContentItem.Remove(newTag);
+                }
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
-                _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = newTagForContentItem });
+                _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = CreateTag(newTagForContentItem) });
             }
 
             contentItem.As<TagsPart>().CurrentTags = tagNamesForContentItem;

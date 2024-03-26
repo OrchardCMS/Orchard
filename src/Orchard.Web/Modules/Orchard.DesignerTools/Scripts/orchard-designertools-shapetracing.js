@@ -27,6 +27,7 @@ jQuery(function ($) {
     var shapeTracingTabsPlacement = $('#shape-tracing-tabs-placement');
     var shapeTracingTabsTemplate = $('#shape-tracing-tabs-template');
     var shapeTracingTabsHtml = $('#shape-tracing-tabs-html');
+    var shapeTracingTabsSettings = $('#shape-tracing-tabs-settings');
     var shapeTracingBreadcrumb = $('#shape-tracing-breadcrumb');
     var shapeTracingMetaContent = $('#shape-tracing-meta-content');
     var shapeTracingEnabled = false;
@@ -87,22 +88,26 @@ jQuery(function ($) {
 
     // expand/collapse behavior
     // ensure the container has always a valid size when expanded
-    shapeTracingToolbarSwitch.click(function () {
-        var _this = $(this);
-        _this.toggleClass('expanded');
-        if (_this.hasClass('expanded')) {
-            shapeTracingContainer.height(Math.max(previousSize, defaultHeight, shapeTracingContainer.height()));
-            enableShapeTracing();
-        }
-        else {
-            // save previous height
-            previousSize = shapeTracingContainer.height();
-            shapeTracingContainer.height(initialContainerSize);
-            disableShapeTracing();
-        }
+    var toggleShapeTracingVisibility = function () {
+    	var _this = $(this);
+    	_this.toggleClass('expanded');
+    	if (_this.hasClass('expanded')) {
+    		shapeTracingContainer.height(Math.max(previousSize, defaultHeight, shapeTracingContainer.height()));
+    		enableShapeTracing();
+    	}
+    	else {
+    		// save previous height
+    		previousSize = shapeTracingContainer.height();
+    		shapeTracingContainer.height(initialContainerSize);
+    		disableShapeTracing();
+    	}
 
-        syncResize();
-    });
+    	syncResize();
+    }
+
+    shapeTracingToolbar.click(toggleShapeTracingVisibility);
+    shapeTracingToolbarSwitch.click(toggleShapeTracingVisibility);
+
 
     var disableShapeTracing = function () {
         shapeTracingEnabled = false;
@@ -112,6 +117,11 @@ jQuery(function ($) {
     var enableShapeTracing = function () {
         shapeTracingEnabled = true;
     }
+
+	// make status act like normal div
+    $('#shape-tracing-toolbar-status').click(function (e) {
+    	e.stopPropagation();
+    })
 
     // add a resizable handle to the container
     $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
@@ -513,6 +523,27 @@ jQuery(function ($) {
 
     shapeTracingTabsHtml.click(function () {
         displayTabHtml();
+    });
+
+	// Settings tab
+    var displayTabSettings = function () {
+    	// toggle the selected class
+    	shapeTracingTabs.children('.selected').removeClass('selected');
+    	shapeTracingTabsSettings.addClass('selected');
+
+    	// remove old content
+    	shapeTracingMetaContent.children().remove();
+
+    	// render the template
+    	$("#shape-tracing-tabs-settings-template").tmpl().appendTo(shapeTracingMetaContent);
+
+    	shapeTracingBreadcrumb.text('');
+
+    	defaultTab = displayTabSettings;
+    };
+
+    shapeTracingTabsSettings.click(function () {
+    	displayTabSettings();
     });
 
     // activates codemirror on specific textareas

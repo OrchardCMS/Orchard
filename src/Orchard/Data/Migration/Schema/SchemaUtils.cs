@@ -6,7 +6,7 @@ namespace Orchard.Data.Migration.Schema {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Enum.TryParse<System.Data.DbType>(System.String,System.Boolean,System.Data.DbType@)")]
         public static DbType ToDbType(Type type) {
             DbType dbType;
-            switch ( Type.GetTypeCode(type) ) {
+            switch (Type.GetTypeCode(type)) {
                 case TypeCode.String:
                     dbType = DbType.String;
                     break;
@@ -20,8 +20,10 @@ namespace Orchard.Data.Migration.Schema {
                     dbType = DbType.Boolean;
                     break;
                 default:
-                    if(type == typeof(Guid)) 
+                    if (type == typeof(Guid))
                         dbType = DbType.Guid;
+                    else if (type == typeof(byte[]))
+                        dbType = DbType.Binary;
                     else
                         Enum.TryParse(Type.GetTypeCode(type).ToString(), true, out dbType);
                     break;

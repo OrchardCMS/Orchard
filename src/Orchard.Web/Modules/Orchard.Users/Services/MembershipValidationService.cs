@@ -3,6 +3,15 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
     public class MembershipValidationService : IMembershipValidationService {
+        
+        public MembershipValidationService() {
+            ShouldCompareLastLogout = true; // default to true for retrocompatibility
+        }
+
+        public bool ShouldCompareLastLogout {
+            get; set;
+            // The public setter allowes injecting this from Site.MyTenant.Config in an AutoFact component
+        }
 
         public bool CanAuthenticateWithCookie(IUser user) {
             var userPart = user as UserPart;
@@ -17,7 +26,7 @@ namespace Orchard.Users.Services {
             }
 
             // if the user has logged out, a cookie should not be accepted
-            if (userPart.LastLogoutUtc.HasValue) {
+            if (ShouldCompareLastLogout && userPart.LastLogoutUtc.HasValue) {
 
                 if (!userPart.LastLoginUtc.HasValue) {
                     return true;

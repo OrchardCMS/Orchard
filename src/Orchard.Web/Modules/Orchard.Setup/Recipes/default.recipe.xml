@@ -23,7 +23,6 @@
         <Types>
             <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
                 <TagsPart />
-                <LocalizationPart />
                 <TitlePart/>
                 <AutoroutePart />
                 <MenuPart />
@@ -31,7 +30,6 @@
             <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
                 <CommentsPart />
                 <TagsPart />
-                <LocalizationPart />
                 <TitlePart/>
                 <AutoroutePart />
             </BlogPost>

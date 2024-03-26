@@ -17,8 +17,9 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<StubRecipeExecutionStep>().As<IRecipeExecutionStep>().AsSelf().SingleInstance();
             builder.RegisterType<RecipeExecutionStepHandler>().SingleInstance();
+            builder.RegisterType<RecipeExecutionStepResolver>().As<IRecipeExecutionStepResolver>().SingleInstance();
 
-            _container = builder.Build();
+           _container = builder.Build();
         }
 
         [Test]

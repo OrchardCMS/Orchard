@@ -10,6 +10,7 @@ using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Common.Drivers {
     public class TextFieldDriver : ContentFieldDriver<TextField> {
@@ -45,10 +46,13 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {
             return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => {
+                    var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
+                    var text = part.IsNew() && String.IsNullOrEmpty(field.Value) ? settings.DefaultValue : field.Value;
+
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
-                        Text = field.Value,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
+                        Text = text,
+                        Settings = settings,
                         ContentItem = part.ContentItem
                     };
 
@@ -65,12 +69,18 @@ namespace Orchard.Core.Common.Drivers {
 
                 field.Value = viewModel.Text;
 
-                if (String.IsNullOrWhiteSpace(field.Value) && !String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-                    field.Value = settings.DefaultValue;
-                }
-
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
+                }
+
+                if (settings.MaxLength > 0) {
+
+                    var value = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)))
+                        .ToString().RemoveTags();
+
+                    if (value.Length > settings.MaxLength) {
+                        updater.AddModelError("Text", T("The maximum allowed length for the field {0} is {1}", T(field.DisplayName), settings.MaxLength));
+                    }                    
                 }
             }
 
@@ -85,8 +95,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
-            if (!String.IsNullOrEmpty(field.Value))
-                context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
         protected override void Describe(DescribeMembersContext context) {

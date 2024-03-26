@@ -2,12 +2,13 @@ using System.Globalization;
 using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
+using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class RouteCultureSelector : ICultureSelector {
         public CultureSelectorResult GetCulture(HttpContextBase context) {
-            if (context == null || ContextHelpers.IsRequestAdmin(context)) return null;
+            if (context == null || AdminFilter.IsApplied(context)) return null;
 
             // Attempt to determine culture by route.
             // This normally happens when you are using non standard pages that are not content items
@@ -17,9 +18,9 @@ namespace Orchard.Localization.Selectors {
             if (routeCulture != null && !string.IsNullOrWhiteSpace(routeCulture.ToString())) {
                 try {
                     var culture = CultureInfo.GetCultureInfo(routeCulture.ToString());
-                    return new CultureSelectorResult {Priority = -3, CultureName = culture.Name};
+                    return new CultureSelectorResult { Priority = -3, CultureName = culture.Name };
                 }
-                catch {}
+                catch { }
             }
 
             return null;

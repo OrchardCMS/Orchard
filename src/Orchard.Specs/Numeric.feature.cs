@@ -157,7 +157,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Hint",
+                        "Fields[Guests].NumericFieldSettings.Hint",
                         "Please enter a number"});
 #line 49
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -174,7 +174,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
+                        "Fields[Guests].NumericFieldSettings.Required",
                         "true"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -202,10 +202,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Minimum",
+                        "Fields[Guests].NumericFieldSettings.Minimum",
                         "-10"});
             table7.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Maximum",
+                        "Fields[Guests].NumericFieldSettings.Maximum",
                         "100"});
 #line 71
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
@@ -252,10 +252,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Minimum",
+                        "Fields[Guests].NumericFieldSettings.Minimum",
                         "a"});
             table10.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Maximum",
+                        "Fields[Guests].NumericFieldSettings.Maximum",
                         "b"});
 #line 93
         testRunner.And("I fill in", ((string)(null)), table10, "And ");
@@ -266,221 +266,70 @@ this.ScenarioSetup(scenarioInfo);
 #line 99
         testRunner.And("I should see \"The value &#39;b&#39; is not valid for Maximum.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 102
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table11.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "false"});
-            table11.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "4"});
+                        "Event.Guests.Value",
+                        "a"});
 #line 103
         testRunner.And("I fill in", ((string)(null)), table11, "And ");
-#line 107
+#line 106
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 108
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 107
+    testRunner.Then("I should see \"Guests is an invalid number\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 110
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table12.AddRow(new string[] {
-                        "Event.Guests.Value",
-                        "a"});
-#line 109
+                        "Fields[Guests].NumericFieldSettings.DefaultValue",
+                        "1234"});
+#line 111
         testRunner.And("I fill in", ((string)(null)), table12, "And ");
-#line 112
+#line 114
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 113
-    testRunner.Then("I should see \"Guests or its default value is an invalid number\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 115
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 116
+    testRunner.Then("I should see \"value=\\\"1234\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 119
     testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "false"});
-            table13.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "4"});
-#line 117
+                        "Fields[Guests].NumericFieldSettings.Required",
+                        "true"});
+#line 120
         testRunner.And("I fill in", ((string)(null)), table13, "And ");
-#line 121
+#line 123
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 122
+#line 124
         testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 125
+    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 128
+    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table14.AddRow(new string[] {
-                        "Event.Guests.Value",
-                        ""});
-#line 123
-        testRunner.And("I fill in", ((string)(null)), table14, "And ");
-#line 126
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 127
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 128
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                        "Fields[Guests].NumericFieldSettings.Required",
+                        "false"});
 #line 129
-    testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 130
-    testRunner.Then("I should see \"Guests:\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 131
-        testRunner.And("I should see \"4\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I fill in", ((string)(null)), table14, "And ");
+#line 132
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 133
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 134
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table15.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "true"});
-            table15.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "5"});
-#line 135
-        testRunner.And("I fill in", ((string)(null)), table15, "And ");
-#line 139
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 140
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table16.AddRow(new string[] {
-                        "Event.Guests.Value",
-                        ""});
-#line 141
-        testRunner.And("I fill in", ((string)(null)), table16, "And ");
-#line 144
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 145
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 146
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 147
-    testRunner.When("I go to \"Admin/Contents/List\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 148
-    testRunner.Then("I should see \"Guests:\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 149
-        testRunner.And("I should see \"5\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 152
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table17.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "false"});
-            table17.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "a"});
-#line 153
-        testRunner.And("I fill in", ((string)(null)), table17, "And ");
-#line 157
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 158
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table18.AddRow(new string[] {
-                        "Event.Guests.Value",
-                        ""});
-#line 159
-        testRunner.And("I fill in", ((string)(null)), table18, "And ");
-#line 162
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 163
-    testRunner.Then("I should see \"Guests or its default value is an invalid number\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 166
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table19.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "false"});
-            table19.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Minimum",
-                        "-10"});
-            table19.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Maximum",
-                        "100"});
-            table19.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "-20"});
-#line 167
-        testRunner.And("I fill in", ((string)(null)), table19, "And ");
-#line 173
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 174
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table20.AddRow(new string[] {
-                        "Event.Guests.Value",
-                        ""});
-#line 175
-        testRunner.And("I fill in", ((string)(null)), table20, "And ");
-#line 178
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 179
-    testRunner.Then("I should see \"The value must be greater than -10\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 182
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table21.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "true"});
-            table21.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        ""});
-#line 183
-        testRunner.And("I fill in", ((string)(null)), table21, "And ");
-#line 187
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 188
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 189
-    testRunner.Then("I should see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 192
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table22.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.Required",
-                        "true"});
-            table22.AddRow(new string[] {
-                        "Fields[0].NumericFieldSettings.DefaultValue",
-                        "6"});
-#line 193
-        testRunner.And("I fill in", ((string)(null)), table22, "And ");
-#line 197
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 198
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 199
     testRunner.Then("I should not see \"required=\\\"required\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

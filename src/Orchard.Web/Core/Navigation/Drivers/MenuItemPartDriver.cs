@@ -15,7 +15,8 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
+            var menu = ((dynamic)part.ContentItem).MenuPart.Menu;
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)) // tests if the current user has permissions to manage that specific menu
                 return null;
 
             return ContentShape("Parts_MenuItem_Edit",
@@ -24,7 +25,8 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Editor(MenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
+            var menu = ((dynamic)part.ContentItem).MenuPart.Menu;
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)) // tests if the current user has permissions to manage that specific menu
                 return null;
 
             if (updater != null) {

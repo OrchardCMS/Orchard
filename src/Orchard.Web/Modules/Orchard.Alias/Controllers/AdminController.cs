@@ -172,8 +172,8 @@ namespace Orchard.Alias.Controllers {
             }
             catch (Exception ex) {
                 Services.TransactionManager.Cancel();
-                Services.Notifier.Error(T("An error occured while creating the alias {0}: {1}. Please check the values are correct.", aliasPath, ex.Message));
-                Logger.Error(ex, T("An error occured while creating the alias {0}", aliasPath).Text);
+                Services.Notifier.Error(T("An error occurred while creating the alias {0}: {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occurred while creating the alias {0}", aliasPath).Text);
 
                 ViewBag.Path = aliasPath;
                 ViewBag.Route = routePath;
@@ -236,8 +236,8 @@ namespace Orchard.Alias.Controllers {
             }
             catch (Exception ex) {
                 Services.TransactionManager.Cancel();
-                Services.Notifier.Error(T("An error occured while editing the alias '{0}': {1}. Please check the values are correct.", aliasPath, ex.Message));
-                Logger.Error(ex, T("An error occured while creating the alias '{0}'", aliasPath).Text);
+                Services.Notifier.Error(T("An error occurred while editing the alias '{0}': {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occurred while creating the alias '{0}'", aliasPath).Text);
 
                 ViewBag.Path = aliasPath;
                 ViewBag.Route = routePath;

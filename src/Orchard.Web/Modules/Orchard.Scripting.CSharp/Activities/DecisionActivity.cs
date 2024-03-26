@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Scripting.CSharp.Services;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -41,7 +42,7 @@ namespace Orchard.Scripting.CSharp.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return GetOutcomes(activityContext).Select(outcome => T(outcome));
+            return GetOutcomes(activityContext).Select(outcome => T.Encode(outcome));
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -62,7 +63,7 @@ namespace Orchard.Scripting.CSharp.Activities {
 
             _csharpService.Run(script);
 
-            yield return T(Convert.ToString(outcome));
+            yield return T.Encode(Convert.ToString(outcome));
         }
 
         private IEnumerable<string> GetOutcomes(ActivityContext context) {

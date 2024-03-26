@@ -15,13 +15,19 @@ namespace Orchard.Users.Handlers {
         public void Creating(UserContext context) {
             _workflowManager.TriggerEvent("UserCreating",
                                          context.User,
-                                         () => new Dictionary<string, object> {{"User", context}});
+                                         () => new Dictionary<string, object> {
+                                             {"User", context.User},
+                                             {"UserParameters", context.UserParameters}
+                                         });
         }
 
         public void Created(UserContext context) {
             _workflowManager.TriggerEvent("UserCreated",
                                          context.User,
-                                         () => new Dictionary<string, object> {{"User", context}});
+                                         () => new Dictionary<string, object> {
+                                             {"User", context.User},
+                                             {"UserParameters", context.UserParameters}
+                                         });
         }
 
         public void LoggingIn(string userNameOrEmail, string password) {

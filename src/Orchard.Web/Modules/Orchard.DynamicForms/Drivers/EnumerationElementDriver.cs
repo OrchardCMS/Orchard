@@ -41,7 +41,13 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "InputType",
                         Name: "InputType",
                         Title: "Input Type",
-                        Description: T("The control to render when presenting the list of options.")));
+                        Description: T("The control to render when presenting the list of options.")),
+                    _DefaultValue: shape.Textbox(
+                        Id: "DefaultValue",
+                        Name: "DefaultValue",
+                        Title: "Default Value",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("The default value of this enumeration field.")));
 
                 form._InputType.Items.Add(new SelectListItem { Text = T("Select List").Text, Value = "SelectList" });
                 form._InputType.Items.Add(new SelectListItem { Text = T("Multi Select List").Text, Value = "MultiSelectList" });
@@ -82,6 +88,13 @@ namespace Orchard.DynamicForms.Drivers {
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
             var tokenData = context.GetTokenData();
+
+            // Allow the initially selected value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            if (element.PostedValue == null) {
+                var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+                element.RuntimeValue = defaultValue;
+            }
 
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });

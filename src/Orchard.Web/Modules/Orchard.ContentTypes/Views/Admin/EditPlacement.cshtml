@@ -1,8 +1,9 @@
 @model Orchard.ContentTypes.ViewModels.EditPlacementViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQueryUI_Sortable");
-    Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+    Layout.Title = T("Edit Placement - {0}", Html.Raw(Model.ContentTypeDefinition.DisplayName)).Text;
 
     var hiddenShapes = Model.AllPlacements.Where(x => String.IsNullOrEmpty(x.PlacementSettings.Zone) && (String.IsNullOrWhiteSpace(x.PlacementSettings.Position) || x.PlacementSettings.Position == "-"));
 }
@@ -11,7 +12,6 @@
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-
 
     <ul id="placement">
         @for (int i = 0; i < Model.AllPlacements.Count; i++ ) {
@@ -24,13 +24,13 @@
             
             <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
                 <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
-				<div class="shape-editor">
-					@try {
-						@Display(Model.AllPlacements[i].Shape)
-					}
-					catch {
-					}
-				</div>
+                <div class="shape-editor">
+                    @try {
+                        @Display(Model.AllPlacements[i].Shape)
+                    }
+                    catch {
+                    }
+                </div>
                 
                 @*  @shape.Position @(Model.PlacementSettings.Any(x => x.Equals(shape)))*@
                 @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
@@ -45,63 +45,62 @@
         <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
         <button class="primaryAction" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl" data-message="@T("Are you sure you want to restore these placements?")">@T("Restore")</button>
     </fieldset>
-
 }
 
 @using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
+    <script type="text/javascript">
+    //<![CDATA[
+        (function ($) {
 
-        var assignPositions = function () {
-            var position = 0;
-            $('.type').each(function () {
-                var input = $(this);
-                reAssignIdName(input, position);  // type
+            var assignPositions = function () {
+                var position = 0;
+                $('.type').each(function () {
+                    var input = $(this);
+                    reAssignIdName(input, position);  // type
 
-                input = input.next();
-                reAssignIdName(input, position);  // differentiator
+                    input = input.next();
+                    reAssignIdName(input, position);  // differentiator
 
-                input = input.next();
-                reAssignIdName(input, position);  // zone
+                    input = input.next();
+                    reAssignIdName(input, position);  // zone
 
-                input = input.next();
-                reAssignIdName(input, position);  // position
+                    input = input.next();
+                    reAssignIdName(input, position);  // position
 
-                input.val(++position);
-            });
-        };
+                    input.val(++position);
+                });
+            };
 
-        var reAssignIdName = function (input, pos) {
-            var name = input.attr('name');
-            input.attr('name', name.replace(new RegExp("\\[.*\\]", 'gi'), '[' + pos + ']'));
+            var reAssignIdName = function (input, pos) {
+                var name = input.attr('name');
+                input.attr('name', name.replace(new RegExp("\\[.*\\]", 'gi'), '[' + pos + ']'));
 
-            var id = input.attr('id');
-            input.attr('id', id.replace(new RegExp('_.*__', 'i'), '_' + pos + '__'));
-        };
+                var id = input.attr('id');
+                input.attr('id', id.replace(new RegExp('_.*__', 'i'), '_' + pos + '__'));
+            };
 
-        assignPositions();
+            assignPositions();
         
-        var startPos;
+            var startPos;
 
-        $('#placement').sortable({
-            placeholder: "placement-placeholder",
-            start: function (event, ui) {
-                var self = $(ui.item);
-                startPos = self.prevAll().size();
-            },
-            stop: function (event, ui) {
-                assignPositions();
-                $('#save-message').show();
+            $('#placement').sortable({
+                placeholder: "placement-placeholder",
+                start: function (event, ui) {
+                    var self = $(ui.item);
+                    startPos = self.prevAll().size();
+                },
+                stop: function (event, ui) {
+                    assignPositions();
+                    $('#save-message').show();
 
-            }
-        });
+                }
+            });
 
-        $('.shape-editor *').attr('disabled', 'disabled');
+            $('.shape-editor *').attr('disabled', 'disabled');
 
-        $("#placement").disableSelection();
+            $("#placement").disableSelection();
 
-    })(jQuery);
-//]]>
-</script>
+        })(jQuery);
+    //]]>
+    </script>
 }

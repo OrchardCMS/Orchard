@@ -7,9 +7,9 @@ using Orchard.Localization;
 
 namespace Orchard.Layouts.Helpers {
     public static class SnippetHtmlExtensions {
-        
+
         public static SnippetFieldDescriptorBuilder SnippetField(this HtmlHelper htmlHelper, string name, string type = null) {
-            var shape = (dynamic) htmlHelper.ViewData.Model;
+            var shape = (dynamic)htmlHelper.ViewData.Model;
 
             return new SnippetFieldDescriptorBuilder(shape)
                 .Named(name)
@@ -47,17 +47,11 @@ namespace Orchard.Layouts.Helpers {
             }
 
             public override string ToString() {
-                var registratorCallback = (Action<SnippetFieldDescriptor>)_shape.DescriptorRegistrationCallback;
-
-                if (registratorCallback != null)
-                    registratorCallback(Descriptor);
+                ((Action<SnippetFieldDescriptor>)_shape.DescriptorRegistrationCallback)?.Invoke(Descriptor);
 
                 var element = (Snippet)_shape.Element;
 
-                if(element != null)
-                    return element.Data.Get(Descriptor.Name);
-
-                return null;
+                return element?.Data.Get(Descriptor.Name);
             }
 
             public string ToHtmlString() {

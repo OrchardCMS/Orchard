@@ -1,3 +1,7 @@
 ﻿<Placement>
-  <Place Parts_Shape_Edit="Content:0" />
+    <Place Parts_Shape_Edit="Content:0" />
+
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Shape_SummaryAdmin="Content:5" />
+    </Match>
 </Placement>

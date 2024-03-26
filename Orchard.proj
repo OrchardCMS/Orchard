@@ -14,9 +14,10 @@
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
-    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
-    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
-    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
+    <OrchardWebFolder>$(SrcFolder)\Orchard.Web</OrchardWebFolder>
+    <ModulesSrcFolder>$(OrchardWebFolder)\Modules</ModulesSrcFolder>
+    <OrchardCoreSrcFolder>$(OrchardWebFolder)\Core</OrchardCoreSrcFolder>
+    <ThemesSrcFolder>$(OrchardWebFolder)\Themes</ThemesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -129,11 +130,25 @@
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
-      Targets="Build"/>
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
+  </Target>
+  
+  <Target Name="BuildViews">
+    <!-- To make sure that Roslyn tools are available, even if the Compile task was not called before this. -->
+    <MSBuild
+      Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
+      Targets="CopyRoslynFilesToOutputFolder"
+      Properties="Configuration=$(Configuration)" />
+    <!-- The actual compilation with views also compiled. -->
+    <MSBuild
+      Projects="$(Solution)"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">
@@ -166,12 +181,13 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name="Spec" DependsOnTargets="Package-Stage">
-
-    <CreateItem Include="$(CompileFolder)\*.Specs.dll">
+  <Target Name="Spec" DependsOnTargets="Compile">
+    <!-- Running SpecFlow tests -->
+    <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
-    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(NUnitPackageToolsFolder)" />
+    
+    <NUnit Assemblies="@(SpecAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Specs.xml" />
   </Target>
 
   <!-- Packaging (Stage) -->
@@ -196,6 +212,7 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+      <Stage-Roslyn Include="$(SrcFolder)\Orchard.Web\bin\roslyn\*" />
      
       <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
       <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
@@ -237,7 +254,7 @@
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
          only want to include the files that are _not_ already present in 
-         the "Orchard.Web\Bin" folder. -->
+         the "Orchard.Web\Bin" folder (except for "Orchard.Web\bin\roslyn"). -->
     <FilterModuleBinaries
       ModulesBinaries="@(Stage-Modules-Binaries)"
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
@@ -267,6 +284,7 @@
     <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Roslyn)" DestinationFolder="$(StageFolder)\bin\roslyn"/>
 
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
@@ -385,11 +403,6 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
-
-    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
-      XPath="/configuration/system.web/trust/@level"
-      Value="Full" />
-
   </Target>
 
   <Target Name="Profiling-Setup">
@@ -397,7 +410,7 @@
       <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
     </ReadLinesFromFile>
 
-    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
+    <Exec Command="&quot;$(ProfilingFolder)\bin\Orchard.exe&quot; %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
   <!-- Gallery Packaging -->

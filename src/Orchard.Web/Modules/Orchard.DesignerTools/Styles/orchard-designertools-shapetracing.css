@@ -6,23 +6,28 @@
 /* Global
 ***************************************************************/
 #shape-tracing-container * {
-     -webkit-border-radius: 2px;
-     -moz-border-radius: 2px;
-      border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
 }
 
 /* Links
 ***************************************************************/
-#shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
-    color:rgba(0, 94, 153, 0.8);
-    text-decoration:none;
-    background-color:transparent;
+#shape-tracing-container a,
+#shape-tracing-container a:link,
+#shape-tracing-container a:visited {
+	color: rgba(0, 94, 153, 0.8);
+	text-decoration: none;
+	background-color: transparent;
 }
-#shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
-    color:rgba(0, 94, 153, 1.0);
-    text-decoration:none;
-    background-color:transparent;
-}
+
+	#shape-tracing-container a:hover,
+	#shape-tracing-container a:active,
+	#shape-tracing-container a:focus {
+		color: rgba(0, 94, 153, 1.0);
+		text-decoration: none;
+		background-color: transparent;
+	}
 
 /* Forms
 ***************************************************************/
@@ -30,314 +35,483 @@
 #shape-tracing-container input[type="button"],
 #shape-tracing-container button,
 #shape-tracing-container .button {
-    color:rgba(0, 94, 153, 0.8);
-    padding:0;
-    margin:0;
-    border:1px solid rgba(154, 155, 157, 1.0);
-    background:rgba(236, 241, 242, 1.0);
-    
-     /*CSS3 properties*/
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
-     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
-    }
+	color: rgba(0, 94, 153, 0.8);
+	padding: 0;
+	margin: 0;
+	border: 1px solid rgba(154, 155, 157, 1.0);
+	background: rgba(236, 241, 242, 1.0);
+	/*CSS3 properties*/
+	background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));
+	background: linear-gradient(to bottom, rgba(251, 252, 252, 1.0) 0%, rgba(236, 241, 242, 1.0) 100%);
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2', endColorstr='#ffeffcfc');
+}
 
-#shape-tracing-container input[type="submit"]:hover,
-#shape-tracing-container input[type="button"]:hover,
-#shape-tracing-container button:hover,
-#shape-tracing-container .button:hover {
-    background-color:rgba(255, 255, 255, 0.5);
-    color:#005e99;
-    color:rgba(0, 94, 153, 1.0);
-    border:1px solid rgba(0, 94, 153, 1.0);
-    text-decoration:none;
-    cursor:pointer;
-    }
+	#shape-tracing-container input[type="submit"]:hover,
+	#shape-tracing-container input[type="button"]:hover,
+	#shape-tracing-container button:hover,
+	#shape-tracing-container .button:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+		color: #005e99;
+		color: rgba(0, 94, 153, 1.0);
+		border: 1px solid rgba(0, 94, 153, 1.0);
+		text-decoration: none;
+		cursor: pointer;
+	}
 
 
-button.create-template, button.create-template:hover, background-image:hover {
-    background-color:transparent;
-    background-image:none;
-    display:inline;
+button.create-template,
+button.create-template:hover {
+	background-color: transparent;
+	background-image: none;
+	display: inline;
+}
+
+#shape-tracing-container button.primaryAction {
+	background: #6a7b42;
+	border: 1px solid #487328;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font: 12px Arial,Helvetica,sans-serif;
+	padding: 5px 14px 5px 14px;
+	text-align: center;
+	text-decoration: none;
+	/*----CSS3 properties----*/
+	text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+	-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+	-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+	box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+	background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
+	background: linear-gradient(to bottom, rgba(155, 179, 108, 1.0) 0%, rgba(133, 154, 93, 1.0) 100%);
+	/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c', endColorstr='#ff809f43');
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+
+#shape-tracing-container button.link /* For link buttons */ {
+	padding: 5px 14px 5px 14px;
+}
+
+#shape-tracing-container button.primaryAction,
+x:-moz-any-link {
+	padding: 3px 14px 3px 14px;
+}
+
+	#shape-tracing-container button.primaryAction:hover {
+		border-color: #3a822e;
+		color: #eefcec;
+		text-decoration: none;
+		background: #809f43;
+		/*CSS3 properties*/
+		background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+		background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));
+		background: linear-gradient(to bottom, rgba(110, 127, 69, 1.0) 0%, rgba(106, 123, 66, 1.0) 100%);
+		filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45', endColorstr='#ff6a7b42');
+	}
+
+	#shape-tracing-container button.primaryAction:active {
+		text-decoration: none;
+		background: #6a7b42;
+		border: 1px solid #487328;
+		color: #fff;
+		/*CSS3 properties*/
+		text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+		background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+		background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
+		background: linear-gradient(to bottom, rgba(155, 179, 108, 1.0) 0%, rgba(128, 159, 67, 1.0) 100%);
+		filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c', endColorstr='#ff809f43');
+	}
+
+/* and allow all of that button style to be undone and beyond - to look like a link */
+#shape-tracing-container button.link {
+	background: none;
+	border: 0;
+	padding: inherit;
+	text-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	filter: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 
 /* Layout
 ***************************************************************/
-#shape-tracing-container ul, #shape-tracing-container li {
-    margin:0;
-    padding:0;
-    color:#000;
-    font-size:100%;
-    list-style-type:none;
+#shape-tracing-window-content-deactivated {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+#shape-tracing-window-content-deactivated .deactivated-content {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#shape-tracing-container ul,
+#shape-tracing-container li {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 100%;
+	list-style-type: none;
 }
 
 #shape-tracing-container {
-    clear:both;
-    display:block;
-    font-size:10pt;
-    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;;
-    left: 0px;
-    bottom: 0px;
-    position:fixed;
-    z-index:999;
-    width:100%;
-    display:none;
-    max-height:66%;
-    height:24px; /* handle (21) + toolbar (3) */
-    min-height:24px;
-    padding:0;
-    margin:0;
+	clear: both;
+	display: block;
+	font-size: 10pt;
+	font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+	left: 0px;
+	bottom: 0px;
+	position: fixed;
+	z-index: 999;
+	width: 100%;
+	display: none;
+	max-height: 66%;
+	height: 31px; /* handle (5) + toolbar (26) */
+	min-height: 24px;
+	padding: 0;
+	margin: 0;
 }
 
 #shape-tracing-meta-content {
-    overflow:auto;
+	overflow: auto;
 }
 
-#shape-tracing-container .shape, #shape-tracing-container .model {
-    padding:8px 0 30px 0;
-    padding-left:30px;
+#shape-tracing-container .shape,
+#shape-tracing-container .model {
+	padding: 8px 0 30px 30px;
 }
 
-#shape-tracing-toolbar  {
-    color:#333;
-    background:rgba(236, 241, 242, 1.0);
-    border:1px solid rgba(182, 188, 189, 1.0);
-    height:21px;
-    padding-top:0;
-    padding-left:5px;
-    padding-right:5px;
-    margin:0;
-     
-     /*CSS3 properties*/
-     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
-     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+#shape-tracing-toolbar {
+	color: #333;
+	background: rgba(236, 241, 242, 1.0);
+	border: 1px solid rgba(182, 188, 189, 1.0);
+	height: 26px;
+	padding-top: 0;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin: 0;
+	cursor: pointer;
+	/*CSS3 properties*/
+	background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));
+	background: linear-gradient(to bottom, rgba(251, 252, 252, 1.0) 0%, rgba(236, 241, 242, 1.0) 100%);
+	/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2', endColorstr='#ffeffcfc');
 }
 
-#shape-tracing-toolbar-switch  {
-    display:block;
-    float:right;
-    width:14px;
-    height:100%;
-    background: url(images/expand.png) no-repeat;
-    margin-top:3px;
+#shape-tracing-toolbar-switch {
+	display: block;
+	float: right;
+	width: 18px;
+	height: 18px;
+	margin-top: 3px;
+	cursor: pointer;
+	transition: all linear .4s;
+	border: 1px solid #a6abb2;
+	background: rgb(230,230,230);
+	background: -moz-linear-gradient(top,  rgba(230,230,230,1) 0%, rgba(182,184,186,1) 100%);
+	background: -webkit-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(182,184,186,1) 100%);
+	background: linear-gradient(to bottom,  rgba(230,230,230,1) 0%,rgba(182,184,186,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#b6b8ba',GradientType=0 );
+	color: #37393f;
 }
 
-#shape-tracing-toolbar-switch.expanded {
-    background: url(images/collapse.png) no-repeat;
+#shape-tracing-toolbar-switch:hover {
+	background: rgb(221,221,221);
+	background: -moz-linear-gradient(top,  rgba(221,221,221,1) 0%, rgba(162,164,165,1) 100%);
+	background: -webkit-linear-gradient(top,  rgba(221,221,221,1) 0%,rgba(162,164,165,1) 100%);
+	background: linear-gradient(to bottom,  rgba(221,221,221,1) 0%,rgba(162,164,165,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddddd', endColorstr='#a2a4a5',GradientType=0 );
 }
+
+#shape-tracing-toolbar-switch::before {
+	content: '';
+	width: 60%;
+	height: 40%;
+	margin-top: 4px;
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid #37393f;
+	border-top-width: 3px;
+	display: block;
+}
+
+	#shape-tracing-toolbar-switch.expanded::before {
+		margin-top: 8px;
+		border-top-width: 1px;
+		height: 1px;
+		background: #37393f;
+	}
+
+#shape-tracing-toolbar-status {
+	height: 18px;
+	float: right;
+	font-size: 12px;
+	line-height: 18px;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-top: 3px;
+	margin-right: 5px;
+	cursor: default;
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none;   /* Chrome/Safari/Opera */
+	-khtml-user-select: none;    /* Konqueror */
+	-moz-user-select: none;      /* Firefox */
+	-ms-user-select: none;       /* Internet Explorer/Edge */
+	user-select: none;           /* Non-prefixed version, currently
+									not supported by any browser */
+}
+
+#shape-tracing-toolbar-status.active {
+	border: 1px solid #487328;
+	color: #fff;
+	background: #6a7b42;
+	background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));
+	background: linear-gradient(to bottom, rgba(155, 179, 108, 1.0) 0%, rgba(133, 154, 93, 1.0) 100%);
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c', endColorstr='#ff809f43');
+}
+
+#shape-tracing-toolbar-status.inactive {
+	border: 1px solid #a48986;
+	background: rgb(235,220,219);
+	background: -moz-linear-gradient(top, rgba(235,220,219,1) 0%, rgba(199,166,163,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(235,220,219,1) 0%,rgba(199,166,163,1) 100%);
+	background: linear-gradient(to bottom, rgba(235,220,219,1) 0%,rgba(199,166,163,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebdcdb', endColorstr='#c7a6a3',GradientType=0 );
+}
+
 
 /* 
     this element is behind the stw to ensure the document is bigger and a scrollbar is added on the document
     so that the stw doesn't hide some content
 */
-#shape-tracing-container-ghost  {
-    width:100%;
-    display:block;
+#shape-tracing-container-ghost {
+	width: 100%;
+	display: block;
 }
 
-#shape-tracing-resize-handle  {
-    width:100%;
-    display:block;
-    height:5px;
-    background-color:transparent;
-    cursor:n-resize;
+#shape-tracing-resize-handle {
+	width: 100%;
+	display: block;
+	height: 5px;
+	background-color: transparent;
+	cursor: n-resize;
 }
 
 .shape-tracing-overlay {
-    background-color:#EBEFF9;
-    cursor: pointer;
+	background-color: #EBEFF9;
+	cursor: pointer;
 }
 
 .shape-tracing-tree-overlay {
-    background-color:#eee;
-    cursor: pointer;
+	background-color: #eee;
+	cursor: pointer;
 }
 
 #shape-tracing-window {
-    background: #fff;
+	background: #fff;
 }
 
 #shape-tracing-window-tree {
-    display:block;
-    float:left;
-    overflow:auto;
-    width:33%;
-    border-right:2px solid rgba(182, 188, 189, 0.8);
-    background:#fff;
+	display: block;
+	float: left;
+	overflow: auto;
+	width: 33%;
+	border-right: 2px solid rgba(182, 188, 189, 0.8);
+	background: #fff;
 }
 
-#shape-tracing-window-tree li  {
-    clear:both;
-    line-height:20px;
-}
+	#shape-tracing-window-tree li {
+		clear: both;
+		line-height: 20px;
+	}
 
 .shape-tracing-selected {
-    background-color: #EBEFF9;
+	background-color: #EBEFF9;
 }
 
-#shape-tracing-window .shape-tracing-selected  {
-    background:#2c66c3;
-    color:#fff;
-    
-     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff3875d7',  endColorstr='#ff2c66c3')	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(56, 117, 215, 1.0)), to(rgba(44, 102, 195, 1.0)));    
-     background: -moz-linear-gradient(top, rgba(56, 117, 215, 1.0), rgba(44, 102, 195, 1.0));
+#shape-tracing-window .shape-tracing-selected {
+	background: #2c66c3;
+	color: #fff;
+	background: -moz-linear-gradient(top, rgba(56, 117, 215, 1.0), rgba(44, 102, 195, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(56, 117, 215, 1.0)), to(rgba(44, 102, 195, 1.0)));
+	background: linear-gradient(to bottom, rgba(56, 117, 215, 1.0) 0%, rgba(44, 102, 195, 1.0) 100%);
+	/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff3875d7', endColorstr='#ff2c66c3') background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(56, 117, 215, 1.0)), to(rgba(44, 102, 195, 1.0)));
 }
 
 #shape-tracing-window-tree ul {
-    margin:0 0 0 18px;
-    padding:0 0 0 4px;
-    list-style-type:none;
+	margin: 0 0 0 18px;
+	padding: 0 0 0 4px;
+	list-style-type: none;
 }
 
-#shape-tracing-window-tree li > div {}
+#shape-tracing-window-tree li > div {
+}
 
 #shape-tracing-window-content {
-    padding:0 0 0 6px;
+	padding: 0 0 0 6px;
 }
 
 #shape-tracing-window .expando-glyph {
-    background:transparent no-repeat 0 -19px;
-    background-image:url(images/menu-glyph.png);
-    padding-left:15px;
+	background: transparent no-repeat 0 -19px;
+	background-image: url(images/menu-glyph.png);
+	padding-left: 15px;
 }
 
-#shape-tracing-window .expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
+	#shape-tracing-window .expando-glyph:hover {
+		background-image: url(images/menu-glyph.png);
+	}
+
+#shape-tracing-window .expando-glyph-container {
+	float: left;
+	display: block;
+	width: 15px;
+	margin-left: -15px;
+	cursor: default;
 }
 
-#shape-tracing-window .expando-glyph-container  {
-    float:left;
-    display:block;
-    width:15px;
-    margin-left:-15px;
-    cursor:default;
-}
+	#shape-tracing-window .expando-glyph-container.closed .expando-glyph {
+		background-repeat: no-repeat;
+		background-image: url(images/menu-glyph.png);
+		background-position: 0 3px;
+	}
 
-#shape-tracing-window .expando-glyph-container.closed .expando-glyph  {
-    background-repeat:no-repeat;
-    background-image:url(images/menu-glyph.png);
-    background-position:0 3px;
-}
+		#shape-tracing-window .expando-glyph-container.closed .expando-glyph:hover {
+			background-image: url(images/menu-glyph.png);
+		}
 
-#shape-tracing-window .expando-glyph-container.closed .expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
-}
+	#shape-tracing-window .expando-glyph-container.closing .expando-glyph {
+		background-repeat: no-repeat;
+		-webkit-transition: all .2s ease-in-out;
+		-moz-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
+		-webkit-transform: rotate(-90deg) translate(3px, -3px);
+		-moz-transform: rotate(-90deg) translate(3px, -3px);
+		transform: rotate(-90deg) translate(3px, -3px);
+	}
 
-#shape-tracing-window .expando-glyph-container.closing .expando-glyph 
-{
-    background-repeat:no-repeat;
-    -webkit-transition:all .2s ease-in-out;
-    -moz-transition:all .2s ease-in-out;
-    transition:all .2s ease-in-out;
-    -webkit-transform:rotate(-90deg) translate(3px, -3px);
-    -moz-transform:rotate(-90deg) translate(3px, -3px);
-    transform:rotate(-90deg) translate(3px, -3px);
-}
+	#shape-tracing-window .expando-glyph-container.opening .expando-glyph {
+		background-repeat: no-repeat;
+		-webkit-transition: all .2s ease-in-out;
+		-moz-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
+		-webkit-transform: rotate(90deg) translate(3px, 3px);
+		-moz-transform: rotate(90deg) translate(3px, 3px);
+		transform: rotate(90deg) translate(3px, 3px);
+	}
 
-#shape-tracing-window .expando-glyph-container.opening .expando-glyph 
-{
-    background-repeat:no-repeat;
-    -webkit-transition:all .2s ease-in-out;
-    -moz-transition:all .2s ease-in-out;
-    transition:all .2s ease-in-out;
-    -webkit-transform:rotate(90deg) translate(3px, 3px);
-    -moz-transform:rotate(90deg) translate(3px, 3px);
-    transform:rotate(90deg) translate(3px, 3px);
-}
-
-#shape-tracing-overlay  {
-    display:none;
-    background-color:#0015FF;
-    position:absolute;
-    opacity:0.5;
-    filter:alpha(opacity=50);
-    z-index:2;
+#shape-tracing-overlay {
+	display: none;
+	background-color: #0015FF;
+	position: absolute;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	z-index: 2;
 }
 
 /* Tabs
 ***************************************************************/
 
 #shape-tracing-tabs li {
-    display: inline;
-    font-size:14px;
-    padding: 4px 18px;
-    color:#005e99;
-    color:rgba(0, 94, 153, 0.8);
-    text-decoration:none;
+	display: inline;
+	font-size: 14px;
+	padding: 4px 18px;
+	color: #005e99;
+	color: rgba(0, 94, 153, 0.8);
+	text-decoration: none;
 }
 
 ul#shape-tracing-tabs {
-    padding:8px 0;
-    border-bottom:1px solid rgba(182, 188, 189, 1.0);
-    background:rgba(236, 241, 242, 1.0);
-    
-    /*CSS3 properties*/
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
-    background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+	padding: 8px 0;
+	border-bottom: 1px solid rgba(182, 188, 189, 1.0);
+	background: rgba(236, 241, 242, 1.0);
+	/*CSS3 properties*/	
+	background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));
+	background: linear-gradient(to bottom, rgba(251, 252, 252, 1.0) 0%, rgba(236, 241, 242, 1.0) 100%);
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2', endColorstr='#ffeffcfc');	
 }
 
-#shape-tracing-tabs li.middle, #shape-tracing-tabs li.first, #shape-tracing-tabs li.last {
-    border:1px solid rgba(154,155,157,1.0);
-    background-color: #F5F5F5;
+#shape-tracing-tabs li.middle,
+#shape-tracing-tabs li.first,
+#shape-tracing-tabs li.last {
+	border: 1px solid rgba(154,155,157,1.0);
+	background-color: #F5F5F5;
 }
 
-#shape-tracing-tabs li.first {margin:0 0 0 4px;}
+#shape-tracing-tabs li.first {
+	margin: 0 0 0 4px;
+}
 
 #shape-tracing-tabs li:hover {
-    background-color:rgba(255, 255, 255, 0.5);
-    color:#005e99;
-    color:rgba(0, 94, 153, 1.0);
-    border:1px solid rgba(0, 94, 153, 1.0);
-    text-decoration:none;
-    cursor:pointer;
+	background-color: rgba(255, 255, 255, 0.5);
+	color: #005e99;
+	color: rgba(0, 94, 153, 1.0);
+	border: 1px solid rgba(0, 94, 153, 1.0);
+	text-decoration: none;
+	cursor: pointer;
 }
+
 #shape-tracing-tabs li.selected {
-    background-color:rgba(255, 255, 255, 0.9);
-    color:rgba(51, 51, 51, 1.0);
-    border:1px solid rgba(102, 102, 102, 1.0);
+	background-color: rgba(255, 255, 255, 0.9);
+	color: rgba(51, 51, 51, 1.0);
+	border: 1px solid rgba(102, 102, 102, 1.0);
 }
+
 #shape-tracing-window-content .grid-display {
-    position:relative;
+	position: relative;
 }
 
-#shape-tracing-window-content .grid-display li {
-    clear:both;
+	#shape-tracing-window-content .grid-display li {
+		clear: both;
+	}
+
+	#shape-tracing-window-content .grid-display ul ul {
+		margin: 0 0 0 18px;
+		padding: 0 0 0 10px;
+		list-style-type: none;
+	}
+
+	#shape-tracing-window-content .grid-display div.name {
+		float: left;
+	}
+
+	#shape-tracing-window-content .grid-display div.type,
+	#shape-tracing-window-content .grid-display div.value {
+		position: absolute;
+		left: 40%;
+		white-space: nowrap;
+	}
+
+#shape-tracing-window-content div.model div.type,
+#shape-tracing-window-content div.model div.value {
+	left: 66%;
 }
 
-#shape-tracing-window-content .grid-display ul ul {
-    margin:0 0 0 18px;
-    padding:0 0 0 10px;
-    list-style-type:none;
-}
-
-#shape-tracing-window-content .grid-display div.name {
-    float:left;
-}
-
-#shape-tracing-window-content .grid-display div.type, #shape-tracing-window-content .grid-display div.value {
-    position:absolute;
-    left:40%;
-    white-space:nowrap;
-}
-
-#shape-tracing-window-content div.model div.type, #shape-tracing-window-content div.model div.value {
-    left:66%;
+#shape-tracing-window-content .settings {
+	padding: 8px 0 30px 30px;
 }
 
 #shape-tracing-breadcrumb {
-    background:rgba(236, 241, 242, 1.0);
-    border-bottom:1px solid rgba(182, 188, 189, 1.0);
-    padding: 3px 0 0 4px;
-    font-weight:700;
-    height: 18px; 
+	background: rgba(236, 241, 242, 1.0);
+	border-bottom: 1px solid rgba(182, 188, 189, 1.0);
+	padding: 3px 0 0 4px;
+	font-weight: 700;
+	height: 18px;
 }
 
 .CodeMirror {
-    height:auto;
-    overflow:hidden !important;
+	height: auto;
+	overflow: hidden !important;
 }

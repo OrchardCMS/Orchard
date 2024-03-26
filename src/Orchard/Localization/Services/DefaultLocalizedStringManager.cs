@@ -6,6 +6,8 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
+using Orchard.Environment.Descriptor.Models;
+using System.Linq;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -15,6 +17,7 @@ namespace Orchard.Localization.Services {
         private readonly ILocalizationStreamParser _localizationStreamParser;
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
+        private readonly ShellDescriptor _shellDescriptor;
 
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "{0}/App_Data/Localization/{1}/orchard.module.po";
@@ -28,13 +31,15 @@ namespace Orchard.Localization.Services {
             ICacheManager cacheManager,
             ILocalizationStreamParser locationStreamParser,
             ShellSettings shellSettings,
-            ISignals signals) {
+            ISignals signals,
+            ShellDescriptor shellDescriptor) {
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
             _localizationStreamParser = locationStreamParser;
             _shellSettings = shellSettings;
             _signals = signals;
+            _shellDescriptor = shellDescriptor;
 
             Logger = NullLogger.Instance;
         }
@@ -138,7 +143,9 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType)) {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id))
+                {
+
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {

@@ -41,6 +41,7 @@ namespace Orchard.Autoroute.Providers {
             context.For<IContent>("Content")
                 // {Content.Slug}
                 .Token("Slug", (content => content == null ? String.Empty : _slugService.Slugify(content)))
+                .Chain("Slug", "Text", (content => content == null ? String.Empty : _slugService.Slugify(content)))
                 .Token("Path", (content => {
                     var autoroutePart = content.As<AutoroutePart>();
                     if (autoroutePart == null) {

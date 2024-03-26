@@ -91,7 +91,7 @@ namespace Orchard.MultiTenancy.Commands {
         public void Create(string tenantName) {
             Context.Output.WriteLine(T("Creating tenant '{0}'...", tenantName));
 
-            if (String.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^\w+$")) {
+            if (String.IsNullOrWhiteSpace(tenantName) || !Regex.IsMatch(tenantName, @"^[a-zA-Z]\w*$")) {
                 Context.Output.WriteLine(T("Invalid tenant name. Must contain characters only and no spaces."));
                 return;
             }

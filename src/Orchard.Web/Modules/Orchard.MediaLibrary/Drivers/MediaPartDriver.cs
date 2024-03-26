@@ -60,6 +60,10 @@ namespace Orchard.MediaLibrary.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "FileName", fileName =>
                 part.FileName = fileName
             );
+
+            context.ImportAttribute(part.PartDefinition.Name, "LogicalType", logicalType =>
+                part.LogicalType = logicalType
+            );
         }
 
         protected override void Exporting(MediaPart part, ContentManagement.Handlers.ExportContentContext context) {
@@ -68,6 +72,7 @@ namespace Orchard.MediaLibrary.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("AlternateText", part.AlternateText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FolderPath", part.FolderPath);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FileName", part.FileName);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LogicalType", part.LogicalType);
         }
     }
 }

@@ -42,6 +42,15 @@ namespace Orchard.UI.Resources {
             set { SetAttribute("href", value); }
         }
 
+        public string Sizes {
+            get {
+                string value;
+                _builder.Attributes.TryGetValue("sizes", out value);
+                return value;
+            }
+            set { SetAttribute("sizes", value); }
+        }
+
         public string GetTag() {
             string tag = _builder.ToString(TagRenderMode.SelfClosing);
             if (!string.IsNullOrEmpty(Condition)) {

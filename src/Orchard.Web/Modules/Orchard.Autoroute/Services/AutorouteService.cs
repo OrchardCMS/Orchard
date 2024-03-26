@@ -135,44 +135,58 @@ namespace Orchard.Autoroute.Services {
 
         public RoutePattern GetDefaultPattern(string contentType, string culture) {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
-            var defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => x.Culture == culture);
-            var defaultPatternIndex = defaultPattern != null ? defaultPattern.PatternIndex : "0";
 
-            if (String.IsNullOrWhiteSpace(defaultPatternIndex))
-                defaultPatternIndex = "0";
+            if (settings.UseCulturePattern) {
+                var defaultPatternIndex = "0";
 
-            if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
-                var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
-                // Lazy updating from old setting.
-                if (String.Equals(culture, _cultureManager.GetSiteCulture(), StringComparison.OrdinalIgnoreCase)) {
-                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = culture });
-                    return settings.Patterns.Where(x => x.Culture == null).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                if (!settings.DefaultPatterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase))) {
+                    // If no default pattern exists for the language return the default culture neutral pattern if it exists, else a generic pattern
+                    if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                        defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
+                        return settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                    }
+                    else {
+                        return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+                    }
                 }
-                else {
-                    settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = "0", Culture = culture });
-                    return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
+
+                // If patterns for the specified culture exist search one of them, else search a culture neutral pattern
+                var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
+                defaultPatternIndex = GetDefaultPatternIndex(contentType, patternCultureSearch);
+
+                if (settings.Patterns.Any()) {
+                    if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex)) != null) {
+                        return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex));
+                    }
+                }
+            }
+            else {
+                // Using the culture neutral pattern
+                if (settings.Patterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                    var defaultPatternIndex = GetDefaultPatternIndex(contentType, null);
+
+                    // If no default culture neutral pattern exist use the default pattern
+                    if (!settings.DefaultPatterns.Any(x => String.IsNullOrEmpty(x.Culture))) {
+                        var patternIndex = String.IsNullOrWhiteSpace(settings.DefaultPatternIndex) ? "0" : settings.DefaultPatternIndex;
+                        settings.DefaultPatterns.Add(new DefaultPattern { PatternIndex = patternIndex, Culture = null });
+                    }
+
+                    return settings.Patterns.Where(x => String.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPatternIndex));
                 }
             }
 
-            // Return a default pattern if set.
-            var patternCultureSearch = settings.Patterns.Any(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase)) ? culture : null;
-
-            if (settings.Patterns.Any()) {
-                if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex)) != null) {
-                    return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(defaultPatternIndex));
-                };
-            }
-
-            // Return a default pattern if none is defined.
+            // Return a default pattern if none is defined
             return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
         }
 
         public void RemoveAliases(AutoroutePart part) {
-            _aliasService.Delete(part.Path, AliasSource);
+            if (part != null) {
+                _aliasService.Delete(part.Path, AliasSource);
+            }
         }
 
         public string GenerateUniqueSlug(AutoroutePart part, IEnumerable<string> existingPaths) {
-            if (existingPaths == null || !existingPaths.Contains(part.Path))
+            if (existingPaths == null || !existingPaths.Contains(part.Path, StringComparer.OrdinalIgnoreCase))
                 return part.Path;
 
             var version = existingPaths.Select(s => GetSlugVersion(part.Path, s)).OrderBy(i => i).LastOrDefault();
@@ -194,6 +208,38 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool ProcessPath(AutoroutePart part) {
+            // Try to get the path from the alias service
+            var pathRoute = _aliasService.Get(part.Path);
+            // If we got a route that matches that path
+            if (pathRoute != null) {
+                // and that route matches the route for the content item
+                var itemRoute = _contentManager.GetItemMetadata(part).DisplayRouteValues;
+                if (itemRoute != null
+                    && pathRoute.Count == itemRoute.Count
+                    && pathRoute.All(x =>
+                        // ensure value exists in the other dictionary
+                        itemRoute[x.Key] != null
+                        && x.Value.ToString()
+                        // compare them as strings
+                            .Equals(itemRoute[x.Key].ToString(), StringComparison.InvariantCultureIgnoreCase))) {
+                    // then the path is fine as it is
+                    return true;
+                }
+                // How does the above behave in different cases:
+                // 1. Part with new original path
+                //    The route is not found among the aliases, so processing for it falls
+                //    back to the original code below.
+                // 2. Path hasn't changed
+                //    If the item is Published, the code above finds it among the aliases
+                //    and this method ends.
+                // 3. Path is not original (there would be a collision)
+                //    We find from the aliases the item the path points to. Comparing routes,
+                //    we discover they do not match and fall back to the original code below.
+                // This code branch is basically a short circuit for the case where a ContentItem
+                // is being updated or published without changes to its path. Hence, it does not
+                // fix all issues we have with AutoroutePart and concurrency, but it is an
+                // attempt at mitigating them by preventing database operations in some cases.
+            }
             var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
 
             // Don't include *this* part in the list
@@ -222,9 +268,27 @@ namespace Orchard.Autoroute.Services {
             return contentDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings;
         }
 
+        private string GetDefaultPatternIndex(string contentType, string culture) {
+            var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
+
+            DefaultPattern defaultPattern = null;
+            if (String.IsNullOrEmpty(culture))
+                defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => String.IsNullOrEmpty(x.Culture));
+            else
+                defaultPattern = settings.DefaultPatterns.FirstOrDefault(x => String.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase));
+
+            var defaultPatternIndex = defaultPattern != null ? defaultPattern.PatternIndex : "0";
+
+            if (String.IsNullOrWhiteSpace(defaultPatternIndex))
+                defaultPatternIndex = "0";
+
+            return defaultPatternIndex;
+        }
+
         private static int? GetSlugVersion(string path, string potentialConflictingPath) {
             int v;
-            var slugParts = potentialConflictingPath.Split(new[] { path }, StringSplitOptions.RemoveEmptyEntries);
+            // Matching needs to ignore case, so both paths are forced to lowercase.
+            var slugParts = potentialConflictingPath.ToLower().Split(new[] { path.ToLower() }, StringSplitOptions.RemoveEmptyEntries);
 
             if (slugParts.Length == 0)
                 return 2;

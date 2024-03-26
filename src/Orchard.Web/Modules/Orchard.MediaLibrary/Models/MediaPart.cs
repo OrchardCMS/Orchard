@@ -1,8 +1,10 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Title.Models;
+using Orchard.MediaLibrary.Handlers;
 
 namespace Orchard.MediaLibrary.Models {
     public class MediaPart : ContentPart<MediaPartRecord> {
@@ -11,6 +13,8 @@ namespace Orchard.MediaLibrary.Models {
 
         /// <summary>
         /// Gets or sets the title of the media.
+        /// This adds an implicit dependency on <see cref="TitlePart"/> which will be resolved by an
+        /// <see cref="ActivatingFilter{TPart}"/> in the <see cref="MediaPartHandler"/>.
         /// </summary>
         public string Title {
             get { return ContentItem.As<TitlePart>().Title; }
@@ -63,7 +67,7 @@ namespace Orchard.MediaLibrary.Models {
         /// Gets the public Url of the media if stored locally.
         /// </summary>
         public string MediaUrl {
-            get { return _publicUrl.Value;  }
+            get { return _publicUrl.Value; }
         }
 
         /// <summary>

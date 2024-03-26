@@ -76,11 +76,11 @@ namespace Orchard.Localization.Services {
         public virtual DateTime ConvertFromSiteCalendar(DateTimeParts parts) {
             return new DateTime(
                 parts.Date.Year,
-                parts.Date.Month, 
+                parts.Date.Month,
                 parts.Date.Day,
-                parts.Time.Hour, 
+                parts.Time.Hour,
                 parts.Time.Minute,
-                parts.Time.Second, 
+                parts.Time.Second,
                 parts.Time.Millisecond,
                 CurrentCalendar,
                 parts.Time.Kind);
@@ -110,14 +110,15 @@ namespace Orchard.Localization.Services {
 
             if (options.EnableTimeZoneConversion) {
                 if (options.IgnoreDate) {
-                    // The caller has asked us to ignore the date part and assume it is today. This usually because the source
-                    // is a time-only field, in which case the date part is usually DateTime.MinValue which we should not use
-                    // for the following reasons:
-                    // * DST can be active or not dependeng on the time of the year. We want the conversion to always act as if the time represents today, but we don't want that date stored.
-                    // * Time zone conversion cannot wrap DateTime.MinValue around to the previous day, resulting in undefined result.
-                    // Therefore we convert the date to today's date before the conversion, and back to the original date after.
-                    var today = _clock.UtcNow.Date;
-                    var tempDate = new DateTime(today.Year, today.Month, today.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                    // The caller has asked us to ignore the date part. This usually because the source
+                    // is a time-only field. In such cases (with an undefined date) it does not make sense
+                    // to consider DST variations throughout the year, so we will use an arbitrary (but fixed)
+                    // non-DST date for the conversion to ensure DST is never applied during conversion. The
+                    // date part is usually DateTime.MinValue which we should not use because time zone
+                    // conversion cannot wrap DateTime.MinValue around to the previous day, resulting in
+                    // an undefined result. Instead we convert the date to a hard-coded date of 2000-01-01
+                    // before the conversion, and back to the original date after.
+                    var tempDate = new DateTime(2000, 1, 1, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                     tempDate = ConvertToSiteTimeZone(tempDate);
                     dateValue = new DateTime(dateValue.Year, dateValue.Month, dateValue.Day, tempDate.Hour, tempDate.Minute, tempDate.Second, tempDate.Millisecond, tempDate.Kind);
                 }
@@ -129,7 +130,7 @@ namespace Orchard.Localization.Services {
             }
 
             var parts = DateTimeParts.FromDateTime(dateValue, offset);
-            
+
             // INFO: No calendar conversion in this method - we expect the date component to be DateTime.MinValue and irrelevant anyway.
 
             return _dateFormatter.FormatDateTime(parts, _dateTimeFormatProvider.LongTimeFormat);
@@ -201,14 +202,16 @@ namespace Orchard.Localization.Services {
             }
 
             if (hasTime && options.EnableTimeZoneConversion) {
-                // If there is no date component (technically the date component is that of DateTime.MinValue) then
-                // we must employ some trickery, for two reasons:
-                // * DST can be active or not dependeng on the time of the year. We want the conversion to always act as if the time represents today, but we don't want that date stored.
-                // * Time zone conversion cannot wrap DateTime.MinValue around to the previous day, resulting in undefined result.
-                // Therefore we convert the date to today's date before the conversion, and back to DateTime.MinValue after.
+                // If there is no date component (technically the date component is that of DateTime.MinValue)
+                // then we must employ some trickery. With an undefined date it does not make sense
+                // to consider DST variations throughout the year, so we will use an arbitrary (but fixed)
+                // non-DST date for the conversion to ensure DST is never applied during conversion. The
+                // date part is usually DateTime.MinValue which we should not use because time zone
+                // conversion cannot wrap DateTime.MinValue around to the previous day, resulting in
+                // an undefined result. Instead we convert the date to a hard-coded date of 2000-01-01
+                // before the conversion, and back to the original date after.
                 if (!hasDate) {
-                    var now = _clock.UtcNow;
-                    dateValue = new DateTime(now.Year, now.Month, now.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                    dateValue = new DateTime(2000, 1, 1, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 }
                 dateValue = ConvertFromSiteTimeZone(dateValue);
                 if (!hasDate) {

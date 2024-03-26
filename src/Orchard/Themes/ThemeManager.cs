@@ -19,9 +19,9 @@ namespace Orchard.Themes {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
+                .OrderByDescending(x => x.Priority).ToList();
 
-            if (requestTheme.Count() < 1)
+            if (!requestTheme.Any())
                 return null;
 
             foreach (var theme in requestTheme) {

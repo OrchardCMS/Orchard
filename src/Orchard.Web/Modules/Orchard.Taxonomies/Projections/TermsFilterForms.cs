@@ -48,11 +48,22 @@ namespace Orchard.Taxonomies.Projections {
                                 Id: "operator-is-all-of", Name: "Operator",
                                 Title: T("Is all of"), Value: "1"
                                 )
-                            )
-                        );
+                            ),
+                        _ExcludeChildren: Shape.Checkbox(
+                            Id: "ExcludeChildren", Name: "ExcludeChildren",
+                            Title: T("Automatically exclude children terms in filtering"),
+                            Value: "true"
+                        ),
+                        _TranslateTerms: Shape.Checkbox(
+                            Id: "TranslateTerms", Name: "TranslateTerms",
+                            Title: T("Automatically include terms' localizations in filtering"),
+                            Value: "true"
+                        )
+                    );
 
                     foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
-                        f._Terms.Add(new SelectListItem { Value = String.Empty, Text = taxonomy.Name });
+                        var tGroup = new SelectListGroup { Name = taxonomy.Name };
+                        f._Terms.Add(tGroup);
                         foreach (var term in _taxonomyService.GetTerms(taxonomy.Id)) {
                             var gap = new string('-', term.GetLevels());
 
@@ -60,7 +71,11 @@ namespace Orchard.Taxonomies.Projections {
                                 gap += " ";
                             }
 
-                            f._Terms.Add(new SelectListItem { Value = term.Id.ToString(), Text = gap + term.Name });
+                            f._Terms.Add(new SelectListItem {
+                                Value = term.Id.ToString(),
+                                Text = gap + term.Name,
+                                Group = tGroup
+                            });
                         }
                     }
 

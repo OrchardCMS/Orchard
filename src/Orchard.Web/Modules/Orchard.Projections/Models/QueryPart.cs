@@ -6,10 +6,14 @@ namespace Orchard.Projections.Models {
     public class QueryPart : ContentPart<QueryPartRecord> {
 
         public string Name {
-            get { return this.As<TitlePart>().Title;  }
+            get { return this.As<TitlePart>().Title; }
             set { this.As<TitlePart>().Title = value; }
         }
 
+        public QueryVersionScopeOptions VersionScope {
+            get { return Retrieve(x => x.VersionScope); }
+            set { Store(x => x.VersionScope, value); }
+        }
         public IList<SortCriterionRecord> SortCriteria {
             get { return Record.SortCriteria; }
         }

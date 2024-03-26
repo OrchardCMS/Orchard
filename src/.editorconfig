@@ -1,0 +1,11 @@
+root = true
+
+[*]
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.cs]
+csharp_new_line_before_open_brace = none
+dotnet_sort_system_directives_first = true

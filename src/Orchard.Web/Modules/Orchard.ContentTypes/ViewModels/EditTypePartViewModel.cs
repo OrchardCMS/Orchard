@@ -17,7 +17,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public int Index { get; set; }
-        public string Prefix { get { return "Parts[" + Index + "]"; } }
+        public string Prefix { get { return "Parts[" + PartDefinition.Name + "]"; } }
         public EditPartViewModel PartDefinition { get; set; }
         public SettingsDictionary PartSettings { get; set; }
         public SettingsDictionary Settings { get; set; }

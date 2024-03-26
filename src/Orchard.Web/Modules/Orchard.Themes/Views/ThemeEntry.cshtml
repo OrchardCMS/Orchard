@@ -68,7 +68,7 @@
             T("Uninstall").Text,
             "UninstallTheme",
             "PackagingServices",
-            new { ThemeId = theme.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" },
+            new { ThemeId = theme.Descriptor.Id, ReturnUrl = Request.RawUrl, Area = "Orchard.Packaging" },
             new { itemprop = "RemoveUrl UnsafeUrl" })
     }
 </div>

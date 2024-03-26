@@ -29,7 +29,7 @@ namespace Orchard.Migrations.Commands {
                 _schemaCommandGenerator.UpdateDatabase();
             }
             catch ( Exception ex ) {
-                throw new OrchardException(T("An error occured while updating the database."), ex);
+                throw new OrchardException(T("An error occurred while updating the database."), ex);
             }
 
             Context.Output.WriteLine(T("Database updated"));
@@ -54,7 +54,7 @@ namespace Orchard.Migrations.Commands {
                 }
             }
             catch ( Exception ex ) {
-                throw new OrchardException(T("An error occured while creating the tables."), ex);
+                throw new OrchardException(T("An error occurred while creating the tables."), ex);
             }
 
             Context.Output.WriteLine(T("Tables created"));

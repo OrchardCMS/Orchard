@@ -1,20 +1,26 @@
 ﻿@model Orchard.Core.Common.ViewModels.TextFieldDriverViewModel
 @{
-    var isRequired = Model.Settings.Required && String.IsNullOrWhiteSpace(Model.Settings.DefaultValue);
+    var maxLength = Model.Settings.MaxLength > 0 ? Model.Settings.MaxLength.ToString() : "";
 }
+
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Text)" @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Text)" @if (Model.Settings.Required) { <text> class="required" </text> }>@Model.Field.DisplayName</label>
     @if (String.IsNullOrWhiteSpace(Model.Settings.Flavor)) {
-        @(isRequired ? Html.TextBoxFor(m => m.Text, new {@class = "text", required = "required"}) : Html.TextBoxFor(m => m.Text, new {@class = "text"}))
+        @(Model.Settings.Required
+            ? Html.TextBoxFor(m => m.Text, new {@class = "text", required = "required", maxlength = maxLength})
+            : Html.TextBoxFor(m => m.Text, new {@class = "text", maxlength = maxLength }))
         @Html.ValidationMessageFor(m => m.Text)
     }
     else {
-       @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor, Required: isRequired, ContentItem: Model.ContentItem)
+
+        var htmlAttributes = new Dictionary<string, object> {
+            {"maxlength", maxLength}
+        };
+
+        @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor, Required: Model.Settings.Required,
+            ContentItem: Model.ContentItem, Field: Model.Field, HtmlAttributes: htmlAttributes)
     }
     @if (HasText(Model.Settings.Hint)) {
-    <span class="hint">@Model.Settings.Hint</span>
-    }
-    @if (!String.IsNullOrWhiteSpace(Model.Settings.DefaultValue)) {
-        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
+        <span class="hint">@Model.Settings.Hint</span>
     }
 </fieldset>

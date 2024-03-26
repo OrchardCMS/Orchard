@@ -41,6 +41,9 @@
         @Html.HiddenFor(m => m.Editor.ShowTime)
         @Html.EditorFor(m => m.Editor)
         <button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
+        @if (!string.IsNullOrEmpty(Model.Editor.Date)) {
+            <button type="submit" name="submit.Save" value="submit.CancelPublishLaterTasks">@T("Cancel Publish Later")</button>
+        }
     </fieldset>
 
     using (Script.Foot()) {

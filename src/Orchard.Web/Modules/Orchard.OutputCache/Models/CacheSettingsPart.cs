@@ -44,6 +44,11 @@ namespace Orchard.OutputCache.Models {
             }
         }
 
+        public string VaryByRequestCookies {
+            get { return this.Retrieve(x => x.VaryByRequestCookies); }
+            set { this.Store(x => x.VaryByRequestCookies, value); }
+        }
+
         public string IgnoredUrls {
             get { return this.Retrieve(x => x.IgnoredUrls); }
             set { this.Store(x => x.IgnoredUrls, value); }

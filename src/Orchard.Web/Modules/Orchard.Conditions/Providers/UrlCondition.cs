@@ -14,33 +14,39 @@ namespace Orchard.Conditions.Providers {
         }
 
         public void Evaluate(ConditionEvaluationContext evaluationContext) {
-            if (!String.Equals(evaluationContext.FunctionName, "url", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(evaluationContext.FunctionName, "url", StringComparison.OrdinalIgnoreCase))
                 return;
 
             var context = _httpContextAccessor.Current();
-            var url = Convert.ToString(evaluationContext.Arguments[0]);
-            if (url.StartsWith("~/")) {
-                url = url.Substring(2);
-                var appPath = context.Request.ApplicationPath;
-                if (appPath == "/")
-                    appPath = "";
+            foreach (var argument in evaluationContext.Arguments) {
+                var url = Convert.ToString(argument);
+                if (url.StartsWith("~/")) {
+                    url = url.Substring(2);
+                    var appPath = context.Request.ApplicationPath;
+                    if (appPath == "/")
+                        appPath = "";
 
-                if(!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
-                    appPath = String.Concat(appPath, "/", _shellSettings.RequestUrlPrefix);
+                    if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
+                        appPath = string.Concat(appPath, "/", _shellSettings.RequestUrlPrefix);
 
-                url = String.Concat(appPath, "/", url);
+                    url = string.Concat(appPath, "/", url);
+                }
+
+                if (!url.Contains("?"))
+                    url = url.TrimEnd('/');
+
+                var requestPath = context.Request.Path;
+                if (!requestPath.Contains("?"))
+                    requestPath = requestPath.TrimEnd('/');
+
+                if ((url.EndsWith("*") && requestPath.StartsWith(url.TrimEnd('*'), StringComparison.OrdinalIgnoreCase)) ||
+                    string.Equals(requestPath, url, StringComparison.OrdinalIgnoreCase)) {
+                    evaluationContext.Result = true;
+                    return;
+                }
             }
 
-            if (!url.Contains("?"))
-                url = url.TrimEnd('/');
-
-            var requestPath = context.Request.Path;
-            if (!requestPath.Contains("?"))
-                requestPath = requestPath.TrimEnd('/');
-
-            evaluationContext.Result = url.EndsWith("*")
-                ? requestPath.StartsWith(url.TrimEnd('*'), StringComparison.OrdinalIgnoreCase)
-                : string.Equals(requestPath, url, StringComparison.OrdinalIgnoreCase);
+            evaluationContext.Result = false;
         }
     }
 }

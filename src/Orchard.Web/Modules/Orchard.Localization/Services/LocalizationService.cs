@@ -8,66 +8,68 @@ namespace Orchard.Localization.Services {
         private readonly IContentManager _contentManager;
         private readonly ICultureManager _cultureManager;
 
+
         public LocalizationService(IContentManager contentManager, ICultureManager cultureManager) {
             _contentManager = contentManager;
             _cultureManager = cultureManager;
         }
 
-        LocalizationPart ILocalizationService.GetLocalizedContentItem(IContent content, string culture) {
+
+        public LocalizationPart GetLocalizedContentItem(IContent content, string culture) {
             // Warning: Returns only the first of same culture localizations.
-            return ((ILocalizationService) this).GetLocalizedContentItem(content, culture, null);
+            return GetLocalizedContentItem(content, culture, null);
         }
 
-        LocalizationPart ILocalizationService.GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions) {
+        public LocalizationPart GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions) {
             var cultureRecord = _cultureManager.GetCultureByName(culture);
 
-            if (cultureRecord == null)
-                return null;
+            if (cultureRecord == null) return null;
 
             var localized = content.As<LocalizationPart>();
 
-            if (localized == null)
-                return null;
+            if (localized == null) return null;
+
+            var masterContentItemId = localized.HasTranslationGroup ? localized.Record.MasterContentItemId : localized.Id;
 
             // Warning: Returns only the first of same culture localizations.
             return _contentManager
                 .Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType)
                 .Where<LocalizationPartRecord>(l =>
-                (l.Id == content.ContentItem.Id || l.MasterContentItemId == content.ContentItem.Id)
-                && l.CultureId == cultureRecord.Id)
+                    (l.Id == masterContentItemId || l.MasterContentItemId == masterContentItemId) &&
+                    l.CultureId == cultureRecord.Id)
                 .Slice(1)
                 .FirstOrDefault();
         }
 
-        string ILocalizationService.GetContentCulture(IContent content) {
+        public string GetContentCulture(IContent content) {
             var localized = content.As<LocalizationPart>();
-            return localized != null && localized.Culture != null
-                ? localized.Culture.Culture
-                : _cultureManager.GetSiteCulture();
+
+            return localized?.Culture == null ?
+                _cultureManager.GetSiteCulture() :
+                localized.Culture.Culture;
         }
 
-        void ILocalizationService.SetContentCulture(IContent content, string culture) {
+        public void SetContentCulture(IContent content, string culture) {
             var localized = content.As<LocalizationPart>();
-            if (localized == null)
-                return;
+
+            if (localized == null) return;
 
             localized.Culture = _cultureManager.GetCultureByName(culture);
         }
 
-        IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content) {
+        public IEnumerable<LocalizationPart> GetLocalizations(IContent content) {
             // Warning: May contain more than one localization of the same culture.
-            return ((ILocalizationService) this).GetLocalizations(content, null);
+            return GetLocalizations(content, null);
         }
 
-        IEnumerable<LocalizationPart> ILocalizationService.GetLocalizations(IContent content, VersionOptions versionOptions) {
-            if (content.ContentItem.Id == 0)
-                return Enumerable.Empty<LocalizationPart>();
+        public IEnumerable<LocalizationPart> GetLocalizations(IContent content, VersionOptions versionOptions) {
+            if (content.ContentItem.Id == 0) return Enumerable.Empty<LocalizationPart>();
 
             var localized = content.As<LocalizationPart>();
 
-            var query = versionOptions == null
-                ? _contentManager.Query<LocalizationPart>(localized.ContentItem.ContentType)
-                : _contentManager.Query<LocalizationPart>(versionOptions, localized.ContentItem.ContentType);
+            var query = versionOptions == null ?
+                _contentManager.Query<LocalizationPart>(localized.ContentItem.ContentType) :
+                _contentManager.Query<LocalizationPart>(versionOptions, localized.ContentItem.ContentType);
 
             int contentItemId = localized.ContentItem.Id;
 
@@ -75,12 +77,11 @@ namespace Orchard.Localization.Services {
                 int masterContentItemId = localized.MasterContentItem.ContentItem.Id;
 
                 query = query.Where<LocalizationPartRecord>(l =>
-                    l.Id != contentItemId // Exclude the content
-                    && (l.Id == masterContentItemId || l.MasterContentItemId == masterContentItemId));
+                    l.Id != contentItemId && // Exclude the content
+                    (l.Id == masterContentItemId || l.MasterContentItemId == masterContentItemId));
             }
             else {
-                query = query.Where<LocalizationPartRecord>(l =>
-                    l.MasterContentItemId == contentItemId);
+                query = query.Where<LocalizationPartRecord>(l => l.MasterContentItemId == contentItemId);
             }
 
             // Warning: May contain more than one localization of the same culture.

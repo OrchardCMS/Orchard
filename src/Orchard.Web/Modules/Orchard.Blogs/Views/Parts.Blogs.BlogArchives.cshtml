@@ -37,6 +37,6 @@
         @Html.UnorderedList(archives, (t, i) => Html.Link(Html.Raw(string.Format("{0} {2} ({1})", monthNames[t.Key.ToDateTime().Month - 1], t.Value, t.Key.ToDateTime().Year)), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
     }
     else {
-    <div class="message info">@T("None found")</div>
+    <p>@T("There are no posts in the archives.")</p>
     }
 </div>

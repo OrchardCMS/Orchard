@@ -1,4 +1,5 @@
-﻿@model Orchard.Templates.ViewModels.ShapePartViewModel
+﻿@using Orchard.Templates.Models
+@model Orchard.Templates.ViewModels.ShapePartViewModel
 @{
     Style.Include("~/modules/orchard.templates/scripts/codemirror/lib/codemirror.css");
     Style.Include("template-editor.css");
@@ -14,5 +15,9 @@
 <fieldset>
     <div>
         @Html.TextAreaFor(m => m.Template, new { @class = "text large code-editor" })
+    </div>
+    <div>
+        @Html.LabelFor(m => m.RenderingMode, T("Rendering Mode"))
+        @Html.DropDownListFor(m => m.RenderingMode, Enum.GetValues(typeof(RenderingMode)).Cast<RenderingMode>().Select(renderingMode => new SelectListItem { Text = renderingMode.ToString(), Value = renderingMode.ToString() }))
     </div>
 </fieldset>

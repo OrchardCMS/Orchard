@@ -6,23 +6,38 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Layouts.Services {
     public class ContentFieldDisplay : ContentDisplayBase, IContentFieldDisplay {
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
-
+        private readonly ShellSettings _shellSettings;
         public ContentFieldDisplay(
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor, 
-            IEnumerable<IContentFieldDriver> contentFieldDrivers) 
+            IWorkContextAccessor workContextAccessor,
+            ShellSettings shellSettings,
+            IEnumerable<IContentFieldDriver> contentFieldDrivers)
             : base(shapeFactory, shapeTableLocator, requestContext, virtualPathProvider, workContextAccessor) {
-
+            _shellSettings = shellSettings;
             _contentFieldDrivers = contentFieldDrivers;
         }
+
+        public override UrlPrefix TenantUrlPrefix {
+            get {
+                if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                    return new UrlPrefix(_shellSettings.RequestUrlPrefix);
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
 
         public override string DefaultStereotype {
             get { return "ContentField"; }
@@ -63,7 +78,7 @@ namespace Orchard.Layouts.Services {
                 if (result != null)
                     result.Apply(context);
             }, Logger);
-            
+
             return context.Shape;
         }
 

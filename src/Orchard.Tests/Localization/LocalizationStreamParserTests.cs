@@ -39,5 +39,21 @@ namespace Orchard.Tests.Localization {
 
             Assert.AreEqual("Foo \"{0}\"", translations["~/themes/mytheme/views/myview.cshtml|foo \"{0}\""]);
         }
+
+        [Test]
+        public void ShouldHandleUnclosedQuote() {
+            var parser = new LocalizationStreamParser();
+
+            var text = new StringBuilder();
+            text.AppendLine("#: ~/Themes/MyTheme/Views/MyView.cshtml");
+            text.AppendLine("msgctxt \"");
+            text.AppendLine("msgid \"Foo \\\"{0}\\\"\"");
+            text.AppendLine("msgstr \"Foo \\\"{0}\\\"\"");
+
+            var translations = new Dictionary<string, string>();
+            parser.ParseLocalizationStream(text.ToString(), translations, false);
+
+            Assert.AreEqual("Foo \"{0}\"", translations["|foo \"{0}\""]);
+        }
     }
 }

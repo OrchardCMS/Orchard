@@ -99,10 +99,6 @@ namespace Orchard.Pages.Commands {
                 }
             }
 
-            if (Homepage) {
-                _homeAliasService.PublishHomeAlias(page);
-            }
-
             var layout = default(string);
             if (UseWelcomeText) {
                 var text = T(
@@ -183,18 +179,20 @@ Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
             }
             else {
                 if (!String.IsNullOrEmpty(Text)) {
-                    layout = 
-                        "{\"elements\": [" +
-                            "{" +
-                              "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
-                              "\"data\": \"Content=" + Encode(Text) + "\"" +
-                            "}" +
-                          "]}";
+                    layout = @"{
+    'elements': [{
+        'typeName': 'Orchard.Layouts.Elements.Canvas',
+        'elements': [{
+            'typeName': 'Orchard.Layouts.Elements.Html',
+            'data': 'Content=" + Encode(Text) + @"'
+        }]
+    }]
+}";
                 }
             }
 
             // (Layout) Hackish way to access the LayoutPart on the page without having to declare a dependency on Orchard.Layouts.
-            var layoutPart = ((dynamic) page).LayoutPart;
+            var layoutPart = ((dynamic)page).LayoutPart;
             var bodyPart = page.As<BodyPart>();
 
             if (bodyPart != null)
@@ -207,6 +205,10 @@ Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
 
             if (Publish) {
                 _contentManager.Publish(page);
+
+                if (Homepage) {
+                    _homeAliasService.PublishHomeAlias(page);
+                }
             }
 
             Context.Output.WriteLine(T("Page created successfully.").Text);

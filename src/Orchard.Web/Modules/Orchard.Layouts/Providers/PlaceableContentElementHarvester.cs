@@ -14,6 +14,7 @@ using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
+using Orchard.Mvc.Html;
 using ContentItem = Orchard.ContentManagement.ContentItem;
 
 namespace Orchard.Layouts.Providers {
@@ -30,7 +31,7 @@ namespace Orchard.Layouts.Providers {
             return contentTypeDefinitions.Select(contentTypeDefinition => {
                 var settings = contentTypeDefinition.Settings;
                 var description = settings.ContainsKey("Description") ? settings["Description"] : contentTypeDefinition.DisplayName;
-                return new ElementDescriptor(typeof (PlaceableContentItem), contentTypeDefinition.Name, T(contentTypeDefinition.DisplayName), T(description), category: "Content Items") {
+                return new ElementDescriptor(typeof (PlaceableContentItem), contentTypeDefinition.Name, T.Encode(contentTypeDefinition.DisplayName), T.Encode(description), category: "Content Items") {
                     Displaying = Displaying,
                     Editor = Editor,
                     UpdateEditor = UpdateEditor,

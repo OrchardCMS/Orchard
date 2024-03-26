@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Net;
+using System.Linq;
 using System.Net.Configuration;
 using System.Net.Mail;
 using System.Web.Mvc;
+using MailKit.Security;
+using MimeKit;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
-using Orchard.Logging;
 using Orchard.Email.Models;
+using Orchard.Logging;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Orchard.Email.Services {
     public class SmtpMessageChannel : Component, ISmtpChannel, IDisposable {
@@ -64,59 +67,53 @@ namespace Orchard.Email.Services {
                 Content = new MvcHtmlString(emailMessage.Body)
             }));
 
-            var mailMessage = new MailMessage {
+            var mailMessage = new MimeMessage {
                 Subject = emailMessage.Subject,
-                Body = _shapeDisplay.Display(template),
-                IsBodyHtml = true
+            };
+            var mailBodyBuilder = new BodyBuilder {
+                HtmlBody = _shapeDisplay.Display(template),
             };
 
-            if (parameters.ContainsKey("Message")) {
+            if (parameters.TryGetValue("Message", out var possiblyMailMessage) && possiblyMailMessage is MailMessage legacyMessage) {
                 // A full message object is provided by the sender.
+                if (!String.IsNullOrWhiteSpace(legacyMessage.Subject)) {
+                    mailMessage.Subject = legacyMessage.Subject;
+                }
 
-                var oldMessage = mailMessage;
-                mailMessage = (MailMessage)parameters["Message"];
-
-                if (String.IsNullOrWhiteSpace(mailMessage.Subject))
-                    mailMessage.Subject = oldMessage.Subject;
-
-                if (String.IsNullOrWhiteSpace(mailMessage.Body)) {
-                    mailMessage.Body = oldMessage.Body;
-                    mailMessage.IsBodyHtml = oldMessage.IsBodyHtml;
+                if (!String.IsNullOrWhiteSpace(legacyMessage.Body)) {
+                    mailBodyBuilder.TextBody = legacyMessage.IsBodyHtml ? null : legacyMessage.Body;
+                    mailBodyBuilder.HtmlBody = legacyMessage.IsBodyHtml ? legacyMessage.Body : null;
                 }
             }
 
-            try {
+            mailMessage.Body = mailBodyBuilder.ToMessageBody();
 
-                foreach (var recipient in ParseRecipients(emailMessage.Recipients)) {
-                    mailMessage.To.Add(new MailAddress(recipient));
-                }
+            try {
+                mailMessage.To.AddRange(ParseRecipients(emailMessage.Recipients));
 
                 if (!String.IsNullOrWhiteSpace(emailMessage.Cc)) {
-                    foreach (var recipient in ParseRecipients(emailMessage.Cc)) {
-                        mailMessage.CC.Add(new MailAddress(recipient));
-                    }
+                    mailMessage.Cc.AddRange(ParseRecipients(emailMessage.Cc));
                 }
 
                 if (!String.IsNullOrWhiteSpace(emailMessage.Bcc)) {
-                    foreach (var recipient in ParseRecipients(emailMessage.Bcc)) {
-                        mailMessage.Bcc.Add(new MailAddress(recipient));
-                    }
+                    mailMessage.Bcc.AddRange(ParseRecipients(emailMessage.Bcc));
                 }
 
+                var fromAddress = default(MailboxAddress);
                 if (!String.IsNullOrWhiteSpace(emailMessage.From)) {
-                    mailMessage.From = new MailAddress(emailMessage.From);
+                    fromAddress = MailboxAddress.Parse(emailMessage.From);
                 }
                 else {
                     // Take 'From' address from site settings or web.config.
-                    mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
-                        ? new MailAddress(_smtpSettings.Address)
-                        : new MailAddress(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
+                    fromAddress = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
+                        ? MailboxAddress.Parse(_smtpSettings.Address)
+                        : MailboxAddress.Parse(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
                 }
 
+                mailMessage.From.Add(fromAddress);
+
                 if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
-                    foreach (var recipient in ParseRecipients(emailMessage.ReplyTo)) {
-                        mailMessage.ReplyToList.Add(new MailAddress(recipient));
-                    }
+                    mailMessage.ReplyTo.AddRange(ParseRecipients(emailMessage.ReplyTo));
                 }
 
                 _smtpClientField.Value.Send(mailMessage);
@@ -127,26 +124,51 @@ namespace Orchard.Email.Services {
         }
 
         private SmtpClient CreateSmtpClient() {
+            var smtpConfiguration = new {
+                _smtpSettings.Host,
+                _smtpSettings.Port,
+                _smtpSettings.EncryptionMethod,
+                _smtpSettings.AutoSelectEncryption,
+                _smtpSettings.RequireCredentials,
+                _smtpSettings.UserName,
+                _smtpSettings.Password,
+            };
             // If no properties are set in the dashboard, use the web.config value.
             if (String.IsNullOrWhiteSpace(_smtpSettings.Host)) {
-                return new SmtpClient(); 
+                var smtpSection = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+                if (smtpSection.DeliveryMethod != SmtpDeliveryMethod.Network) {
+                    throw new NotSupportedException($"Only the {SmtpDeliveryMethod.Network} delivery method is supported, but "
+                        + $"{smtpSection.DeliveryMethod} delivery method is configured. Please check your Web.config.");
+                }
+
+                smtpConfiguration = new {
+                    smtpSection.Network.Host,
+                    smtpSection.Network.Port,
+                    EncryptionMethod = smtpSection.Network.EnableSsl ? SmtpEncryptionMethod.SslTls : SmtpEncryptionMethod.None,
+                    AutoSelectEncryption = !smtpSection.Network.EnableSsl,
+                    RequireCredentials = smtpSection.Network.DefaultCredentials || !String.IsNullOrWhiteSpace(smtpSection.Network.UserName),
+                    smtpSection.Network.UserName,
+                    smtpSection.Network.Password,
+                };
             }
 
-            var smtpClient = new SmtpClient {
-                UseDefaultCredentials = _smtpSettings.RequireCredentials && _smtpSettings.UseDefaultCredentials
-            };
-
-            if (!smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(_smtpSettings.UserName)) {
-                smtpClient.Credentials = new NetworkCredential(_smtpSettings.UserName, _smtpSettings.Password);
+            var secureSocketOptions = SecureSocketOptions.Auto;
+            if (!smtpConfiguration.AutoSelectEncryption) {
+                secureSocketOptions = smtpConfiguration.EncryptionMethod switch {
+                    SmtpEncryptionMethod.None => SecureSocketOptions.None,
+                    SmtpEncryptionMethod.SslTls => SecureSocketOptions.SslOnConnect,
+                    SmtpEncryptionMethod.StartTls => SecureSocketOptions.StartTls,
+                    _ => SecureSocketOptions.None,
+                };
             }
 
-            if (_smtpSettings.Host != null) {
-                smtpClient.Host = _smtpSettings.Host;
+            var smtpClient = new SmtpClient();
+            smtpClient.Connect(smtpConfiguration.Host, smtpConfiguration.Port, secureSocketOptions);
+
+            if (smtpConfiguration.RequireCredentials) {
+                smtpClient.Authenticate(smtpConfiguration.UserName, smtpConfiguration.Password);
             }
 
-            smtpClient.Port = _smtpSettings.Port;
-            smtpClient.EnableSsl = _smtpSettings.EnableSsl;
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
         }
 
@@ -154,8 +176,16 @@ namespace Orchard.Email.Services {
             return dictionary.ContainsKey(key) ? dictionary[key] as string : null;
         }
 
-        private IEnumerable<string> ParseRecipients(string recipients) {
-            return recipients.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries);
+        private IEnumerable<MailboxAddress> ParseRecipients(string recipients) {
+            return recipients.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .SelectMany(address => {
+                    if (MailboxAddress.TryParse(address, out var mailboxAddress)) {
+                        return new[] { mailboxAddress };
+                    }
+
+                    Logger.Error("Invalid email address: {0}", address);
+                    return Enumerable.Empty<MailboxAddress>();
+                });
         }
     }
 }

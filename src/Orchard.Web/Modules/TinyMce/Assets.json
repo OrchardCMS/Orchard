@@ -1,0 +1,8 @@
+﻿[
+    {
+        "inputs": [
+            "Assets/Less/orchard-tinymce.less"
+        ],
+        "output": "Styles/orchard-tinymce.css"
+    }
+]

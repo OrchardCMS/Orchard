@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -157,7 +157,7 @@ namespace Orchard.ContentManagement {
                 return Convert.ToString(value);
             }
             if ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null) &&
-                value == null && 
+                value == null &&
                 type != typeof(string)) {
 
                 return "null";
@@ -212,6 +212,10 @@ namespace Orchard.ContentManagement {
 
                 var decimalValue = Convert.ToDecimal(value);
                 return decimalValue.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(Guid) || type == typeof(Guid?)) {
+                return value == null ? "null" : value.ToString();
             }
 
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -275,6 +279,10 @@ namespace Orchard.ContentManagement {
             }
             if (type == typeof(decimal) || type == typeof(decimal?)) {
                 return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(Guid) || type == typeof(Guid?)) {
+                return (T)(object)Guid.Parse(value);
             }
 
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;

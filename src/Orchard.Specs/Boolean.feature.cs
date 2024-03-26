@@ -157,7 +157,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.Hint",
+                        "Fields[Active].BooleanFieldSettings.Hint",
                         "Check if the event is active"});
 #line 49
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -174,7 +174,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.DefaultValue",
+                        "Fields[Active].BooleanFieldSettings.DefaultValue",
                         "True"});
 #line 58
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -191,92 +191,27 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.Optional",
+                        "Fields[Active].BooleanFieldSettings.Optional",
                         "false"});
-            table6.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.DefaultValue",
-                        "Neutral"});
 #line 67
         testRunner.And("I fill in", ((string)(null)), table6, "And ");
+#line 70
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 71
+        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.NotSetLabel",
-                        "May be"});
-#line 71
+                        "Event.Active.Value",
+                        ""});
+#line 72
         testRunner.And("I fill in", ((string)(null)), table7, "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table8.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.SelectionMode",
-                        "Radiobutton"});
-#line 74
-        testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 77
+#line 75
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 78
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table9.AddRow(new string[] {
-                        "Event.Active.Value",
-                        ""});
-#line 79
-        testRunner.And("I fill in", ((string)(null)), table9, "And ");
-#line 82
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 83
+#line 76
     testRunner.Then("I should see \"The field Active is mandatory.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 86
-    testRunner.When("I go to \"Admin/ContentTypes/Edit/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table10.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.Optional",
-                        "false"});
-            table10.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.DefaultValue",
-                        "True"});
-#line 87
-        testRunner.And("I fill in", ((string)(null)), table10, "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table11.AddRow(new string[] {
-                        "Fields[0].BooleanFieldSettings.SelectionMode",
-                        "Dropdown list"});
-#line 91
-        testRunner.And("I fill in", ((string)(null)), table11, "And ");
-#line 94
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 95
-        testRunner.And("I go to \"Admin/Contents/Create/Event\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table12.AddRow(new string[] {
-                        "Event.Active.Value",
-                        ""});
-#line 96
-        testRunner.And("I fill in", ((string)(null)), table12, "And ");
-#line 99
-        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 100
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 101
-    testRunner.Then("I should see \"Your Event has been created.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 102
-        testRunner.And("I should see \"selected=\\\"selected\\\" value=\\\"true\\\"\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

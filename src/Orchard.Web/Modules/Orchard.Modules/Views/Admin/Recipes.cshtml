@@ -1,30 +1,35 @@
 ﻿@using Orchard.Utility.Extensions
+
 @model Orchard.Modules.ViewModels.RecipesViewModel
 
 @{
     Layout.Title = T("Recipes");
 }
+
 @using (Html.BeginFormAntiForgeryPost()) {
     if (Model.Modules.Any()) {
         <ul class="contentItems">
             @foreach (var moduleEntry in Model.Modules.OrderBy(m => m.Module.Descriptor.Name)) {
                 var module = moduleEntry.Module;
                 var descriptor = module.Descriptor;
+                if (string.IsNullOrWhiteSpace(descriptor.Version)) {
+                    descriptor.Version = "1.0";
+                }
 
                 <li>
                     <div class="summary">
                         <div class="properties">
-                            <h2>@descriptor.Name<span> - @T("Version: {0}", !string.IsNullOrEmpty(descriptor.Version) ? descriptor.Version : T("1.0").ToString())</span></h2>
-
-                            @*@if (!string.IsNullOrEmpty(descriptor.Description)) {
-                                <p>@descriptor.Description</p>
-                                }*@
+                            <h2>@descriptor.Name<span> - @T("Version: {0}", descriptor.Version)</span></h2>
 
                             @foreach (var recipe in moduleEntry.Recipes) {
+                                if (string.IsNullOrWhiteSpace(recipe.Description)) {
+                                    recipe.Description = T("No description.").Text;
+                                }
+
                                 <br />
                                 <div>
-                                    <h4>@recipe.Name.CamelFriendly() - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Modules", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
-                                    <p>@(!string.IsNullOrEmpty(recipe.Description) ? recipe.Description : T("No description").ToString())</p>
+                                    <h4>@recipe.Name - @Html.ActionLink(T("Execute").Text, "Recipes", "Admin", new { area = "Orchard.Modules", moduleId = descriptor.Id, name = recipe.Name }, new { itemprop = "UnsafeUrl" })</h4>
+                                    <p style="white-space: pre-line;">@recipe.Description</p>
                                 </div>
                             }
                         </div>
@@ -34,6 +39,6 @@
         </ul>
     }
     else {
-        <p>@T("No modules available").ToString()</p>
+        <p>@T("No modules available").Text</p>
     }
 }

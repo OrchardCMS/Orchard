@@ -117,5 +117,13 @@ namespace Orchard.Tokens.Tests {
             var result = _tokenizer.Replace("{Text.LineEncode}", new { Text = str }, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             Assert.That(result, Is.EqualTo("foo<br />bar<br />baz"));
         }
+
+        [TestCase("foo\nbar", "foo<br />bar")]
+        [TestCase("foo\rbar", "foo<br />bar")]
+        [TestCase("foo\r\nbar", "foo<br />bar")]
+        public void TestLineEncodeWithNonWindowsStyleLineBreaks(string str, string expected) {
+            var result = _tokenizer.Replace("{Text.LineEncode}", new { Text = str }, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            Assert.That(result, Is.EqualTo(expected));
+        }
     }
 }

@@ -2,7 +2,7 @@
 @using Orchard.Workflows.Helpers
 @{
     var name = (string)Model.Name;
-    var outcomes = ((string)Model.State.Actions).FormatOutcomesJson();
+    var outcomes = ((string)Model.State.Actions).FormatOutcomesJson(T);
 }
 
 <div class="event activity-@name.HtmlClassify()" title="@Model.Description" data-outcomes="@outcomes">

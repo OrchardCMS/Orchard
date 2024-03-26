@@ -175,7 +175,7 @@ namespace Orchard.Autoroute.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCulturePattern", part.Record.UseCulturePattern);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", part.PromoteToHomePage);
         }
     }
 }

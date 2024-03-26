@@ -6,10 +6,13 @@ using Orchard.Data.Conventions;
 namespace Orchard.Projections.Models {
     public class QueryPartRecord : ContentPartRecord {
         public QueryPartRecord() {
+            VersionScope = QueryVersionScopeOptions.Published;
             FilterGroups = new List<FilterGroupRecord>();
             SortCriteria = new List<SortCriterionRecord>();
             Layouts = new List<LayoutRecord>();
         }
+
+        public virtual QueryVersionScopeOptions VersionScope { get; set; }
 
         [CascadeAllDeleteOrphan, Aggregate]
         [XmlArray("FilterGroupRecords")]
@@ -22,6 +25,5 @@ namespace Orchard.Projections.Models {
         [CascadeAllDeleteOrphan, Aggregate]
         [XmlArray("Layouts")]
         public virtual IList<LayoutRecord> Layouts { get; set; }
-
     }
 }

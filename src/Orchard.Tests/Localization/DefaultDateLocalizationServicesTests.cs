@@ -3,6 +3,7 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Localization {
 
@@ -303,10 +304,11 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        [Description("DST date and time are not properly round-tripped when date is ignored.")]
+        [Description("DST is ignored when date is ignored (non-DST date).")]
         public void ConvertToLocalizedTimeStringTest03() {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-            var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
+            var clock = new StubClock(new DateTime(2012, 1, 1, 12, 0, 0, DateTimeKind.Utc));
+            var container = TestHelpers.InitializeContainer("en-US", null, timeZone, clock);
             var target = container.Resolve<IDateLocalizationServices>();
 
             var dateString = "3/10/2012";
@@ -318,7 +320,27 @@ namespace Orchard.Tests.Localization {
             var timeString2 = target.ConvertToLocalizedTimeString(dateTimeUtc, new DateLocalizationOptions() { IgnoreDate = true });
 
             Assert.AreEqual(dateString, dateString2);
-            Assert.AreNotEqual(timeString, timeString2);
+            Assert.AreEqual(timeString, timeString2);
+        }
+
+        [Test]
+        [Description("DST is ignored when date is ignored (DST date).")]
+        public void ConvertToLocalizedTimeStringTest04() {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var clock = new StubClock(new DateTime(2012, 10, 3, 12, 0, 0, DateTimeKind.Utc));
+            var container = TestHelpers.InitializeContainer("en-US", null, timeZone, clock);
+            var target = container.Resolve<IDateLocalizationServices>();
+
+            var dateString = "3/10/2012";
+            var timeString = "12:00:00 PM";
+
+            var dateTimeUtc = target.ConvertFromLocalizedString(dateString, timeString);
+
+            var dateString2 = target.ConvertToLocalizedDateString(dateTimeUtc);
+            var timeString2 = target.ConvertToLocalizedTimeString(dateTimeUtc, new DateLocalizationOptions() { IgnoreDate = true });
+
+            Assert.AreEqual(dateString, dateString2);
+            Assert.AreEqual(timeString, timeString2);
         }
 
         /*

@@ -1,6 +1,8 @@
 @model Orchard.ContentTypes.ViewModels.CreatePartViewModel
 
-@{ Layout.Title = T("New Content Part").ToString(); }
+@{
+    Layout.Title = T("New Content Part").Text;
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
@@ -11,4 +13,5 @@
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Create")</button>
-    </fieldset>}
+    </fieldset>
+}

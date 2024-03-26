@@ -6,6 +6,7 @@ using Orchard.Localization.Providers;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
@@ -31,10 +32,10 @@ namespace Orchard.Localization.Selectors {
 
             if (httpContext == null) return;
 
-            var cookieName = ContextHelpers.IsRequestAdmin(httpContext) ? AdminCookieName : FrontEndCookieName;
+            var cookieName = AdminFilter.IsApplied(httpContext) ? AdminCookieName : FrontEndCookieName;
 
             var cookie = new HttpCookie(cookieName, culture) {
-                Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear), 
+                Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear),
             };
 
             cookie.Domain = !httpContext.Request.IsLocal ? httpContext.Request.Url.Host : null;
@@ -51,7 +52,7 @@ namespace Orchard.Localization.Selectors {
         public CultureSelectorResult GetCulture(HttpContextBase context) {
             if (context == null) return null;
 
-            var cookieName = ContextHelpers.IsRequestAdmin(context) ? AdminCookieName : FrontEndCookieName;
+            var cookieName = AdminFilter.IsApplied(context) ? AdminCookieName : FrontEndCookieName;
 
             var cookie = context.Request.Cookies.Get(cookieName);
 

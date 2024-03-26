@@ -128,7 +128,7 @@ namespace Orchard.Setup.Services {
 
                 using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
-                    // Check if the database is already created (in case an exception occured in the second phase).
+                    // Check if the database is already created (in case an exception occurred in the second phase).
                     var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
                     var installationPresent = true;
                     try {

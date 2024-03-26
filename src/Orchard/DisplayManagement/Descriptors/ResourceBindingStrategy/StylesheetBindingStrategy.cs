@@ -43,6 +43,9 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
             if (Uri.IsWellFormedUriString(fileName, UriKind.Absolute)
                 || (fileName.StartsWith("//", StringComparison.InvariantCulture)
                 && Uri.IsWellFormedUriString("http:" + fileName, UriKind.Absolute))) {
+                if (fileName.StartsWith("//", StringComparison.InvariantCulture)) {
+                    fileName = "http:" + fileName;
+                }
                 var uri = new Uri(fileName);
                 shapeName = uri.Authority + "$" + uri.AbsolutePath + "$" + uri.Query;
             }

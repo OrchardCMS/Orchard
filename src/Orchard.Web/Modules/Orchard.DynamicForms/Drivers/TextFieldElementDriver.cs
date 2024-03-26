@@ -31,7 +31,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "Value",
                         Name: "Value",
                         Title: "Value",
-                        Classes: new[] { "text", "medium", "tokenized" },
+                        Classes: new[] { "text", "medium" },
                         Description: T("The value of this text field.")));
 
                 return form;
@@ -59,6 +59,12 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Maximum Length",
                         Classes: new[] { "text", "medium" },
                         Description: T("The maximum length allowed.")),
+                    _ValidationExpression: shape.Textbox(
+                        Id: "ValidationExpression",
+                        Name: "ValidationExpression",
+                        Title: "Validation Expression",
+                        Classes: new[] { "text", "large" },
+                        Description: T("The regular expression the text must match with.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",
@@ -77,9 +83,13 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(TextField element, ElementDisplayingContext context) {
-            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
-            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
-            context.ElementShape.ProcessedValue = element.RuntimeValue;
+            var tokenData = context.GetTokenData();
+            context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
+            context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+
+            // Allow the initial value to be tokenized.
+            // If a value was posted, use that value instead (without tokenizing it).
+            context.ElementShape.ProcessedValue = element.PostedValue != null ? element.PostedValue : _tokenizer.Replace(element.RuntimeValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
         }
     }
 }

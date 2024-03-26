@@ -75,7 +75,7 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-            var value = field.DateTime;
+            var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
             // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
@@ -96,7 +96,6 @@ namespace Orchard.Fields.Drivers {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
-                HasDefaultValue = settings.DefaultValue.HasValue,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
                     Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
@@ -133,37 +132,26 @@ namespace Orchard.Fields.Drivers {
                 var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
 
                 DateTime? value = null;
-                var IsParseError = false;
 
-                // If required and one field is missing, don't try to parse data.
-                if (settings.Required && ((showDate && String.IsNullOrWhiteSpace(viewModel.Editor.Date)) || (showTime && String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
-                    // And use the default value only if all required fields are empty.
-                    if (!showDate || !showTime || (String.IsNullOrWhiteSpace(viewModel.Editor.Date) && String.IsNullOrWhiteSpace(viewModel.Editor.Time))) {
-                        value = settings.DefaultValue;
-                    }
-                }
-                else {
+                // Try to parse data if not required or if there are no missing fields.
+                if (!settings.Required || ((!showDate || !String.IsNullOrWhiteSpace(viewModel.Editor.Date)) && (!showTime || !String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
                     try {
-                        var utcDateTime = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time, options);
-                        value = utcDateTime.HasValue ? utcDateTime : settings.DefaultValue;
+                        value = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time, options);
                     }
                     catch {
-                        IsParseError = true;
-                        updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date and time.", field.DisplayName));
+                        updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date and time.", T(field.DisplayName)));
                     }
                 }
 
-                if (!IsParseError) {
-                    // Hackish workaround to make sure a time-only field with an entered time equivalent to
-                    // 00:00 UTC doesn't get stored as a full DateTime.MinValue in the database, resulting
-                    // in it being interpreted as an empty value when subsequently retrieved.
-                    if (value.HasValue && settings.Display == DateTimeFieldDisplays.TimeOnly && value == DateTime.MinValue) {
-                        value = value.Value.AddDays(1);
-                    }
+                // Hackish workaround to make sure a time-only field with an entered time equivalent to
+                // 00:00 UTC doesn't get stored as a full DateTime.MinValue in the database, resulting
+                // in it being interpreted as an empty value when subsequently retrieved.
+                if (value.HasValue && settings.Display == DateTimeFieldDisplays.TimeOnly && value == DateTime.MinValue) {
+                    value = value.Value.AddDays(1);
+                }
 
-                    if (settings.Required && (!value.HasValue || (settings.Display != DateTimeFieldDisplays.TimeOnly && value.Value.Date == DateTime.MinValue))) {
-                        updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
-                    }
+                if (settings.Required && (!value.HasValue || (settings.Display != DateTimeFieldDisplays.TimeOnly && value.Value.Date == DateTime.MinValue))) {
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is required.", T(field.DisplayName)));
                 }
 
                 field.DateTime = value.HasValue ? value.Value : DateTime.MinValue;
@@ -177,9 +165,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, DateTimeField field, ExportContentContext context) {
-            var value = field.Storage.Get<DateTime>(null);
-            if (value != DateTime.MinValue)
-                context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc));
+            context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
         }
 
         protected override void Describe(DescribeMembersContext context) {

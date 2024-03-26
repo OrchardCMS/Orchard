@@ -1,9 +1,7 @@
-﻿@using Orchard.Fields.Settings;
-@using Orchard.Utility.Extensions;
-@{
+﻿@{
     string value = (string)Model.ContentField.Value;
     if (!string.IsNullOrEmpty(value)) {
         string name = Model.ContentField.DisplayName;
-    <p class="text-field">@T(name): @value</p>
+    <p class="text-field">@T.Encode(name): @value</p>
     }
 }

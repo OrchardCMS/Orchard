@@ -72,6 +72,8 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
 
+            url = url.Trim();
+
             if (url.StartsWith("~/")) {
                 return true;
             }
@@ -88,6 +90,12 @@ namespace Orchard.Utility.Extensions {
             // at this point, check for an fully qualified url
             try {
                 var uri = new Uri(url);
+
+                if (!uri.Scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
+                    && !uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase)) {
+                    return false;
+                }
+
                 if (uri.Authority.Equals(request.Headers["Host"], StringComparison.OrdinalIgnoreCase)) {
                     return true;
                 }

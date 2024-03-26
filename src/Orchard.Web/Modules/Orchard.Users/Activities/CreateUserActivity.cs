@@ -67,6 +67,8 @@ namespace Orchard.Users.Activities {
                 yield break;
             }
 
+            userName = userName.Trim();
+
             var user = _membershipService.CreateUser(
                 new CreateUserParams(
                     userName,

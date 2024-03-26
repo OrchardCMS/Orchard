@@ -51,10 +51,10 @@ namespace Orchard.Localization.Controllers {
             }
 
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
-            contentItemTranslation.MasterContentItem = masterContentItem;
+            contentItemTranslation.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
-            
+
             return View(content);
         }
 
@@ -89,14 +89,14 @@ namespace Orchard.Localization.Controllers {
             if (existingTranslation != null) {
                 var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
                 return RedirectToAction(
-                    Convert.ToString(existingTranslationMetadata.EditorRouteValues["action"]), 
+                    Convert.ToString(existingTranslationMetadata.EditorRouteValues["action"]),
                     existingTranslationMetadata.EditorRouteValues);
             }
 
             var contentItemTranslation = _contentManager
                 .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
-                    part.MasterContentItem = masterContentItem;
-            });
+                    part.MasterContentItem = masterLocalizationPart.MasterContentItem == null ? masterContentItem : masterLocalizationPart.MasterContentItem;
+                });
 
             var content = _contentManager.UpdateEditor(contentItemTranslation, this);
 

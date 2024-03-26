@@ -1,9 +1,9 @@
 ﻿Name: $$ModuleName$$
 AntiForgery: enabled
 Author: The Orchard Team
-Website: http://orchardproject.net
+Website: https://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.0
+OrchardVersion: 1.10.3
 Description: Description for the module
 Features:
     $$ModuleName$$:

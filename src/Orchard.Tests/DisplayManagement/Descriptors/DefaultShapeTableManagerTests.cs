@@ -247,7 +247,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
                 _container.Resolve<TestShapeProvider>().Discover =
                     builder => builder.Describe("Hello").From(TestFeature())
-                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", path)), new PlacementInfo { Location = "Match" });
+                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, 
+                                    new KeyValuePair<string, string>("Path", path), 
+                                    new[] { new PathPlacementParseMatchProvider() }), 
+                                    new PlacementInfo { Location = "Match" });
 
                 var manager = _container.Resolve<IShapeTableManager>();
                 var hello = manager.GetShapeTable(null).Descriptors["Hello"];

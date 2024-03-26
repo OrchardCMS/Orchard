@@ -22,6 +22,11 @@
         <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
         
         @Display(Model.CustomActionsShapes)
+        <button class="button" id="select-all-button"
+                data-select-all-text="@T("Select All")" data-select-none-text="@T("Select None")"
+                data-bind="visible: results().length > 0">
+            @T("Select All")
+        </button>
     </div>
     <div id="media-library-main">
         <div id="media-library-main-navigation">
@@ -42,7 +47,7 @@
                         <div class="thumbnail" data-bind="html: data.thumbnail">
                         </div>
                         <div class="media-library-main-list-overlay">
-                            <p class="title" data-bind="text: data.title"></p>
+                            <p class="title" data-bind="text: data.title, attr: { title: data.title }"></p>
                             <p class="publication-status" data-bind="text: publicationStatus"></p>
                         </div>
                     </li>
@@ -68,6 +73,7 @@
                         </ul>
                         <div id="media-library-main-selection-actions">
                             <button id="delete-selection-button">@T("Delete")</button>
+                            <button href="#" data-bind="click: replaceMedia, visible: selection().length == 1" class="button" id="replace-selection-button">@T("Replace")</button>
                             <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
                         </div>
                     </div>
@@ -96,12 +102,15 @@ var mediaLibrarySettings = {
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
     cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
+    replaceUrl: '@Url.Action("Import", "Admin", new {area = "Orchard.MediaLibrary" })' ,
     hasFolderPath: @(!string.IsNullOrEmpty(viewModel.FolderPath) ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     rootFolderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.RootFolderPath ?? "")',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
     cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
+    replaceConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to replace this media item ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
+    unauthorizedMessage: '@HttpUtility.JavaScriptStringEncode(T("Access denied").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
     childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
 };

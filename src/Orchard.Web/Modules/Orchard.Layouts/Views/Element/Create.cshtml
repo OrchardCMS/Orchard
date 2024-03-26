@@ -1,6 +1,6 @@
 ﻿@model Orchard.Layouts.ViewModels.EditElementViewModel
 @{
 	ViewBag.Command = "add";
-	ViewBag.TitleFormat = "Add {0}";
+	ViewBag.TitleFormat = T("Add {0}").Text;
 }
 @Html.Partial("ElementEditor", Model, ViewData)

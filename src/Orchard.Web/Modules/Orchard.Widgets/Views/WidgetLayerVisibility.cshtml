@@ -25,7 +25,7 @@
         var currentLayerId = @Model.CurrentLayer.Id;
         var layers = [
         @foreach (var layer in layers) {
-            <text>{"name":"@layer.Name","description":"@EncodeLineBreaks(layer.Description)","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
+            <text>{"name":"@HttpUtility.JavaScriptStringEncode(layer.Name)","description":"@HttpUtility.JavaScriptStringEncode(EncodeLineBreaks(layer.Description))","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
         }
         ];
         var visWrapper = $("#widgets-layer-visibility");

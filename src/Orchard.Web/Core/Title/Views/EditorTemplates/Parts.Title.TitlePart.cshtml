@@ -1,7 +1,11 @@
-﻿@model Orchard.Core.Title.Models.TitlePart
+﻿@using Orchard.Core.Title.Settings
+@model Orchard.Core.Title.Models.TitlePart
+@{
+    var maxLength = Model.Settings.GetModel<TitlePartSettings>().MaxLength > 0 ? Model.Settings.GetModel<TitlePartSettings>().MaxLength.ToString() : "";
+}
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Title)" class="required">@T("Title")</label>    
-    @Html.TextBoxFor(m => m.Title, new { @class = "text large", autofocus = "autofocus" })
+    <label for="@Html.FieldIdFor(m => m.Title)" class="required">@T("Title")</label>
+    @Html.TextBoxFor(m => m.Title, new { @class = "text large", autofocus = "autofocus", maxlength = maxLength })
     <span class="hint">@T("You must provide a title for this content item")</span>
 </fieldset>

@@ -31,7 +31,7 @@ namespace Orchard.FileSystems.LockFile {
                 return true;
             }
             catch {
-                // an error occured while reading/creating the lock file
+                // an error occurred while reading/creating the lock file
                 return false;
             }
             finally {
@@ -46,7 +46,7 @@ namespace Orchard.FileSystems.LockFile {
                 return IsLockedImpl(path);
             }
             catch {
-                // an error occured while reading the file
+                // an error occurred while reading the file
                 return true;
             }
             finally {

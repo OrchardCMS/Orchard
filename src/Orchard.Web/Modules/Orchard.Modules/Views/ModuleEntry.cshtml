@@ -28,7 +28,7 @@
             T("Uninstall").Text,
             "UninstallModule",
             "PackagingServices",
-            new { ModuleId = module.Descriptor.Id, ReturnUrl = Request.ToUrlString(), Area = "Orchard.Packaging" },
+            new { ModuleId = module.Descriptor.Id, ReturnUrl = Request.RawUrl, Area = "Orchard.Packaging" },
             new { itemprop = "RemoveUrl UnsafeUrl" })
 
         @if (!String.IsNullOrEmpty(module.Descriptor.Description)) {

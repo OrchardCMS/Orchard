@@ -19,7 +19,7 @@
 
 @helper MainFileUrl(Asset asset, Func<Asset, string> mainFileUrl, string linkText) {
     if (!String.IsNullOrEmpty(mainFileUrl(asset))) {
-        <a href="@mainFileUrl(asset)">@T(linkText)</a>
+        <a href="@mainFileUrl(asset)">@T.Encode(linkText)</a>
     }
 }
 

@@ -14,11 +14,13 @@ using Orchard.Recipes.Services;
 namespace Orchard.ImportExport.Providers.ExportActions {
     public class BuildRecipeAction : ExportAction {
         private readonly IEnumerable<IRecipeBuilderStep> _recipeBuilderSteps;
+        private readonly IRecipeBuilderStepResolver _recipeBuilderStepResolver;
         private readonly IRecipeBuilder _recipeBuilder;
         private readonly IOrchardServices _orchardServices;
 
-        public BuildRecipeAction(IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IRecipeBuilder recipeBuilder, IOrchardServices orchardServices) {
+        public BuildRecipeAction(IRecipeBuilderStepResolver recipeBuilderStepResolver, IEnumerable<IRecipeBuilderStep> recipeBuilderSteps, IRecipeBuilder recipeBuilder, IOrchardServices orchardServices) {
             _recipeBuilderSteps = recipeBuilderSteps;
+            _recipeBuilderStepResolver = recipeBuilderStepResolver;
             _recipeBuilder = recipeBuilder;
             _orchardServices = orchardServices;
 
@@ -60,10 +62,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
                     }
                     else {
                         var exportStepNames = viewModel.Steps.Where(x => x.IsSelected).Select(x => x.Name);
-                        var stepsQuery = from name in exportStepNames
-                            let provider = _recipeBuilderSteps.SingleOrDefault(x => x.Name == name)
-                            where provider != null
-                            select provider;
+                        var stepsQuery = _recipeBuilderStepResolver.Resolve(exportStepNames);
                         var steps = stepsQuery.ToArray();
                         var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
                         foreach (var exportStep in steps) {
@@ -86,7 +85,7 @@ namespace Orchard.ImportExport.Providers.ExportActions {
                 return;
 
             foreach (var stepElement in recipeBuilderStepsElement.Elements()) {
-                var step = _recipeBuilderSteps.SingleOrDefault(x => x.Name == stepElement.Name.LocalName);
+                var step = _recipeBuilderStepResolver.Resolve(stepElement.Name.LocalName);
 
                 if (step != null) {
                     var stepContext = new RecipeBuilderStepConfigurationContext(stepElement);

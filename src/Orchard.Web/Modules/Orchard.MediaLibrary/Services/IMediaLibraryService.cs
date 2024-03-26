@@ -22,7 +22,7 @@ namespace Orchard.MediaLibrary.Services {
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename, string contentType);
         IMediaFactory GetMediaFactory(Stream stream, string mimeType, string contentType);
-
+        bool CheckMediaFolderPermission(Orchard.Security.Permissions.Permission permission, string folderPath);
         /// <summary>
         /// Creates a unique filename to prevent filename collisions.
         /// </summary>
@@ -40,6 +40,8 @@ namespace Orchard.MediaLibrary.Services {
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
         IMediaFolder GetRootMediaFolder();
+
+        IMediaFolder GetUserMediaFolder();
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -166,6 +168,27 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             return folderPath;
+        }
+
+        public static string MimeTypeToContentType(this IMediaLibraryService service, Stream stream, string mimeType, string contentType) {
+            var mediaFactory = service.GetMediaFactory(stream, mimeType, contentType);
+            if (mediaFactory == null)
+                return null;
+
+            switch (mediaFactory.GetType().Name) {
+                case "ImageFactory":
+                    return "Image";
+                case "AudioFactory":
+                    return "Audio";
+                case "DocumentFactory":
+                    return "Document";
+                case "VectorImageFactory":
+                    return "VectorImage";
+                case "VideoFactory":
+                    return "Video";
+                default:
+                    return null;
+            }
         }
     }
 }

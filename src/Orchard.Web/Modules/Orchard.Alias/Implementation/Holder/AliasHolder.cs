@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Concurrent;
 using Orchard.Alias.Implementation.Map;
+using Orchard.Alias.Implementation.Updater;
 
 namespace Orchard.Alias.Implementation.Holder {
     public class AliasHolder : IAliasHolder {
-        public AliasHolder() {
+        private readonly Lazy<IAliasHolderUpdater> _aliasHolderUpdater;
+        private readonly ConcurrentDictionary<string, AliasMap> _aliasMaps;
+
+        public AliasHolder(Lazy<IAliasHolderUpdater> aliasHolderUpdater) {
+            _aliasHolderUpdater = aliasHolderUpdater;
             _aliasMaps = new ConcurrentDictionary<string, AliasMap>(StringComparer.OrdinalIgnoreCase);
         }
 
-        private readonly ConcurrentDictionary<string, AliasMap> _aliasMaps;
+        private ConcurrentDictionary<string, AliasMap> GetOrRefreshAliasMaps() {
+            lock (_aliasMaps) {
+                if (_aliasMaps.Count == 0)
+                    _aliasHolderUpdater.Value.Refresh();
+            }
+
+            return _aliasMaps;
+        }
 
         public void SetAliases(IEnumerable<AliasInfo> aliases) {
             var grouped = aliases.GroupBy(alias => alias.Area ?? String.Empty, StringComparer.InvariantCultureIgnoreCase);
@@ -25,7 +37,7 @@ namespace Orchard.Alias.Implementation.Holder {
         }
 
         public void SetAlias(AliasInfo alias) {
-            foreach (var map in _aliasMaps.Values) {
+            foreach (var map in GetOrRefreshAliasMaps().Values) {
                 map.Remove(alias);
             }
 
@@ -33,11 +45,11 @@ namespace Orchard.Alias.Implementation.Holder {
         }
 
         public IEnumerable<AliasMap> GetMaps() {
-            return _aliasMaps.Values;
+            return GetOrRefreshAliasMaps().Values;
         }
 
         public AliasMap GetMap(string areaName) {
-            return _aliasMaps.GetOrAdd(areaName ?? String.Empty, key => new AliasMap(key));
+            return GetOrRefreshAliasMaps().GetOrAdd(areaName ?? String.Empty, key => new AliasMap(key));
         }
 
         public void RemoveAlias(AliasInfo aliasInfo) {

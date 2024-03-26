@@ -1,7 +1,14 @@
 ﻿@{
-    var htmlAttributes = new Dictionary<string, object> {
-        {"class", "text medium"}
-    };
+    var htmlAttributes = (Dictionary<string, object>)Model.HtmlAttributes;
+
+    if (htmlAttributes == null) {
+        htmlAttributes = new Dictionary<string, object> {
+            {"class", "text medium"}
+        };
+    }
+    else {
+        htmlAttributes["class"] = "text medium";
+    }
 
     if (Model.Required == true) {
         htmlAttributes["required"] = "required";

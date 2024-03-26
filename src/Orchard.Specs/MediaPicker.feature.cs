@@ -153,7 +153,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Fields[0].MediaPickerFieldSettings.Hint",
+                        "Fields[File].MediaPickerFieldSettings.Hint",
                         "Please select a file"});
 #line 48
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
@@ -170,7 +170,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Fields[0].MediaPickerFieldSettings.Required",
+                        "Fields[File].MediaPickerFieldSettings.Required",
                         "true"});
 #line 57
         testRunner.And("I fill in", ((string)(null)), table5, "And ");
@@ -198,10 +198,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "ext-Fields[0].MediaPickerFieldSettings",
+                        "ext-Fields[File].MediaPickerFieldSettings",
                         "true"});
             table7.AddRow(new string[] {
-                        "Fields[0].MediaPickerFieldSettings.AllowedExtensions",
+                        "Fields[File].MediaPickerFieldSettings.AllowedExtensions",
                         "jpg"});
 #line 70
         testRunner.And("I fill in", ((string)(null)), table7, "And ");

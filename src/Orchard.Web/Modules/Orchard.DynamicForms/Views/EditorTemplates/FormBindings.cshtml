@@ -22,8 +22,8 @@
             <tbody>
                 @if (partDescriptor.BindingContexts.Any()) {
                     foreach (var partBinding in partDescriptor.BindingContexts.SelectMany(x => x.Bindings)) {
-                         var partBindingId = String.Format("binding-{0}-{1}", partDescriptor.Part.PartDefinition.Name.HtmlClassify(), partBinding.Name.HtmlClassify());
-                         var partBindingState = partState.Bindings.ElementAtOrDefault(partBindingIndex) ?? new BindingSettings();
+                        var partBindingId = String.Format("binding-{0}-{1}", partDescriptor.Part.PartDefinition.Name.HtmlClassify(), partBinding.Name.HtmlClassify());
+                        var partBindingState = partState.Bindings.FirstOrDefault(f => f.Name == partBinding.Name) ?? new BindingSettings();
                          <tr>
                              <td colspan="2">
                                  <input type="hidden" name="Parts[@partIndex].Bindings[@partBindingIndex].Name" value="@partBinding.Name" />
@@ -36,7 +36,7 @@
                 }
                 @foreach (var fieldDescriptor in partDescriptor.FieldBindings) {
                     var fieldBindingIndex = 0;
-                    var fieldState = partState.Fields.ElementAtOrDefault(fieldIndex) ?? new FieldBindingSettings();
+                    var fieldState = partState.Fields.FirstOrDefault(f=>f.Name == fieldDescriptor.Field.Name) ?? new FieldBindingSettings();                    
                     if (fieldDescriptor.BindingContexts.Any()) {
                         foreach (var fieldBinding in fieldDescriptor.BindingContexts.SelectMany(x => x.Bindings)) {
                             var fieldBindingId = String.Format("binding-{0}-{1}-{2}", partDescriptor.Part.PartDefinition.Name.HtmlClassify(), fieldDescriptor.Field.Name.HtmlClassify(), fieldBinding.Name.HtmlClassify());

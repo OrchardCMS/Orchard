@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Autofac;
 using NHibernate;
@@ -13,13 +14,11 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Tests.ContentManagement;
-using System.IO;
 using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 
-namespace Orchard.Tests.DataMigration
-{
-	[TestFixture]
+namespace Orchard.Tests.DataMigration {
+    [TestFixture]
     public class SchemaBuilderTestsBase {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
@@ -97,6 +96,21 @@ namespace Orchard.Tests.DataMigration
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
                     .Column("Salary", DbType.Decimal, column => column.WithPrecision(9).WithScale(2))
                     .Column("Gender", DbType.Decimal, column => column.WithDefault(""))
+                    );
+        }
+
+        [Test]
+        public void GenericCreateCommandShouldBeHandled() {
+            _schemaBuilder
+                .CreateTable("User", table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Firstname", column => column.WithLength(255))
+                    .Column<string>("Lastname", column => column.WithLength(100).NotNull())
+                    .Column<string>("SN", column => column.WithLength(40).Unique())
+                    .Column<decimal>("Salary", column => column.WithPrecision(9).WithScale(2))
+                    .Column<decimal>("Gender", column => column.WithDefault(""))
+                    .Column<Guid>("Identifier")
+                    .Column<byte[]>("Photo", column => column.WithLength(2048))
                     );
         }
 

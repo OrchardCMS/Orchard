@@ -15,7 +15,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public void Log(LogLevel level, Exception exception, string format, params object[] args) {
-            var message = String.Format(format, args);
+            var message = args == null ? format : string.Format(format, args);
             Logger.Log(level, exception, "{0}: {1}", ComponentType.Name, message);
         }
     }

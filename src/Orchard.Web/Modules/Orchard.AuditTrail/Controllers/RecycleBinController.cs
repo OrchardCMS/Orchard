@@ -110,7 +110,7 @@ namespace Orchard.AuditTrail.Controllers {
             foreach (var contentItem in contentItems) {
                 var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
                 if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem)) {
-                    _notifier.Error(T("You need the EditContent permission to restore <strong>{0}</strong>.", contentItemTitle));
+                    _notifier.Error(T("You need to have permission to edit <strong>{0}</strong> to be able to restore it.", contentItemTitle));
                     continue;
                 }
 
@@ -125,7 +125,7 @@ namespace Orchard.AuditTrail.Controllers {
             foreach (var contentItem in contentItems) {
                 var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
                 if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, contentItem)) {
-                    _notifier.Error(T("You need the DeleteContent permission to permanently delete <strong>{0}</strong>.", contentItemTitle));
+                    _notifier.Error(T("You need to have permission to delete <strong>{0}</strong> to be able to permanently delete it.", contentItemTitle));
                     continue;
                 }
 

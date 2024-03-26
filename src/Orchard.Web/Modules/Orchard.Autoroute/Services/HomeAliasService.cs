@@ -91,7 +91,7 @@ namespace Orchard.Autoroute.Services {
                 return false;
             }
 
-            return a.Keys.All(x => String.Equals(a[x], b[x].ToString(), StringComparison.OrdinalIgnoreCase));
+            return a.Keys.All(x => String.Equals(a[x], Convert.ToString(b[x]), StringComparison.OrdinalIgnoreCase));
         }
     }
 }

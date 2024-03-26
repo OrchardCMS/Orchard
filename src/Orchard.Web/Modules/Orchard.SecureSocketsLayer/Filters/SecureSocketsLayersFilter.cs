@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.SecureSocketsLayer.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.SecureSocketsLayer.Filters {
     public class SecureSocketsLayersFilter : FilterProvider, IActionFilter {
@@ -17,11 +16,6 @@ namespace Orchard.SecureSocketsLayer.Filters {
         public Localizer T { get; set; }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            var settings = _sslService.GetSettings();
-
-            if (!settings.Enabled) {
-                _orchardServices.Notifier.Warning(T("You need to configure the SSL settings."));
-            }
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -35,7 +29,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
             var secure =
                 (user != null && user.Identity.IsAuthenticated) ||
                 _sslService.ShouldBeSecure(filterContext);
-
+            var usePermanentRedirect = settings.UsePermanentRedirect;
             var request = filterContext.HttpContext.Request;
 
             // redirect to a secured connection ?
@@ -47,7 +41,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(secureActionUrl);
+                filterContext.Result = new RedirectResult(secureActionUrl, usePermanentRedirect);
                 return;
             }
 
@@ -62,7 +56,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
                         filterContext.ActionDescriptor.ControllerDescriptor.ControllerName,
                         filterContext.RequestContext.RouteData.Values));
 
-                filterContext.Result = new RedirectResult(insecureActionUrl);
+                filterContext.Result = new RedirectResult(insecureActionUrl, usePermanentRedirect);
             }
         }
 

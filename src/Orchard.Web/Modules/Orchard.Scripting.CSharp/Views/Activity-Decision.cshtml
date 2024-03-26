@@ -1,6 +1,6 @@
 ﻿@using Orchard.Workflows.Helpers
 @{
-  var outcomes = ((string)Model.State.Outcomes).FormatOutcomesJson();
+  var outcomes = ((string)Model.State.Outcomes).FormatOutcomesJson(T);
 }
 
 <div data-outcomes="@outcomes">

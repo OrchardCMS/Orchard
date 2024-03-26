@@ -1,0 +1,10 @@
+﻿@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+
+@model QueryViewModel
+
+<fieldset>
+    @Html.LabelFor(m => m.VersionScope, T("Content's version"))
+    @Html.DropDownListFor(m => m.VersionScope, new SelectList(Enum.GetValues(typeof(QueryVersionScopeOptions)), Model.VersionScope))
+    <span class="hint">@T("The content's version to query.")</span>
+</fieldset>

@@ -1,0 +1,68 @@
+﻿@model Upgrade.ViewModels.MigrateViewModel
+@{ Layout.Title = T("Updates projections index tables with fields' latest values.").ToString(); }
+@if (Model.ContentTypes.Count() > 0) {
+    <div class="message message-Warning" id="message-progress" style="display: none"></div>
+    using (Html.BeginFormAntiForgeryPost()) {
+        Html.ValidationSummary();
+        <h2>@T("The update will process fields data and will update their latest value into projections index tables.")</h2>
+        <div>
+            <span>@T("These types will be processed:")</span>
+            <ol>
+                @foreach (var contentTypeEntry in Model.ContentTypes) {
+                <li>
+                    @contentTypeEntry.ContentTypeName
+                </li>
+                }
+            </ol>
+        </div>
+        <fieldset>
+            <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateLatestValue", "Projections")">@T("Migrate")</button>
+        </fieldset>
+    }
+}
+else {
+    <h3>@T("There are no content types with custom fields, nothing to upgrade.")</h3>
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All items have been processed").Text)';
+
+            var MigrationBatch = function (importUrl, startId) {
+                $.ajax({
+                    type: 'POST',
+                    url: importUrl,
+                    async: true,
+                    data: {
+                        __RequestVerificationToken: antiForgeryToken,
+                        id: startId // start at index 0
+                    },
+                    success: function (data) {
+                        if (Number(data) == startId) {
+                            $('#message-progress').text(endMessage);
+                        }
+                        else {
+                            startId = Number(data);
+                            $('#message-progress').text('Processing content item ' + startId);
+                            MigrationBatch(importUrl, startId);
+                        }
+                    },
+                    fail: function (result) {
+                        console.log("An error occured: " + result);
+                    }
+                });
+
+            };
+
+            $('.button-migrate').click(function () {
+                var importUrl = $(this).data('url');
+
+                var startId = 0;
+                $('#message-progress').show();
+                MigrationBatch(importUrl, startId);
+
+            });
+        });
+    </script>
+}

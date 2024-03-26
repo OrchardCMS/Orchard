@@ -1,7 +1,7 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Net.Configuration;
 using Orchard.ContentManagement;
-using System;
 using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Email.Models {
@@ -31,19 +31,28 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.Port, value); }
         }
 
-        public bool EnableSsl {
-            get { return this.Retrieve(x => x.EnableSsl); }
-            set { this.Store(x => x.EnableSsl, value); }
+        [Obsolete("Use " + nameof(AutoSelectEncryption) + " and/or "+ nameof(EncryptionMethod) + " instead.")]
+        public bool EnableSsl => this.Retrieve(x => x.EnableSsl);
+
+        public SmtpEncryptionMethod EncryptionMethod {
+#pragma warning disable CS0618 // Type or member is obsolete
+            // Reading EnableSsl is necessary to keep the correct settings during the upgrade to MailKit.
+            get { return this.Retrieve(x => x.EncryptionMethod, EnableSsl ? (Port == 587 ? SmtpEncryptionMethod.StartTls : SmtpEncryptionMethod.SslTls) : SmtpEncryptionMethod.None); }
+#pragma warning restore CS0618 // Type or member is obsolete
+            set { this.Store(x => x.EncryptionMethod, value); }
+        }
+
+        public bool AutoSelectEncryption {
+#pragma warning disable CS0618 // Type or member is obsolete
+            // Reading EnableSsl is necessary to keep the correct settings during the upgrade to MailKit.
+            get { return this.Retrieve(x => x.AutoSelectEncryption, !EnableSsl); }
+#pragma warning restore CS0618 // Type or member is obsolete
+            set { this.Store(x => x.AutoSelectEncryption, value); }
         }
 
         public bool RequireCredentials {
             get { return this.Retrieve(x => x.RequireCredentials); }
             set { this.Store(x => x.RequireCredentials, value); }
-        }
-
-        public bool UseDefaultCredentials {
-            get { return this.Retrieve(x => x.UseDefaultCredentials); }
-            set { this.Store(x => x.UseDefaultCredentials, value); }
         }
 
         public string UserName {

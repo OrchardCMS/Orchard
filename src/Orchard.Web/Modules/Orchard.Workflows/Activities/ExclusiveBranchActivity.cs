@@ -34,7 +34,7 @@ namespace Orchard.Workflows.Activities {
                     // remove all other waiting activities after the parent branch
 
                     var siblings = workflowContext.GetOutboundTransitions(parentBranch).Select(x => x.DestinationActivityRecord).ToList();
-                    var awaitings = workflowContext.Record.AwaitingActivities.Where(x => siblings.Contains(x.ActivityRecord));
+                    var awaitings = workflowContext.Record.AwaitingActivities.Where(x => siblings.Contains(x.ActivityRecord)).ToList();
                     foreach (var awaiting in awaitings) {
                         workflowContext.Record.AwaitingActivities.Remove(awaiting);
                     }

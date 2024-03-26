@@ -39,18 +39,23 @@ namespace Orchard.Events {
             // static IEnumerable<T> IEnumerable.OfType<T>(this IEnumerable source)
             // where T is from returnType's IEnumerable<T>
             var enumerableOfTypeT = _enumerableOfTypeTDictionary.GetOrAdd( returnType, type => typeof(Enumerable).GetGenericMethod("OfType", type.GetGenericArguments(), new[] { typeof(IEnumerable) }, typeof(IEnumerable<>)));
-            return enumerableOfTypeT.Invoke(null, new[] { results });
+            return (enumerableOfTypeT != null) ? enumerableOfTypeT.Invoke(null, new[] { results }) : null;
+
         }
     }
 
     public static class Extensions {
         public static MethodInfo GetGenericMethod(this Type t, string name, Type[] genericArgTypes, Type[] argTypes, Type returnType) {
-            return (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                    where m.Name == name &&
-                    m.GetGenericArguments().Length == genericArgTypes.Length &&
-                    m.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(argTypes) &&
-                    (m.ReturnType.IsGenericType && !m.ReturnType.IsGenericTypeDefinition ? returnType.GetGenericTypeDefinition() : m.ReturnType) == returnType
-                    select m).Single().MakeGenericMethod(genericArgTypes);
+            var method = (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                          where m.Name == name &&
+                          m.GetGenericArguments().Length == genericArgTypes.Length &&
+                          m.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(argTypes) &&
+                          (m.ReturnType.IsGenericType && !m.ReturnType.IsGenericTypeDefinition ? returnType.GetGenericTypeDefinition() : m.ReturnType) == returnType
+                          select m).SingleOrDefault();
+            if (method != null) {
+                return method.MakeGenericMethod(genericArgTypes);
+            }
+            return null;
 
         }
     }

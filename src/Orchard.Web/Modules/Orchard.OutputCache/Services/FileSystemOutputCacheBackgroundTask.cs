@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -18,7 +19,8 @@ namespace Orchard.OutputCache.Services {
         private readonly IClock _clock;
         private readonly ISignals _signals;
 
-        private string _root;
+        private string _content;
+        private string _metadata;
 
         public FileSystemOutputCacheBackgroundTask(
             IAppDataFolder appDataFolder, 
@@ -32,22 +34,26 @@ namespace Orchard.OutputCache.Services {
             _clock = clock;
             _signals = signals;
 
-            _root = _appDataFolder.Combine("OutputCache", _shellSettings.Name);
+            _metadata = FileSystemOutputCacheStorageProvider.GetMetadataPath(appDataFolder, _shellSettings.Name);
+            _content = FileSystemOutputCacheStorageProvider.GetContentPath(appDataFolder, _shellSettings.Name);
         }
 
         public void Sweep() {
-            foreach(var filename in _appDataFolder.ListFiles(_root).ToArray()) {
-                var validUntilUtc = _cacheManager.Get(filename, context => {
-                    _signals.When(filename);
+            foreach(var filename in _appDataFolder.ListFiles(_metadata).ToArray()) {
+                var hash = Path.GetFileName(filename);
+
+                var validUntilUtc = _cacheManager.Get(hash, context => {
+                    _signals.When(hash);
 
                     using (var stream = _appDataFolder.OpenFile(filename)) {
-                        var cacheItem = FileSystemOutputCacheStorageProvider.Deserialize(stream);
+                        var cacheItem = FileSystemOutputCacheStorageProvider.DeserializeMetadata(stream);
                         return cacheItem.ValidUntilUtc;
                     }
                 });
 
                 if (_clock.UtcNow > validUntilUtc) {
-                    _appDataFolder.DeleteFile(filename);
+                    _appDataFolder.DeleteFile(_appDataFolder.Combine(_metadata, hash));
+                    _appDataFolder.DeleteFile(_appDataFolder.Combine(_content, hash));
                     _signals.Trigger(filename);
                 }
             }

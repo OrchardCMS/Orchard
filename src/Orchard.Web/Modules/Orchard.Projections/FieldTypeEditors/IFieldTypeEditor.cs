@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Projections.Models;
 
 namespace Orchard.Projections.FieldTypeEditors {
     /// <summary>
@@ -33,7 +34,15 @@ namespace Orchard.Projections.FieldTypeEditors {
         /// Defines the relationship to the corresponding field indexing table for this editor
         /// </summary>
         Action<IAliasFactory> GetFilterRelationship(string aliasName);
-
     }
 
+
+    public static class FieldTypeEditorExtensions {
+        public static QueryVersionScopeOptions GetQueryVersionScope(this IFieldTypeEditor editor, string value) {
+            if (!Enum.TryParse(value, out QueryVersionScopeOptions versionScope))
+                versionScope = QueryVersionScopeOptions.Published;
+
+            return versionScope;
+        }
+    }
 }

@@ -72,7 +72,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
 
             }
             catch (Exception e) {
-                Logger.Error(e, "An unexpected error occured while monitoring sql dependencies.");
+                Logger.Error(e, "An unexpected error occurred while monitoring sql dependencies.");
             }
         }
 

@@ -7,9 +7,10 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Forms.Services;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
+using Orchard.Projections.ViewModels;
 
 namespace Orchard.Projections.Drivers {
-    
+
     public class QueryPartDriver : ContentPartDriver<QueryPart> {
         private readonly IProjectionManager _projectionManager;
         private readonly IFormManager _formManager;
@@ -18,18 +19,32 @@ namespace Orchard.Projections.Drivers {
             _projectionManager = projectionManager;
             _formManager = formManager;
         }
-
-        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if(updater == null) {
-                return null;
+        protected override string Prefix {
+            get {
+                return "Query_Part";
             }
-
-            return null;
+        }
+        protected override DriverResult Editor(QueryPart part, dynamic shapeHelper) {
+            return Editor(part, null, shapeHelper);
+        }
+        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var model = new QueryViewModel { VersionScope = part.VersionScope };
+            if (updater != null) {
+                if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                    part.VersionScope = model.VersionScope;
+                }
+            }
+            return ContentShape("Parts_QueryPart_Edit",
+                                () => {
+                                    return shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPart_Edit", Model: model, Prefix: Prefix);
+                                });
         }
 
         protected override void Exporting(QueryPart part, ExportContentContext context) {
 
             var element = context.Element(part.PartDefinition.Name);
+
+            element.SetAttributeValue("VersionScope", part.VersionScope);
 
             element.Add(
                 new XElement("FilterGroups",
@@ -90,6 +105,7 @@ namespace Orchard.Projections.Drivers {
                             new XAttribute("Display", layout.Display),
                             new XAttribute("DisplayType", layout.DisplayType ?? ""),
                             new XAttribute("Type", layout.Type ?? ""),
+                            new XAttribute("GUIdentifier", layout.GUIdentifier ?? ""),
 
                             // Properties
                             new XElement("Properties", layout.Properties.Select(GetPropertyXml)),
@@ -108,22 +124,24 @@ namespace Orchard.Projections.Drivers {
                 return;
             }
 
+            context.ImportAttribute(part.PartDefinition.Name, "VersionScope", scope => part.VersionScope = (QueryVersionScopeOptions)Enum.Parse(typeof(QueryVersionScopeOptions), scope));
+
             var queryElement = context.Data.Element(part.PartDefinition.Name);
 
             part.Record.FilterGroups.Clear();
             foreach (var item in queryElement.Element("FilterGroups").Elements("FilterGroup").Select(filterGroup =>
                 new FilterGroupRecord {
                     Filters = filterGroup.Elements("Filter").Select(filter => {
-                        
+
                         var category = filter.Attribute("Category").Value;
                         var type = filter.Attribute("Type").Value;
                         var state = filter.Attribute("State").Value;
-                        
+
                         var descriptor = _projectionManager.GetFilter(category, type);
                         if (descriptor != null) {
                             state = _formManager.Import(descriptor.Form, state, context);
                         }
-                        
+
                         return new FilterRecord {
                             Category = category,
                             Description = filter.Attribute("Description").Value,
@@ -177,6 +195,7 @@ namespace Orchard.Projections.Drivers {
                     DisplayType = layout.Attribute("DisplayType").Value,
                     State = state,
                     Type = type,
+                    GUIdentifier = string.IsNullOrWhiteSpace(layout.Attribute("GUIdentifier").Value) ? Guid.NewGuid().ToString() : layout.Attribute("GUIdentifier").Value,
                     Properties = layout.Element("Properties").Elements("Property").Select(GetProperty).ToList(),
                     GroupProperty = GetProperty(layout.Element("Group").Element("Property"))
                 };
@@ -186,7 +205,7 @@ namespace Orchard.Projections.Drivers {
         }
 
         private XElement GetPropertyXml(PropertyRecord property) {
-            if(property == null) {
+            if (property == null) {
                 return null;
             }
 
@@ -226,7 +245,7 @@ namespace Orchard.Projections.Drivers {
         }
 
         private PropertyRecord GetProperty(XElement property) {
-            if(property == null) {
+            if (property == null) {
                 return null;
             }
 

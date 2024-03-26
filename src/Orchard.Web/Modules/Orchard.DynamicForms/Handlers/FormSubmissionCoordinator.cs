@@ -50,6 +50,7 @@ namespace Orchard.DynamicForms.Handlers {
             var contentItem = default(ContentItem);
             if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType)) {
                 contentItem = formService.CreateContentItem(form, context.ValueProvider);
+                formTokenContext.CreatedContent = contentItem;
             }
 
             // Notifiy.

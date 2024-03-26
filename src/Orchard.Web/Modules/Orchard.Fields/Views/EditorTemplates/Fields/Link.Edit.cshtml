@@ -14,9 +14,6 @@
             target = "_top";
             break;
     }
-
-    var isRequired = settings.Required && String.IsNullOrWhiteSpace(settings.DefaultValue);
-    var isTextRequired = settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(settings.TextDefaultValue);
 }
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
@@ -24,27 +21,19 @@
         <span class="hint">@settings.Hint</span>
     }
     <div class="editor-label">
-        <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>  }>@T("Url")</label>
+        <label for="@Html.FieldIdFor(m => m.Value)" @if (settings.Required) { <text> class="required" </text>   }>@T("Url")</label>
     </div>
     <div class="editor-field">
-        @(isRequired ? Html.TextBoxFor(m => m.Value, new { @class = "text large", required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large" }))
+        @(settings.Required ? Html.TextBoxFor(m => m.Value, new { @class = "text large", required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large" }))
         <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
     </div>
-    @if (!String.IsNullOrWhiteSpace(settings.DefaultValue)) {
-        <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
-    }
     @if (settings.LinkTextMode == LinkTextMode.Optional || settings.LinkTextMode == LinkTextMode.Required) {
         <div class="editor-label">
-            <label for="@Html.FieldIdFor(m => m.Text)" @if (settings.LinkTextMode == LinkTextMode.Required) { <text> class="required" </text>  }>@T("Text")</label>
+            <label for="@Html.FieldIdFor(m => m.Text)" @if (settings.LinkTextMode == LinkTextMode.Required) { <text> class="required" </text> }>@T("Text")</label>
         </div>
         <div class="editor-field">
-            @(isTextRequired ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium" }))
-            @if (!String.IsNullOrWhiteSpace(settings.TextDefaultValue)) {
-                <span class="hint">@T("If the field is left empty then the default value will be used.")</span>
-            }
-            else {
-                <span class="hint">@T("The text of the link. If left empty, the url will be used instead.")</span>
-            }
+            @(settings.LinkTextMode == LinkTextMode.Required ? Html.TextBoxFor(m => m.Text, new { @class = "text medium", required = "required" }) : Html.TextBoxFor(m => m.Text, new { @class = "text medium" }))
+            <span class="hint">@T("The text of the link. If left empty, the url will be used instead.")</span>
         </div>
     }
 

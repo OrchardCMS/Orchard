@@ -165,6 +165,13 @@ namespace Orchard.ImportExport.Commands {
             }
 
             if (!String.IsNullOrEmpty(customSteps)) {
+                var customStepsList = customSteps.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var customStepName in customStepsList) {
+                    GetOrCreateElement(stepsElement, customStepName);
+                }
+
+                //Still need CustomStepsStep to support older export steps created by users
                 var customStepsElement = GetOrCreateElement(stepsElement, "CustomSteps");
                 customStepsElement.Attr("Steps", customSteps);
             }

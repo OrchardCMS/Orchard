@@ -63,8 +63,8 @@
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
     </div>
     <div>
-        @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
         @Html.CheckBoxFor(m => m.UseCdn)
+        @Html.LabelFor(m => m.UseCdn, T("Use CDN").Text, new { @class = "forcheckbox" })
 	    <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version")</span>
     </div>
     <div>

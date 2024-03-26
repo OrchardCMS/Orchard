@@ -8,10 +8,11 @@ namespace Orchard.Core.Contents {
         // Note - in code you should demand PublishContent, EditContent, or DeleteContent
         // Do not demand the "Own" variations - those are applied automatically when you demand the main ones
 
+        public static readonly Permission CreateContent = new Permission { Description = "Create content", Name = "CreateContent" };
         public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishContent" };
         public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish own content", Name = "PublishOwnContent", ImpliedBy = new[] { PublishContent } };
         public static readonly Permission EditContent = new Permission { Description = "Edit content for others", Name = "EditContent", ImpliedBy = new[] { PublishContent } };
-        public static readonly Permission EditOwnContent = new Permission { Description = "Edit own content", Name = "EditOwnContent", ImpliedBy = new[] { EditContent, PublishOwnContent } };
+        public static readonly Permission EditOwnContent = new Permission { Description = "Edit own content", Name = "EditOwnContent", ImpliedBy = new[] { CreateContent, EditContent, PublishOwnContent } };
         public static readonly Permission DeleteContent = new Permission { Description = "Delete content for others", Name = "DeleteContent" };
         public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete own content", Name = "DeleteOwnContent", ImpliedBy = new[] { DeleteContent } };
         public static readonly Permission ViewContent = new Permission { Description = "View all content", Name = "ViewContent", ImpliedBy = new[] { EditContent } };
@@ -35,7 +36,8 @@ namespace Orchard.Core.Contents {
                 ViewContent,
                 ViewOwnContent,
                 PreviewOwnContent,
-                PreviewContent
+                PreviewContent,
+                CreateContent
             };
         }
 
@@ -43,22 +45,22 @@ namespace Orchard.Core.Contents {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent,PreviewContent}
+                    Permissions = new[] {PublishContent,EditContent,DeleteContent,PreviewContent, CreateContent }
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent,PreviewContent}
+                    Permissions = new[] {PublishContent,EditContent,DeleteContent, PreviewContent, CreateContent }
                 },
                 new PermissionStereotype {
                     Name = "Moderator"
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent}
+                    Permissions = new[] {PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent, CreateContent }
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new[] {EditOwnContent,PreviewOwnContent}
+                    Permissions = new[] {EditOwnContent,PreviewOwnContent, CreateContent }
                 },
                 new PermissionStereotype {
                     Name = "Authenticated",

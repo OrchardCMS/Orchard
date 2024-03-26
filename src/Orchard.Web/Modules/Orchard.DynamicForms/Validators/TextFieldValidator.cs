@@ -23,6 +23,12 @@ namespace Orchard.DynamicForms.Validators {
                     r.ErrorMessage = settings.CustomValidationMessage;
                 });
             }
+            if (!string.IsNullOrWhiteSpace(settings.ValidationExpression)) {
+                yield return _validationRuleFactory.Create<RegularExpression>(r => {
+                    r.Pattern = settings.ValidationExpression;
+                    r.ErrorMessage = settings.CustomValidationMessage;
+                });
+            }
         }
     }
 }

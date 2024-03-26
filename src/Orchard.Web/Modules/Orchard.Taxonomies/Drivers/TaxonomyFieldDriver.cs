@@ -117,13 +117,10 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TaxonomyField field, ExportContentContext context) {
-            var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name);
-
+            var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name);    
             // stores all content items associated to this field
             var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString()).ToArray();
-
-            if (termIdentities.Any())
-                context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
+            context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
         }
 
         protected override void Importing(ContentPart part, TaxonomyField field, ImportContentContext context) {

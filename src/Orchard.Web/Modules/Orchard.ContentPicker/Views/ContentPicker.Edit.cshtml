@@ -16,7 +16,7 @@
     var fieldName = Model.FieldName;
     var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
     var types = String.Join(",", (IEnumerable<string>)Model.Types ?? Enumerable.Empty<string>());
-}
+}   
 
 <fieldset class="content-picker-field"
           data-required="@required.ToString().ToLower()"
@@ -50,7 +50,7 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>
-                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemAdminLink(contentItem) @if (!contentItem.HasPublished()){<text> - </text>@T("Not Published")}</span>
+                        <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemAdminLink(null, contentItem, new { ReturnUrl = @Request.Url.ToString()}) @if (!contentItem.HasPublished()){<text> - </text>@T("Not Published")}</span>
                     </td>
                     <td>
                         <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>

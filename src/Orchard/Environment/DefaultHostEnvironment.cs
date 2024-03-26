@@ -45,7 +45,7 @@ namespace Orchard.Environment {
             if (!httpContext.IsBackgroundContext()) {
                 // Don't redirect posts...
                 if (httpContext.Request.RequestType == "GET") {
-                    httpContext.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
+                    httpContext.Response.Redirect(HttpContext.Current.Request.RawUrl, true /*endResponse*/);
                 }
                 else {
                     httpContext.Response.ContentType = "text/html";

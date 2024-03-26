@@ -1,0 +1,33 @@
+name: Compile
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - 1.10.x
+
+jobs:
+  compile:
+    name: Compile
+    defaults:
+      run:
+        shell: pwsh
+    runs-on: windows-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3.1.0
+
+      - name: Restore NuGet packages
+        run: nuget restore src/Orchard.sln
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Compile
+        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+
+      - name: Test
+        run: msbuild Orchard.proj /m /v:minimal /t:Test

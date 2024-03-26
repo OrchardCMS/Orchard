@@ -1,4 +1,5 @@
 ﻿using Orchard.Environment.Extensions;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.JobsQueue {
@@ -11,6 +12,7 @@ namespace Orchard.JobsQueue {
             builder
                 .AddImageSet("jobsqueue")
                 .Add(T("Jobs Queue"), "15.0", item => {
+                    item.Permission(StandardPermissions.SiteOwner);
                     item.Action("List", "Admin", new { area = "Orchard.JobsQueue" });
                     item.LinkToFirstChild(false);
                 });

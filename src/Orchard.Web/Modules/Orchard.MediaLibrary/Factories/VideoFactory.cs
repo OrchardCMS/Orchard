@@ -55,13 +55,10 @@ namespace Orchard.MediaLibrary.Factories {
             part.Title = Path.GetFileNameWithoutExtension(path);
 
             var videoPart = part.As<VideoPart>();
-
             if (videoPart == null) {
                 return null;
             }
 
-            videoPart.Length = 0;
-            
             return part;
         }
     }

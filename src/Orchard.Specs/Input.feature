@@ -35,7 +35,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                              | value                           |
-            | Fields[0].InputFieldSettings.Hint | Enter the contact email address |
+            | Fields[Contact].InputFieldSettings.Hint | Enter the contact email address |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Enter the contact email address"
@@ -44,7 +44,7 @@ Scenario: Creating and using Input fields
     #When I go to "Admin/ContentTypes/Edit/Event"
     #	And I fill in 
     #        | name                                 | value       |
-    #        | Fields[0].InputFieldSettings.Pattern | [^@]*@[^@]* |
+    #        | Fields[Contact].InputFieldSettings.Pattern | [^@]*@[^@]* |
     #	And I hit "Save"
     #	And I go to "Admin/Contents/Create/Event"
     #Then I should see "pattern=\"[^@]*@[^@]*\""
@@ -53,7 +53,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                              | value   |
-            | Fields[0].InputFieldSettings.Type | Email   |
+            | Fields[Contact].InputFieldSettings.Type | Email   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "type=\"email\""
@@ -62,7 +62,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                               | value                  |
-            | Fields[0].InputFieldSettings.Title | Enter an email address |
+            | Fields[Contact].InputFieldSettings.Title | Enter an email address |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "title=\"Enter an email address\""
@@ -71,7 +71,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].InputFieldSettings.AutoFocus | true  |
+            | Fields[Contact].InputFieldSettings.AutoFocus | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "autofocus=\"autofocus\""
@@ -80,7 +80,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                      | value |
-            | Fields[0].InputFieldSettings.AutoComplete | true  |
+            | Fields[Contact].InputFieldSettings.AutoComplete | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "autocomplete=\"on\""
@@ -89,7 +89,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                     | value            |
-            | Fields[0].InputFieldSettings.Placeholder | email@domain.com |
+            | Fields[Contact].InputFieldSettings.Placeholder | email@domain.com |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "placeholder=\"email@domain.com\""
@@ -98,7 +98,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].InputFieldSettings.MaxLength | 100   |
+            | Fields[Contact].InputFieldSettings.MaxLength | 100   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "maxlength=\"100\""
@@ -107,7 +107,7 @@ Scenario: Creating and using Input fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                  | value |
-            | Fields[0].InputFieldSettings.Required | true  |
+            | Fields[Contact].InputFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -129,58 +129,29 @@ Scenario: Creating and using Input fields
     Then I should see "Contact:" 
         And I should see "contact@orchardproject.net"
 
-    # If not required and no value, the default value should be used
+    # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                      | value                       |
-            | Fields[0].InputFieldSettings.Required     | false                       |
-            | Fields[0].InputFieldSettings.DefaultValue | contact1@orchardproject.net |
+            | Fields[Contact].InputFieldSettings.DefaultValue | contact@orchardproject.net |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name                | value |
-            | Event.Contact.Value |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-    When I go to "Admin/Contents/List"
-    Then I should see "Contact:" 
-        And I should see "contact1@orchardproject.net"
+    Then I should see "value=\"contact@orchardproject.net\""
 
-    # If required and no value, the default value should be used
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                      | value                       |
-            | Fields[0].InputFieldSettings.Required     | true                        |
-            | Fields[0].InputFieldSettings.DefaultValue | contact2@orchardproject.net |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name                | value |
-            | Event.Contact.Value |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-    When I go to "Admin/Contents/List"
-    Then I should see "Contact:" 
-        And I should see "contact2@orchardproject.net"
-
-    # If required and no default value, the required attribute should be used
+    # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                      | value |
-            | Fields[0].InputFieldSettings.Required     | true  |
-            | Fields[0].InputFieldSettings.DefaultValue |       |
+            | Fields[Contact].InputFieldSettings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
 
-    # If required and a default value is set, the required attribute should not be used
+    # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                      | value                      |
-            | Fields[0].InputFieldSettings.Required     | true                       |
-            | Fields[0].InputFieldSettings.DefaultValue | contact@orchardproject.net |
+            | name                                      | value |
+            | Fields[Contact].InputFieldSettings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

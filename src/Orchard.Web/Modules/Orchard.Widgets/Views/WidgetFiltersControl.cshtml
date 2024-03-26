@@ -9,8 +9,8 @@
     var returnUrl = Request.RawUrl;
 }
 <div id="widgets-layers-control" class="widgets-container">
-    @if (layers.Any()) {
-        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
+    @using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
+        if (layers.Any()) {
             <fieldset class="bulk-actions-auto">
                 <label for="layerId">@T("Current Layer:")</label>
                 <select id="layerId" name="layerId">
@@ -22,23 +22,20 @@
                 @Html.Link(T("Edit").Text, Url.Action("EditLayer", "Admin", new { area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }), new { @class = "button" })
             </fieldset>
         }
-    }
-    <div id="widgets-layer-add">
-        @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
-    </div>
-
-    @if (cultures.Count() > 1) { 
-        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
-        <fieldset class="bulk-actions-auto">
-            <label for="culture">@T("Current Culture:")</label>
-            <select id="culture" name="culture">
-                @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
-                @foreach (var culture in cultures) {
-                    @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
-                }
-            </select>
-            <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-        </fieldset>
+        <div id="widgets-layer-add">
+            @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
+        </div>
+        if (cultures.Count() > 1) {
+            <fieldset class="bulk-actions-auto">
+                <label for="culture">@T("Current Culture:")</label>
+                <select id="culture" name="culture">
+                    @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
+                    @foreach (var culture in cultures) {
+                        @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                    }
+                </select>
+                <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
+            </fieldset>
         }
     }
 

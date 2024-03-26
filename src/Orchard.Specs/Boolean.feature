@@ -48,16 +48,16 @@ Scenario: Creating and using Boolean fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                | value                        |
-            | Fields[0].BooleanFieldSettings.Hint | Check if the event is active |
+            | Fields[Active].BooleanFieldSettings.Hint | Check if the event is active |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Check if the event is active"
     
-    # The default value should be used on creation
+    # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].BooleanFieldSettings.DefaultValue | True  |
+            | Fields[Active].BooleanFieldSettings.DefaultValue | True  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "checked=\"checked\""
@@ -65,15 +65,8 @@ Scenario: Creating and using Boolean fields
     # The value should be required
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                        | value    |
-            | Fields[0].BooleanFieldSettings.Optional     | false    |
-            | Fields[0].BooleanFieldSettings.DefaultValue | Neutral  |
-        And I fill in 
-            | name                                       | value  |
-            | Fields[0].BooleanFieldSettings.NotSetLabel | May be |
-        And I fill in 
-            | name                                         | value       |
-            | Fields[0].BooleanFieldSettings.SelectionMode | Radiobutton |
+            | name                                        | value |
+            | Fields[Active].BooleanFieldSettings.Optional     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -81,22 +74,3 @@ Scenario: Creating and using Boolean fields
             | Event.Active.Value |       |
         And I hit "Save"
     Then I should see "The field Active is mandatory."
-	
-    # If required and no value, the default value should be used
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                        | value |
-            | Fields[0].BooleanFieldSettings.Optional     | false |
-            | Fields[0].BooleanFieldSettings.DefaultValue | True  |
-        And I fill in 
-            | name                                         | value         |
-            | Fields[0].BooleanFieldSettings.SelectionMode | Dropdown list |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Active.Value |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-        And I should see "selected=\"selected\" value=\"true\""

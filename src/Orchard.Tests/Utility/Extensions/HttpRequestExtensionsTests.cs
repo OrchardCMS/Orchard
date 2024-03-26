@@ -6,7 +6,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Tests.Utility.Extensions {
     [TestFixture]
     public class HttpRequestExtensionsTests {
-    
+
         [Test]
         public void IsLocalUrlShouldReturnFalseWhenUrlIsNullOrEmpty() {
             var request = new StubHttpRequest();
@@ -21,6 +21,7 @@ namespace Orchard.Tests.Utility.Extensions {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("//"), Is.False);
+            Assert.That(request.IsLocalUrl("  //"), Is.False);
         }
 
         [Test]
@@ -28,6 +29,7 @@ namespace Orchard.Tests.Utility.Extensions {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("/\\"), Is.False);
+            Assert.That(request.IsLocalUrl(" /\\"), Is.False);
         }
 
         [Test]
@@ -35,6 +37,7 @@ namespace Orchard.Tests.Utility.Extensions {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("/"), Is.True);
+            Assert.That(request.IsLocalUrl("\t/"), Is.True);
             Assert.That(request.IsLocalUrl("/контакты"), Is.True);
             Assert.That(request.IsLocalUrl("/  "), Is.True);
             Assert.That(request.IsLocalUrl("/abc-def"), Is.True);
@@ -46,6 +49,18 @@ namespace Orchard.Tests.Utility.Extensions {
             request.Headers.Add("Host", "localhost");
 
             Assert.That(request.IsLocalUrl("http://localhost"), Is.True);
+            Assert.That(request.IsLocalUrl("https://localhost"), Is.True);
+        }
+
+        [Test]
+        public void IsLocalUrlShouldReturnFalseForNonHttpSchemes() {
+            var request = new StubHttpRequest();
+            request.Headers.Add("Host", "localhost");
+
+            Assert.That(request.IsLocalUrl("httpx://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("foo://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("data://localhost"), Is.False);
+            Assert.That(request.IsLocalUrl("mailto://localhost"), Is.False);
         }
 
         [Test]

@@ -4,7 +4,7 @@
 @{
     Script.Require("ShapesBase");
     ContentItem contentItem = Model.ContentItem;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
@@ -25,27 +25,31 @@
             @T(" | ")
 
             if (contentItem.HasDraft()) {
-                @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-                @T(" | ")
-
                 if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
+                    @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.RawUrl }), new { itemprop = "UnsafeUrl" })
+                    @T(" | ")
+                }
+
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
                     @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
                     @T(" | ")
                 }
             }
 
             if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.RawUrl}), new { itemprop = "UnsafeUrl" })
                 @T(" | ")
             }
         } else {
-            if (contentItem.HasDraft()) {    
-                @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
-                @T(" | ")
+            if (contentItem.HasDraft()) {
+                if (Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                    @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = contentItem.Id }, new { })
+                    @T(" | ")
+                }
             }
 
             if (Authorizer.Authorize(Orchard.Blogs.Permissions.PublishBlogPost, contentItem)) {
-                @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl = Request.RawUrl }), new { itemprop = "UnsafeUrl" })
                 @T(" | ")
             }
         }

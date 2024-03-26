@@ -48,7 +48,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                | value                 |
-            | Fields[0].NumericFieldSettings.Hint | Please enter a number |
+            | Fields[Guests].NumericFieldSettings.Hint | Please enter a number |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Please enter a number"
@@ -57,7 +57,7 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                    | value |
-            | Fields[0].NumericFieldSettings.Required | true  |
+            | Fields[Guests].NumericFieldSettings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -70,8 +70,8 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].NumericFieldSettings.Minimum | -10   |
-            | Fields[0].NumericFieldSettings.Maximum | 100   |
+            | Fields[Guests].NumericFieldSettings.Minimum | -10   |
+            | Fields[Guests].NumericFieldSettings.Maximum | 100   |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "min=\"-10\"" 
@@ -92,108 +92,43 @@ Scenario: Creating and using numeric fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                   | value |
-            | Fields[0].NumericFieldSettings.Minimum | a     |
-            | Fields[0].NumericFieldSettings.Maximum | b     |
+            | Fields[Guests].NumericFieldSettings.Minimum | a     |
+            | Fields[Guests].NumericFieldSettings.Maximum | b     |
         And I hit "Save"
     Then I should see "The value &#39;a&#39; is not valid for Minimum."
         And I should see "The value &#39;b&#39; is not valid for Maximum."
 
     # The value should be validated
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | false |
-            | Fields[0].NumericFieldSettings.DefaultValue | 4     |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
+    When I go to "Admin/Contents/Create/Event"
         And I fill in 
             | name               | value |
             | Event.Guests.Value |   a   |
         And I hit "Save"
-    Then I should see "Guests or its default value is an invalid number"
+    Then I should see "Guests is an invalid number"
 
-    # If not required and no value, the default value should be used
+    # The default value should be proposed on creation
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | false |
-            | Fields[0].NumericFieldSettings.DefaultValue | 4     |
+            | Fields[Guests].NumericFieldSettings.DefaultValue | 1234  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Guests.Value |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-    When I go to "Admin/Contents/List"
-    Then I should see "Guests:" 
-        And I should see "4"
+    Then I should see "value=\"1234\""
 
-    # If required and no value, the default value should be used
+    # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | true  |
-            | Fields[0].NumericFieldSettings.DefaultValue | 5     |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Guests.Value |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-    When I go to "Admin/Contents/List"
-    Then I should see "Guests:" 
-        And I should see "5"
-
-    # The default value should be validated
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | false |
-            | Fields[0].NumericFieldSettings.DefaultValue | a     |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Guests.Value |       |
-        And I hit "Save"
-    Then I should see "Guests or its default value is an invalid number"
-
-    # The default value should be bound
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | false |
-            | Fields[0].NumericFieldSettings.Minimum      | -10   |
-            | Fields[0].NumericFieldSettings.Maximum      | 100   |
-            | Fields[0].NumericFieldSettings.DefaultValue | -20   |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Guests.Value |       |
-        And I hit "Save"
-    Then I should see "The value must be greater than -10"
-
-    # If required and no default value, the required attribute should be used
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | true  |
-            | Fields[0].NumericFieldSettings.DefaultValue |       |
+            | Fields[Guests].NumericFieldSettings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
 
-    # If required and a default value is set, the required attribute should not be used
+    # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                        | value |
-            | Fields[0].NumericFieldSettings.Required     | true  |
-            | Fields[0].NumericFieldSettings.DefaultValue | 6     |
+            | Fields[Guests].NumericFieldSettings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

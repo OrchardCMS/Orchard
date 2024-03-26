@@ -21,7 +21,7 @@ namespace Orchard.MediaLibrary.Factories {
             if (!mimeType.StartsWith("image/svg")) {
                 return null;
             }
-            
+
             if (!String.IsNullOrEmpty(contentType)) {
                 var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
                 if (contentDefinition == null || contentDefinition.Parts.All(x => x.PartDefinition.Name != typeof(VectorImagePart).Name)) {

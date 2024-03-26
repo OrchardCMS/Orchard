@@ -1,8 +1,9 @@
 @model Orchard.ContentTypes.ViewModels.EditPartViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
-    Layout.Title = T("Edit Part").ToString();
+    Layout.Title = T("Edit Content Part - {0}", Html.Raw(Model.DisplayName)).Text;
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -28,12 +29,12 @@
 }
 
 @using(Script.Foot()){
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
-        $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
-    })(jQuery);
-//]]>
-</script>
+    <script type="text/javascript">
+    //<![CDATA[
+        (function ($) {
+            $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
+            $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
+        })(jQuery);
+    //]]>
+    </script>
 }

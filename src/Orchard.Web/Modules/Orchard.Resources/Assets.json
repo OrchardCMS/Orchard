@@ -76,7 +76,7 @@
     },
     {
         "inputs": [ "Assets/Css/Colorbox/colorbox.css" ],
-        "output": "Styles/jquery-colorbox.css"
+        "output": "Styles/jquery.colorbox.css"
     },
     {
         "inputs": [ "Assets/Js/Colorbox/jquery.colorbox.js" ],

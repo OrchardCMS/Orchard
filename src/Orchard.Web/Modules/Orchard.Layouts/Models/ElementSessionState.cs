@@ -1,8 +1,8 @@
 using System;
 
-﻿namespace Orchard.Layouts.Models {
-﻿        [Serializable]
-        public class ElementSessionState {
+namespace Orchard.Layouts.Models {
+    [Serializable]
+    public class ElementSessionState {
         public string TypeName { get; set; }
         public string ElementData { get; set; }
         public string ElementEditorData { get; set; }

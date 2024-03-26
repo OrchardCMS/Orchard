@@ -134,7 +134,7 @@ namespace Orchard.Blogs.Commands {
                 Context.Output.WriteLine(T("Found {0} items", doc.Descendants("item").Count()));
             }
             catch (Exception ex) {
-                throw new OrchardException(T("An error occured while loading the feed at {0}.", FeedUrl), ex);
+                throw new OrchardException(T("An error occurred while loading the feed at {0}.", FeedUrl), ex);
             }
 
             var blog = _blogService.Get(BlogId, VersionOptions.Latest);

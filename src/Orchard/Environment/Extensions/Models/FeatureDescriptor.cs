@@ -5,6 +5,7 @@ namespace Orchard.Environment.Extensions.Models {
     public class FeatureDescriptor {
         public FeatureDescriptor() {
             Dependencies = Enumerable.Empty<string>();
+            LifecycleStatus = LifecycleStatus.Production;
         }
 
         public ExtensionDescriptor Extension { get; set; }
@@ -14,6 +15,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string Description { get; set; }
         public string Category { get; set; }
         public int Priority { get; set; }
+        public LifecycleStatus LifecycleStatus { get; set; }
         public IEnumerable<string> Dependencies { get; set; }
     }
 }

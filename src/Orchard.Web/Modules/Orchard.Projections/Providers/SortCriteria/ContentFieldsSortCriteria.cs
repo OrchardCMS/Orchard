@@ -32,14 +32,14 @@ namespace Orchard.Projections.Providers.SortCriteria {
         public Localizer T { get; set; }
 
         public void Describe(DescribeSortCriterionContext describe) {
-            foreach(var part in _contentDefinitionManager.ListPartDefinitions()) {
-                if(!part.Fields.Any()) {
+            foreach (var part in _contentDefinitionManager.ListPartDefinitions()) {
+                if (!part.Fields.Any()) {
                     continue;
                 }
 
                 var descriptor = describe.For(part.Name + "ContentFields", T("{0} Content Fields", part.Name.CamelFriendly()), T("Content Fields for {0}", part.Name.CamelFriendly()));
 
-                foreach(var field in part.Fields) {
+                foreach (var field in part.Fields) {
                     var localField = field;
                     var localPart = part;
                     var drivers = _contentFieldDrivers.Where(x => x.GetFieldInfo().Any(fi => fi.FieldTypeName == localField.FieldDefinition.Name)).ToList();
@@ -57,8 +57,8 @@ namespace Orchard.Projections.Providers.SortCriteria {
                                 display: context => DisplaySortCriterion(context, localPart, localField),
                                 form: SortCriterionFormProvider.FormName);
                         });
-                    
-                    foreach(var driver in drivers) {
+
+                    foreach (var driver in drivers) {
                         driver.Describe(membersContext);
                     }
                 }
@@ -79,11 +79,11 @@ namespace Orchard.Projections.Providers.SortCriteria {
 
             // apply where clause
             context.Query = context.Query.Where(relationship, predicate);
-            
+
             // apply sort
-            context.Query = ascending 
-                ? context.Query.OrderBy(relationship, x => x.Asc("Value")) 
-                : context.Query.OrderBy(relationship, x => x.Desc("Value"));
+            context.Query = ascending
+                ? context.Query.OrderBy(relationship, x => x.Asc(context.GetSortColumnName()))
+                : context.Query.OrderBy(relationship, x => x.Desc(context.GetSortColumnName()));
         }
 
         public LocalizedString DisplaySortCriterion(SortCriterionContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition) {

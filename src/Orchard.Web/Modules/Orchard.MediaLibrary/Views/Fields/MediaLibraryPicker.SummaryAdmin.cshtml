@@ -8,7 +8,7 @@
     string name = field.Name;
     var mediaParts = field.MediaParts;
 
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 <span class="name">@displayName:</span>
 <p class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">

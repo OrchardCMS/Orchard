@@ -8,6 +8,7 @@ using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.Indexing {
     public class LuceneSearchBuilderTests {
@@ -34,6 +35,7 @@ namespace Orchard.Tests.Modules.Indexing {
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<DefaultLuceneAnalyzerProvider>().As<ILuceneAnalyzerProvider>();
             builder.RegisterType<DefaultLuceneAnalyzerSelector>().As<ILuceneAnalyzerSelector>();
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();

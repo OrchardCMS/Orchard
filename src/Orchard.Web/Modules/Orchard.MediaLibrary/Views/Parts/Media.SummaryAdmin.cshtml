@@ -11,7 +11,7 @@
 @if (HasText(mediaUrl)) {
 <div class="file-name">
     <em>@T("Filename:")</em>
-    <span><a href="@mediaUrl">@HttpUtility.UrlDecode(Path.GetFileName(mediaUrl))</a></span>
+    <span><a href="@mediaUrl" target="_blank">@HttpUtility.UrlDecode(Path.GetFileName(mediaUrl))</a></span>
 </div>
 }
 <div class="mime-type">

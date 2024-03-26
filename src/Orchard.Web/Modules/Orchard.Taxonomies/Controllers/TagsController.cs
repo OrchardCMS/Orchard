@@ -36,19 +36,23 @@ namespace Orchard.Taxonomies.Controllers {
 	        if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel)) {
 		        throw new UnauthorizedAccessException("Can't access the admin");
 	        }
-            if (string.IsNullOrEmpty(query)) return new List<Tag>();
             var allTerms = leavesOnly
                                ? _taxonomyService.GetTerms(taxonomyId).ToList()
                                : new List<TermPart>();
+
             var matchingTerms = _contentManager.Query<TermPart, TermPartRecord>()
                                                .Where(t => t.TaxonomyId == taxonomyId)
-                                               .Join<TitlePartRecord>()
-                                               .Where(r => r.Title.Contains(query))
-                                               .List()
-                                               .Select(t => BuildTag(t, leavesOnly, allTerms))
-                                               .OrderBy(t => t.Label)
-                                               .ToList();
-            return matchingTerms;
+                                               .Join<TitlePartRecord>();
+
+            if (!string.IsNullOrEmpty(query))
+                matchingTerms = matchingTerms.Where(r => r.Title.Contains(query));
+
+            var resultingTerms = matchingTerms.List()
+                                              .Select(t => BuildTag(t, leavesOnly, allTerms))
+                                              .OrderBy(t => t.Label)
+                                              .ToList();
+
+            return resultingTerms;
         }
 
         private static Tag BuildTag(TermPart term, bool leavesOnly, IEnumerable<TermPart> terms) {

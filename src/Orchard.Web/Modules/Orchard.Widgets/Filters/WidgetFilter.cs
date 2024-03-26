@@ -59,7 +59,7 @@ namespace Orchard.Widgets.Filters {
             foreach (var widgetPart in widgetParts) {
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
-                    Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
+                    Logger.Warning("The widget '{0}' has no assigned layer or the layer does not exist.", widgetPart.Title);
                     continue;
                 }
 

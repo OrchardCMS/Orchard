@@ -27,7 +27,7 @@ namespace Orchard.DesignerTools.Controllers {
 
             alternate = alternate.Replace("__", "-").Replace("_", ".");
 
-            var currentTheme = _themeManager.GetRequestTheme(Request.RequestContext);
+            var currentTheme = Services.WorkContext.CurrentTheme;
             var alternateFilename = Server.MapPath(Path.Combine(currentTheme.Location, currentTheme.Id, "Views", alternate));
             var isCodeTemplate = template.Contains("::");
 

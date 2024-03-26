@@ -11,7 +11,7 @@ namespace Orchard.Localization.Services {
             var persianFormats = (DateTimeFormatInfo)original.Clone();
 
             var persianCalendarMonthNames = new[] {
-                "فررودین",
+                "فروردین",
                 "اردیبهشت",
                 "خرداد",
                 "تیر",

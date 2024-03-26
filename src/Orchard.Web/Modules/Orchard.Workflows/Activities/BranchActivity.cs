@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
@@ -19,11 +20,11 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return GetBranches(activityContext).Select(x => T(x));
+            return GetBranches(activityContext).Select(x => T.Encode(x));
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return GetBranches(activityContext).Select(x => T(x));
+            return GetBranches(activityContext).Select(x => T.Encode(x));
         }
 
         public override string Name {

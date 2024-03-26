@@ -21,14 +21,7 @@ namespace Orchard.MediaLibrary.Security {
         public void Adjust(CheckAccessContext context) {
             var mediaPart = context.Content.As<MediaPart>();
             if (mediaPart != null) {
-                if(_authorizer.Authorize(Permissions.ManageMediaContent)) {
-                    context.Granted = true;
-                    return;
-                }
-
-                if(_authorizer.Authorize(Permissions.ManageOwnMedia)) {
-                    context.Granted = _mediaLibraryService.CanManageMediaFolder(mediaPart.FolderPath);
-                }
+                context.Granted = _mediaLibraryService.CheckMediaFolderPermission(context.Permission, mediaPart.FolderPath);
             }
         }
     }

@@ -1,0 +1,5 @@
+﻿<Placement>
+    <Match ContentType="Site">
+        <Place Parts_LuceneSettings_Edit="Content: 1@LuceneSettings" />
+    </Match>
+</Placement>

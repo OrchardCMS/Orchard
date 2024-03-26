@@ -42,7 +42,7 @@ namespace Orchard.Projections.Providers.SortCriteria {
         }
     }
 
-    public class SortCriterionFormValitator : FormHandler {
+    public class SortCriterionFormValidator : FormHandler {
         public Localizer T { get; set; }
 
         public override void Validating(ValidatingContext context) {

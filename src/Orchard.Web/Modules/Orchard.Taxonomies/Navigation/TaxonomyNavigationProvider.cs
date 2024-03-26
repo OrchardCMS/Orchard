@@ -22,7 +22,15 @@ namespace Orchard.Taxonomies.Navigation {
             ITaxonomyService taxonomyService) {
             _contentManager = contentManager;
             _taxonomyService = taxonomyService;
+
+            _termsMemory = new Dictionary<string, TermPart[]>();
         }
+
+        // Prevent doing the same query for terms more than once on a same request
+        // in case we are building menus from the same starting taxonomies. Key is a
+        // string to "combine" the Id of the root TermPart and the flag telling to
+        // add that root to the results.
+        private Dictionary<string, TermPart[]> _termsMemory;
 
         public IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> items) {
 
@@ -34,14 +42,21 @@ namespace Orchard.Taxonomies.Navigation {
                     var rootTerm = _taxonomyService.GetTerm(taxonomyNavigationPart.TermId);
 
                     TermPart[] allTerms;
-
+                    string memoryKey;
                     if (rootTerm != null) {
-                        // if DisplayRootTerm is specified add it to the menu items to render
-                        allTerms = _taxonomyService.GetChildren(rootTerm, taxonomyNavigationPart.DisplayRootTerm).ToArray();
+                        memoryKey = $"{rootTerm.Id}_{taxonomyNavigationPart.DisplayRootTerm}";
+                        if (!_termsMemory.ContainsKey(memoryKey)) {
+                            // if DisplayRootTerm is specified add it to the menu items to render
+                            _termsMemory[memoryKey] = _taxonomyService.GetChildren(rootTerm, taxonomyNavigationPart.DisplayRootTerm).ToArray();
+                        }
                     }
                     else {
-                        allTerms = _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId).ToArray();
+                        memoryKey = taxonomyNavigationPart.TaxonomyId.ToString();
+                        if (!_termsMemory.ContainsKey(memoryKey)) {
+                            _termsMemory[memoryKey] = _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId).ToArray();
+                        }
                     }
+                    allTerms = _termsMemory[memoryKey];
 
                     var rootLevel = rootTerm != null
                         ? rootTerm.GetLevels()

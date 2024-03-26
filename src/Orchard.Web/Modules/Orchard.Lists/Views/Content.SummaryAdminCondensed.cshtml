@@ -3,7 +3,7 @@
 @using Orchard.Utility.Extensions;
 @{
     ContentItem contentItem = Model.ContentItem;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 <div class="summary-condensed" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">

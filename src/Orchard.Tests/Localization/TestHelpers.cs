@@ -9,9 +9,12 @@ using Orchard.Tests.Stubs;
 namespace Orchard.Tests.Localization {
 
     internal class TestHelpers {
-        public static IContainer InitializeContainer(string cultureName, string calendarName, TimeZoneInfo timeZone) {
+        public static IContainer InitializeContainer(string cultureName, string calendarName, TimeZoneInfo timeZone, IClock clock = null) {
             var builder = new ContainerBuilder();
-            builder.RegisterType<StubClock>().As<IClock>();
+            if (clock != null)
+                builder.RegisterInstance(clock);
+            else
+                builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterInstance<WorkContext>(new StubWorkContext(cultureName, calendarName, timeZone));
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<CultureDateTimeFormatProvider>().As<IDateTimeFormatProvider>();

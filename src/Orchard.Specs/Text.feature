@@ -35,7 +35,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                       | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Flavor | Large |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "class=\"text large\""
@@ -44,7 +44,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                         | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required | true  |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
         And I fill in 
@@ -57,7 +57,7 @@ Scenario: Creating and using Text fields
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                     | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Hint | Subject of the event |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "Subject of the event"
@@ -67,60 +67,35 @@ Scenario: Creating and using Text fields
     Then I should see "Subject"
     When I fill in 
             | name               | value                |
-            | Event.Subject.Text | Orchard Harvest 2013 |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-        And I should see "Orchard Harvest 2013"
-
-    # If not required and no value, the default value should be used
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                                             | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | false                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2014 |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Subject.Text |       |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Your Event has been created."
-        And I should see "Orchard Harvest 2014"
-
-    # If required and no value, the default value should be used
-    When I go to "Admin/ContentTypes/Edit/Event"
-        And I fill in 
-            | name                                                             | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true                 |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2015 |
-        And I hit "Save"
-        And I go to "Admin/Contents/Create/Event"
-        And I fill in 
-            | name               | value |
-            | Event.Subject.Text |       |
+            | Event.Subject.Text | Orchard Harvest 2015 |
         And I hit "Save"
         And I am redirected
     Then I should see "Your Event has been created."
         And I should see "Orchard Harvest 2015"
 
-    # If required and no default value, the required attribute should be used
+    # The default value should be proposed on creation
+    When I go to "Admin/ContentTypes/Edit/Event"
+        And I fill in 
+            | name                                                             | value                |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2016 |
+        And I hit "Save"
+        And I go to "Admin/Contents/Create/Event"
+    Then I should see "value=\"Orchard Harvest 2016\""
+
+    # The required attribute should be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
             | name                                                             | value |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue |       |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | true  |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should see "required=\"required\""
 
-    # If required and a default value is set, the required attribute should not be used
+    # The required attribute should not be used
     When I go to "Admin/ContentTypes/Edit/Event"
         And I fill in 
-            | name                                                             | value                |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.Required     | true                 |
-            | Fields[0].TextFieldSettingsEventsViewModel.Settings.DefaultValue | Orchard Harvest 2015 |
+            | name                                                             | value |
+            | Fields[Subject].TextFieldSettingsEventsViewModel.Settings.Required     | false |
         And I hit "Save"
         And I go to "Admin/Contents/Create/Event"
     Then I should not see "required=\"required\""

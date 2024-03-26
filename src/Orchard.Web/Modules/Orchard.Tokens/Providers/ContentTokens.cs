@@ -26,6 +26,9 @@ namespace Orchard.Tokens.Providers {
         public Localizer T { get; set; }
 
         public void Describe(DescribeContext context) {
+            context.For("ContentItem", T("Content Items"), T("The context to access specific content items."))
+                .Token("Id:*", T("Content Item by Id"), T("The content item with the specified id."));
+
             context.For("Content", T("Content Items"), T("Content Items"))
                 .Token("Id", T("Content Id"), T("Numeric primary key value of content."))
                 .Token("Author", T("Content Author"), T("Person in charge of the content."), "User")
@@ -36,8 +39,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("DisplayUrl", T("Display Url"), T("Url to display the content."), "Url")
                 .Token("EditUrl", T("Edit Url"), T("Url to edit the content."), "Url")
                 .Token("Container", T("Container"), T("The container Content Item."), "Content")
-                .Token("Body", T("Body"), T("The body text of the content item."), "Text")
-                ;
+                .Token("Body", T("Body"), T("The body text of the content item."), "Text");
 
             // Token descriptors for fields
             foreach (var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
@@ -72,26 +74,57 @@ namespace Orchard.Tokens.Providers {
         }
 
         public void Evaluate(EvaluateContext context) {
+            context.For<IContentManager>("ContentItem", _contentManager)
+                .Token(
+                        token => token.StartsWith("Id:", StringComparison.OrdinalIgnoreCase) ? ContentManagerGetToken(token) : "",
+                        (token, cm) => {
+                            // token is Id:*
+                            if (token != "") {
+                                var id = token.Substring("Id:".Length);
+                                return cm.Get(Convert.ToInt32(id));
+                            }
+                            else { return null; }
+                        })
+                .Chain(
+                    token => {
+                        var cleanToken = ContentManagerGetToken(token); // is Id:*
+                        if (string.IsNullOrWhiteSpace(cleanToken)) return null;
+                        int cleanTokenLength = cleanToken.Length;
+                        var subTokens = token.Length > cleanTokenLength ? token.Substring(cleanToken.Length + 1) : "";
+                        return new Tuple<string, string>(
+                            cleanToken, //The specific Token Id:*, it is the key
+                            subTokens //The subsequent Tokens (i.e Fields.PartName.FieldName)
+                            );
+                    },
+                    "Content",
+                    (token, cm) => {
+                        // token is Id:*
+
+                        if (token != "") {
+                            var id = token.Substring("Id:".Length);
+                            return cm.Get(Convert.ToInt32(id));
+                        }
+                        else { return null; }
+                    });
             context.For<IContent>("Content")
-                .Token("Id", content => content != null ? content.Id : 0)
-                .Token("Author", AuthorName)
-                .Chain("Author", "User", content => content != null ? content.As<ICommonPart>().Owner : null)
-                .Token("Date", Date)
-                .Chain("Date", "Date", Date)
-                .Token("Identity", content => content != null ? _contentManager.GetItemMetadata(content).Identity.ToString() : String.Empty)
-                .Token("ContentType", content => content != null ? content.ContentItem.TypeDefinition.DisplayName : String.Empty)
-                .Chain("ContentType", "TypeDefinition", content => content != null ? content.ContentItem.TypeDefinition : null)
-                .Token("DisplayText", DisplayText)
-                .Chain("DisplayText", "Text", DisplayText)
-                .Token("DisplayUrl", DisplayUrl)
-                .Chain("DisplayUrl", "Url", DisplayUrl)
-                .Token("EditUrl", EditUrl)
-                .Chain("EditUrl", "Url", EditUrl)
-                .Token("Container", content => DisplayText(Container(content)))
-                .Chain("Container", "Content", Container)
-                .Token("Body", Body)
-                .Chain("Body", "Text", Body)
-                ;
+                    .Token("Id", content => content != null ? content.Id : 0)
+                    .Token("Author", AuthorName)
+                    .Chain("Author", "User", content => content != null ? content.As<ICommonPart>().Owner : null)
+                    .Token("Date", Date)
+                    .Chain("Date", "Date", Date)
+                    .Token("Identity", content => content != null ? _contentManager.GetItemMetadata(content).Identity.ToString() : String.Empty)
+                    .Token("ContentType", content => content != null ? content.ContentItem.TypeDefinition.DisplayName : String.Empty)
+                    .Chain("ContentType", "TypeDefinition", content => content != null ? content.ContentItem.TypeDefinition : null)
+                    .Token("DisplayText", DisplayText)
+                    .Chain("DisplayText", "Text", DisplayText)
+                    .Token("DisplayUrl", DisplayUrl)
+                    .Chain("DisplayUrl", "Url", DisplayUrl)
+                    .Token("EditUrl", EditUrl)
+                    .Chain("EditUrl", "Url", EditUrl)
+                    .Token("Container", content => DisplayText(Container(content)))
+                    .Chain("Container", "Content", Container)
+                    .Token("Body", Body)
+                    .Chain("Body", "Text", Body);
 
             if (context.Target == "Content") {
                 var forContent = context.For<IContent>("Content");
@@ -200,6 +233,37 @@ namespace Orchard.Tokens.Providers {
             }
 
             return bodyPart.Text;
+        }
+
+        //returns Id:* Token
+        private static string ContentManagerGetToken(string token) {
+            string tokenPrefix, result;
+            int chainIndex, tokenLength;
+
+            if (token.IndexOf(":") == -1) {
+                return null;
+            }
+            tokenPrefix = token.Substring(0, token.IndexOf(":"));
+
+            chainIndex = token.IndexOf(".");
+            tokenLength = (tokenPrefix + ":").Length;
+            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
+                return null;
+            }
+            else if (chainIndex == 0) {// "." has not be found
+                result = token.Substring(tokenLength);
+            }
+            else {
+                result = token.Substring(0, chainIndex);
+            }
+
+            // return the resulting id if it is a number, otherwise an empty string
+            if (int.TryParse(result.Substring(tokenPrefix.Length + 1), out var contentid)) {
+                return result;
+            }
+            else {
+                return "";
+            }
         }
     }
 }

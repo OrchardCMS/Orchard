@@ -1,7 +1,9 @@
 ﻿@model Orchard.Layouts.ViewModels.MenuEditorViewModel
+
 @{
     var menuOptions = Model.Menus.Select(x => new SelectListItem {Text = Html.ItemDisplayText(x).ToString(), Value = x.Id.ToString(), Selected = x.Id == Model.CurrentMenuId});
 }
+
 <fieldset>
     @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
     @Html.DropDownListFor(m => m.CurrentMenuId, menuOptions)
@@ -20,5 +22,5 @@
 <fieldset>
     @Html.CheckBoxFor(m => m.ShowFullMenu)
     @Html.LabelFor(m => m.ShowFullMenu, T("No filter on selected page").Text, new { @class = "forcheckbox" })
-    @Html.Hint(T("Check for the menu to be display without filtering the selected current page."))
+    @Html.Hint(T("Check for the menu to be displayed without filtering the selected current page."))
 </fieldset>

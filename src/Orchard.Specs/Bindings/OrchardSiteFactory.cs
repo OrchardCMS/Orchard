@@ -11,6 +11,22 @@ using TechTalk.SpecFlow;
 namespace Orchard.Specs.Bindings {
     [Binding]
     public class OrchardSiteFactory : BindingBase {
+        [Given(@"I have a clean site with standard extensions")]
+        public void GivenIHaveACleanSiteWithStandardExtensions() {
+            GivenIHaveACleanSiteWithStandardExtensions("/");
+        }
+
+        [Given(@"I have a clean site with standard extensions at ""(.*)\""")]
+        public void GivenIHaveACleanSiteWithStandardExtensions(string virtualDirectory) {
+            Binding<WebAppHosting>().GivenIHaveACleanSiteWith(
+                virtualDirectory,
+                // This is the list of extensions which will be copied over into the temporary Orchard folder.
+                TableData(
+                    new { extension = "Module", names = "Lucene, Markdown, Orchard.Alias, Orchard.AntiSpam, Orchard.ArchiveLater, Orchard.Autoroute, Orchard.Azure, Orchard.Blogs, Orchard.Caching, Orchard.CodeGeneration, Orchard.Comments, Orchard.ContentPermissions, Orchard.ContentPicker, Orchard.ContentTypes, Orchard.DesignerTools, Orchard.Email, Orchard.Fields, Orchard.Forms, Orchard.ImageEditor, Orchard.ImportExport, Orchard.Indexing, Orchard.JobsQueue, Orchard.Resources, Orchard.Layouts, Orchard.Lists, Orchard.Localization, Orchard.MediaLibrary, Orchard.MediaProcessing, Orchard.Migrations, Orchard.Modules, Orchard.MultiTenancy, Orchard.OutputCache, Orchard.Packaging, Orchard.Pages, Orchard.Projections, Orchard.PublishLater, Orchard.Recipes, Orchard.Roles, Orchard.Scripting, Orchard.Scripting.CSharp, Orchard.Scripting.Dlr, Orchard.Search, Orchard.SecureSocketsLayer, Orchard.Setup, Orchard.Tags, Orchard.Taxonomies, Orchard.Templates, Orchard.Themes, Orchard.Tokens, Orchard.Users, Orchard.Warmup, Orchard.Widgets, Orchard.Workflows, Orchard.Conditions, SysCache, TinyMce, Upgrade" },
+                    new { extension = "Core", names = "Common, Containers, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Title, XmlRpc" },
+                    new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
+        }
+
         [Given(@"I have installed Orchard")]
         public void GivenIHaveInstalledOrchard() {
             GivenIHaveInstalledOrchard("/");
@@ -20,13 +36,7 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveInstalledOrchard(string virtualDirectory) {
             var webApp = Binding<WebAppHosting>();
 
-            // this is the list of module which will be copied over into the temporary Orchard folder
-            webApp.GivenIHaveACleanSiteWith(
-                virtualDirectory,
-                TableData(
-                new { extension = "Module", names = "Lucene, Markdown, Orchard.Alias, Orchard.AntiSpam, Orchard.ArchiveLater, Orchard.Autoroute, Orchard.Azure, Orchard.Blogs, Orchard.Caching, Orchard.CodeGeneration, Orchard.Comments, Orchard.ContentPermissions, Orchard.ContentPicker, Orchard.ContentTypes, Orchard.DesignerTools, Orchard.Email, Orchard.Fields, Orchard.Forms, Orchard.ImageEditor, Orchard.ImportExport, Orchard.Indexing, Orchard.JobsQueue, Orchard.Resources, Orchard.Layouts, Orchard.Lists, Orchard.Localization, Orchard.MediaLibrary, Orchard.MediaProcessing, Orchard.Migrations, Orchard.Modules, Orchard.MultiTenancy, Orchard.OutputCache, Orchard.Packaging, Orchard.Pages, Orchard.Projections, Orchard.PublishLater, Orchard.Recipes, Orchard.Roles, Orchard.Scripting, Orchard.Scripting.CSharp, Orchard.Scripting.Dlr, Orchard.Search, Orchard.SecureSocketsLayer, Orchard.Setup, Orchard.Tags, Orchard.Taxonomies, Orchard.Templates, Orchard.Themes, Orchard.Tokens, Orchard.Users, Orchard.Warmup, Orchard.Widgets, Orchard.Workflows, Orchard.Conditions, SysCache, TinyMce, Upgrade" },
-                new { extension = "Core", names = "Common, Containers, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Title, XmlRpc" },
-                new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
+            GivenIHaveACleanSiteWithStandardExtensions(virtualDirectory);
 
             webApp.WhenIGoTo("Setup");
 

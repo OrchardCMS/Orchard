@@ -32,6 +32,7 @@ namespace Orchard.MediaProcessing.Providers.Filters {
             string mode = context.State.Mode;
             string alignment = context.State.Alignment;
             string padcolor = context.State.PadColor;
+            string scale = context.State.Scale;
 
             var settings = new ResizeSettings {
                 Mode = FitMode.Max,
@@ -70,6 +71,13 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                 }
             }
 
+            switch (scale) {
+                case "downscaleOnly": settings.Scale = ScaleMode.DownscaleOnly; break;
+                case "upscaleOnly": settings.Scale = ScaleMode.UpscaleOnly; break;
+                case "both": settings.Scale = ScaleMode.Both; break;
+                case "upscaleCanvas": settings.Scale = ScaleMode.UpscaleCanvas; break;
+            }
+
             var result = new MemoryStream();
             if (context.Media.CanSeek) {
                 context.Media.Seek(0, SeekOrigin.Begin);
@@ -82,10 +90,10 @@ namespace Orchard.MediaProcessing.Providers.Filters {
             string mode = context.State.Mode;
 
             switch (mode) {
-                case "pad": return T("Pad to {0}x{1}", context.State.Height, context.State.Width);
-                case "crop": return T("Crop to {0}x{1}", context.State.Height, context.State.Width);
-                case "stretch": return T("Stretch to {0}x{1}", context.State.Height, context.State.Width);
-                default: return T("Resize to {0}x{1}", context.State.Height, context.State.Width); 
+                case "pad": return T("Pad to {0} x {1}", context.State.Width, context.State.Height);
+                case "crop": return T("Crop to {0} x {1}", context.State.Width, context.State.Height);
+                case "stretch": return T("Stretch to {0} x {1}", context.State.Width, context.State.Height);
+                default: return T("Resize to {0} x {1}", context.State.Width, context.State.Height); 
 
             } 
         }
@@ -135,7 +143,13 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                             Title: T("Pad Color"),
                             Value: "",
                             Description: T("The background color to use to pad the image e.g., #ffffff, red. Leave empty to keep transparency."),
-                            Classes: new[] {"text small"})
+                            Classes: new[] {"text small"}),
+                        _Scale: Shape.SelectList(
+                            Id: "scale", Name: "Scale",
+                            Title: T("Scale"),
+                            Description: T("Select the scale mode which defines whether the image is allowed to upscale, downscale, both, or if only the canvas gets to be upscaled."),
+                            Size: 1,
+                            Multiple: false)
                         );
 
                     f._Mode.Add(new SelectListItem { Value = "max", Text = T("Max").Text });
@@ -152,6 +166,11 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                     f._Alignment.Add(new SelectListItem { Value = "bottomleft", Text = T("Bottom Left").Text });
                     f._Alignment.Add(new SelectListItem { Value = "bottomcenter", Text = T("Bottom Center").Text });
                     f._Alignment.Add(new SelectListItem { Value = "bottomright", Text = T("Bottom Right").Text });
+
+                    f._Scale.Add(new SelectListItem { Value = "downscaleOnly", Text = T("Downscale only").Text });
+                    f._Scale.Add(new SelectListItem { Value = "upscaleOnly", Text = T("Upscale only").Text });
+                    f._Scale.Add(new SelectListItem { Value = "both", Text = T("Both").Text });
+                    f._Scale.Add(new SelectListItem { Value = "upscaleCanvas", Text = T("Upscale canvas").Text });
 
                     return f;
                 };

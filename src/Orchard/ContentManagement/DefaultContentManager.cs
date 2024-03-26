@@ -277,10 +277,16 @@ namespace Orchard.ContentManagement {
             return _contentItemVersionRepository
                 .Fetch(x => x.ContentItemRecord.Id == id)
                 .OrderBy(x => x.Number)
-                .Select(x => Get(x.Id, VersionOptions.VersionRecord(x.Id)));
+                .Select(x => Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                .Where(ci => ci != null); 
         }
 
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
+            if (!ids.Any()) {
+                // since there are no ids, I have to get no item, so it makes
+                // sense to not do anything at all
+                return Enumerable.Empty<T>();
+            }
             var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) => {
                 contentItemCriteria.Add(Restrictions.In("Id", ids.ToArray()));
                 if (options.IsPublished) {
@@ -301,6 +307,7 @@ namespace Orchard.ContentManagement {
 
             var itemsById = contentItemVersionRecords
                 .Select(r => Get(r.ContentItemRecord.Id, options.IsDraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
+                .Where(ci => ci != null)
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 
@@ -312,11 +319,17 @@ namespace Orchard.ContentManagement {
 
 
         public IEnumerable<ContentItem> GetManyByVersionId(IEnumerable<int> versionRecordIds, QueryHints hints) {
+            if (!versionRecordIds.Any()) {
+                // since there are no ids, I have to get no item, so it makes
+                // sense to not do anything at all
+                return Enumerable.Empty<ContentItem>();
+            }
             var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) =>
                 contentItemVersionCriteria.Add(Restrictions.In("Id", versionRecordIds.ToArray())));
 
             var itemsById = contentItemVersionRecords
                 .Select(r => Get(r.ContentItemRecord.Id, VersionOptions.VersionRecord(r.Id)))
+                .Where(ci => ci != null)
                 .GroupBy(ci => ci.VersionRecord.Id)
                 .ToDictionary(g => g.Key);
 
@@ -562,7 +575,6 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Clone(ContentItem contentItem) {
-            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
             var element = Export(contentItem);
 
             // If a handler prevents this element from being exported, it can't be cloned.

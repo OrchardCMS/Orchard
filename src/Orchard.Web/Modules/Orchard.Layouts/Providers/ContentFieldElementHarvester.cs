@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -11,6 +11,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
+using Orchard.Mvc.Html;
 
 namespace Orchard.Layouts.Providers {
     public class ContentFieldElementHarvester : Component, IElementHarvester {
@@ -44,7 +45,7 @@ namespace Orchard.Layouts.Providers {
                 var field = tuple.Item2;
                 var name = String.Format("{0}.{1}", part.Name, field.Name);
                 var displayName = field.DisplayName;
-                yield return new ElementDescriptor(elementType, name, T(displayName), T(field.DisplayName), contentFieldElement.Category) {
+                yield return new ElementDescriptor(elementType, name, T.Encode(displayName), T.Encode(field.DisplayName), contentFieldElement.Category) {
                     Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2"
                 };
@@ -52,20 +53,18 @@ namespace Orchard.Layouts.Providers {
         }
 
         private IEnumerable<Tuple<ContentPartDefinition, ContentPartFieldDefinition>> GetContentFieldTuples(HarvestElementsContext context) {
-            var contentTypeDefinition = context.Content != null 
-                ? _contentDefinitionManager.Value.GetTypeDefinition(context.Content.ContentItem.ContentType) 
-                : default(ContentTypeDefinition);
+            // If there is no content item provided as context, there are no fields made available.
+            if (context.Content == null)
+                return Enumerable.Empty<Tuple<ContentPartDefinition, ContentPartFieldDefinition>>();
 
-            var parts = contentTypeDefinition != null
-                ? contentTypeDefinition.Parts.Select(x => x.PartDefinition) 
-                : _contentDefinitionManager.Value.ListPartDefinitions();
-
+            var contentTypeDefinition = _contentDefinitionManager.Value.GetTypeDefinition(context.Content.ContentItem.ContentType);
+            var parts = contentTypeDefinition.Parts.Select(x => x.PartDefinition);
             var fields = parts.SelectMany(part => part.Fields.Select(field => Tuple.Create(part, field)));
     
             // TODO: Each module should be able to tell which fields are supported as droppable elements.
             var blackList = new string[0];
 
-            return fields.Where(t => blackList.All(x => t.Item2.FieldDefinition.Name != x));
+            return fields.Where(t => blackList.All(x => t.Item2.FieldDefinition.Name != x)).ToList();
         }
 
         private void Displaying(ElementDisplayingContext context) {

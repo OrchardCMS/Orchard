@@ -15,7 +15,7 @@
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
                 @Html.SelectOption(ContentsBulkAction.None, ContentsBulkAction.Remove, T("Delete").ToString())
             </select>
-            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.ToUrlString())
+            @Html.Hidden("returnUrl", ViewContext.RequestContext.HttpContext.Request.RawUrl)
             <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
         </fieldset>
         <fieldset class="contentItems bulk-items">
