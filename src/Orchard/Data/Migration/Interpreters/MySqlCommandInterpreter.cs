@@ -92,7 +92,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 var columnNames = String.Join(", ", command.ColumnNames.Select(c => string.Format("'{0}'", c)));
                 var tableName = PrefixTableName(command.TableName);
                 var columnList = command.ColumnNames.ToList();
-                var indexMaximumLenght = 767;
+                var indexMaximumLength = 767;
                 var longColumnNames = new List<string>();
 
                 if (columnList.Count > 1) {
@@ -104,10 +104,10 @@ namespace Orchard.Data.Migration.Interpreters {
                     using (var reader = sqlCommand.ExecuteReader()) {
                         reader.Read();
                         if (!reader.IsDBNull(0)) {
-                            var characterMaximumLenght = reader.GetInt32(0);
-                            indexMaximumLenght -= characterMaximumLenght;
-                            if (indexMaximumLenght < 0) {
-                                throw new InvalidOperationException("Cannot create index because indexMaximumLenght less than 0");
+                            var characterMaximumLength = reader.GetInt32(0);
+                            indexMaximumLength -= characterMaximumLength;
+                            if (indexMaximumLength < 0) {
+                                throw new InvalidOperationException("Cannot create index because indexMaximumLength less than 0");
                             }
                         }
                     }
@@ -129,9 +129,9 @@ namespace Orchard.Data.Migration.Interpreters {
                 }
 
                 if (longColumnNames.Count > 0) {
-                    var columnPrefixKeyPartLenght = indexMaximumLenght / longColumnNames.Count;
+                    var columnPrefixKeyPartLength = indexMaximumLength / longColumnNames.Count;
                     foreach (var columnName in longColumnNames) {
-                        columnList[columnList.IndexOf(columnName)] = string.Format("{0}({1})", columnName, columnPrefixKeyPartLenght);
+                        columnList[columnList.IndexOf(columnName)] = string.Format("{0}({1})", columnName, columnPrefixKeyPartLength);
                     }
                 }
 
