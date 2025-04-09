@@ -244,8 +244,7 @@ namespace Orchard.Core.Navigation.Controllers {
         public ActionResult EditPOST(int id, string returnUrl) {
             return EditPOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>()
-                    && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable
-                    && contentItem.IsPublished())
+                    && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
         }
