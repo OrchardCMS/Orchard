@@ -10,13 +10,13 @@ using System;
 
 namespace Orchard.Redis.Caching {
 
-    public interface IRedisCacheStorageProvider : ICacheStorageProvider {
+    public interface ICacheStorageProviderWithKeyPrefix : ICacheStorageProvider {
         void Clear(string key);
     }
 
     [OrchardFeature("Orchard.Redis.Caching")]
     [OrchardSuppressDependency("Orchard.Caching.Services.DefaultCacheStorageProvider")]
-    public class RedisCacheStorageProvider : Component, IRedisCacheStorageProvider {
+    public class RedisCacheStorageProvider : Component, ICacheStorageProviderWithKeyPrefix {
         public const string ConnectionStringKey = "Orchard.Redis.Cache";
 
         private readonly ShellSettings _shellSettings;
