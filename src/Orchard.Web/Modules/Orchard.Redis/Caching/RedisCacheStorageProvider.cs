@@ -9,11 +9,6 @@ using StackExchange.Redis;
 using System;
 
 namespace Orchard.Redis.Caching {
-
-    public interface ICacheStorageProviderWithKeyPrefix : ICacheStorageProvider {
-        void Clear(string key);
-    }
-
     [OrchardFeature("Orchard.Redis.Caching")]
     [OrchardSuppressDependency("Orchard.Caching.Services.DefaultCacheStorageProvider")]
     public class RedisCacheStorageProvider : Component, ICacheStorageProviderWithKeyPrefix {

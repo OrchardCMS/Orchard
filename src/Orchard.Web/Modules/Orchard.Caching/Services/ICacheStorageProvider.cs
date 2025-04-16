@@ -8,4 +8,8 @@ namespace Orchard.Caching.Services {
         void Remove(string key);
         void Clear();
     }
+
+    public interface ICacheStorageProviderWithKeyPrefix : ICacheStorageProvider {
+        void Clear(string key);
+    }
 }
