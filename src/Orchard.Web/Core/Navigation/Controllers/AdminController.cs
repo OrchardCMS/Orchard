@@ -242,9 +242,12 @@ namespace Orchard.Core.Navigation.Controllers {
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
+            var menuPart = _contentManager.GetLatest<MenuPart>(id);
+            var isPublished = menuPart.ContentItem.IsPublished();
             return EditPOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>()
-                    && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable
+                    && isPublished)
                     _contentManager.Publish(contentItem);
             });
         }
