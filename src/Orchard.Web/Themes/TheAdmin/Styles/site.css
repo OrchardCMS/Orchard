@@ -1132,20 +1132,13 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     float: left;
 }
 
-.edit-item-sidebar fieldset:not(:first-child) {
+.edit-item-sidebar fieldset:not(:first-child):not(.delete-button) {
     margin-left: 12px;
+    padding-left: 12px;
+    border-left: 1px solid #ccc;
 }
 
-.edit-item-sidebar fieldset:first-child {
-    clear: left;
-}
-
-fieldset.publish-button, fieldset.unpublish-button {
-    padding-right: 12px;
-    border-right: 1px solid #ccc;
-}
-
-fieldset.delete-button {
+.edit-item-sidebar fieldset.delete-button {
     float: right;
 }
 
@@ -1503,23 +1496,16 @@ html.dir-rtl {
     float: right;
 }
 
-.dir-rtl .edit-item-sidebar fieldset:first-child {
-    clear: right;
-}
-
-.dir-rtl .edit-item-sidebar fieldset:not(:first-child) {
+.dir-rtl .edit-item-sidebar fieldset:not(:first-child):not(.delete-button) {
     margin-left: 0;
+    padding-left: 0;
+    border-left: none;
     margin-right: 12px;
+    padding-right: 12px;
+    border-right: 1px solid #ccc;
 }
 
-.dir-rtl fieldset.publish-button, fieldset.unpublish-button {
-    padding-right: 0;
-    border-right: none;
-    padding-left: 12px;
-    border-left: 1px solid #ccc;
-}
-
-.dir-rtl fieldset.delete-button {
+.dir-rtl .edit-item-sidebar fieldset.delete-button {
     float: left;
 }
 
