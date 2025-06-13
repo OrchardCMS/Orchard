@@ -37,22 +37,21 @@ namespace Orchard.Widgets.Drivers {
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {
-            if(updater.TryUpdateModel(layerPart, Prefix, null, null)) {
+            if (updater.TryUpdateModel(layerPart, Prefix, null, null)) {
                 if (String.IsNullOrWhiteSpace(layerPart.LayerRule)) {
                     layerPart.LayerRule = "true";
                 }
 
                 if (_widgetsService.GetLayers()
-                    .Any(l => 
+                    .Any(l =>
                         l.Id != layerPart.Id
-                        && String.Equals(l.Name, layerPart.Name, StringComparison.InvariantCultureIgnoreCase))) { 
+                        && String.Equals(l.Name, layerPart.Name, StringComparison.InvariantCultureIgnoreCase))) {
                     updater.AddModelError("Name", T("A Layer with the same name already exists"));
                 }
 
                 try {
                     _conditionManager.Matches(layerPart.LayerRule);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     updater.AddModelError("Description", T("The rule is not valid: {0}", e.Message));
                 }
             }
@@ -78,7 +77,7 @@ namespace Orchard.Widgets.Drivers {
 
             var rule = context.Attribute(part.PartDefinition.Name, "LayerRule");
             if (rule != null) {
-                part.LayerRule = rule;    
+                part.LayerRule = rule;
             }
         }
 
