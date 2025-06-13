@@ -613,11 +613,15 @@
     <Content Include="Navigation\Views\Admin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Contents\Views\Content.UnpublishButton.cshtml" />
+    <Content Include="Contents\Views\Content.DeleteButton.cshtml" />  
+    <None Include="packages.config" />
+    <Content Include="Title\Views\DefinitionTemplates\TitlePartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Containers\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="packages.config" />
-    <Content Include="Title\Views\DefinitionTemplates\TitlePartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
