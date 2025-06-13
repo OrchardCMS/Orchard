@@ -170,10 +170,6 @@
     <Compile Include="ViewModels\DateTimeFieldViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Fields\Input.cshtml" />
   </ItemGroup>
   <ItemGroup>

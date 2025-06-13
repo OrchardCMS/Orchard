@@ -200,7 +200,9 @@
     <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
     <Compile Include="Providers\IMediaFolderProvider.cs" />
+    <Compile Include="Services\IOEmbedService.cs" />
     <Compile Include="Services\MediaLibraryService.cs" />
+    <Compile Include="Services\OEmbedService.cs" />
     <Compile Include="Services\Shapes.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
