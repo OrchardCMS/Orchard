@@ -24,9 +24,11 @@ tinyMCE.init({
     ],
     toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | " + mediaPlugins + " link " + contentPickerButtons + " unlink charmap | code htmlsnippetsbutton fullscreen",
     convert_urls: false,
-    valid_elements: "*[*]",
-    // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
-    extended_valid_elements: "script[type|defer|src|language]",
+    //
+    // Uncomment the following two lines (valid_elements and extended_valid_elements) if you want to allow script tags in the HTML content.
+    //
+    //valid_elements: "*[*]",
+    //extended_valid_elements: "script[type|defer|src|language]",
     //menubar: false,
     //statusbar: false,
     skin: "orchardlightgray",
