@@ -255,8 +255,8 @@ angular
                                         return $(e).height();
                                     }));
                                     for (i = 1; i <= 12; i++)
-                                        ui.placeholder.removeClass("col-xs-" + i);
-                                    ui.placeholder.addClass("col-xs-" + receivedColumn.width);
+                                        ui.placeholder.removeClass("col-" + i);
+                                    ui.placeholder.addClass("col-" + receivedColumn.width);
                                     if (maxHeight > 0) {
                                         ui.placeholder.height(maxHeight);
                                         ui.placeholder.css("min-height", 0);
@@ -338,8 +338,8 @@ angular
                             result.push("layout-row-full");
                     }
                     if (child.type == "Column") {
-                        result.push("col-xs-" + child.width);
-                        result.push("col-xs-offset-" + child.offset);
+                        result.push("col-" + child.width);
+                        result.push("col-offset-" + child.offset);
                     }
                     if (child.type == "Content")
                         result.push("layout-content-" + child.contentTypeClass);
