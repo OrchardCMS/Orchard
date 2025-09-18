@@ -72,22 +72,28 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: '7'
+          node-version: 7
 
-      - name: Setup NPM Packages
+      - name: Install Gulp Globally
         working-directory: ./src
         run: |
-          npm install --loglevel warn
-
           # Install gulp globally to be able to run the rebuild task, using the same version as in the project.
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
+      - name: Setup NPM Packages
+        working-directory: ./src
+        shell: cmd
+        run: npm install --loglevel warn
+
       - name: Rebuild Client-side Assets
         working-directory: ./src
-        run: |
-          gulp rebuild
+        shell: cmd
+        run: gulp rebuild
 
+      - name: Check Client-side Assets
+        working-directory: ./src
+        run: |
           git add . # To make line ending changes "disappear".
           $gitStatus = (git status --porcelain)
           if ($gitStatus)
