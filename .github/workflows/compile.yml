@@ -74,18 +74,21 @@ jobs:
         with:
           node-version: 7
 
-      - name: Setup NPM Packages
+      - name: Install Gulp Globally
         working-directory: ./src
         run: |
           # Install gulp globally to be able to run the rebuild task, using the same version as in the project.
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
-          npm install --loglevel warn
+      - name: Setup NPM Packages
+        working-directory: ./src
+        shell: cmd
+        run: npm install --loglevel warn
 
       - name: Rebuild Client-side Assets
-        shell: cmd
         working-directory: ./src
+        shell: cmd
         run: gulp rebuild
 
       - name: Check Client-side Assets
