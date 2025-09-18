@@ -292,20 +292,20 @@ ul.disc {
     padding: 0;
 }
 
-.action-links + .action-links::before {
-    content: " ";
-    display: block;
-}
+    .action-links + .action-links::before {
+        content: " ";
+        display: block;
+    }
 
-.action-links > .action-label {
-    font-weight: bold;
-    margin: 0 6px;
-}
+    .action-links > .action-label {
+        font-weight: bold;
+        margin: 0 6px;
+    }
 
-.action-links > .action-link + .action-link::before {
-    content: "|";
-    margin: 0 2px 0 6px;
-}
+    .action-links > .action-link + .action-link::before {
+        content: "|";
+        margin: 0 2px 0 6px;
+    }
 
 /* Header - Branding, Login and Culture Selection
 ***************************************************************/
@@ -707,8 +707,9 @@ span.message {
     border: 1px solid #cfe493;
     color: #062232;
 }
+
 .message-Information {
-    background:#d9edf7; /* blue */
+    background: #d9edf7; /* blue */
     border: 1px solid #bce8f1;
     color: #31708f;
 }
@@ -1172,17 +1173,18 @@ table.items {
     margin: 1em 0;
     padding: 0;
 }
-.contentItems > ul > li, .contentItems > li {
-    margin: 0;
-    overflow: hidden;
-    padding: 0 1.4em .8em;
-    border-bottom: 1px solid #eaeaea;
-}
 
-.contentItems.bulk-items > ul > li {
-    padding-bottom: .6em;
-    padding-left: .6em;
-}
+    .contentItems > ul > li, .contentItems > li {
+        margin: 0;
+        overflow: hidden;
+        padding: 0 1.4em .8em;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .contentItems.bulk-items > ul > li {
+        padding-bottom: .6em;
+        padding-left: .6em;
+    }
 
 #main .contentItems > ul > li .actions {
     color: #EAE9D9;
@@ -1191,42 +1193,42 @@ table.items {
     padding: 0 0 .1em;
 }
 
-#main .contentItems > ul > li .actions .ibutton {
-    margin-right: 6px;
-}
+    #main .contentItems > ul > li .actions .ibutton {
+        margin-right: 6px;
+    }
 
-#main .contentItems > ul > li .actions .destruct .ibutton {
-    margin-left: 8px;
-    margin-right: 0;
-}
+    #main .contentItems > ul > li .actions .destruct .ibutton {
+        margin-left: 8px;
+        margin-right: 0;
+    }
 
 #main .contentItems li:hover .ibutton {
     background-position: 0 0;
 }
 
-#main .contentItems li:hover .ibutton.remove {
-    background-position: -20px 0;
-}
+    #main .contentItems li:hover .ibutton.remove {
+        background-position: -20px 0;
+    }
 
-#main .contentItems li:hover .ibutton.view {
-    background-position: -40px 0;
-}
+    #main .contentItems li:hover .ibutton.view {
+        background-position: -40px 0;
+    }
 
-#main .contentItems li:hover .ibutton.add.page {
-    background-position: -60px 0;
-}
+    #main .contentItems li:hover .ibutton.add.page {
+        background-position: -60px 0;
+    }
 
-#main .contentItems li:hover .ibutton.edit {
-    background-position: -80px 0;
-}
+    #main .contentItems li:hover .ibutton.edit {
+        background-position: -80px 0;
+    }
 
-#main .contentItems li:hover .ibutton.publish {
-    background-position: -100px 0;
-}
+    #main .contentItems li:hover .ibutton.publish {
+        background-position: -100px 0;
+    }
 
-#main .contentItems li:hover .ibutton.blog {
-    background-position: -120px 0;
-}
+    #main .contentItems li:hover .ibutton.blog {
+        background-position: -120px 0;
+    }
 
 .contentItems .summary {
     clear: both;
@@ -1277,7 +1279,7 @@ table.items {
     align-items: flex-end;
     width: auto;
     float: right;
-    text-align:  right;
+    text-align: right;
 }
 
 .contentItems .comment-count {
@@ -1423,15 +1425,15 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto {
     float: left;
 }
 
-.edit-item-sidebar fieldset:not(:first-child):not(.delete-button) {
-    margin-left: 12px;
-    padding-left: 12px;
-    border-left: 1px solid #ccc;
-}
+    .edit-item-sidebar fieldset:not(:first-child):not(.delete-button) {
+        margin-left: 12px;
+        padding-left: 12px;
+        border-left: 1px solid #ccc;
+    }
 
-.edit-item-sidebar fieldset.delete-button {
-    float: right;
-}
+    .edit-item-sidebar fieldset.delete-button {
+        float: right;
+    }
 
 /* Dashboard */
 
