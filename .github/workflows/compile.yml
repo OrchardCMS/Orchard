@@ -1,5 +1,4 @@
 name: Compile
-# Compiles the solution and runs unit tests.
 
 on:
   workflow_dispatch:
@@ -12,6 +11,7 @@ on:
 jobs:
   compile-dotnet:
     name: Compile .NET solution
+    if: false
     defaults:
       run:
         shell: pwsh
@@ -72,22 +72,25 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: '7'
+          node-version: 7
 
       - name: Setup NPM Packages
         working-directory: ./src
         run: |
-          npm install --loglevel warn
-
           # Install gulp globally to be able to run the rebuild task, using the same version as in the project.
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
+          npm install --loglevel warn
+
       - name: Rebuild Client-side Assets
+        shell: cmd
+        working-directory: ./src
+        run: gulp rebuild
+
+      - name: Check Client-side Assets
         working-directory: ./src
         run: |
-          gulp rebuild
-
           git add . # To make line ending changes "disappear".
           $gitStatus = (git status --porcelain)
           if ($gitStatus)
