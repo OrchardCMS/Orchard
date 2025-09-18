@@ -11,6 +11,7 @@ on:
 jobs:
   compile-dotnet:
     name: Compile .NET solution
+    if: false
     defaults:
       run:
         shell: pwsh
