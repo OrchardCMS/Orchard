@@ -80,7 +80,7 @@ jobs:
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
-      - name: Setup NPM Packages
+      - name: Install NPM Packages
         working-directory: ./src
         shell: cmd
         run: npm install --loglevel warn
