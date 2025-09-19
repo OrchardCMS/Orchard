@@ -7,17 +7,32 @@ on:
     - cron: '0 0 * * *' # Every day at midnight.
 
 jobs:
+  define-matrix:
+    name: Define Strategy Matrix
+    runs-on: ubuntu-24.04
+    outputs:
+      branches: ${{ steps.branches.outputs.branches }}
+    steps:
+      - name: Define Branches
+        id: branches
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo 'branches=["1.10.x", "dev"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'branches=["${{ github.ref_name }}"]' >> "$GITHUB_OUTPUT"
+          fi
+
   compile:
     name: SpecFlow tests
-    defaults:
-      run:
-        shell: cmd
+    needs: define-matrix
     runs-on: windows-2025
     strategy:
       matrix:
-        branch: ${{ github.event_name == 'schedule' && fromJson('["dev","1.10.x"]') || fromJson('["${{ github.ref_name }}"]') }}
+        branch: ${{ fromJSON(needs.define-matrix.outputs.branches) }}
       fail-fast: false
-
+    defaults:
+      run:
+        shell: cmd
     steps:
       - name: Clone repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
