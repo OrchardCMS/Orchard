@@ -51,7 +51,8 @@ namespace Orchard.Widgets.Drivers {
 
                 try {
                     _conditionManager.Matches(layerPart.LayerRule);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     updater.AddModelError("Description", T("The rule is not valid: {0}", e.Message));
                 }
             }
