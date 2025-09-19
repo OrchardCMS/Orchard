@@ -11,7 +11,7 @@ jobs:
     name: SpecFlow tests
     defaults:
       run:
-        shell: pwsh
+        shell: cmd
     runs-on: windows-latest
     strategy:
       matrix:
