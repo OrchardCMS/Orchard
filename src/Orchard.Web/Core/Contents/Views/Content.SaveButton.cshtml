@@ -1,13 +1,3 @@
-﻿@using Orchard.ContentManagement
-@using Orchard.Core.Contents.Settings
-
-@{
-    var contentItem = Model.ContentItem as ContentItem;
-    var label = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable
-        ? T("Save Draft")
-        : T("Save");
-}
-
-<fieldset class="save-button">
-    <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save">@label</button>
+﻿<fieldset class="save-button">
+    <button class="primaryAction" type="submit" name="submit.Save" value="submit.Save">@T("Save Draft")</button>
 </fieldset>
