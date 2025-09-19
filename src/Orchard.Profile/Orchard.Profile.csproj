@@ -89,21 +89,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\HttpClient.cs" />
-    <Compile Include="Tests\Profiling.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Profiling.feature</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Tests\Profiling.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Profiling.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\Profiling.feature" />
+    <Compile Include="Tests\Profiling.feature.cs">
+      <DependentUpon>Profiling.feature</DependentUpon>
+    </Compile>
     <None Include="_environment.cmd" />
     <None Include="Go.cmd" />
     <None Include="Initialize.cmd" />
