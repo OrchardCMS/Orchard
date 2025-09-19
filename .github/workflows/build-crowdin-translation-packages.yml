@@ -3,13 +3,10 @@ name: Build Crowdin Translation Packages
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: '0 6 * * *'
 
 jobs:
   build-crowdin-translation-packages:
-    defaults:
-      run:
-        shell: pwsh
     runs-on: ubuntu-latest
 
     steps:
