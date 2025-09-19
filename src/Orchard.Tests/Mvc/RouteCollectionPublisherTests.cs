@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Utility;
@@ -44,14 +43,15 @@ namespace Orchard.Tests.Mvc {
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void SameNameTwiceCausesExplosion() {
             _routes.MapRoute("foo", "{controller}");
 
             var publisher = _container.Resolve<IRoutePublisher>();
-            publisher.Publish(new[] { Desc("yarg", "bar"), Desc("yarg", "quux") });
 
-            Assert.That(_routes.Count(), Is.EqualTo(2));
+            Assert.Throws<ArgumentException>(() => {
+                publisher.Publish(new[] { Desc("yarg", "bar"), Desc("yarg", "quux") });
+                Assert.That(_routes.Count(), Is.EqualTo(2));
+            });
         }
 
 
