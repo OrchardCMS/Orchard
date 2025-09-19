@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: cmd
-    runs-on: windows-latest
+    runs-on: windows-2025
     strategy:
       matrix:
         branch: ${{ github.event_name == 'schedule' && fromJson('["dev","1.10.x"]') || fromJson('["${{ github.ref_name }}"]') }}
