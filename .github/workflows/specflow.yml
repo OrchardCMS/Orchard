@@ -4,7 +4,7 @@ name: SpecFlow tests
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 * * *' # Every day at midnight.
+    - cron: '0 0 * * *' # Every day at midnight.
 
 jobs:
   compile:
@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        branch: [dev, 1.10.x]
+        branch: ${{ github.event_name == 'schedule' && fromJson('["dev","1.10.x"]') || fromJson('["${{ github.ref_name }}"]') }}
       fail-fast: false
 
     steps:
