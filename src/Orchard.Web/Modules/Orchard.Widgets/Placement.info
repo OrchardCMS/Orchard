@@ -1,4 +1,8 @@
 ﻿<Placement>
     <Place Parts_Widgets_LayerPart="Content:1"/>
     <Place Parts_Widgets_WidgetPart="Content:1"/>
+
+    <Match ContentPart="WidgetPart">
+        <Place Content_UnpublishButton="-"/>
+    </Match>
 </Placement>
