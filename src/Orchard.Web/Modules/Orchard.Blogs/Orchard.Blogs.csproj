@@ -237,9 +237,6 @@
     <Content Include="Views\Parts.Blogs.Blog.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Blog.DeleteButton.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Content-BlogPost.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
