@@ -575,9 +575,6 @@
     <Content Include="Navigation\Views\Content-Menu.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Navigation\Views\Menu.DeleteButton.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Navigation\Views\Menu.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -631,7 +628,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Content.UnpublishButton.cshtml" />
-    <Content Include="Contents\Views\Content.DeleteButton.cshtml" />  
+    <Content Include="Contents\Views\Content.DeleteButton.cshtml" />
     <None Include="packages.config" />
     <Content Include="Title\Views\DefinitionTemplates\TitlePartSettings.cshtml" />
   </ItemGroup>
