@@ -3,8 +3,12 @@ name: SpecFlow Tests
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 1.10.x
+      - dev
   schedule:
-    - cron: '0 0 * * *' # Every day at midnight.
+    - cron: '0 0 * * 1' # Every Monday midnight.
 
 jobs:
   define-matrix:
