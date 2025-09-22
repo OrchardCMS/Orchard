@@ -262,10 +262,13 @@
 .layout-editor .layout-row.layout-element-focused:not(.layout-element-droptarget) > .layout-element-wrapper > .layout-children > .layout-element + .layout-element:not(.layout-element-active) > .layout-element-wrapper {
   margin-left: 0 !important;
 }
-.layout-editor .layout-row .layout-children {
+.layout-editor .layout-row > div > .layout-children {
     display: flex;
+    flex-direction: row;
 }
-
+.layout-editor .layout-column > div > .layout-children {
+    flex-direction: column;
+}
 .layout-editor .layout-column > .layout-element-wrapper > .layout-column-resize-bar {
   display: none;
   position: absolute;

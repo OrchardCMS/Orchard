@@ -18,8 +18,13 @@
             }
         }
 
-        .layout-children {
+        > div > .layout-children {
             display: flex;
+            flex-direction: row;
         }
+    }
+
+    .layout-column > div > .layout-children {
+        flex-direction: column;
     }
 }
