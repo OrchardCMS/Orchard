@@ -8,6 +8,7 @@ using Orchard.Security;
 using Orchard.Indexing.ViewModels;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using static Orchard.Indexing.Helpers.IndexingHelpers;
 
 namespace Orchard.Indexing.Controllers {
     public class AdminController : Controller {
@@ -68,7 +69,7 @@ namespace Orchard.Indexing.Controllers {
                 return new HttpUnauthorizedResult();
 
             var provider = _indexManager.GetSearchIndexProvider();
-            if (String.IsNullOrWhiteSpace(id) || id.ToSafeName() != id) {
+            if (!IsValidIndexName(id)) {
                 Services.Notifier.Error(T("Invalid index name."));
                 return View("Create", id);
             }
@@ -96,7 +97,12 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            _indexingService.UpdateIndex(id);
+            if (IsValidIndexName(id)) {
+                _indexingService.UpdateIndex(id);
+            }
+            else {
+                Services.Notifier.Error(T("Invalid index name."));
+            }
 
             return RedirectToAction("Index");
         }
@@ -106,7 +112,12 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            _indexingService.RebuildIndex(id);
+            if (IsValidIndexName(id)) {
+                _indexingService.RebuildIndex(id);
+            }
+            else {
+                Services.Notifier.Error(T("Invalid index name."));
+            }
 
             return RedirectToAction("Index");
         }
@@ -116,7 +127,12 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            _indexingService.DeleteIndex(id);
+            if (IsValidIndexName(id)) {
+                _indexingService.DeleteIndex(id);
+            }
+            else {
+                Services.Notifier.Error(T("Invalid index name."));
+            }
 
             return RedirectToAction("Index");
         }

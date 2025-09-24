@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.Indexing.Services;
 using Orchard.Tasks.Indexing;
 using Orchard.Utility.Extensions;
+using static Orchard.Indexing.Helpers.IndexingHelpers;
 
 namespace Orchard.Indexing.Commands {
     public class IndexingCommands : DefaultOrchardCommandHandler {
@@ -38,27 +39,22 @@ namespace Orchard.Indexing.Commands {
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(index)) {
+            if (!IsValidIndexName(index)) {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
 
-            if (index.ToSafeName() != index) {
-                Context.Output.WriteLine(T("Invalid index name."));
+            var indexProvider = _indexManager.GetSearchIndexProvider();
+            if (indexProvider == null) {
+                Context.Output.WriteLine(T("No indexing service was found. Please enable a module like Lucene."));
             }
             else {
-                var indexProvider = _indexManager.GetSearchIndexProvider();
-                if(indexProvider == null) {
-                    Context.Output.WriteLine(T("No indexing service was found. Please enable a module like Lucene."));
+                if (indexProvider.Exists(index)) {
+                    Context.Output.WriteLine(T("The specified index already exists."));
                 }
                 else {
-                    if (indexProvider.Exists(index)) {
-                        Context.Output.WriteLine(T("The specified index already exists."));
-                    }
-                    else {
-                        _indexManager.GetSearchIndexProvider().CreateIndex(index);
-                        Context.Output.WriteLine(T("New index has been created successfully."));
-                    }
+                    _indexManager.GetSearchIndexProvider().CreateIndex(index);
+                    Context.Output.WriteLine(T("New index has been created successfully."));
                 }
             }
         }
@@ -66,7 +62,7 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index update")]
         [CommandHelp("index update <index>\r\n\t" + "Updates the specified index")]
         public void Update(string index) {
-            if (string.IsNullOrWhiteSpace(index)) {
+            if (!IsValidIndexName(index)) {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
@@ -78,7 +74,7 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index rebuild")]
         [CommandHelp("index rebuild <index> \r\n\t" + "Rebuilds the specified index")]
         public void Rebuild(string index) {
-            if (string.IsNullOrWhiteSpace(index)) {
+            if (!IsValidIndexName(index)) {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
@@ -91,7 +87,7 @@ namespace Orchard.Indexing.Commands {
         [CommandHelp("index query <index> /Query:<query>\r\n\t" + "Searches the specified <query> terms in the specified index")]
         [OrchardSwitches("Query")]
         public void Search(string index) {
-            if (string.IsNullOrWhiteSpace(index)) {
+            if (!IsValidIndexName(index)) {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
@@ -126,7 +122,7 @@ namespace Orchard.Indexing.Commands {
         [CommandHelp("index stats <index>\r\n\t" + "Displays some statistics about the search index")]
         [OrchardSwitches("IndexName")]
         public void Stats(string index) {
-            if (string.IsNullOrWhiteSpace(index)) {
+            if (!IsValidIndexName(index)) {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
