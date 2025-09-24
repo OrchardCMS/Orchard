@@ -150,10 +150,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin.feature.cs">
+    <Compile Include="Tests\Admin.feature.cs">
       <DependentUpon>Admin.feature</DependentUpon>
     </Compile>
-    <Compile Include="Autoroute.feature.cs">
+    <Compile Include="Tests\Autoroute.feature.cs">
       <DependentUpon>Autoroute.feature</DependentUpon>
     </Compile>
     <Compile Include="Bindings\BindingBase.cs" />
@@ -163,46 +163,46 @@
     <Compile Include="Bindings\HtmlNodeExtensions.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Bindings\UsersPermissionsAndRoles.cs" />
-    <Compile Include="Blogs.feature.cs">
+    <Compile Include="Tests\Blogs.feature.cs">
       <DependentUpon>Blogs.feature</DependentUpon>
     </Compile>
-    <Compile Include="Boolean.feature.cs">
+    <Compile Include="Tests\Boolean.feature.cs">
       <DependentUpon>Boolean.feature</DependentUpon>
     </Compile>
-    <Compile Include="Comments.feature.cs">
+    <Compile Include="Tests\Comments.feature.cs">
       <DependentUpon>Comments.feature</DependentUpon>
     </Compile>
-    <Compile Include="ContentRights.feature.cs">
+    <Compile Include="Tests\ContentRights.feature.cs">
       <DependentUpon>ContentRights.feature</DependentUpon>
     </Compile>
-    <Compile Include="ContentTypes.feature.cs">
+    <Compile Include="Tests\ContentTypes.feature.cs">
       <DependentUpon>ContentTypes.feature</DependentUpon>
     </Compile>
-    <Compile Include="DateTime.feature.cs">
+    <Compile Include="Tests\DateTime.feature.cs">
       <DependentUpon>DateTime.feature</DependentUpon>
     </Compile>
-    <Compile Include="Enumeration.feature.cs">
+    <Compile Include="Tests\Enumeration.feature.cs">
       <DependentUpon>Enumeration.feature</DependentUpon>
     </Compile>
-    <Compile Include="Settings.feature.cs">
+    <Compile Include="Tests\Settings.feature.cs">
       <DependentUpon>Settings.feature</DependentUpon>
     </Compile>
-    <Compile Include="Text.feature.cs">
+    <Compile Include="Tests\Text.feature.cs">
       <DependentUpon>Text.feature</DependentUpon>
     </Compile>
-    <Compile Include="Input.feature.cs">
+    <Compile Include="Tests\Input.feature.cs">
       <DependentUpon>Input.feature</DependentUpon>
     </Compile>
-    <Compile Include="Link.feature.cs">
+    <Compile Include="Tests\Link.feature.cs">
       <DependentUpon>Link.feature</DependentUpon>
     </Compile>
-    <Compile Include="MediaPicker.feature.cs">
+    <Compile Include="Tests\MediaPicker.feature.cs">
       <DependentUpon>MediaPicker.feature</DependentUpon>
     </Compile>
-    <Compile Include="Numeric.feature.cs">
+    <Compile Include="Tests\Numeric.feature.cs">
       <DependentUpon>Numeric.feature</DependentUpon>
     </Compile>
-    <Compile Include="Tags.feature.cs">
+    <Compile Include="Tests\Tags.feature.cs">
       <DependentUpon>Tags.feature</DependentUpon>
     </Compile>
     <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
@@ -213,34 +213,34 @@
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
-    <Compile Include="Lists.feature.cs">
+    <Compile Include="Tests\Lists.feature.cs">
       <DependentUpon>Lists.feature</DependentUpon>
     </Compile>
-    <Compile Include="Media.feature.cs">
+    <Compile Include="Tests\Media.feature.cs">
       <DependentUpon>Media.feature</DependentUpon>
     </Compile>
-    <Compile Include="Modules.feature.cs">
+    <Compile Include="Tests\Modules.feature.cs">
       <DependentUpon>Modules.feature</DependentUpon>
     </Compile>
-    <Compile Include="MultiTenancy.feature.cs">
+    <Compile Include="Tests\MultiTenancy.feature.cs">
       <DependentUpon>MultiTenancy.feature</DependentUpon>
     </Compile>
-    <Compile Include="Pages.feature.cs">
+    <Compile Include="Tests\Pages.feature.cs">
       <DependentUpon>Pages.feature</DependentUpon>
     </Compile>
-    <Compile Include="PermissionModel.feature.cs">
+    <Compile Include="Tests\PermissionModel.feature.cs">
       <DependentUpon>PermissionModel.feature</DependentUpon>
     </Compile>
-    <Compile Include="Setup.feature.cs">
+    <Compile Include="Tests\Setup.feature.cs">
       <DependentUpon>Setup.feature</DependentUpon>
     </Compile>
-    <Compile Include="SiteCompilation.feature.cs">
+    <Compile Include="Tests\SiteCompilation.feature.cs">
       <DependentUpon>SiteCompilation.feature</DependentUpon>
     </Compile>
-    <Compile Include="Users.feature.cs">
+    <Compile Include="Tests\Users.feature.cs">
       <DependentUpon>Users.feature</DependentUpon>
     </Compile>
-    <Compile Include="UsingSpecFlow.feature.cs">
+    <Compile Include="Tests\UsingSpecFlow.feature.cs">
       <DependentUpon>UsingSpecFlow.feature</DependentUpon>
     </Compile>
     <Compile Include="Util\PathExtensions.cs" />
@@ -251,10 +251,10 @@
     <Compile Include="Hosting\WebHostAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bindings\SanityCheck.cs" />
-    <Compile Include="WebHosting.feature.cs">
+    <Compile Include="Tests\WebHosting.feature.cs">
       <DependentUpon>WebHosting.feature</DependentUpon>
     </Compile>
-    <Compile Include="Widgets.feature.cs">
+    <Compile Include="Tests\Widgets.feature.cs">
       <DependentUpon>Widgets.feature</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -273,19 +273,19 @@
     <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Admin.feature" />
+    <None Include="Tests\Admin.feature" />
     <None Include="App.Config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Autoroute.feature" />
-    <None Include="Blogs.feature" />
-    <None Include="Boolean.feature" />
-    <None Include="Comments.feature" />
-    <None Include="ContentRights.feature" />
-    <None Include="ContentTypes.feature" />
+    <None Include="Tests\Autoroute.feature" />
+    <None Include="Tests\Blogs.feature" />
+    <None Include="Tests\Boolean.feature" />
+    <None Include="Tests\Comments.feature" />
+    <None Include="Tests\ContentRights.feature" />
+    <None Include="Tests\ContentTypes.feature" />
     <Content Include="Content\orchard.core.po" />
-    <None Include="DateTime.feature" />
-    <None Include="Enumeration.feature" />
+    <None Include="Tests\DateTime.feature" />
+    <None Include="Tests\Enumeration.feature" />
     <WebConfigsToTransform Include="Hosting\Orchard.Web\Config\HostComponents.config">
       <SubType>Designer</SubType>
     </WebConfigsToTransform>
@@ -296,15 +296,15 @@
       <DependentUpon>HostComponents.config</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="Settings.feature" />
-    <None Include="Text.feature" />
-    <None Include="Input.feature" />
-    <None Include="Link.feature" />
-    <None Include="MediaPicker.feature" />
-    <None Include="Numeric.feature" />
-    <None Include="Tags.feature" />
-    <None Include="Lists.feature" />
-    <None Include="PermissionModel.feature" />
+    <None Include="Tests\Settings.feature" />
+    <None Include="Tests\Text.feature" />
+    <None Include="Tests\Input.feature" />
+    <None Include="Tests\Link.feature" />
+    <None Include="Tests\MediaPicker.feature" />
+    <None Include="Tests\Numeric.feature" />
+    <None Include="Tests\Tags.feature" />
+    <None Include="Tests\Lists.feature" />
+    <None Include="Tests\PermissionModel.feature" />
     <Content Include="Hosting\TemplateConfigs\DisableDynamicCompilation.HostComponents.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -313,7 +313,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="SiteCompilation.feature" />
+    <None Include="Tests\SiteCompilation.feature" />
     <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -323,15 +323,15 @@
     <Content Include="Hosting\Orchard.Web\Config\Host.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Media.feature" />
-    <None Include="Modules.feature" />
-    <None Include="MultiTenancy.feature" />
-    <None Include="Pages.feature" />
-    <None Include="Users.feature" />
-    <None Include="WebHosting.feature" />
-    <None Include="Setup.feature" />
-    <None Include="UsingSpecFlow.feature" />
-    <None Include="Widgets.feature" />
+    <None Include="Tests\Media.feature" />
+    <None Include="Tests\Modules.feature" />
+    <None Include="Tests\MultiTenancy.feature" />
+    <None Include="Tests\Pages.feature" />
+    <None Include="Tests\Users.feature" />
+    <None Include="Tests\WebHosting.feature" />
+    <None Include="Tests\Setup.feature" />
+    <None Include="Tests\UsingSpecFlow.feature" />
+    <None Include="Tests\Widgets.feature" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
