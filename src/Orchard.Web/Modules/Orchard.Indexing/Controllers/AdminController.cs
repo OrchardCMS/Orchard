@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Indexing.Services;
+using Orchard.Indexing.ViewModels;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
-using Orchard.Indexing.ViewModels;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 using static Orchard.Indexing.Helpers.IndexingHelpers;
 
 namespace Orchard.Indexing.Controllers {
@@ -16,7 +15,7 @@ namespace Orchard.Indexing.Controllers {
         private readonly IIndexManager _indexManager;
 
         public AdminController(
-            IIndexingService indexingService, 
+            IIndexingService indexingService,
             IOrchardServices services,
             IIndexManager indexManager) {
             _indexingService = indexingService;
@@ -35,23 +34,21 @@ namespace Orchard.Indexing.Controllers {
                 IndexEntries = Enumerable.Empty<IndexEntry>(),
                 IndexProvider = _indexManager.GetSearchIndexProvider()
             };
-            
+
             if (_indexManager.HasIndexProvider()) {
                 viewModel.IndexEntries = _indexManager.GetSearchIndexProvider().List().Select(x => {
                     try {
                         return _indexingService.GetIndexEntry(x);
                     }
-                    catch(Exception e) {
+                    catch (Exception e) {
                         Logger.Error(e, "Index couldn't be read: " + x);
-                        return new IndexEntry { 
+                        return new IndexEntry {
                             IndexName = x,
                             IndexingStatus = IndexingStatus.Unavailable
                         };
                     }
                 });
             }
-            
-            // Services.Notifier.Information(T("The index might be corrupted. If you can't recover click on Rebuild."));
 
             return View(viewModel);
         }
@@ -60,7 +57,7 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            return View("Create", String.Empty);
+            return View("Create");
         }
 
         [HttpPost, ActionName("Create")]
@@ -83,9 +80,9 @@ namespace Orchard.Indexing.Controllers {
                 provider.CreateIndex(id);
                 Services.Notifier.Information(T("Index named {0} created successfully", id));
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 Services.Notifier.Error(T("An error occurred while creating the index: {0}", id));
-                Logger.Error("An error occurred while creatign the index " + id, e);
+                Logger.Error("An error occurred while creating the index " + id, e);
                 return View("Create", id);
             }
 
