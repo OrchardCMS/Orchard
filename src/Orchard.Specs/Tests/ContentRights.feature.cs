@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Orchard.Specs
+namespace Orchard.Specs.Tests
 {
     using TechTalk.SpecFlow;
     
