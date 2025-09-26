@@ -3,5 +3,7 @@
     <Place Parts_User_EditPassword_Edit="Content:1"/>
     <Place Parts_User_UserSecurityConfiguration_Edit="Content:1.1"/>
     <Place Parts_UserApprove_Edit="Sidebar:25"/> <!-- immediately following the contents module's Approve Now button -->
+
+    <!-- The Unpublish and Delete buttons are hidden with type-specific shape overrides, because placement wasn't effective. -->
   </Match>
 </Placement>

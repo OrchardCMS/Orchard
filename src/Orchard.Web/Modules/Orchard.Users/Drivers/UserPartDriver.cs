@@ -5,7 +5,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Drivers {
     /// <summary>
-    /// This class intentionnaly has no Display method to prevent external access to this information through standard 
+    /// This class intentionally has no Display method to prevent external access to this information through standard 
     /// Content Item display methods.
     /// </summary>
     public class UserPartDriver : ContentPartDriver<UserPart> {
