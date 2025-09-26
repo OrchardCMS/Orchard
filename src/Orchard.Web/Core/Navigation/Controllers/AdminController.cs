@@ -156,7 +156,7 @@ namespace Orchard.Core.Navigation.Controllers {
                     .ToList();
 
                 foreach (var menuItem in menuItems.Concat(new[] { menuPart })) {
-                    // if the menu item is a concrete content item, don't delete it, just unreference the menu
+                    // if the menu item is a concrete content item, don't delete it, just remove the menu reference
                     if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype")
                         || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
                         menuPart.Menu = null;
@@ -223,11 +223,12 @@ namespace Orchard.Core.Navigation.Controllers {
             if (menu == null)
                 return HttpNotFound();
 
+            _contentManager.Create(contentItem);
+
             menuPart.Menu = menu;
-            var model = _contentManager.UpdateEditor(contentItem, this);
             menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
 
-            _contentManager.Create(menuPart);
+            var model = _contentManager.UpdateEditor(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
