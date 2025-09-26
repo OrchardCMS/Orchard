@@ -1,4 +1,9 @@
 ﻿<Placement>
+  <Match ContentPart="TermPart">
+    <Place Content_UnpublishButton="-"
+           Content_DeleteButton="-" />
+  </Match>
+
   <!-- Location of field edition -->
   <Place Fields_TaxonomyField_Edit="Content:9"/>
    <Place Fields_TaxonomyFieldList_Edit="Content:9"/>
