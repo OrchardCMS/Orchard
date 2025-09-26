@@ -76,8 +76,8 @@ namespace Orchard.Tests.Environment.Blueprint {
             var result = service.Fetch("Hello");
             var resultInfo = result.ToDataString();
 
-            Assert.That(descriptorInfo, Is.StringContaining("6655321"));
-            Assert.That(resultInfo, Is.StringContaining("6655321"));
+            Assert.That(descriptorInfo, Does.Contain("6655321"));
+            Assert.That(resultInfo, Does.Contain("6655321"));
             Assert.That(descriptorInfo, Is.EqualTo(resultInfo));
 
         }

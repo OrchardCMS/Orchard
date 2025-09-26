@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Settings;
+using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Html;
 using Orchard.Settings;
 using Orchard.Taxonomies.Models;
-using Orchard.Taxonomies.ViewModels;
 using Orchard.Taxonomies.Services;
+using Orchard.Taxonomies.ViewModels;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.DisplayManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Data;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Settings;
-using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
-using Orchard.Mvc.Extensions;
-using System.Web.Routing;
 
 namespace Orchard.Taxonomies.Controllers {
 
@@ -30,7 +31,7 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
         private readonly IContentManager _contentManager;
-        private string contentType = "Taxonomy";
+        private static readonly string _contentType = "Taxonomy";
         public AdminController(
             IOrchardServices services,
             IContentManager contentManager,
@@ -72,7 +73,7 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult Index() {
             var viewModel = new TaxonomyAdminIndexViewModel { Taxonomies = new List<TaxonomyEntry>(), BulkAction = new TaxonomiesAdminIndexBulkAction() };
 
             if (!TryUpdateModel(viewModel)) {
@@ -90,8 +91,14 @@ namespace Orchard.Taxonomies.Controllers {
                     foreach (var entry in checkedEntries) {
                         _taxonomyService.DeleteTaxonomy(_taxonomyService.GetTaxonomy(entry.Id));
                     }
-                    break;
 
+                    Services.Notifier.Information(
+                        T.Plural(
+                            "1 Taxonomy has been removed",
+                            "{0} Taxonomies have been removed",
+                            checkedEntries.Count()));
+
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -101,7 +108,7 @@ namespace Orchard.Taxonomies.Controllers {
 
 
         public ActionResult Create() {
-            var contentItem = _contentManager.New(contentType);
+            var contentItem = _contentManager.New(_contentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Cannot create taxonomies")))
                 return new HttpUnauthorizedResult();
@@ -123,7 +130,7 @@ namespace Orchard.Taxonomies.Controllers {
         public ActionResult CreateAndPublishPOST(string returnUrl) {
 
             // pass a dummy content to the authorization check to check for "own" variations
-            var dummyContent = _contentManager.New(contentType);
+            var dummyContent = _contentManager.New(_contentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, dummyContent, T("Couldn't create taxonomies")))
                 return new HttpUnauthorizedResult();
@@ -132,7 +139,7 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         private ActionResult CreatePOST(string returnUrl, Action<ContentItem> conditionallyPublish) {
-            var contentItem = _contentManager.New(contentType);
+            var contentItem = _contentManager.New(_contentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Couldn't create taxonomies")))
                 return new HttpUnauthorizedResult();
@@ -234,6 +241,9 @@ namespace Orchard.Taxonomies.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id) => Delete(id);
 
         [HttpPost]
         public ActionResult Delete(int id) {
@@ -246,6 +256,8 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             _taxonomyService.DeleteTaxonomy(taxonomy);
+
+            Services.Notifier.Information(T("The Taxonomy {0} has been removed", taxonomy.Name));
 
             return RedirectToAction("Index");
         }

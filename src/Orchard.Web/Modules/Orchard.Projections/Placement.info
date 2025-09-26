@@ -1,4 +1,8 @@
 ﻿<Placement>
+  <Match ContentPart="QueryPart">
+    <Place Content_UnpublishButton="-" />
+  </Match>
+
   <Place Parts_ProjectionPart_Edit="Content:5"/>
   <Place Parts_ProjectionPart_List="Content:5"/>
   <Place Parts_ProjectionPart_Pager="Content:after"/>

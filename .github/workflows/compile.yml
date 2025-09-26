@@ -14,8 +14,8 @@ jobs:
     name: Compile .NET solution
     defaults:
       run:
-        shell: pwsh
-    runs-on: windows-latest
+        shell: cmd
+    runs-on: windows-2025
     steps:
       - name: Clone Repository
         uses: actions/checkout@v4.1.1
@@ -33,11 +33,13 @@ jobs:
         run: msbuild Orchard.proj /m /v:minimal /t:Test
 
       - name: Test Setup with SpecFlow
+        shell: pwsh
         run: |
           $nunitConsole = (Get-ChildItem -Path 'src/packages' -Recurse -Filter 'nunit-console.exe' | Select-Object -Last 1).FullName
           & $nunitConsole 'build/Compile/Orchard.Specs.dll' /xml='build/Orchard.Specs.xml' /run=Orchard.Specs.SetupFeature.RootAndSetupFolderShowsSetupScreenAndFormValuesAreValidated
 
       - name: Run Orchard Setup with Orchard.exe
+        shell: pwsh
         run: |
           $commandFile = 'src/Orchard.Web/bin/setup-commands.txt'
           New-Item -Path $commandFile -ItemType File -Force
@@ -45,6 +47,7 @@ jobs:
           & 'src/Orchard.Web/bin/Orchard.exe' @$commandFile
 
       - name: Run Code Generation
+        shell: pwsh
         run: |
           $commandFile = 'src/Orchard.Web/bin/codegen-commands.txt'
           New-Item -Path $commandFile -ItemType File -Force
@@ -63,8 +66,8 @@ jobs:
     name: Compile Client-side Assets
     defaults:
       run:
-        shell: pwsh
-    runs-on: windows-latest
+        shell: cmd
+    runs-on: windows-2025
     steps:
       - name: Clone Repository
         uses: actions/checkout@v4.1.1
@@ -72,22 +75,28 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: '7'
+          node-version: 7
 
-      - name: Setup NPM Packages
+      - name: Install Gulp Globally
         working-directory: ./src
+        shell: pwsh
         run: |
-          npm install --loglevel warn
-
           # Install gulp globally to be able to run the rebuild task, using the same version as in the project.
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
+      - name: Install NPM Packages
+        working-directory: ./src
+        run: npm install --loglevel warn
+
       - name: Rebuild Client-side Assets
         working-directory: ./src
-        run: |
-          gulp rebuild
+        run: gulp rebuild
 
+      - name: Check Client-side Assets
+        working-directory: ./src
+        shell: pwsh
+        run: |
           git add . # To make line ending changes "disappear".
           $gitStatus = (git status --porcelain)
           if ($gitStatus)

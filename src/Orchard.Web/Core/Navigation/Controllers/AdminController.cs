@@ -293,6 +293,14 @@ namespace Orchard.Core.Navigation.Controllers {
             return RedirectToAction("Index", new { menuId = menuPart.Menu.Id });
         }
 
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id) => Delete(id);
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int id) => Unpublish(id);
+
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
             return new MenuItemEntry {
                 MenuItemId = menuPart.Id,

@@ -47,7 +47,7 @@ namespace Orchard.Tests.Modules.Users.Services
         private StubClock _clock;
         private Mock<WorkContext> _workContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -63,7 +63,7 @@ namespace Orchard.Tests.Modules.Users.Services
                 typeof(ContentTypePartDefinitionRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
 
         }

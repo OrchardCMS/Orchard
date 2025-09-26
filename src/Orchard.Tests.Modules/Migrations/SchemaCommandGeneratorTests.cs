@@ -47,7 +47,7 @@ namespace Orchard.Tests.Modules.Migrations {
         private readonly Path _tempFixtureFolderName = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Tests.Modules.Migrations");
         private Path _tempFolderName;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void CreateDb() {
             var types = new[] {
                 typeof(BlogRecord),
@@ -111,7 +111,7 @@ Features:
 ");
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Term() {
             try { _tempFixtureFolderName.Delete(true); }
             catch { }

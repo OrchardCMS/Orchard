@@ -35,7 +35,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
