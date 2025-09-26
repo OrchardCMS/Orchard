@@ -4,6 +4,10 @@
            Content_DeleteButton="-" />
   </Match>
 
+  <Match ContentPart="TaxonomyPart">
+    <Place Content_UnpublishButton="-" />
+  </Match>
+
   <!-- Location of field edition -->
   <Place Fields_TaxonomyField_Edit="Content:9"/>
    <Place Fields_TaxonomyFieldList_Edit="Content:9"/>
