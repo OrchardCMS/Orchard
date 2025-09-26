@@ -73,8 +73,8 @@ namespace Orchard.Specs.Bindings {
             _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
         }
 
-        [Given(@"I have chosen to load modules using dymamic compilation only")]
-        public void GivenIHaveChosenToLoadModulesUsingDynamicComilationOnly() {
+        [Given(@"I have chosen to load modules using dynamic compilation only")]
+        public void GivenIHaveChosenToLoadModulesUsingDynamicCompilationOnly() {
             _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
             _dynamicCompilationOption = DynamicCompilationOption.Force;
         }
@@ -342,7 +342,7 @@ namespace Orchard.Specs.Bindings {
                         // select all <select> elements
                         form.Children.SelectMany(elt => elt.DescendantsAndSelf("select")).Where(elt => elt.Name.Equals("select", StringComparison.OrdinalIgnoreCase))
                         // group them by their name with value that comes from first of:
-                        //  (1) value of option with 'selecturlPath.Replace("127.0.0.1", "localhost")ed' attribute,
+                        //  (1) value of option with 'selectUrlPath.Replace("127.0.0.1", "localhost")ed' attribute,
                         //  (2) value of first option (none have 'selected'),
                         //  (3) empty value (e.g. select with no options)
                             .GroupBy(
