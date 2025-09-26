@@ -151,7 +151,7 @@ Scenario: Creating and using date time fields in another culture
     # Creating an Event content type
     Given I have installed Orchard
         And I have installed "Orchard.Fields"
-        And I have the file "Content\orchard.core.po" in "Core\App_Data\Localization\fr-FR\orchard.core.po"
+        And I have the file "..\Content\orchard.core.po" in "Core\App_Data\Localization\fr-FR\orchard.core.po"
     When I go to "Admin/ContentTypes"
     Then I should see "<a[^>]*>.*?Create new type</a>"
     When I go to "Admin/ContentTypes/Create"

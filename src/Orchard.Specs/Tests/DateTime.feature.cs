@@ -382,8 +382,8 @@ this.ScenarioInitialize(scenarioInfo);
 #line 153
         testRunner.And("I have installed \"Orchard.Fields\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 154
-        testRunner.And("I have the file \"Content\\orchard.core.po\" in \"Core\\App_Data\\Localization\\fr-FR\\or" +
-                    "chard.core.po\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I have the file \"..\\Content\\orchard.core.po\" in \"Core\\App_Data\\Localization\\fr-FR" +
+                    "\\orchard.core.po\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 155
     testRunner.When("I go to \"Admin/ContentTypes\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 156
