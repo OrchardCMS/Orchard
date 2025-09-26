@@ -51,7 +51,7 @@ namespace Orchard.Tests.Modules.Users.Services
         private CultureInfo _currentCulture;
         private Mock<WorkContext> _workContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _currentCulture = Thread.CurrentThread.CurrentCulture;
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -68,7 +68,7 @@ namespace Orchard.Tests.Modules.Users.Services
                 typeof(ContentTypePartDefinitionRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             Thread.CurrentThread.CurrentCulture = _currentCulture;
         }

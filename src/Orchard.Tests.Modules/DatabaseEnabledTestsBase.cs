@@ -28,11 +28,11 @@ namespace Orchard.Tests.Modules {
         protected StubClock _clock;
 
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDownFixture() {
             File.Delete(_databaseFilePath);
         }

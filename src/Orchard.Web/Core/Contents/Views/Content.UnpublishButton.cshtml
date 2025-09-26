@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+
+@{
+    var contentItem = Model.ContentItem as IContent;
+}
+
+@if (Authorizer.Authorize(Permissions.PublishContent, contentItem) && contentItem.IsPublished()) {
+    <fieldset class="unpublish-button">
+        <button type="submit" name="submit.Unpublish" value="submit.Unpublish">@T("Unpublish")</button>
+    </fieldset>
+}

@@ -21,7 +21,7 @@ namespace Orchard.Tests.Localization {
         private string _databaseFileName;
         private const string _testCulture = "fr-CA";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -57,7 +57,7 @@ namespace Orchard.Tests.Localization {
             _session.Close();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             File.Delete(_databaseFileName);
         }

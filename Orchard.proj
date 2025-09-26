@@ -40,7 +40,7 @@
   <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
        to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
   <ItemGroup>
-    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\tools\nunit-console.exe" />
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit.Runners.*\tools\nunit-console.exe" />
     <NUnitPackageToolsFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
   </ItemGroup>
 
