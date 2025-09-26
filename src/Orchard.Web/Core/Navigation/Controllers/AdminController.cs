@@ -13,6 +13,7 @@ using Orchard.Data;
 using Orchard.Exceptions;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Security;
@@ -129,6 +130,10 @@ namespace Orchard.Core.Navigation.Controllers {
 
             return RedirectToAction("Index", new { menuId });
         }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id) => Delete(id);
 
         [HttpPost]
         public ActionResult Delete(int id) {
