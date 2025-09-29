@@ -1,0 +1,10 @@
+name: Release Package
+# Builds the release package and uploads it as an artifact.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-package:
+    name: Release Package
+    runs-on: Windows-2025
