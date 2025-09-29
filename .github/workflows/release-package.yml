@@ -29,12 +29,12 @@ jobs:
         shell: pwsh
         run: |
           $packageName = "Orchard-$('${{ github.ref_name }}'.Replace('/', '_'))-${{ github.sha }}"
-          Compress-Archive -Path '.\build\Precompiled\*' -CompressionLevel 'Fastest' -DestinationPath ".\$($packageName).zip"
+          # Compress-Archive -Path '.\build\Precompiled\*' -CompressionLevel 'Fastest' -DestinationPath ".\$($packageName).zip"
           "package-name=$packageName" >> $Env:GITHUB_OUTPUT
 
       - name: Upload Release Package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ steps.compress.outputs.package-name }}
-          path: .\${{ steps.compress.outputs.package-name }}.zip
+          path: .\build\Precompiled
           if-no-files-found: error
