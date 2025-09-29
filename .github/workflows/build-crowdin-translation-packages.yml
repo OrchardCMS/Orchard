@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Orchard CMS
-        uses: andrii-bodnar/crowdin-request-action@aac9a865d62b37060b0ce530db5ac5cfca02dd2c # 0.0.2
+        uses: andrii-bodnar/crowdin-request-action@ee7a2af9564d8934b5b4a8427185aaaffee0165e # v0.3.0
         with:
           route: POST /projects/{projectId}/translations/builds
           projectId: 46524
@@ -19,7 +19,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
 
       - name: Orchard CMS Gallery
-        uses: andrii-bodnar/crowdin-request-action@aac9a865d62b37060b0ce530db5ac5cfca02dd2c # 0.0.2
+        uses: andrii-bodnar/crowdin-request-action@ee7a2af9564d8934b5b4a8427185aaaffee0165e # v0.3.0
         with:
           route: POST /projects/{projectId}/translations/builds
           projectId: 63766
