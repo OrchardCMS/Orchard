@@ -18,13 +18,13 @@ jobs:
     runs-on: windows-2025
     steps:
       - name: Clone Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Restore NuGet Packages
         run: nuget restore src/Orchard.sln
 
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
 
       - name: Compile
         run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:TreatWarningsAsErrors=true -WarnAsError /p:MvcBuildViews=true
@@ -70,10 +70,10 @@ jobs:
     runs-on: windows-2025
     steps:
       - name: Clone Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: 7
 
