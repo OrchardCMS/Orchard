@@ -1,6 +1,6 @@
 using Orchard.UI.Resources;
 
-namespace Orchard.Resources {
+namespace Orchard.Resources.ResourceManifests {
     public class FontAwesome : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();

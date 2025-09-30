@@ -940,16 +940,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Uri.cs" />
-    <Compile Include="BlockUI.cs" />
-    <Compile Include="Moment.cs" />
-    <Compile Include="Knockout.cs" />
-    <Compile Include="History.cs" />
-    <Compile Include="FontAwesome.cs" />
-    <Compile Include="Bootstrap.cs" />
-    <Compile Include="Underscore.cs" />
-    <Compile Include="AngularJs.cs" />
-    <Compile Include="jQuery.cs" />
+    <Compile Include="ResourceManifests\Uri.cs" />
+    <Compile Include="ResourceManifests\BlockUI.cs" />
+    <Compile Include="ResourceManifests\Moment.cs" />
+    <Compile Include="ResourceManifests\Knockout.cs" />
+    <Compile Include="ResourceManifests\History.cs" />
+    <Compile Include="ResourceManifests\FontAwesome.cs" />
+    <Compile Include="ResourceManifests\Bootstrap.cs" />
+    <Compile Include="ResourceManifests\Underscore.cs" />
+    <Compile Include="ResourceManifests\AngularJs.cs" />
+    <Compile Include="ResourceManifests\jQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Less\FontAwesome\animated.less" />
