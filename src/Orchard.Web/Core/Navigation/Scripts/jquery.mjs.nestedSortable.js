@@ -263,7 +263,6 @@
             newList = document.createElement(o.listType);
 
             // dragDirection object is required by jquery.ui.sortable.js 1.13+
-            // https://github.com/ilikenwf/nestedSortable/pull/137
             this.dragDirection = {
                 vertical: this._getDragVerticalDirection(),
                 horizontal: this._getDragHorizontalDirection()
