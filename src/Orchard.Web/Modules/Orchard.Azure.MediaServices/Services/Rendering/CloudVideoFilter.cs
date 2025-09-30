@@ -12,7 +12,7 @@ using Orchard.MediaLibrary.Models;
 using Orchard.Services;
 
 namespace Orchard.Azure.MediaServices.Services.Rendering {
-    public class CloudVideoFilter : IHtmlFilter {
+    public class CloudVideoFilter : HtmlFilter {
         private readonly IShapeFactory _shapeFactory;
         private readonly IContentManager _contentManager;
         private readonly IShapeDisplay _shapeDisplay;
@@ -23,8 +23,8 @@ namespace Orchard.Azure.MediaServices.Services.Rendering {
             _shapeDisplay = shapeDisplay;
         }
 
-        public string ProcessContent(string text, string flavor) {
-            return String.Equals(flavor, "html", StringComparison.OrdinalIgnoreCase) ? ReplaceVideoPlaceholder(text) : text;
+        public override string ProcessContent(string text, HtmlFilterContext context) {
+            return String.Equals(context.Flavor, "html", StringComparison.OrdinalIgnoreCase) ? ReplaceVideoPlaceholder(text) : text;
         }
 
         private string ReplaceVideoPlaceholder(string text) {

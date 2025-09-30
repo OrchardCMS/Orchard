@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
 using Orchard.Data.Migration.Schema;
@@ -376,8 +377,11 @@ namespace Orchard.Data.Migration.Interpreters {
 
                     using (var command = session.Connection.CreateCommand()) {
                         command.CommandText = sqlStatement;
-                        session.Transaction.Enlist(command);
-                        command.ExecuteNonQuery();
+                        var transaction = session.GetCurrentTransaction();
+                        if (transaction != null) {
+                            transaction.Enlist(command);
+                            command.ExecuteNonQuery();
+                        }
                     }
                 }
             }

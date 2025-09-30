@@ -74,5 +74,11 @@ namespace Orchard.DynamicForms.Controllers {
 
             return Redirect(Request.UrlReferrer.ToString());
         }
+
+        public ActionResult Export(string id) =>
+            File(
+                _formService.ExportSubmissions(id),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Export.xlsx");
     }
 }

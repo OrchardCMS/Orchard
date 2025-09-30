@@ -20,6 +20,7 @@ using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.Core.Title.Models;
+using Orchard.Services;
 
 namespace Orchard.Core.Tests.Feeds.Controllers {
     [TestFixture]
@@ -177,6 +178,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             builder.RegisterInstance(mockContentManager.Object).As<IContentManager>();
             builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
             builder.RegisterType<CorePartsFeedItemBuilder>().As<IFeedItemBuilder>();
+            builder.RegisterType<HtmlFilterProcessor>().As<IHtmlFilterProcessor>();
             builder.RegisterInstance(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 

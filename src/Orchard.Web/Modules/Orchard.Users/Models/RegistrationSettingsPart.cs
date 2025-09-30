@@ -101,5 +101,46 @@ namespace Orchard.Users.Models {
             get { return this.Retrieve(x => x.PasswordReuseLimit, 5); }
             set { this.Store(x => x.PasswordReuseLimit, value); }
         }
+
+        public bool EnableCustomUsernamePolicy {
+            get { return this.Retrieve(x => x.EnableCustomUsernamePolicy); }
+            set { this.Store(x => x.EnableCustomUsernamePolicy, value); }
+        }
+
+        [Range(1, UserPart.MaxUserNameLength, ErrorMessage = "The minimum username length must be between 1 and 255.")]
+        public int MinimumUsernameLength {
+            get { return this.Retrieve(x => x.MinimumUsernameLength, 1); }
+            set { this.Store(x => x.MinimumUsernameLength, value); }
+       
+        }
+
+        [Range(1, UserPart.MaxUserNameLength, ErrorMessage = "The maximum username length must be between 1 and 255.")]
+        public int MaximumUsernameLength {
+            get { return this.Retrieve(x => x.MaximumUsernameLength, UserPart.MaxUserNameLength); }
+            set { this.Store(x => x.MaximumUsernameLength, value); }
+        }
+
+        public bool ForbidUsernameSpecialChars {
+            get { return this.Retrieve(x => x.ForbidUsernameSpecialChars); }
+            set { this.Store(x => x.ForbidUsernameSpecialChars, value); }
+        }
+
+        public bool AllowEmailAsUsername {
+            get { return this.Retrieve(x => x.AllowEmailAsUsername); }
+            set { this.Store(x => x.AllowEmailAsUsername, value); }
+        }
+
+        public bool ForbidUsernameWhitespace {
+            get { return this.Retrieve(x => x.ForbidUsernameWhitespace); }
+            set { this.Store(x => x.ForbidUsernameWhitespace, value); }
+        }
+
+        public bool BypassPoliciesFromBackoffice {
+            get { return this.Retrieve(x => x.BypassPoliciesFromBackoffice); }
+            set { this.Store(x => x.BypassPoliciesFromBackoffice, value); }
+        }
+
+
     }
 }
+

@@ -11,6 +11,7 @@
     <div class="properties">
         <h3>@Model.DisplayName</h3>
         @if (!string.IsNullOrWhiteSpace(stereotype)) { <text><span class="stereotype" title="Stereotype">- @stereotype</span></text> }
+        @if (!Model.DisplayName.Equals(Model.Name, StringComparison.OrdinalIgnoreCase)) { <text><span class="hint" title="@T("Technical name")">@T("Content Type name: {0}", Model.Name)</span></text> }
 
         @if (settings.Creatable) {
             <p class="pageStatus">@Html.ActionLink(T("Create New {0}", Html.Raw(Model.DisplayName)).Text, "Create", new {area = "Contents", id = Model.Name})</p>

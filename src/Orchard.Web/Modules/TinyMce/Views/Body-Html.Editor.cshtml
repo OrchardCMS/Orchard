@@ -1,18 +1,42 @@
 ﻿@using Orchard.ContentManagement
+@using Orchard.Environment.Configuration
 @using Orchard.Environment.Descriptor.Models
 @using Orchard.Localization
-
+@using Orchard.Mvc.Extensions
+@using TinyMce.Settings
 @{
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    if (!string.IsNullOrWhiteSpace(urlPrefix)) {
+        urlPrefix += "/";
+    }
+    var contentTypes = "";
+    if (Model.Field != null) {
+        var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentLinksSettings>();
+        if (settings != null) {
+            contentTypes = settings.DisplayedContentTypes;
+        }
+    }
+    else if (Model.Part != null) {
+        var settings = Model.Part.TypePartDefinition.Settings.GetModel<ContentLinksSettings>();
+        if (settings != null) {
+            contentTypes = settings.DisplayedContentTypes;
+        }
+    }
+
+
 }
 
 <script type="text/javascript">
     var mediaPickerEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaPicker") ? "true" : "false");
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
+    var contenPickerEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.ContentPicker") ? "true" : "false");
+    var tokensHtmlFilterEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.Tokens.HtmlFilter") ? "true" : "false");
     var directionality = "@WorkContext.GetTextDirection((IContent)Model.ContentItem)";
     var language = "@Model.Language";
     var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId(propertyName) : null)";
+    var baseOrchardPath = "@Url.MakeAbsolute("/")@urlPrefix";
 </script>
 
 @{
@@ -27,5 +51,6 @@
         { "class", "html tinymce" },
         { "data-mediapicker-uploadpath", Model.AddMediaPath },
         { "data-mediapicker-title", T("Insert/Update Media") },
+        { "data-content-types", contentTypes },
         { "style", "width:100%" }
      })

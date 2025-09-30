@@ -89,8 +89,7 @@ namespace Orchard.ContentPicker.Drivers {
 
             if (String.IsNullOrEmpty(model.SelectedIds)) {
                 field.Ids = new int[0];
-            }
-            else {
+            } else {
                 field.Ids = model.SelectedIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
             }
 
@@ -102,14 +101,18 @@ namespace Orchard.ContentPicker.Drivers {
         }
 
         protected override void Importing(ContentPart part, Fields.ContentPickerField field, ImportContentContext context) {
-            var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
-            if (contentItemIds != null) {
-                field.Ids = contentItemIds.Split(',')
-                    .Select(context.GetItemFromSession)
-                    .Select(contentItem => contentItem.Id).ToArray();
-            }
-            else {
-                field.Ids = new int[0];
+            // If nothing about the field is inside the context, field is not modified.
+            // For this reason, check if the current element is inside the ImportContentContext.
+            var element = context.Data.Element(field.FieldDefinition.Name + "." + field.Name);
+            if (element != null) {
+                var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
+                if (contentItemIds != null) {
+                    field.Ids = contentItemIds.Split(',')
+                        .Select(context.GetItemFromSession)
+                        .Select(contentItem => contentItem.Id).ToArray();
+                } else {
+                    field.Ids = new int[0];
+                }
             }
         }
 

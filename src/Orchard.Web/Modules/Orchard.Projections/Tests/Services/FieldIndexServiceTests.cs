@@ -12,6 +12,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Metadata;
+using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Projections.Handlers;
@@ -61,15 +62,21 @@ namespace Orchard.Projections.Tests.Services {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                    typeof(ContentItemRecord), 
-                    typeof(ContentItemVersionRecord), 
-                    typeof(ContentTypeRecord), 
+                    typeof(ContentPartDefinitionRecord),
+                    typeof(ContentPartFieldDefinitionRecord),
+                    typeof(ContentFieldDefinitionRecord),
+                    typeof(ContentTypeDefinitionRecord),
+                    typeof(ContentTypePartDefinitionRecord),
+
+                    typeof(ContentItemRecord),
+                    typeof(ContentItemVersionRecord),
+                    typeof(ContentTypeRecord),
+
+                    typeof(FieldIndexPartRecord),
                     
-                    typeof(FieldIndexPartRecord), 
-                    
-                    typeof(StringFieldIndexRecord), 
-                    typeof(IntegerFieldIndexRecord), 
-                    typeof(DecimalFieldIndexRecord), 
+                    typeof(StringFieldIndexRecord),
+                    typeof(IntegerFieldIndexRecord),
+                    typeof(DecimalFieldIndexRecord),
                     typeof(DoubleFieldIndexRecord)
                 };
             }
@@ -113,8 +120,6 @@ namespace Orchard.Projections.Tests.Services {
             SaveObject(0m);
             SaveObject(-42m);
             SaveObject(42m);
-            // SaveObject(decimal.MaxValue);
-            // SaveObject(decimal.MinValue);
         }
 
         [Test, Ignore("SqlCe exception")]

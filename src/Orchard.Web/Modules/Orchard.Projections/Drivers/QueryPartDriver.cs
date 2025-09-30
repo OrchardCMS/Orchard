@@ -19,14 +19,16 @@ namespace Orchard.Projections.Drivers {
             _projectionManager = projectionManager;
             _formManager = formManager;
         }
+
         protected override string Prefix {
             get {
                 return "Query_Part";
             }
         }
-        protected override DriverResult Editor(QueryPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-        }
+
+        protected override DriverResult Editor(QueryPart part, dynamic shapeHelper) =>
+            Editor(part, null, shapeHelper);
+
         protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new QueryViewModel { VersionScope = part.VersionScope };
             if (updater != null) {
@@ -34,10 +36,10 @@ namespace Orchard.Projections.Drivers {
                     part.VersionScope = model.VersionScope;
                 }
             }
-            return ContentShape("Parts_QueryPart_Edit",
-                                () => {
-                                    return shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPart_Edit", Model: model, Prefix: Prefix);
-                                });
+
+            return ContentShape("Parts_QueryPart_Edit", () => {
+                return shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPart_Edit", Model: model, Prefix: Prefix);
+            });
         }
 
         protected override void Exporting(QueryPart part, ExportContentContext context) {
@@ -60,12 +62,12 @@ namespace Orchard.Projections.Drivers {
                                 }
 
                                 return new XElement("Filter",
-                                             new XAttribute("Category", filter.Category ?? ""),
-                                             new XAttribute("Description", filter.Description ?? ""),
-                                             new XAttribute("Position", filter.Position),
-                                             new XAttribute("State", state ?? ""),
-                                             new XAttribute("Type", filter.Type ?? "")
-                                    );
+                                    new XAttribute("Category", filter.Category ?? ""),
+                                    new XAttribute("Description", filter.Description ?? ""),
+                                    new XAttribute("Position", filter.Position),
+                                    new XAttribute("State", state ?? ""),
+                                    new XAttribute("Type", filter.Type ?? "")
+                                );
                             })
                         )
                     )

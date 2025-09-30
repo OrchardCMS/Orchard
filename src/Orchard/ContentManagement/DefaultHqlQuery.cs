@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NHibernate;
 using NHibernate.Engine;
+using NHibernate.Hql;
 using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Transform;
 using Orchard.ContentManagement.Records;
@@ -227,12 +228,15 @@ namespace Orchard.ContentManagement {
             sql = "SELECT count(*) as totalCount from (" + sql + ") t";
             return Convert.ToInt32(_session.CreateSQLQuery(sql)
                     .AddScalar("totalCount", NHibernateUtil.Int32)
+                    .SetCacheable(true) // TODO: check that this doesn't break anything
                     .UniqueResult());
         }
 
         public string ToSql(bool count) {
             var sessionImp = (ISessionImplementor)_session;
-            var translators = TranslatorFactory.CreateQueryTranslators(ToHql(count), null, false, sessionImp.EnabledFilters, sessionImp.Factory);
+            var translators = TranslatorFactory.CreateQueryTranslators(
+                new StringQueryExpression(ToHql(count)),
+                null, false, sessionImp.EnabledFilters, sessionImp.Factory);
             return translators[0].SQLString;
         }
 

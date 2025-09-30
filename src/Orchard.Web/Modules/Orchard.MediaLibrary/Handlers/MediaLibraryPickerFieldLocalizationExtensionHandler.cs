@@ -45,6 +45,12 @@ namespace Orchard.MediaLibrary.Handlers {
                         //try to replace items in the field with their translation
                         var itemsInField = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty);
                         var mediaIds = new List<int>();
+
+                        // Flag to check if media have been removed from the field.
+                        // This happens when the field is set to remove items without localization and one or more media items cannot be localized.
+                        // This flag is used to display a model error when the field is required and every media item has been removed from it.
+                        var mediaRemoved = false;
+
                         foreach (var item in itemsInField) {
                             // negatives id whoud be localized
                             var mediaItem = _contentManager.Get(item.Id, VersionOptions.Latest);
@@ -55,7 +61,7 @@ namespace Orchard.MediaLibrary.Handlers {
                                 if (contentCulture == mediaCulture) {
                                     // The content culture and the media culture match
                                     mediaIds.Add(mediaItem.Id);
-                                }
+                                } 
                                 else {
                                     if (mediaCulture == null) {
                                         // The media has not a culture, so it takes the content culture
@@ -65,7 +71,7 @@ namespace Orchard.MediaLibrary.Handlers {
                                             "{0}: the media item {1} was culture neutral and it has been localized",
                                             field.DisplayName,
                                             mediaItem.As<MediaPart>().FileName));
-                                    }
+                                    } 
                                     else {
                                         // The media has a culture
                                         var localizedMedia = _localizationServices.GetLocalizedContentItem(mediaItem, contentCulture);
@@ -76,7 +82,7 @@ namespace Orchard.MediaLibrary.Handlers {
                                                 "{0}: the media item {1} has been replaced by its localized version",
                                                 field.DisplayName,
                                                 mediaItem.As<MediaPart>().FileName));
-                                        }
+                                        } 
                                         else {
                                             if (!settings.RemoveItemsWithoutLocalization) {
                                                 // The media supports translations but have not a localized version, so it will be cloned in the right language
@@ -92,33 +98,35 @@ namespace Orchard.MediaLibrary.Handlers {
                                                     "{0}: a localized version of media item {1} has been created",
                                                     field.DisplayName,
                                                     mediaItem.As<MediaPart>().FileName));
-                                            }
+                                            } 
                                             else {
                                                 _orchardServices.Notifier.Warning(T(
                                                     "{0}: the media item {1} has been removed from the field because its culture differs from content's culture",
                                                     field.DisplayName,
                                                     mediaItem.As<MediaPart>().FileName));
+                                                mediaRemoved = true;
                                             }
                                         }
                                     }
                                 }
-                            }
+                            } 
                             else if (mediaItem != null && !mediaIsLocalizable) {
                                 if (!settings.RemoveItemsWithNoLocalizationPart) {
                                     mediaIds.Add(mediaItem.Id);
-                                }
+                                } 
                                 else {
                                     _orchardServices.Notifier.Warning(T(
                                         "{0}: the media item {1} has been removed from the field because culture neutral",
                                         field.DisplayName,
                                         mediaItem.As<MediaPart>().FileName));
+                                    mediaRemoved = true;
                                 }
                             }
                         }
 
                         field.Ids = mediaIds.Distinct().ToArray();
 
-                        if (field.Ids.Length == 0 && fieldSettings.Required) {
+                        if (field.Ids.Length == 0 && fieldSettings.Required && mediaRemoved) {
                             context.Updater.AddModelError("Id", T("The {0} field is required.", field.DisplayName));
                         }
                     }

@@ -22,13 +22,14 @@ namespace Orchard.MediaProcessing.Shapes {
         public ILogger Logger { get; set; }
 
         [Shape]
-        public void ResizeMediaUrl(dynamic Shape, dynamic Display, TextWriter Output, ContentItem ContentItem, string Path, int Width, int Height, string Mode, string Alignment, string PadColor) {
+        public void ResizeMediaUrl(dynamic Shape, dynamic Display, TextWriter Output, ContentItem ContentItem, string Path, int Width, int Height, string Mode, string Alignment, string PadColor, string Scale= "upscaleOnly") {
             var state = new Dictionary<string, string> {
                 {"Width", Width.ToString(CultureInfo.InvariantCulture)},
                 {"Height", Height.ToString(CultureInfo.InvariantCulture)},
                 {"Mode", Mode},
                 {"Alignment", Alignment},
                 {"PadColor", PadColor},
+                {"Scale", Scale},
             };
 
             var filter = new FilterRecord {
@@ -42,7 +43,8 @@ namespace Orchard.MediaProcessing.Shapes {
                 + "_h_" + Convert.ToString(Height) 
                 + "_m_" + Convert.ToString(Mode)
                 + "_a_" + Convert.ToString(Alignment) 
-                + "_c_" + Convert.ToString(PadColor);
+                + "_c_" + Convert.ToString(PadColor)
+                + "_s_" + Convert.ToString(Scale);
 
             MediaUrl(Shape, Display, Output, profile, Path, ContentItem, filter);
         }

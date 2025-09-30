@@ -3,6 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
+using System.Web.Hosting;
+using Orchard.Environment;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -13,15 +16,25 @@ using Orchard.Utility.Extensions;
 namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
     // discovers static files and turns them into shapes.
     public abstract class StaticFileBindingStrategy {
+        private static readonly char[] _queryStringChars = new[] { '?' };
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private static readonly char[] UnsafeCharList = "/:?#[]@!&'()*+,;=\r\n\t\f\" <>.-_".ToCharArray();
+        private readonly Work<WorkContext> _workContext;
+        private readonly IResourceFileHashProvider _resourceFileHashProvider;
 
-        protected StaticFileBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) {
+        protected StaticFileBindingStrategy(
+            IExtensionManager extensionManager,
+            ShellDescriptor shellDescriptor,
+            IVirtualPathProvider virtualPathProvider,
+            Work<WorkContext> workContext,
+            IResourceFileHashProvider resourceFileHashProvider) {
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
             _virtualPathProvider = virtualPathProvider;
+            _workContext = workContext;
+            _resourceFileHashProvider = resourceFileHashProvider;
         }
 
         public abstract string GetFileExtension();
@@ -92,7 +105,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                                 var shape = ((dynamic)displayContext.Value);
                                 var output = displayContext.ViewContext.Writer;
                                 ResourceDefinition resource = shape.Resource;
-                                var url = GetResourceUrl(shape.Url, hit.fileVirtualPath);
+                                var url = GetResourceUrl(shape.Url, AddHash(hit.fileVirtualPath));
                                 string condition = shape.Condition;
                                 Dictionary<string, string> attributes = shape.TagAttributes;
                                 ResourceManager.WriteResource(output, resource, url, condition, attributes);
@@ -102,14 +115,59 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
             }
         }
 
+
+        private string AddHash(string url) {
+            var site = _workContext.Value.CurrentSite;
+
+            // Adds the hash of the static resources if neded
+            if (site.UseFileHash) {
+                var physicalPath = GetPhysicalPath(url);
+                if (!String.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath)) {
+                    return AddQueryStringValue(url, "fileHash", _resourceFileHashProvider.GetResourceFileHash(physicalPath));
+                }
+            }
+            return url;
+        }
+
+        private string GetPhysicalPath(string url) {
+            if (!String.IsNullOrEmpty(url) && !Uri.IsWellFormedUriString(url, UriKind.Absolute) && !url.StartsWith("//")) {
+                if (VirtualPathUtility.IsAbsolute(url) || VirtualPathUtility.IsAppRelative(url)) {
+                    return HostingEnvironment.MapPath(url.Split(_queryStringChars)[0]);
+                }
+            }
+            return null;
+        }
+
+        private string AddQueryStringValue(string url, string name, string value) {
+            if (String.IsNullOrEmpty(url)) {
+                return null;
+            }
+            var encodedValue = HttpUtility.UrlEncode(value);
+            if (url.Contains("?")) {
+                if (url.EndsWith("&")) {
+                    return String.Format("{0}{1}={2}", url, name, encodedValue);
+                }
+                else {
+                    return String.Format("{0}&{1}={2}", url, name, encodedValue);
+                }
+            }
+            else {
+                return String.Format("{0}?{1}={2}", url, name, encodedValue);
+            }
+        }
+
         private string GetResourceUrl(string shapeUrl, string fileVirtualPath) {
             if (string.IsNullOrEmpty(shapeUrl)) return fileVirtualPath;
 
-            return GetPathFromRelativeUrl(shapeUrl) == GetPathFromRelativeUrl(fileVirtualPath) ? shapeUrl : fileVirtualPath;
+            return GetPathFromRelativeUrl(shapeUrl).Equals(GetPathFromRelativeUrl(fileVirtualPath), StringComparison.InvariantCultureIgnoreCase) ?
+                shapeUrl : fileVirtualPath;
         }
 
         private string GetPathFromRelativeUrl(string url) {
-            var path = url.TrimStart('~');
+            // normalize urls that could be like ~/ or /OrchardLocal/ or /OrchardLocal/tenant-prefix
+            // driving them to a ~/ format
+            var appRelativeUrl = System.Web.VirtualPathUtility.ToAppRelative(url);
+            var path = appRelativeUrl.TrimStart('~');
             var indexOfQueryString = path.IndexOf('?');
 
             return indexOfQueryString >= 0 ? path.Substring(0, indexOfQueryString) : path;
@@ -123,7 +181,17 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
 
     // discovers .css files and turns them into Style__<filename> shapes.
     public class StylesheetBindingStrategy : StaticFileBindingStrategy, IShapeTableProvider {
-        public StylesheetBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) : base(extensionManager, shellDescriptor, virtualPathProvider) {
+        public StylesheetBindingStrategy(
+            IExtensionManager extensionManager,
+            ShellDescriptor shellDescriptor,
+            IVirtualPathProvider virtualPathProvider,
+            Work<WorkContext> workContext,
+            IResourceFileHashProvider resourceFileHashProvider) : base(
+                extensionManager,
+                shellDescriptor,
+                virtualPathProvider,
+                workContext,
+                resourceFileHashProvider) {
         }
 
         public override string GetFileExtension() {

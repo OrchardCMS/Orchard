@@ -6,6 +6,8 @@ using Orchard.Taxonomies.Services;
 using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Localization.Services;
+using Orchard.Taxonomies.Drivers;
 
 namespace Orchard.Taxonomies.Projections {
     public interface IFilterProvider : IEventHandler {
@@ -14,10 +16,13 @@ namespace Orchard.Taxonomies.Projections {
 
     public class TermsFilter : IFilterProvider {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private int _termsFilterId;
 
-        public TermsFilter(ITaxonomyService taxonomyService) {
+        public TermsFilter(ITaxonomyService taxonomyService,
+            IWorkContextAccessor workContextAccessor) {
             _taxonomyService = taxonomyService;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -36,7 +41,10 @@ namespace Orchard.Taxonomies.Projections {
             var termIds = (string)context.State.TermIds;
 
             if (!String.IsNullOrEmpty(termIds)) {
-                var ids = termIds.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
+                var ids = termIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    // Int32.Parse throws for empty strings
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(Int32.Parse).ToArray();
 
                 if (ids.Length == 0) {
                     return;
@@ -45,13 +53,30 @@ namespace Orchard.Taxonomies.Projections {
                 int op = Convert.ToInt32(context.State.Operator);
 
                 var terms = ids.Select(_taxonomyService.GetTerm).ToList();
+
+                bool.TryParse(context.State.TranslateTerms?.Value, out bool translateTerms);
+                if (translateTerms &&
+                    _workContextAccessor.GetContext().TryResolve<ILocalizationService>(out var localizationService)) {
+                    var localizedTerms = new List<TermPart>();
+                    foreach (var termPart in terms) {
+                        localizedTerms.AddRange(
+                            localizationService.GetLocalizations(termPart)
+                                .Select(l => l.As<TermPart>()));
+                    }
+                    terms.AddRange(localizedTerms);
+                    terms = terms.Distinct(new TermPartComparer()).ToList();
+                }
+
                 var allChildren = new List<TermPart>();
+                bool.TryParse(context.State.ExcludeChildren?.Value, out bool excludeChildren);
                 foreach (var term in terms) {
-                    bool.TryParse(context.State.ExcludeChildren?.Value, out bool excludeChildren);
-                    if (!excludeChildren)
+                    if (term == null) {
+                        continue;
+                    }
+                    allChildren.Add(term);
+                    if (!excludeChildren) {
                         allChildren.AddRange(_taxonomyService.GetChildren(term));
-                    if (term != null)
-                        allChildren.Add(term);
+                    }
                 }
 
                 allChildren = allChildren.Distinct().ToList();

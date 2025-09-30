@@ -203,8 +203,11 @@ $(function () {
                     var mediaItems = data.mediaItems;
                     var mediaItemsFolderPath = data.folderPath;
 
-                    if (mediaItemsFolderPath !== self.displayed()) {
-                        return;
+                    // When searching on "Recent" folder self.displayed() is null and mediaItemsFolderPath is a empty string.
+                    if (!(mediaItemsFolderPath == '' && self.displayed() == null)) {
+                        if (mediaItemsFolderPath !== self.displayed()) {
+                            return;
+                        }
                     }
 
                     self.mediaItemsCount = data.mediaItemsCount;

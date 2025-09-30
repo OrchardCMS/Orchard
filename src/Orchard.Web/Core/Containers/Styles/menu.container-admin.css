@@ -1,0 +1,7 @@
+﻿.menu-admin > .section-container > h3 > a {
+    background-image: url(images/menu.container.png) !important;
+}
+
+.menu-admin > .section-container > h3 > a:hover {
+    background-position: 0 -30px !important;
+}

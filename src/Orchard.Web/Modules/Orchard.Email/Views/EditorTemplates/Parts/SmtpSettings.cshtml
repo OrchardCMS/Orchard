@@ -1,4 +1,5 @@
-﻿@using System.Net.Mail
+﻿@using Orchard.Email.Models
+@using System.Net.Mail
 @model Orchard.Email.Models.SmtpSettingsPart
 @{
     var smtpClient = new SmtpClient();
@@ -29,15 +30,37 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
-        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
+        @Html.TextBoxFor(m => m.Port, new { type = "number", placeholder = smtpClient.Port, min = 1, max = 65535 })
         @Html.ValidationMessage("Port", "*")
         <span class="hint">@T("The SMTP server port, usually 25.")</span>
     </div>
     <div>
-        @Html.EditorFor(m => m.EnableSsl)
-        <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
-        @Html.ValidationMessage("EnableSsl", "*")
-        <span class="hint">@T("Check if the SMTP server requires SSL communications.")</span>
+        <label for="@Html.FieldIdFor(m => m.EncryptionMethod)">@T("Encryption method to use")</label>
+        <select for="@Html.FieldIdFor(m => m.EncryptionMethod)"
+                id="@Html.FieldIdFor(m => m.EncryptionMethod)"
+                name="@Html.FieldNameFor(m => m.EncryptionMethod)"
+                disabled="@Model.AutoSelectEncryption">
+            @Html.SelectOption(
+                Model.EncryptionMethod,
+                SmtpEncryptionMethod.None,
+                String.Join(String.Empty, T("None").ToString(), " - ", T("Connect to server using insecure connection.").ToString()))
+            @Html.SelectOption(
+                Model.EncryptionMethod,
+                SmtpEncryptionMethod.SslTls,
+                String.Join(String.Empty, T("SSL/TLS").ToString(), " - ", T("Connect to server using SSL/TSL secure connection.").ToString()))
+            @Html.SelectOption(
+                Model.EncryptionMethod,
+                SmtpEncryptionMethod.StartTls,
+                String.Join(String.Empty, T("STARTTLS").ToString(), " - ", T("Connect to server using insecure connection and upgrade to secure using SSL/TLS.").ToString()))
+        </select>
+        @Html.ValidationMessage("EncryptionMethod", "*")
+        <span class="hint">@T("The encryption method used when connecting to mail server.")</span>
+    </div>
+    <div>
+        @Html.EditorFor(m => m.AutoSelectEncryption)
+        <label for="@Html.FieldIdFor(m => m.AutoSelectEncryption)" class="forcheckbox">@T("Auto Select Encryption method")</label>
+        @Html.ValidationMessage("AutoSelectEncryption", "*")
+        <span class="hint">@T("Check to let the system select the encryption method based on port.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.RequireCredentials)
@@ -46,30 +69,16 @@
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
         <div>
-            @Html.RadioButtonFor(m => m.UseDefaultCredentials, false, new { id = "customCredentialsOption", name = "UseDefaultCredentials" })
-            <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
-            @Html.ValidationMessage("UseDefaultCredentials", "*")
+            <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text medium" })
+            @Html.ValidationMessage("UserName", "*")
+            <span class="hint">@T("The username for authentication.")</span>
         </div>
-
         <div>
-            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
-            <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
-            @Html.ValidationMessage("UseDefaultCredentials", "*")
-            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
-        </div>
-        <div class="options">
-            <span data-controllerid="customCredentialsOption">
-                <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-                @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
-                @Html.ValidationMessage("UserName", "*")
-                <span class="hint">@T("The username for authentication.")</span>
-            </span>
-            <span data-controllerid="customCredentialsOption">
-                <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-                @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
-                @Html.ValidationMessage("Password", "*")
-                <span class="hint">@T("The password for authentication.")</span>
-            </span>
+            <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
+            @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
+            @Html.ValidationMessage("Password", "*")
+            <span class="hint">@T("The password for authentication.")</span>
         </div>
     </div>
     <div>
@@ -101,9 +110,9 @@
                     replyTo = $("#@Html.FieldIdFor(m => m.ReplyTo)"),
                     host = $("#@Html.FieldIdFor(m => m.Host)"),
                     port = $("#@Html.FieldIdFor(m => m.Port)"),
-                    enableSsl = $("#@Html.FieldIdFor(m => m.EnableSsl)"),
+                    encryptionMethod = $("#@Html.FieldIdFor(m => m.EncryptionMethod)"),
+                    autoSelectEncryption = $("#@Html.FieldIdFor(m => m.AutoSelectEncryption)"),
                     requireCredentials = $("#@Html.FieldIdFor(m => m.RequireCredentials)"),
-                    useDefaultCredentials = $("input[name='@Html.NameFor(m => m.UseDefaultCredentials)']"),
                     userName = $("#@Html.FieldIdFor(m => m.UserName)"),
                     password = $("#@Html.FieldIdFor(m => m.Password)"),
                     listUnsubscribe = $("#@Html.FieldIdFor(m => m.ListUnsubscribe)"),
@@ -116,9 +125,9 @@
                         replyTo: replyTo.val(),
                         host: host.val(),
                         port: port.val(),
-                        enableSsl: enableSsl.prop("checked"),
+                        encryptionMethod: encryptionMethod.val(),
+                        autoSelectEncryption: autoSelectEncryption.prop("checked"),
                         requireCredentials: requireCredentials.prop("checked"),
-                        useDefaultCredentials: useDefaultCredentials.filter(':checked').val(),
                         userName: userName.val(),
                         password: password.val(),
                         listUnsubscribe: listUnsubscribe.val(),

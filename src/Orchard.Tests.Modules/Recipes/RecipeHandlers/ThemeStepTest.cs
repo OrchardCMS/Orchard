@@ -19,6 +19,7 @@ using Orchard.Environment.Features;
 using Orchard.Environment.State;
 using Orchard.Events;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Locking;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
@@ -60,6 +61,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
+            builder.RegisterType<LockingProvider>().As<ILockingProvider>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
@@ -71,6 +73,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterInstance(testVirtualPathProvider).As<IVirtualPathProvider>();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<ThemeService>().As<IThemeService>();
+            builder.RegisterType<Signals>().As<ISignals>().SingleInstance();
             builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();
             builder.RegisterType<StubSiteThemeService>().As<ISiteThemeService>();
             builder.RegisterType<ThemeStep>();

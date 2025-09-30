@@ -228,8 +228,8 @@
                                             return $(e).height();
                                         }));
                                         for (i = 1; i <= 12; i++)
-                                            ui.placeholder.removeClass("col-sm-" + i);
-                                        ui.placeholder.addClass("col-sm-" + receivedColumn.width);
+                                            ui.placeholder.removeClass("col-" + i);
+                                        ui.placeholder.addClass("col-" + receivedColumn.width);
                                         if (maxHeight > 0) {
                                             ui.placeholder.height(maxHeight);
                                             ui.placeholder.css("min-height", 0);
@@ -321,8 +321,8 @@
                                 result.push("layout-row-full");
                         }
                         if (child.type == "Column") {
-                            result.push("col-sm-" + child.width);
-                            result.push("col-sm-offset-" + child.offset);
+                            result.push("col-" + child.width);
+                            result.push("col-offset-" + child.offset);
                         }
                         if (child.type == "Content")
                             result.push("layout-content-" + child.contentTypeClass);

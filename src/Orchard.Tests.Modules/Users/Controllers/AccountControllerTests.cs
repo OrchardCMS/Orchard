@@ -15,6 +15,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Handlers;
 using Orchard.Core.Settings.Metadata;
+using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Services;
 using Orchard.DisplayManagement;
@@ -71,6 +72,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<AccountValidationService>().As<IAccountValidationService>();
+            builder.RegisterType<PasswordService>().As<IPasswordService>();
+            builder.RegisterType<PasswordHistoryService>().As<IPasswordHistoryService>();
 
             builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
@@ -108,7 +111,12 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                 return new[] { typeof(UserPartRecord),
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),
-                    typeof(ContentItemVersionRecord), 
+                    typeof(ContentItemVersionRecord),
+                    typeof(ContentPartDefinitionRecord),
+                    typeof(ContentPartFieldDefinitionRecord),
+                    typeof(ContentFieldDefinitionRecord),
+                    typeof(ContentTypeDefinitionRecord),
+                    typeof(ContentTypePartDefinitionRecord)
                 };
             }
         }

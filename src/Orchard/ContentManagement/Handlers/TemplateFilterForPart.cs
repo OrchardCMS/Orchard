@@ -40,8 +40,10 @@ namespace Orchard.ContentManagement.Handlers {
                 return;
 
             var templatePart = part.As<TPart>();
-            var templateShape = context.New.EditorTemplate(TemplateName: _templateName, Model: templatePart, Prefix: _prefix);
-            context.Shape.Zones[_location].Add(templateShape, _position);
+            if (templatePart != null) {
+                var templateShape = context.New.EditorTemplate(TemplateName: _templateName, Model: templatePart, Prefix: _prefix);
+                context.Shape.Zones[_location].Add(templateShape, _position);
+            }
         }
 
         protected override void UpdateEditorShape(UpdateEditorContext context, ContentPart part) {
@@ -49,8 +51,10 @@ namespace Orchard.ContentManagement.Handlers {
                 return;
 
             var templatePart = part.As<TPart>();
-            context.Updater.TryUpdateModel(templatePart, _prefix, null, null);
-            BuildEditorShape(context, part);
+            if (templatePart != null) {
+                context.Updater.TryUpdateModel(templatePart, _prefix, null, null);
+                BuildEditorShape(context, part);
+            }
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Orchard.Fields.Fields {
         public string[] SelectedValues {
             get {
                 var value = Value;
-                if(string.IsNullOrWhiteSpace(value)) {
+                if (string.IsNullOrWhiteSpace(value)) {
                     return new string[0];
                 }
 
-                return value.Split(new [] { Separator }, StringSplitOptions.RemoveEmptyEntries);
+                return value.Split(new[] { Separator }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             set {

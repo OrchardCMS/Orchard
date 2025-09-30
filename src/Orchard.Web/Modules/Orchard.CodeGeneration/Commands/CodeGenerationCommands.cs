@@ -161,6 +161,8 @@ namespace Orchard.CodeGeneration.Commands {
             templateText = templateText.Replace("$$ModuleTypeLibGuid$$", Guid.NewGuid().ToString());
             File.WriteAllText(propertiesPath + "\\AssemblyInfo.cs", templateText);
             content.Add(propertiesPath + "\\AssemblyInfo.cs");
+            File.WriteAllText(testsPath + "packages.config", File.ReadAllText(_codeGenTemplatePath + "ModuleTestsPackagesConfig.txt"));
+            content.Add(testsPath + "packages.config");
 
             var itemGroup = CreateProjectItemGroup(testsPath, content, folders);
 
@@ -168,7 +170,7 @@ namespace Orchard.CodeGeneration.Commands {
             csprojText = csprojText.Replace("$$ProjectName$$", projectName);
             csprojText = csprojText.Replace("$$TestsProjectGuid$$", projectGuid);
             csprojText = csprojText.Replace("$$FileIncludes$$", itemGroup ?? "");
-            csprojText = csprojText.Replace("$$OrchardReferences$$", GetOrchardReferences());
+            csprojText = csprojText.Replace("$$OrchardReferences$$", GetOrchardReferences(modulesFolderRelativeDepth: 3));
 
             File.WriteAllText(testsPath + projectName + ".csproj", csprojText);
 
@@ -327,15 +329,17 @@ namespace Orchard.CodeGeneration.Commands {
             return text;
         }
 
-        private static string GetOrchardReferences() {
+        private static string GetOrchardReferences(int modulesFolderRelativeDepth = 2) {
+            var frameworkRelativeDepth = string.Join("\\", Enumerable.Repeat("..", modulesFolderRelativeDepth + 1));
+            var coreRelativeDepth = string.Join("\\", Enumerable.Repeat("..", modulesFolderRelativeDepth));
             return IsSourceEnlistment() ?
-@"<ProjectReference Include=""..\..\..\Orchard\Orchard.Framework.csproj"">
-      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+$@"<ProjectReference Include=""{frameworkRelativeDepth}\Orchard\Orchard.Framework.csproj"">
+      <Project>{{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}}</Project>
       <Name>Orchard.Framework</Name>
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>
-    <ProjectReference Include=""..\..\Core\Orchard.Core.csproj"">
-      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+    <ProjectReference Include=""{coreRelativeDepth}\Core\Orchard.Core.csproj"">
+      <Project>{{9916839C-39FC-4CEB-A5AF-89CA7E87119F}}</Project>
       <Name>Orchard.Core</Name>
       <Private>$(MvcBuildViews)</Private>
     </ProjectReference>" :

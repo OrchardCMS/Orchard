@@ -14,6 +14,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Handlers;
 using Orchard.Core.Settings.Metadata;
+using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Core.Settings.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -46,7 +47,7 @@ namespace Orchard.Tests.Modules.Users.Services
         private StubClock _clock;
         private Mock<WorkContext> _workContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -54,10 +55,15 @@ namespace Orchard.Tests.Modules.Users.Services
                 typeof(UserPartRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord));
+                typeof(ContentTypeRecord),
+                typeof(ContentPartDefinitionRecord),
+                typeof(ContentPartFieldDefinitionRecord),
+                typeof(ContentFieldDefinitionRecord),
+                typeof(ContentTypeDefinitionRecord),
+                typeof(ContentTypePartDefinitionRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
 
         }
@@ -68,6 +74,7 @@ namespace Orchard.Tests.Modules.Users.Services
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<MembershipValidationService>().As<IMembershipValidationService>();
             builder.RegisterType<MembershipService>().As<IMembershipService>();
+            builder.RegisterType<PasswordService>().As<IPasswordService>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -77,7 +84,6 @@ namespace Orchard.Tests.Modules.Users.Services
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
-            //builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterAutoMocking(MockBehavior.Loose);
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
@@ -135,11 +141,12 @@ namespace Orchard.Tests.Modules.Users.Services
 
         [Test]
         public void SaltAndPasswordShouldBeDifferentEvenWithSameSourcePassword() {
-            var user1 = _membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
+            var password = "Password1!";
+            var user1 = _membershipService.CreateUser(new CreateUserParams("user1", password, "user1@email.com", null, null, true, false));
             _session.Flush();
             _session.Clear();
 
-            var user2 = _membershipService.CreateUser(new CreateUserParams("d", "b", "e", null, null, true, false));
+            var user2 = _membershipService.CreateUser(new CreateUserParams("user2", password, "user2@email.com", null, null, true, false));
             _session.Flush();
             _session.Clear();
 
@@ -150,8 +157,8 @@ namespace Orchard.Tests.Modules.Users.Services
             Assert.That(user1Record.Password, Is.Not.EqualTo(user2Record.Password));
 
             List<LocalizedString> validationErrors;
-            Assert.That(_membershipService.ValidateUser("a", "b", out validationErrors), Is.Not.Null);
-            Assert.That(_membershipService.ValidateUser("d", "b", out validationErrors), Is.Not.Null);
+            Assert.That(_membershipService.ValidateUser("user1", password, out validationErrors), Is.Not.Null);
+            Assert.That(_membershipService.ValidateUser("user2", password, out validationErrors), Is.Not.Null);
         }
 
         [Test]

@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -21,6 +25,7 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Localization.Services;
 using Orchard.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DynamicForms.Services {
     public class FormService : IFormService {
@@ -38,16 +43,16 @@ namespace Orchard.DynamicForms.Services {
         private readonly ICultureAccessor _cultureAccessor;
 
         public FormService(
-            ILayoutSerializer serializer, 
-            IClock clock, 
-            IRepository<Submission> submissionRepository, 
-            IFormElementEventHandler elementHandlers, 
-            IContentDefinitionManager contentDefinitionManager, 
-            IBindingManager bindingManager, 
-            IDynamicFormEventHandler formEventHandler, 
+            ILayoutSerializer serializer,
+            IClock clock,
+            IRepository<Submission> submissionRepository,
+            IFormElementEventHandler elementHandlers,
+            IContentDefinitionManager contentDefinitionManager,
+            IBindingManager bindingManager,
+            IDynamicFormEventHandler formEventHandler,
             Lazy<IEnumerable<IElementValidator>> validators,
-            IDateLocalizationServices dateLocalizationServices, 
-            IOrchardServices services, 
+            IDateLocalizationServices dateLocalizationServices,
+            IOrchardServices services,
             ICultureAccessor cultureAccessor) {
 
             _serializer = serializer;
@@ -152,6 +157,90 @@ namespace Orchard.DynamicForms.Services {
             };
         }
 
+        public Stream ExportSubmissions(string formName = null) {
+            var stream = new MemoryStream();
+
+            string GetColumnId(int columnNumber) {
+                string result = "";
+                do {
+                    result = ((char)((columnNumber - 1) % 26 + (int)'A')).ToString() + result;
+                    columnNumber = (columnNumber - 1) / 26;
+                } while (columnNumber != 0);
+                return result;
+            }
+
+            // Create a spreadsheet document.
+            var spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
+
+            // Add a WorkbookPart to the document.
+            var workbookpart = spreadsheetDocument.AddWorkbookPart();
+            workbookpart.Workbook = new Workbook();
+
+            // Add a WorksheetPart to the WorkbookPart.
+            var worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+            var sheetData = new SheetData();
+            worksheetPart.Worksheet = new Worksheet(sheetData);
+
+            // Add Sheets to the Workbook.
+            var sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild(new Sheets());
+
+            // Fetch submissions
+            var query = _submissionRepository.Table;
+
+            if (!String.IsNullOrWhiteSpace(formName)) {
+                query = query.Where(x => x.FormName == formName);
+            }
+
+            var submissions = new Orderable<Submission>(query).Desc(x => x.CreatedUtc).Queryable.ToArray();
+
+            foreach (var formGroup in submissions.GroupBy(s => s.FormName)) {
+                // Append a new worksheet and associate it with the workbook.
+                var sheet = new Sheet() {
+                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = formGroup.Key
+                };
+                sheets.Append(sheet);
+
+                var data = GenerateDataTable(formGroup);
+                uint rowIndex = 1;
+
+                var headerRow = new Row { RowIndex = rowIndex };
+                sheetData.Append(headerRow);
+
+                for (int i = 0; i < data.Columns.Count; i++) {
+                    var title = data.Columns[i].ToString().CamelFriendly();
+                    headerRow.Append(new Cell {
+                        CellReference = GetColumnId(i + 1) + rowIndex,
+                        InlineString = new InlineString { Text = new Text(title) },
+                        DataType = new EnumValue<CellValues>(CellValues.InlineString),
+                    });
+                }
+
+                foreach (DataRow dataRow in data.Rows) {
+                    rowIndex++;
+                    var row = new Row { RowIndex = rowIndex };
+                    sheetData.Append(row);
+                    for (int i = 0; i < data.Columns.Count; i++) {
+                        var value = dataRow[data.Columns[i]];
+                        row.Append(new Cell {
+                            CellReference = GetColumnId(i + 1) + rowIndex,
+                            InlineString = new InlineString { Text = new Text(value.ToString()) },
+                            DataType = new EnumValue<CellValues>(CellValues.InlineString),
+                        });
+                    }
+                }
+            }
+
+            workbookpart.Workbook.Save();
+
+            // Close the document.
+            spreadsheetDocument.Dispose();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
         public void DeleteSubmission(Submission submission) {
             _submissionRepository.Delete(submission);
         }
@@ -191,10 +280,10 @@ namespace Orchard.DynamicForms.Services {
 
             // Collect any remaining form values not handled by any specific element.
             var requestForm = _services.WorkContext.HttpContext.Request.Form;
-            var blackList = new[] {"__RequestVerificationToken", "formName", "contentId"};
-            foreach (var key in 
-                from string key in requestForm 
-                where !String.IsNullOrWhiteSpace(key) && !blackList.Contains(key) && values[key] == null 
+            var blackList = new[] { "__RequestVerificationToken", "formName", "contentId" };
+            foreach (var key in
+                from string key in requestForm
+                where !String.IsNullOrWhiteSpace(key) && !blackList.Contains(key) && values[key] == null
                 select key) {
 
                 values.Add(key, requestForm[key]);
@@ -204,13 +293,14 @@ namespace Orchard.DynamicForms.Services {
         }
 
         public DataTable GenerateDataTable(IEnumerable<Submission> submissions) {
-            var records = submissions.Select(x => Tuple.Create(x, x.ToNameValues())).ToArray();
+            var records = submissions.Select(x => System.Tuple.Create(x, x.ToNameValues())).ToArray();
             var columnNames = new HashSet<string>();
             var dataTable = new DataTable();
 
-            foreach (var key in 
-                from record in records 
-                from string key in record.Item2 where !columnNames.Contains(key) 
+            foreach (var key in
+                from record in records
+                from string key in record.Item2
+                where !columnNames.Contains(key)
                 where !String.IsNullOrWhiteSpace(key)
                 select key) {
                 columnNames.Add(key);
@@ -282,7 +372,7 @@ namespace Orchard.DynamicForms.Services {
             if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
                 _contentManager.Publish(contentItem);
             }
-            
+
             return contentItem;
         }
 
@@ -307,8 +397,8 @@ namespace Orchard.DynamicForms.Services {
         }
 
         private static void InvokePartBindings(
-            ContentItem contentItem, 
-            IEnumerable<ContentPartBindingDescriptor> lookup, 
+            ContentItem contentItem,
+            IEnumerable<ContentPartBindingDescriptor> lookup,
             PartBindingSettings partBindingSettings,
             string value) {
 
@@ -348,7 +438,7 @@ namespace Orchard.DynamicForms.Services {
             if (field == null)
                 return;
 
-            var fieldBindingDescriptorsQuery = 
+            var fieldBindingDescriptorsQuery =
                 from partBindingDescriptor in lookup
                 where partBindingDescriptor.Part.PartDefinition.Name == partBindingSettings.Name
                 from fieldBindingDescriptor in partBindingDescriptor.FieldBindings

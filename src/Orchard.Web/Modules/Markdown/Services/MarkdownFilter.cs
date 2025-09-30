@@ -1,15 +1,16 @@
 ﻿using System;
 using Orchard.Services;
 
-namespace Markdown.Services {
-    public class MarkdownFilter : IHtmlFilter {
-        public string ProcessContent(string text, string flavor) {
-            return String.Equals(flavor, "markdown", StringComparison.OrdinalIgnoreCase) ? MarkdownReplace(text) : text;
+namespace Markdown.Services
+{
+    public class MarkdownFilter : HtmlFilter {
+        public override string ProcessContent(string text, HtmlFilterContext context) {
+            return String.Equals(context.Flavor, "markdown", StringComparison.OrdinalIgnoreCase) ? MarkdownReplace(text) : text;
         }
 
         private static string MarkdownReplace(string text) {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
+            if (String.IsNullOrEmpty(text))
+                return String.Empty;
 
             return Markdig.Markdown.ToHtml(text);
         }

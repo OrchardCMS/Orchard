@@ -20,10 +20,12 @@ using Orchard.Projections.Settings;
 using Orchard.Projections.ViewModels;
 using Orchard.Tokens;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Projections.Drivers {
     public class ProjectionPartDriver : ContentPartDriver<ProjectionPart> {
+        private readonly IOrchardServices _orchardServices;
         private readonly IRepository<QueryPartRecord> _queryRepository;
         private readonly IProjectionManager _projectionManager;
         private readonly IFeedManager _feedManager;
@@ -33,25 +35,25 @@ namespace Orchard.Projections.Drivers {
         private const string TemplateName = "Parts/ProjectionPart";
 
         public ProjectionPartDriver(
-            IOrchardServices services,
+            IOrchardServices orchardServices,
             IRepository<QueryPartRecord> queryRepository,
             IProjectionManager projectionManager,
             IFeedManager feedManager,
             ITokenizer tokenizer,
             IDisplayHelperFactory displayHelperFactory,
             IWorkContextAccessor workContextAccessor) {
+            _orchardServices = orchardServices;
             _queryRepository = queryRepository;
             _projectionManager = projectionManager;
             _feedManager = feedManager;
             _tokenizer = tokenizer;
             _displayHelperFactory = displayHelperFactory;
             _workContextAccessor = workContextAccessor;
+
             T = NullLocalizer.Instance;
-            Services = services;
         }
 
         public Localizer T { get; set; }
-        public IOrchardServices Services { get; set; }
 
         protected override string Prefix { get { return "ProjectionPart"; } }
 
@@ -59,7 +61,7 @@ namespace Orchard.Projections.Drivers {
             var query = part.Record.QueryPartRecord;
 
             // retrieving paging parameters
-            var queryString = Services.WorkContext.HttpContext.Request.QueryString;
+            var queryString = _orchardServices.WorkContext.HttpContext.Request.QueryString;
 
             var pageKey = String.IsNullOrWhiteSpace(part.Record.PagerSuffix) ? "page" : "page-" + part.Record.PagerSuffix;
             var page = 0;
@@ -81,16 +83,14 @@ namespace Orchard.Projections.Drivers {
             var pageSizeKey = "pageSize" + part.Record.PagerSuffix;
 
             if (queryString.AllKeys.Contains(pageSizeKey)) {
-                int qsPageSize;
-
-                if (Int32.TryParse(queryString[pageSizeKey], out qsPageSize)) {
+                if (Int32.TryParse(queryString[pageSizeKey], out int qsPageSize)) {
                     if (part.Record.MaxItems == 0 || qsPageSize <= part.Record.MaxItems) {
                         pageSize = qsPageSize;
                     }
                 }
             }
 
-            var pager = new Pager(Services.WorkContext.CurrentSite, page, pageSize);
+            var pager = new Pager(_orchardServices.WorkContext.CurrentSite, page, pageSize);
 
             var pagerShape = shapeHelper.Pager(pager)
                 .ContentPart(part)
@@ -107,7 +107,7 @@ namespace Orchard.Projections.Drivers {
                 ContentShape("Parts_ProjectionPart_List", shape => {
 
                     // generates a link to the RSS feed for this term
-                    var metaData = Services.ContentManager.GetItemMetadata(part.ContentItem);
+                    var metaData = _orchardServices.ContentManager.GetItemMetadata(part.ContentItem);
                     _feedManager.Register(metaData.DisplayText, "rss", new RouteValueDictionary { { "projection", part.Id } });
 
                     // execute the query
@@ -130,8 +130,8 @@ namespace Orchard.Projections.Drivers {
 
                     // renders in a standard List shape if no specific layout could be found
                     if (layoutDescriptor == null) {
-                        var list = Services.New.List();
-                        var contentShapes = contentItems.Select(item => Services.ContentManager.BuildDisplay(item, "Summary"));
+                        var list = _orchardServices.New.List();
+                        var contentShapes = contentItems.Select(item => _orchardServices.ContentManager.BuildDisplay(item, "Summary"));
                         list.AddRange(contentShapes);
 
                         return list;
@@ -143,7 +143,7 @@ namespace Orchard.Projections.Drivers {
                     var layoutComponents = contentItems.Select(
                         contentItem => {
 
-                            var contentItemMetadata = Services.ContentManager.GetItemMetadata(contentItem);
+                            var contentItemMetadata = _orchardServices.ContentManager.GetItemMetadata(contentItem);
 
                             var propertyDescriptors = fieldDescriptors.Select(
                                 d => {
@@ -156,9 +156,9 @@ namespace Orchard.Projections.Drivers {
                                 });
 
                             // apply all settings to the field content, wrapping it in a FieldWrapper shape
-                            var properties = Services.New.Properties(
+                            var properties = _orchardServices.New.Properties(
                                 Items: propertyDescriptors.Select(
-                                    pd => Services.New.PropertyWrapper(
+                                    pd => _orchardServices.New.PropertyWrapper(
                                         Item: pd.Shape,
                                         Property: pd.Property,
                                         ContentItem: contentItem,
@@ -199,14 +199,14 @@ namespace Orchard.Projections.Drivers {
                                 return key;
                             }).Select(x => new { Key = x.Key, Components = x });
 
-                        var list = Services.New.List();
+                        var list = _orchardServices.New.List();
                         foreach (var group in groups) {
 
                             var localResult = layoutDescriptor.Render(renderLayoutContext, group.Components);
                             // add the Context to the shape
                             localResult.Context(renderLayoutContext);
 
-                            list.Add(Services.New.LayoutGroup(Key: new MvcHtmlString(group.Key), List: localResult));
+                            list.Add(_orchardServices.New.LayoutGroup(Key: new MvcHtmlString(group.Key), List: localResult));
                         }
 
                         return list;
@@ -223,81 +223,80 @@ namespace Orchard.Projections.Drivers {
         }
 
         protected override DriverResult Editor(ProjectionPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_ProjectionPart_Edit",
-                                () => {
-                                    var model = new ProjectionPartEditViewModel();
+            return ContentShape("Parts_ProjectionPart_Edit", () => {
+                var model = new ProjectionPartEditViewModel();
 
-                                    // for create read the setting values
-                                    var settings = part.TypePartDefinition.Settings.GetModel<ProjectionPartSettings>();
-                                    if (part.Id == 0) {
-                                        model = new ProjectionPartEditViewModel {
-                                            DisplayPager = settings.DisplayPager,
-                                            Items = settings.Items,
-                                            Skip = settings.Skip,
-                                            PagerSuffix = settings.PagerSuffix,
-                                            MaxItems = settings.MaxItems,
-                                            QueryLayoutRecordId = settings.QueryLayoutRecordId
-                                        };
-                                    }
-                                    else {
-                                        model = new ProjectionPartEditViewModel {
-                                            DisplayPager = part.Record.DisplayPager,
-                                            Items = part.Record.Items,
-                                            ItemsPerPage = part.Record.ItemsPerPage,
-                                            Skip = part.Record.Skip,
-                                            PagerSuffix = part.Record.PagerSuffix,
-                                            MaxItems = part.Record.MaxItems,
-                                            QueryLayoutRecordId = "-1"
-                                        };
-                                        // concatenated Query and Layout ids for the view
-                                        if (part.Record.QueryPartRecord != null) {
-                                            model.QueryLayoutRecordId = part.Record.QueryPartRecord.Id + ";";
-                                        }
+                // for create read the setting values
+                var settings = part.TypePartDefinition.Settings.GetModel<ProjectionPartSettings>();
+                if (part.Id == 0) {
+                    model = new ProjectionPartEditViewModel {
+                        DisplayPager = settings.DisplayPager,
+                        Items = settings.Items,
+                        Skip = settings.Skip,
+                        PagerSuffix = settings.PagerSuffix,
+                        MaxItems = settings.MaxItems,
+                        QueryLayoutRecordId = settings.QueryLayoutRecordId
+                    };
+                }
+                else {
+                    model = new ProjectionPartEditViewModel {
+                        DisplayPager = part.Record.DisplayPager,
+                        Items = part.Record.Items,
+                        ItemsPerPage = part.Record.ItemsPerPage,
+                        Skip = part.Record.Skip,
+                        PagerSuffix = part.Record.PagerSuffix,
+                        MaxItems = part.Record.MaxItems,
+                        QueryLayoutRecordId = "-1"
+                    };
+                    // concatenated Query and Layout ids for the view
+                    if (part.Record.QueryPartRecord != null) {
+                        model.QueryLayoutRecordId = part.Record.QueryPartRecord.Id + ";";
+                    }
 
-                                        if (part.Record.LayoutRecord != null) {
-                                            model.QueryLayoutRecordId += part.Record.LayoutRecord.Id.ToString();
-                                        }
-                                        else {
-                                            model.QueryLayoutRecordId += "-1";
-                                        }
-                                    }
+                    if (part.Record.LayoutRecord != null) {
+                        model.QueryLayoutRecordId += part.Record.LayoutRecord.Id.ToString();
+                    }
+                    else {
+                        model.QueryLayoutRecordId += "-1";
+                    }
+                }
 
-                                    model.PartId = part.Id;
+                model.PartId = part.Id;
 
-                                    // lock fields
-                                    model.LockEditingItems = settings.LockEditingItems;
-                                    model.LockEditingSkip = settings.LockEditingSkip;
-                                    model.LockEditingMaxItems = settings.LockEditingMaxItems;
-                                    model.LockEditingPagerSuffix = settings.LockEditingPagerSuffix;
-                                    model.LockEditingDisplayPager = settings.LockEditingDisplayPager;
+                // lock fields
+                model.LockEditingItems = settings.LockEditingItems;
+                model.LockEditingSkip = settings.LockEditingSkip;
+                model.LockEditingMaxItems = settings.LockEditingMaxItems;
+                model.LockEditingPagerSuffix = settings.LockEditingPagerSuffix;
+                model.LockEditingDisplayPager = settings.LockEditingDisplayPager;
 
-                                    // populating the list of queries and layouts
-                                    var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
-                                    model.QueryRecordEntries = Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
-                                           .Select(x => new QueryRecordEntry {
-                                               Id = x.Id,
-                                               Name = x.Name,
-                                               LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {
-                                                   Id = l.Id,
-                                                   Description = GetLayoutDescription(layouts, l)
-                                               })
-                                           });
+                // populating the list of queries and layouts
+                var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
+                model.QueryRecordEntries = _orchardServices.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
+                        .Select(x => new QueryRecordEntry {
+                            Id = x.Id,
+                            Name = x.Name,
+                            LayoutRecordEntries = x.Layouts.Select(l => new LayoutRecordEntry {
+                                Id = l.Id,
+                                Description = GetLayoutDescription(layouts, l)
+                            })
+                        });
 
-                                    // if any values, use default list of the settings
-                                    if (!string.IsNullOrWhiteSpace(settings.FilterQueryRecordId)) {
-                                        var filterQueryRecordId = settings.FilterQueryRecordId.Split('&');
-                                        model.QueryRecordIdFilterEntries = filterQueryRecordId
-                                            .Select(x => new QueryRecordFilterEntry {
-                                                Id = x.Split(';')[0],
-                                                LayoutId = x.Split(';')[1]
-                                            });
-                                    }
-                                    else {
-                                        model.QueryRecordIdFilterEntries = new List<QueryRecordFilterEntry>();
-                                    }
+                // if any values, use default list of the settings
+                if (!string.IsNullOrWhiteSpace(settings.FilterQueryRecordId)) {
+                    var filterQueryRecordId = settings.FilterQueryRecordId.Split('&');
+                    model.QueryRecordIdFilterEntries = filterQueryRecordId
+                        .Select(x => new QueryRecordFilterEntry {
+                            Id = x.Split(';')[0],
+                            LayoutId = x.Split(';')[1]
+                        });
+                }
+                else {
+                    model.QueryRecordIdFilterEntries = new List<QueryRecordFilterEntry>();
+                }
 
-                                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
-                                });
+                return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
+            });
         }
 
         private static string GetLayoutDescription(IEnumerable<LayoutDescriptor> layouts, LayoutRecord l) {
@@ -313,7 +312,7 @@ namespace Orchard.Projections.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
 
             model.PartId = part.Id;
-            
+
             // check the setting, if it is unlocked, assign the setting value
             if (settings.LockEditingDisplayPager) {
                 part.Record.DisplayPager = settings.DisplayPager;
@@ -356,6 +355,12 @@ namespace Orchard.Projections.Drivers {
                 updater.AddModelError("PagerSuffix", T("Suffix should not contain special characters."));
             }
 
+            if (model.Items == 0
+                && (part.Record.QueryPartRecord?.FilterGroups.Any(group => group.Filters.Count == 0) ?? false)) {
+                _orchardServices.Notifier.Warning(
+                    T("The selected Query has at least one empty filter group, which causes all content items to be returned. It is recommended to limit the number of content items queried by setting the 'Items to display' field to a non-zero value."));
+            }
+
             return Editor(part, shapeHelper);
         }
 
@@ -376,12 +381,11 @@ namespace Orchard.Projections.Drivers {
         protected override void ImportCompleted(ProjectionPart part, ImportContentContext context) {
             // Assign the query only when everything is imported.
             var query = context.Attribute(part.PartDefinition.Name, "Query");
-            if (query != null && context.GetItemFromSession(query).As<QueryPart>()!=null) {
+            if (query != null && context.GetItemFromSession(query).As<QueryPart>() != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
-                int layoutIndexValue;
                 if (layoutIndex != null
-                    && Int32.TryParse(layoutIndex, out layoutIndexValue)
+                    && Int32.TryParse(layoutIndex, out int layoutIndexValue)
                     && layoutIndexValue >= 0
                     && part.Record.QueryPartRecord.Layouts.Count > layoutIndexValue) {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
@@ -398,9 +402,9 @@ namespace Orchard.Projections.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPager", part.Record.DisplayPager);
 
             if (part.Record.QueryPartRecord != null) {
-                var queryPart = Services.ContentManager.Query<QueryPart, QueryPartRecord>("Query").Where(x => x.Id == part.Record.QueryPartRecord.Id).List().FirstOrDefault();
+                var queryPart = _orchardServices.ContentManager.Query<QueryPart, QueryPartRecord>("Query").Where(x => x.Id == part.Record.QueryPartRecord.Id).List().FirstOrDefault();
                 if (queryPart != null) {
-                    var queryIdentity = Services.ContentManager.GetItemMetadata(queryPart).Identity;
+                    var queryIdentity = _orchardServices.ContentManager.GetItemMetadata(queryPart).Identity;
                     context.Element(part.PartDefinition.Name).SetAttributeValue("Query", queryIdentity.ToString());
                     context.Element(part.PartDefinition.Name).SetAttributeValue("LayoutIndex", part.Record.QueryPartRecord.Layouts.IndexOf(part.Record.LayoutRecord));
                 }

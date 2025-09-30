@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -16,15 +15,26 @@ namespace Orchard.Projections {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
-        
+        private readonly IRepository<FilterRecord> _filterRepository;
+
+        /// <summary>
+        /// When upgrading from "1.10.x" branch code committed after 1.10.3 to "dev" branch code or 1.11, merge
+        /// conflicts between "1.10.x" and "dev" caused by running the same migration steps in a different order need to
+        /// be resolved by instructing this migration to decide which steps need to be executed. If you're upgrading
+        /// under these conditions and your pre-upgrade migration version is 6, use HostComponents.config to override
+        /// this property to true.
+        /// </summary>
+        public bool IsUpgradingFromOrchard_1_10_x_Version_6 { get; set; }
+
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
-            IRepository<PropertyRecord> propertyRecordRepository) {
-
+            IRepository<PropertyRecord> propertyRecordRepository,
+            IRepository<FilterRecord> filterRepository) {
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
+            _filterRepository = filterRepository;
 
             T = NullLocalizer.Instance;
         }
@@ -40,6 +50,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<string>("Value", c => c.WithLength(4000))
+                    .Column<string>("LatestValue", c => c.WithLength(4000))
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -48,6 +59,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<long>("Value")
+                    .Column<long>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -56,6 +68,7 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<double>("Value")
+                    .Column<double>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
@@ -64,10 +77,32 @@ namespace Orchard.Projections {
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
                     .Column<string>("PropertyName")
                     .Column<decimal>("Value")
+                    .Column<decimal>("LatestValue")
                     .Column<int>("FieldIndexPartRecord_Id")
             );
 
+            //Adds indexes for better performances in queries
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+                table.CreateIndex("IDX_Orchard_Projections_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id");
+            });
+
             SchemaBuilder.CreateTable("FieldIndexPartRecord", table => table.ContentPartRecord());
+
+            //Adds indexes for better performances in queries
+            AddPropertyNameAndFieldIndexPartRecordIdIndexes();
 
             // Query
 
@@ -81,6 +116,7 @@ namespace Orchard.Projections {
             SchemaBuilder.CreateTable("QueryPartRecord",
                 table => table
                     .ContentPartRecord()
+                    .Column<string>("VersionScope", c => c.WithLength(15))
             );
 
             SchemaBuilder.CreateTable("FilterGroupRecord",
@@ -119,6 +155,7 @@ namespace Orchard.Projections {
                     .Column<string>("Description", c => c.WithLength(255))
                     .Column<string>("State", c => c.Unlimited())
                     .Column<string>("DisplayType", c => c.WithLength(64))
+                    .Column<string>("GUIdentifier", column => column.WithLength(68))
                     .Column<int>("Display")
                     .Column<int>("QueryPartRecord_id")
                     .Column<int>("GroupProperty_id")
@@ -154,6 +191,7 @@ namespace Orchard.Projections {
                     .Column<bool>("HideEmpty")
 
                     .Column<bool>("RewriteOutput")
+                    .Column<string>("RewriteOutputCondition", c => c.Unlimited())
                     .Column<string>("RewriteText", c => c.Unlimited())
                     .Column<bool>("StripHtmlTags")
                     .Column<bool>("TrimLength")
@@ -211,6 +249,24 @@ namespace Orchard.Projections {
                     .DisplayedAs("Projection")
                 );
 
+            SchemaBuilder.CreateTable("NavigationQueryPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<int>("Items")
+                    .Column<int>("Skip")
+                    .Column<int>("QueryPartRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
+                cfg => cfg
+                    .WithIdentity()
+                    .WithPart("NavigationQueryPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Query Link")
+                    .WithSetting("Description", "Injects menu items from a Query")
+                    .WithSetting("Stereotype", "MenuItem")
+                );
+
             // Default Model Bindings - CommonPartRecord
 
             _memberBindingRepository.Create(new MemberBindingRecord {
@@ -252,38 +308,7 @@ namespace Orchard.Projections {
                 Description = T("The text from the Body part").Text
             });
 
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_StringFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_IntegerFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_DoubleFieldIndexRecord", "FieldIndexPartRecord_Id")
-            );
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table
-                .CreateIndex("IDX_Orchard_Projections_DecimalFieldIndexRecords", "FieldIndexPartRecord_Id")
-            );
-
-            SchemaBuilder.CreateTable("NavigationQueryPartRecord",
-                table => table.ContentPartRecord()
-                    .Column<int>("Items")
-                    .Column<int>("Skip")
-                    .Column<int>("QueryPartRecord_id")
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
-                cfg => cfg
-                    .WithPart("NavigationQueryPart")
-                    .WithPart("MenuPart")
-                    .WithPart("CommonPart")
-                    .DisplayedAs("Query Link")
-                    .WithSetting("Description", "Injects menu items from a Query")
-                    .WithSetting("Stereotype", "MenuItem")
-                    .WithIdentity()
-                );
-
-            return 4;
+            return 8;
         }
 
         public int UpdateFrom1() {
@@ -306,7 +331,7 @@ namespace Orchard.Projections {
 
             ContentDefinitionManager.AlterTypeDefinition("ProjectionPage", cfg => cfg.Listable());
 
-            return 3;
+            return 2;
         }
 
         public int UpdateFrom2() {
@@ -328,29 +353,19 @@ namespace Orchard.Projections {
 
         public int UpdateFrom4() {
             SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
-            .AddColumn<string>("LatestValue", c => c.WithLength(4000)));
+                .AddColumn<string>("LatestValue", c => c.WithLength(4000)));
 
             SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table
-            .AddColumn<long>("LatestValue"));
+                .AddColumn<long>("LatestValue"));
 
             SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table
-            .AddColumn<double>("LatestValue"));
+                .AddColumn<double>("LatestValue"));
 
             SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table
-            .AddColumn<decimal>("LatestValue"));
+                .AddColumn<decimal>("LatestValue"));
 
             //Adds indexes for better performances in queries
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
-
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_PropertyName", new string[] { "PropertyName" }));
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => table.CreateIndex("IX_FieldIndexPartRecord_Id", new string[] { "FieldIndexPartRecord_Id" }));
+            AddPropertyNameAndFieldIndexPartRecordIdIndexes();
 
             SchemaBuilder.AlterTable("QueryPartRecord", table => table
                 .AddColumn<string>("VersionScope", c => c.WithLength(15)));
@@ -358,32 +373,95 @@ namespace Orchard.Projections {
             return 5;
         }
 
-#pragma warning disable CS0618
-        // disable compiler warning regarding the fact that RewriteOutput is obsolete
-        // because this migration is handling just that.
         public int UpdateFrom5() {
-            SchemaBuilder.AlterTable("PropertyRecord", table => table
-                .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
-            );
-
-            foreach (var property in _propertyRecordRepository.Table)
-                if (property.RewriteOutput) property.RewriteOutputCondition = "true";
+            MigratePropertyRecordToRewriteOutputCondition();
 
             return 6;
         }
-#pragma warning restore CS0618
 
         public int UpdateFrom6() {
-            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
-                     column => column.WithLength(68)));
+            // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom6 on dev: Casting a somewhat wide net, but
+            // filters can't be queried by the form they are using and different types of filters can (and do) use
+            // StringFilterForm. However, the "Operator" parameter's value being "ContainsAnyIfProvided" is very
+            // specific.
+            var formStateToReplace = "<Operator>ContainsAnyIfProvided</Operator>";
+            var filterRecordsToUpdate = _filterRepository.Table.Where(f => f.State.Contains(formStateToReplace)).ToList();
+            foreach (var filter in filterRecordsToUpdate) {
+                filter.State = filter.State.Replace(
+                    formStateToReplace,
+                    "<Operator>ContainsAny</Operator><IgnoreFilterIfValueIsEmpty>true</IgnoreFilterIfValueIsEmpty>");
+            }
 
-            var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
-            foreach (var layout in layoutRecords) {
-                layout.GUIdentifier = Guid.NewGuid().ToString();
+            if (IsUpgradingFromOrchard_1_10_x_Version_6) {
+                MigratePropertyRecordToRewriteOutputCondition();
+            }
+            else {
+                // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
+                SchemaBuilder.AlterTable("LayoutRecord", table =>
+                    table.AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
+
+                var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
+                foreach (var layout in layoutRecords) {
+                    layout.GUIdentifier = Guid.NewGuid().ToString();
+                }
             }
 
             return 7;
         }
 
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+                table.DropIndex("IX_PropertyName");
+                table.DropIndex("IX_FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+                table.DropIndex("IX_PropertyName");
+                table.DropIndex("IX_FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+                table.DropIndex("IX_PropertyName");
+                table.DropIndex("IX_FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+                table.DropIndex("IX_PropertyName");
+                table.DropIndex("IX_FieldIndexPartRecord_Id");
+            });
+
+            AddPropertyNameAndFieldIndexPartRecordIdIndexes();
+
+            return 8;
+        }
+
+        // This change was originally in UpdateFrom5 on dev, but didn't exist on 1.10.x.
+        private void MigratePropertyRecordToRewriteOutputCondition() {
+            SchemaBuilder.AlterTable("PropertyRecord", table => table
+                .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
+            );
+
+            foreach (var property in _propertyRecordRepository.Table)
+#pragma warning disable CS0618 // Type or member is obsolete
+                // Reading this obsolete property to migrate its data to a new one.
+                if (property.RewriteOutput) property.RewriteOutputCondition = "true";
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        private void AddPropertyNameAndFieldIndexPartRecordIdIndexes() {
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+                table.CreateIndex("IDX_StringFieldIndexRecord_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_StringFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+                table.CreateIndex("IDX_IntegerFieldIndexRecord_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_IntegerFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+                table.CreateIndex("IDX_DoubleFieldIndexRecord_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_DoubleFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
+            });
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+                table.CreateIndex("IDX_DecimalFieldIndexRecord_PropertyName", "PropertyName");
+                table.CreateIndex("IDX_DecimalFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
+            });
+        }
     }
 }

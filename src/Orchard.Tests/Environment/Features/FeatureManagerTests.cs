@@ -16,6 +16,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Features;
 using Orchard.Environment.State;
 using Orchard.Events;
+using Orchard.Locking;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
@@ -27,10 +28,10 @@ namespace Orchard.Tests.Environment.Features {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                                 typeof (ShellDescriptorRecord),
-                                 typeof (ShellFeatureRecord),
-                                 typeof (ShellParameterRecord),
-                             };
+                    typeof (ShellDescriptorRecord),
+                    typeof (ShellFeatureRecord),
+                    typeof (ShellParameterRecord),
+                };
             }
         }
 
@@ -39,11 +40,13 @@ namespace Orchard.Tests.Environment.Features {
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
+            builder.RegisterType<LockingProvider>().As<ILockingProvider>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
+            builder.RegisterType<Signals>().As<ISignals>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterSource(new EventsRegistrationSource());
 

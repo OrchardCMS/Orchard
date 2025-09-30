@@ -1,1 +1,10 @@
-﻿<span class="raw">@Html.Raw(Model.Content.BodyPart.Text)</span>
+﻿@using Orchard.Core.Common.Models
+@using Orchard.Services
+
+@{
+    var htmlFilterProcessor = WorkContext.Resolve<IHtmlFilterProcessor>();
+    var bodyPart = Model.Content.BodyPart as BodyPart;
+    var bodyText = htmlFilterProcessor.ProcessFilters(bodyPart.Text, bodyPart.GetFlavor(), bodyPart);
+}
+
+<span class="raw">@Html.Raw(bodyText)</span>

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using Ionic.Zip;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
@@ -53,10 +53,10 @@ namespace Orchard.Tests.Modules.Media.Services {
         [Test]
         public void GetMediaFoldersTest() {
             StorageProvider.ListFoldersPredicate = path => {
-                return string.IsNullOrEmpty(path) ? new[] {new StubStorageFolder(FolderName1)}
-                            : string.Equals(path, FolderName1) ? new[] {new StubStorageFolder(FolderName2), new StubStorageFolder(FolderName3)}
+                return string.IsNullOrEmpty(path) ? new[] { new StubStorageFolder(FolderName1) }
+                            : string.Equals(path, FolderName1) ? new[] { new StubStorageFolder(FolderName2), new StubStorageFolder(FolderName3) }
                                  : new StubStorageFolder[] { };
-                };
+            };
 
             IEnumerable<MediaFolder> mediaFolders = MediaService.GetMediaFolders(null);
             Assert.That(mediaFolders.Count(), Is.EqualTo(1), "Root path only has 1 sub directory");
@@ -94,7 +94,7 @@ namespace Orchard.Tests.Modules.Media.Services {
             Assert.That(StorageProvider.SavedStreams.Contains(StorageProvider.Combine(FolderName1, FinalDottedWebconfigFileName)), Is.False, "no extension files are never allowed");
             Assert.That(StorageProvider.SavedStreams.Contains(StorageProvider.Combine(FolderName1, PaddedWebconfigFileName)), Is.False, "no extension files are never allowed");
             Assert.That(StorageProvider.SavedStreams.Contains(StorageProvider.Combine(FolderName1, FinalDottedTextFileName)), Is.False, "no extension files are never allowed");
-            
+
             Assert.That(StorageProvider.SavedStreams.Count, Is.EqualTo(3));
         }
 
@@ -160,29 +160,30 @@ namespace Orchard.Tests.Modules.Media.Services {
         }
 
         private MemoryStream CreateZipMemoryStream() {
+            var entries = new List<string> {
+                TextFileName, WebconfigFileName, DllFileName, ZipFileName, NoExtensionFileName, PaddedWebconfigFileName,
+                FinalDottedWebconfigFileName, PaddedTextFileName, FinalDottedTextFileName
+            };
+
             // Setup memory stream with zip archive for more complex scenarios
             MemoryStream memoryStream = new MemoryStream();
-            using (ZipFile zipOut = new ZipFile()) {
-
-                zipOut.AddEntry(TextFileName, new byte[] { 0x01 });
-                zipOut.AddEntry(WebconfigFileName, new byte[] { 0x02 });
-                zipOut.AddEntry(DllFileName, new byte[] { 0x03 });
-                zipOut.AddEntry(ZipFileName, new byte[] { 0x04 });
-                zipOut.AddEntry(NoExtensionFileName, new byte[] { 0x05 });
-                zipOut.AddEntry(PaddedWebconfigFileName, new byte[] { 0x06 });
-                zipOut.AddEntry(FinalDottedWebconfigFileName, new byte[] { 0x07 });
-                zipOut.AddEntry(PaddedTextFileName, new byte[] { 0x08 });
-                zipOut.AddEntry(FinalDottedTextFileName, new byte[] { 0x09 });
-
-                zipOut.Save(memoryStream);
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true)) {
+                var content = new byte[] { 0x01 };
+                foreach (var entry in entries) {
+                    var zipEntry = archive.CreateEntry(entry);
+                    using (var zipStream = zipEntry.Open()) {
+                        zipStream.Write(content, 0, 1);
+                    }
+                    ++content[0];
+                }
             }
-                
+
             return new MemoryStream(memoryStream.ToArray());
         }
 
         private class MediaServiceAccessor : MediaService {
             public MediaServiceAccessor(IStorageProvider storageProvider, IOrchardServices orchardServices)
-                : base (storageProvider, orchardServices) {}
+                : base(storageProvider, orchardServices) { }
 
             public void UnzipMediaFileArchiveAccessor(string targetFolder, Stream zipStream) {
                 UnzipMediaFileArchive(targetFolder, zipStream);

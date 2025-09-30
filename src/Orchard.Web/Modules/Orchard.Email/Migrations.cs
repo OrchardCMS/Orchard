@@ -7,9 +7,7 @@ using Orchard.Email.Models;
 namespace Orchard.Email {
     public class Migrations : DataMigrationImpl {
         private readonly IContentManager _contentManager;
-
         public Migrations(IContentManager contentManager) => _contentManager = contentManager;
-
         // The first migration without any content should not exist but it has been deployed so we need to keep it.
         public int Create() => 1;
 

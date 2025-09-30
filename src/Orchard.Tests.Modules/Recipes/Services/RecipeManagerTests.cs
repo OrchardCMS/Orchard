@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -14,6 +13,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
+using Orchard.Mvc;
 using Orchard.Recipes.Events;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
@@ -93,6 +93,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
+            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
         }
 
         public override void Init() {

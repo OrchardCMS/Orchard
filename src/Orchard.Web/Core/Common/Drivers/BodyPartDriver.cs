@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using Orchard.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Services;
 using System.Web.Mvc;
@@ -15,13 +12,13 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.Drivers {
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IHtmlFilterProcessor _htmlFilterProcessor;
         private readonly RequestContext _requestContext;
 
         private const string TemplateName = "Parts.Common.Body";
 
-        public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters, RequestContext requestContext) {
-            _htmlFilters = htmlFilters;
+        public BodyPartDriver(IOrchardServices services, IHtmlFilterProcessor htmlFilterProcessor, RequestContext requestContext) {
+            _htmlFilterProcessor = htmlFilterProcessor;
             Services = services;
             _requestContext = requestContext;
         }
@@ -33,32 +30,27 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
+            string GetProcessedBodyText() => _htmlFilterProcessor.ProcessFilters(part.Text, part.GetFlavor(), part);
+
             return Combined(
-                ContentShape("Parts_Common_Body",
-                             () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
-                                 return shapeHelper.Parts_Common_Body(Html: new HtmlString(bodyText));
-                             }),
-                ContentShape("Parts_Common_Body_Summary",
-                             () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
-                                 return shapeHelper.Parts_Common_Body_Summary(Html: new HtmlString(bodyText));
-                             })
-                );
+                ContentShape("Parts_Common_Body", () =>
+                    shapeHelper.Parts_Common_Body(Html: new HtmlString(GetProcessedBodyText()))),
+                ContentShape("Parts_Common_Body_Summary", () =>
+                    shapeHelper.Parts_Common_Body_Summary(Html: new HtmlString(GetProcessedBodyText()))));
         }
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part,_requestContext);
-            return ContentShape("Parts_Common_Body_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+            return ContentShape("Parts_Common_Body_Edit", () =>
+                shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BodyPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part, _requestContext);
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            return ContentShape("Parts_Common_Body_Edit", 
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+            return ContentShape("Parts_Common_Body_Edit", () =>
+                shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override void Importing(BodyPart part, ContentManagement.Handlers.ImportContentContext context) {
@@ -83,16 +75,9 @@ namespace Orchard.Core.Common.Drivers {
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {
             return new BodyEditorViewModel {
                 BodyPart = part,
-                EditorFlavor = GetFlavor(part),
+                EditorFlavor = part.GetFlavor(),
                 AddMediaPath = new PathBuilder(part,requestContext).AddContentType().AddContainerSlug().ToString()
             };
-        }
-
-        private static string GetFlavor(BodyPart part) {
-            var typePartSettings = part.Settings.GetModel<BodyTypePartSettings>();
-            return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
-                       ? typePartSettings.Flavor
-                       : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
         }
 
         class PathBuilder {

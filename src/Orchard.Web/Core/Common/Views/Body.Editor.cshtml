@@ -3,10 +3,16 @@
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
 
     string editorFlavor = Model.EditorFlavor;
+    var htmlAttributes = (Dictionary<string, object>)Model.HtmlAttributes;
 
-    var htmlAttributes = new Dictionary<string, object> {
-        {"class", editorFlavor.HtmlClassify()}
-    };
+    if (htmlAttributes == null) {
+        htmlAttributes = new Dictionary<string, object> {
+        {"class", editorFlavor.HtmlClassify()}};
+
+    }
+    else {
+        htmlAttributes["class"] = editorFlavor.HtmlClassify();
+    }
 
     if (Model.Required == true) {
         htmlAttributes["required"] = "required";

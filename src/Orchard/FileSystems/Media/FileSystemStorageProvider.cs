@@ -4,15 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
-using Orchard.Localization;
-using Orchard.Validation;
 using Orchard.Exceptions;
+using Orchard.Localization;
+using Orchard.Utility.Extensions;
+using Orchard.Validation;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
         private readonly string _storagePath; // c:\orchard\media\default
         private readonly string _virtualPath; // ~/Media/Default/
         private readonly string _publicPath; // /Orchard/Media/Default/
+        public static readonly char[] HttpUnallowedCharacters =
+            new char[] { '<', '>', '*', '%', '&', ':', '\\', '/', '?', '#', '"', '{', '}', '|', '^', '[', ']', '`' };
+        public static readonly char[] InvalidFolderNameCharacters =
+            Path.GetInvalidPathChars().Union(HttpUnallowedCharacters).ToArray();
+        public static readonly char[] InvalidFileNameCharacters =
+            Path.GetInvalidFileNameChars().Union(HttpUnallowedCharacters).ToArray();
 
         public FileSystemStorageProvider(ShellSettings settings) {
             var mediaPath = HostingEnvironment.IsHosted
@@ -27,16 +34,33 @@ namespace Orchard.FileSystems.Media {
                 appPath = HostingEnvironment.ApplicationVirtualPath;
             }
             if (!appPath.EndsWith("/"))
-                appPath = appPath + '/';
+                appPath += '/';
             if (!appPath.StartsWith("/"))
                 appPath = '/' + appPath;
 
             _publicPath = appPath + "Media/" + settings.Name + "/";
 
             T = NullLocalizer.Instance;
+            MaxPathLength = 260;
         }
 
         public Localizer T { get; set; }
+
+        /// <summary>
+        /// The public setter allows injecting this from Sites.MyTenant.Config or Sites.config, by using an AutoFac
+        /// component. See the example below.
+        /// </summary>
+        /*
+         <component
+            instance-scope="per-lifetime-scope"
+            service="Orchard.FileSystems.Media.IStorageProvider"
+            type="Orchard.FileSystems.Media.FileSystemStorageProvider, Orchard.Framework">
+                <properties>
+                    <property name="MaxPathLength" value="500" />
+                </properties>
+            </component>
+         */
+        public int MaxPathLength { get; set; }
 
         /// <summary>
         /// Maps a relative path into the storage path.
@@ -198,6 +222,12 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <exception cref="ArgumentException">If the folder already exists.</exception>
         public void CreateFolder(string path) {
+            // We are dealing with a folder here, but GetFileName returns the last path segment, which in this case is
+            // the folder name.
+            if (FolderNameContainsInvalidCharacters(Path.GetFileName(path))) {
+                throw new InvalidNameCharacterException(T("The directory name contains invalid character(s)").ToString());
+            }
+
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
             if (directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
@@ -229,6 +259,12 @@ namespace Orchard.FileSystems.Media {
             DirectoryInfo sourceDirectory = new DirectoryInfo(MapStorage(oldPath));
             if (!sourceDirectory.Exists) {
                 throw new ArgumentException(T("Directory {0} does not exist", oldPath).ToString());
+            }
+
+            // We are dealing with a folder here, but GetFileName returns the last path segment, which in this case is
+            // the folder name.
+            if (FolderNameContainsInvalidCharacters(Path.GetFileName(newPath))) {
+                throw new InvalidNameCharacterException(T("The new directory name contains invalid character(s)").ToString());
             }
 
             DirectoryInfo targetDirectory = new DirectoryInfo(MapStorage(newPath));
@@ -296,6 +332,10 @@ namespace Orchard.FileSystems.Media {
                 throw new ArgumentException(T("File {0} does not exist", oldPath).ToString());
             }
 
+            if (FileNameContainsInvalidCharacters(Path.GetFileName(newPath))) {
+                throw new InvalidNameCharacterException(T("The new file name contains invalid character(s)").ToString());
+            }
+
             FileInfo targetFileInfo = new FileInfo(MapStorage(newPath));
             if (targetFileInfo.Exists) {
                 throw new ArgumentException(T("File {0} already exists", newPath).ToString());
@@ -325,6 +365,10 @@ namespace Orchard.FileSystems.Media {
         /// <exception cref="ArgumentException">If the file already exists.</exception>
         /// <returns>The created file.</returns>
         public IStorageFile CreateFile(string path) {
+            if (FileNameContainsInvalidCharacters(Path.GetFileName(path))) {
+                throw new InvalidNameCharacterException(T("The file name contains invalid character(s)").ToString());
+            }
+
             FileInfo fileInfo = new FileInfo(MapStorage(path));
             if (fileInfo.Exists) {
                 throw new ArgumentException(T("File {0} already exists", fileInfo.Name).ToString());
@@ -334,6 +378,17 @@ namespace Orchard.FileSystems.Media {
             var dirName = Path.GetDirectoryName(fileInfo.FullName);
             if (!Directory.Exists(dirName)) {
                 Directory.CreateDirectory(dirName);
+            }
+            //Path.GetFileNameWithoutExtension(fileInfo.Name)
+            // If absolute path is longer than the maximum path length (260 characters), file cannot be saved.
+            if (fileInfo.FullName.Length > MaxPathLength) {
+                var fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                var extension = fileInfo.Extension;
+                // try to generate a shorter path for the file
+                var nameHash = fileName.GetHashCode().ToString("x");
+                // Hopefully this new path is short enough now
+                path = Combine(Path.GetDirectoryName(path), nameHash + extension);
+                fileInfo = new FileInfo(MapStorage(path));
             }
             File.WriteAllBytes(fileInfo.FullName, new byte[0]);
 
@@ -367,6 +422,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be created.</param>
         /// <param name="inputStream">The stream to be saved.</param>
         /// <exception cref="ArgumentException">If the stream can't be saved due to access permissions.</exception>
+        /// <exception cref="OrchardException">If the path is invalid.</exception>
         public void SaveStream(string path, Stream inputStream) {
             // Create the file.
             // The CreateFile method will map the still relative path
@@ -397,6 +453,12 @@ namespace Orchard.FileSystems.Media {
         private static bool IsHidden(FileSystemInfo di) {
             return (di.Attributes & FileAttributes.Hidden) != 0;
         }
+
+        public static bool FolderNameContainsInvalidCharacters(string folderName) =>
+            folderName.IndexOfAny(InvalidFolderNameCharacters) > -1;
+
+        public static bool FileNameContainsInvalidCharacters(string fileName) =>
+            fileName.IndexOfAny(InvalidFileNameCharacters) > -1;
 
         #endregion
 

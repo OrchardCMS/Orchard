@@ -13,7 +13,7 @@
         @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu, false).ToString())
         if (Model.CurrentMenuId == menu.Id) {
             selectedMenuId = menu.Id;
-    }
+        }
     }
     </select>
     @if (selectedMenuId != -1) {

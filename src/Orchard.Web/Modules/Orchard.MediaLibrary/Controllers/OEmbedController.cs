@@ -17,12 +17,16 @@ namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class OEmbedController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IOEmbedService _oEmbedService;
 
         public OEmbedController(
             IOrchardServices services,
-            IMediaLibraryService mediaManagerService) {
-            _mediaLibraryService = mediaManagerService;
+            IMediaLibraryService mediaManagerService,
+            IOEmbedService oEmbedService) {
+
             Services = services;
+            _mediaLibraryService = mediaManagerService;
+            _oEmbedService = oEmbedService;
             T = NullLocalizer.Instance;
         }
 
@@ -78,39 +82,9 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
             }
 
-            var webClient = new WebClient { Encoding = Encoding.UTF8 };
             try {
-                // <link rel="alternate" href="http://vimeo.com/api/oembed.xml?url=http%3A%2F%2Fvimeo.com%2F23608259" type="text/xml+oembed">
+                viewModel.Content = _oEmbedService.DownloadMediaData(url);
 
-                var source = webClient.DownloadString(url);
-
-                // seek type="text/xml+oembed" or application/xml+oembed
-                var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                if (oembedSignature == -1) {
-                    oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                }
-                if (oembedSignature != -1) {
-                    var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
-                    var tagEnd = source.IndexOf('>', oembedSignature);
-                    var tag = source.Substring(tagStart, tagEnd - tagStart);
-                    var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
-                    if (matches.Count > 0) {
-                        var href = matches[0].Groups[1].Value;
-                        try {
-                            var content = webClient.DownloadString(Server.HtmlDecode(href));
-                            viewModel.Content = XDocument.Parse(content);
-                        }
-                        catch {
-                            // bubble exception
-                        }
-                    }
-                }
-                if (viewModel.Content == null) {
-                    viewModel.Content = new XDocument(
-                        new XDeclaration("1.0", "utf-8", "yes"),
-                        new XElement("oembed")
-                        );
-                }
                 var root = viewModel.Content.Root;
                 if (!String.IsNullOrWhiteSpace(url)) {
                     root.El("url", url);

@@ -1,4 +1,3 @@
-using System;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -19,7 +18,8 @@ namespace Orchard.Localization.Selectors {
         private const string AdminCookieName = "OrchardCurrentCulture-Admin";
         private const int DefaultExpireTimeYear = 1;
 
-        public CookieCultureSelector(IHttpContextAccessor httpContextAccessor,
+        public CookieCultureSelector(
+            IHttpContextAccessor httpContextAccessor,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
@@ -36,11 +36,10 @@ namespace Orchard.Localization.Selectors {
 
             var cookie = new HttpCookie(cookieName, culture) {
                 Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear),
+                Domain = httpContext.Request.IsLocal ? null : httpContext.Request.Url.Host
             };
 
-            cookie.Domain = !httpContext.Request.IsLocal ? httpContext.Request.Url.Host : null;
-
-            if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+            if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
                 cookie.Path = GetCookiePath(httpContext);
             }
 

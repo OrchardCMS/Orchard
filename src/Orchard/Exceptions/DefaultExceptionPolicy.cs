@@ -34,7 +34,7 @@ namespace Orchard.Exceptions {
                 return false;
             }
 
-            if (sender is IEventBus &&  exception is OrchardFatalException) {
+            if (sender is IEventBus && exception is OrchardFatalException) {
                 return false;
             }
 
@@ -49,7 +49,7 @@ namespace Orchard.Exceptions {
         }
 
         private static bool IsFatal(Exception exception) {
-            return 
+            return
                 exception is OrchardSecurityException ||
                 exception is StackOverflowException ||
                 exception is AccessViolationException ||

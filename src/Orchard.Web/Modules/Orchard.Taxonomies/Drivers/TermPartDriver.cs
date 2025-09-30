@@ -52,7 +52,11 @@ namespace Orchard.Taxonomies.Drivers {
                     var pagerParameters = new PagerParameters();
                     var httpContext = _httpContextAccessor.Current();
                     if (httpContext != null) {
-                        pagerParameters.Page = Convert.ToInt32(httpContext.Request.QueryString["page"]);
+                        // Check if "page" parameter is a valid number.
+                        int page = 0;
+                        if (int.TryParse(httpContext.Request.QueryString["page"], out page)) {
+                            pagerParameters.Page = page;
+                        }
                     }
 
                     var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);

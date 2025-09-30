@@ -23,22 +23,22 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private object _display;
         private object _layout;
 
-        public Localizer T { 
+        public Localizer T {
             get {
                 // first time used, create it
-                if(_localizer == NullLocalizer.Instance) {
-                
+                if (_localizer == NullLocalizer.Instance) {
+
                     // if the Model is a shape, get localization scopes from binding sources
                     // e.g., Logon.cshtml in a theme, overriging Users/Logon.cshtml, needs T to 
                     // fallback to the one in Users
                     var shape = Model as IShape;
-                    if(shape != null && shape.Metadata.BindingSources.Count > 1) {
+                    if (shape != null && shape.Metadata.BindingSources.Count > 1) {
                         var localizers = shape.Metadata.BindingSources.Reverse().Select(scope => LocalizationUtilities.Resolve(ViewContext, scope)).ToList();
-                        _localizer = (text, args) => { 
-                            foreach(var localizer in localizers) {
+                        _localizer = (text, args) => {
+                            foreach (var localizer in localizers) {
                                 var hint = localizer(text, args);
                                 // if not localized using this scope, use next scope
-                                if(hint.Text != text) {
+                                if (hint.Text != text) {
                                     return hint;
                                 }
                             }
@@ -54,7 +54,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 }
 
                 return _localizer;
-            } 
+            }
         }
 
         public dynamic Display { get { return _display; } }
@@ -79,7 +79,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         private IAuthorizer _authorizer;
-        public IAuthorizer Authorizer { 
+        public IAuthorizer Authorizer {
             get {
                 return _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
             }
@@ -114,7 +114,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         private string[] _commonLocations;
-        public string[] CommonLocations { get { return _commonLocations ?? (_commonLocations = WorkContext.Resolve<ExtensionLocations>().CommonLocations); } } 
+        public string[] CommonLocations { get { return _commonLocations ?? (_commonLocations = WorkContext.Resolve<ExtensionLocations>().CommonLocations); } }
 
         public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
             // hack to fake the style "alternate" for now so we don't have to change stylesheet names when this is hooked up
@@ -150,7 +150,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             base.InitHelpers();
 
             WorkContext = ViewContext.GetWorkContext();
-            
+
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = WorkContext.Layout;
         }
@@ -190,11 +190,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }
 
-            if (!String.IsNullOrEmpty(_tenantPrefix)
-                && path.StartsWith("~/")  
-                && !CommonLocations.Any(gpp=>path.StartsWith(gpp, StringComparison.OrdinalIgnoreCase))
-            ) { 
-                    return base.Href("~/" + _tenantPrefix + path.Substring(2), pathParts);
+            if (!string.IsNullOrWhiteSpace(_tenantPrefix)
+                && path.StartsWith("~/")
+                && !CommonLocations.Any(gpp => path.StartsWith(gpp, StringComparison.OrdinalIgnoreCase))) {
+                return base.Href("~/" + _tenantPrefix + path.Substring(1), pathParts);
             }
 
             return base.Href(path, pathParts);

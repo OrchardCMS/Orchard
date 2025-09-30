@@ -7,3 +7,4 @@ OrchardVersion: 1.10.3
 Description: Provides Orchard Recipes.
 FeatureDescription: Implementation of Orchard recipes.
 Category: Core
+Dependencies: PackagingServices

@@ -7,7 +7,6 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 
 namespace Orchard.Projections.FilterEditors.Forms {
-
     public class StringFilterForm : IFormProvider {
         public const string FormName = "StringFilter";
 
@@ -20,50 +19,55 @@ namespace Orchard.Projections.FilterEditors.Forms {
         }
 
         public void Describe(DescribeContext context) {
-            Func<IShapeFactory, object> form =
-                shape => {
+            object form(IShapeFactory shape) {
+                var f = Shape.Form(
+                    Id: "StringFilter",
+                    _Operator: Shape.SelectList(
+                        Id: "operator", Name: "Operator",
+                        Title: T("Operator"),
+                        Size: 1,
+                        Multiple: false
+                    ),
+                    _Value: Shape.TextBox(
+                        Id: "value", Name: "Value",
+                        Title: T("Value"),
+                        Classes: new[] { "text medium", "tokenized" },
+                        Description: T("Enter the value the string should be.")
+                    ),
+                    _IgnoreIfEmptyValue: Shape.Checkbox(
+                        Id: "IgnoreFilterIfValueIsEmpty",
+                        Name: "IgnoreFilterIfValueIsEmpty",
+                        Title: T("Ignore filter if value is empty"),
+                        Description: T("When enabled, the filter will not be applied if the provided value is or evaluates to empty."),
+                        Value: "true"
+                    ));
 
-                    var f = Shape.Form(
-                        Id: "StringFilter",
-                        _Operator: Shape.SelectList(
-                            Id: "operator", Name: "Operator",
-                            Title: T("Operator"),
-                            Size: 1,
-                            Multiple: false
-                        ),
-                        _Value: Shape.TextBox(
-                            Id: "value", Name: "Value",
-                            Title: T("Value"),
-                            Classes: new[] { "text medium", "tokenized" },
-                            Description: T("Enter the value the string should be.")
-                            )
-                        );
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Equals), Text = T("Is equal to").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotEquals), Text = T("Is not equal to").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Contains), Text = T("Contains").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.ContainsAny), Text = T("Contains any word").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.ContainsAll), Text = T("Contains all words").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Starts), Text = T("Starts with").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotStarts), Text = T("Does not start with").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Ends), Text = T("Ends with").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotEnds), Text = T("Does not end with").Text });
+                f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotContains), Text = T("Does not contain").Text });
 
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Equals), Text = T("Is equal to").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotEquals), Text = T("Is not equal to").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Contains), Text = T("Contains").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.ContainsAny), Text = T("Contains any word").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.ContainsAll), Text = T("Contains all words").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Starts), Text = T("Starts with").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotStarts), Text = T("Does not start with").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Ends), Text = T("Ends with").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotEnds), Text = T("Does not end with").Text });
-                    f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotContains), Text = T("Does not contain").Text });
-                    f._Operator.Add(new SelectListItem {
-                        Value = Convert.ToString(StringOperator.ContainsAnyIfProvided),
-                        Text = T("Contains any word (if any is provided)").Text
-                    });
+                return f;
+            }
 
-                    return f;
-                };
-
-            context.Form(FormName, form);
+            context.Form(FormName, (Func<IShapeFactory, object>)form);
 
         }
 
         public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property) {
             var op = (StringOperator)Enum.Parse(typeof(StringOperator), Convert.ToString(formState.Operator));
             object value = Convert.ToString(formState.Value);
+
+            if (bool.TryParse(formState.IgnoreFilterIfValueIsEmpty?.ToString() ?? "", out bool ignoreIfEmpty)
+                && ignoreIfEmpty
+                && string.IsNullOrWhiteSpace(value as string))
+                return (ex) => { };
 
             switch (op) {
                 case StringOperator.Equals:
@@ -92,14 +96,6 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     return y => y.Not(x => x.Like(property, Convert.ToString(value), HqlMatchMode.End));
                 case StringOperator.NotContains:
                     return y => y.Not(x => x.Like(property, Convert.ToString(value), HqlMatchMode.Anywhere));
-                case StringOperator.ContainsAnyIfProvided:
-                    if (string.IsNullOrWhiteSpace((string)value))
-                        return x => x.IsNotEmpty("Id"); // basically, return every possible ContentItem
-                    var values3 = Convert.ToString(value)
-                        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    var predicates3 = values3.Skip(1)
-                        .Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
-                    return x => x.Disjunction(y => y.Like(property, values3[0], HqlMatchMode.Anywhere), predicates3);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -130,11 +126,6 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     return T("{0} does not end with '{1}'", fieldName, value);
                 case StringOperator.NotContains:
                     return T("{0} does not contain '{1}'", fieldName, value);
-                case StringOperator.ContainsAnyIfProvided:
-                    return T("{0} contains any of '{1}' (or '{1}' is empty)",
-                        fieldName,
-                        new LocalizedString(string.Join("', '",
-                            value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -151,7 +142,6 @@ namespace Orchard.Projections.FilterEditors.Forms {
         NotStarts,
         Ends,
         NotEnds,
-        NotContains,
-        ContainsAnyIfProvided
+        NotContains
     }
 }

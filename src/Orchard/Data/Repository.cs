@@ -24,7 +24,7 @@ namespace Orchard.Data {
         }
 
         public virtual IQueryable<T> Table {
-            get { return Session.Query<T>().Cacheable(); }
+            get { return Session.Query<T>().WithOptions(opt => opt.SetCacheable(true)); }
         }
 
         #region IRepository<T> Members
@@ -107,7 +107,7 @@ namespace Orchard.Data {
         public virtual void Copy(T source, T target) {
             Logger.Debug("Copy {0} {1}", source, target);
             var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
-            var values = metadata.GetPropertyValues(source, EntityMode.Poco);
+            var values = metadata.GetPropertyValues(source);
 
             //This method is currently only used by StorageVersionFilter<>.Versioning()
             //In order to prevent shared references to the same collection instance
@@ -132,7 +132,7 @@ namespace Orchard.Data {
                 values[index] = Activator.CreateInstance(genericType, new[] { listValues });
             }
 
-            metadata.SetPropertyValues(target, values, EntityMode.Poco);
+            metadata.SetPropertyValues(target, values);
         }
 
         public virtual void Flush() {

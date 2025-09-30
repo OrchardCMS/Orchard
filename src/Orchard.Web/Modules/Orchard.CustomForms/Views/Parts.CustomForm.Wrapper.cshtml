@@ -1,4 +1,10 @@
-﻿@{
+﻿@using Orchard.ContentManagement.MetaData;
+@using Orchard.ContentManagement.MetaData.Models;
+@using Orchard.Core.Contents.Settings;
+
+@{
+    IContentDefinitionManager _contentDefinitionManager = WorkContext.Resolve<IContentDefinitionManager>();
+
     dynamic editor = Model.Editor;
 
     if (TempData.ContainsKey("CustomFormWidget.InvalidCustomFormState")) {
@@ -7,18 +13,34 @@
 
     // remove default Save/Publish buttons
     editor.Zones["Sidebar"].Items.Clear();
+
+    var showPublishButton = Model.ContentItem.CustomFormPart.SavePublishContentItem;
+
+    // Read type definition to check if content is draftable
+    var typeDefinition = _contentDefinitionManager
+        .ListTypeDefinitions()
+        .Where(x => String.Equals(x.Name, Model.ContentItem.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase))
+        .FirstOrDefault();
+    if (typeDefinition != null) {
+        // Publish button has to be visible only if content is draftable AND is set to show the publish button
+        showPublishButton = showPublishButton &&
+            typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+    }
 }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Item", new { area = "Orchard.CustomForms", id = Model.ContentItem.Id }))) {
-    @Html.ValidationSummary()
+@Html.ValidationSummary()
     // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
-    @Display(editor)
-    @Html.Hidden("returnUrl", Request.RawUrl, new { id = string.Empty });
-    @Html.Hidden("contentId", !string.IsNullOrWhiteSpace(Request.QueryString["contentId"]) ? Request.QueryString["contentId"] : "0", new { id = string.Empty });
-    <fieldset class="submit-button">
-            <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
-        @if (Model.ContentItem.CustomFormPart.SavePublishContentItem == true) {
-            <button type="submit" name="submit.Publish" value="submit.Publish">@Model.ContentPart.PublishButtonText</button>
-        }
-    </fieldset>
+@Display(editor)
+
+@Html.Hidden("returnUrl", Request.RawUrl, new { id = string.Empty });
+@Html.Hidden("contentId", !string.IsNullOrWhiteSpace(Request.QueryString["contentId"]) ? Request.QueryString["contentId"] : "0", new { id = string.Empty });
+
+<fieldset class="submit-button">
+
+    <button type="submit" name="submit.Save" value="submit.Save">@Model.ContentPart.SubmitButtonText</button>
+    @if (showPublishButton) {
+        <button type="submit" name="submit.Publish" value="submit.Publish">@Model.ContentPart.PublishButtonText</button>
+    }
+</fieldset>
 }

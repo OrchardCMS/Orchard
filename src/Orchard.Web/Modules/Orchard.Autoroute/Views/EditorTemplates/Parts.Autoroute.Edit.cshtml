@@ -51,7 +51,7 @@
 
 </fieldset>
 @if (!Model.IsHomePage) {
-    if (AuthorizedFor(Permissions.SetHomePage)) {
+    if (AuthorizedFor(Permissions.SetHomePage) && Model.Settings.AllowSetAsHomePage) {
         <fieldset>
             <span class="checkbox-and-label">
                 @Html.CheckBoxFor(m => m.PromoteToHomePage)

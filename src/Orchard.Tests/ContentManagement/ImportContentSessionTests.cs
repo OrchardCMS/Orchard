@@ -14,7 +14,7 @@ namespace Orchard.Tests.ContentManagement {
         private Mock<IContentManager> _contentManager;
 
         #region Init
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestInit() {
             _testItemIdentity1 = new ContentIdentity("/ItemId=1");
             _testItemIdentity2 = new ContentIdentity("/ItemId=2");

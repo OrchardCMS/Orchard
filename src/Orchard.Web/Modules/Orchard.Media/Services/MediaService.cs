@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Web;
-using Ionic.Zip;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
@@ -194,7 +194,7 @@ namespace Orchard.Media.Services {
         /// <param name="bytes">The array of bytes with the file's contents.</param>
         /// <param name="extractZip">Boolean value indicating weather zip files should be extracted.</param>
         /// <returns>The path to the uploaded file.</returns>
-        public string UploadMediaFile(string folderPath, string fileName, byte [] bytes, bool extractZip) {
+        public string UploadMediaFile(string folderPath, string fileName, byte[] bytes, bool extractZip) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNullOrEmpty(fileName, "fileName");
             Argument.ThrowIfNull(bytes, "bytes");
@@ -274,16 +274,16 @@ namespace Orchard.Media.Services {
 
                 // must be in the whitelist
                 MediaSettingsPart mediaSettings = currentSite.As<MediaSettingsPart>();
-                
+
                 if (mediaSettings == null) {
                     return false;
-                } 
-                
-                if(String.IsNullOrWhiteSpace(mediaSettings.UploadAllowedFileTypeWhitelist)) {
-                    return true;
-                } 
+                }
 
-                if(!mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ').Contains(extension.ToUpperInvariant())) {
+                if (String.IsNullOrWhiteSpace(mediaSettings.UploadAllowedFileTypeWhitelist)) {
+                    return true;
+                }
+
+                if (!mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ').Contains(extension.ToUpperInvariant())) {
                     return false;
                 }
             }
@@ -305,28 +305,26 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(targetFolder, "targetFolder");
             Argument.ThrowIfNull(zipStream, "zipStream");
 
-            using (var fileInflater = ZipFile.Read(zipStream)) {
+            using (var fileInflater = new ZipArchive(zipStream)) {
                 // We want to preserve whatever directory structure the zip file contained instead
                 // of flattening it.
                 // The API below doesn't necessarily return the entries in the zip file in any order.
                 // That means the files in subdirectories can be returned as entries from the stream 
                 // before the directories that contain them, so we create directories as soon as first
                 // file below their path is encountered.
-                foreach (ZipEntry entry in fileInflater) {
+                foreach (var entry in fileInflater.Entries) {
                     if (entry == null) {
                         continue;
                     }
 
-                    if (!entry.IsDirectory && !string.IsNullOrEmpty(entry.FileName)) {
-
+                    if (!string.IsNullOrEmpty(entry.Name)) {
                         // skip disallowed files
-                        if (FileAllowed(entry.FileName, false)) {
-                            string fullFileName = _storageProvider.Combine(targetFolder, entry.FileName);
+                        if (FileAllowed(entry.Name, false)) {
+                            string fullFileName = _storageProvider.Combine(targetFolder, entry.FullName);
 
-                            using (var stream = entry.OpenReader()) {
+                            using (var stream = entry.Open()) {
                                 // the call will return false if the file already exists
                                 if (!_storageProvider.TrySaveStream(fullFileName, stream)) {
-                                    
                                     // try to delete the file and save again
                                     try {
                                         _storageProvider.DeleteFile(fullFileName);

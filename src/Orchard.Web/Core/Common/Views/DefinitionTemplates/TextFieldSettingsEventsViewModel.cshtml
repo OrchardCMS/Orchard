@@ -8,6 +8,12 @@
     </div>
 </fieldset>
 <fieldset>
+    <label for="@Html.FieldIdFor(m => m.Settings.MaxLength)">@T("Maximum length")</label>
+    @Html.EditorFor(m => m.Settings.MaxLength, new { htmlAttributes = new { min = 0 } })
+    <span class="hint">@T("Maximum length allowed for this field. Setting the value to 0 means unlimited length.")</span>
+    @Html.ValidationMessageFor(m => m.Settings.MaxLength)
+</fieldset>
+<fieldset>
     <div>
         @Html.CheckBoxFor(m => m.Settings.Required) <label for="@Html.FieldIdFor(m => m.Settings.Required)" class="forcheckbox">@T("Required")</label>
         <span class="hint">@T("Check to ensure the user enters a value in this field.")</span>

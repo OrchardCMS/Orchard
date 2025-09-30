@@ -88,7 +88,7 @@ namespace Orchard.MediaProcessing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new AdminIndexViewModel {ImageProfiles = new List<ImageProfileEntry>(), Options = new AdminIndexOptions()};
+            var viewModel = new AdminIndexViewModel { ImageProfiles = new List<ImageProfileEntry>(), Options = new AdminIndexOptions() };
             UpdateModel(viewModel);
 
             var checkedItems = viewModel.ImageProfiles.Where(c => c.IsChecked);
@@ -133,7 +133,7 @@ namespace Orchard.MediaProcessing.Controllers {
                             Category = f.Category,
                             Type = f.Type,
                             FilterRecordId = filter.Id,
-                            DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext {State = FormParametersHelper.ToDynamic(filter.State)}).Text : filter.Description
+                            DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
                         });
                 }
             }
@@ -154,7 +154,7 @@ namespace Orchard.MediaProcessing.Controllers {
                 return HttpNotFound();
             }
 
-            Services.ContentManager.Remove(profile.ContentItem);
+            _profileService.DeleteImageProfile(id);
             Services.Notifier.Success(T("Image Profile {0} deleted", profile.Name));
 
             return RedirectToAction("Index");
@@ -175,7 +175,7 @@ namespace Orchard.MediaProcessing.Controllers {
                     throw new ArgumentException("direction");
             }
 
-            return RedirectToAction("Edit", new {id});
+            return RedirectToAction("Edit", new { id });
         }
 
         public ActionResult Preview(int id) {
@@ -183,6 +183,36 @@ namespace Orchard.MediaProcessing.Controllers {
                 return new HttpUnauthorizedResult();
 
             throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public ActionResult Purge(int id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
+                return new HttpUnauthorizedResult();
+
+            if (_profileService.PurgeImageProfile(id)) {
+                Services.Notifier.Information(T("The Image Profile has been purged"));
+            }
+            else {
+                Services.Notifier.Warning(T("Unable to purge the Image Profile, it may already have been purged"));
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult PurgeObsolete() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
+                return new HttpUnauthorizedResult();
+
+            if (_profileService.PurgeObsoleteImageProfiles()) {
+                Services.Notifier.Information(T("The obsolete Image Profiles have been purged"));
+            }
+            else {
+                Services.Notifier.Warning(T("Unable to purge the obsolete Image Profiles"));
+            }
+
+            return RedirectToAction("Index");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

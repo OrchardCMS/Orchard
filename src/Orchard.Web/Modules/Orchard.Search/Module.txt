@@ -27,3 +27,8 @@ Features:
         Description: Provides search menu item in the Media Library explorer.
         Dependencies: Orchard.MediaLibrary, Orchard.Search
         Category: Search
+    Orchard.Search.Blogs:
+        Name: Blog posts Search
+        Description: Provides search menu item in the Blog section.
+        Dependencies: Orchard.Blogs, Orchard.Search
+        Category: Search

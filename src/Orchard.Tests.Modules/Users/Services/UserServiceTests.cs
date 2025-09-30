@@ -14,6 +14,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Handlers;
 using Orchard.Core.Settings.Metadata;
+using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Core.Settings.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -50,7 +51,7 @@ namespace Orchard.Tests.Modules.Users.Services
         private CultureInfo _currentCulture;
         private Mock<WorkContext> _workContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _currentCulture = Thread.CurrentThread.CurrentCulture;
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -59,10 +60,15 @@ namespace Orchard.Tests.Modules.Users.Services
                 typeof(UserPartRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord));
+                typeof(ContentTypeRecord),
+                typeof(ContentPartDefinitionRecord),
+                typeof(ContentPartFieldDefinitionRecord),
+                typeof(ContentFieldDefinitionRecord),
+                typeof(ContentTypeDefinitionRecord),
+                typeof(ContentTypePartDefinitionRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             Thread.CurrentThread.CurrentCulture = _currentCulture;
         }

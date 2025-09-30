@@ -1,7 +1,9 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.Core.Title.Settings;
 using Orchard.Localization;
 
 namespace Orchard.Core.Title.Drivers {
@@ -33,7 +35,14 @@ namespace Orchard.Core.Title.Drivers {
         }
 
         protected override DriverResult Editor(TitlePart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            if (updater.TryUpdateModel(part, Prefix, null, null)){
+
+                var settings = part.Settings.GetModel<TitlePartSettings>();
+
+                if (settings.MaxLength > 0 && part.Title.Length > settings.MaxLength) {
+                    updater.AddModelError("Title", T("The maximum allowed length for the title is {0}", settings.MaxLength));
+                }
+            }
 
             return Editor(part, shapeHelper);
         }

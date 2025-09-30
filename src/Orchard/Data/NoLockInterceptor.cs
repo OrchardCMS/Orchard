@@ -42,7 +42,7 @@ namespace Orchard.Data {
 
             return _shellSettings.DataTablePrefix + "_" + tableName;
         }
-        
+
         // based on https://stackoverflow.com/a/39518098/2669614
         public override SqlString OnPrepareStatement(SqlString sql) {
             // only work on select queries
@@ -167,7 +167,7 @@ namespace Orchard.Data {
                         }
                     }
                     // rebuild query
-                    for(int i = 0; i < affectedCaptures.Count; i++) {
+                    for (int i = 0; i < affectedCaptures.Count; i++) {
                         var inner = affectedCaptures[i];
                         for (int j = i + 1; j < affectedCaptures.Count; j++) {
                             var outer = affectedCaptures[j];
@@ -203,7 +203,7 @@ namespace Orchard.Data {
             public bool IsAltered { get; set; }
 
             public void AddNoLockHints() {
-                Value = AddNoLockHints(Value, TableNames); 
+                Value = AddNoLockHints(Value, TableNames);
             }
 
             private string AddNoLockHints(string query, IEnumerable<string> tableNames) {
@@ -240,13 +240,19 @@ namespace Orchard.Data {
                                 if (tableIndex == fromIndex + 1
                                     || parts[tableIndex - 1].Equals(",")) {
 
-                                    parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
+                                    if (parts[tableIndex + 1].Equals("where", StringComparison.OrdinalIgnoreCase)) {
+                                        // There is no alias in the query, so we add "WITH(NOLOCK)" immediately after table name but before the "where" clause.
+                                        parts.Insert(tableIndex + 1, "WITH(NOLOCK)");
+                                    } else {
+                                        // We add "WITH(NOLOCK)" after the table alias.
+                                        parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
+                                    }
                                 } else {
                                     // probably doing a join, so edit the next "on" and make it
                                     // "WITH (NOLOCK) on"
                                     for (int i = tableIndex + 1; i < whereIndex; i++) {
                                         if (parts[i].Trim().Equals("WITH(NOLOCK)", StringComparison.OrdinalIgnoreCase)) {
-                                            // we processed this table anme already
+                                            // we processed this table name already.
                                             break;
                                         }
                                         if (parts[i].Trim().Equals("on", StringComparison.OrdinalIgnoreCase)) {

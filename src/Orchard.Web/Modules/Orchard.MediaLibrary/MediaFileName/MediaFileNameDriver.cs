@@ -1,14 +1,14 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.Security;
 using Orchard.UI.Notify;
 
-namespace Orchard.MediaLibrary.MediaFileName
-{
+namespace Orchard.MediaLibrary.MediaFileName {
     public class MediaFileNameDriver : ContentPartDriver<MediaPart> {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
@@ -58,6 +58,8 @@ namespace Orchard.MediaLibrary.MediaFileName
                         var priorFileName = model.FileName;
                         if (updater.TryUpdateModel(model, Prefix, null, null)) {
                             if (model.FileName != null && !model.FileName.Equals(priorFileName, StringComparison.OrdinalIgnoreCase)) {
+                                var fieldName = "MediaFileNameEditorSettings.FileName";
+
                                 try {
                                     _mediaLibraryService.RenameFile(part.FolderPath, priorFileName, model.FileName);
                                     part.FileName = model.FileName;
@@ -65,10 +67,13 @@ namespace Orchard.MediaLibrary.MediaFileName
                                     _notifier.Add(NotifyType.Success, T("File '{0}' was renamed to '{1}'", priorFileName, model.FileName));
                                 }
                                 catch (OrchardException) {
-                                    updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file. Invalid Windows file path."));
+                                    updater.AddModelError(fieldName, T("Unable to rename file. Invalid Windows file path."));
                                 }
-                                catch (Exception) {
-                                    updater.AddModelError("MediaFileNameEditorSettings.FileName", T("Unable to rename file"));
+                                catch (InvalidNameCharacterException) {
+                                    updater.AddModelError(fieldName, T("The file name contains invalid character(s)."));
+                                }
+                                catch (Exception exception) {
+                                    updater.AddModelError(fieldName, T("Unable to rename file: {0}", exception.Message));
                                 }
                             }
                         }

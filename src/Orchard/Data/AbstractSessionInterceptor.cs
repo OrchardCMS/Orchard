@@ -161,7 +161,7 @@ namespace Orchard.Data {
         /// The identifier property of the returned instance
         ///             should be initialized with the given identifier.
         /// </remarks>
-        public virtual object Instantiate(string entityName, EntityMode entityMode, object id) {
+        public virtual object Instantiate(string entityName, object id) {
             return null;
         }
 

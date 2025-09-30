@@ -198,6 +198,13 @@ namespace Orchard.CustomForms.Controllers {
 
             contentItem.As<ICommonPart>().Container = customForm.ContentItem;
 
+            // save the submitted form
+            if (customForm.SaveContentItem) {
+                conditionallyPublish(contentItem);
+                // Refresh content item
+                contentItem = _contentManager.Get(contentItem.Id, VersionOptions.Latest);
+            }
+
             // triggers any event
             _rulesManager.TriggerEvent("CustomForm", "Submitted",
                     () => new Dictionary<string, object> { { "Content", contentItem } });
@@ -208,11 +215,6 @@ namespace Orchard.CustomForms.Controllers {
 
             if (customForm.Redirect) {
                 returnUrl = _tokenizer.Replace(customForm.RedirectUrl, new Dictionary<string, object> { { "Content", contentItem } });
-            }
-
-            // save the submitted form
-            if (customForm.SaveContentItem) {
-                conditionallyPublish(contentItem);
             }
 
             // writes a confirmation message

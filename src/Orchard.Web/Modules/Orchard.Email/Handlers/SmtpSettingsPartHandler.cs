@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Configuration;
 using System.Text;
 using Orchard.ContentManagement;
-using Orchard.Email.Models;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Email.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
-using System.Configuration;
 
 namespace Orchard.Email.Handlers {
     public class SmtpSettingsPartHandler : ContentHandler {
@@ -24,7 +24,8 @@ namespace Orchard.Email.Handlers {
             OnInitializing<SmtpSettingsPart>((context, part) => {
                 part.Port = 25;
                 part.RequireCredentials = false;
-                part.EnableSsl = false;
+                part.AutoSelectEncryption = true;
+                part.EncryptionMethod = SmtpEncryptionMethod.None;
             });
         }
 

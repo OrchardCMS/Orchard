@@ -90,7 +90,7 @@ namespace Orchard.Taxonomies.Drivers {
                                 if (localizedParentTerm != null && localizedParentTerm != parentTerm)
                                     _notifier.Add(NotifyType.Information, T("The parent term has been changed to its localized version associated to the culture {0}.", localizedParentTerm.As<LocalizationPart>().Culture.Culture));
                             }
-                            else if (termCulture != taxonomyCulture && taxonomyCulture != null && _localizationService.GetLocalizations(parentTaxonomy).Count() > 0) {
+                            else if (taxonomyCulture != null && termCulture.Culture != taxonomyCulture.Culture && _localizationService.GetLocalizations(parentTaxonomy).Count() > 0) {
                                 //I can associate to a taxonomy a term of a different culture only if the taxonomy is unlocalized or has no translations
                                 updater.AddModelError("WrongTaxonomyLocalization", T("A localization of the taxonomy in the specified language does not exist. Please create it first."));
                             }
