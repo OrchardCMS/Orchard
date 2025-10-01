@@ -51,16 +51,16 @@ namespace Orchard.Resources.ResourceManifests {
             manifest.DefineScript("jQueryCalendars")
                 .SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js")
                 .SetDependencies("jQueryPlugin")
-                .SetVersion("2.0.1");
+                .SetVersion("2.2.0");
 
             manifest.DefineScript("jQueryCalendars_Picker")
                 .SetUrl("Calendars/jquery.calendars.picker.full.min.js", "Calendars/jquery.calendars.picker.full.js")
                 .SetDependencies("jQueryCalendars")
-                .SetVersion("2.0.1");
+                .SetVersion("2.2.0");
             manifest.DefineStyle("jQueryCalendars_Picker")
                 .SetUrl("Calendars/jquery.calendars.picker.full.min.css", "Calendars/jquery.calendars.picker.full.css")
                 .SetDependencies("jQueryUI_Orchard")
-                .SetVersion("2.0.1");
+                .SetVersion("2.0.0"); // The styles are still at version 2.0.0 in the 2.2.0 release.
 
             // jQuery Time Entry.
             manifest.DefineScript("jQueryTimeEntry")
