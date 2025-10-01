@@ -7,9 +7,9 @@ namespace Orchard.Resources.ResourceManifests {
 
             // jQuery.
             manifest.DefineScript("jQuery")
-                .SetUrl("jquery.min.js", "jquery.js")
-                .SetCdn("//code.jquery.com/jquery-3.6.0.min.js", "//code.jquery.com/jquery-3.6.0.js")
-                .SetVersion("3.6.0");
+                .SetUrl("jQuery/jquery.min.js", "jQuery/jquery.js")
+                .SetCdn("//code.jquery.com/jquery-3.7.1.min.js", "//code.jquery.com/jquery-3.7.1.js")
+                .SetVersion("3.7.1");
 
             // jQuery UI (full package).
             manifest.DefineScript("jQueryUI")

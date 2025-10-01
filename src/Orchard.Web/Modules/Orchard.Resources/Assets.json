@@ -1,9 +1,5 @@
 [
     {
-        "inputs": [ "Assets/Js/jQuery/jquery-3.6.0.js" ],
-        "output": "Scripts/jquery.js"
-    },
-    {
         "inputs": [
             "Assets/Css/jQueryUI/jquery-ui.css",
             "Assets/Css/jQueryUI/jquery-ui.structure.css",

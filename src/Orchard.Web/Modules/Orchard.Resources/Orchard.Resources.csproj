@@ -338,7 +338,6 @@
     <Content Include="Assets\Js\FileUpload\jquery.fileupload.js" />
     <Content Include="Assets\Js\History\history.js" />
     <Content Include="Assets\Js\jQueryUI\jquery-ui.js" />
-    <Content Include="Assets\Js\jQuery\jquery-3.6.0.js" />
     <Content Include="Assets\Js\jQuery\jquery.cookie.js" />
     <Content Include="Assets\Js\FileUpload\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery\jquery.plugin.js" />
@@ -752,12 +751,12 @@
     <Content Include="Scripts\jquery.fileupload-full.min.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.iframe-transport.min.js" />
-    <Content Include="Scripts\jquery.js" />
-    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.plugin.js" />
     <Content Include="Scripts\jquery.plugin.min.js" />
     <Content Include="Scripts\jquery.utils.js" />
     <Content Include="Scripts\jquery.utils.min.js" />
+    <Content Include="Scripts\jQuery\jquery.js" />
+    <Content Include="Scripts\jQuery\jquery.min.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\knockout.min.js" />
     <Content Include="Scripts\moment.js" />
