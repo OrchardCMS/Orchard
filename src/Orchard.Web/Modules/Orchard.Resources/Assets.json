@@ -12,9 +12,7 @@
         "output": "Styles/jquery-ui.css"
     },
     {
-        "inputs": [
-            "Assets/Js/jQueryUI/jquery-ui.js"
-        ],
+        "inputs": [ "Assets/Js/jQueryUI/jquery-ui.js" ],
         "output": "Scripts/jquery-ui.js"
     },
     {
@@ -42,9 +40,7 @@
         "output": "Scripts/jquery.fileupload-full.js"
     },
     {
-        "inputs": [
-            "Assets/Js/Calendars/*.js"
-        ],
+        "inputs": [ "Assets/Js/Calendars/*.js" ],
         "output": "Scripts/Calendars/@.js"
     },
     {
