@@ -79,19 +79,19 @@
     },
     {
         "inputs": [ "Assets/Js/Angular/angular.js" ],
-        "output": "Scripts/angular.js"
+        "output": "Scripts/Angular/angular.js"
     },
     {
         "inputs": [ "Assets/Js/Angular/angular-sanitize.js" ],
-        "output": "Scripts/angular-sanitize.js"
+        "output": "Scripts/Angular/angular-sanitize.js"
     },
     {
         "inputs": [ "Assets/Js/Angular/angular-resource.js" ],
-        "output": "Scripts/angular-resource.js"
+        "output": "Scripts/Angular/angular-resource.js"
     },
     {
         "inputs": [ "Assets/Js/Angular/sortable.js" ],
-        "output": "Scripts/angular-sortable.js"
+        "output": "Scripts/Angular/angular-sortable.js"
     },
     {
         "inputs": [ "Assets/Js/Underscore/underscore.js" ],
