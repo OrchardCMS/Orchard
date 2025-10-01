@@ -1,11 +1,8 @@
-var fs = require("fs"),
-    glob = require("glob"),
+var glob = require("glob"),
     path = require("path-posix"),
     merge = require("merge-stream"),
     gulp = require("gulp"),
     gulpif = require("gulp-if"),
-    print = require("gulp-print"),
-    debug = require("gulp-debug"),
     newer = require("gulp-newer"),
     plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
@@ -63,7 +60,7 @@ gulp.task("watch", function () {
                 else
                     console.log("Asset file '" + event.path + "' was " + event.type + ", rebuilding asset group.");
                 var doRebuild = true;
-                var task = createAssetGroupTask(assetGroup, doRebuild);
+                createAssetGroupTask(assetGroup, doRebuild);
             });
         }
         createWatcher();
