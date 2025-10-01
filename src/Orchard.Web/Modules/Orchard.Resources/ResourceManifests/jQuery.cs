@@ -16,9 +16,12 @@ namespace Orchard.Resources.ResourceManifests {
                 .SetUrl("jquery-ui.min.js", "jquery-ui.js")
                 .SetVersion("1.13.2")
                 .SetDependencies("jQuery")
-                .SetCdn("//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.min.js", "//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.js");
+                .SetCdn(
+                    "//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.min.js",
+                    "//ajax.aspnetcdn.com/ajax/jquery.ui/1.13.2/jquery-ui.js");
             manifest.DefineStyle("jQueryUI").SetUrl("jquery-ui.min.css", "jquery-ui.css").SetVersion("1.13.2");
-            manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI"); // Right now no customization in the styles, but the resource might be used later.
+            // Right now no customization in the styles, but the resource might be used later.
+            manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI");
 
             // DEPRECATED for 1.10: Resources for jQuery UI individual components. This now only
             // defer to the full jQueryUI resources. In some cases where modules depend on these,
@@ -50,30 +53,61 @@ namespace Orchard.Resources.ResourceManifests {
             manifest.DefineStyle("jQueryUI_Theme").SetDependencies("jQueryUI");
 
             // Additional utilities and plugins.
-            manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.min.js", "jquery.utils.js").SetDependencies("jQuery");
-            manifest.DefineScript("jQueryPlugin").SetUrl("jquery.plugin.min.js", "jquery.plugin.js").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryUtils")
+                .SetUrl("jquery.utils.min.js", "jquery.utils.js")
+                .SetDependencies("jQuery");
+            manifest.DefineScript("jQueryPlugin")
+                .SetUrl("jquery.plugin.min.js", "jquery.plugin.js")
+                .SetDependencies("jQuery");
 
             // jQuery Calendars.
-            manifest.DefineScript("jQueryCalendars").SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
-            manifest.DefineScript("jQueryCalendars_Picker").SetUrl("Calendars/jquery.calendars.picker.full.min.js", "Calendars/jquery.calendars.picker.full.js").SetDependencies("jQueryCalendars").SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("Calendars/jquery.calendars.picker.full.min.css", "Calendars/jquery.calendars.picker.full.css").SetDependencies("jQueryUI_Orchard").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryCalendars")
+                .SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js")
+                .SetDependencies("jQueryPlugin")
+                .SetVersion("2.0.1");
+            manifest.DefineScript("jQueryCalendars_Picker")
+                .SetUrl("Calendars/jquery.calendars.picker.full.min.js", "Calendars/jquery.calendars.picker.full.js")
+                .SetDependencies("jQueryCalendars")
+                .SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryCalendars_Picker")
+                .SetUrl("Calendars/jquery.calendars.picker.full.min.css", "Calendars/jquery.calendars.picker.full.css")
+                .SetDependencies("jQueryUI_Orchard")
+                .SetVersion("2.0.1");
 
             // jQuery Time Entry.
-            manifest.DefineScript("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryTimeEntry").SetUrl("TimeEntry/jquery.timeentry.min.css", "TimeEntry/jquery.timeentry.css").SetVersion("2.0.1");
+            manifest.DefineScript("jQueryTimeEntry")
+                .SetUrl("TimeEntry/jquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js")
+                .SetDependencies("jQueryPlugin")
+                .SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryTimeEntry")
+                .SetUrl("TimeEntry/jquery.timeentry.min.css", "TimeEntry/jquery.timeentry.css")
+                .SetVersion("2.0.1");
 
             // jQuery Date/Time Editor Enhancements.
-            manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
+            manifest.DefineStyle("jQueryDateTimeEditor")
+                .SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css")
+                .SetDependencies("DateTimeEditor");
 
             // jQuery File Upload.
-            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload-full.min.js", "jquery.fileupload-full.js").SetVersion("9.11.2").SetDependencies("jQueryUI_Widget");
+            manifest.DefineScript("jQueryFileUpload")
+                .SetUrl("jquery.fileupload-full.min.js", "jquery.fileupload-full.js")
+                .SetVersion("9.11.2")
+                .SetDependencies("jQueryUI_Widget");
 
             // jQuery Color Box.
-            manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.6.3").SetDependencies("jQuery");
-            manifest.DefineStyle("jQueryColorBox").SetUrl("jquery.colorbox.min.css", "jquery.colorbox.css").SetVersion("1.6.3");
+            manifest.DefineScript("jQueryColorBox")
+                .SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js")
+                .SetVersion("1.6.3")
+                .SetDependencies("jQuery");
+            manifest.DefineStyle("jQueryColorBox")
+                .SetUrl("jquery.colorbox.min.css", "jquery.colorbox.css")
+                .SetVersion("1.6.3");
 
             // jQuery Cookie.
-            manifest.DefineScript("jQueryCookie").SetUrl("jquery.cookie.min.js", "jquery.cookie.js").SetVersion("1.4.1").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryCookie")
+                .SetUrl("jquery.cookie.min.js", "jquery.cookie.js")
+                .SetVersion("1.4.1")
+                .SetDependencies("jQuery");
         }
     }
 }
