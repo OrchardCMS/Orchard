@@ -110,7 +110,6 @@
     <Content Include="Assets\Js\Bootstrap\carousel.js" />
     <Content Include="Assets\Js\Bootstrap\collapse.js" />
     <Content Include="Assets\Js\Bootstrap\dropdown.js" />
-    <Content Include="Assets\Js\Bootstrap\index.js" />
     <Content Include="Assets\Js\Bootstrap\modal.js" />
     <Content Include="Assets\Js\Bootstrap\popover.js" />
     <Content Include="Assets\Js\Bootstrap\scrollspy.js" />
