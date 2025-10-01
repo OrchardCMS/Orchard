@@ -2,7 +2,8 @@
    Swedish localisation for Gregorian/Julian calendars for jQuery.
    Written by Anders Ekdahl (anders@nomadiz.se). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['sv'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.sv = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Januari','Februari','Mars','April','Maj','Juni',
@@ -12,12 +13,13 @@
 		dayNames: ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'],
 		dayNamesShort: ['Sön','Mån','Tis','Ons','Tor','Fre','Lör'],
 		dayNamesMin: ['Sö','Må','Ti','On','To','Fr','Lö'],
+		digits: null,
         dateFormat: 'yyyy-mm-dd',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['sv'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['sv'];
+		$.calendars.calendars.julian.prototype.regionalOptions.sv =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.sv;
 	}
 })(jQuery);

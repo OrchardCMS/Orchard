@@ -7,6 +7,7 @@
    Algerian (and Tunisian) Arabic localisation for Gregorian/Julian calendars for jQuery.
    Mohamed Cherif BOUCHELAGHEM -- cherifbouchelaghem@yahoo.fr */
 (function ($) {
+    'use strict';
     $.calendars.calendars.gregorian.prototype.regionalOptions['ar-DZ'] = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
@@ -16,6 +17,7 @@
         dayNames: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
         dayNamesShort: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
         dayNamesMin: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 6,
         isRTL: true

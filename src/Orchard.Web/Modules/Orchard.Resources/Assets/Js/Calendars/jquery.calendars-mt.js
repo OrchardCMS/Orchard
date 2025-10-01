@@ -2,7 +2,8 @@
    Maltese localisation for Gregorian/Julian calendars for jQuery.
    Written by Chritian Sciberras (uuf6429@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['mt'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.mt = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Jannar','Frar','Marzu','April','Mejju','Ġunju',
@@ -12,12 +13,13 @@
 		dayNames: ['Il-Ħadd', 'It-Tnejn', 'It-Tlieta', 'L-Erbgħa', 'Il-Ħamis', 'Il-Ġimgħa', 'Is-Sibt'],
 		dayNamesShort: ['Ħad', 'Tne', 'Tli', 'Erb', 'Ħam', 'Ġim', 'Sib'],
 		dayNamesMin: ['Ħ','T','T','E','Ħ','Ġ','S'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['mt'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['mt'];
+		$.calendars.calendars.julian.prototype.regionalOptions.mt =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.mt;
 	}
 })(jQuery);

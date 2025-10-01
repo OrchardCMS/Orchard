@@ -1,10 +1,11 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Nepali calendar for jQuery v2.0.1.
+   Nepali calendar for jQuery v2.2.0.
    Written by Artur Neumann (ict.projects{at}nepal.inf.org) April 2013.
    Available under the MIT (http://keith-wood.name/licence.html) license. 
    Please attribute the author if you use it. */
 
 (function($) { // Hide scope, no $ conflict
+	'use strict';
 
 	/** Implementation of the Nepali civil calendar.
 		Based on the ideas from 
@@ -13,12 +14,12 @@
 		See also <a href="http://en.wikipedia.org/wiki/Nepali_calendar">http://en.wikipedia.org/wiki/Nepali_calendar</a>
 		and <a href="https://en.wikipedia.org/wiki/Bikram_Samwat">https://en.wikipedia.org/wiki/Bikram_Samwat</a>.
 		@class NepaliCalendar
-		@param [language=''] {string} The language code (default English) for localisation. */
+		@param {string} [language=''] The language code (default English) for localisation. */
 	function NepaliCalendar(language) {
 		this.local = this.regionalOptions[language || ''] || this.regionalOptions[''];
 	}
 
-	NepaliCalendar.prototype = new $.calendars.baseCalendar;
+	NepaliCalendar.prototype = new $.calendars.baseCalendar();
 
 	$.extend(NepaliCalendar.prototype, {
 		/** The calendar name.
@@ -50,17 +51,17 @@
 			Entries are objects indexed by the language code ('' being the default US/English).
 			Each object has the following attributes.
 			@memberof NepaliCalendar
-			@property name {string} The calendar name.
-			@property epochs {string[]} The epoch names.
-			@property monthNames {string[]} The long names of the months of the year.
-			@property monthNamesShort {string[]} The short names of the months of the year.
-			@property dayNames {string[]} The long names of the days of the week.
-			@property dayNamesShort {string[]} The short names of the days of the week.
-			@property dayNamesMin {string[]} The minimal names of the days of the week.
-			@property dateFormat {string} The date format for this calendar.
+			@property {string} name The calendar name.
+			@property {string[]} epochs The epoch names (before/after year 0).
+			@property {string[]} monthNames The long names of the months of the year.
+			@property {string[]} monthNamesShort The short names of the months of the year.
+			@property {string[]} dayNames The long names of the days of the week.
+			@property {string[]} dayNamesShort The short names of the days of the week.
+			@property {string[]} dayNamesMin The minimal names of the days of the week.
+			@property {string} dateFormat The date format for this calendar.
 					See the options on <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a> for details.
-			@property firstDay {number} The number of the first day of the week, starting at 0.
-			@property isRTL {number} <code>true</code> if this localisation reads right-to-left. */
+			@property {number} firstDay The number of the first day of the week, starting at 0.
+			@property {boolean} isRTL <code>true</code> if this localisation reads right-to-left. */
 		regionalOptions: { // Localisations
 			'': {
 				name: 'Nepali',
@@ -71,6 +72,7 @@
 				dayNames: ['Aaitabaar', 'Sombaar', 'Manglbaar', 'Budhabaar', 'Bihibaar', 'Shukrabaar', 'Shanibaar'],
 				dayNamesShort: ['Aaita', 'Som', 'Mangl', 'Budha', 'Bihi', 'Shukra', 'Shani'],
 				dayNamesMin: ['Aai', 'So', 'Man', 'Bu', 'Bi', 'Shu', 'Sha'],
+				digits: null,
 				dateFormat: 'dd/mm/yyyy',
 				firstDay: 1,
 				isRTL: false
@@ -79,7 +81,7 @@
 
 		/** Determine whether this date is in a leap year.
 			@memberof NepaliCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
 			@throws Error if an invalid year or a different calendar used. */
 		leapYear: function(year) {
@@ -88,9 +90,9 @@
 
 		/** Determine the week of the year for a date.
 			@memberof NepaliCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {number} The week of the year.
 			@throws Error if an invalid date or a different calendar used. */
 		weekOfYear: function(year, month, day) {
@@ -102,7 +104,7 @@
 
 		/** Retrieve the number of days in a year.
 			@memberof NepaliCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {number} The number of days.
 			@throws Error if an invalid year or a different calendar used. */
 		daysInYear: function(year) {
@@ -112,16 +114,16 @@
 				return this.daysPerYear;
 			}
 			var daysPerYear = 0;
-			for (var month_number = this.minMonth; month_number <= 12; month_number++) {
-				daysPerYear += this.NEPALI_CALENDAR_DATA[year][month_number];
+			for (var month = this.minMonth; month <= 12; month++) {
+				daysPerYear += this.NEPALI_CALENDAR_DATA[year][month];
 			}
 			return daysPerYear;
 		},
 
 		/** Retrieve the number of days in a month.
 			@memberof NepaliCalendar
-			@param year {CDate|number| The date to examine or the year of the month.
-			@param [month] {number} The month.
+			@param {CDate|number| year The date to examine or the year of the month.
+			@param {number} [month] The month (if only <code>year</code> specified above).
 			@return {number} The number of days in this month.
 			@throws Error if an invalid month/year or a different calendar used. */
 		daysInMonth: function(year, month) {
@@ -136,9 +138,9 @@
 
 		/** Determine whether this date is a week day.
 			@memberof NepaliCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {boolean} <code>true</code> if a week day, <code>false</code> if not.
 			@throws Error if an invalid date or a different calendar used. */
 		weekDay: function(year, month, day) {
@@ -148,9 +150,9 @@
 		/** Retrieve the Julian date equivalent for this date,
 			i.e. days since January 1, 4713 BCE Greenwich noon.
 			@memberof NepaliCalendar
-			@param year {CDate|number} The date to convert or the year to convert.
-			@param [month] {number} The month to convert.
-			@param [day] {number} The day to convert.
+			@param {CDate|number} year The date to convert or the year to convert.
+			@param {number} [month] The month to convert (if only <code>year</code> specified above).
+			@param {number} [day] The day to convert (if only <code>year</code> specified above).
 			@return {number} The equivalent Julian date.
 			@throws Error if an invalid date or a different calendar used. */
 		toJD: function(nepaliYear, nepaliMonth, nepaliDay) {
@@ -191,8 +193,8 @@
 				// For the first days of Paush we are now in negative values,
 				// because in the end of the gregorian year we substract
 				// 365 / 366 days (P.S. remember math in school + - gives -)
-				if (gregorianDayOfYear <= 0) {
-					gregorianDayOfYear += (gregorianCalendar.leapYear(gregorianYear) ? 366 : 365);
+				if (gregorianDayOfYear < 0) {
+					gregorianDayOfYear += gregorianCalendar.daysInYear(gregorianYear);
 				}
 			}
 			else {
@@ -204,7 +206,7 @@
 		
 		/** Create a new date from a Julian date.
 			@memberof NepaliCalendar
-			@param jd {number} The Julian date to convert.
+			@param {number} jd The Julian date to convert.
 			@return {CDate} The equivalent date. */
 		fromJD: function(jd) {
 			var gregorianCalendar =  $.calendars.instance();
@@ -253,13 +255,13 @@
 		/** Creates missing data in the NEPALI_CALENDAR_DATA table.
 			This data will not be correct but just give an estimated result. Mostly -/+ 1 day
 			@private
-			@param nepaliYear {number} The missing year number. */
+			@param {number} nepaliYear The missing year number. */
 		_createMissingCalendarData: function(nepaliYear) {
-			var tmp_calendar_data = this.daysPerMonth.slice(0);
-			tmp_calendar_data.unshift(17);
+			var calendarData = this.daysPerMonth.slice(0);
+			calendarData.unshift(17);
 			for (var nepaliYearToCreate = (nepaliYear - 1); nepaliYearToCreate < (nepaliYear + 2); nepaliYearToCreate++) {
 				if (typeof this.NEPALI_CALENDAR_DATA[nepaliYearToCreate] === 'undefined') {
-					this.NEPALI_CALENDAR_DATA[nepaliYearToCreate] = tmp_calendar_data;
+					this.NEPALI_CALENDAR_DATA[nepaliYearToCreate] = calendarData;
 				}
 			}
 		},

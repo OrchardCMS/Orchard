@@ -7,6 +7,7 @@
    Spanish/Argentina localisation for Gregorian/Julian calendars for jQuery.
    Written by Esteban Acosta Villafane (esteban.acosta@globant.com) of Globant (http://www.globant.com). */
 (function ($) {
+    'use strict';
     $.calendars.calendars.gregorian.prototype.regionalOptions['es-AR'] = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
@@ -17,6 +18,7 @@
         dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
         dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 0,
         isRTL: false

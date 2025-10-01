@@ -3,7 +3,8 @@
    Mansoor Munib -- mansoormunib@gmail.com <http://www.mansoor.co.nr/mansoor.html>
    Thanks to Habib Ahmed, ObaidUllah Anwar. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['ur'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.ur = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['جنوری','فروری','مارچ','اپریل','مئی','جون',
@@ -13,13 +14,13 @@
 		dayNames: ['اتوار','پير','منگل','بدھ','جمعرات','جمعہ','ہفتہ'],
 		dayNamesShort: ['اتوار','پير','منگل','بدھ','جمعرات','جمعہ','ہفتہ'],
 		dayNamesMin: ['اتوار','پير','منگل','بدھ','جمعرات','جمعہ','ہفتہ'],
+		digits: $.calendars.substituteDigits(['٠', '١', '٢', '٣', '۴', '۵', '۶', '۷', '٨', '٩']),
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 0,
-		firstDay: 1,
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['ur'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['ur'];
+		$.calendars.calendars.julian.prototype.regionalOptions.ur =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.ur;
 	}
 })(jQuery);

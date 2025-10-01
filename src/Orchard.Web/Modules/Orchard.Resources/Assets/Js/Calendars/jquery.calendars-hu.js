@@ -2,7 +2,8 @@
    Hungarian localisation for Gregorian/Julian calendars for jQuery.
    Written by Istvan Karaszi (jquerycalendar@spam.raszi.hu). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['hu'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.hu = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -12,12 +13,13 @@
 		dayNames: ['Vasárnap', 'Hétfö', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'],
 		dayNamesShort: ['Vas', 'Hét', 'Ked', 'Sze', 'Csü', 'Pén', 'Szo'],
 		dayNamesMin: ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'],
+		digits: null,
 		dateFormat: 'yyyy-mm-dd',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['hu'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['hu'];
+		$.calendars.calendars.julian.prototype.regionalOptions.hu =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.hu;
 	}
 })(jQuery);

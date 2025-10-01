@@ -2,7 +2,8 @@
    Armenian localisation for Gregorian/Julian calendars for jQuery.
    Written by Levon Zakaryan (levon.zakaryan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['hy'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.hy = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Հունվար','Փետրվար','Մարտ','Ապրիլ','Մայիս','Հունիս',
@@ -12,12 +13,13 @@
 		dayNames: ['կիրակի','եկուշաբթի','երեքշաբթի','չորեքշաբթի','հինգշաբթի','ուրբաթ','շաբաթ'],
 		dayNamesShort: ['կիր','երկ','երք','չրք','հնգ','ուրբ','շբթ'],
 		dayNamesMin: ['կիր','երկ','երք','չրք','հնգ','ուրբ','շբթ'],
+		digits: null,
 		dateFormat: 'dd.mm.yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['hy'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['hy'];
+		$.calendars.calendars.julian.prototype.regionalOptions.hy =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.hy;
 	}
 })(jQuery);

@@ -1,20 +1,21 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Mayan calendar for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Mayan calendar for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license. 
    Please attribute the author if you use it. */
 
 (function($) { // Hide scope, no $ conflict
+	'use strict';
 
 	/** Implementation of the Mayan Long Count calendar.
 		See also <a href="http://en.wikipedia.org/wiki/Mayan_calendar">http://en.wikipedia.org/wiki/Mayan_calendar</a>.
 		@class MayanCalendar
-		@param [language=''] {string} The language code (default English) for localisation. */
+		@param {string} [language=''] The language code (default English) for localisation. */
 	function MayanCalendar(language) {
 		this.local = this.regionalOptions[language || ''] || this.regionalOptions[''];
 	}
 
-	MayanCalendar.prototype = new $.calendars.baseCalendar;
+	MayanCalendar.prototype = new $.calendars.baseCalendar();
 
 	$.extend(MayanCalendar.prototype, {
 		/** The calendar name.
@@ -40,19 +41,19 @@
 			Entries are objects indexed by the language code ('' being the default US/English).
 			Each object has the following attributes.
 			@memberof MayanCalendar
-			@property name {string} The calendar name.
-			@property epochs {string[]} The epoch names.
-			@property monthNames {string[]} The long names of the months of the year.
-			@property monthNamesShort {string[]} The short names of the months of the year.
-			@property dayNames {string[]} The long names of the days of the week.
-			@property dayNamesShort {string[]} The short names of the days of the week.
-			@property dayNamesMin {string[]} The minimal names of the days of the week.
-			@property dateFormat {string} The date format for this calendar.
+			@property {string} name The calendar name.
+			@property {string[]} epochs The epoch names (before/after year 0).
+			@property {string[]} monthNames The long names of the months of the year.
+			@property {string[]} monthNamesShort The short names of the months of the year.
+			@property {string[]} dayNames The long names of the days of the week.
+			@property {string[]} dayNamesShort The short names of the days of the week.
+			@property {string[]} dayNamesMin The minimal names of the days of the week.
+			@property {string} dateFormat The date format for this calendar.
 					See the options on <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a> for details.
-			@property firstDay {number} The number of the first day of the week, starting at 0.
-			@property isRTL {number} <code>true</code> if this localisation reads right-to-left.
-			@property haabMonths {string[]} The names of the Haab months.
-			@property tzolkinMonths {string[]} The names of the Tzolkin months. */
+			@property {number} firstDay The number of the first day of the week, starting at 0.
+			@property {boolean} isRTL <code>true</code> if this localisation reads right-to-left.
+			@property {string[]} haabMonths The names of the Haab months.
+			@property {string[]} tzolkinMonths The names of the Tzolkin months. */
 		regionalOptions: { // Localisations
 			'': {
 				name: 'Mayan',
@@ -67,6 +68,7 @@
 				'10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
 				dayNamesMin: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 				'10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
+				digits: null,
 				dateFormat: 'YYYY.m.d',
 				firstDay: 0,
 				isRTL: false,
@@ -79,7 +81,7 @@
 
 		/** Determine whether this date is in a leap year.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
 			@throws Error if an invalid year or a different calendar used. */
 		leapYear: function(year) {
@@ -89,7 +91,7 @@
 
 		/** Format the year, if not a simple sequential number.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to format or the year to format.
+			@param {CDate|number} year The date to format or the year to format.
 			@return {string} The formatted year.
 			@throws Error if an invalid year or a different calendar used. */
 		formatYear: function(year) {
@@ -104,7 +106,7 @@
 
 		/** Convert from the formatted year back to a single number.
 			@memberof MayanCalendar
-			@param years {string} The year as n.n.n.
+			@param {string} years The year as n.n.n.
 			@return {number} The sequential year.
 			@throws Error if an invalid value is supplied. */
 		forYear: function(years) {
@@ -125,7 +127,7 @@
 
 		/** Retrieve the number of months in a year.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {number} The number of months.
 			@throws Error if an invalid year or a different calendar used. */
 		monthsInYear: function(year) {
@@ -135,9 +137,9 @@
 
 		/** Determine the week of the year for a date.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {number} The week of the year.
 			@throws Error if an invalid date or a different calendar used. */
 		weekOfYear: function(year, month, day) {
@@ -147,7 +149,7 @@
 
 		/** Retrieve the number of days in a year.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {number} The number of days.
 			@throws Error if an invalid year or a different calendar used. */
 		daysInYear: function(year) {
@@ -157,8 +159,8 @@
 
 		/** Retrieve the number of days in a month.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year of the month.
-			@param [month] {number} The month.
+			@param {CDate|number} year The date to examine or the year of the month.
+			@param {number} [month] The month (if only <code>year</code> specified above).
 			@return {number} The number of days in this month.
 			@throws Error if an invalid month/year or a different calendar used. */
 		daysInMonth: function(year, month) {
@@ -175,9 +177,9 @@
 
 		/** Retrieve the day of the week for a date.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {number} The day of the week: 0 to number of days - 1.
 			@throws Error if an invalid date or a different calendar used. */
 		dayOfWeek: function(year, month, day) {
@@ -187,9 +189,9 @@
 
 		/** Determine whether this date is a week day.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {boolean} <code>true</code> if a week day, <code>false</code> if not.
 			@throws Error if an invalid date or a different calendar used. */
 		weekDay: function(year, month, day) {
@@ -199,9 +201,9 @@
 
 		/** Retrieve additional information about a date - Haab and Tzolkin equivalents.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {object} Additional information - contents depends on calendar.
 			@throws Error if an invalid date or a different calendar used. */
 		extraInfo: function(year, month, day) {
@@ -218,7 +220,7 @@
 		/** Retrieve Haab date from a Julian date.
 			@memberof MayanCalendar
 			@private
-			@param jd  {number} The Julian date.
+			@param {number} jd The Julian date.
 			@return {number[]} Corresponding Haab month and day. */
 		_toHaab: function(jd) {
 			jd -= this.jdEpoch;
@@ -229,7 +231,7 @@
 		/** Retrieve Tzolkin date from a Julian date.
 			@memberof MayanCalendar
 			@private
-			@param jd {number} The Julian date.
+			@param {number} jd The Julian date.
 			@return {number[]} Corresponding Tzolkin day and trecena. */
 		_toTzolkin: function(jd) {
 			jd -= this.jdEpoch;
@@ -239,9 +241,9 @@
 		/** Retrieve the Julian date equivalent for this date,
 			i.e. days since January 1, 4713 BCE Greenwich noon.
 			@memberof MayanCalendar
-			@param year {CDate|number} The date to convert or the year to convert.
-			@param [month] {number} The month to convert.
-			@param [day] {number} The day to convert.
+			@param {CDate|number} year The date to convert or the year to convert.
+			@param {number} [month] The month to convert (if only <code>year</code> specified above).
+			@param {number} [day] The day to convert (if only <code>year</code> specified above).
 			@return {number} The equivalent Julian date.
 			@throws Error if an invalid date or a different calendar used. */
 		toJD: function(year, month, day) {
@@ -251,7 +253,7 @@
 
 		/** Create a new date from a Julian date.
 			@memberof MayanCalendar
-			@param jd {number} The Julian date to convert.
+			@param {number} jd The Julian date to convert.
 			@return {CDate} The equivalent date. */
 		fromJD: function(jd) {
 			jd = Math.floor(jd) + 0.5 - this.jdEpoch;

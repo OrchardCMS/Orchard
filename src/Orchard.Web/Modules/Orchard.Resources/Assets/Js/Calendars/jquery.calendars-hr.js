@@ -2,7 +2,8 @@
    Croatian localisation for Gregorian/Julian calendars for jQuery.
    Written by Vjekoslav Nesek. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['hr'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.hr = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Siječanj','Veljača','Ožujak','Travanj','Svibanj','Lipanj',
@@ -12,12 +13,13 @@
 		dayNames: ['Nedjelja','Ponedjeljak','Utorak','Srijeda','Četvrtak','Petak','Subota'],
 		dayNamesShort: ['Ned','Pon','Uto','Sri','Čet','Pet','Sub'],
 		dayNamesMin: ['Ne','Po','Ut','Sr','Če','Pe','Su'],
+		digits: null,
 		dateFormat: 'dd.mm.yyyy.',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['hr'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['hr'];
+		$.calendars.calendars.julian.prototype.regionalOptions.hr =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.hr;
 	}
 })(jQuery);

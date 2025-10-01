@@ -1,23 +1,24 @@
 ﻿/* http://keith-wood.name/calendars.html
-   UmmAlQura calendar for jQuery v2.0.1.
+   UmmAlQura calendar for jQuery v2.2.0.
    Written by Amro Osama March 2013.
    Modified by Binnooh.com & www.elm.sa - 2014 - Added dates back to 1276 Hijri year.
    Available under the MIT (http://keith-wood.name/licence.html) license. 
    Please attribute the author if you use it. */
 
 (function ($) { // Hide scope, no $ conflict
+	'use strict';
 
 	/** Implementation of the UmmAlQura or 'saudi' calendar.
 		See also <a href="http://en.wikipedia.org/wiki/Islamic_calendar#Saudi_Arabia.27s_Umm_al-Qura_calendar">http://en.wikipedia.org/wiki/Islamic_calendar#Saudi_Arabia.27s_Umm_al-Qura_calendar</a>.
 		<a href="http://www.ummulqura.org.sa/About.aspx">http://www.ummulqura.org.sa/About.aspx</a>
 		<a href="http://www.staff.science.uu.nl/~gent0113/islam/ummalqura.htm">http://www.staff.science.uu.nl/~gent0113/islam/ummalqura.htm</a>
 		@class UmmAlQuraCalendar
-		@param [language=''] {string} The language code (default English) for localisation. */
+		@param {string} [language=''] The language code (default English) for localisation. */
 	function UmmAlQuraCalendar(language) {
 		this.local = this.regionalOptions[language || ''] || this.regionalOptions[''];
 	}
 
-	UmmAlQuraCalendar.prototype = new $.calendars.baseCalendar;
+	UmmAlQuraCalendar.prototype = new $.calendars.baseCalendar();
 
 	$.extend(UmmAlQuraCalendar.prototype, {
 		/** The calendar name.
@@ -42,17 +43,17 @@
 			Entries are objects indexed by the language code ('' being the default US/English).
 			Each object has the following attributes.
 			@memberof UmmAlQuraCalendar
-			@property name {string} The calendar name.
-			@property epochs {string[]} The epoch names.
-			@property monthNames {string[]} The long names of the months of the year.
-			@property monthNamesShort {string[]} The short names of the months of the year.
-			@property dayNames {string[]} The long names of the days of the week.
-			@property dayNamesShort {string[]} The short names of the days of the week.
-			@property dayNamesMin {string[]} The minimal names of the days of the week.
-			@property dateFormat {string} The date format for this calendar.
+			@property {string} name The calendar name.
+			@property {string[]} epochs The epoch names (before/after year 0).
+			@property {string[]} monthNames The long names of the months of the year.
+			@property {string[]} monthNamesShort The short names of the months of the year.
+			@property {string[]} dayNames The long names of the days of the week.
+			@property {string[]} dayNamesShort The short names of the days of the week.
+			@property {string[]} dayNamesMin The minimal names of the days of the week.
+			@property {string} dateFormat The date format for this calendar.
 					See the options on <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a> for details.
-			@property firstDay {number} The number of the first day of the week, starting at 0.
-			@property isRTL {number} <code>true</code> if this localisation reads right-to-left. */
+			@property {number} firstDay The number of the first day of the week, starting at 0.
+			@property {boolean} isRTL <code>true</code> if this localisation reads right-to-left. */
 		regionalOptions: { // Localisations
 			'': {
 				name: 'Umm al-Qura',
@@ -61,7 +62,9 @@
 				'Rajab', 'Sha\'aban', 'Ramadan', 'Shawwal', 'Dhu al-Qi\'dah', 'Dhu al-Hijjah'],
 				monthNamesShort: ['Muh', 'Saf', 'Rab1', 'Rab2', 'Jum1', 'Jum2', 'Raj', 'Sha\'', 'Ram', 'Shaw', 'DhuQ', 'DhuH'],
 				dayNames: ['Yawm al-Ahad', 'Yawm al-Ithnain', 'Yawm al-Thalāthā’', 'Yawm al-Arba‘ā’', 'Yawm al-Khamīs', 'Yawm al-Jum‘a', 'Yawm al-Sabt'],
+				dayNamesShort: ['Ahd', 'Ith', 'Thu', 'Arb', 'Khm', 'Jum', 'Sbt'],
 				dayNamesMin: ['Ah', 'Ith', 'Th', 'Ar', 'Kh', 'Ju', 'Sa'],
+				digits: null,
 				dateFormat: 'yyyy/mm/dd',
 				firstDay: 6,
 				isRTL: true
@@ -70,7 +73,7 @@
 
 		/** Determine whether this date is in a leap year.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
 			@throws Error if an invalid year or a different calendar used. */
 		leapYear: function (year) {
@@ -80,9 +83,9 @@
 
 		/** Determine the week of the year for a date.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {number} The week of the year.
 			@throws Error if an invalid date or a different calendar used. */
 		weekOfYear: function (year, month, day) {
@@ -94,7 +97,7 @@
 
 		/** Retrieve the number of days in a year.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
 			@return {number} The number of days.
 			@throws Error if an invalid year or a different calendar used. */
 		daysInYear: function (year) {
@@ -107,18 +110,18 @@
 
 		/** Retrieve the number of days in a month.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to examine or the year of the month.
-			@param [month] {number} The month.
+			@param {CDate|number} year The date to examine or the year of the month.
+			@param {number} [month] The month (if only <code>year</code> specified above).
 			@return {number} The number of days in this month.
 			@throws Error if an invalid month/year or a different calendar used. */
 		daysInMonth: function (year, month) {
 			var date = this._validate(year, month, this.minDay, $.calendars.local.invalidMonth);
 			var mcjdn = date.toJD() - 2400000 + 0.5; // Modified Chronological Julian Day Number (MCJDN)
-			// the MCJDN's of the start of the lunations in the Umm al-Qura calendar are stored in the 'ummalqura_dat' array
+			// the MCJDN's of the start of the lunations in the Umm al-Qura calendar are stored in the 'ummalquraData' array
 			var index = 0;
-			for (var i = 0; i < ummalqura_dat.length; i++) {
-				if (ummalqura_dat[i] > mcjdn) {
-					return (ummalqura_dat[index] - ummalqura_dat[index - 1]);
+			for (var i = 0; i < ummalquraData.length; i++) {
+				if (ummalquraData[i] > mcjdn) {
+					return (ummalquraData[index] - ummalquraData[index - 1]);
 				}
 				index++;
 			}
@@ -127,9 +130,9 @@
 
 		/** Determine whether this date is a week day.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to examine or the year to examine.
-			@param [month] {number} The month to examine.
-			@param [day] {number} The day to examine.
+			@param {CDate|number} year The date to examine or the year to examine.
+			@param {number} [month] The month to examine (if only <code>year</code> specified above).
+			@param {number} [day] The day to examine (if only <code>year</code> specified above).
 			@return {boolean} <code>true</code> if a week day, <code>false</code> if not.
 			@throws Error if an invalid date or a different calendar used. */
 		weekDay: function (year, month, day) {
@@ -139,49 +142,51 @@
 		/** Retrieve the Julian date equivalent for this date,
 			i.e. days since January 1, 4713 BCE Greenwich noon.
 			@memberof UmmAlQuraCalendar
-			@param year {CDate|number} The date to convert or the year to convert.
-			@param [month] {number} The month to convert.
-			@param [day] {number} The day to convert.
+			@param {CDate|number} year The date to convert or the year to convert.
+			@param {number} [month] The month to convert (if only <code>year</code> specified above).
+			@param {number} [day] The day to convert (if only <code>year</code> specified above).
 			@return {number} The equivalent Julian date.
 			@throws Error if an invalid date or a different calendar used. */
 		toJD: function (year, month, day) {
 			var date = this._validate(year, month, day, $.calendars.local.invalidDate);
 			var index = (12 * (date.year() - 1)) + date.month() - 15292;
-			var mcjdn = date.day() + ummalqura_dat[index - 1] - 1;
+			var mcjdn = date.day() + ummalquraData[index - 1] - 1;
 			return mcjdn + 2400000 - 0.5; // Modified Chronological Julian Day Number (MCJDN)
 		},
 
 		/** Create a new date from a Julian date.
 			@memberof UmmAlQuraCalendar
-			@param jd {number} The Julian date to convert.
+			@param {number} jd The Julian date to convert.
 			@return {CDate} The equivalent date. */
 		fromJD: function (jd) {
 			var mcjdn = jd - 2400000 + 0.5; // Modified Chronological Julian Day Number (MCJDN)
 			// the MCJDN's of the start of the lunations in the Umm al-Qura calendar 
-			// are stored in the 'ummalqura_dat' array
+			// are stored in the 'ummalquraData' array
 			var index = 0;
-			for (var i = 0; i < ummalqura_dat.length; i++) {
-				if (ummalqura_dat[i] > mcjdn) break;
+			for (var i = 0; i < ummalquraData.length; i++) {
+				if (ummalquraData[i] > mcjdn) {
+					break;
+				}
 				index++;
 			}
 			var lunation = index + 15292; //UmmAlQura Lunation Number
 			var ii = Math.floor((lunation - 1) / 12);
 			var year = ii + 1;
 			var month = lunation - 12 * ii;
-			var day = mcjdn - ummalqura_dat[index - 1] + 1;
+			var day = mcjdn - ummalquraData[index - 1] + 1;
 			return this.newDate(year, month, day);
 		},
 
 		/** Determine whether a date is valid for this calendar.
 			@memberof UmmAlQuraCalendar
-			@param year {number} The year to examine.
-			@param month {number} The month to examine.
-			@param day {number} The day to examine.
+			@param {number} year The year to examine.
+			@param {number} month The month to examine.
+			@param {number} day The day to examine.
 			@return {boolean} <code>true</code> if a valid date, <code>false</code> if not. */
-		isValid: function(year, month, day) {
+		isValid: function(year, month, day) { // jshint unused:false
 			var valid = $.calendars.baseCalendar.prototype.isValid.apply(this, arguments);
 			if (valid) {
-				year = (year.year != null ? year.year : year);
+				year = (typeof year.year === 'function' ? year.year() : year);
 				valid = (year >= 1276 && year <= 1500);
 			}
 			return valid;
@@ -190,14 +195,15 @@
 		/** Check that a candidate date is from the same calendar and is valid.
 			@memberof UmmAlQuraCalendar
 			@private
-			@param year {CDate|number} The date to validate or the year to validate.
-			@param month {number} The month to validate.
-			@param day {number} The day to validate.
-			@param error {string} Error message if invalid.
+			@param {CDate|number} year The date to validate or the year to validate.
+			@param {number} month The month to validate (if only <code>year</code> specified above).
+			@param {number} day The day to validate (if only <code>year</code> specified above).
+			@param {string} error Error message if invalid.
+			@return {CDate} The validated date.
 			@throws Error if different calendars used or invalid date. */
 		_validate: function(year, month, day, error) {
 			var date = $.calendars.baseCalendar.prototype._validate.apply(this, arguments);
-			if (date.year < 1276 || date.year > 1500) {
+			if (date.year() < 1276 || date.year() > 1500) {
 				throw error.replace(/\{0\}/, this.local.name);
 			}
 			return date;
@@ -207,8 +213,8 @@
 	// UmmAlQura calendar implementation
 	$.calendars.calendars.ummalqura = UmmAlQuraCalendar;
 
-	var ummalqura_dat = [
-		20,    50,    79,    109,   138,   168,   197,   227,   256,   286,   315,   345,   374,   404,   433,   463,   492,   522,   551,   581, 
+	var ummalquraData = [
+		20,    50,    79,    109,   138,   168,   197,   227,   256,   286,   315,   345,   374,   404,   433,   463,   492,   522,   551,   581,   // 1276
 		611,   641,   670,   700,   729,   759,   788,   818,   847,   877,   906,   936,   965,   995,   1024,  1054,  1083,  1113,  1142,  1172,
 		1201,  1231,  1260,  1290,  1320,  1350,  1379,  1409,  1438,  1468,  1497,  1527,  1556,  1586,  1615,  1645,  1674,  1704,  1733,  1763,
 		1792,  1822,  1851,  1881,  1910,  1940,  1969,  1999,  2028,  2058,  2087,  2117,  2146,  2176,  2205,  2235,  2264,  2294,  2323,  2353,
@@ -233,7 +239,7 @@
 		13014, 13043, 13072, 13102, 13131, 13161, 13191, 13220, 13250, 13280, 13310, 13339, 13368, 13398, 13427, 13456, 13486, 13515, 13545, 13574,
 		13604, 13634, 13664, 13693, 13723, 13752, 13782, 13811, 13840, 13870, 13899, 13929, 13958, 13988, 14018, 14047, 14077, 14107, 14136, 14166,
 		14195, 14224, 14254, 14283, 14313, 14342, 14372, 14401, 14431, 14461, 14490, 14520, 14550, 14579, 14609, 14638, 14667, 14697, 14726, 14756,
-		14785, 14815, 14844, 14874, 14904, 14933, 14963, 14993, 15021, 15051, 15081, 15110, 15140, 15169, 15199, 15228, 15258, 15287, 15317, 15347,
+		14785, 14815, 14844, 14874, 14904, 14933, 14963, 14993, 15021, 15051, 15081, 15110, 15140, 15169, 15199, 15228, 15258, 15287, 15317, 15347, // 01/1317-08/1318
 		15377, 15406, 15436, 15465, 15494, 15524, 15553, 15582, 15612, 15641, 15671, 15701, 15731, 15760, 15790, 15820, 15849, 15878, 15908, 15937,
 		15966, 15996, 16025, 16055, 16085, 16114, 16144, 16174, 16204, 16233, 16262, 16292, 16321, 16350, 16380, 16409, 16439, 16468, 16498, 16528,
 		16558, 16587, 16617, 16646, 16676, 16705, 16734, 16764, 16793, 16823, 16852, 16882, 16912, 16941, 16971, 17001, 17030, 17060, 17089, 17118,
@@ -300,7 +306,7 @@
 		51641, 51670, 51699, 51729, 51758, 51787, 51816, 51846, 51876, 51906, 51936, 51965, 51995, 52025, 52054, 52083, 52113, 52142, 52171, 52200,
 		52230, 52260, 52290, 52319, 52349, 52379, 52408, 52438, 52467, 52497, 52526, 52555, 52585, 52614, 52644, 52673, 52703, 52733, 52762, 52792,
 		52822, 52851, 52881, 52910, 52939, 52969, 52998, 53028, 53057, 53087, 53116, 53146, 53176, 53205, 53235, 53264, 53294, 53324, 53353, 53383,
-		53412, 53441, 53471, 53500, 53530, 53559, 53589, 53619, 53648, 53678, 53708, 53737, 53767, 53796, 53825, 53855, 53884, 53913, 53943, 53973,
+		53412, 53441, 53471, 53500, 53530, 53559, 53589, 53619, 53648, 53678, 53708, 53737, 53767, 53796, 53825, 53855, 53884, 53914, 53943, 53973,
 		54003, 54032, 54062, 54092, 54121, 54151, 54180, 54209, 54239, 54268, 54297, 54327, 54357, 54387, 54416, 54446, 54476, 54505, 54535, 54564,
 		54593, 54623, 54652, 54681, 54711, 54741, 54770, 54800, 54830, 54859, 54889, 54919, 54948, 54977, 55007, 55036, 55066, 55095, 55125, 55154,
 		55184, 55213, 55243, 55273, 55302, 55332, 55361, 55391, 55420, 55450, 55479, 55508, 55538, 55567, 55597, 55627, 55657, 55686, 55716, 55745,
@@ -312,7 +318,7 @@
 		58727, 58757, 58786, 58816, 58845, 58875, 58905, 58934, 58964, 58994, 59023, 59053, 59082, 59111, 59141, 59170, 59200, 59229, 59259, 59288,
 		59318, 59348, 59377, 59407, 59436, 59466, 59495, 59525, 59554, 59584, 59613, 59643, 59672, 59702, 59731, 59761, 59791, 59820, 59850, 59879,
 		59909, 59939, 59968, 59997, 60027, 60056, 60086, 60115, 60145, 60174, 60204, 60234, 60264, 60293, 60323, 60352, 60381, 60411, 60440, 60469,
-		60499, 60528, 60558, 60588, 60618, 60648, 60677, 60707, 60736, 60765, 60795, 60824, 60853, 60883, 60912, 60942, 60972, 61002, 61031, 61061,
+		60499, 60528, 60558, 60588, 60618, 60647, 60677, 60707, 60736, 60765, 60795, 60824, 60853, 60883, 60912, 60942, 60972, 61002, 61031, 61061,
 		61090, 61120, 61149, 61179, 61208, 61237, 61267, 61296, 61326, 61356, 61385, 61415, 61445, 61474, 61504, 61533, 61563, 61592, 61621, 61651,
 		61680, 61710, 61739, 61769, 61799, 61828, 61858, 61888, 61917, 61947, 61976, 62006, 62035, 62064, 62094, 62123, 62153, 62182, 62212, 62242,
 		62271, 62301, 62331, 62360, 62390, 62419, 62448, 62478, 62507, 62537, 62566, 62596, 62625, 62655, 62685, 62715, 62744, 62774, 62803, 62832,
@@ -335,7 +341,7 @@
 		72311, 72341, 72370, 72400, 72429, 72459, 72489, 72518, 72548, 72577, 72607, 72637, 72666, 72695, 72725, 72754, 72784, 72813, 72843, 72872,
 		72902, 72931, 72961, 72991, 73020, 73050, 73080, 73109, 73139, 73168, 73197, 73227, 73256, 73286, 73315, 73345, 73375, 73404, 73434, 73464,
 		73493, 73523, 73552, 73581, 73611, 73640, 73669, 73699, 73729, 73758, 73788, 73818, 73848, 73877, 73907, 73936, 73965, 73995, 74024, 74053,
-		74083, 74113, 74142, 74172, 74202, 74231, 74261, 74291, 74320, 74349, 74379, 74408, 74437, 74467, 74497, 74526, 74556, 74586, 74615, 74645,
+		74083, 74113, 74142, 74172, 74202, 74231, 74261, 74291, 74320, 74349, 74379, 74408, 74437, 74467, 74497, 74526, 74556, 74585, 74615, 74645,
 		74675, 74704, 74733, 74763, 74792, 74822, 74851, 74881, 74910, 74940, 74969, 74999, 75029, 75058, 75088, 75117, 75147, 75176, 75206, 75235,
 		75264, 75294, 75323, 75353, 75383, 75412, 75442, 75472, 75501, 75531, 75560, 75590, 75619, 75648, 75678, 75707, 75737, 75766, 75796, 75826,
 		75856, 75885, 75915, 75944, 75974, 76003, 76032, 76062, 76091, 76121, 76150, 76180, 76210, 76239, 76269, 76299, 76328, 76358, 76387, 76416,

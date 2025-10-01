@@ -2,7 +2,8 @@
    Bosnian localisation for Gregorian/Julian calendars for jQuery.
    Kenan Konjo. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['bs'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.bs = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mart','April','Maj','Juni',
@@ -12,12 +13,13 @@
 		dayNames: ['Nedelja','Ponedeljak','Utorak','Srijeda','Četvrtak','Petak','Subota'],
 		dayNamesShort: ['Ned','Pon','Uto','Sri','Čet','Pet','Sub'],
 		dayNamesMin: ['Ne','Po','Ut','Sr','Če','Pe','Su'],
+		digits: null,
 		dateFormat: 'dd.mm.yy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['bs'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['bs'];
+		$.calendars.calendars.julian.prototype.regionalOptions.bs =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.bs;
 	}
 })(jQuery);

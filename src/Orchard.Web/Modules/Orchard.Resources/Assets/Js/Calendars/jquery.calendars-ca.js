@@ -2,7 +2,8 @@
    Catalan localisation for Gregorian/Julian calendars for jQuery.
    Writers: (joan.leon@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['ca'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.ca = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Gener','Febrer','Mar&ccedil;','Abril','Maig','Juny',
@@ -12,12 +13,13 @@
 		dayNames: ['Diumenge','Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte'],
 		dayNamesShort: ['Dug','Dln','Dmt','Dmc','Djs','Dvn','Dsb'],
 		dayNamesMin: ['Dg','Dl','Dt','Dc','Dj','Dv','Ds'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['ca'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['ca'];
+		$.calendars.calendars.julian.prototype.regionalOptions.ca =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.ca;
 	}
 })(jQuery);

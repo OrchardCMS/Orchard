@@ -3,14 +3,29 @@
 ** Any changes made directly to this file will be overwritten next time its asset group is processed by Gulp.
 */
 
+/*! http://keith-wood.name/calendars.html
+   Calendars localisations. */
 /* http://keith-wood.name/calendars.html
-   Calendars for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Calendars for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     function Calendars() {
         this.regionalOptions = [];
+        /** Localised values.
+            @memberof Calendars
+            @property {string} [invalidCalendar='Calendar {0} not found']
+                Error message for an unknown calendar.
+            @property {string} [invalidDate='Invalid {0} date']
+                Error message for an invalid date for this calendar.
+            @property {string} [invalidMonth='Invalid {0} month']
+                Error message for an invalid month for this calendar.
+            @property {string} [invalidYear='Invalid {0} year']
+                Error message for an invalid year for this calendar.
+            @property {string} [differentCalendars='Cannot mix {0} and {1} dates']
+                Error message for mixing different calendars. */
         this.regionalOptions[''] = {
             invalidCalendar: 'Calendar {0} not found',
             invalidDate: 'Invalid {0} date',
@@ -24,15 +39,19 @@
     }
     /** Create the calendars plugin.
         <p>Provides support for various world calendars in a consistent manner.</p>
+        <p>Use the global instance, <code>$.calendars</code>, to access the functionality.</p>
         @class Calendars
         @example $.calendars.instance('julian').newDate(2014, 12, 25) */
     $.extend(Calendars.prototype, {
         /** Obtain a calendar implementation and localisation.
             @memberof Calendars
-            @param [name='gregorian'] {string} The name of the calendar, e.g. 'gregorian', 'persian', 'islamic'.
-            @param [language=''] {string} The language code to use for localisation (default is English).
+            @param {string} [name='gregorian'] The name of the calendar, e.g. 'gregorian', 'persian', 'islamic'.
+            @param {string} [language=''] The language code to use for localisation (default is English).
             @return {Calendar} The calendar and localisation.
-            @throws Error if calendar not found. */
+            @throws Error if calendar not found.
+            @example $.calendars.instance()
+$.calendars.instance('persian')
+$.calendars.instance('hebrew', 'he') */
         instance: function (name, language) {
             name = (name || 'gregorian').toLowerCase();
             language = language || '';
@@ -49,25 +68,66 @@
         },
         /** Create a new date - for today if no other parameters given.
             @memberof Calendars
-            @param year {CDate|number} The date to copy or the year for the date.
-            @param [month] {number} The month for the date.
-            @param [day] {number} The day for the date.
-            @param [calendar='gregorian'] {BaseCalendar|string} The underlying calendar or the name of the calendar.
-            @param [language=''] {string} The language to use for localisation (default English).
+            @param {CDate|number} [year] The date to copy or the year for the date.
+            @param {number} [month] The month for the date (if numeric <code>year</code> specified above).
+            @param {number} [day] The day for the date (if numeric <code>year</code> specified above).
+            @param {BaseCalendar|string} [calendar='gregorian'] The underlying calendar or the name of the calendar.
+            @param {string} [language=''] The language to use for localisation (default English).
             @return {CDate} The new date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example $.calendars.newDate()
+$.calendars.newDate(otherDate)
+$.calendars.newDate(2001, 1, 1)
+$.calendars.newDate(1379, 10, 12, 'persian') */
         newDate: function (year, month, day, calendar, language) {
-            calendar = (year != null && year.year ? year.calendar() : (typeof calendar === 'string' ?
-                this.instance(calendar, language) : calendar)) || this.instance();
+            calendar = ((typeof year !== 'undefined' && year !== null) && year.year ? year.calendar() :
+                (typeof calendar === 'string' ? this.instance(calendar, language) : calendar)) || this.instance();
             return calendar.newDate(year, month, day);
+        },
+        /** A simple digit substitution function for localising numbers via the
+            {@linkcode GregorianCalendar.regionalOptions|Calendar digits} option.
+            @memberof Calendars
+            @param {string[]} digits The substitute digits, for 0 through 9.
+            @return {CalendarsDigits} The substitution function.
+            @example digits: $.calendars.substituteDigits(['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']) */
+        substituteDigits: function (digits) {
+            return function (value) {
+                return (value + '').replace(/[0-9]/g, function (digit) {
+                    return digits[digit];
+                });
+            };
+        },
+        /** Digit substitution function for localising Chinese style numbers via the
+            {@linkcode GregorianCalendar.regionalOptions|Calendar digits} option.
+            @memberof Calendars
+            @param {string[]} digits The substitute digits, for 0 through 9.
+            @param {string[]} powers The characters denoting powers of 10, i.e. 1, 10, 100, 1000.
+            @return {CalendarsDigits} The substitution function.
+            @example digits: $.calendars.substituteChineseDigits(
+  ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'], ['', '十', '百', '千']) */
+        substituteChineseDigits: function (digits, powers) {
+            return function (value) {
+                var localNumber = '';
+                var power = 0;
+                while (value > 0) {
+                    var units = value % 10;
+                    localNumber = (units === 0 ? '' : digits[units] + powers[power]) + localNumber;
+                    power++;
+                    value = Math.floor(value / 10);
+                }
+                if (localNumber.indexOf(digits[1] + powers[1]) === 0) {
+                    localNumber = localNumber.substr(1);
+                }
+                return localNumber || digits[0];
+            };
         }
     });
     /** Generic date, based on a particular calendar.
         @class CDate
-        @param calendar {BaseCalendar} The underlying calendar implementation.
-        @param year {number} The year for this date.
-        @param month {number} The month for this date.
-        @param day {number} The day for this date.
+        @param {BaseCalendar} calendar The underlying calendar implementation.
+        @param {number} year The year for this date.
+        @param {number} month The month for this date.
+        @param {number} day The day for this date.
         @return {CDate} The date object.
         @throws Error if an invalid date. */
     function CDate(calendar, year, month, day) {
@@ -83,8 +143,8 @@
     }
     /** Pad a numeric value with leading zeroes.
         @private
-        @param value {number} The number to format.
-        @param length {number} The minimum length.
+        @param {number} value The number to format.
+        @param {number} length The minimum length.
         @return {string} The formatted number. */
     function pad(value, length) {
         value = '' + value;
@@ -93,45 +153,55 @@
     $.extend(CDate.prototype, {
         /** Create a new date.
             @memberof CDate
-            @param [year] {CDate|number} The date to copy or the year for the date (default this date).
-            @param [month] {number} The month for the date.
-            @param [day] {number} The day for the date.
+            @param {CDate|number} [year] The date to copy or the year for the date (default to this date).
+            @param {number} [month] The month for the date (if numeric <code>year</code> specified above).
+            @param {number} [day] The day for the date (if numeric <code>year</code> specified above).
             @return {CDate} The new date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example date.newDate()
+date.newDate(otherDate)
+date.newDate(2001, 1, 1) */
         newDate: function (year, month, day) {
-            return this._calendar.newDate((year == null ? this : year), month, day);
+            return this._calendar.newDate((typeof year === 'undefined' || year === null ? this : year), month, day);
         },
         /** Set or retrieve the year for this date.
             @memberof CDate
-            @param [year] {number} The year for the date.
+            @param {number} [year] The year for the date.
             @return {number|CDate} The date's year (if no parameter) or the updated date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example date.year(2001)
+var year = date.year() */
         year: function (year) {
             return (arguments.length === 0 ? this._year : this.set(year, 'y'));
         },
         /** Set or retrieve the month for this date.
             @memberof CDate
-            @param [month] {number} The month for the date.
+            @param {number} [month] The month for the date.
             @return {number|CDate} The date's month (if no parameter) or the updated date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example date.month(1)
+var month = date.month() */
         month: function (month) {
             return (arguments.length === 0 ? this._month : this.set(month, 'm'));
         },
         /** Set or retrieve the day for this date.
             @memberof CDate
-            @param [day] {number} The day for the date.
+            @param {number} [day] The day for the date.
             @return {number|CData} The date's day (if no parameter) or the updated date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example date.day(1)
+var day = date.day() */
         day: function (day) {
             return (arguments.length === 0 ? this._day : this.set(day, 'd'));
         },
         /** Set new values for this date.
             @memberof CDate
-            @param year {number} The year for the date.
-            @param month {number} The month for the date.
-            @param day {number} The day for the date.
+            @param {number} year The year for the date.
+            @param {number} month The month for the date.
+            @param {number} day The day for the date.
             @return {CDate} The updated date.
-            @throws Error if an invalid date. */
+            @throws Error if an invalid date.
+            @example date.date(2001, 1, 1) */
         date: function (year, month, day) {
             if (!this._calendar.isValid(year, month, day)) {
                 throw ($.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate).
@@ -144,93 +214,107 @@
         },
         /** Determine whether this date is in a leap year.
             @memberof CDate
-            @return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not. */
+            @return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
+            @example if (date.leapYear()) ...*/
         leapYear: function () {
             return this._calendar.leapYear(this);
         },
         /** Retrieve the epoch designator for this date, e.g. BCE or CE.
             @memberof CDate
-            @return {string} The current epoch. */
+            @return {string} The current epoch.
+            @example var epoch = date.epoch() */
         epoch: function () {
             return this._calendar.epoch(this);
         },
         /** Format the year, if not a simple sequential number.
             @memberof CDate
-            @return {string} The formatted year. */
+            @return {string} The formatted year.
+            @example var year = date.formatYear() */
         formatYear: function () {
             return this._calendar.formatYear(this);
         },
         /** Retrieve the month of the year for this date,
             i.e. the month's position within a numbered year.
             @memberof CDate
-            @return {number} The month of the year: <code>minMonth</code> to months per year. */
+            @return {number} The month of the year: <code>minMonth</code> to months per year.
+            @example var month = date.monthOfYear() */
         monthOfYear: function () {
             return this._calendar.monthOfYear(this);
         },
         /** Retrieve the week of the year for this date.
             @memberof CDate
-            @return {number} The week of the year: 1 to weeks per year. */
+            @return {number} The week of the year: 1 to weeks per year.
+            @example var week = date.weekOfYear() */
         weekOfYear: function () {
             return this._calendar.weekOfYear(this);
         },
         /** Retrieve the number of days in the year for this date.
             @memberof CDate
-            @return {number} The number of days in this year. */
+            @return {number} The number of days in this year.
+            @example var days = date.daysInYear() */
         daysInYear: function () {
             return this._calendar.daysInYear(this);
         },
         /** Retrieve the day of the year for this date.
             @memberof CDate
-            @return {number} The day of the year: 1 to days per year. */
+            @return {number} The day of the year: 1 to days per year.
+            @example var doy = date.dayOfYear() */
         dayOfYear: function () {
             return this._calendar.dayOfYear(this);
         },
         /** Retrieve the number of days in the month for this date.
             @memberof CDate
-            @return {number} The number of days. */
+            @return {number} The number of days.
+            @example var days = date.daysInMonth() */
         daysInMonth: function () {
             return this._calendar.daysInMonth(this);
         },
         /** Retrieve the day of the week for this date.
             @memberof CDate
-            @return {number} The day of the week: 0 to number of days - 1. */
+            @return {number} The day of the week: 0 to number of days - 1.
+            @example var dow = date.dayOfWeek() */
         dayOfWeek: function () {
             return this._calendar.dayOfWeek(this);
         },
         /** Determine whether this date is a week day.
             @memberof CDate
-            @return {boolean} <code>true</code> if a week day, <code>false</code> if not. */
+            @return {boolean} <code>true</code> if a week day, <code>false</code> if not.
+            @example if (date.weekDay()) ... */
         weekDay: function () {
             return this._calendar.weekDay(this);
         },
         /** Retrieve additional information about this date.
             @memberof CDate
-            @return {object} Additional information - contents depends on calendar. */
+            @return {object} Additional information - contents depends on calendar.
+            @example var info = date.extraInfo() */
         extraInfo: function () {
             return this._calendar.extraInfo(this);
         },
         /** Add period(s) to a date.
             @memberof CDate
-            @param offset {number} The number of periods to adjust by.
-            @param period {string} One of 'y' for year, 'm' for month, 'w' for week, 'd' for day.
-            @return {CDate} The updated date. */
+            @param {number} offset The number of periods to adjust by.
+            @param {string} period One of 'y' for years, 'm' for months, 'w' for weeks, 'd' for days.
+            @return {CDate} The updated date.
+            @example date.add(10, 'd') */
         add: function (offset, period) {
             return this._calendar.add(this, offset, period);
         },
         /** Set a portion of the date.
             @memberof CDate
-            @param value {number} The new value for the period.
-            @param period {string} One of 'y' for year, 'm' for month, 'd' for day.
+            @param {number} value The new value for the period.
+            @param {string} period One of 'y' for year, 'm' for month, 'd' for day.
             @return {CDate} The updated date.
-            @throws Error if not a valid date. */
+            @throws Error if not a valid date.
+            @example date.set(10, 'd') */
         set: function (value, period) {
             return this._calendar.set(this, value, period);
         },
         /** Compare this date to another date.
             @memberof CDate
-            @param date {CDate} The other date.
+            @param {CDate} date The other date.
             @return {number} -1 if this date is before the other date,
-                    0 if they are equal, or +1 if this date is after the other date. */
+                    0 if they are equal, or +1 if this date is after the other date.
+            @example if (date1.compareTo(date2) < 0) ... */
         compareTo: function (date) {
             if (this._calendar.name !== date._calendar.name) {
                 throw ($.calendars.local.differentCalendars || $.calendars.regionalOptions[''].differentCalendars).
@@ -243,34 +327,39 @@
         },
         /** Retrieve the calendar backing this date.
             @memberof CDate
-            @return {BaseCalendar} The calendar implementation. */
+            @return {BaseCalendar} The calendar implementation.
+            @example var cal = date.calendar() */
         calendar: function () {
             return this._calendar;
         },
         /** Retrieve the Julian date equivalent for this date,
             i.e. days since January 1, 4713 BCE Greenwich noon.
             @memberof CDate
-            @return {number} The equivalent Julian date. */
+            @return {number} The equivalent Julian date.
+            @example var jd = date.toJD() */
         toJD: function () {
             return this._calendar.toJD(this);
         },
         /** Create a new date from a Julian date.
             @memberof CDate
-            @param jd {number} The Julian date to convert.
-            @return {CDate} The equivalent date. */
+            @param {number} jd The Julian date to convert.
+            @return {CDate} The equivalent date.
+            @example var date2 = date1.fromJD(jd) */
         fromJD: function (jd) {
             return this._calendar.fromJD(jd);
         },
         /** Convert this date to a standard (Gregorian) JavaScript Date.
             @memberof CDate
-            @return {Date} The equivalent JavaScript date. */
+            @return {Date} The equivalent JavaScript date.
+            @example var jsd = date.toJSDate() */
         toJSDate: function () {
             return this._calendar.toJSDate(this);
         },
         /** Create a new date from a standard (Gregorian) JavaScript Date.
             @memberof CDate
-            @param jsd {Date} The JavaScript date to convert.
-            @return {CDate} The equivalent date. */
+            @param {Date} jsd The JavaScript date to convert.
+            @return {CDate} The equivalent date.
+            @example var date2 = date1.fromJSDate(jsd) */
         fromJSDate: function (jsd) {
             return this._calendar.fromJSDate(jsd);
         },
@@ -284,7 +373,7 @@
     });
     /** Basic functionality for all calendars.
         Other calendars should extend this:
-        <pre>OtherCalendar.prototype = new BaseCalendar;</pre>
+        <pre>OtherCalendar.prototype = new BaseCalendar();</pre>
         @class BaseCalendar */
     function BaseCalendar() {
         this.shortYearCutoff = '+10';
@@ -293,13 +382,16 @@
         _validateLevel: 0,
         /** Create a new date within this calendar - today if no parameters given.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to duplicate or the year for the date.
-            @param [month] {number} The month for the date.
-            @param [day] {number} The day for the date.
+            @param {CDate|number} year The date to duplicate or the year for the date.
+            @param {number} [month] The month for the date (if numeric <code>year</code> specified above).
+            @param {number} [day] The day for the date (if numeric <code>year</code> specified above).
             @return {CDate} The new date.
-            @throws Error if not a valid date or a different calendar used. */
+            @throws Error if not a valid date or a different calendar is used.
+            @example var date = calendar.newDate(2014, 1, 26)
+var date2 = calendar.newDate(date1)
+var today = calendar.newDate() */
         newDate: function (year, month, day) {
-            if (year == null) {
+            if (typeof year === 'undefined' || year === null) {
                 return this.today();
             }
             if (year.year) {
@@ -312,33 +404,40 @@
         },
         /** Create a new date for today.
             @memberof BaseCalendar
-            @return {CDate} Today's date. */
+            @return {CDate} Today's date.
+            @example var today = calendar.today() */
         today: function () {
             return this.fromJSDate(new Date());
         },
         /** Retrieve the epoch designator for this date.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {string} The current epoch.
-            @throws Error if an invalid year or a different calendar used. */
+            @throws Error if an invalid year or a different calendar is used.
+            @example var epoch = calendar.epoch(date)
+var epoch = calendar.epoch(2014) */
         epoch: function (year) {
             var date = this._validate(year, this.minMonth, this.minDay, $.calendars.local.invalidYear || $.calendars.regionalOptions[''].invalidYear);
             return (date.year() < 0 ? this.local.epochs[0] : this.local.epochs[1]);
         },
         /** Format the year, if not a simple sequential number
             @memberof BaseCalendar
-            @param year {CDate|number} The date to format or the year to format.
+            @param {CDate|number} year The date to format or the year to format.
             @return {string} The formatted year.
-            @throws Error if an invalid year or a different calendar used. */
+            @throws Error if an invalid year or a different calendar is used.
+            @example var year = calendar.formatYear(date)
+var year = calendar.formatYear(2014) */
         formatYear: function (year) {
             var date = this._validate(year, this.minMonth, this.minDay, $.calendars.local.invalidYear || $.calendars.regionalOptions[''].invalidYear);
             return (date.year() < 0 ? '-' : '') + pad(Math.abs(date.year()), 4);
         },
         /** Retrieve the number of months in a year.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {number} The number of months.
-            @throws Error if an invalid year or a different calendar used. */
+            @throws Error if an invalid year or a different calendar is used.
+            @example var months = calendar.monthsInYear(date)
+var months = calendar.monthsInYear(2014) */
         monthsInYear: function (year) {
             this._validate(year, this.minMonth, this.minDay, $.calendars.local.invalidYear || $.calendars.regionalOptions[''].invalidYear);
             return 12;
@@ -346,21 +445,24 @@
         /** Calculate the month's ordinal position within the year -
             for those calendars that don't start at month 1!
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param month {number} The month to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] The month to examine (if numeric <code>year</code> specified above).
             @return {number} The ordinal position, starting from <code>minMonth</code>.
-            @throws Error if an invalid year/month or a different calendar used. */
+            @throws Error if an invalid year/month or a different calendar is used.
+            @example var pos = calendar.monthOfYear(date)
+var pos = calendar.monthOfYear(2014, 7) */
         monthOfYear: function (year, month) {
             var date = this._validate(year, month, this.minDay, $.calendars.local.invalidMonth || $.calendars.regionalOptions[''].invalidMonth);
             return (date.month() + this.monthsInYear(date) - this.firstMonth) %
                 this.monthsInYear(date) + this.minMonth;
         },
-        /** Calculate actual month from ordinal position, starting from minMonth.
+        /** Calculate actual month from ordinal position, starting from <code>minMonth</code>.
             @memberof BaseCalendar
-            @param year {number} The year to examine.
-            @param ord {number} The month's ordinal position.
+            @param {number} year The year to examine.
+            @param {number} ord The month's ordinal position.
             @return {number} The month's number.
-            @throws Error if an invalid year/month. */
+            @throws Error if an invalid year/month.
+            @example var month = calendar.fromMonthOfYear(2014, 7) */
         fromMonthOfYear: function (year, ord) {
             var m = (ord + this.firstMonth - 2 * this.minMonth) %
                 this.monthsInYear(year) + this.minMonth;
@@ -369,48 +471,57 @@
         },
         /** Retrieve the number of days in a year.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {number} The number of days.
-            @throws Error if an invalid year or a different calendar used. */
+            @throws Error if an invalid year or a different calendar is used.
+            @example var days = calendar.daysInYear(date)
+var days = calendar.daysInYear(2014) */
         daysInYear: function (year) {
             var date = this._validate(year, this.minMonth, this.minDay, $.calendars.local.invalidYear || $.calendars.regionalOptions[''].invalidYear);
             return (this.leapYear(date) ? 366 : 365);
         },
         /** Retrieve the day of the year for a date.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to convert or the year to convert.
-            @param [month] {number} The month to convert.
-            @param [day] {number} The day to convert.
-            @return {number} The day of the year.
-            @throws Error if an invalid date or a different calendar used. */
+            @param {CDate|number} year The date to convert or the year to convert.
+            @param {number} [month] The month to convert (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to convert (if numeric <code>year</code> specified above).
+            @return {number} The day of the year: 1 to days per year.
+            @throws Error if an invalid date or a different calendar is used.
+            @example var doy = calendar.dayOfYear(date)
+var doy = calendar.dayOfYear(2014, 7, 1) */
         dayOfYear: function (year, month, day) {
             var date = this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             return date.toJD() - this.newDate(date.year(), this.fromMonthOfYear(date.year(), this.minMonth), this.minDay).toJD() + 1;
         },
         /** Retrieve the number of days in a week.
             @memberof BaseCalendar
-            @return {number} The number of days. */
+            @return {number} The number of days.
+            @example var days = calendar.daysInWeek() */
         daysInWeek: function () {
             return 7;
         },
         /** Retrieve the day of the week for a date.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param [month] {number} The month to examine.
-            @param [day] {number} The day to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] The month to examine (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to examine (if numeric <code>year</code> specified above).
             @return {number} The day of the week: 0 to number of days - 1.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used.
+            @example var dow = calendar.dayOfWeek(date)
+var dow = calendar.dayOfWeek(2014, 1, 26) */
         dayOfWeek: function (year, month, day) {
             var date = this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             return (Math.floor(this.toJD(date)) + 2) % this.daysInWeek();
         },
         /** Retrieve additional information about a date.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param [month] {number} The month to examine.
-            @param [day] {number} The day to examine.
-            @return {object} Additional information - contents depends on calendar.
-            @throws Error if an invalid date or a different calendar used. */
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] The month to examine (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to examine (if numeric <code>year</code> specified above).
+            @return {object} Additional information - content depends on calendar.
+            @throws Error if an invalid date or a different calendar is used.
+            @example var info = calendar.extraInfo(date)
+var info = calendar.extraInfo(2014, 1, 26) */
         extraInfo: function (year, month, day) {
             this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             return {};
@@ -418,11 +529,12 @@
         /** Add period(s) to a date.
             Cater for no year zero.
             @memberof BaseCalendar
-            @param date {CDate} The starting date.
-            @param offset {number} The number of periods to adjust by.
-            @param period {string} One of 'y' for year, 'm' for month, 'w' for week, 'd' for day.
+            @param {CDate} date The starting date.
+            @param {number} offset The number of periods to adjust by.
+            @param {string} period One of 'y' for years, 'm' for months, 'w' for weeks, 'd' for days.
             @return {CDate} The updated date.
-            @throws Error if a different calendar used. */
+            @throws Error if a different calendar is used.
+            @example calendar.add(date, 10, 'd') */
         add: function (date, offset, period) {
             this._validate(date, this.minMonth, this.minDay, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             return this._correctAdd(date, this._add(date, offset, period), offset, period);
@@ -430,23 +542,23 @@
         /** Add period(s) to a date.
             @memberof BaseCalendar
             @private
-            @param date {CDate} The starting date.
-            @param offset {number} The number of periods to adjust by.
-            @param period {string} One of 'y' for year, 'm' for month, 'w' for week, 'd' for day.
-            @return {CDate} The updated date. */
+            @param {CDate} date The starting date.
+            @param {number} offset The number of periods to adjust by.
+            @param {string} period One of 'y' for years, 'm' for months, 'w' for weeks, 'd' for days.
+            @return {number[]} The updated date as year, month, and day. */
         _add: function (date, offset, period) {
             this._validateLevel++;
+            var d;
             if (period === 'd' || period === 'w') {
                 var jd = date.toJD() + offset * (period === 'w' ? this.daysInWeek() : 1);
-                var d = date.calendar().fromJD(jd);
+                d = date.calendar().fromJD(jd);
                 this._validateLevel--;
                 return [d.year(), d.month(), d.day()];
             }
             try {
                 var y = date.year() + (period === 'y' ? offset : 0);
                 var m = date.monthOfYear() + (period === 'm' ? offset : 0);
-                var d = date.day(); // + (period === 'd' ? offset : 0) +
-                //(period === 'w' ? offset * this.daysInWeek() : 0);
+                d = date.day();
                 var resyncYearMonth = function (calendar) {
                     while (m < calendar.minMonth) {
                         y--;
@@ -483,10 +595,10 @@
             Handle no year zero if necessary.
             @memberof BaseCalendar
             @private
-            @param date {CDate} The starting date.
-            @param ymd {number[]} The added date.
-            @param offset {number} The number of periods to adjust by.
-            @param period {string} One of 'y' for year, 'm' for month, 'w' for week, 'd' for day.
+            @param {CDate} date The starting date.
+            @param {number[]} ymd The added date.
+            @param {number} offset The number of periods to adjust by.
+            @param {string} period One of 'y' for years, 'm' for months, 'w' for weeks, 'd' for days.
             @return {CDate} The updated date. */
         _correctAdd: function (date, ymd, offset, period) {
             if (!this.hasYearZero && (period === 'y' || period === 'm')) {
@@ -503,11 +615,12 @@
         },
         /** Set a portion of the date.
             @memberof BaseCalendar
-            @param date {CDate} The starting date.
-            @param value {number} The new value for the period.
-            @param period {string} One of 'y' for year, 'm' for month, 'd' for day.
+            @param {CDate} date The starting date.
+            @param {number} value The new value for the period.
+            @param {string} period One of 'y' for year, 'm' for month, 'd' for day.
             @return {CDate} The updated date.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used.
+            @example calendar.set(date, 10, 'd') */
         set: function (date, value, period) {
             this._validate(date, this.minMonth, this.minDay, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             var y = (period === 'y' ? value : date.year());
@@ -520,10 +633,11 @@
         },
         /** Determine whether a date is valid for this calendar.
             @memberof BaseCalendar
-            @param year {number} The year to examine.
-            @param month {number} The month to examine.
-            @param day {number} The day to examine.
-            @return {boolean} <code>true</code> if a valid date, <code>false</code> if not. */
+            @param {number} year The year to examine.
+            @param {number} month The month to examine.
+            @param {number} day The day to examine.
+            @return {boolean} <code>true</code> if a valid date, <code>false</code> if not.
+            @example if (calendar.isValid(2014, 2, 31)) ... */
         isValid: function (year, month, day) {
             this._validateLevel++;
             var valid = (this.hasYearZero || year !== 0);
@@ -537,30 +651,33 @@
         },
         /** Convert the date to a standard (Gregorian) JavaScript Date.
             @memberof BaseCalendar
-            @param year {CDate|number} The date to convert or the year to convert.
-            @param [month] {number} The month to convert.
-            @param [day] {number} The day to convert.
+            @param {CDate|number} year The date to convert or the year to convert.
+            @param {number} [month] The month to convert (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to convert (if numeric <code>year</code> specified above).
             @return {Date} The equivalent JavaScript date.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used.
+            @example var jsd = calendar.toJSDate(date)
+var jsd = calendar.toJSDate(2014, 1, 26) */
         toJSDate: function (year, month, day) {
             var date = this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             return $.calendars.instance().fromJD(this.toJD(date)).toJSDate();
         },
         /** Convert the date from a standard (Gregorian) JavaScript Date.
             @memberof BaseCalendar
-            @param jsd {Date} The JavaScript date.
-            @return {CDate} The equivalent calendar date. */
+            @param {Date} jsd The JavaScript date.
+            @return {CDate} The equivalent calendar date.
+            @example var date = calendar.fromJSDate(jsd) */
         fromJSDate: function (jsd) {
             return this.fromJD($.calendars.instance().fromJSDate(jsd).toJD());
         },
         /** Check that a candidate date is from the same calendar and is valid.
             @memberof BaseCalendar
             @private
-            @param year {CDate|number} The date to validate or the year to validate.
-            @param [month] {number} The month to validate.
-            @param [day] {number} The day to validate.
-            @param error {string} Rrror message if invalid.
-            @throws Error if different calendars used or invalid date. */
+            @param {CDate|number} year The date to validate or the year to validate.
+            @param {number} [month] The month to validate (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to validate (if numeric <code>year</code> specified above).
+            @param {string} error Error message if invalid.
+            @throws Error if an invalid date or a different calendar is used. */
         _validate: function (year, month, day, error) {
             if (year.year) {
                 if (this._validateLevel === 0 && this.name !== year.calendar().name) {
@@ -589,23 +706,23 @@
         and <a href="http://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar">http://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar</a>.
         @class GregorianCalendar
         @augments BaseCalendar
-        @param [language=''] {string} The language code (default English) for localisation. */
+        @param {string} [language=''] The language code (default English) for localisation. */
     function GregorianCalendar(language) {
         this.local = this.regionalOptions[language] || this.regionalOptions[''];
     }
-    GregorianCalendar.prototype = new BaseCalendar;
+    GregorianCalendar.prototype = new BaseCalendar();
     $.extend(GregorianCalendar.prototype, {
         /** The calendar name.
             @memberof GregorianCalendar */
         name: 'Gregorian',
         /** Julian date of start of Gregorian epoch: 1 January 0001 CE.
-           @memberof GregorianCalendar */
+            @memberof GregorianCalendar */
         jdEpoch: 1721425.5,
         /** Days per month in a common year.
-           @memberof GregorianCalendar */
+            @memberof GregorianCalendar */
         daysPerMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
         /** <code>true</code> if has a year zero, <code>false</code> if not.
-           @memberof GregorianCalendar */
+            @memberof GregorianCalendar */
         hasYearZero: false,
         /** The minimum month number.
             @memberof GregorianCalendar */
@@ -614,23 +731,29 @@
             @memberof GregorianCalendar */
         firstMonth: 1,
         /** The minimum day number.
-           @memberof GregorianCalendar */
+            @memberof GregorianCalendar */
         minDay: 1,
+        /** Convert a number into a localised form.
+            @callback CalendarsDigits
+            @param {number} value The number to convert.
+            @return {string} The localised number.
+            @example digits: $.calendars.substituteDigits(['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']) */
         /** Localisations for the plugin.
             Entries are objects indexed by the language code ('' being the default US/English).
             Each object has the following attributes.
             @memberof GregorianCalendar
-            @property name {string} The calendar name.
-            @property epochs {string[]} The epoch names.
-            @property monthNames {string[]} The long names of the months of the year.
-            @property monthNamesShort {string[]} The short names of the months of the year.
-            @property dayNames {string[]} The long names of the days of the week.
-            @property dayNamesShort {string[]} The short names of the days of the week.
-            @property dayNamesMin {string[]} The minimal names of the days of the week.
-            @property dateFormat {string} The date format for this calendar.
-                    See the options on <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a> for details.
-            @property firstDay {number} The number of the first day of the week, starting at 0.
-            @property isRTL {number} <code>true</code> if this localisation reads right-to-left. */
+            @property {string} [name='Gregorian'] The calendar name.
+            @property {string[]} [epochs=['BCE','CE']] The epoch names.
+            @property {string[]} [monthNames=[...]] The long names of the months of the year.
+            @property {string[]} [monthNamesShort=[...]] The short names of the months of the year.
+            @property {string[]} [dayNames=[...]] The long names of the days of the week.
+            @property {string[]} [dayNamesShort=[...]] The short names of the days of the week.
+            @property {string[]} [dayNamesMin=[...]] The minimal names of the days of the week.
+            @property {CalendarsDigits} [digits=null] Convert numbers to localised versions.
+            @property {string} [dateFormat='mm/dd/yyyy'] The date format for this calendar.
+                    See the options on {@linkcode BaseCalendar.formatDate|formatDate} for details.
+            @property {number} [firstDay=0] The number of the first day of the week, starting at 0.
+            @property {boolean} [isRTL=false] <code>true</code> if this localisation reads right-to-left. */
         regionalOptions: {
             '': {
                 name: 'Gregorian',
@@ -641,6 +764,7 @@
                 dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
                 dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                 dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                digits: null,
                 dateFormat: 'mm/dd/yyyy',
                 firstDay: 0,
                 isRTL: false
@@ -648,21 +772,21 @@
         },
         /** Determine whether this date is in a leap year.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
-            @throws Error if an invalid year or a different calendar used. */
+            @throws Error if an invalid year or a different calendar is used. */
         leapYear: function (year) {
             var date = this._validate(year, this.minMonth, this.minDay, $.calendars.local.invalidYear || $.calendars.regionalOptions[''].invalidYear);
-            var year = date.year() + (date.year() < 0 ? 1 : 0); // No year zero
+            year = date.year() + (date.year() < 0 ? 1 : 0); // No year zero
             return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
         },
         /** Determine the week of the year for a date - ISO 8601.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param [month] {number} The month to examine.
-            @param [day] {number} The day to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] The month to examine (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to examine (if numeric <code>year</code> specified above).
             @return {number} The week of the year, starting from 1.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used. */
         weekOfYear: function (year, month, day) {
             // Find Thursday of this week starting on Monday
             var checkDate = this.newDate(year, month, day);
@@ -671,10 +795,10 @@
         },
         /** Retrieve the number of days in a month.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to examine or the year of the month.
-            @param [month] {number} The month.
+            @param {CDate|number} year The date to examine or the year of the month.
+            @param {number} [month] The month (if numeric <code>year</code> specified above).
             @return {number} The number of days in this month.
-            @throws Error if an invalid month/year or a different calendar used. */
+            @throws Error if an invalid month/year or a different calendar is used. */
         daysInMonth: function (year, month) {
             var date = this._validate(year, month, this.minDay, $.calendars.local.invalidMonth || $.calendars.regionalOptions[''].invalidMonth);
             return this.daysPerMonth[date.month() - 1] +
@@ -682,22 +806,22 @@
         },
         /** Determine whether this date is a week day.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param [month] {number} The month to examine.
-            @param [day] {number} The day to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] The month to examine (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to examine (if numeric <code>year</code> specified above).
             @return {boolean} <code>true</code> if a week day, <code>false</code> if not.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used. */
         weekDay: function (year, month, day) {
             return (this.dayOfWeek(year, month, day) || 7) < 6;
         },
         /** Retrieve the Julian date equivalent for this date,
             i.e. days since January 1, 4713 BCE Greenwich noon.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to convert or the year to convert.
-            @param [month] {number} The month to convert.
-            @param [day] {number} The day to convert.
+            @param {CDate|number} year The date to convert or the year to convert.
+            @param {number} [month] The month to convert (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to convert (if numeric <code>year</code> specified above).
             @return {number} The equivalent Julian date.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used. */
         toJD: function (year, month, day) {
             var date = this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             year = date.year();
@@ -718,7 +842,7 @@
         },
         /** Create a new date from a Julian date.
             @memberof GregorianCalendar
-            @param jd {number} The Julian date to convert.
+            @param {number} jd The Julian date to convert.
             @return {CDate} The equivalent date. */
         fromJD: function (jd) {
             // Jean Meeus algorithm, "Astronomical Algorithms", 1991
@@ -739,11 +863,11 @@
         },
         /** Convert this date to a standard (Gregorian) JavaScript Date.
             @memberof GregorianCalendar
-            @param year {CDate|number} The date to convert or the year to convert.
-            @param [month] {number} The month to convert.
-            @param [day] {number} The day to convert.
+            @param {CDate|number} year The date to convert or the year to convert.
+            @param {number} [month] The month to convert (if numeric <code>year</code> specified above).
+            @param {number} [day] The day to convert (if numeric <code>year</code> specified above).
             @return {Date} The equivalent JavaScript date.
-            @throws Error if an invalid date or a different calendar used. */
+            @throws Error if an invalid date or a different calendar is used. */
         toJSDate: function (year, month, day) {
             var date = this._validate(year, month, day, $.calendars.local.invalidDate || $.calendars.regionalOptions[''].invalidDate);
             var jsd = new Date(date.year(), date.month() - 1, date.day());
@@ -759,7 +883,7 @@
         },
         /** Create a new date from a standard (Gregorian) JavaScript Date.
             @memberof GregorianCalendar
-            @param jsd {Date} The JavaScript date to convert.
+            @param {Date} jsd The JavaScript date to convert.
             @return {CDate} The equivalent date. */
         fromJSDate: function (jsd) {
             return this.newDate(jsd.getFullYear(), jsd.getMonth() + 1, jsd.getDate());
@@ -775,11 +899,12 @@
     $.calendars.calendars.gregorian = GregorianCalendar;
 })(jQuery);
 /* http://keith-wood.name/calendars.html
-   Calendars extras for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Calendars extras for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     $.extend($.calendars.regionalOptions[''], {
         invalidArguments: 'Invalid arguments',
         invalidFormat: 'Cannot format a date from another calendar',
@@ -793,10 +918,15 @@
         /** Format this date.
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof CDate
-            @param [format] {string} The date format to use (see <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a>).
+            @param {string} [format] The date format to use (see {@linkcode BaseCalendar.formatDate|formatDate}).
+            @param {object} [settings] Options for the <code>formatDate</code> function.
             @return {string} The formatted date. */
-        formatDate: function (format) {
-            return this._calendar.formatDate(format || '', this);
+        formatDate: function (format, settings) {
+            if (typeof format !== 'string') {
+                settings = format;
+                format = '';
+            }
+            return this._calendar.formatDate(format || '', this, settings);
         }
     });
     $.extend($.calendars.baseCalendar.prototype, {
@@ -804,60 +934,47 @@
         SECS_PER_DAY: 24 * 60 * 60,
         TICKS_EPOCH: $.calendars.instance().jdEpoch,
         TICKS_PER_DAY: 24 * 60 * 60 * 10000000,
-        /** Date form for ATOM (RFC 3339/ISO 8601).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for ATOM (RFC 3339/ISO 8601) - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         ATOM: 'yyyy-mm-dd',
-        /** Date form for cookies.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for cookies - 'D, dd M yyyy'.
             @memberof BaseCalendar */
         COOKIE: 'D, dd M yyyy',
-        /** Date form for full date.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for the full date - 'DD, MM d, yyyy'.
             @memberof BaseCalendar */
         FULL: 'DD, MM d, yyyy',
-        /** Date form for ISO 8601.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for ISO 8601 - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         ISO_8601: 'yyyy-mm-dd',
-        /** Date form for Julian date.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Julian date - days since January 1, 4713 BCE Greenwich noon.
             @memberof BaseCalendar */
         JULIAN: 'J',
-        /** Date form for RFC 822.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 822 - 'D, d M yy'.
             @memberof BaseCalendar */
         RFC_822: 'D, d M yy',
-        /** Date form for RFC 850.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 850 - 'DD, dd-M-yy'.
             @memberof BaseCalendar */
         RFC_850: 'DD, dd-M-yy',
-        /** Date form for RFC 1036.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 1036 - 'D, d M yy'.
             @memberof BaseCalendar */
         RFC_1036: 'D, d M yy',
-        /** Date form for RFC 1123.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 1123 - 'D, d M yyyy'.
             @memberof BaseCalendar */
         RFC_1123: 'D, d M yyyy',
-        /** Date form for RFC 2822.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 2822 - 'D, d M yyyy'.
             @memberof BaseCalendar */
         RFC_2822: 'D, d M yyyy',
-        /** Date form for RSS (RFC 822).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RSS (RFC 822) - 'D, d M yy'.
             @memberof BaseCalendar */
         RSS: 'D, d M yy',
-        /** Date form for Windows ticks.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Windows ticks - number of 100-nanosecond ticks since 1 January 0001 00:00:00 UTC.
             @memberof BaseCalendar */
         TICKS: '!',
-        /** Date form for Unix timestamp.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Unix timestamp - number of seconds elapsed since the
+            start of the Unix epoch at 1 January 1970 00:00:00 UTC.
             @memberof BaseCalendar */
         TIMESTAMP: '@',
-        /** Date form for W3c (ISO 8601).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for W3C (ISO 8601) - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         W3C: 'yyyy-mm-dd',
         /** Format a date object into a string value.
@@ -886,14 +1003,15 @@
             </ul>
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param [format] {string} The desired format of the date (defaults to calendar format).
-            @param date {CDate} The date value to format.
-            @param [settings] {object} Addition options, whose attributes include:
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
-            @property [calculateWeek] {CalendarsPickerCalculateWeek} Function that determines week of the year.
+            @param {string} [format] The desired format of the date (defaults to calendar format).
+            @param {CDate} date The date value to format.
+            @param {object} [settings] Addition options, whose attributes include:
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
+            @param {boolean} [settings.localNumbers=false] <code>true</code> to localise numbers (if available),
+                <code>false</code> to use normal Arabic numerals.
             @return {string} The date in the above format.
             @throws Errors if the date is from a different calendar. */
         formatDate: function (format, date, settings) {
@@ -914,7 +1032,7 @@
             var dayNames = settings.dayNames || this.local.dayNames;
             var monthNamesShort = settings.monthNamesShort || this.local.monthNamesShort;
             var monthNames = settings.monthNames || this.local.monthNames;
-            var calculateWeek = settings.calculateWeek || this.local.calculateWeek;
+            var localNumbers = settings.localNumbers || this.local.localNumbers;
             // Check whether a format character is doubled
             var doubled = function (match, step) {
                 var matches = 1;
@@ -938,11 +1056,14 @@
             var formatName = function (match, value, shortNames, longNames) {
                 return (doubled(match) ? longNames[value] : shortNames[value]);
             };
+            // Localise numbers if requested and available
+            var localiseNumbers = localNumbers && this.local.digits ?
+                this.local.digits : function (value) { return value; };
             var output = '';
             var literal = false;
             for (var iFormat = 0; iFormat < format.length; iFormat++) {
                 if (literal) {
-                    if (format.charAt(iFormat) === "'" && !doubled("'")) {
+                    if (format.charAt(iFormat) === '\'' && !doubled('\'')) {
                         literal = false;
                     }
                     else {
@@ -952,7 +1073,7 @@
                 else {
                     switch (format.charAt(iFormat)) {
                         case 'd':
-                            output += formatNumber('d', date.day(), 2);
+                            output += localiseNumbers(formatNumber('d', date.day(), 2));
                             break;
                         case 'D':
                             output += formatName('D', date.dayOfWeek(), dayNamesShort, dayNames);
@@ -964,13 +1085,13 @@
                             output += formatNumber('w', date.weekOfYear(), 2);
                             break;
                         case 'm':
-                            output += formatNumber('m', date.month(), 2);
+                            output += localiseNumbers(formatNumber('m', date.month(), 2));
                             break;
                         case 'M':
                             output += formatName('M', date.month() - this.minMonth, monthNamesShort, monthNames);
                             break;
                         case 'y':
-                            output += (doubled('y', 2) ? date.year() :
+                            output += localiseNumbers(doubled('y', 2) ? date.year() :
                                 (date.year() % 100 < 10 ? '0' : '') + date.year() % 100);
                             break;
                         case 'Y':
@@ -986,9 +1107,9 @@
                         case '!':
                             output += (date.toJD() - this.TICKS_EPOCH) * this.TICKS_PER_DAY;
                             break;
-                        case "'":
-                            if (doubled("'")) {
-                                output += "'";
+                        case '\'':
+                            if (doubled('\'')) {
+                                output += '\'';
                             }
                             else {
                                 literal = true;
@@ -1002,25 +1123,25 @@
             return output;
         },
         /** Parse a string value into a date object.
-            See <a href="#formatDate"><code>formatDate</code></a> for the possible formats, plus:
+            See {@linkcode BaseCalendar.formatDate|formatDate} for the possible formats, plus:
             <ul>
             <li>* - ignore rest of string</li>
             </ul>
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param format {string} The expected format of the date ('' for default calendar format).
-            @param value {string} The date in the above format.
-            @param [settings] {object} Additional options whose attributes include:
-            @property [shortYearCutoff] {number} The cutoff year for determining the century.
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
+            @param {string} format The expected format of the date ('' for default calendar format).
+            @param {string} value The date in the above format.
+            @param {object} [settings] Additional options whose attributes include:
+            @param {number} [settings.shortYearCutoff] The cutoff year for determining the century.
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
             @return {CDate} The extracted date value or <code>null</code> if value is blank.
             @throws Errors if the format and/or value are missing,
                     if the value doesn't match the format, or if the date is invalid. */
         parseDate: function (format, value, settings) {
-            if (value == null) {
+            if (typeof value === 'undefined' || value === null) {
                 throw $.calendars.local.invalidArguments || $.calendars.regionalOptions[''].invalidArguments;
             }
             value = (typeof value === 'object' ? value.toString() : value + '');
@@ -1036,11 +1157,11 @@
             var dayNames = settings.dayNames || this.local.dayNames;
             var monthNamesShort = settings.monthNamesShort || this.local.monthNamesShort;
             var monthNames = settings.monthNames || this.local.monthNames;
-            var jd = -1;
-            var year = -1;
-            var month = -1;
-            var day = -1;
-            var doy = -1;
+            var jd = NaN;
+            var year = NaN;
+            var month = NaN;
+            var day = NaN;
+            var doy = NaN;
             var shortYear = false;
             var literal = false;
             // Check whether a format character is doubled
@@ -1069,11 +1190,20 @@
             var calendar = this;
             var getName = function (match, shortNames, longNames, step) {
                 var names = (doubled(match, step) ? longNames : shortNames);
+                var index = -1;
                 for (var i = 0; i < names.length; i++) {
                     if (value.substr(iValue, names[i].length).toLowerCase() === names[i].toLowerCase()) {
-                        iValue += names[i].length;
-                        return i + calendar.minMonth;
+                        if (index === -1) {
+                            index = i;
+                        }
+                        else if (names[i].length > names[index].length) {
+                            index = i;
+                        }
                     }
+                }
+                if (index > -1) {
+                    iValue += names[index].length;
+                    return index + calendar.minMonth;
                 }
                 throw ($.calendars.local.unknownNameAt || $.calendars.regionalOptions[''].unknownNameAt).
                     replace(/\{0\}/, iValue);
@@ -1089,7 +1219,7 @@
             var iValue = 0;
             for (var iFormat = 0; iFormat < format.length; iFormat++) {
                 if (literal) {
-                    if (format.charAt(iFormat) === "'" && !doubled("'")) {
+                    if (format.charAt(iFormat) === '\'' && !doubled('\'')) {
                         literal = false;
                     }
                     else {
@@ -1141,29 +1271,30 @@
                         case '*':
                             iValue = value.length;
                             break;
-                        case "'":
-                            if (doubled("'")) {
+                        case '\'':
+                            if (doubled('\'')) {
                                 checkLiteral();
                             }
                             else {
                                 literal = true;
                             }
                             break;
-                        default: checkLiteral();
+                        default:
+                            checkLiteral();
                     }
                 }
             }
             if (iValue < value.length) {
                 throw $.calendars.local.unexpectedText || $.calendars.regionalOptions[''].unexpectedText;
             }
-            if (year === -1) {
+            if (isNaN(year)) {
                 year = this.today().year();
             }
             else if (year < 100 && shortYear) {
                 year += (shortYearCutoff === -1 ? 1900 : this.today().year() -
                     this.today().year() % 100 - (year <= shortYearCutoff ? 0 : 100));
             }
-            if (doy > -1) {
+            if (!isNaN(doy)) {
                 month = 1;
                 day = doy;
                 for (var dim = this.daysInMonth(year, month); day > dim; dim = this.daysInMonth(year, month)) {
@@ -1171,23 +1302,24 @@
                     day -= dim;
                 }
             }
-            return (jd > -1 ? this.fromJD(jd) : this.newDate(year, month, day));
+            return (!isNaN(jd) ? this.fromJD(jd) : this.newDate(year, month, day));
         },
         /** A date may be specified as an exact value or a relative one.
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param dateSpec {CDate|number|string} The date as an object or string in the given format or
+            @param {CDate|number|string} dateSpec The date as an object or string in the given format or
                     an offset - numeric days from today, or string amounts and periods, e.g. '+1m +2w'.
-            @param defaultDate {CDate} The date to use if no other supplied, may be <code>null</code>.
-            @param currentDate {CDate} The current date as a possible basis for relative dates,
-                    if <code>null</code> today is used (optional)
-            @param [dateFormat] {string} The expected date format - see <a href="#formatDate"><code>formatDate</code></a>.
-            @param [settings] {object} Additional options whose attributes include:
-            @property [shortYearCutoff] {number} The cutoff year for determining the century.
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
+            @param {CDate} defaultDate The date to use if no other supplied, may be <code>null</code>.
+            @param {CDate} [currentDate=null] The current date as a possible basis for relative dates,
+                    if <code>null</code> today is used.
+            @param {string} [dateFormat] The expected date format -
+                    see {@linkcode BaseCalendar.formatDate|formatDate}. Use '' for the calendar default format.
+            @param {object} [settings] Additional options whose attributes include:
+            @param {number} [settings.shortYearCutoff] The cutoff year for determining the century.
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
             @return {CDate} The decoded date. */
         determineDate: function (dateSpec, defaultDate, currentDate, dateFormat, settings) {
             if (currentDate && typeof currentDate !== 'object') {
@@ -1218,7 +1350,7 @@
                 return date;
             };
             defaultDate = (defaultDate ? defaultDate.newDate() : null);
-            dateSpec = (dateSpec == null ? defaultDate :
+            dateSpec = (typeof dateSpec === 'undefined' || dateSpec === null ? defaultDate :
                 (typeof dateSpec === 'string' ? offsetString(dateSpec) : (typeof dateSpec === 'number' ?
                     (isNaN(dateSpec) || dateSpec === Infinity || dateSpec === -Infinity ? defaultDate :
                         calendar.today().add(dateSpec, 'd')) : calendar.newDate(dateSpec))));
@@ -1227,14 +1359,15 @@
     });
 })(jQuery);
 /* http://keith-wood.name/calendars.html
-   Calendars date picker for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Calendars date picker for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     var pluginName = 'calendarsPicker';
     /** Create the calendars datepicker plugin.
-        <p>Sets an input field to popup a calendar for date entry,
+        <p>Sets an <code>input</code> field to popup a calendar for date entry,
             or a <code>div</code> or <code>span</code> to show an inline calendar.</p>
         <p>Expects HTML like:</p>
         <pre>&lt;input type="text"> or &lt;div>&lt;/div></pre>
@@ -1243,45 +1376,46 @@
         @class CalendarsPicker
         @augments JQPlugin
         @example $(selector).calendarsPicker()
- $(selector).calendarsPicker({minDate: 0, maxDate: '+1m +1w'}) */
+$(selector).calendarsPicker({minDate: 0, maxDate: '+1m +1w'}) */
     $.JQPlugin.createPlugin({
         /** The name of the plugin.
-            @memberof CalendarsPicker */
+            @memberof CalendarsPicker
+            @default 'calendarsPicker' */
         name: pluginName,
         /** Default template for generating a datepicker.
             Insert anywhere:
             <ul>
-            <li>'{l10n:name}' to insert localised value for name,</li>
-            <li>'{link:name}' to insert a link trigger for command name,</li>
-            <li>'{button:name}' to insert a button trigger for command name,</li>
+            <li>'{l10n:<em>name</em>}' to insert localised value for <em>name</em>,</li>
+            <li>'{link:<em>name</em>}' to insert a link trigger for command <em>name</em>,</li>
+            <li>'{button:<em>name</em>}' to insert a button trigger for command <em>name</em>,</li>
             <li>'{popup:start}...{popup:end}' to mark a section for inclusion in a popup datepicker only,</li>
             <li>'{inline:start}...{inline:end}' to mark a section for inclusion in an inline datepicker only.</li>
             </ul>
             @memberof CalendarsPicker
-            @property picker {string} Overall structure: '{months}' to insert calendar months.
-            @property monthRow {string} One row of months: '{months}' to insert calendar months.
-            @property month {string} A single month: '{monthHeader<em>:dateFormat</em>}' to insert the month header -
-                        <em>dateFormat</em> is optional and defaults to 'MM yyyy',
-                        '{weekHeader}' to insert a week header, '{weeks}' to insert the month's weeks.
-            @property weekHeader {string} A week header: '{days}' to insert individual day names.
-            @property dayHeader {string} Individual day header: '{day}' to insert day name.
-            @property week {string} One week of the month: '{days}' to insert the week's days,
-                        '{weekOfYear}' to insert week of year.
-            @property day {string} An individual day: '{day}' to insert day value.
-            @property monthSelector {string} jQuery selector, relative to picker, for a single month.
-            @property daySelector {string} jQuery selector, relative to picker, for individual days.
-            @property rtlClass {string} Class for right-to-left (RTL) languages.
-            @property multiClass {string} Class for multi-month datepickers.
-            @property defaultClass {string} Class for selectable dates.
-            @property selectedClass {string} Class for currently selected dates.
-            @property highlightedClass {string} Class for highlighted dates.
-            @property todayClass {string} Class for today.
-            @property otherMonthClass {string} Class for days from other months.
-            @property weekendClass {string} Class for days on weekends.
-            @property commandClass {string} Class prefix for commands.
-            @property commandButtonClass {string} Extra class(es) for commands that are buttons.
-            @property commandLinkClass {string} Extra class(es) for commands that are links.
-            @property disabledClass {string} Class for disabled commands. */
+            @property {string} picker Overall structure: '{months}' to insert calendar months.
+            @property {string} monthRow One row of months: '{months}' to insert calendar months.
+            @property {string} month A single month: '{monthHeader<em>:dateFormat</em>}' to insert the month header -
+                <em>dateFormat</em> is optional and defaults to 'MM yyyy',
+                '{weekHeader}' to insert a week header, '{weeks}' to insert the month's weeks.
+            @property {string} weekHeader A week header: '{days}' to insert individual day names.
+            @property {string} dayHeader Individual day header: '{day}' to insert day name.
+            @property {string} week One week of the month: '{days}' to insert the week's days,
+                '{weekOfYear}' to insert week of year.
+            @property {string} day An individual day: '{day}' to insert day value.
+            @property {string} monthSelector jQuery selector, relative to picker, for a single month.
+            @property {string} daySelector jQuery selector, relative to picker, for individual days.
+            @property {string} rtlClass Class for right-to-left (RTL) languages.
+            @property {string} multiClass Class for multi-month datepickers.
+            @property {string} defaultClass Class for selectable dates.
+            @property {string} selectedClass Class for currently selected dates.
+            @property {string} highlightedClass Class for highlighted dates.
+            @property {string} todayClass Class for today.
+            @property {string} otherMonthClass Class for days from other months.
+            @property {string} weekendClass Class for days on weekends.
+            @property {string} commandClass Class prefix for commands.
+            @property {string} commandButtonClass Extra class(es) for commands that are buttons.
+            @property {string} commandLinkClass Extra class(es) for commands that are links.
+            @property {string} disabledClass Class for disabled commands. */
         defaultRenderer: {
             picker: '<div class="calendars">' +
                 '<div class="calendars-nav">{link:prev}{link:today}{link:next}</div>{months}' +
@@ -1325,20 +1459,22 @@
             <li>nextWeek - Move the cursor to the next week - <em>Ctrl+Down</em></li>
             </ul>
             The command name is the key name and is used to add the command to a layout
-            with '{button:name}' or '{link:name}'. Each has the following attributes.
+            with '{button:<em>name</em>}' or '{link:<em>name</em>}'. Each has the following attributes.
             @memberof CalendarsPicker
-            @property text {string} The field in the regional settings for the displayed text.
-            @property status {string} The field in the regional settings for the status text.
-            @property keystroke {object} The keystroke to trigger the action, with attributes:
-                <code>keyCode</code> {number} the code for the keystroke,
-                <code>ctrlKey</code> {boolean} <code>true</code> if <em>Ctrl</em> is required,
-                <code>altKey</code> {boolean} <code>true</code> if <em>Alt</em> is required,
-                <code>shiftKey</code> {boolean} <code>true</code> if <em>Shift</em> is required.
-            @property enabled {CalendarsPickerCommandEnabled} The function that indicates the command is enabled.
-            @property date {CalendarsPickerCommandDate} The function to get the date associated with this action.
-            @property action {CalendarsPickerCommandAction} The function that implements the action. */
+            @property {string} text The field in the regional settings for the displayed text.
+            @property {string} status The field in the regional settings for the status text.
+            @property {object} keystroke The keystroke to trigger the action, with attributes:
+            @property {number} keystroke.keyCode the code for the keystroke,
+            @property {boolean} [keystroke.ctrlKey] <code>true</code> if <em>Ctrl</em> is required,
+            @property {boolean} [keystroke.altKey] <code>true</code> if <em>Alt</em> is required,
+            @property {boolean} [keystroke.shiftKey] <code>true</code> if <em>Shift</em> is required.
+            @property {CalendarsPickerCommandEnabled} enabled The function that indicates the command is enabled.
+            @property {CalendarsPickerCommandDate} date The function to get the date associated with this action.
+            @property {CalendarsPickerCommandAction} action The function that implements the action. */
         commands: {
-            prev: { text: 'prevText', status: 'prevStatus',
+            prev: {
+                text: 'prevText',
+                status: 'prevStatus',
                 keystroke: { keyCode: 33 },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
@@ -1355,7 +1491,9 @@
                     plugin.changeMonth(this, -inst.options.monthsToStep);
                 }
             },
-            prevJump: { text: 'prevJumpText', status: 'prevJumpStatus',
+            prevJump: {
+                text: 'prevJumpText',
+                status: 'prevJumpStatus',
                 keystroke: { keyCode: 33, ctrlKey: true },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
@@ -1372,7 +1510,9 @@
                     plugin.changeMonth(this, -inst.options.monthsToJump);
                 }
             },
-            next: { text: 'nextText', status: 'nextStatus',
+            next: {
+                text: 'nextText',
+                status: 'nextStatus',
                 keystroke: { keyCode: 34 },
                 enabled: function (inst) {
                     var maxDate = inst.get('maxDate');
@@ -1389,7 +1529,9 @@
                     plugin.changeMonth(this, inst.options.monthsToStep);
                 }
             },
-            nextJump: { text: 'nextJumpText', status: 'nextJumpStatus',
+            nextJump: {
+                text: 'nextJumpText',
+                status: 'nextJumpStatus',
                 keystroke: { keyCode: 34, ctrlKey: true },
                 enabled: function (inst) {
                     var maxDate = inst.get('maxDate');
@@ -1406,7 +1548,9 @@
                     plugin.changeMonth(this, inst.options.monthsToJump);
                 }
             },
-            current: { text: 'currentText', status: 'currentStatus',
+            current: {
+                text: 'currentText',
+                status: 'currentStatus',
                 keystroke: { keyCode: 36, ctrlKey: true },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
@@ -1423,7 +1567,9 @@
                     plugin.showMonth(this, curDate.year(), curDate.month());
                 }
             },
-            today: { text: 'todayText', status: 'todayStatus',
+            today: {
+                text: 'todayText',
+                status: 'todayStatus',
                 keystroke: { keyCode: 36, ctrlKey: true },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
@@ -1431,22 +1577,32 @@
                     return (!minDate || inst.options.calendar.today().compareTo(minDate) !== -1) &&
                         (!maxDate || inst.options.calendar.today().compareTo(maxDate) !== +1);
                 },
-                date: function (inst) { return inst.options.calendar.today(); },
-                action: function (inst) { plugin.showMonth(this); }
+                date: function (inst) {
+                    return inst.options.calendar.today();
+                },
+                action: function () {
+                    plugin.showMonth(this);
+                }
             },
-            clear: { text: 'clearText', status: 'clearStatus',
+            clear: {
+                text: 'clearText',
+                status: 'clearStatus',
                 keystroke: { keyCode: 35, ctrlKey: true },
-                enabled: function (inst) { return true; },
-                date: function (inst) { return null; },
-                action: function (inst) { plugin.clear(this); }
+                enabled: function () { return true; },
+                date: function () { return null; },
+                action: function () { plugin.clear(this); }
             },
-            close: { text: 'closeText', status: 'closeStatus',
+            close: {
+                text: 'closeText',
+                status: 'closeStatus',
                 keystroke: { keyCode: 27 },
-                enabled: function (inst) { return true; },
-                date: function (inst) { return null; },
-                action: function (inst) { plugin.hide(this); }
+                enabled: function () { return true; },
+                date: function () { return null; },
+                action: function () { plugin.hide(this); }
             },
-            prevWeek: { text: 'prevWeekText', status: 'prevWeekStatus',
+            prevWeek: {
+                text: 'prevWeekText',
+                status: 'prevWeekStatus',
                 keystroke: { keyCode: 38, ctrlKey: true },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
@@ -1454,32 +1610,45 @@
                         add(-inst.options.calendar.daysInWeek(), 'd').compareTo(minDate) !== -1);
                 },
                 date: function (inst) {
-                    return inst.drawDate.newDate().
-                        add(-inst.options.calendar.daysInWeek(), 'd');
+                    return inst.drawDate.newDate().add(-inst.options.calendar.daysInWeek(), 'd');
                 },
-                action: function (inst) { plugin.changeDay(this, -inst.options.calendar.daysInWeek()); }
+                action: function (inst) {
+                    plugin.changeDay(this, -inst.options.calendar.daysInWeek());
+                }
             },
-            prevDay: { text: 'prevDayText', status: 'prevDayStatus',
+            prevDay: {
+                text: 'prevDayText',
+                status: 'prevDayStatus',
                 keystroke: { keyCode: 37, ctrlKey: true },
                 enabled: function (inst) {
                     var minDate = inst.curMinDate();
-                    return (!minDate || inst.drawDate.newDate().add(-1, 'd').
-                        compareTo(minDate) !== -1);
+                    return (!minDate || inst.drawDate.newDate().add(-1, 'd').compareTo(minDate) !== -1);
                 },
-                date: function (inst) { return inst.drawDate.newDate().add(-1, 'd'); },
-                action: function (inst) { plugin.changeDay(this, -1); }
+                date: function (inst) {
+                    return inst.drawDate.newDate().add(-1, 'd');
+                },
+                action: function () {
+                    plugin.changeDay(this, -1);
+                }
             },
-            nextDay: { text: 'nextDayText', status: 'nextDayStatus',
+            nextDay: {
+                text: 'nextDayText',
+                status: 'nextDayStatus',
                 keystroke: { keyCode: 39, ctrlKey: true },
                 enabled: function (inst) {
                     var maxDate = inst.get('maxDate');
-                    return (!maxDate || inst.drawDate.newDate().add(1, 'd').
-                        compareTo(maxDate) !== +1);
+                    return (!maxDate || inst.drawDate.newDate().add(1, 'd').compareTo(maxDate) !== +1);
                 },
-                date: function (inst) { return inst.drawDate.newDate().add(1, 'd'); },
-                action: function (inst) { plugin.changeDay(this, 1); }
+                date: function (inst) {
+                    return inst.drawDate.newDate().add(1, 'd');
+                },
+                action: function () {
+                    plugin.changeDay(this, 1);
+                }
             },
-            nextWeek: { text: 'nextWeekText', status: 'nextWeekStatus',
+            nextWeek: {
+                text: 'nextWeekText',
+                status: 'nextWeekStatus',
                 keystroke: { keyCode: 40, ctrlKey: true },
                 enabled: function (inst) {
                     var maxDate = inst.get('maxDate');
@@ -1487,133 +1656,152 @@
                         add(inst.options.calendar.daysInWeek(), 'd').compareTo(maxDate) !== +1);
                 },
                 date: function (inst) {
-                    return inst.drawDate.newDate().
-                        add(inst.options.calendar.daysInWeek(), 'd');
+                    return inst.drawDate.newDate().add(inst.options.calendar.daysInWeek(), 'd');
                 },
-                action: function (inst) { plugin.changeDay(this, inst.options.calendar.daysInWeek()); }
+                action: function (inst) {
+                    plugin.changeDay(this, inst.options.calendar.daysInWeek());
+                }
             }
         },
         /** Determine whether a command is enabled.
             @callback CalendarsPickerCommandEnabled
-            @param inst {object} The current instance settings.
+            @param {object} inst The current instance settings.
             @return {boolean} <code>true</code> if this command is enabled, <code>false</code> if not.
             @example enabled: function(inst) {
-    return !!inst.curMinDate();
- } */
+  return !!inst.curMinDate();
+} */
         /** Calculate the representative date for a command.
             @callback CalendarsPickerCommandDate
-            @param inst {object} The current instance settings.
+            @param {object} inst The current instance settings.
             @return {CDate} A date appropriate for this command.
             @example date: function(inst) {
-    return inst.curMinDate();
- } */
+  return inst.curMinDate();
+} */
         /** Perform the action for a command.
             @callback CalendarsPickerCommandAction
-            @param inst {object} The current instance settings.
+            @param {object} inst The current instance settings.
             @example date: function(inst) {
-    $.datepick.setDate(inst.elem, inst.curMinDate());
- } */
+  $.datepick.setDate(inst.elem, inst.curMinDate());
+} */
         /** Calculate the week of the year for a date.
             @callback CalendarsPickerCalculateWeek
-            @param date {CDate} The date to evaluate.
+            @param {CDate} date The date to evaluate.
             @return {number} The week of the year.
             @example calculateWeek: function(date) {
-    var startYear = $.calendars.newDate(date.year(), 1, 1);
-    return Math.floor((date.dayOfYear() - startYear.dayOfYear()) / 7) + 1;
- } */
+  var startYear = date.newDate(date.year(), 1, 1);
+  return Math.floor((date.dayOfYear() - startYear.dayOfYear()) / 7) + 1;
+} */
         /** Provide information about an individual date shown in the calendar.
             @callback CalendarsPickerOnDate
-            @param date {CDate} The date to evaluate.
+            @param {CDate} date The date to evaluate.
             @return {object} Information about that date, with the properties above.
-            @property selectable {boolean} <code>true</code> if this date can be selected.
-            @property dateClass {string} Class(es) to be applied to the date.
-            @property content {string} The date cell content.
-            @property tooltip {string} A popup tooltip for the date.
+            @property {boolean} selectable <code>true</code> if this date can be selected.
+            @property {string} dateClass Class(es) to be applied to the date.
+            @property {string} content The date cell content.
+            @property {string} tooltip A popup tooltip for the date.
             @example onDate: function(date) {
-    return {selectable: date.day() > 0 && date.day() &lt; 5,
-        dateClass: date.day() === 4 ? 'last-day' : ''};
- } */
+  return {selectable: date.day() > 0 && date.day() < 5,
+    dateClass: date.day() === 4 ? 'last-day' : ''};
+} */
         /** Update the datepicker display.
             @callback CalendarsPickerOnShow
-            @param picker {jQuery} The datepicker <code>div</code> to be shown.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The datepicker <code>div</code> to be shown.
+            @param {object} inst The current instance settings.
             @example onShow: function(picker, inst) {
-    picker.append('&lt;button type="button">Hi&lt;/button>').
-        find('button:last').click(function() {
-            alert('Hi!');
-        });
- } */
+  picker.append('<button type="button">Hi</button>').
+    find('button:last').click(function() {
+      alert('Hi!');
+    });
+} */
         /** React to navigating through the months/years.
             @callback CalendarsPickerOnChangeMonthYear
-            @param year {number} The new year.
-            @param month {number} The new month (1 to 12).
+            @param {number} year The new year.
+            @param {number} month The new month (calendar minimum month to maximum month).
             @example onChangeMonthYear: function(year, month) {
-    alert('Now in ' + month + '/' + year);
- } */
+  alert('Now in ' + month + '/' + year);
+} */
         /** Datepicker on select callback.
             Triggered when a date is selected.
             @callback CalendarsPickerOnSelect
-            @param dates {CDate[]} The selected date(s).
+            @param {CDate[]} dates The selected date(s).
             @example onSelect: function(dates) {
-    alert('Selected ' + dates);
- } */
+  alert('Selected ' + dates);
+} */
         /** Datepicker on close callback.
             Triggered when a popup calendar is closed.
             @callback CalendarsPickerOnClose
-            @param dates {CDate[]} The selected date(s).
+            @param {CDate[]} dates The selected date(s).
             @example onClose: function(dates) {
-    alert('Selected ' + dates);
- } */
+  alert('Selected ' + dates);
+} */
         /** Default settings for the plugin.
             @memberof CalendarsPicker
-            @property [calendar=$.calendars.instance()] {Calendar} The calendar for this datepicker.
-            @property [pickerClass=''] {string} CSS class to add to this instance of the datepicker.
-            @property [showOnFocus=true] {boolean} <code>true</code> for popup on focus, <code>false</code> for not.
-            @property [showTrigger=null] {string|Element|jQuery} Element to be cloned for a trigger, <code>null</code> for none.
-            @property [showAnim='show'] {string} Name of jQuery animation for popup, '' for no animation.
-            @property [showOptions=null] {object} Options for enhanced animations.
-            @property [showSpeed='normal'] {string} Duration of display/closure.
-            @property [popupContainer=null] {string|Element|jQuery} The element to which a popup calendar is added, <code>null</code> for body.
-            @property [alignment='bottom'] {string} Alignment of popup - with nominated corner of input:
-                        'top' or 'bottom' aligns depending on language direction,
-                        'topLeft', 'topRight', 'bottomLeft', 'bottomRight'.
-            @property [fixedWeeks=false] {boolean} <code>true</code> to always show 6 weeks, <code>false</code> to only show as many as are needed.
-            @property [firstDay=null] {number} First day of the week, 0 = Sunday, 1 = Monday, etc., <code>null</code> for <code>calendar</code> default.
-            @property [calculateWeek=null] {CalendarsPickerCalculateWeek} Calculate week of the year from a date, <code>null</code> for <code>calendar</code> default.
-            @property [monthsToShow=1] {number|number[]} How many months to show, cols or [rows, cols].
-            @property [monthsOffset=0] {number} How many months to offset the primary month by;
-                        may be a function that takes the date and returns the offset.
-            @property [monthsToStep=1] {number} How many months to move when prev/next clicked.
-            @property [monthsToJump=12] {number} How many months to move when large prev/next clicked.
-            @property [useMouseWheel=true] {boolean} <code>true</code> to use mousewheel if available, <code>false</code> to never use it.
-            @property [changeMonth=true] {boolean} <code>true</code> to change month/year via drop-down, <code>false</code> for navigation only.
-            @property [yearRange='c-10:c+10'] {string} Range of years to show in drop-down: 'any' for direct text entry
-                        or 'start:end', where start/end are '+-nn' for relative to today
-                        or 'c+-nn' for relative to the currently selected date
-                        or 'nnnn' for an absolute year.
-            @property [showOtherMonths=false] {boolean} <code>true</code> to show dates from other months, <code>false</code> to not show them.
-            @property [selectOtherMonths=false] {boolean} <code>true</code> to allow selection of dates from other months too.
-            @property [defaultDate=null] {string|number|CDate} Date to show if no other selected.
-            @property [selectDefaultDate=false] {boolean} <code>true</code> to pre-select the default date if no other is chosen.
-            @property [minDate=null] {string|number|CDate} The minimum selectable date.
-            @property [maxDate=null] {string|number|CDate} The maximum selectable date.
-            @property [dateFormat='mm/dd/yyyy'] {string} Format for dates.
-            @property [autoSize=false] {boolean} <code>true</code> to size the input field according to the date format.
-            @property [rangeSelect=false] {boolean} Allows for selecting a date range on one date picker.
-            @property [rangeSeparator=' - '] {string} Text between two dates in a range.
-            @property [multiSelect=0] {number} Maximum number of selectable dates, zero for single select.
-            @property [multiSeparator=','] {string} Text between multiple dates.
-            @property [onDate=null] {CalendarsPickerOnDate} Callback as a date is added to the datepicker.
-            @property [onShow=null] {CalendarsPickerOnShow} Callback just before a datepicker is shown.
-            @property [onChangeMonthYear=null] {CalendarsPickerOnChangeMonthYear} Callback when a new month/year is selected.
-            @property [onSelect=null] {CalendarsPickerOnSelect} Callback when a date is selected.
-            @property [onClose=null] {CalendarsPickerOnClose} Callback when a datepicker is closed.
-            @property [altField=null] {string|Element|jQuery} Alternate field to update in synch with the datepicker.
-            @property [altFormat=null] {string} Date format for alternate field, defaults to <code>dateFormat</code>.
-            @property [constrainInput=true] {boolean} <code>true</code> to constrain typed input to <code>dateFormat</code> allowed characters.
-            @property [commandsAsDateFormat=false] {boolean} <code>true</code> to apply
-                        <code><a href="#formatDate">formatDate</a></code> to the command texts.
-            @property [commands=this.commands] {object} Command actions that may be added to a layout by name. */
+            @property {Calendar} [calendar=$.calendars.instance()] The calendar for this datepicker.
+            @property {string} [pickerClass=''] CSS class to add to this instance of the datepicker.
+            @property {boolean} [showOnFocus=true] <code>true</code> for popup on focus, <code>false</code> for not.
+            @property {string|Element|jQuery} [showTrigger=null] Element to be cloned for a trigger,
+                <code>null</code> for none.
+            @property {string} [showAnim='show'] Name of jQuery animation for popup, '' for no animation.
+            @property {object} [showOptions=null] Options for enhanced animations.
+            @property {string|number} [showSpeed='normal'] Duration of display/closure, named or in milliseconds.
+            @property {string|Element|jQuery} [popupContainer=null] The element to which a popup calendar is added,
+                <code>null</code> for body.
+            @property {string} [alignment='bottom'] Alignment of popup - with nominated corner of input:
+                'top' or 'bottom' aligns depending on language direction,
+                'topLeft', 'topRight', 'bottomLeft', 'bottomRight'.
+            @property {boolean} [fixedWeeks=false] <code>true</code> to always show 6 weeks,
+                <code>false</code> to only show as many as are needed.
+            @property {number} [firstDay=null] First day of the week, 0 = Sunday, 1 = Monday, etc.,
+                <code>null</code> for <code>calendar</code> default.
+            @property {CalendarsPickerCalculateWeek} [calculateWeek=null] Calculate week of the year from a date,
+                <code>null</code> for <code>calendar</code> default.
+            @property {boolean} [localNumbers=false] <code>true</code> to localise numbers (if available),
+                <code>false</code> to use normal Arabic numerals.
+            @property {number|number[]} [monthsToShow=1] How many months to show, cols or [rows, cols].
+            @property {number} [monthsOffset=0] How many months to offset the primary month by;
+                may be a function that takes the date and returns the offset.
+            @property {number} [monthsToStep=1] How many months to move when prev/next clicked.
+            @property {number} [monthsToJump=12] How many months to move when large prev/next clicked.
+            @property {boolean} [useMouseWheel=true] <code>true</code> to use mousewheel if available,
+                <code>false</code> to never use it.
+            @property {boolean} [changeMonth=true] <code>true</code> to change month/year via drop-down,
+                <code>false</code> for navigation only.
+            @property {string} [yearRange='c-10:c+10'] Range of years to show in drop-down: 'any' for direct text entry
+                or 'start:end', where start/end are '+-nn' for relative to today
+                or 'c+-nn' for relative to the currently selected date
+                or 'nnnn' for an absolute year.
+            @property {boolean} [showOtherMonths=false] <code>true</code> to show dates from other months,
+                <code>false</code> to not show them.
+            @property {boolean} [selectOtherMonths=false] <code>true</code> to allow selection of dates
+                from other months too.
+            @property {string|number|CDate} [defaultDate=null] Date to show if no other selected.
+            @property {boolean} [selectDefaultDate=false] <code>true</code> to pre-select the default date
+                if no other is chosen.
+            @property {string|number|CDate} [minDate=null] The minimum selectable date.
+            @property {string|number|CDate} [maxDate=null] The maximum selectable date.
+            @property {string} [dateFormat='mm/dd/yyyy'] Format for dates.
+            @property {boolean} [autoSize=false] <code>true</code> to size the input field according to the date format.
+            @property {boolean} [rangeSelect=false] Allows for selecting a date range on one date picker.
+            @property {string} [rangeSeparator=' - '] Text between two dates in a range.
+            @property {number} [multiSelect=0] Maximum number of selectable dates, zero for single select.
+            @property {string} [multiSeparator=','] Text between multiple dates.
+            @property {CalendarsPickerOnDate} [onDate=null] Callback as a date is added to the datepicker.
+            @property {CalendarsPickerOnShow} [onShow=null] Callback just before a datepicker is shown.
+            @property {CalendarsPickerOnChangeMonthYear} [onChangeMonthYear=null] Callback when a new month/year
+                is selected.
+            @property {CalendarsPickerOnSelect} [onSelect=null] Callback when a date is selected.
+            @property {CalendarsPickerOnClose} [onClose=null] Callback when a datepicker is closed.
+            @property {string|Element|jQuery} [altField=null] Alternate field to update in synch with the datepicker.
+            @property {string} [altFormat=null] Date format for alternate field, defaults to <code>dateFormat</code>.
+            @property {boolean} [constrainInput=true] <code>true</code> to constrain typed input to
+                <code>dateFormat</code> allowed characters.
+            @property {boolean} [commandsAsDateFormat=false] <code>true</code> to apply
+                <code><a href="#formatDate">formatDate</a></code> to the command texts.
+            @property {object} [commands=this.commands] Command actions that may be added to a layout by name.
+            @example $(selector).calendarsPicker({calendar: $.calendars.instance('persian')})
+$(selector).calendarsPicker({monthsToShow: [2, 3], monthsToStep: 6})
+$(selector).calendarsPicker({minDate: $.calendars.newDate(2001, 1, 1),
+  maxDate: $.calendars.newDate(2010, 12, 31)}) */
         defaultOptions: {
             calendar: $.calendars.instance(),
             pickerClass: '',
@@ -1627,6 +1815,7 @@
             fixedWeeks: false,
             firstDay: null,
             calculateWeek: null,
+            localNumbers: false,
             monthsToShow: 1,
             monthsOffset: 0,
             monthsToStep: 1,
@@ -1661,32 +1850,37 @@
             Entries are objects indexed by the language code ('' being the default US/English).
             Each object has the following attributes.
             @memberof CalendarsPicker
-            @property [renderer=this.defaultRenderer] {string} The rendering templates.
-            @property [prevText='&lt;Prev'] {string} Text for the previous month command.
-            @property [prevStatus='Show the previous month'] {string} Status text for the previous month command.
-            @property [prevJumpText='&lt;&lt;'] {string} Text for the previous year command.
-            @property [prevJumpStatus='Show the previous year'] {string} Status text for the previous year command.
-            @property [nextText='Next&gt;'] {string} Text for the next month command.
-            @property [nextStatus='Show the next month'] {string} Status text for the next month command.
-            @property [nextJumpText='&gt;&gt;'] {string} Text for the next year command.
-            @property [nextJumpStatus='Show the next year'] {string} Status text for the next year command.
-            @property [currentText='Current'] {string} Text for the current month command.
-            @property [currentStatus='Show the current month'] {string} Status text for the current month command.
-            @property [todayText='Today'] {string} Text for the today's month command.
-            @property [todayStatus='Show today\'s month'] {string} Status text for the today's month command.
-            @property [clearText='Clear'] {string} Text for the clear command.
-            @property [clearStatus='Clear all the dates'] {string} Status text for the clear command.
-            @property [closeText='Close'] {string} Text for the close command.
-            @property [closeStatus='Close the datepicker'] {string} Status text for the close command.
-            @property [yearStatus='Change the year'] {string} Status text for year selection.
-            @property [earlierText='&#160;&#160;▲'] {string} Text for earlier years.
-            @property [laterText='&#160;&#160;▼'] {string} Text for later years.
-            @property [monthStatus='Change the month'] {string} Status text for month selection.
-            @property [weekText='Wk'] {string} Text for week of the year column header.
-            @property [weekStatus='Week of the year'] {string} Status text for week of the year column header.
-            @property [dayStatus='Select DD,&#160;M&#160;d,&#160;yyyy'] {string} Status text for selectable days.
-            @property [defaultStatus='Select a date'] {string} Status text shown by default.
-            @property [isRTL=false] {boolean} <code>true</code> if language is right-to-left. */
+            @property {string} [renderer=this.defaultRenderer] The rendering templates.
+            @property {string} [prevText='&lt;Prev'] Text for the previous month command.
+            @property {string} [prevStatus='Show the previous month'] Status text for the
+                        previous month command.
+            @property {string} [prevJumpText='&lt;&lt;']  Text for the previous year command.
+            @property {string} [prevJumpStatus='Show the previous year'] Status text for the
+                        previous year command.
+            @property {string} [nextText='Next&gt;'] Text for the next month command.
+            @property {string} [nextStatus='Show the next month'] Status text for the next month command.
+            @property {string} [nextJumpText='&gt;&gt;'] Text for the next year command.
+            @property {string} [nextJumpStatus='Show the next year'] Status text for the
+                        next year command.
+            @property {string} [currentText='Current'] Text for the current month command.
+            @property {string} [currentStatus='Show the current month']  Status text for the
+                        current month command.
+            @property {string} [todayText='Today'] Text for the today's month command.
+            @property {string} [todayStatus='Show today\'s month']  Status text for the today's month command.
+            @property {string} [clearText='Clear'] Text for the clear command.
+            @property {string} [clearStatus='Clear all the dates'] Status text for the clear command.
+            @property {string} [closeText='Close'] Text for the close command.
+            @property {string} [closeStatus='Close the datepicker']  Status text for the close command.
+            @property {string} [yearStatus='Change the year'] Status text for year selection.
+            @property {string} [earlierText='&#160;&#160;▲'] Text for earlier years.
+            @property {string} [laterText='&#160;&#160;▼'] Text for later years.
+            @property {string} [monthStatus='Change the month'] Status text for month selection.
+            @property {string} [weekText='Wk'] Text for week of the year column header.
+            @property {string} [weekStatus='Week of the year'] Status text for week of the year
+                        column header.
+            @property {string} [dayStatus='Select DD, M d, yyyy'] Status text for selectable days.
+            @property {string} [defaultStatus='Select a date'] Status text shown by default.
+            @property {boolean} [isRTL=false] <code>true</code> if language is right-to-left. */
         regionalOptions: {
             '': {
                 renderer: {},
@@ -1717,9 +1911,6 @@
                 isRTL: false
             }
         },
-        /** Names of getter methods - those that can't be chained.
-            @memberof CalendarsPicker */
-        _getters: ['getDate', 'isDisabled', 'isSelectable', 'retrieveDate'],
         _disabled: [],
         _popupClass: 'calendars-popup',
         _triggerClass: 'calendars-trigger',
@@ -1802,8 +1993,8 @@
         /** Attach events and trigger, if necessary.
             @memberof CalendarsPicker
             @private
-            @param elem {jQuery} The control to affect.
-            @param inst {object} The current instance settings. */
+            @param {jQuery} elem The control to affect.
+            @param {object} inst The current instance settings. */
         _attachments: function (elem, inst) {
             elem.off('focus.' + inst.name);
             if (inst.options.showOnFocus) {
@@ -1833,8 +2024,8 @@
         /** Apply the maximum length for the date format.
             @memberof CalendarsPicker
             @private
-            @param elem {jQuery} The control to affect.
-            @param inst {object} The current instance settings. */
+            @param {jQuery} elem The control to affect.
+            @param {object} inst The current instance settings. */
         _autoSize: function (elem, inst) {
             if (inst.options.autoSize && !inst.inline) {
                 var calendar = inst.options.calendar;
@@ -1857,7 +2048,7 @@
                     date.day(findMax(calendar.local[dateFormat.match(/DD/) ?
                         'dayNames' : 'dayNamesShort']) + 20 - date.dayOfWeek());
                 }
-                inst.elem.attr('size', date.formatDate(dateFormat).length);
+                inst.elem.attr('size', date.formatDate(dateFormat, { localNumbers: inst.options.localnumbers }).length);
             }
         },
         _preDestroy: function (elem, inst) {
@@ -1874,11 +2065,11 @@
         },
         /** Apply multiple event functions.
             @memberof CalendarsPicker
-            @param fns {function} The functions to apply.
+            @param {function} fns The functions to apply.
             @example onShow: multipleEvents(fn1, fn2, ...) */
         multipleEvents: function (fns) {
             var funcs = arguments;
-            return function (args) {
+            return function () {
                 for (var i = 0; i < funcs.length; i++) {
                     funcs[i].apply(this, arguments);
                 }
@@ -1886,7 +2077,7 @@
         },
         /** Enable the control.
             @memberof CalendarsPicker
-            @param elem {Element} The control to affect.
+            @param {Element} elem The control to affect.
             @example $(selector).datepick('enable') */
         enable: function (elem) {
             elem = $(elem);
@@ -1897,7 +2088,7 @@
             if (inst.inline) {
                 elem.children('.' + this._disableClass).remove().end().
                     find('button,select').prop('disabled', false).end().
-                    find('a').attr('href', 'javascript:void(0)');
+                    find('a').attr('href', '#');
             }
             else {
                 elem.prop('disabled', false);
@@ -1908,7 +2099,7 @@
         },
         /** Disable the control.
             @memberof CalendarsPicker
-            @param elem {Element} The control to affect.
+            @param {Element} elem The control to affect.
             @example $(selector).datepick('disable') */
         disable: function (elem) {
             elem = $(elem);
@@ -1945,7 +2136,7 @@
         },
         /** Is the first field in a jQuery collection disabled as a datepicker?
             @memberof CalendarsPicker
-            @param elem {Element} The control to examine.
+            @param {Element} elem The control to examine.
             @return {boolean} <code>true</code> if disabled, <code>false</code> if enabled.
             @example if ($(selector).datepick('isDisabled')) {...} */
         isDisabled: function (elem) {
@@ -1953,7 +2144,7 @@
         },
         /** Show a popup datepicker.
             @memberof CalendarsPicker
-            @param elem {Event|Element} a focus event or the control to use.
+            @param {Event|Element} elem a focus event or the control to use.
             @example $(selector).datepick('show') */
         show: function (elem) {
             elem = $(elem.target || elem);
@@ -2000,8 +2191,8 @@
         /** Extract possible dates from a string.
             @memberof CalendarsPicker
             @private
-            @param inst {object} The current instance settings.
-            @param text {string} The text to extract from.
+            @param {object} inst The current instance settings.
+            @param {string} text The text to extract from.
             @return {CDate[]} The extracted dates. */
         _extractDates: function (inst, datesText) {
             if (datesText === inst.lastVal) {
@@ -2039,8 +2230,8 @@
         /** Update the datepicker display.
             @memberof CalendarsPicker
             @private
-            @param elem {Event|Element} a focus event or the control to use.
-            @param hidden {boolean} <code>true</code> to initially hide the datepicker. */
+            @param {Event|Element} elem A focus event or the control to use.
+            @param {boolean} hidden <code>true</code> to initially hide the datepicker. */
         _update: function (elem, hidden) {
             elem = $(elem.target || elem);
             var inst = plugin._getInst(elem);
@@ -2076,8 +2267,8 @@
         /** Update the input field and any alternate field with the current dates.
             @memberof CalendarsPicker
             @private
-            @param elem {Element} The control to use.
-            @param keyUp {boolean} <code>true</code> if coming from <code>keyUp</code> processing (internal). */
+            @param {Element} elem The control to use.
+            @param {boolean} keyUp <code>true</code> if coming from <code>keyUp</code> processing (internal). */
         _updateInput: function (elem, keyUp) {
             var inst = this._getInst(elem);
             if (!$.isEmptyObject(inst)) {
@@ -2088,11 +2279,12 @@
                 var calendar = inst.options.calendar;
                 var dateFormat = inst.get('dateFormat');
                 var altFormat = inst.options.altFormat || dateFormat;
+                var settings = { localNumbers: inst.options.localNumbers };
                 for (var i = 0; i < inst.selectedDates.length; i++) {
                     value += (keyUp ? '' : (i > 0 ? sep : '') +
-                        calendar.formatDate(dateFormat, inst.selectedDates[i]));
+                        calendar.formatDate(dateFormat, inst.selectedDates[i], settings));
                     altValue += (i > 0 ? sep : '') +
-                        calendar.formatDate(altFormat, inst.selectedDates[i]);
+                        calendar.formatDate(altFormat, inst.selectedDates[i], settings);
                 }
                 if (!inst.inline && !keyUp) {
                     $(elem).val(value);
@@ -2103,12 +2295,13 @@
                     inst.options.onSelect.apply(elem, [inst.selectedDates]);
                     inst.inSelect = false;
                 }
+                $(elem).change();
             }
         },
         /** Retrieve the size of left and top borders for an element.
             @memberof CalendarsPicker
             @private
-            @param elem {jQuery} The element of interest.
+            @param {jQuery} elem The element of interest.
             @return {number[]} The left and top borders. */
         _getBorders: function (elem) {
             var convert = function (value) {
@@ -2120,7 +2313,7 @@
         /** Check positioning to remain on the screen.
             @memberof CalendarsPicker
             @private
-            @param inst {object} The current instance settings.
+            @param {object} inst The current instance settings.
             @return {object} The updated offset for the datepicker. */
         _checkOffset: function (inst) {
             var base = (inst.elem.is(':hidden') && inst.trigger ? inst.trigger : inst.elem);
@@ -2132,7 +2325,7 @@
             }
             var isFixed = false;
             $(inst.elem).parents().each(function () {
-                isFixed |= $(this).css('position') === 'fixed';
+                isFixed = isFixed || $(this).css('position') === 'fixed';
                 return !isFixed;
             });
             var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
@@ -2172,7 +2365,7 @@
         /** Close date picker if clicked elsewhere.
             @memberof CalendarsPicker
             @private
-            @param event {MouseEvent} The mouse click to check. */
+            @param {MouseEvent} event The mouse click to check. */
         _checkExternalClick: function (event) {
             if (!plugin.curInst) {
                 return;
@@ -2185,8 +2378,8 @@
         },
         /** Hide a popup datepicker.
             @memberof CalendarsPicker
-            @param elem {Element|object} The control to use or the current instance settings.
-            @param immediate {boolean} <code>true</code> to close immediately without animation (internal).
+            @param {Element|object} elem The control to use or the current instance settings.
+            @param {boolean} immediate <code>true</code> to close immediately without animation (internal).
             @example $(selector).datepick('hide') */
         hide: function (elem, immediate) {
             if (!elem) {
@@ -2229,12 +2422,13 @@
         /** Handle keystrokes in the datepicker.
             @memberof CalendarsPicker
             @private
-            @param event {KeyEvent} The keystroke.
+            @param {KeyEvent} event The keystroke.
             @return {boolean} <code>true</code> if not handled, <code>false</code> if handled. */
         _keyDown: function (event) {
             var elem = (event.data && event.data.elem) || event.target;
             var inst = plugin._getInst(elem);
             var handled = false;
+            var command;
             if (inst.inline || inst.div) {
                 if (event.keyCode === 9) {
                     plugin.hide(elem);
@@ -2246,24 +2440,30 @@
                 else {
                     var commands = inst.options.commands;
                     for (var name in commands) {
-                        var command = commands[name];
-                        if (command.keystroke.keyCode === event.keyCode &&
-                            !!command.keystroke.ctrlKey === !!(event.ctrlKey || event.metaKey) &&
-                            !!command.keystroke.altKey === event.altKey &&
-                            !!command.keystroke.shiftKey === event.shiftKey) {
-                            plugin.performAction(elem, name);
-                            handled = true;
-                            break;
+                        if (inst.options.commands.hasOwnProperty(name)) {
+                            command = commands[name];
+                            /* jshint -W018 */ // Dislikes !!
+                            if (command.keystroke.keyCode === event.keyCode &&
+                                !!command.keystroke.ctrlKey === !!(event.ctrlKey || event.metaKey) &&
+                                !!command.keystroke.altKey === event.altKey &&
+                                !!command.keystroke.shiftKey === event.shiftKey) {
+                                /* jshint +W018 */
+                                plugin.performAction(elem, name);
+                                handled = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
             else {
-                var command = inst.options.commands.current;
+                command = inst.options.commands.current;
+                /* jshint -W018 */ // Dislikes !!
                 if (command.keystroke.keyCode === event.keyCode &&
                     !!command.keystroke.ctrlKey === !!(event.ctrlKey || event.metaKey) &&
                     !!command.keystroke.altKey === event.altKey &&
                     !!command.keystroke.shiftKey === event.shiftKey) {
+                    /* jshint +W018 */
                     plugin.show(elem);
                     handled = true;
                 }
@@ -2278,7 +2478,7 @@
         /** Filter keystrokes in the datepicker.
             @memberof CalendarsPicker
             @private
-            @param event {KeyEvent} The keystroke.
+            @param {KeyEvent} event The keystroke.
             @return {boolean} <code>true</code> if allowed, <code>false</code> if not allowed. */
         _keyPress: function (event) {
             var inst = plugin._getInst((event.data && event.data.elem) || event.target);
@@ -2293,7 +2493,7 @@
         /** Determine the set of characters allowed by the date format.
             @memberof CalendarsPicker
             @private
-            @param inst {object} The current instance settings.
+            @param {object} inst The current instance settings.
             @return {string} The set of allowed characters, or <code>null</code> if anything allowed. */
         _allowedChars: function (inst) {
             var allowedChars = (inst.options.multiSelect ? inst.options.multiSeparator :
@@ -2304,7 +2504,7 @@
             for (var i = 0; i < dateFormat.length; i++) {
                 var ch = dateFormat.charAt(i);
                 if (literal) {
-                    if (ch === "'" && dateFormat.charAt(i + 1) !== "'") {
+                    if (ch === '\'' && dateFormat.charAt(i + 1) !== '\'') {
                         literal = false;
                     }
                     else {
@@ -2334,9 +2534,9 @@
                         case 'M':
                         case 'Y':
                             return null; // Accept anything
-                        case "'":
-                            if (dateFormat.charAt(i + 1) === "'") {
-                                allowedChars += "'";
+                        case '\'':
+                            if (dateFormat.charAt(i + 1) === '\'') {
+                                allowedChars += '\'';
                             }
                             else {
                                 literal = true;
@@ -2352,7 +2552,7 @@
         /** Synchronise datepicker with the field.
             @memberof CalendarsPicker
             @private
-            @param event {KeyEvent} The keystroke.
+            @param {KeyEvent} event The keystroke.
             @return {boolean} <code>true</code> if allowed, <code>false</code> if not allowed. */
         _keyUp: function (event) {
             var elem = (event.data && event.data.elem) || event.target;
@@ -2364,7 +2564,7 @@
                         plugin.setDate(elem, dates, null, true);
                     }
                 }
-                catch (event) {
+                catch (e) {
                 }
             }
             return true;
@@ -2372,8 +2572,8 @@
         /** Increment/decrement month/year on mouse wheel activity.
             @memberof CalendarsPicker
             @private
-            @param event {event} The mouse wheel event.
-            @param delta {number} The amount of change. */
+            @param {event} event The mouse wheel event.
+            @param {number} delta The amount of change. */
         _doMouseWheel: function (event, delta) {
             var elem = (plugin.curInst && plugin.curInst.elem[0]) ||
                 $(event.target).closest('.' + plugin._getMarker())[0];
@@ -2389,7 +2589,7 @@
         },
         /** Clear an input and close a popup datepicker.
             @memberof CalendarsPicker
-            @param elem {Element} The control to use.
+            @param {Element} elem The control to use.
             @example $(selector).datepick('clear') */
         clear: function (elem) {
             var inst = this._getInst(elem);
@@ -2407,7 +2607,7 @@
         },
         /** Retrieve the selected date(s) for a datepicker.
             @memberof CalendarsPicker
-            @param elem {Element} The control to examine.
+            @param {Element} elem The control to examine.
             @return {CDate[]} The selected date(s).
             @example var dates = $(selector).datepick('getDate') */
         getDate: function (elem) {
@@ -2416,14 +2616,14 @@
         },
         /** Set the selected date(s) for a datepicker.
             @memberof CalendarsPicker
-            @param elem {Element} the control to examine.
-            @param dates {CDate|number|string|array} the selected date(s).
-            @param [endDate] {CDate|number|string} the ending date for a range.
-            @param [keyUp] {boolean} <code>true</code> if coming from <code>keyUp</code> processing (internal).
-            @param [setOpt] {boolean} <code>true</code> if coming from option processing (internal).
+            @param {Element} elem The control to examine.
+            @param {CDate|number|string|array} dates The selected date(s).
+            @param {CDate|number|string} [endDate] The ending date for a range.
+            @param {boolean} [keyUp] <code>true</code> if coming from <code>keyUp</code> processing (internal).
+            @param {boolean} [setOpt] <code>true</code> if coming from option processing (internal).
             @example $(selector).datepick('setDate', new Date(2014, 12-1, 25))
- $(selector).datepick('setDate', '12/25/2014', '01/01/2015')
- $(selector).datepick('setDate', [date1, date2, date3]) */
+$(selector).datepick('setDate', '12/25/2014', '01/01/2015')
+$(selector).datepick('setDate', [date1, date2, date3]) */
         setDate: function (elem, dates, endDate, keyUp, setOpt) {
             var inst = this._getInst(elem);
             if (!$.isEmptyObject(inst)) {
@@ -2463,9 +2663,8 @@
                             inst.selectedDates[1] = inst.selectedDates[0];
                             break;
                         case 2:
-                            inst.selectedDates[1] =
-                                (inst.selectedDates[0].compareTo(inst.selectedDates[1]) === +1 ?
-                                    inst.selectedDates[0] : inst.selectedDates[1]);
+                            inst.selectedDates[1] = (inst.selectedDates[0].compareTo(inst.selectedDates[1]) === +1 ?
+                                inst.selectedDates[0] : inst.selectedDates[1]);
                             break;
                     }
                     inst.pickingRange = false;
@@ -2482,8 +2681,8 @@
         /** Determine whether a date is selectable for this datepicker.
             @memberof CalendarsPicker
             @private
-            @param elem {Element} The control to check.
-            @param date {CDate|string|number} The date to check.
+            @param {Element} elem The control to check.
+            @param {CDate|string|number} date The date to check.
             @return {boolean} <code>true</code> if selectable, <code>false</code> if not.
             @example var selectable = $(selector).datepick('isSelectable', date) */
         isSelectable: function (elem, date) {
@@ -2497,11 +2696,11 @@
         /** Internally determine whether a date is selectable for this datepicker.
             @memberof CalendarsPicker
             @private
-            @param elem {Element} the control to check.
-            @param date {CDate} The date to check.
-            @param onDate {function|boolean} Any <code>onDate</code> callback or <code>callback.selectable</code>.
-            @param minDate {CDate} The minimum allowed date.
-            @param maxDate {CDate} The maximum allowed date.
+            @param {Element} elem The control to check.
+            @param {CDate} date The date to check.
+            @param {function|boolean} onDate Any <code>onDate</code> callback or <code>callback.selectable</code>.
+            @param {CDate} minDate The minimum allowed date.
+            @param {CDate} maxDate The maximum allowed date.
             @return {boolean} <code>true</code> if selectable, <code>false</code> if not. */
         _isSelectable: function (elem, date, onDate, minDate, maxDate) {
             var dateInfo = (typeof onDate === 'boolean' ? { selectable: onDate } :
@@ -2511,8 +2710,9 @@
         },
         /** Perform a named action for a datepicker.
             @memberof CalendarsPicker
-            @param elem {element} The control to affect.
-            @param action {string} The name of the action. */
+            @param {element} elem The control to affect.
+            @param {string} action The name of the {@link CalendarsPicker.commands|action}.
+            @example $(selector).calendarsPicker('performAction', 'next') */
         performAction: function (elem, action) {
             var inst = this._getInst(elem);
             if (!$.isEmptyObject(inst) && !this.isDisabled(elem)) {
@@ -2524,27 +2724,27 @@
         },
         /** Set the currently shown month, defaulting to today's.
             @memberof CalendarsPicker
-            @param elem {Element} The control to affect.
-            @param [year] {number} The year to show.
-            @param [month] {number} The month to show (1-12).
-            @param [day] {number} The day to show.
+            @param {Element} elem The control to affect.
+            @param {number} [year] The year to show.
+            @param {number} [month] The month to show (calendar minimum month to maximum month).
+            @param {number} [day] The day to show.
             @example $(selector).datepick('showMonth', 2014, 12, 25) */
         showMonth: function (elem, year, month, day) {
             var inst = this._getInst(elem);
-            if (!$.isEmptyObject(inst) && (day != null ||
-                (inst.drawDate.year() !== year || inst.drawDate.month() !== month))) {
+            if (!$.isEmptyObject(inst) && ((typeof day !== 'undefined' && day !== null) ||
+                inst.drawDate.year() !== year || inst.drawDate.month() !== month)) {
                 inst.prevDate = inst.drawDate.newDate();
                 var calendar = inst.options.calendar;
-                var show = this._checkMinMax((year != null ?
-                    calendar.newDate(year, month, 1) : calendar.today()), inst);
-                inst.drawDate.date(show.year(), show.month(), (day != null ? day : Math.min(inst.drawDate.day(), calendar.daysInMonth(show.year(), show.month()))));
+                var show = this._checkMinMax(typeof year !== 'undefined' && year !== null ?
+                    calendar.newDate(year, month, 1) : calendar.today(), inst);
+                inst.drawDate.date(show.year(), show.month(), typeof day !== 'undefined' && day !== null ? day : Math.min(inst.drawDate.day(), calendar.daysInMonth(show.year(), show.month())));
                 this._update(elem);
             }
         },
         /** Adjust the currently shown month.
             @memberof CalendarsPicker
-            @param elem {Element} The control to affect.
-            @param offset {number} The number of months to change by.
+            @param {Element} elem The control to affect.
+            @param {number} offset The number of months to change by.
             @example $(selector).datepick('changeMonth', 2)*/
         changeMonth: function (elem, offset) {
             var inst = this._getInst(elem);
@@ -2555,8 +2755,8 @@
         },
         /** Adjust the currently shown day.
             @memberof CalendarsPicker
-            @param elem {Element} The control to affect.
-            @param offset {number} The number of days to change by.
+            @param {Element} elem The control to affect.
+            @param {number} offset The number of days to change by.
             @example $(selector).datepick('changeDay', 7)*/
         changeDay: function (elem, offset) {
             var inst = this._getInst(elem);
@@ -2568,8 +2768,8 @@
         /** Restrict a date to the minimum/maximum specified.
             @memberof CalendarsPicker
             @private
-            @param date {CDate} The date to check.
-            @param inst {object} The current instance settings. */
+            @param {CDate} date The date to check.
+            @param {object} inst The current instance settings. */
         _checkMinMax: function (date, inst) {
             var minDate = inst.get('minDate');
             var maxDate = inst.get('maxDate');
@@ -2579,18 +2779,19 @@
         },
         /** Retrieve the date associated with an entry in the datepicker.
             @memberof CalendarsPicker
-            @param elem {Element} The control to examine.
-            @param target {Element} The selected datepicker element.
+            @param {Element} elem The control to examine.
+            @param {Element} target The selected datepicker element.
             @return {CDate} The corresponding date, or <code>null</code>.
-            @example var date = $(selector).datepick('retrieveDate', $('div.datepick-popup a:contains(10)')[0]) */
+            @example var date = $(selector).datepick('retrieveDate',
+  $('div.datepick-popup a:contains(10)')[0]) */
         retrieveDate: function (elem, target) {
             var inst = this._getInst(elem);
             return ($.isEmptyObject(inst) ? null : inst.options.calendar.fromJD(parseFloat(target.className.replace(/^.*jd(\d+\.5).*$/, '$1'))));
         },
         /** Select a date for this datepicker.
             @memberof CalendarsPicker
-            @param elem {Element} The control to examine.
-            @param target {Element} The selected datepicker element.
+            @param {Element} elem The control to examine.
+            @param {Element} target The selected datepicker element.
             @example $(selector).datepick('selectDate', $('div.datepick-popup a:contains(10)')[0]) */
         selectDate: function (elem, target) {
             var inst = this._getInst(elem);
@@ -2635,8 +2836,8 @@
         /** Generate the datepicker content for this control.
             @memberof CalendarsPicker
             @private
-            @param elem {Element} The control to affect.
-            @param inst {object} The current instance settings.
+            @param {Element} elem The control to affect.
+            @param {object} inst The current instance settings.
             @return {jQuery} The datepicker content */
         _generateContent: function (elem, inst) {
             var monthsToShow = inst.options.monthsToShow;
@@ -2666,12 +2867,14 @@
                     ' class="' + inst.options.renderer.commandClass + ' ' +
                     inst.options.renderer.commandClass + '-' + name + ' ' + classes +
                     (command.enabled(inst) ? '' : ' ' + inst.options.renderer.disabledClass) + '">' +
-                    (date ? date.formatDate(inst.options[command.text]) :
+                    (date ? date.formatDate(inst.options[command.text], { localNumbers: inst.options.localNumbers }) :
                         inst.options[command.text]) + '</' + close + '>');
             };
             for (var name in inst.options.commands) {
-                addCommand('button', 'button type="button"', 'button', name, inst.options.renderer.commandButtonClass);
-                addCommand('link', 'a href="javascript:void(0)"', 'a', name, inst.options.renderer.commandLinkClass);
+                if (inst.options.commands.hasOwnProperty(name)) {
+                    addCommand('button', 'button type="button"', 'button', name, inst.options.renderer.commandButtonClass);
+                    addCommand('link', 'a href="javascript:void(0)"', 'a', name, inst.options.renderer.commandLinkClass);
+                }
             }
             picker = $(picker);
             if (monthsToShow[1] > 1) {
@@ -2683,15 +2886,17 @@
             }
             // Add datepicker behaviour
             var self = this;
-            function removeHighlight() {
-                (inst.inline ? $(this).closest('.' + self._getMarker()) : inst.div).
+            function removeHighlight(elem) {
+                (inst.inline ? $(elem).closest('.' + self._getMarker()) : inst.div).
                     find(inst.options.renderer.daySelector + ' a').
                     removeClass(inst.options.renderer.highlightedClass);
             }
             picker.find(inst.options.renderer.daySelector + ' a').hover(function () {
-                removeHighlight.apply(this);
+                removeHighlight(this);
                 $(this).addClass(inst.options.renderer.highlightedClass);
-            }, removeHighlight).
+            }, function () {
+                removeHighlight(this);
+            }).
                 click(function () {
                 self.selectDate(elem, this);
             }).end().
@@ -2712,7 +2917,6 @@
                     self.showMonth(elem, year, inst.drawDate.month(), inst.drawDate.day());
                 }
                 catch (e) {
-                    alert(e);
                 }
             }).keydown(function (event) {
                 if (event.keyCode === 13) {
@@ -2759,13 +2963,13 @@
         /** Generate the content for a single month.
             @memberof CalendarsPicker
             @private
-            @param elem {Element} The control to affect.
-            @param inst {object} The current instance settings.
-            @param year {number} The year to generate.
-            @param month {number} The month to generate.
-            @param calendar {BaseCalendar} The current calendar.
-            @param renderer {object} The rendering templates.
-            @param first {boolean} <code>true</code> if first of multiple months.
+            @param {Element} elem The control to affect.
+            @param {object} inst The current instance settings.
+            @param {number} year The year to generate.
+            @param {number} month The month to generate.
+            @param {BaseCalendar} calendar The current calendar.
+            @param {object} renderer The rendering templates.
+            @param {boolean} first <code>true</code> if first of multiple months.
             @return {string} The month content. */
         _generateMonth: function (elem, inst, year, month, calendar, renderer, first) {
             var daysInMonth = calendar.daysInMonth(year, month);
@@ -2773,7 +2977,7 @@
             monthsToShow = ($.isArray(monthsToShow) ? monthsToShow : [1, monthsToShow]);
             var fixedWeeks = inst.options.fixedWeeks || (monthsToShow[0] * monthsToShow[1] > 1);
             var firstDay = inst.options.firstDay;
-            firstDay = (firstDay == null ? calendar.local.firstDay : firstDay);
+            firstDay = (typeof firstDay === 'undefined' || firstDay === null ? calendar.local.firstDay : firstDay);
             var leadDays = (calendar.dayOfWeek(year, month, calendar.minDay) -
                 firstDay + calendar.daysInWeek()) % calendar.daysInWeek();
             var numWeeks = (fixedWeeks ? 6 : Math.ceil((leadDays + daysInMonth) / calendar.daysInWeek()));
@@ -2787,6 +2991,10 @@
                 (drawDate.dayOfWeek() === firstDay || drawDate.daysInMonth() < calendar.daysInWeek()) ?
                 calendar.daysInWeek() : 0), 'd');
             var jd = drawDate.toJD();
+            // Localise numbers if requested and available
+            var localiseNumbers = function (value) {
+                return (inst.options.localNumbers && calendar.local.digits ? calendar.local.digits(value) : value);
+            };
             // Generate weeks
             var weeks = '';
             for (var week = 0; week < numWeeks; week++) {
@@ -2797,8 +3005,8 @@
                 for (var day = 0; day < calendar.daysInWeek(); day++) {
                     var selected = false;
                     if (inst.options.rangeSelect && inst.selectedDates.length > 0) {
-                        selected = (drawDate.compareTo(inst.selectedDates[0]) !== -1 &&
-                            drawDate.compareTo(inst.selectedDates[1]) !== +1);
+                        selected = drawDate.compareTo(inst.selectedDates[0]) !== -1 &&
+                            drawDate.compareTo(inst.selectedDates[1]) !== +1;
                     }
                     else {
                         for (var i = 0; i < inst.selectedDates.length; i++) {
@@ -2824,9 +3032,9 @@
                         (drawDate.compareTo(inst.drawDate) === 0 && drawDate.month() === month ?
                             ' ' + renderer.highlightedClass : '') + '"' +
                         (dateInfo.title || (inst.options.dayStatus && selectable) ? ' title="' +
-                            (dateInfo.title || drawDate.formatDate(inst.options.dayStatus)) + '"' : '') + '>' +
+                            (dateInfo.title || drawDate.formatDate(inst.options.dayStatus, { localNumbers: inst.options.localNumbers })) + '"' : '') + '>' +
                         (inst.options.showOtherMonths || drawDate.month() === month ?
-                            dateInfo.content || drawDate.day() : '&#160;') +
+                            dateInfo.content || localiseNumbers(drawDate.day()) : '&#160;') +
                         (selectable ? '</a>' : '</span>'));
                     drawDate.add(1, 'd');
                     jd++;
@@ -2838,7 +3046,7 @@
             monthHeader = (monthHeader[0].length <= 13 ? 'MM yyyy' :
                 monthHeader[0].substring(13, monthHeader[0].length - 1));
             monthHeader = (first ? this._generateMonthSelection(inst, year, month, minDate, maxDate, monthHeader, calendar, renderer) :
-                calendar.formatDate(monthHeader, calendar.newDate(year, month, calendar.minDay)));
+                calendar.formatDate(monthHeader, calendar.newDate(year, month, calendar.minDay), { localNumbers: inst.options.localNumbers }));
             var weekHeader = this._prepare(renderer.weekHeader, inst).
                 replace(/\{days\}/g, this._generateDayHeaders(inst, calendar, renderer));
             return this._prepare(renderer.month, inst).replace(/\{monthHeader(:[^\}]+)?\}/g, monthHeader).
@@ -2847,13 +3055,13 @@
         /** Generate the HTML for the day headers.
             @memberof CalendarsPicker
             @private
-            @param inst {object} The current instance settings.
-            @param calendar {BaseCalendar} The current calendar.
-            @param renderer {object} The rendering templates.
+            @param {object} inst The current instance settings.
+            @param {BaseCalendar} calendar The current calendar.
+            @param {object} renderer The rendering templates.
             @return {string} A week's worth of day headers. */
         _generateDayHeaders: function (inst, calendar, renderer) {
             var firstDay = inst.options.firstDay;
-            firstDay = (firstDay == null ? calendar.local.firstDay : firstDay);
+            firstDay = (typeof firstDay === 'undefined' || firstDay === null ? calendar.local.firstDay : firstDay);
             var header = '';
             for (var day = 0; day < calendar.daysInWeek(); day++) {
                 var dow = (day + firstDay) % calendar.daysInWeek();
@@ -2862,20 +3070,20 @@
             }
             return header;
         },
-        /** Generate selection controls for month.
+        /** Generate the selection controls for a month.
             @memberof CalendarsPicker
             @private
-            @param inst {object} The current instance settings.
-            @param year {number} The year to generate.
-            @param month {number} The month to generate.
-            @param minDate {CDate} The minimum date allowed.
-            @param maxDate {CDate} The maximum date allowed.
-            @param monthHeader {string} The month/year format.
-            @param calendar {BaseCalendar} The current calendar.
+            @param {object} inst The current instance settings.
+            @param {number} year The year to generate.
+            @param {number} month The month to generate.
+            @param {CDate} minDate The minimum date allowed.
+            @param {CDate} maxDate The maximum date allowed.
+            @param {string} monthHeader The month/year format.
+            @param {BaseCalendar} calendar The current calendar.
             @return {string} The month selection content. */
         _generateMonthSelection: function (inst, year, month, minDate, maxDate, monthHeader, calendar) {
             if (!inst.options.changeMonth) {
-                return calendar.formatDate(monthHeader, calendar.newDate(year, month, 1));
+                return calendar.formatDate(monthHeader, calendar.newDate(year, month, 1), { localNumbers: inst.options.localNumbers });
             }
             // Months
             var monthNames = calendar.local['monthNames' + (monthHeader.match(/mm/i) ? '' : 'Short')];
@@ -2896,11 +3104,14 @@
             selector += '</select>';
             html = html.replace(/\\x2E/, selector);
             // Years
+            var localiseNumbers = function (value) {
+                return (inst.options.localNumbers && calendar.local.digits ? calendar.local.digits(value) : value);
+            };
             var yearRange = inst.options.yearRange;
             if (yearRange === 'any') {
                 selector = '<select class="' + this._monthYearClass + ' ' + this._anyYearClass +
                     '" title="' + inst.options.yearStatus + '">' +
-                    '<option>' + year + '</option></select>' +
+                    '<option value="' + year + '">' + localiseNumbers(year) + '</option></select>' +
                     '<input class="' + this._monthYearClass + ' ' + this._curMonthClass +
                     month + '" value="' + year + '">';
             }
@@ -2920,17 +3131,18 @@
                         selector += '<option value="' +
                             Math.min(month, calendar.monthsInYear(y) - 1 + calendar.minMonth) +
                             '/' + y + '"' + (year === y ? ' selected="selected"' : '') + '>' +
-                            (yDisplay || y) + '</option>';
+                            (yDisplay || localiseNumbers(y)) + '</option>';
                     }
                 };
+                var earlierLater, y;
                 if (start.toJD() < end.toJD()) {
                     start = (minDate && minDate.compareTo(start) === +1 ? minDate : start).year();
                     end = (maxDate && maxDate.compareTo(end) === -1 ? maxDate : end).year();
-                    var earlierLater = Math.floor((end - start) / 2);
+                    earlierLater = Math.floor((end - start) / 2);
                     if (!minDate || minDate.year() < start) {
                         addYear(start - earlierLater, inst.options.earlierText);
                     }
-                    for (var y = start; y <= end; y++) {
+                    for (y = start; y <= end; y++) {
                         addYear(y);
                     }
                     if (!maxDate || maxDate.year() > end) {
@@ -2940,11 +3152,11 @@
                 else {
                     start = (maxDate && maxDate.compareTo(start) === -1 ? maxDate : start).year();
                     end = (minDate && minDate.compareTo(end) === +1 ? minDate : end).year();
-                    var earlierLater = Math.floor((start - end) / 2);
+                    earlierLater = Math.floor((start - end) / 2);
                     if (!maxDate || maxDate.year() > start) {
                         addYear(start + earlierLater, inst.options.earlierText);
                     }
-                    for (var y = start; y >= end; y--) {
+                    for (y = start; y >= end; y--) {
                         addYear(y);
                     }
                     if (!minDate || minDate.year() < end) {
@@ -2958,11 +3170,11 @@
         },
         /** Prepare a render template for use.
             Exclude popup/inline sections that are not applicable.
-            Localise text of the form: {l10n:name}.
+            Localise text of the form: {l10n:<em>name</em>}.
             @memberof CalendarsPicker
             @private
-            @param text {string} The text to localise.
-            @param inst {object} The current instance settings.
+            @param {string} text The text to localise.
+            @param {object} inst The current instance settings.
             @return {string} The localised text. */
         _prepare: function (text, inst) {
             var replaceSection = function (type, retain) {
@@ -2982,9 +3194,10 @@
             replaceSection('inline', inst.inline);
             replaceSection('popup', !inst.inline);
             var pattern = /\{l10n:([^\}]+)\}/;
-            var matches = null;
-            while (matches = pattern.exec(text)) {
+            var matches = pattern.exec(text);
+            while (matches) {
                 text = text.replace(matches[0], inst.options[matches[1]]);
+                matches = pattern.exec(text);
             }
             return text;
         }

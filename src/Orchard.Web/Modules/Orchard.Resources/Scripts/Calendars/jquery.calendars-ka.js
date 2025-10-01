@@ -7,7 +7,8 @@
    Georgian localisation for Gregorian/Julian calendars for jQuery.
    Andrei Gorbushkin. */
 (function ($) {
-    $.calendars.calendars.gregorian.prototype.regionalOptions['ka'] = {
+    'use strict';
+    $.calendars.calendars.gregorian.prototype.regionalOptions.ka = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
         monthNames: ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი',
@@ -17,12 +18,13 @@
         dayNames: ['კვირა', 'ორშაბათი', 'სამშაბათი', 'ოთხშაბათი', 'ხუთშაბათი', 'პარასკევი', 'შაბათი'],
         dayNamesShort: ['კვ', 'ორშ', 'სამ', 'ოთხ', 'ხუთ', 'პარ', 'შაბ'],
         dayNamesMin: ['კვ', 'ორ', 'სმ', 'ოთ', 'ხშ', 'პრ', 'შბ'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 1,
         isRTL: false
     };
     if ($.calendars.calendars.julian) {
-        $.calendars.calendars.julian.prototype.regionalOptions['ka'] =
-            $.calendars.calendars.gregorian.prototype.regionalOptions['ka'];
+        $.calendars.calendars.julian.prototype.regionalOptions.ka =
+            $.calendars.calendars.gregorian.prototype.regionalOptions.ka;
     }
 })(jQuery);

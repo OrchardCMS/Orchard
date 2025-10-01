@@ -2,7 +2,9 @@
    Malayalam localisation for Gregorian/Julian calendars for jQuery.
    Saji Nediyanchath (saji89@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['ml'] = {
+	'use strict';
+	/* jshint -W100 */
+	$.calendars.calendars.gregorian.prototype.regionalOptions.ml = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ജനുവരി','ഫെബ്രുവരി','മാര്‍ച്ച്','ഏപ്രില്‍','മേയ്','ജൂണ്‍',
@@ -12,12 +14,13 @@
 		dayNames: ['ഞായര്‍', 'തിങ്കള്‍', 'ചൊവ്വ', 'ബുധന്‍', 'വ്യാഴം', 'വെള്ളി', 'ശനി'],
 		dayNamesShort: ['ഞായ', 'തിങ്ക', 'ചൊവ്വ', 'ബുധ', 'വ്യാഴം', 'വെള്ളി', 'ശനി'],
 		dayNamesMin: ['ഞാ','തി','ചൊ','ബു','വ്യാ','വെ','ശ'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['ml'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['ml'];
+		$.calendars.calendars.julian.prototype.regionalOptions.ml =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.ml;
 	}
 })(jQuery);

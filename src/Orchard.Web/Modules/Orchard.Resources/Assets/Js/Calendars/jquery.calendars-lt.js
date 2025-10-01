@@ -2,7 +2,8 @@
    Lithuanian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas@avalon.lt>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['lt'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.lt = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Sausis','Vasaris','Kovas','Balandis','Gegužė','Birželis',
@@ -12,12 +13,13 @@
 		dayNames: ['sekmadienis','pirmadienis','antradienis','trečiadienis','ketvirtadienis','penktadienis','šeštadienis'],
 		dayNamesShort: ['sek','pir','ant','tre','ket','pen','šeš'],
 		dayNamesMin: ['Se','Pr','An','Tr','Ke','Pe','Še'],
+		digits: null,
 		dateFormat: 'yyyy-mm-dd',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['lt'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['lt'];
+		$.calendars.calendars.julian.prototype.regionalOptions.lt =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.lt;
 	}
 })(jQuery);

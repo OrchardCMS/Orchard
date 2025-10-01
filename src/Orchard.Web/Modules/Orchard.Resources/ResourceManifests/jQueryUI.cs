@@ -52,6 +52,7 @@ namespace Orchard.Resources.ResourceManifests {
                 .SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js")
                 .SetDependencies("jQueryPlugin")
                 .SetVersion("2.0.1");
+
             manifest.DefineScript("jQueryCalendars_Picker")
                 .SetUrl("Calendars/jquery.calendars.picker.full.min.js", "Calendars/jquery.calendars.picker.full.js")
                 .SetDependencies("jQueryCalendars")

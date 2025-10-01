@@ -7,7 +7,8 @@
    German localisation for Gregorian/Julian calendars for jQuery.
    Written by Milian Wolff (mail@milianw.de). */
 (function ($) {
-    $.calendars.calendars.gregorian.prototype.regionalOptions['de'] = {
+    'use strict';
+    $.calendars.calendars.gregorian.prototype.regionalOptions.de = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
         monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
@@ -17,12 +18,13 @@
         dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
         dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
         dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+        digits: null,
         dateFormat: 'dd.mm.yyyy',
         firstDay: 1,
         isRTL: false
     };
     if ($.calendars.calendars.julian) {
-        $.calendars.calendars.julian.prototype.regionalOptions['de'] =
-            $.calendars.calendars.gregorian.prototype.regionalOptions['de'];
+        $.calendars.calendars.julian.prototype.regionalOptions.de =
+            $.calendars.calendars.gregorian.prototype.regionalOptions.de;
     }
 })(jQuery);

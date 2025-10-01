@@ -2,6 +2,7 @@
    Brazilian Portuguese localisation for Gregorian/Julian calendars for jQuery.
    Written by Leonildo Costa Silva (leocsilva@gmail.com). */
 (function($) {
+	'use strict';
 	$.calendars.calendars.gregorian.prototype.regionalOptions['pt-BR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
@@ -12,6 +13,7 @@
 		dayNames: ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'],
 		dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
 		dayNamesMin: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 0,
 		isRTL: false

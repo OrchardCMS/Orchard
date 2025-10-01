@@ -2,7 +2,8 @@
    Faroese localisation for Gregorian/Julian calendars for jQuery.
    Written by Sverri Mohr Olsen, sverrimo@gmail.com */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['fo'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.fo = {
 		name: 'Gregorianskur',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mars','Apríl','Mei','Juni',
@@ -12,12 +13,13 @@
 		dayNames: ['Sunnudagur','Mánadagur','Týsdagur','Mikudagur','Hósdagur','Fríggjadagur','Leyardagur'],
 		dayNamesShort: ['Sun','Mán','Týs','Mik','Hós','Frí','Ley'],
 		dayNamesMin: ['Su','Má','Tý','Mi','Hó','Fr','Le'],
+		digits: null,
 		dateFormat: 'dd-mm-yyyy',
 		firstDay: 0,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['fo'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['fo'];
+		$.calendars.calendars.julian.prototype.regionalOptions.fo =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.fo;
 	}
 })(jQuery);

@@ -2,6 +2,7 @@
    Spanish/Perú localisation for Gregorian/Julian calendars for jQuery.
    Written by Fischer Tirado (fishdev@globant.com) of ASIX (http://www.asixonline.com). */
 (function($) {
+	'use strict';
 	$.calendars.calendars.gregorian.prototype.regionalOptions['es-PE'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
@@ -12,6 +13,7 @@
 		dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
 		dayNamesShort: ['Dom','Lun','Mar','Mié','Jue','Vie','Sab'],
 		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 0,
 		isRTL: false

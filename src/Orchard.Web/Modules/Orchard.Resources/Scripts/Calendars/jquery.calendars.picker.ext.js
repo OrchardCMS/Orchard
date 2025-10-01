@@ -4,11 +4,12 @@
 */
 
 /* http://keith-wood.name/calendars.html
-   Calendars date picker extensions for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Calendars date picker extensions for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     var themeRollerRenderer = {
         picker: '<div{popup:start} id="ui-datepicker-div"{popup:end} class="ui-datepicker ui-widget ' +
             'ui-widget-content ui-helper-clearfix ui-corner-all{inline:start} ui-datepicker-inline{inline:end}">' +
@@ -42,41 +43,42 @@
     };
     $.extend($.calendarsPicker, {
         /** Template for generating a calendar picker showing week of year.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
-            @memberof CalendarsPicker */
+            Used with the {@linkcode CalendarsPicker.regionalOptions|renderer} regional option.
+            @memberof CalendarsPicker
+            @example renderer: $.calendarsPicker.weekOfYearRenderer */
         weekOfYearRenderer: $.extend({}, $.calendarsPicker.defaultRenderer, {
             weekHeader: '<tr><th class="calendars-week">' +
                 '<span title="{l10n:weekStatus}">{l10n:weekText}</span></th>{days}</tr>',
             week: '<tr><td class="calendars-week">{weekOfYear}</td>{days}</tr>'
         }),
         /** ThemeRoller template for generating a calendar picker.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
-            @memberof CalendarsPicker */
+            Used with the {@linkcode CalendarsPicker.regionalOptions|renderer} regional option.
+            @memberof CalendarsPicker
+            @example renderer: $.calendarsPicker.themeRollerRenderer */
         themeRollerRenderer: themeRollerRenderer,
         /** ThemeRoller template for generating a calendar picker showing week of year.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
-            @memberof CalendarsPicker */
+            Used with the {@linkcode CalendarsPicker.regionalOptions|renderer} regional option.
+            @memberof CalendarsPicker
+            @example renderer: $.calendarsPicker.themeRollerWeekOfYearRenderer */
         themeRollerWeekOfYearRenderer: $.extend({}, themeRollerRenderer, {
             weekHeader: '<tr><th class="ui-state-hover"><span>{l10n:weekText}</span></th>{days}</tr>',
             week: '<tr><td class="ui-state-hover">{weekOfYear}</td>{days}</tr>'
         }),
         /** Don't allow weekends to be selected.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onDate} option.
             @memberof CalendarsPicker
-            @param date {CDate} The current date.
+            @param {CDate} date The current date.
             @return {object} Information about this date.
             @example onDate: $.calendarsPicker.noWeekends */
         noWeekends: function (date) {
             return { selectable: date.weekDay() };
         },
         /** Change the first day of the week by clicking on the day header.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
             @example onShow: $.calendarsPicker.changeFirstDay */
-        changeFirstDay: function (picker, calendar, inst) {
+        changeFirstDay: function (picker) {
             var target = $(this);
             picker.find('th span').each(function () {
                 if (this.parentNode.className.match(/.*calendars-week.*/)) {
@@ -93,15 +95,15 @@
         },
         /** A function to call when a date is hovered.
             @callback CalendarsPickerOnHover
-            @param date {CDate} The date being hovered or <code>null</code> on exit.
-            @param selectable {boolean} <code>true</code> if this date is selectable, <code>false</code> if not.
+            @param {CDate} date The date being hovered or <code>null</code> on exit.
+            @param {boolean} selectable <code>true</code> if this date is selectable, <code>false</code> if not.
             @example function showHovered(date, selectable) {
     $('#feedback').text('You are viewing ' + (date ? date.formatDate() : 'nothing'));
  } */
         /** Add a callback when hovering over dates.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param onHover {CalendarsPickerOnHover} The callback when hovering.
+            @param {CalendarsPickerOnHover} onHover The callback when hovering.
             @example onShow: $.calendarsPicker.hoverCallback(showHovered) */
         hoverCallback: function (onHover) {
             return function (picker, calendar, inst) {
@@ -117,14 +119,13 @@
             };
         },
         /** Highlight the entire week when hovering over it.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
+            @param {object} inst The current instance settings.
             @example onShow: $.calendarsPicker.highlightWeek */
         highlightWeek: function (picker, calendar, inst) {
-            var target = this;
             var renderer = inst.options.renderer;
             picker.find(renderer.daySelector + ' a, ' + renderer.daySelector + ' span').
                 hover(function () {
@@ -136,11 +137,11 @@
             });
         },
         /** Show a status bar with messages.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
+            @param {object} inst The current instance settings.
             @example onShow: $.calendarsPicker.showStatus */
         showStatus: function (picker, calendar, inst) {
             var isTR = (inst.options.renderer.selectedClass === 'ui-state-active');
@@ -155,11 +156,11 @@
             });
         },
         /** Allow easier navigation by month.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
+            @param {object} inst The current instance settings.
             @example onShow: $.calendarsPicker.monthNavigation */
         monthNavigation: function (picker, calendar, inst) {
             var target = $(this);
@@ -186,12 +187,12 @@
             });
         },
         /** Select an entire week when clicking on a week number.
-            Use in conjunction with <code>weekOfYearRenderer</code>.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Use in conjunction with {@linkcode CalendarsPicker.weekOfYearRenderer|weekOfYearRenderer}.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
+            @param {object} inst The current instance settings.
             @example onShow: $.calendarsPicker.selectWeek */
         selectWeek: function (picker, calendar, inst) {
             var target = $(this);
@@ -214,12 +215,12 @@
             });
         },
         /** Select an entire month when clicking on the week header.
-            Use in conjunction with <code>weekOfYearRenderer</code>.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Use in conjunction with {@linkcode CalendarsPicker.weekOfYearRenderer|weekOfYearRenderer}.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
+            @param {object} inst The current instance settings.
             @example onShow: $.calendarsPicker.selectMonth */
         selectMonth: function (picker, calendar, inst) {
             var target = $(this);
@@ -243,15 +244,14 @@
             });
         },
         /** Select a month only instead of a single day.
-            Found in the <code>jquery.calendars.picker.ext.js</code> module.
+            Used with the {@linkcode CalendarsPicker.defaultOptions|onShow} option.
             @memberof CalendarsPicker
-            @param picker {jQuery} The completed datepicker division.
-            @param calendar {BaseCalendar} The calendar implementation.
-            @param inst {object} The current instance settings.
+            @param {jQuery} picker The completed datepicker division.
+            @param {BaseCalendar} calendar The calendar implementation.
             @example onShow: $.calendarsPicker.monthOnly */
-        monthOnly: function (picker, calendar, inst) {
+        monthOnly: function (picker, calendar) {
             var target = $(this);
-            var selectMonth = $('<div style="text-align: center;"><button type="button">Select</button></div>').
+            $('<div style="text-align: center;"><button type="button">Select</button></div>').
                 insertAfter(picker.find('.calendars-month-row:last,.ui-datepicker-row-break:last')).
                 children().click(function () {
                 var monthYear = picker.find('.calendars-month-year:first').val().split('/');

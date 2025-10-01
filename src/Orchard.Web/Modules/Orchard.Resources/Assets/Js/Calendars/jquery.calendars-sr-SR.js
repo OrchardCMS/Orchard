@@ -2,6 +2,7 @@
    Serbian localisation for Gregorian/Julian calendars for jQuery.
    Written by Dejan Dimić. */
 (function($) {
+	'use strict';
 	$.calendars.calendars.gregorian.prototype.regionalOptions['sr-SR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
@@ -11,6 +12,7 @@
 		dayNames: ['Nedelja','Ponedeljak','Utorak','Sreda','Četvrtak','Petak','Subota'],
 		dayNamesShort: ['Ned','Pon','Uto','Sre','Čet','Pet','Sub'],
 		dayNamesMin: ['Ne','Po','Ut','Sr','Če','Pe','Su'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false

@@ -1,21 +1,34 @@
-﻿/* http://keith-wood.name/calendars.html
+/* http://keith-wood.name/calendars.html
    Farsi/Persian localisation for calendars datepicker for jQuery.
    Javad Mowlanezhad -- jmowla@gmail.com. */
 (function($) {
-	$.calendarsPicker.regionalOptions['fa'] = {
+	'use strict';
+	/* jshint -W100 */
+	$.calendarsPicker.regionalOptions.fa = {
 		renderer: $.calendarsPicker.defaultRenderer,
-		prevText: '&#x3c;قبلي', prevStatus: 'نمايش ماه قبل',
-		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
-		nextText: 'بعدي&#x3e;', nextStatus: 'نمايش ماه بعد',
-		nextJumpText: '&#x3e;&#x3e;', nextJumpStatus: '',
-		currentText: 'امروز', currentStatus: 'نمايش ماه جاري',
-		todayText: 'امروز', todayStatus: 'نمايش ماه جاري',
-		clearText: 'حذف تاريخ', clearStatus: 'پاک کردن تاريخ جاري',
-		closeText: 'بستن', closeStatus: 'بستن بدون اعمال تغييرات',
-		yearStatus: 'نمايش سال متفاوت', monthStatus: 'نمايش ماه متفاوت',
-		weekText: 'هف', weekStatus: 'هفتهِ سال',
-		dayStatus: 'انتخاب D, M d', defaultStatus: 'انتخاب تاريخ',
+		prevText: '&#x3c;قبلی',
+		prevStatus: 'نمایش ماه قبل',
+		prevJumpText: '&#x3c;&#x3c;',
+		prevJumpStatus: '',
+		nextText: 'بعدی&#x3e;',
+		nextStatus: 'نمایش ماه بعد',
+		nextJumpText: '&#x3e;&#x3e;',
+		nextJumpStatus: '',
+		currentText: 'امروز',
+		currentStatus: 'نمایش ماه جاری',
+		todayText: 'امروز',
+		todayStatus: 'نمایش ماه جاری',
+		clearText: 'حذف تاریخ',
+		clearStatus: 'پاک کردن تاریخ جاری',
+		closeText: 'بستن',
+		closeStatus: 'بستن بدون اعمال تغییرات',
+		yearStatus: 'نمایش سال متفاوت',
+		monthStatus: 'نمایش ماه متفاوت',
+		weekText: 'هف',
+		weekStatus: 'هفته‌ی سال',
+		dayStatus: 'انتخاب D, M d',
+		defaultStatus: 'انتخاب تاریخ',
 		isRTL: true
 	};
-	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['fa']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions.fa);
 })(jQuery);

@@ -2,7 +2,8 @@
    Ukrainian localisation for Gregorian/Julian calendars for jQuery.
    Written by Maxim Drogobitskiy (maxdao@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['uk'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.uk = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Січень','Лютий','Березень','Квітень','Травень','Червень',
@@ -12,12 +13,13 @@
 		dayNames: ['неділя','понеділок','вівторок','середа','четвер','п\'ятниця','субота'],
 		dayNamesShort: ['нед','пнд','вів','срд','чтв','птн','сбт'],
 		dayNamesMin: ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['uk'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['uk'];
+		$.calendars.calendars.julian.prototype.regionalOptions.uk =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.uk;
 	}
 })(jQuery);

@@ -4,11 +4,12 @@
 */
 
 /* http://keith-wood.name/calendars.html
-   Calendars extras for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) August 2009.
+   Calendars extras for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) August 2009.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     $.extend($.calendars.regionalOptions[''], {
         invalidArguments: 'Invalid arguments',
         invalidFormat: 'Cannot format a date from another calendar',
@@ -22,10 +23,15 @@
         /** Format this date.
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof CDate
-            @param [format] {string} The date format to use (see <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a>).
+            @param {string} [format] The date format to use (see {@linkcode BaseCalendar.formatDate|formatDate}).
+            @param {object} [settings] Options for the <code>formatDate</code> function.
             @return {string} The formatted date. */
-        formatDate: function (format) {
-            return this._calendar.formatDate(format || '', this);
+        formatDate: function (format, settings) {
+            if (typeof format !== 'string') {
+                settings = format;
+                format = '';
+            }
+            return this._calendar.formatDate(format || '', this, settings);
         }
     });
     $.extend($.calendars.baseCalendar.prototype, {
@@ -33,60 +39,47 @@
         SECS_PER_DAY: 24 * 60 * 60,
         TICKS_EPOCH: $.calendars.instance().jdEpoch,
         TICKS_PER_DAY: 24 * 60 * 60 * 10000000,
-        /** Date form for ATOM (RFC 3339/ISO 8601).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for ATOM (RFC 3339/ISO 8601) - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         ATOM: 'yyyy-mm-dd',
-        /** Date form for cookies.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for cookies - 'D, dd M yyyy'.
             @memberof BaseCalendar */
         COOKIE: 'D, dd M yyyy',
-        /** Date form for full date.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for the full date - 'DD, MM d, yyyy'.
             @memberof BaseCalendar */
         FULL: 'DD, MM d, yyyy',
-        /** Date form for ISO 8601.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for ISO 8601 - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         ISO_8601: 'yyyy-mm-dd',
-        /** Date form for Julian date.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Julian date - days since January 1, 4713 BCE Greenwich noon.
             @memberof BaseCalendar */
         JULIAN: 'J',
-        /** Date form for RFC 822.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 822 - 'D, d M yy'.
             @memberof BaseCalendar */
         RFC_822: 'D, d M yy',
-        /** Date form for RFC 850.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 850 - 'DD, dd-M-yy'.
             @memberof BaseCalendar */
         RFC_850: 'DD, dd-M-yy',
-        /** Date form for RFC 1036.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 1036 - 'D, d M yy'.
             @memberof BaseCalendar */
         RFC_1036: 'D, d M yy',
-        /** Date form for RFC 1123.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 1123 - 'D, d M yyyy'.
             @memberof BaseCalendar */
         RFC_1123: 'D, d M yyyy',
-        /** Date form for RFC 2822.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RFC 2822 - 'D, d M yyyy'.
             @memberof BaseCalendar */
         RFC_2822: 'D, d M yyyy',
-        /** Date form for RSS (RFC 822).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for RSS (RFC 822) - 'D, d M yy'.
             @memberof BaseCalendar */
         RSS: 'D, d M yy',
-        /** Date form for Windows ticks.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Windows ticks - number of 100-nanosecond ticks since 1 January 0001 00:00:00 UTC.
             @memberof BaseCalendar */
         TICKS: '!',
-        /** Date form for Unix timestamp.
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for Unix timestamp - number of seconds elapsed since the
+            start of the Unix epoch at 1 January 1970 00:00:00 UTC.
             @memberof BaseCalendar */
         TIMESTAMP: '@',
-        /** Date form for W3c (ISO 8601).
-            Found in the <code>jquery.calendars.plus.js</code> module.
+        /** Date format for W3C (ISO 8601) - 'yyyy-mm-dd'.
             @memberof BaseCalendar */
         W3C: 'yyyy-mm-dd',
         /** Format a date object into a string value.
@@ -115,14 +108,15 @@
             </ul>
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param [format] {string} The desired format of the date (defaults to calendar format).
-            @param date {CDate} The date value to format.
-            @param [settings] {object} Addition options, whose attributes include:
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
-            @property [calculateWeek] {CalendarsPickerCalculateWeek} Function that determines week of the year.
+            @param {string} [format] The desired format of the date (defaults to calendar format).
+            @param {CDate} date The date value to format.
+            @param {object} [settings] Addition options, whose attributes include:
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
+            @param {boolean} [settings.localNumbers=false] <code>true</code> to localise numbers (if available),
+                <code>false</code> to use normal Arabic numerals.
             @return {string} The date in the above format.
             @throws Errors if the date is from a different calendar. */
         formatDate: function (format, date, settings) {
@@ -143,7 +137,7 @@
             var dayNames = settings.dayNames || this.local.dayNames;
             var monthNamesShort = settings.monthNamesShort || this.local.monthNamesShort;
             var monthNames = settings.monthNames || this.local.monthNames;
-            var calculateWeek = settings.calculateWeek || this.local.calculateWeek;
+            var localNumbers = settings.localNumbers || this.local.localNumbers;
             // Check whether a format character is doubled
             var doubled = function (match, step) {
                 var matches = 1;
@@ -167,11 +161,14 @@
             var formatName = function (match, value, shortNames, longNames) {
                 return (doubled(match) ? longNames[value] : shortNames[value]);
             };
+            // Localise numbers if requested and available
+            var localiseNumbers = localNumbers && this.local.digits ?
+                this.local.digits : function (value) { return value; };
             var output = '';
             var literal = false;
             for (var iFormat = 0; iFormat < format.length; iFormat++) {
                 if (literal) {
-                    if (format.charAt(iFormat) === "'" && !doubled("'")) {
+                    if (format.charAt(iFormat) === '\'' && !doubled('\'')) {
                         literal = false;
                     }
                     else {
@@ -181,7 +178,7 @@
                 else {
                     switch (format.charAt(iFormat)) {
                         case 'd':
-                            output += formatNumber('d', date.day(), 2);
+                            output += localiseNumbers(formatNumber('d', date.day(), 2));
                             break;
                         case 'D':
                             output += formatName('D', date.dayOfWeek(), dayNamesShort, dayNames);
@@ -193,13 +190,13 @@
                             output += formatNumber('w', date.weekOfYear(), 2);
                             break;
                         case 'm':
-                            output += formatNumber('m', date.month(), 2);
+                            output += localiseNumbers(formatNumber('m', date.month(), 2));
                             break;
                         case 'M':
                             output += formatName('M', date.month() - this.minMonth, monthNamesShort, monthNames);
                             break;
                         case 'y':
-                            output += (doubled('y', 2) ? date.year() :
+                            output += localiseNumbers(doubled('y', 2) ? date.year() :
                                 (date.year() % 100 < 10 ? '0' : '') + date.year() % 100);
                             break;
                         case 'Y':
@@ -215,9 +212,9 @@
                         case '!':
                             output += (date.toJD() - this.TICKS_EPOCH) * this.TICKS_PER_DAY;
                             break;
-                        case "'":
-                            if (doubled("'")) {
-                                output += "'";
+                        case '\'':
+                            if (doubled('\'')) {
+                                output += '\'';
                             }
                             else {
                                 literal = true;
@@ -231,25 +228,25 @@
             return output;
         },
         /** Parse a string value into a date object.
-            See <a href="#formatDate"><code>formatDate</code></a> for the possible formats, plus:
+            See {@linkcode BaseCalendar.formatDate|formatDate} for the possible formats, plus:
             <ul>
             <li>* - ignore rest of string</li>
             </ul>
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param format {string} The expected format of the date ('' for default calendar format).
-            @param value {string} The date in the above format.
-            @param [settings] {object} Additional options whose attributes include:
-            @property [shortYearCutoff] {number} The cutoff year for determining the century.
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
+            @param {string} format The expected format of the date ('' for default calendar format).
+            @param {string} value The date in the above format.
+            @param {object} [settings] Additional options whose attributes include:
+            @param {number} [settings.shortYearCutoff] The cutoff year for determining the century.
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
             @return {CDate} The extracted date value or <code>null</code> if value is blank.
             @throws Errors if the format and/or value are missing,
                     if the value doesn't match the format, or if the date is invalid. */
         parseDate: function (format, value, settings) {
-            if (value == null) {
+            if (typeof value === 'undefined' || value === null) {
                 throw $.calendars.local.invalidArguments || $.calendars.regionalOptions[''].invalidArguments;
             }
             value = (typeof value === 'object' ? value.toString() : value + '');
@@ -265,11 +262,11 @@
             var dayNames = settings.dayNames || this.local.dayNames;
             var monthNamesShort = settings.monthNamesShort || this.local.monthNamesShort;
             var monthNames = settings.monthNames || this.local.monthNames;
-            var jd = -1;
-            var year = -1;
-            var month = -1;
-            var day = -1;
-            var doy = -1;
+            var jd = NaN;
+            var year = NaN;
+            var month = NaN;
+            var day = NaN;
+            var doy = NaN;
             var shortYear = false;
             var literal = false;
             // Check whether a format character is doubled
@@ -298,11 +295,20 @@
             var calendar = this;
             var getName = function (match, shortNames, longNames, step) {
                 var names = (doubled(match, step) ? longNames : shortNames);
+                var index = -1;
                 for (var i = 0; i < names.length; i++) {
                     if (value.substr(iValue, names[i].length).toLowerCase() === names[i].toLowerCase()) {
-                        iValue += names[i].length;
-                        return i + calendar.minMonth;
+                        if (index === -1) {
+                            index = i;
+                        }
+                        else if (names[i].length > names[index].length) {
+                            index = i;
+                        }
                     }
+                }
+                if (index > -1) {
+                    iValue += names[index].length;
+                    return index + calendar.minMonth;
                 }
                 throw ($.calendars.local.unknownNameAt || $.calendars.regionalOptions[''].unknownNameAt).
                     replace(/\{0\}/, iValue);
@@ -318,7 +324,7 @@
             var iValue = 0;
             for (var iFormat = 0; iFormat < format.length; iFormat++) {
                 if (literal) {
-                    if (format.charAt(iFormat) === "'" && !doubled("'")) {
+                    if (format.charAt(iFormat) === '\'' && !doubled('\'')) {
                         literal = false;
                     }
                     else {
@@ -370,29 +376,30 @@
                         case '*':
                             iValue = value.length;
                             break;
-                        case "'":
-                            if (doubled("'")) {
+                        case '\'':
+                            if (doubled('\'')) {
                                 checkLiteral();
                             }
                             else {
                                 literal = true;
                             }
                             break;
-                        default: checkLiteral();
+                        default:
+                            checkLiteral();
                     }
                 }
             }
             if (iValue < value.length) {
                 throw $.calendars.local.unexpectedText || $.calendars.regionalOptions[''].unexpectedText;
             }
-            if (year === -1) {
+            if (isNaN(year)) {
                 year = this.today().year();
             }
             else if (year < 100 && shortYear) {
                 year += (shortYearCutoff === -1 ? 1900 : this.today().year() -
                     this.today().year() % 100 - (year <= shortYearCutoff ? 0 : 100));
             }
-            if (doy > -1) {
+            if (!isNaN(doy)) {
                 month = 1;
                 day = doy;
                 for (var dim = this.daysInMonth(year, month); day > dim; dim = this.daysInMonth(year, month)) {
@@ -400,23 +407,24 @@
                     day -= dim;
                 }
             }
-            return (jd > -1 ? this.fromJD(jd) : this.newDate(year, month, day));
+            return (!isNaN(jd) ? this.fromJD(jd) : this.newDate(year, month, day));
         },
         /** A date may be specified as an exact value or a relative one.
             Found in the <code>jquery.calendars.plus.js</code> module.
             @memberof BaseCalendar
-            @param dateSpec {CDate|number|string} The date as an object or string in the given format or
+            @param {CDate|number|string} dateSpec The date as an object or string in the given format or
                     an offset - numeric days from today, or string amounts and periods, e.g. '+1m +2w'.
-            @param defaultDate {CDate} The date to use if no other supplied, may be <code>null</code>.
-            @param currentDate {CDate} The current date as a possible basis for relative dates,
-                    if <code>null</code> today is used (optional)
-            @param [dateFormat] {string} The expected date format - see <a href="#formatDate"><code>formatDate</code></a>.
-            @param [settings] {object} Additional options whose attributes include:
-            @property [shortYearCutoff] {number} The cutoff year for determining the century.
-            @property [dayNamesShort] {string[]} Abbreviated names of the days from Sunday.
-            @property [dayNames] {string[]} Names of the days from Sunday.
-            @property [monthNamesShort] {string[]} Abbreviated names of the months.
-            @property [monthNames] {string[]} Names of the months.
+            @param {CDate} defaultDate The date to use if no other supplied, may be <code>null</code>.
+            @param {CDate} [currentDate=null] The current date as a possible basis for relative dates,
+                    if <code>null</code> today is used.
+            @param {string} [dateFormat] The expected date format -
+                    see {@linkcode BaseCalendar.formatDate|formatDate}. Use '' for the calendar default format.
+            @param {object} [settings] Additional options whose attributes include:
+            @param {number} [settings.shortYearCutoff] The cutoff year for determining the century.
+            @param {string[]} [settings.dayNamesShort] Abbreviated names of the days from day 0 (Sunday).
+            @param {string[]} [settings.dayNames] Names of the days from day 0 (Sunday).
+            @param {string[]} [settings.monthNamesShort] Abbreviated names of the months.
+            @param {string[]} [settings.monthNames] Names of the months.
             @return {CDate} The decoded date. */
         determineDate: function (dateSpec, defaultDate, currentDate, dateFormat, settings) {
             if (currentDate && typeof currentDate !== 'object') {
@@ -447,7 +455,7 @@
                 return date;
             };
             defaultDate = (defaultDate ? defaultDate.newDate() : null);
-            dateSpec = (dateSpec == null ? defaultDate :
+            dateSpec = (typeof dateSpec === 'undefined' || dateSpec === null ? defaultDate :
                 (typeof dateSpec === 'string' ? offsetString(dateSpec) : (typeof dateSpec === 'number' ?
                     (isNaN(dateSpec) || dateSpec === Infinity || dateSpec === -Infinity ? defaultDate :
                         calendar.today().add(dateSpec, 'd')) : calendar.newDate(dateSpec))));

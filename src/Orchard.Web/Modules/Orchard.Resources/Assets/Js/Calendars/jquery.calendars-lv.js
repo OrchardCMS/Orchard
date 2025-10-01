@@ -2,7 +2,8 @@
    Latvian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas.paleicikas@metasite.net>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['lv'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.lv = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvāris','Februāris','Marts','Aprīlis','Maijs','Jūnijs',
@@ -12,12 +13,13 @@
 		dayNames: ['svētdiena','pirmdiena','otrdiena','trešdiena','ceturtdiena','piektdiena','sestdiena'],
 		dayNamesShort: ['svt','prm','otr','tre','ctr','pkt','sst'],
 		dayNamesMin: ['Sv','Pr','Ot','Tr','Ct','Pk','Ss'],
+		digits: null,
 		dateFormat: 'dd-mm-yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['lv'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['lv'];
+		$.calendars.calendars.julian.prototype.regionalOptions.lv =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.lv;
 	}
 })(jQuery);

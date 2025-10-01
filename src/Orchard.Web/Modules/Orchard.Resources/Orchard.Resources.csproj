@@ -161,6 +161,7 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars-lv.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-me-ME.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-me.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars-mg.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-mk.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-ml.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-ms.js" />
@@ -168,6 +169,7 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars-nl-BE.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-nl.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-no.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars-pa.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-pl.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-pt-BR.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-rm.js" />
@@ -180,7 +182,9 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars-sr.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-sv.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-ta.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars-te.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-th.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars-ti.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-tr.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-tt.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars-uk.js" />
@@ -191,10 +195,14 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars-zh-TW.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.all.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.coptic.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.discworld.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.ethiopian-am.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.ethiopian-ti.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.ethiopian.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.hebrew-he.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.hebrew.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.iranian-fa.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.iranian.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.islamic-ar.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.islamic-fa.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.islamic.js" />
@@ -202,6 +210,8 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars.julian.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.lang.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.mayan.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.nanakshahi-pa.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.nanakshahi.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.nepali-ne.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.nepali.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.persian-fa.js" />
@@ -271,6 +281,7 @@
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-sr.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-sv.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-ta.js" />
+    <Content Include="Assets\Js\Calendars\jquery.calendars.picker-te.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-th.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-tr.js" />
     <Content Include="Assets\Js\Calendars\jquery.calendars.picker-tt.js" />

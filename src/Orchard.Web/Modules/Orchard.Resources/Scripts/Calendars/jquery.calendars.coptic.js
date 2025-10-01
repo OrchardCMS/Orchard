@@ -4,21 +4,22 @@
 */
 
 /* http://keith-wood.name/calendars.html
-   Coptic calendar for jQuery v2.0.1.
-   Written by Keith Wood (kbwood{at}iinet.com.au) February 2010.
+   Coptic calendar for jQuery v2.2.0.
+   Written by Keith Wood (kbwood.au{at}gmail.com) February 2010.
    Available under the MIT (http://keith-wood.name/licence.html) license.
    Please attribute the author if you use it. */
 (function ($) {
+    'use strict';
     /** Implementation of the Coptic calendar.
         See <a href="http://en.wikipedia.org/wiki/Coptic_calendar">http://en.wikipedia.org/wiki/Coptic_calendar</a>.
         See also Calendrical Calculations: The Millennium Edition
         (<a href="http://emr.cs.iit.edu/home/reingold/calendar-book/index.shtml">http://emr.cs.iit.edu/home/reingold/calendar-book/index.shtml</a>).
         @class CopticCalendar
-        @param [language=''] {string} The language code (default English) for localisation. */
+        @param {string} [language=''] The language code (default English) for localisation. */
     function CopticCalendar(language) {
         this.local = this.regionalOptions[language || ''] || this.regionalOptions[''];
     }
-    CopticCalendar.prototype = new $.calendars.baseCalendar;
+    CopticCalendar.prototype = new $.calendars.baseCalendar();
     $.extend(CopticCalendar.prototype, {
         /** The calendar name.
             @memberof CopticCalendar */
@@ -45,17 +46,17 @@
             Entries are objects indexed by the language code ('' being the default US/English).
             Each object has the following attributes.
             @memberof CopticCalendar
-            @property name {string} The calendar name.
-            @property epochs {string[]} The epoch names.
-            @property monthNames {string[]} The long names of the months of the year.
-            @property monthNamesShort {string[]} The short names of the months of the year.
-            @property dayNames {string[]} The long names of the days of the week.
-            @property dayNamesShort {string[]} The short names of the days of the week.
-            @property dayNamesMin {string[]} The minimal names of the days of the week.
-            @property dateFormat {string} The date format for this calendar.
+            @property {string} name The calendar name.
+            @property {string[]} epochs The epoch names (before/after year 0).
+            @property {string[]} monthNames The long names of the months of the year.
+            @property {string[]} monthNamesShort The short names of the months of the year.
+            @property {string[]} dayNames The long names of the days of the week.
+            @property {string[]} dayNamesShort The short names of the days of the week.
+            @property {string[]} dayNamesMin The minimal names of the days of the week.
+            @property {string} dateFormat The date format for this calendar.
                     See the options on <a href="BaseCalendar.html#formatDate"><code>formatDate</code></a> for details.
-            @property firstDay {number} The number of the first day of the week, starting at 0.
-            @property isRTL {number} <code>true</code> if this localisation reads right-to-left. */
+            @property {number} firstDay The number of the first day of the week, starting at 0.
+            @property {boolean} isRTL <code>true</code> if this localisation reads right-to-left. */
         regionalOptions: {
             '': {
                 name: 'Coptic',
@@ -67,6 +68,7 @@
                 dayNames: ['Tkyriaka', 'Pesnau', 'Pshoment', 'Peftoou', 'Ptiou', 'Psoou', 'Psabbaton'],
                 dayNamesShort: ['Tky', 'Pes', 'Psh', 'Pef', 'Pti', 'Pso', 'Psa'],
                 dayNamesMin: ['Tk', 'Pes', 'Psh', 'Pef', 'Pt', 'Pso', 'Psa'],
+                digits: null,
                 dateFormat: 'dd/mm/yyyy',
                 firstDay: 0,
                 isRTL: false
@@ -74,7 +76,7 @@
         },
         /** Determine whether this date is in a leap year.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {boolean} <code>true</code> if this is a leap year, <code>false</code> if not.
             @throws Error if an invalid year or a different calendar used. */
         leapYear: function (year) {
@@ -84,7 +86,7 @@
         },
         /** Retrieve the number of months in a year.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
             @return {number} The number of months.
             @throws Error if an invalid year or a different calendar used. */
         monthsInYear: function (year) {
@@ -93,9 +95,9 @@
         },
         /** Determine the week of the year for a date.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param [month] {number) the month to examine.
-            @param [day] {number} The day to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} [month] the month to examine (if only <code>year</code> specified above).
+            @param {number} [day] The day to examine (if only <code>year</code> specified above).
             @return {number} The week of the year.
             @throws Error if an invalid date or a different calendar used. */
         weekOfYear: function (year, month, day) {
@@ -106,8 +108,8 @@
         },
         /** Retrieve the number of days in a month.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to examine or the year of the month.
-            @param [month] {number} The month.
+            @param {CDate|number} year The date to examine or the year of the month.
+            @param {number} [month] The month (if only <code>year</code> specified above).
             @return {number} The number of days in this month.
             @throws Error if an invalid month/year or a different calendar used. */
         daysInMonth: function (year, month) {
@@ -117,9 +119,9 @@
         },
         /** Determine whether this date is a week day.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to examine or the year to examine.
-            @param month {number} The month to examine.
-            @param day {number} The day to examine.
+            @param {CDate|number} year The date to examine or the year to examine.
+            @param {number} month The month to examine (if only <code>year</code> specified above).
+            @param {number} day The day to examine (if only <code>year</code> specified above).
             @return {boolean} <code>true</code> if a week day, <code>false</code> if not.
             @throws Error if an invalid date or a different calendar used. */
         weekDay: function (year, month, day) {
@@ -128,9 +130,9 @@
         /** Retrieve the Julian date equivalent for this date,
             i.e. days since January 1, 4713 BCE Greenwich noon.
             @memberof CopticCalendar
-            @param year {CDate|number} The date to convert or the year to convert.
-            @param [month] {number) the month to convert.
-            @param [day] {number} The day to convert.
+            @param {CDate|number} year The date to convert or the year to convert.
+            @param {number} [month] the month to convert (if only <code>year</code> specified above).
+            @param {number} [day] The day to convert (if only <code>year</code> specified above).
             @return {number} The equivalent Julian date.
             @throws Error if an invalid date or a different calendar used. */
         toJD: function (year, month, day) {
@@ -144,7 +146,7 @@
         },
         /** Create a new date from a Julian date.
             @memberof CopticCalendar
-            @param jd {number} The Julian date to convert.
+            @param {number} jd The Julian date to convert.
             @return {CDate} The equivalent date. */
         fromJD: function (jd) {
             var c = Math.floor(jd) + 0.5 - this.jdEpoch;

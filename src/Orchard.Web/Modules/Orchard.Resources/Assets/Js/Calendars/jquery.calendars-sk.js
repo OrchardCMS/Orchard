@@ -2,7 +2,8 @@
    Slovak localisation for Gregorian/Julian calendars for jQuery.
    Written by Vojtech Rinik (vojto@hmm.sk). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['sk'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.sk = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Január','Február','Marec','Apríl','Máj','Jún',
@@ -12,12 +13,13 @@
 		dayNames: ['Nedel\'a','Pondelok','Utorok','Streda','Štvrtok','Piatok','Sobota'],
 		dayNamesShort: ['Ned','Pon','Uto','Str','Štv','Pia','Sob'],
 		dayNamesMin: ['Ne','Po','Ut','St','Št','Pia','So'],
+		digits: null,
 		dateFormat: 'dd.mm.yyyy',
 		firstDay: 0,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['sk'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['sk'];
+		$.calendars.calendars.julian.prototype.regionalOptions.sk =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.sk;
 	}
 })(jQuery);

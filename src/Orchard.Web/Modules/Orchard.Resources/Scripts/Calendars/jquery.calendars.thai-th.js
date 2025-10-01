@@ -4,10 +4,11 @@
 */
 
 /* http://keith-wood.name/calendars.html
-   Thai localisation for Thai calendars for jQuery v2.0.1.
+   Thai localisation for Thai calendars for jQuery v2.2.0.
    Written by pipo (pipo@sixhead.com). */
 (function ($) {
-    $.calendars.calendars.thai.prototype.regionalOptions['th'] = {
+    'use strict';
+    $.calendars.calendars.thai.prototype.regionalOptions.th = {
         name: 'Thai',
         epochs: ['BBE', 'BE'],
         monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
@@ -17,6 +18,7 @@
         dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
         dayNamesShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
         dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 0,
         isRTL: false

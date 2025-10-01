@@ -2,6 +2,7 @@
    Swiss French localisation for Gregorian/Julian calendars for jQuery.
    Written by Martin Voelkle (martin.voelkle@e-tc.ch). */
 (function($) {
+	'use strict';
 	$.calendars.calendars.gregorian.prototype.regionalOptions['fr-CH'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
@@ -12,6 +13,7 @@
 		dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
 		dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
 		dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
+		digits: null,
 		dateFormat: 'dd.mm.yyyy',
 		firstDay: 1,
 		isRTL: false

@@ -2,7 +2,8 @@
    Indonesian localisation for Gregorian/Julian calendars for jQuery.
    Written by Deden Fathurahman (dedenf@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['id'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.id = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januari','Februari','Maret','April','Mei','Juni',
@@ -12,12 +13,13 @@
 		dayNames: ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],
 		dayNamesShort: ['Min','Sen','Sel','Rab','kam','Jum','Sab'],
 		dayNamesMin: ['Mg','Sn','Sl','Rb','Km','jm','Sb'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 0,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['id'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['id'];
+		$.calendars.calendars.julian.prototype.regionalOptions.id =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.id;
 	}
 })(jQuery);

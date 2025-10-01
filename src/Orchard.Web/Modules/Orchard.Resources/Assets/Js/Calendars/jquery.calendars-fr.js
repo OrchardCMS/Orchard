@@ -2,7 +2,8 @@
    French localisation for Gregorian/Julian calendars for jQuery.
    Stéphane Nahmani (sholby@sholby.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['fr'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.fr = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
@@ -12,12 +13,13 @@
 		dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
 		dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
 		dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['fr'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['fr'];
+		$.calendars.calendars.julian.prototype.regionalOptions.fr =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.fr;
 	}
 })(jQuery);

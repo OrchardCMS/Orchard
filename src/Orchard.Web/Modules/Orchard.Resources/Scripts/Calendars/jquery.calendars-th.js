@@ -7,7 +7,8 @@
    Thai localisation for Gregorian/Julian calendars for jQuery.
    Written by pipo (pipo@sixhead.com). */
 (function ($) {
-    $.calendars.calendars.gregorian.prototype.regionalOptions['th'] = {
+    'use strict';
+    $.calendars.calendars.gregorian.prototype.regionalOptions.th = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
         monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
@@ -17,12 +18,13 @@
         dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
         dayNamesShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
         dayNamesMin: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 0,
         isRTL: false
     };
     if ($.calendars.calendars.julian) {
-        $.calendars.calendars.julian.prototype.regionalOptions['th'] =
-            $.calendars.calendars.gregorian.prototype.regionalOptions['th'];
+        $.calendars.calendars.julian.prototype.regionalOptions.th =
+            $.calendars.calendars.gregorian.prototype.regionalOptions.th;
     }
 })(jQuery);

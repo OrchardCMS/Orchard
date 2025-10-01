@@ -2,7 +2,8 @@
    Italian localisation for Gregorian/Julian calendars for jQuery.
    Written by Apaella (apaella@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regionalOptions['it'] = {
+	'use strict';
+	$.calendars.calendars.gregorian.prototype.regionalOptions.it = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
@@ -12,12 +13,13 @@
 		dayNames: ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
 		dayNamesShort: ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'],
 		dayNamesMin: ['Do','Lu','Ma','Me','Gio','Ve','Sa'],
+		digits: null,
 		dateFormat: 'dd/mm/yyyy',
 		firstDay: 1,
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regionalOptions['it'] =
-			$.calendars.calendars.gregorian.prototype.regionalOptions['it'];
+		$.calendars.calendars.julian.prototype.regionalOptions.it =
+			$.calendars.calendars.gregorian.prototype.regionalOptions.it;
 	}
 })(jQuery);

@@ -7,6 +7,7 @@
    Hindi INDIA localisation for Gregorian/Julian calendars for jQuery.
    Written by Pawan Kumar Singh. */
 (function ($) {
+    'use strict';
     $.calendars.calendars.gregorian.prototype.regionalOptions['hi-IN'] = {
         name: 'Gregorian',
         epochs: ['BCE', 'CE'],
@@ -15,6 +16,7 @@
         dayNames: ['रविवार', 'सोमवार', 'मंगलवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार'],
         dayNamesShort: ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'],
         dayNamesMin: ['र', 'सो', 'मं', 'बु', 'गु', 'शु', 'श'],
+        digits: null,
         dateFormat: 'dd/mm/yyyy',
         firstDay: 1,
         isRTL: false
