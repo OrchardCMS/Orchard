@@ -1,17 +1,5 @@
 [
     {
-        "inputs": [
-            "Assets/Css/jQueryUI/jquery-ui.css",
-            "Assets/Css/jQueryUI/jquery-ui.structure.css",
-            "Assets/Css/jQueryUI/jquery-ui.theme.css"
-        ],
-        "output": "Styles/jquery-ui.css"
-    },
-    {
-        "inputs": [ "Assets/Js/jQueryUI/jquery-ui.js" ],
-        "output": "Scripts/jquery-ui.js"
-    },
-    {
         "inputs": [ "Assets/Js/jQuery/jquery.utils.js" ],
         "output": "Scripts/jquery.utils.js"
     },

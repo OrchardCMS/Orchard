@@ -17,7 +17,7 @@ namespace Orchard.Resources.ResourceManifests {
                 .SetDependencies("AngularJs");
             manifest.DefineScript("AngularJs_Sortable")
                 .SetUrl("Angular/angular-sortable.min.js", "Angular/angular-sortable.js")
-                .SetDependencies("AngularJs", "jQueryUI_Sortable");
+                .SetDependencies("AngularJs", "jQueryUI");
 
             manifest.DefineScript("AngularJs_Full")
                 .SetDependencies("AngularJs", "AngularJs_Sanitize", "AngularJs_Resource", "AngularJs_Sortable");

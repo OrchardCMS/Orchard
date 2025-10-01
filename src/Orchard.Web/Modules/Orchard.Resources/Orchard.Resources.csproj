@@ -96,9 +96,6 @@
     <Content Include="Assets\Css\Calendars\ui.calendars.picker.css" />
     <Content Include="Assets\Css\Colorbox\colorbox.css" />
     <Content Include="Assets\Css\DateTimeEditor\jquery-datetime-editor.css" />
-    <Content Include="Assets\Css\jQueryUI\jquery-ui.css" />
-    <Content Include="Assets\Css\jQueryUI\jquery-ui.structure.css" />
-    <Content Include="Assets\Css\jQueryUI\jquery-ui.theme.css" />
     <Content Include="Assets\Css\TimeEntry\jquery.timeentry.css" />
     <Content Include="Assets\Js\Angular\angular-resource.js" />
     <Content Include="Assets\Js\Angular\angular-sanitize.js" />
@@ -337,7 +334,6 @@
     <Content Include="Assets\Js\FileUpload\jquery.fileupload-validate.js" />
     <Content Include="Assets\Js\FileUpload\jquery.fileupload.js" />
     <Content Include="Assets\Js\History\history.js" />
-    <Content Include="Assets\Js\jQueryUI\jquery-ui.js" />
     <Content Include="Assets\Js\jQuery\jquery.cookie.js" />
     <Content Include="Assets\Js\FileUpload\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery\jquery.plugin.js" />
@@ -739,8 +735,8 @@
     <Content Include="Scripts\Calendars\jquery.calendars.validation.min.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\history.min.js" />
-    <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jQueryUI\jquery-ui.js" />
+    <Content Include="Scripts\jQueryUI\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.blockui.js" />
     <Content Include="Scripts\jquery.blockui.min.js" />
     <Content Include="Scripts\jquery.colorbox.js" />
@@ -823,10 +819,20 @@
     <Content Include="Styles\Images\ui-icons_ffffff_256x240.png" />
     <Content Include="Styles\jquery-datetime-editor.css" />
     <Content Include="Styles\jquery-datetime-editor.min.css" />
-    <Content Include="Styles\jquery-ui.css" />
-    <Content Include="Styles\jquery-ui.min.css" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_444444_256x240.png" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_555555_256x240.png" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_777620_256x240.png" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_777777_256x240.png" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Styles\jQueryUI\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Styles\jQueryUI\jquery-ui.css" />
+    <Content Include="Styles\jQueryUI\jquery-ui.min.css" />
     <Content Include="Styles\jquery.colorbox.css" />
     <Content Include="Styles\jquery.colorbox.min.css" />
+    <Content Include="Styles\jQueryUI\jquery-ui.structure.css" />
+    <Content Include="Styles\jQueryUI\jquery-ui.structure.min.css" />
+    <Content Include="Styles\jQueryUI\jquery-ui.theme.css" />
+    <Content Include="Styles\jQueryUI\jquery-ui.theme.min.css" />
     <Content Include="Styles\TimeEntry\jquery.timeentry.css" />
     <Content Include="Styles\TimeEntry\jquery.timeentry.min.css" />
     <Content Include="Web.config" />
@@ -941,6 +947,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ResourceManifests\jQueryUI.cs" />
     <Compile Include="ResourceManifests\Uri.cs" />
     <Compile Include="ResourceManifests\BlockUI.cs" />
     <Compile Include="ResourceManifests\Moment.cs" />
