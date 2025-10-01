@@ -380,8 +380,10 @@
     <Content Include="Scripts\Angular\angular-sortable.min.js" />
     <Content Include="Scripts\Angular\angular.js" />
     <Content Include="Scripts\Angular\angular.min.js" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\Bootstrap\bootstrap.bundle.js" />
+    <Content Include="Scripts\Bootstrap\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\Bootstrap\bootstrap.js" />
+    <Content Include="Scripts\Bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-af.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-af.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars-am.js" />
@@ -936,6 +938,7 @@
     <Content Include="Assets\Scss\Bootstrap\_type.scss" />
     <Content Include="Assets\Scss\Bootstrap\_utilities.scss" />
     <Content Include="Assets\Scss\Bootstrap\_variables.scss" />
+    <Content Include="Assets\Scss\Bootstrap\utilities\_interactions.scss" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
