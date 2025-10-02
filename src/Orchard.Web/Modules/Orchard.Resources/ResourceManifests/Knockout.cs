@@ -4,7 +4,10 @@ namespace Orchard.Resources.ResourceManifests {
     public class Knockout : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("Knockout").SetUrl("knockout.min.js", "knockout.js").SetVersion("3.4.0"); // TODO: Set the CDN URL as soon as its available on the AJAXCDN site for this version.
+            manifest.DefineScript("Knockout")
+                .SetUrl("Knockout/knockout.min.js", "Knockout/knockout.js")
+                // TODO: Set the CDN URL as soon as its available on the AJAXCDN site for this version.
+                .SetVersion("3.4.0");
         }
     }
 }

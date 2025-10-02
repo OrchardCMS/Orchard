@@ -83,7 +83,7 @@
     },
     {
         "inputs": [ "Assets/Js/Knockout/knockout-3.4.0.js" ],
-        "output": "Scripts/knockout.js"
+        "output": "Scripts/Knockout/knockout.js"
     },
     {
         "inputs": [ "Assets/Js/Moment/moment.js" ],
