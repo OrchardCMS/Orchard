@@ -7,7 +7,8 @@ namespace Orchard.Resources.ResourceManifests {
             manifest.DefineScript("Knockout")
                 .SetUrl("Knockout/knockout.min.js", "Knockout/knockout.js")
                 // TODO: Set the CDN URL as soon as its available on the AJAXCDN site for this version.
-                .SetVersion("3.4.0");
+                // 3.5.1 is not available, only 3.5.0.
+                .SetVersion("3.5.1");
         }
     }
 }
