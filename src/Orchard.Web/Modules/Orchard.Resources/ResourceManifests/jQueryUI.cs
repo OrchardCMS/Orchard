@@ -84,11 +84,11 @@ namespace Orchard.Resources.ResourceManifests {
 
             // jQuery Color Box.
             manifest.DefineScript("jQueryColorBox")
-                .SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js")
+                .SetUrl("jQuery.Colorbox/jquery.colorbox.min.js", "jQuery.Colorbox/jquery.colorbox.js")
                 .SetVersion("1.6.3")
                 .SetDependencies("jQuery");
             manifest.DefineStyle("jQueryColorBox")
-                .SetUrl("jquery.colorbox.min.css", "jquery.colorbox.css")
+                .SetUrl("jQuery.Colorbox/jquery.colorbox.min.css", "jQuery.Colorbox/jquery.colorbox.css")
                 .SetVersion("1.6.3");
         }
     }

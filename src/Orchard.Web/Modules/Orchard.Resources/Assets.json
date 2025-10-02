@@ -54,12 +54,8 @@
         "output": "Styles/jquery-datetime-editor.css"
     },
     {
-        "inputs": [ "Assets/Css/Colorbox/colorbox.css" ],
-        "output": "Styles/jquery.colorbox.css"
-    },
-    {
-        "inputs": [ "Assets/Js/Colorbox/jquery.colorbox.js" ],
-        "output": "Scripts/jquery.colorbox.js"
+        "inputs": [ "Assets/Css/jQuery.Colorbox/colorbox.css" ],
+        "output": "Styles/jQuery.Colorbox/jquery.colorbox.css"
     },
     {
         "inputs": [ "Assets/Js/Angular/angular.js" ],

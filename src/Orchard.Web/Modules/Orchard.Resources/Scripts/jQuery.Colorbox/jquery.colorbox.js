@@ -1,5 +1,5 @@
 /*!
-	Colorbox 1.6.3
+	Colorbox 1.6.4
 	license: MIT
 	http://www.jacklmoore.com/colorbox
 */
@@ -80,7 +80,7 @@
 			return this.rel;
 		},
 		href: function() {
-			// using this.href would give the absolute url, when the href may have been inteded as a selector (e.g. '#container')
+			// using this.href would give the absolute url, when the href may have been intended as a selector (e.g. '#container')
 			return $(this).attr('href');
 		},
 		title: function() {
@@ -155,7 +155,7 @@
 	$prev,
 	$close,
 	$groupControls,
-	$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
+	$events = $('<a/>'), // $({}) would be preferred, but there is an issue with jQuery 1.4.2
 
 	// Variables for cached values or use across multiple functions
 	settings,
@@ -484,7 +484,7 @@
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
 				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
-				$slideshow = $tag('button', "Slideshow"),
+				$slideshow = $('<button type="button"/>').attr({id:prefix+'Slideshow'}),
 				$loadingOverlay
 			);
 
@@ -950,7 +950,7 @@
 		}, 100);
 
 		if (settings.get('inline')) {
-			var $target = $(href);
+			var $target = $(href).eq(0);
 			// Inserts an empty placeholder where inline content is being pulled from.
 			// An event is bound to put inline content back when Colorbox closes or loads new content.
 			$inline = $('<div>').hide().insertBefore($target);
@@ -982,7 +982,7 @@
 					return;
 				}
 
-				// A small pause because some browsers will occassionaly report a
+				// A small pause because some browsers will occasionally report a
 				// img.width and img.height of zero immediately after the img.onload fires
 				setTimeout(function(){
 					var percent;
