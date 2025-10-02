@@ -4,7 +4,7 @@ namespace Orchard.Resources.ResourceManifests {
     public class History : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("History").SetUrl("history.min.js", "history.js");
+            manifest.DefineScript("History").SetUrl("History/history.min.js", "History/history.js");
         }
     }
 }

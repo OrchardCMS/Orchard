@@ -744,8 +744,8 @@
     <Content Include="Scripts\Calendars\jquery.calendars.ummalqura.min.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.validation.js" />
     <Content Include="Scripts\Calendars\jquery.calendars.validation.min.js" />
-    <Content Include="Scripts\history.js" />
-    <Content Include="Scripts\history.min.js" />
+    <Content Include="Scripts\History\history.js" />
+    <Content Include="Scripts\History\history.min.js" />
     <Content Include="Scripts\jQueryUI\jquery-ui.js" />
     <Content Include="Scripts\jQueryUI\jquery-ui.min.js" />
     <Content Include="Scripts\jQuery.BlockUI\jquery.blockui.js" />

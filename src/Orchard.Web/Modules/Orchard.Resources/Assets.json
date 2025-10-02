@@ -87,7 +87,7 @@
     },
     {
         "inputs": [ "Assets/Js/History/history.js" ],
-        "output": "Scripts/history.js"
+        "output": "Scripts/History/history.js"
     },
     {
         "inputs": [ "Assets/Js/Knockout/knockout-3.4.0.js" ],
