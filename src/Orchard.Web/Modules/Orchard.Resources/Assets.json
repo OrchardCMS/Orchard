@@ -1,15 +1,15 @@
 [
     {
-        "inputs": [ "Assets/Js/jQuery/jquery.utils.js" ],
-        "output": "Scripts/jquery.utils.js"
+        "inputs": [ "Assets/Js/jQuery.Utilities/jquery.utils.js" ],
+        "output": "Scripts/jQuery.Utilities/jquery.utils.js"
     },
     {
-        "inputs": [ "Assets/Js/jQuery/jquery.plugin.js" ],
-        "output": "Scripts/jquery.plugin.js"
+        "inputs": [ "Assets/Js/jQuery.Utilities/jquery.plugin.js" ],
+        "output": "Scripts/jQuery.Utilities/jquery.plugin.js"
     },
     {
-        "inputs": [ "Assets/Js/jQuery/jquery.cookie.js" ],
-        "output": "Scripts/jquery.cookie.js"
+        "inputs": [ "Assets/Js/jQuery.Utilities/jquery.cookie.js" ],
+        "output": "Scripts/jQuery.Utilities/jquery.cookie.js"
     },
     {
         "inputs": [ "Assets/Js/FileUpload/jquery.iframe-transport.js" ],

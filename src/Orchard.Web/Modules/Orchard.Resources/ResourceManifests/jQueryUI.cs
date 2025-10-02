@@ -35,18 +35,6 @@ namespace Orchard.Resources.ResourceManifests {
             // Right now no customization in the styles, but the resource might be used later.
             manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI_Full");
 
-            // Additional utilities and plugins.
-            manifest.DefineScript("jQueryUtils")
-                .SetUrl("jquery.utils.min.js", "jquery.utils.js")
-                .SetDependencies("jQuery");
-            manifest.DefineScript("jQueryPlugin")
-                .SetUrl("jquery.plugin.min.js", "jquery.plugin.js")
-                .SetDependencies("jQuery");
-            manifest.DefineScript("jQueryCookie") // jQuery Cookie.
-                .SetUrl("jquery.cookie.min.js", "jquery.cookie.js")
-                .SetVersion("1.4.1")
-                .SetDependencies("jQuery");
-
             // jQuery Calendars.
             manifest.DefineScript("jQueryCalendars")
                 .SetUrl("Calendars/jquery.calendars.all.min.js", "Calendars/jquery.calendars.all.js")
