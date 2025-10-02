@@ -310,7 +310,7 @@
     <Content Include="Assets\Js\jQuery.Utilities\jquery.cookie.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.utils.js" />
-    <Content Include="Assets\Js\Knockout\knockout-3.4.0.js" />
+    <Content Include="Assets\Js\Knockout\knockout.js" />
     <Content Include="Assets\Js\Moment\moment.js" />
     <Content Include="Assets\Js\Underscore\underscore.js" />
     <Content Include="Assets\Js\Uri\uri.js" />

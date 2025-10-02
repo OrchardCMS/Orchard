@@ -82,7 +82,7 @@
         "output": "Scripts/History/history.js"
     },
     {
-        "inputs": [ "Assets/Js/Knockout/knockout-3.4.0.js" ],
+        "inputs": [ "Assets/Js/Knockout/knockout.js" ],
         "output": "Scripts/Knockout/knockout.js"
     },
     {
