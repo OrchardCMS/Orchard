@@ -7,7 +7,7 @@ namespace Orchard.Resources.ResourceManifests {
 
             manifest.DefineScript("jQueryFileUpload")
                 .SetUrl("jQuery.FileUpload/jquery.fileupload-full.min.js", "jQuery.FileUpload/jquery.fileupload-full.js")
-                .SetVersion("9.11.2")
+                .SetVersion("10.32")
                 .SetDependencies("jQueryUI");
         }
     }

@@ -1,32 +1,29 @@
 /*
- * jQuery File Upload Processing Plugin 1.3.0
+ * jQuery File Upload Processing Plugin
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2012, Sebastian Tschan
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
-/* jshint nomen:false */
-/* global define, window */
+/* global define, require */
 
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define([
-            'jquery',
-            './jquery.fileupload'
-        ], factory);
+        define(['jquery', './jquery.fileupload'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS:
+        factory(require('jquery'), require('./jquery.fileupload'));
     } else {
         // Browser globals:
-        factory(
-            window.jQuery
-        );
+        factory(window.jQuery);
     }
-}(function ($) {
+})(function ($) {
     'use strict';
 
     var originalAdd = $.blueimp.fileupload.prototype.options.add;
@@ -34,16 +31,15 @@
     // The File Upload Processing plugin extends the fileupload widget
     // with file processing functionality:
     $.widget('blueimp.fileupload', $.blueimp.fileupload, {
-
         options: {
             // The list of processing actions:
             processQueue: [
                 /*
-                {
-                    action: 'log',
-                    type: 'debug'
-                }
-                */
+                        {
+                            action: 'log',
+                            type: 'debug'
+                        }
+                        */
             ],
             add: function (e, data) {
                 var $this = $(this);
@@ -56,24 +52,25 @@
 
         processActions: {
             /*
-            log: function (data, options) {
-                console[options.type](
-                    'Processing "' + data.files[data.index].name + '"'
-                );
-            }
-            */
+                  log: function (data, options) {
+                      console[options.type](
+                          'Processing "' + data.files[data.index].name + '"'
+                      );
+                  }
+                  */
         },
 
         _processFile: function (data, originalData) {
             var that = this,
+                // eslint-disable-next-line new-cap
                 dfd = $.Deferred().resolveWith(that, [data]),
                 chain = dfd.promise();
             this._trigger('process', null, data);
             $.each(data.processQueue, function (i, settings) {
                 var func = function (data) {
                     if (originalData.errorThrown) {
-                        return $.Deferred()
-                                .rejectWith(that, [originalData]).promise();
+                        // eslint-disable-next-line new-cap
+                        return $.Deferred().rejectWith(that, [originalData]).promise();
                     }
                     return that.processActions[settings.action].call(
                         that,
@@ -81,7 +78,7 @@
                         settings
                     );
                 };
-                chain = chain.pipe(func, settings.always && func);
+                chain = chain[that._promisePipe](func, settings.always && func);
             });
             chain
                 .done(function () {
@@ -106,23 +103,24 @@
                     action = this.action,
                     prefix = this.prefix === true ? action : this.prefix;
                 $.each(this, function (key, value) {
-                    if ($.type(value) === 'string' &&
-                            value.charAt(0) === '@') {
-                        settings[key] = options[
-                            value.slice(1) || (prefix ? prefix +
-                                key.charAt(0).toUpperCase() + key.slice(1) : key)
-                        ];
+                    if ($.type(value) === 'string' && value.charAt(0) === '@') {
+                        settings[key] =
+                            options[
+                            value.slice(1) ||
+                            (prefix
+                                ? prefix + key.charAt(0).toUpperCase() + key.slice(1)
+                                : key)
+                            ];
                     } else {
                         settings[key] = value;
                     }
-
                 });
                 processQueue.push(settings);
             });
             options.processQueue = processQueue;
         },
 
-        // Returns the number of files currently in the processsing queue:
+        // Returns the number of files currently in the processing queue:
         processing: function () {
             return this._processing;
         },
@@ -141,20 +139,22 @@
                     var opts = index ? $.extend({}, options) : options,
                         func = function () {
                             if (data.errorThrown) {
-                                return $.Deferred()
-                                        .rejectWith(that, [data]).promise();
+                                // eslint-disable-next-line new-cap
+                                return $.Deferred().rejectWith(that, [data]).promise();
                             }
                             return that._processFile(opts, data);
                         };
                     opts.index = index;
                     that._processing += 1;
-                    that._processingQueue = that._processingQueue.pipe(func, func)
-                        .always(function () {
-                            that._processing -= 1;
-                            if (that._processing === 0) {
-                                that._trigger('processstop');
-                            }
-                        });
+                    that._processingQueue = that._processingQueue[that._promisePipe](
+                        func,
+                        func
+                    ).always(function () {
+                        that._processing -= 1;
+                        if (that._processing === 0) {
+                            that._trigger('processstop');
+                        }
+                    });
                 });
             }
             return this._processingQueue;
@@ -163,10 +163,8 @@
         _create: function () {
             this._super();
             this._processing = 0;
-            this._processingQueue = $.Deferred().resolveWith(this)
-                .promise();
+            // eslint-disable-next-line new-cap
+            this._processingQueue = $.Deferred().resolveWith(this).promise();
         }
-
     });
-
-}));
+});
