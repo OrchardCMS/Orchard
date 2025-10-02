@@ -12,16 +12,16 @@
         "output": "Scripts/jQuery.Utilities/jquery.cookie.js"
     },
     {
-        "inputs": [ "Assets/Js/FileUpload/jquery.iframe-transport.js" ],
-        "output": "Scripts/jquery.iframe-transport.js"
+        "inputs": [ "Assets/Js/jQuery.FileUpload/jquery.iframe-transport.js" ],
+        "output": "Scripts/jQuery.FileUpload/jquery.iframe-transport.js"
     },
     {
         "inputs": [
-            "Assets/Js/FileUpload/jquery.fileupload.js",
-            "Assets/Js/FileUpload/jquery.fileupload-process.js",
-            "Assets/Js/FileUpload/jquery.fileupload-validate.js"
+            "Assets/Js/jQuery.FileUpload/jquery.fileupload.js",
+            "Assets/Js/jQuery.FileUpload/jquery.fileupload-process.js",
+            "Assets/Js/jQuery.FileUpload/jquery.fileupload-validate.js"
         ],
-        "output": "Scripts/jquery.fileupload-full.js"
+        "output": "Scripts/jQuery.FileUpload/jquery.fileupload-full.js"
     },
     {
         "inputs": [ "Assets/Js/jQuery.Calendars/*.js" ],

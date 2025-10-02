@@ -302,12 +302,12 @@
     <Content Include="Assets\Js\jQuery.Calendars\jquery.calendars.ummalqura-ar.js" />
     <Content Include="Assets\Js\jQuery.Calendars\jquery.calendars.ummalqura.js" />
     <Content Include="Assets\Js\jQuery.Calendars\jquery.calendars.validation.js" />
-    <Content Include="Assets\Js\FileUpload\jquery.fileupload-process.js" />
-    <Content Include="Assets\Js\FileUpload\jquery.fileupload-validate.js" />
-    <Content Include="Assets\Js\FileUpload\jquery.fileupload.js" />
     <Content Include="Assets\Js\History\history.js" />
+    <Content Include="Assets\Js\jQuery.FileUpload\jquery.fileupload-process.js" />
+    <Content Include="Assets\Js\jQuery.FileUpload\jquery.fileupload-validate.js" />
+    <Content Include="Assets\Js\jQuery.FileUpload\jquery.fileupload.js" />
+    <Content Include="Assets\Js\jQuery.FileUpload\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.cookie.js" />
-    <Content Include="Assets\Js\FileUpload\jquery.iframe-transport.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.utils.js" />
     <Content Include="Assets\Js\Knockout\knockout-3.4.0.js" />
@@ -755,10 +755,10 @@
     <Content Include="Scripts\jQuery.Colorbox\jquery.colorbox.min.js" />
     <Content Include="Scripts\jQuery.Utilities\jquery.cookie.js" />
     <Content Include="Scripts\jQuery.Utilities\jquery.cookie.min.js" />
-    <Content Include="Scripts\jquery.fileupload-full.js" />
-    <Content Include="Scripts\jquery.fileupload-full.min.js" />
-    <Content Include="Scripts\jquery.iframe-transport.js" />
-    <Content Include="Scripts\jquery.iframe-transport.min.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-full.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-full.min.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jQuery.FileUpload\jquery.iframe-transport.min.js" />
     <Content Include="Scripts\jQuery.Utilities\jquery.plugin.js" />
     <Content Include="Scripts\jQuery.Utilities\jquery.plugin.min.js" />
     <Content Include="Scripts\jQuery.Utilities\jquery.utils.js" />
@@ -954,6 +954,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourceManifests\jQueryCalendars.cs" />
+    <Compile Include="ResourceManifests\jQueryFileUpload.cs" />
     <Compile Include="ResourceManifests\jQueryUtilities.cs" />
     <Compile Include="ResourceManifests\jQueryUI.cs" />
     <Compile Include="ResourceManifests\Uri.cs" />

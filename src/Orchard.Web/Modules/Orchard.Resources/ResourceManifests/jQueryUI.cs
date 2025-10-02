@@ -49,12 +49,6 @@ namespace Orchard.Resources.ResourceManifests {
                 .SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css")
                 .SetDependencies("DateTimeEditor");
 
-            // jQuery File Upload.
-            manifest.DefineScript("jQueryFileUpload")
-                .SetUrl("jquery.fileupload-full.min.js", "jquery.fileupload-full.js")
-                .SetVersion("9.11.2")
-                .SetDependencies("jQueryUI");
-
             // jQuery Color Box.
             manifest.DefineScript("jQueryColorBox")
                 .SetUrl("jQuery.Colorbox/jquery.colorbox.min.js", "jQuery.Colorbox/jquery.colorbox.js")
