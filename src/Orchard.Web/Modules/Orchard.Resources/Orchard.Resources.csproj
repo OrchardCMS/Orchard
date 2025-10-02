@@ -96,7 +96,7 @@
     <Content Include="Assets\Css\jQuery.Calendars\ui.calendars.picker.css" />
     <Content Include="Assets\Css\jQuery.Colorbox\colorbox.css" />
     <Content Include="Assets\Css\DateTimeEditor\jquery-datetime-editor.css" />
-    <Content Include="Assets\Css\TimeEntry\jquery.timeentry.css" />
+    <Content Include="Assets\Css\jQuery.TimeEntry\jquery.timeentry.css" />
     <Content Include="Assets\Js\Angular\angular-resource.js" />
     <Content Include="Assets\Js\Angular\angular-sanitize.js" />
     <Content Include="Assets\Js\Angular\angular.js" />
