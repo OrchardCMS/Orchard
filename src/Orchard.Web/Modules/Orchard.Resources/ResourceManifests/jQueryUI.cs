@@ -35,15 +35,6 @@ namespace Orchard.Resources.ResourceManifests {
             // Right now no customization in the styles, but the resource might be used later.
             manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI_Full");
 
-            // jQuery Time Entry.
-            manifest.DefineScript("jQueryTimeEntry")
-                .SetUrl("TimeEntry/jquery.timeentry.min.js", "TimeEntry/jquery.timeentry.js")
-                .SetDependencies("jQueryPlugin")
-                .SetVersion("2.0.1");
-            manifest.DefineStyle("jQueryTimeEntry")
-                .SetUrl("TimeEntry/jquery.timeentry.min.css", "TimeEntry/jquery.timeentry.css")
-                .SetVersion("2.0.1");
-
             // jQuery Date/Time Editor Enhancements.
             manifest.DefineStyle("jQueryDateTimeEditor")
                 .SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css")

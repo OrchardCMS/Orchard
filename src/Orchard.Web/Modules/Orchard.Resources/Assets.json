@@ -42,12 +42,8 @@
         "output": "Styles/jQuery.Calendars/jquery.calendars.picker.full.css"
     },
     {
-        "inputs": [ "Assets/Css/TimeEntry/jquery.timeentry.css" ],
-        "output": "Styles/TimeEntry/jquery.timeentry.css"
-    },
-    {
-        "inputs": [ "Assets/Js/TimeEntry/jquery.timeentry.js" ],
-        "output": "Scripts/TimeEntry/jquery.timeentry.js"
+        "inputs": [ "Assets/Css/jQuery.TimeEntry/jquery.timeentry.css" ],
+        "output": "Styles/jQuery.TimeEntry/jquery.timeentry.css"
     },
     {
         "inputs": [ "Assets/Css/DateTimeEditor/jquery-datetime-editor.css" ],
