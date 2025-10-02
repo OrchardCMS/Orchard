@@ -955,6 +955,7 @@
   <ItemGroup>
     <Compile Include="ResourceManifests\jQueryCalendars.cs" />
     <Compile Include="ResourceManifests\jQueryFileUpload.cs" />
+    <Compile Include="ResourceManifests\jQueryColorbox.cs" />
     <Compile Include="ResourceManifests\jQueryUtilities.cs" />
     <Compile Include="ResourceManifests\jQueryUI.cs" />
     <Compile Include="ResourceManifests\Uri.cs" />

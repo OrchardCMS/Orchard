@@ -48,15 +48,6 @@ namespace Orchard.Resources.ResourceManifests {
             manifest.DefineStyle("jQueryDateTimeEditor")
                 .SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css")
                 .SetDependencies("DateTimeEditor");
-
-            // jQuery Color Box.
-            manifest.DefineScript("jQueryColorBox")
-                .SetUrl("jQuery.Colorbox/jquery.colorbox.min.js", "jQuery.Colorbox/jquery.colorbox.js")
-                .SetVersion("1.6.3")
-                .SetDependencies("jQuery");
-            manifest.DefineStyle("jQueryColorBox")
-                .SetUrl("jQuery.Colorbox/jquery.colorbox.min.css", "jQuery.Colorbox/jquery.colorbox.css")
-                .SetVersion("1.6.3");
         }
     }
 }
