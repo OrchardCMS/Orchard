@@ -95,6 +95,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\IndexingCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Helpers\IndexingHelpers.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\CreateIndexingTaskHandler.cs" />
     <Compile Include="Handlers\InfosetFieldIndexingHandler.cs" />
