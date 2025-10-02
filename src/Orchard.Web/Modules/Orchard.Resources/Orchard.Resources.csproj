@@ -101,7 +101,7 @@
     <Content Include="Assets\Js\Angular\angular-sanitize.js" />
     <Content Include="Assets\Js\Angular\angular.js" />
     <Content Include="Assets\Js\Angular\sortable.js" />
-    <Content Include="Assets\Js\BlockUI\jquery.blockui.js" />
+    <Content Include="Assets\Js\jQuery.BlockUI\jquery.blockui.js" />
     <Content Include="Assets\Js\Bootstrap\alert.js" />
     <Content Include="Assets\Js\Bootstrap\button.js" />
     <Content Include="Assets\Js\Bootstrap\carousel.js" />
@@ -748,8 +748,8 @@
     <Content Include="Scripts\history.min.js" />
     <Content Include="Scripts\jQueryUI\jquery-ui.js" />
     <Content Include="Scripts\jQueryUI\jquery-ui.min.js" />
-    <Content Include="Scripts\jquery.blockui.js" />
-    <Content Include="Scripts\jquery.blockui.min.js" />
+    <Content Include="Scripts\jQuery.BlockUI\jquery.blockui.js" />
+    <Content Include="Scripts\jQuery.BlockUI\jquery.blockui.min.js" />
     <Content Include="Scripts\jquery.colorbox.js" />
     <Content Include="Scripts\jquery.colorbox.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
@@ -960,7 +960,7 @@
   <ItemGroup>
     <Compile Include="ResourceManifests\jQueryUI.cs" />
     <Compile Include="ResourceManifests\Uri.cs" />
-    <Compile Include="ResourceManifests\BlockUI.cs" />
+    <Compile Include="ResourceManifests\jQueryBlockUI.cs" />
     <Compile Include="ResourceManifests\Moment.cs" />
     <Compile Include="ResourceManifests\Knockout.cs" />
     <Compile Include="ResourceManifests\History.cs" />
