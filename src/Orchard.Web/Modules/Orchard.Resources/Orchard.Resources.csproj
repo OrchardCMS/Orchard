@@ -797,8 +797,8 @@
     <Content Include="Styles\jQueryUI\images\ui-bg_glass_75_e6e6e6_1x400.png" />
     <Content Include="Styles\jQueryUI\images\ui-bg_glass_95_fef1ec_1x400.png" />
     <Content Include="Styles\jQueryUI\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Styles\jquery-datetime-editor.css" />
-    <Content Include="Styles\jquery-datetime-editor.min.css" />
+    <Content Include="Styles\DateTimeEditor\jquery-datetime-editor.css" />
+    <Content Include="Styles\DateTimeEditor\jquery-datetime-editor.min.css" />
     <Content Include="Styles\jQuery.Colorbox\images\border.png" />
     <Content Include="Styles\jQuery.Colorbox\images\controls.png" />
     <Content Include="Styles\jQuery.Colorbox\images\loading.gif" />

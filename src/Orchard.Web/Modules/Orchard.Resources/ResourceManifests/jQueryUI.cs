@@ -35,9 +35,9 @@ namespace Orchard.Resources.ResourceManifests {
             // Right now no customization in the styles, but the resource might be used later.
             manifest.DefineStyle("jQueryUI_Orchard").SetDependencies("jQueryUI_Full");
 
-            // jQuery Date/Time Editor Enhancements.
+            // jQuery Date/Time Editor enhancements.
             manifest.DefineStyle("jQueryDateTimeEditor")
-                .SetUrl("jquery-datetime-editor.min.css", "jquery-datetime-editor.css")
+                .SetUrl("DateTimeEditor/jquery-datetime-editor.min.css", "DateTimeEditor/jquery-datetime-editor.css")
                 .SetDependencies("DateTimeEditor");
         }
     }
