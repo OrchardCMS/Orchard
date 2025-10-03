@@ -4,7 +4,9 @@ namespace Orchard.Resources.ResourceManifests {
     public class Moment : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("Moment").SetUrl("moment.min.js", "moment.js").SetVersion("2.10.6");
+            manifest.DefineScript("Moment")
+                .SetUrl("Moment/moment.min.js", "Moment/moment.js")
+                .SetVersion("2.10.6");
         }
     }
 }

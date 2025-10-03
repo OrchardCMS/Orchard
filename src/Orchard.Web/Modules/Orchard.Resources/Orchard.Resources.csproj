@@ -766,8 +766,8 @@
     <Content Include="Scripts\jQuery\jquery.min.js" />
     <Content Include="Scripts\Knockout\knockout.js" />
     <Content Include="Scripts\Knockout\knockout.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\Moment\moment.js" />
+    <Content Include="Scripts\Moment\moment.min.js" />
     <Content Include="Scripts\jQuery.TimeEntry\jquery.timeentry.js" />
     <Content Include="Scripts\jQuery.TimeEntry\jquery.timeentry.min.js" />
     <Content Include="Scripts\underscore.js" />
