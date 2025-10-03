@@ -74,10 +74,6 @@
         "output": "Scripts/underscore.js"
     },
     {
-        "inputs": [ "Assets/Less/FontAwesome/font-awesome.less" ],
-        "output": "Styles/font-awesome.css"
-    },
-    {
         "inputs": [ "Assets/Js/History/history.js" ],
         "output": "Scripts/History/history.js"
     },

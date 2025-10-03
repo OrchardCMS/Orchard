@@ -122,7 +122,7 @@ var mediaLibrarySettings = {
     <li>
         <div class="media-library-folder" data-bind="css: { 'in-progress': $root.pendingRequest() }">
             <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
-                <a href="#" class="media-library-navigation-folder-link"><i class="fa" data-bind="css: {'fa-folder-open-o': isExpanded(), 'fa-folder-o': !isExpanded()}"></i><span data-bind="text: name"></span></a>
+                <a href="#" class="media-library-navigation-folder-link"><i class="far" data-bind="css: {'fa-folder-open': isExpanded(), 'fa-folder': !isExpanded()}"></i><span data-bind="text: name"></span></a>
             </div>
             <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
             </ul>
