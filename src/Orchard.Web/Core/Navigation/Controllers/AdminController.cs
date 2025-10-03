@@ -137,9 +137,9 @@ namespace Orchard.Core.Navigation.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-
             MenuPart menuPart = _menuService.Get(id);
             int? menuId = null;
+
             if (!_authorizer.Authorize(
                 Permissions.ManageMenus,
                 menuPart == null ? null : _menuService.GetMenu(menuPart.Menu.Id),
@@ -166,6 +166,11 @@ namespace Orchard.Core.Navigation.Controllers {
                     }
                 }
 
+                _notifier.Information(T.Plural(
+                    "The menu item '{1}' has been deleted.",
+                    "The menu item '{1}' and its children have been deleted.",
+                    menuItems.Count() + 1,
+                    menuPart.MenuText));
             }
 
             return RedirectToAction("Index", new { menuId });
