@@ -25,7 +25,7 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public IContent GetMenu(string menuName) {
-            if(string.IsNullOrWhiteSpace(menuName)) {
+            if (string.IsNullOrWhiteSpace(menuName)) {
                 return null;
             }
 
@@ -37,19 +37,19 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public IContent GetMenu(int menuId) {
-            return _contentManager.Get(menuId, VersionOptions.Published);    
+            return _contentManager.Get(menuId, VersionOptions.Published);
         }
 
         public MenuPart Get(int menuPartId) {
-            return _contentManager.Get<MenuPart>(menuPartId);
+            return _contentManager.Get<MenuPart>(menuPartId, VersionOptions.Latest);
         }
 
         public IContent Create(string name) {
-            
-            if(string.IsNullOrWhiteSpace(name)) {
+
+            if (string.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentNullException(name);
             }
-            
+
             var menu = _contentManager.Create("Menu");
             menu.As<TitlePart>().Title = name;
 
