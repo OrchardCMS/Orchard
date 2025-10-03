@@ -71,7 +71,7 @@
     },
     {
         "inputs": [ "Assets/Js/Underscore/underscore.js" ],
-        "output": "Scripts/underscore.js"
+        "output": "Scripts/Underscore/underscore.js"
     },
     {
         "inputs": [ "Assets/Js/History/history.js" ],
