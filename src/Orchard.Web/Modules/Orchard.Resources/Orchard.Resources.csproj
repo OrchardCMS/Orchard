@@ -772,8 +772,8 @@
     <Content Include="Scripts\jQuery.TimeEntry\jquery.timeentry.min.js" />
     <Content Include="Scripts\Underscore\underscore.js" />
     <Content Include="Scripts\Underscore\underscore.min.js" />
-    <Content Include="Scripts\uri.js" />
-    <Content Include="Scripts\uri.min.js" />
+    <Content Include="Scripts\Uri\uri.js" />
+    <Content Include="Scripts\Uri\uri.min.js" />
     <Content Include="Styles\Bootstrap\bootstrap-grid.css" />
     <Content Include="Styles\Bootstrap\bootstrap-grid.min.css" />
     <Content Include="Styles\Bootstrap\bootstrap-reboot.css" />

@@ -91,6 +91,6 @@
     },
     {
         "inputs": [ "Assets/Js/Uri/uri.js" ],
-        "output": "Scripts/uri.js"
+        "output": "Scripts/Uri/uri.js"
     }
 ]
