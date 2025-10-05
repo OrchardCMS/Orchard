@@ -41,7 +41,7 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public MenuPart Get(int menuPartId) {
-            return _contentManager.Get<MenuPart>(menuPartId);
+            return _contentManager.Get<MenuPart>(menuPartId, VersionOptions.Latest);
         }
 
         public IContent Create(string name) {
