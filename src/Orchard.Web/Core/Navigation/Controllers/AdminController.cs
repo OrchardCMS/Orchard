@@ -314,10 +314,6 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Delete")]
-        public ActionResult EditDeletePOST(int id) => Delete(id);
-
-        [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int id) => Unpublish(id);
 
