@@ -50,7 +50,7 @@ namespace Orchard.Roles.Drivers {
 
         public Localizer T { get; set; }
 
-        private Lazy<IEnumerable<RoleRecord>> _allRoles;
+        private readonly Lazy<IEnumerable<RoleRecord>> _allRoles;
 
         protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) {
 
@@ -171,19 +171,6 @@ namespace Orchard.Roles.Drivers {
 
         protected override void Exporting(UserRolesPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", string.Join(",", part.Roles));
-        }
-
-        protected override void Cloning(UserRolesPart originalPart, UserRolesPart clonePart, CloneContentContext context) {
-            var cloneRoleRecords = _userRolesRepository
-                .Fetch(x => x.UserId == clonePart.ContentItem.Id)
-                .ToList()
-                .Select(x => x.Role)
-                .ToList();
-            var originalRoleRecords = originalPart.Roles.Select(x => _roleService.GetRoleByName(x)).ToList();
-
-            foreach (var addingRole in originalRoleRecords.Where(x => !cloneRoleRecords.Contains(x))) {
-                _userRolesRepository.Create(new UserRolesPartRecord { UserId = clonePart.ContentItem.Id, Role = addingRole });
-            }
         }
     }
 }
