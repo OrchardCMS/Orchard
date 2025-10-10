@@ -22,10 +22,8 @@ namespace Orchard.Search.Drivers {
 
         protected override string Prefix { get { return "SearchSettings"; } }
 
-        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-            
-        }
+        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) =>
+            Editor(part, null, shapeHelper);
 
         protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             return Combined(
@@ -88,10 +86,6 @@ namespace Orchard.Search.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value => {
                 part.Store("SearchFields", value);
             });
-        }
-
-        protected override void Cloning(SearchSettingsPart originalPart, SearchSettingsPart clonePart, CloneContentContext context) {
-            clonePart.SearchFields = originalPart.SearchFields;
         }
     }
 }
