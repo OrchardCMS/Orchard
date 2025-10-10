@@ -1,1 +1,0 @@
-/// <reference path="Typings/jquery.d.ts" />

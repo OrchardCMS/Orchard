@@ -137,15 +137,7 @@
         "output": "Scripts/knockout.js"
     },
     {
-        "inputs": [ "Assets/Js/Moment/moment.js" ],
-        "output": "Scripts/moment.js"
-    },
-    {
         "inputs": [ "Assets/Js/BlockUI/jquery.blockui.js" ],
         "output": "Scripts/jquery.blockui.js"
-    },
-    {
-        "inputs": [ "Assets/Js/Uri/uri.js" ],
-        "output": "Scripts/uri.js"
     }
 ]
