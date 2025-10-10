@@ -305,6 +305,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\build-crowdin-translation-packages.yml = ..\.github\workflows\build-crowdin-translation-packages.yml
 		..\.github\workflows\compile.yml = ..\.github\workflows\compile.yml
+		..\.github\workflows\release-package.yml = ..\.github\workflows\release-package.yml
+		..\.github\workflows\specflow.yml = ..\.github\workflows\specflow.yml
 	EndProjectSection
 EndProject
 Global
