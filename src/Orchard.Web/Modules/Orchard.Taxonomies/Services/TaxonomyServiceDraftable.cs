@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
@@ -57,91 +51,25 @@ namespace Orchard.Taxonomies.Services {
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
         }
-
-        new public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().ForVersion(VersionOptions.Latest).List();
-        }
-
-        new public TaxonomyPart GetTaxonomy(int id) {
+        
+        public override TaxonomyPart GetTaxonomy(int id) {
             return _contentManager.Get(id, VersionOptions.Latest).As<TaxonomyPart>();
         }
+        
+        public override IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+            return base.GetTaxonomiesQuery().ForVersion(VersionOptions.Latest);
+        }
 
-        new public TaxonomyPart GetTaxonomyByName(string name) {
+        public override IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+            return base.GetTermsQuery().ForVersion(VersionOptions.Latest);
+        }
 
-            if (String.IsNullOrWhiteSpace(name)) {
-                throw new ArgumentNullException("name");
+        protected override void PublishTerm(TermPart term) {
+            // Only publish the Term if it was published already.
+            if (term.ContentItem.HasPublished() && !term.ContentItem.IsPublished()) {
+                var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
+                _contentManager.Publish(contentItem);
             }
-
-            // include the record in the query to optimize the query plan
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().ForVersion(VersionOptions.Latest)
-                .Join<TitlePartRecord>()
-                .Where(r => r.Title == name)
-                .List()
-                .FirstOrDefault();
-        }
-
-        new public TaxonomyPart GetTaxonomyBySlug(string slug) {
-            if (String.IsNullOrWhiteSpace(slug)) {
-                throw new ArgumentNullException("slug");
-            }
-
-            return _contentManager
-                .Query<TaxonomyPart, TaxonomyPartRecord>().ForVersion(VersionOptions.Latest)
-                .Join<TitlePartRecord>()
-                .Join<AutoroutePartRecord>()
-                .Where(r => r.DisplayAlias == slug)
-                .List()
-                .FirstOrDefault();
-        }
-
-        new public IEnumerable<TermPart> GetTerms(int taxonomyId) {
-            var result = _contentManager.Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
-                .Where(x => x.TaxonomyId == taxonomyId)
-                .OrderBy(x=>x.FullWeight)
-                .List();
-
-            return result;
-        }
-
-        new public TermPart GetTermByPath(string path) {
-            return _contentManager.Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
-                .Join<AutoroutePartRecord>()
-                .Where(rr => rr.DisplayAlias == path)
-                .List()
-                .FirstOrDefault();
-        }
-
-        new public IEnumerable<TermPart> GetAllTerms() {
-            var result = _contentManager
-                .Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
-                .OrderBy(x=>x.TaxonomyId)
-                .OrderBy(x=>x.FullWeight)
-                .List();
-            return result;
-        }
-
-        new public TermPart GetTerm(int id) {
-            return _contentManager
-                .Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
-                .Where(x => x.Id == id).List().FirstOrDefault();
-        }
-
-        new public TermPart GetTermByName(int taxonomyId, string name) {
-            return _contentManager
-                .Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest)
-                .Where(t => t.TaxonomyId == taxonomyId)
-                .Join<TitlePartRecord>()
-                .Where(r => r.Title == name)
-                .List()
-                .FirstOrDefault();
-        }
-
-        new public IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().ForVersion(VersionOptions.Latest);
-        }
-
-        new public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId) {
-            return _contentManager.Query<TermPart, TermPartRecord>().ForVersion(VersionOptions.Latest).Where(x => x.TaxonomyId == taxonomyId);
         }
     }
 }

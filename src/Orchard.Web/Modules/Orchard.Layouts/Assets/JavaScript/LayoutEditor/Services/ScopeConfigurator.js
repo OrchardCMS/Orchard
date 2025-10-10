@@ -149,11 +149,14 @@
 
                     $scope.delete = function (element) {
                         element.delete();
+                        $.event.trigger({
+                            type: "layouteditor:edited"
+                        });
                     }
 
                     if ($scope.element.hasEditor) {
                         $scope.edit = function () {
-                            $scope.$root.editElement($scope.element).then(function (args) {
+                            $scope.$root.editElement($scope.element).done(function (args) {
                                 $scope.$apply(function () {
                                     if (args.cancel)
                                         return;
@@ -225,8 +228,8 @@
                                             return $(e).height();
                                         }));
                                         for (i = 1; i <= 12; i++)
-                                            ui.placeholder.removeClass("col-xs-" + i);
-                                        ui.placeholder.addClass("col-xs-" + receivedColumn.width);
+                                            ui.placeholder.removeClass("col-" + i);
+                                        ui.placeholder.addClass("col-" + receivedColumn.width);
                                         if (maxHeight > 0) {
                                             ui.placeholder.height(maxHeight);
                                             ui.placeholder.css("min-height", 0);
@@ -255,7 +258,7 @@
                                         receivedElement.setParent(element);
 
                                         if (!!receivedElement.hasEditor) {
-                                            $scope.$root.editElement(receivedElement).then(function (args) {
+                                            $scope.$root.editElement(receivedElement).done(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
                                                     receivedElement.applyElementEditorModel(args.elementEditorModel);
@@ -281,6 +284,10 @@
                                         element.setIsDropTarget(false);
                                         if (!!receivedElement)
                                             receivedElement.setIsFocused();
+
+                                        $scope.$root.addElement(receivedElement).done(function () {
+                                            return;
+                                        });
                                     });
                                 });
                             }
@@ -314,8 +321,8 @@
                                 result.push("layout-row-full");
                         }
                         if (child.type == "Column") {
-                            result.push("col-xs-" + child.width);
-                            result.push("col-xs-offset-" + child.offset);
+                            result.push("col-" + child.width);
+                            result.push("col-offset-" + child.offset);
                         }
                         if (child.type == "Content")
                             result.push("layout-content-" + child.contentTypeClass);

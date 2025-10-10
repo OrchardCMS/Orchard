@@ -142,10 +142,17 @@ namespace Orchard.Core.Common.Handlers {
             part.VersionPublishedUtc = utcNow;
         }
 
+
         protected void LazyLoadHandlers(CommonPart part) {
             // add handlers that will load content for id's just-in-time
             part.OwnerField.Loader(() => _contentManager.Get<IUser>(part.Record.OwnerId));
-            part.ContainerField.Loader(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));
+            part.ContainerField.Loader(() => part.Record.Container == null ?
+                                            null :
+                                            /* Published, or latest if published version is missing:
+                                            ** So the relation with the container is still present even if the container is unpublished
+                                            */
+                                            _contentManager.Get(part.Record.Container.Id) ??
+                                            _contentManager.Get(part.Record.Container.Id, VersionOptions.Latest));
         }
 
         protected static void PropertySetHandlers(ActivatedContentContext context, CommonPart part) {

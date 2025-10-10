@@ -17,8 +17,6 @@ using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
-using Orchard.Recipes.Models;
-using Orchard.Recipes.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -30,8 +28,6 @@ namespace Orchard.Modules.Controllers {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
-        private readonly IRecipeHarvester _recipeHarvester;
-        private readonly IRecipeManager _recipeManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly ShellSettings _shellSettings;
 
@@ -42,8 +38,6 @@ namespace Orchard.Modules.Controllers {
             IDataMigrationManager dataMigrationManager,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
-            IRecipeHarvester recipeHarvester,
-            IRecipeManager recipeManager,
             ShellDescriptor shellDescriptor,
             ShellSettings shellSettings,
             IShapeFactory shapeFactory) {
@@ -53,8 +47,6 @@ namespace Orchard.Modules.Controllers {
             _dataMigrationManager = dataMigrationManager;
             _extensionManager = extensionManager;
             _featureManager = featureManager;
-            _recipeHarvester = recipeHarvester;
-            _recipeManager = recipeManager;
             _shellDescriptor = shellDescriptor;
             _shellSettings = shellSettings;
             Shape = shapeFactory;
@@ -111,62 +103,6 @@ namespace Orchard.Modules.Controllers {
             });
         }
 
-        public ActionResult Recipes() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
-                return new HttpUnauthorizedResult();
-
-            IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => ExtensionIsAllowed(extensionDescriptor))
-                .OrderBy(extensionDescriptor => extensionDescriptor.Name)
-                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
-
-            var viewModel = new RecipesViewModel();
-
-            if (_recipeHarvester != null) {
-                viewModel.Modules = modules.Select(x => new ModuleRecipesViewModel {
-                    Module = x,
-                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
-                })
-                .Where(x => x.Recipes.Any())
-                .ToList();
-            }
-
-            return View(viewModel);
-
-        }
-
-        [HttpPost, ActionName("Recipes")]
-        public ActionResult RecipesPOST(string moduleId, string name) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
-                return new HttpUnauthorizedResult();
-
-            ModuleEntry module = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ExtensionIsAllowed(extensionDescriptor))
-                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor }).FirstOrDefault();
-
-            if (module == null) {
-                return HttpNotFound();
-            }
-
-            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => !x.IsSetupRecipe && x.Name == name);
-
-            if (recipe == null) {
-                return HttpNotFound();
-            }
-
-            try {
-                _recipeManager.Execute(recipe);
-            }
-            catch (Exception e) {
-                Logger.Error(e, "Error while executing recipe {0} in {1}", moduleId, name);
-                Services.Notifier.Error(T("Recipes {0} contains  unsupported module installation steps.", recipe.Name));
-            }
-
-            Services.Notifier.Success(T("The recipe {0} was executed successfully.", recipe.Name));
-
-            return RedirectToAction("Recipes");
-
-        }
         public ActionResult Features() {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();

@@ -12,7 +12,7 @@ namespace Orchard.Users {
                 .Add(T("Users"), "11",
                     menu => menu.Action("Index", "Admin", new { area = "Orchard.Users" })
                         .Add(T("Users"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" })
-                            .LocalNav().Permission(Permissions.ManageUsers)));
+                            .LocalNav().Permission(Permissions.ViewUsers)));
         }
     }
 }

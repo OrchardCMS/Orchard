@@ -1,30 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Data;
-using Orchard.Localization;
+using Orchard.FileSystems.Media;
+using Orchard.Logging;
 using Orchard.MediaProcessing.Models;
 
 namespace Orchard.MediaProcessing.Services {
-    public class ImageProfileService : IImageProfileService {
+    public class ImageProfileService : Component, IImageProfileService {
         private readonly IContentManager _contentManager;
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<FilterRecord> _filterRepository;
         private readonly ISignals _signals;
+        private readonly IStorageProvider _storageProvider;
 
         public ImageProfileService(
-            IContentManager contentManager, 
+            IContentManager contentManager,
             ICacheManager cacheManager,
             IRepository<FilterRecord> filterRepository,
-            ISignals signals) {
+            ISignals signals,
+            IStorageProvider storageProvider) {
             _contentManager = contentManager;
             _cacheManager = cacheManager;
             _filterRepository = filterRepository;
             _signals = signals;
+            _storageProvider = storageProvider;
         }
-
-        public Localizer T { get; set; }
 
         public ImageProfilePart GetImageProfile(int id) {
             return _contentManager.Get<ImageProfilePart>(id);
@@ -70,6 +73,7 @@ namespace Orchard.MediaProcessing.Services {
             var profile = _contentManager.Get(id);
 
             if (profile != null) {
+                DeleteImageProfileFolder(profile.As<ImageProfilePart>().Name);
                 _contentManager.Remove(profile);
             }
         }
@@ -114,6 +118,44 @@ namespace Orchard.MediaProcessing.Services {
             var temp = next.Position;
             next.Position = filter.Position;
             filter.Position = temp;
+        }
+
+        public bool PurgeImageProfile(int id) {
+            var profile = GetImageProfile(id);
+            try {
+                DeleteImageProfileFolder(profile.Name);
+                profile.FileNames.Clear();
+                _signals.Trigger("MediaProcessing_Saved_" + profile.Name);
+                return true;
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "Unable to purge image profile '{0}'", profile.Name);
+                return false;
+            }
+        }
+
+        public bool PurgeObsoleteImageProfiles() {
+            var profiles = GetAllImageProfiles();
+            try {
+                if (profiles != null) {
+                    var validPaths = profiles.Select(profile => _storageProvider.Combine("_Profiles", this.GetNameHashCode(profile.Name)));
+                    foreach (var folder in _storageProvider.ListFolders("_Profiles").Select(f => f.GetPath())) {
+                        if (!validPaths.Any(folder.StartsWith)) {
+                            _storageProvider.DeleteFolder(folder);
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "Unable to purge obsolete image profiles");
+                return false;
+            }
+        }
+
+        private void DeleteImageProfileFolder(string profileName) {
+            var folder = _storageProvider.Combine("_Profiles", this.GetNameHashCode(profileName));
+            _storageProvider.DeleteFolder(folder);
         }
     }
 }

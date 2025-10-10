@@ -39,9 +39,14 @@ namespace Orchard.Users.Events {
         void AccessDenied(IUser user);
 
         /// <summary>
+        /// Called before a user has changed password
+        /// </summary>
+        void ChangingPassword(IUser user, string password);
+
+        /// <summary>
         /// Called after a user has changed password
         /// </summary>
-        void ChangedPassword(IUser user);
+        void ChangedPassword(IUser user, string password);
 
         /// <summary>
         /// Called after a user has confirmed their email address
@@ -57,6 +62,11 @@ namespace Orchard.Users.Events {
         /// Called after a user has been approved
         /// </summary>
         void Approved(IUser user);
+
+        /// <summary>
+        /// Called after a user has been disabled
+        /// </summary>
+        void Moderate(IUser user);
     }
 }
 

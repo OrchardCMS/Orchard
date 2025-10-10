@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
-using Orchard.Environment.Descriptor.Models;
-using System.Linq;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -44,8 +45,57 @@ namespace Orchard.Localization.Services {
             Logger = NullLogger.Instance;
         }
 
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
+
+        public FormatForScope GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+            var result = InnerGetLocalizedString(scopes, text, cultureName);
+            if (result == null) {
+                /*
+                 * Log out messages that look like what we would have in the .po files
+                 * Prepend that with a line telling the target culture for which the localization is missing
+                msgctxt "Orchard.Users.Activities.CreateUserActivity"
+                msgid "InvalidPassword"
+                msgstr "**InvalidPassword**"
+                 */
+                var sb = new StringBuilder();
+                // The configured appender for the localizations file will only consider
+                // messages that contain "##CULTURE##"
+                sb.AppendLine("##CULTURE## " + cultureName);
+                // These three lines math those found in .po files.
+                sb.AppendLine("msgctxt \"" + scopes.FirstOrDefault() + "\"");
+                sb.AppendLine("msgid \"" + text + "\"");
+                sb.AppendLine("msgstr \"**" + text + "**\"");
+                // to enable/disable logging this information, search in log4net.config
+                // for the logger named Orchard.Localization.Services.DefaultLocalizedStringManager
+                Logger.Information(sb.ToString());
+                return new FormatForScope(text, scopes.FirstOrDefault());
+            }
+            return result;
+        }
+
+        protected FormatForScope InnerGetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+            var culture = LoadCulture(cultureName);
+            text = text ?? string.Empty; // prevent NREs with this string
+            foreach (var scope in scopes) {
+                string scopedKey = (scope + "|" + text).ToLowerInvariant();
+                if (culture.Translations.ContainsKey(scopedKey)) {
+                    return new FormatForScope(culture.Translations[scopedKey], scope);
+                }
+            }
+            string genericKey = ("|" + text).ToLowerInvariant();
+            if (culture.Translations.ContainsKey(genericKey)) {
+                return new FormatForScope(culture.Translations[genericKey], null);
+            }
+
+            foreach (var scope in scopes) {
+                string parent_text = GetParentTranslation(scope, text, cultureName);
+                if (!parent_text.Equals(text)) {
+                    return new FormatForScope(parent_text, scope);
+                }
+            }
+            return null;
+        }
 
         // This will translate a string into a string in the target cultureName.
         // The scope portion is optional, it amounts to the location of the file containing 
@@ -53,22 +103,6 @@ namespace Orchard.Localization.Services {
         // If the culture doesn't have a translation for the string, it will fallback to the 
         // parent culture as defined in the .net culture hierarchy. e.g. fr-FR will fallback to fr.
         // In case it's not found anywhere, the text is returned as is.
-        public string GetLocalizedString(string scope, string text, string cultureName) {
-            var culture = LoadCulture(cultureName);
-
-            string scopedKey = (scope + "|" + text).ToLowerInvariant();
-            if (culture.Translations.ContainsKey(scopedKey)) {
-                return culture.Translations[scopedKey];
-            }
-
-            string genericKey = ("|" + text).ToLowerInvariant();
-            if (culture.Translations.ContainsKey(genericKey)) {
-                return culture.Translations[genericKey];
-            }
-
-            return GetParentTranslation(scope, text, cultureName);
-        }
-
         private string GetParentTranslation(string scope, string text, string cultureName) {
             string scopedKey = (scope + "|" + text).ToLowerInvariant();
             string genericKey = ("|" + text).ToLowerInvariant();
@@ -143,8 +177,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id))
-                {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType) && _shellDescriptor.Features.Any(x => x.Name == theme.Id)) {
 
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.VirtualPath, culture);
                     text = _webSiteFolder.ReadFile(themePath);

@@ -1,4 +1,5 @@
 ﻿using Orchard.Projections.Descriptors.Filter;
+using Orchard.Projections.Models;
 
 namespace Orchard.Projections.ViewModels {
 

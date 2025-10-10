@@ -41,14 +41,20 @@
                 <tr>
                     <td>
                         <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)" />
-                        @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) { <span class="gap">&nbsp;</span> }
+                        @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) {<span class="gap">&nbsp;</span>}
                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
-                        @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
-                        @if (termEntry.HasDraft) {
-                            <text>@T(" (Draft)")</text>
+                        @if (Authorizer.Authorize(Permissions.EditTerm)) {
+                            @Html.ItemEditLink(termEntry.Name, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) })
+                        }
+                        else {
+                            @Html.ItemDisplayText(termEntry.ContentItem)
+                            if (termEntry.HasDraft) {
+                                <text>@T(" (Draft)")</text>
+                            }
                         }
                     </td>
                     <td>
+                        @Html.ItemDisplayLink(T("View").Text, termEntry.ContentItem) <text>|</text>
                         @if (Authorizer.Authorize(Permissions.EditTerm)) {
                             @Html.ItemEditLink(T("Edit").Text, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) }) <text>|</text>
                             @Html.ActionLink(T("Move").ToString(), "MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })

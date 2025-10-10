@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
@@ -49,6 +50,7 @@ namespace Orchard.Taxonomies.Models {
         /// <summary>
         /// Property used to sort terms that have the same level or path
         /// </summary>
+        [Range(-524287, 524288, ErrorMessage = "Valid Weight is between -524287 and 524288")]
         public int Weight {
             get { return Retrieve(x => x.Weight); }
             set { Store(x => x.Weight, value); }
@@ -57,9 +59,7 @@ namespace Orchard.Taxonomies.Models {
         /// <summary>
         /// This property is used to represent the lexicographic order of the term inside the taxonomy.
         /// The term FullWeight is composed by his parent FullWeight and the lexicographic representation of the own term separated with a slash '/'.
-        /// The term is represented at the end of his FullWeight using the term Weight padded with zeros and the term Id separated with a point '.'.
-        /// e.g: Term1=> Id:144, Path:"/", Weight:-1, FullWeight: "-0000001.144/"
-        /// e.g: Term2=> Id:154, Path:"/144/", Weight:-1, FullWeight: "-0000001.144/-0000001.154/"
+        /// See TaxonomyService.ComputeFullWeight for the details of the implementation.
         /// </summary>
         public string FullWeight {
             get { return Record.FullWeight; }

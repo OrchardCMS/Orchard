@@ -6,9 +6,11 @@ namespace Orchard.Email.Models {
         public string Body { get; set; }
         public string Recipients { get; set; }
         public string ReplyTo { get; set; }
-        public string From { get; set; }
+        public string FromAddress { get; set; }
+        public string FromName { get; set; }
         public string Bcc { get; set; }
         public string Cc { get; set; }
+        public bool NotifyReadEmail { get; set; }
         /// <summary>
         /// IEnumerable of strings representing attachments paths
         /// </summary>

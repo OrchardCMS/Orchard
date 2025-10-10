@@ -89,15 +89,39 @@ namespace Orchard.Taxonomies.Drivers {
         private ContentShapeResult BuildEditorShape(ContentPart part, TaxonomyField field, dynamic shapeHelper, TaxonomyFieldViewModel appliedViewModel = null) {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
-                var appliedTerms = GetAppliedTerms(part, field, VersionOptions.Latest).ToDictionary(t => t.Id, t => t);
-                var taxonomy = _taxonomySource.GetTaxonomy(settings.Taxonomy, part.ContentItem);
+                var taxonomy = _taxonomySource
+                    .GetTaxonomy(settings.Taxonomy, part.ContentItem);
+                // if we are in the POST for an update/create, we can skip fetching stuff from the db
+                // because we can get the applied terms from the view model.
+                var appliedTerms = appliedViewModel == null
+                    ? GetAppliedTerms(part, field, VersionOptions.Latest)
+                        .ToDictionary(t => t.Id, t => t)
+                    : appliedViewModel.Terms
+                        // only selected ones
+                        .Where(t => t.IsChecked)
+                        .ToDictionary(t =>
+                            // the key is the term's Id
+                            t.Id,
+                            // the value is the TermPart, that will be null if there was
+                            // an error during update (such as validation errors)
+                            t => t.ContentItem == null
+                                ? GetOrCreateTerm(t, taxonomy.Id, field)
+                                : t.ContentItem.As<TermPart>());
                 var terms = taxonomy != null && !settings.Autocomplete
-                    ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).Where(te => !te.HasDraft).ToList()
+                    ? _taxonomyService
+                        .GetTerms(taxonomy.Id)
+                        .Where(t => !string.IsNullOrWhiteSpace(t.Name))
+                        .Select(t => t.CreateTermEntry())
+                        .Where(te => !te.HasDraft)
+                        .ToList()
                     : new List<TermEntry>(0);
 
                 // Ensure the modified taxonomy items are not lost if a model validation error occurs
                 if (appliedViewModel != null) {
-                    terms.ForEach(t => t.IsChecked = appliedViewModel.Terms.Any(at => at.Id == t.Id && at.IsChecked) || t.Id == appliedViewModel.SingleTermId);
+                    terms
+                        .ForEach(t => t.IsChecked =
+                            appliedViewModel.Terms.Any(at => at.Id == t.Id && at.IsChecked)
+                            || t.Id == appliedViewModel.SingleTermId);
                 }
                 else {
                     terms.ForEach(t => t.IsChecked = appliedTerms.ContainsKey(t.Id));
@@ -109,7 +133,9 @@ namespace Orchard.Taxonomies.Drivers {
                     Terms = terms,
                     SelectedTerms = appliedTerms.Select(t => t.Value),
                     Settings = settings,
-                    SingleTermId = appliedTerms.Select(t => t.Key).FirstOrDefault(),
+                    SingleTermId = appliedViewModel != null
+                        ? appliedViewModel.SingleTermId
+                        : appliedTerms.Select(t => t.Key).FirstOrDefault(),
                     TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                     HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                 };
@@ -174,7 +200,6 @@ namespace Orchard.Taxonomies.Drivers {
 
             return term;
         }
-
 
         private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
             string fieldName = field != null ? field.Name : string.Empty;

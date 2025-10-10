@@ -6,8 +6,9 @@
     Model.Attributes.Add("role", "local-navigation");
     var tag = Tag(Model, "ul");
 }
-﻿@tag.StartElement
-    @foreach(var firstLevelMenuItem in Model) {
+@if (Model.Items!=null && Model.Items.Count > 0) {
+    @tag.StartElement
+    foreach (var firstLevelMenuItem in Model) {
         if (firstLevelMenuItem.LocalNav) {
             string sectionHeaderText = firstLevelMenuItem.Text.Text;
 
@@ -34,8 +35,9 @@
             firstLevelMenuItem.Classes.Add("local-section-" + sectionHeaderText.HtmlClassify());
             var firstLevelTag = Tag(firstLevelMenuItem, "li");
             @firstLevelTag.StartElement
-                @sectionHeaderMarkup
-           @firstLevelTag.EndElement
+            @sectionHeaderMarkup
+            @firstLevelTag.EndElement
         }
     }
-@tag.EndElement
+    @tag.EndElement
+}

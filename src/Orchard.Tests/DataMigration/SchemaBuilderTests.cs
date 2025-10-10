@@ -180,7 +180,7 @@ namespace Orchard.Tests.DataMigration {
                 .DropForeignKey("Address", "FK_User");
         }
 
-        [Test, ExpectedException]
+        [Test]
         public void BiggerDataShouldNotFit() {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
@@ -192,8 +192,8 @@ namespace Orchard.Tests.DataMigration {
                 .ExecuteSql("insert into TEST_ContentItemRecord (Data) values('Hello World')");
 
             // should throw an exception if trying to write more data
-            _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+            Assert.Throws<OrchardException>(() => _schemaBuilder
+                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256))));
 
             _schemaBuilder
                 .AlterTable("ContentItemRecord", table => table
@@ -223,17 +223,18 @@ namespace Orchard.Tests.DataMigration {
                 .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 2048)));
         }
 
-        [Test, ExpectedException(typeof(OrchardException))]
+        [Test]
         public void ChangingSizeWithoutTypeShouldNotBeAllowed() {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
                     .Column("Data", DbType.String, column => column.WithLength(255)));
 
-            _schemaBuilder
-                .AlterTable("ContentItemRecord", table => table
-                    .AlterColumn("Data", column => column.WithLength(2048)));
-
+            Assert.Throws<OrchardException>(() =>
+                _schemaBuilder
+                    .AlterTable("ContentItemRecord", table => table
+                        .AlterColumn("Data", column => column.WithLength(2048)))
+            );
         }
 
         [Test]

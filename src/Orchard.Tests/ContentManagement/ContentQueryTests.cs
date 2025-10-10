@@ -1,26 +1,25 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
-using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
-using Orchard.DisplayManagement.Implementation;
+using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.Stubs;
-using NHibernate.Impl;
 using Orchard.UI.PageClass;
-using System.Collections.Generic;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -31,7 +30,7 @@ namespace Orchard.Tests.ContentManagement {
         private ISession _session;
         private ITransactionManager _transactionManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(

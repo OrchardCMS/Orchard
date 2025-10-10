@@ -5,5 +5,6 @@
         public const string PasswordDoesNotContainUppercase = "PasswordDoesNotContainUppercase";
         public const string PasswordDoesNotContainLowercase = "PasswordDoesNotContainLowercase";
         public const string PasswordDoesNotContainSpecialCharacters = "PasswordDoesNotContainSpecialCharacters";
+        public const string PasswordDoesNotMeetHistoryPolicy = "PasswordDoesNotMeetHistoryPolicy";
     }
 }

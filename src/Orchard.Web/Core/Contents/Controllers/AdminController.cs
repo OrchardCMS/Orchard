@@ -14,20 +14,19 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
-using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Settings;
 using Orchard.Utility.Extensions;
-using Orchard.Localization.Services;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : ContentControllerBase, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
@@ -37,24 +36,21 @@ namespace Orchard.Core.Contents.Controllers {
 
         public AdminController(
             IOrchardServices orchardServices,
-            IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITransactionManager transactionManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory,
             ICultureManager cultureManager,
-            ICultureFilter cultureFilter) {
+            ICultureFilter cultureFilter) : base(orchardServices.ContentManager) {
             Services = orchardServices;
-            _contentManager = contentManager;
+            _contentManager = orchardServices.ContentManager;
+            _transactionManager = orchardServices.TransactionManager;
             _contentDefinitionManager = contentDefinitionManager;
-            _transactionManager = transactionManager;
             _siteService = siteService;
             _cultureManager = cultureManager;
             _cultureFilter = cultureFilter;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeFactory;
+            Shape = orchardServices.New;
         }
 
         dynamic Shape { get; set; }
@@ -248,6 +244,11 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
+            var customRouteRedirection = GetCustomContentItemRouteRedirection(contentItem, ContentItemRoute.Create);
+            if (customRouteRedirection != null) {
+                return customRouteRedirection;
+            }
+
             if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
@@ -323,6 +324,11 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Edit(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
+            var customRouteRedirection = GetCustomContentItemRouteRedirection(contentItem, ContentItemRoute.Editor);
+            if (customRouteRedirection != null) {
+                return customRouteRedirection;
+            }
+
             if (contentItem == null)
                 return HttpNotFound();
 
@@ -354,6 +360,32 @@ namespace Orchard.Core.Contents.Controllers {
                 _contentManager.Publish(contentItem);
                 return true;
             });
+        }
+
+        /// <summary>
+        /// This action is specific to the submit button of the edit form.
+        /// Unpublish logic is the same of the Unpublish action, which is called by the content list.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int id, string returnUrl) {
+            return Unpublish(id, returnUrl);
+        }
+
+        /// <summary>
+        /// This action is specific to the submit button of the edit form.
+        /// Delete logic is the same of the Remove action, which is called by the content list.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id, string returnUrl) {
+            return Remove(id, returnUrl);
         }
 
         private ActionResult EditPOST(int id, string returnUrl, Func<ContentItem, bool> conditionallyPublish) {
@@ -415,6 +447,10 @@ namespace Orchard.Core.Contents.Controllers {
             
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(originalContentItem.ContentType);
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("You do not have permission to edit (or create) content.")))
+                return new HttpUnauthorizedResult();
+
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, dummyContent, T("You do not have permission to edit (or create) content.")))
                 return new HttpUnauthorizedResult();

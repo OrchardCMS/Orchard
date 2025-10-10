@@ -176,7 +176,7 @@ fieldset.action {
 
 
 /* PLACEMENT EDITOR */
-.tabdrag {
+.tabdrag, .carddrag {
     min-height: 20px;
 }
 
@@ -209,6 +209,15 @@ fieldset.action {
     background: #EEE url(images/move.gif) no-repeat 10px 10px;
     height: 30px;
     padding: 5px 0px 0px 30px;
+}
+
+.zone-container li .card-type {
+    cursor: move;
+    background-color: #ccc;
+    background: #ccc url(images/move.gif) no-repeat 10px 10px;
+    height: 30px;
+    padding: 5px 10px 5px 30px;
+    margin-bottom: 10px;
 }
 
 #placement #content-tab {

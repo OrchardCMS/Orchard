@@ -154,7 +154,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                 _transactionManager.Cancel();
 
                 Logger.Error(ex, "Error while saving cloud video item with ID {0}.", part.Id);
-                _notifier.Error(T("An error occurred while saving the cloud video item:\n{1}", ex.Message));
+                _notifier.Error(T("An error occurred while saving the cloud video item:\n{0}", ex.Message));
             }
 
             return RedirectToAction("Edit", new { id = part.Id });

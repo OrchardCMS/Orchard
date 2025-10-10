@@ -46,7 +46,7 @@ namespace Orchard.Recipes.Services {
 
         private IEnumerable<Recipe> HarvestRecipes(ExtensionDescriptor extension) {
             var recipes = new List<Recipe>();
-            
+
             var recipeLocation = Path.Combine(extension.Location, extension.Id, "Recipes");
             var recipeFiles = _webSiteFolder.ListFiles(recipeLocation, true);
 
@@ -58,7 +58,7 @@ namespace Orchard.Recipes.Services {
                     Logger.Error(ex, "Error while parsing recipe file '{0}'.", r);
                 }
             });
-            
+
             return recipes;
         }
     }

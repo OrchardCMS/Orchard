@@ -1,0 +1,39 @@
+name: Release Package
+# Builds the release package and uploads it as an artifact.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-package:
+    name: Release Package
+    runs-on: Windows-2025
+    defaults:
+      run:
+        shell: cmd
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Restore NuGet Packages
+        run: nuget restore src/Orchard.sln
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
+
+      - name: Build Precompiled Application
+        run: msbuild Orchard.proj /m /v:minimal /t:Precompiled
+
+      - name: Generate Release Package Name
+        id: package-name
+        shell: pwsh
+        run: |
+          $packageName = "Orchard-$('${{ github.ref_name }}'.Replace('/', '_'))-${{ github.sha }}"
+          "package-name=$packageName" >> $Env:GITHUB_OUTPUT
+
+      - name: Upload Release Package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ steps.package-name.outputs.package-name }}
+          path: .\build\Precompiled
+          if-no-files-found: error

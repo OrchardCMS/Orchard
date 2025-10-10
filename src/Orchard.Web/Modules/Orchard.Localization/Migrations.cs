@@ -25,6 +25,18 @@ namespace Orchard.Localization {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            // Most searches will be interested in either the content's culture
+            // or the group of contents that are localizations of one another
+            SchemaBuilder.AlterTable("LocalizationPartRecord", table => {
+                table.CreateIndex($"IDX_LocalizationPartRecord_CultureId",
+                    "CultureId");
+                table.CreateIndex($"IDX_LocalizationPartRecord_MasterContentItemId",
+                    "MasterContentItemId");
+            });
+            return 3;
+        }
     }
 
     [OrchardFeature("Orchard.Localization.Transliteration")]

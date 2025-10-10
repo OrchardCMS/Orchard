@@ -20,40 +20,52 @@ namespace Orchard.Glimpse.ADO {
             _decoratedService.Configure(settings);
         }
 
-        public IDbConnection CreateConnection() {
+        public DbConnection CreateConnection() {
             return new GlimpseDbConnection(_decoratedService.CreateConnection() as DbConnection);
         }
 
-        public IDbCommand GenerateCommand(CommandType type, SqlString sqlString, SqlType[] parameterTypes) {
+        public DbCommand GenerateCommand(CommandType type, SqlString sqlString, SqlType[] parameterTypes) {
             return new GlimpseDbCommand(_decoratedService.GenerateCommand(type, sqlString, parameterTypes) as DbCommand);
         }
 
-        public void PrepareCommand(IDbCommand command) {
+        public void PrepareCommand(DbCommand command) {
             _decoratedService.PrepareCommand(command);
         }
 
-        public IDbDataParameter GenerateParameter(IDbCommand command, string name, SqlType sqlType) {
+        public DbParameter GenerateParameter(DbCommand command, string name, SqlType sqlType) {
             return _decoratedService.GenerateParameter(command, name, sqlType);
         }
 
-        public void RemoveUnusedCommandParameters(IDbCommand cmd, SqlString sqlString) {
+        public void RemoveUnusedCommandParameters(DbCommand cmd, SqlString sqlString) {
             _decoratedService.RemoveUnusedCommandParameters(cmd, sqlString);
         }
 
-        public void ExpandQueryParameters(IDbCommand cmd, SqlString sqlString) {
-            _decoratedService.ExpandQueryParameters(cmd, sqlString);
+        public void ExpandQueryParameters(DbCommand cmd, SqlString sqlString, SqlType[] parameterTypes) {
+            _decoratedService.ExpandQueryParameters(cmd, sqlString, parameterTypes);
         }
 
         public IResultSetsCommand GetResultSetsCommand(ISessionImplementor session) {
             return _decoratedService.GetResultSetsCommand(session);
         }
 
-        public void AdjustCommand(IDbCommand command) {
+        public void AdjustCommand(DbCommand command) {
             _decoratedService.AdjustCommand(command);
         }
 
         public bool SupportsMultipleOpenReaders => _decoratedService.SupportsMultipleOpenReaders;
 
         public bool SupportsMultipleQueries => _decoratedService.SupportsMultipleQueries;
+
+        public bool RequiresTimeSpanForTime => _decoratedService.RequiresTimeSpanForTime;
+
+        public bool SupportsSystemTransactions => _decoratedService.SupportsSystemTransactions;
+
+        public bool SupportsNullEnlistment => _decoratedService.SupportsNullEnlistment;
+
+        public bool SupportsEnlistmentWhenAutoEnlistmentIsDisabled => _decoratedService.SupportsEnlistmentWhenAutoEnlistmentIsDisabled;
+
+        public bool HasDelayedDistributedTransactionCompletion => _decoratedService.HasDelayedDistributedTransactionCompletion;
+
+        public DateTime MinDate => _decoratedService.MinDate;
     }
 }

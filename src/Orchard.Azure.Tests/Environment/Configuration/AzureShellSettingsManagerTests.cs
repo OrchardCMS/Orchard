@@ -85,9 +85,9 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             Assert.That(ShellSettingsManager.LoadSettings().Count(), Is.EqualTo(2));
 
             foo = ShellSettingsManager.LoadSettings().Where(s => s.Name == "Foo").Single();
-            Assert.That(foo.Name, Is.StringContaining("Foo"));
-            Assert.That(foo.DataProvider, Is.StringContaining("Bar"));
-            Assert.That(foo.DataConnectionString, Is.StringContaining("Quux"));
+            Assert.That(foo.Name, Does.Contain("Foo"));
+            Assert.That(foo.DataProvider, Does.Contain("Bar"));
+            Assert.That(foo.DataConnectionString, Does.Contain("Quux"));
         }
 
         [Test]

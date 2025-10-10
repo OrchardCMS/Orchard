@@ -4,6 +4,13 @@
         this.element = element;
         this.element.data("layout-designer-host", this);
         this.editor = layoutEditor;
+
+        function serializelayoutHandler() {
+            serializeLayout();
+        };
+
+        $(document).on("serializelayout", serializelayoutHandler);
+
         this.settings = {
             antiForgeryToken: self.element.data("anti-forgery-token"),
             editorDialogTitleFormat: self.element.data("editor-dialog-title-format"),
@@ -18,6 +25,16 @@
                 append: function (container, element) { container.append(element); },
                 replace: function (currentElement, newElement) { currentElement.replaceWith(newElement); }
             }
+        };
+
+        this.addElement = function (contentType) {
+            var deferred = new $.Deferred();
+            deferred.resolve();
+            $.event.trigger({
+                type: "layouteditor:edited"
+            });
+
+            return deferred.promise();
         };
 
         this.editElement = function (element) {
@@ -38,11 +55,14 @@
                 }, "post");
 
                 dialog.element.on("command", function (e, args) {
-                    
-                    switch(args.command) {
+
+                    switch (args.command) {
                         case "update":
                             deferred.resolve(args);
                             dialog.close();
+                            $.event.trigger({
+                                type: "layouteditor:edited"
+                            });
                             break;
                         case "cancel":
                         case "close":
@@ -98,7 +118,7 @@
             var layoutDataDataJson = serializeCanvas();
             var recycleBinDataJson = serializeRecycleBin();
 
-            layoutDataField.val(layoutDataDataJson);
+            layoutDataField.val(layoutDataDataJson).trigger("change");
             recycleBinDataField.val(recycleBinDataJson);
         };
 

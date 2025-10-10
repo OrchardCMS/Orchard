@@ -46,7 +46,7 @@ namespace Orchard.Tasks.Locking.Services {
                     return true;
                 }
 
-                Logger.Warning("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
+                Logger.Debug("Failed to acquire lock '{0}' within the specified timeout ({1}).", name, timeout);
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error while trying to acquire lock '{0}'.", name);
@@ -104,6 +104,7 @@ namespace Orchard.Tasks.Locking.Services {
                             Logger.Debug("Record for lock '{0}' already owned by current machine or was successfully created; creating lock object.", internalName);
 
                             dLock = new DistributedLock(name, internalName, releaseLockAction: () => {
+                                _locks.Remove(monitorObj);
                                 Monitor.Exit(monitorObj);
                                 DeleteDistributedLockRecord(internalName);
                             });
@@ -111,7 +112,6 @@ namespace Orchard.Tasks.Locking.Services {
                             _locks.Add(monitorObj, dLock);
                             return true;
                         }
-
                         return false;
                     });
 
@@ -120,7 +120,9 @@ namespace Orchard.Tasks.Locking.Services {
 
                         if (throwOnTimeout)
                             throw new TimeoutException(String.Format("Failed to acquire lock '{0}' within the specified timeout ({1}).", internalName, timeout));
-
+                        else
+                            Monitor.Exit(monitorObj);
+                        
                         return null;
                     }
                 }

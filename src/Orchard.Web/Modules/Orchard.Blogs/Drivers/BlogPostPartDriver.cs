@@ -1,5 +1,5 @@
-﻿using Orchard.Blogs.Models;
-using Orchard.Blogs.Extensions;
+﻿using Orchard.Blogs.Extensions;
+using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Feeds;
@@ -15,11 +15,13 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(BlogPostPart part, string displayType, dynamic shapeHelper) {
-            if (displayType.StartsWith("Detail")) {
-                var blogTitle = _contentManager.GetItemMetadata(part.BlogPart).DisplayText;
-                _feedManager.Register(part.BlogPart, blogTitle);
+            if (part.BlogPart != null && part.BlogPart.HasPublished()) {
+                if (displayType.StartsWith("Detail")) {
+                    var publishedBlog = part.BlogPart.IsPublished() ? part.BlogPart : _contentManager.Get(part.BlogPart.Id).As<BlogPart>();
+                    var blogTitle = _contentManager.GetItemMetadata(publishedBlog).DisplayText;
+                    _feedManager.Register(publishedBlog, blogTitle);
+                }
             }
-
             return null;
         }
     }

@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
+using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
@@ -11,13 +15,9 @@ using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
-using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
-using Orchard.Localization;
-using Orchard.UI.Notify;
-using System;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 
 namespace Orchard.Projections.Controllers {
     [ValidateInput(false)]
@@ -84,7 +84,7 @@ namespace Orchard.Projections.Controllers {
 
             var model = new AdminIndexViewModel {
                 Queries = results.Select(x => new QueryEntry {
-                    Query = x.As<QueryPart>().Record, 
+                    Query = x.As<QueryPart>().Record,
                     QueryId = x.Id,
                     Name = x.As<QueryPart>().Name
                 }).ToList(),
@@ -158,15 +158,20 @@ namespace Orchard.Projections.Controllers {
                                 Category = f.Category,
                                 Type = f.Type,
                                 FilterRecordId = filter.Id,
-                                DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext {State = FormParametersHelper.ToDynamic(filter.State)}).Text : filter.Description
+                                DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
                             });
                     }
                 }
 
-                filterGroupEntries.Add( new FilterGroupEntry { Id = group.Id, Filters = filterEntries } );
+                filterGroupEntries.Add(new FilterGroupEntry { Id = group.Id, Filters = filterEntries });
             }
 
             viewModel.FilterGroups = filterGroupEntries;
+
+            if (viewModel.FilterGroups.Any(group => group.Filters.Count() == 0)) {
+                _services.Notifier.Warning(
+                    T("This Query has at least one empty filter group, which will cause all content items to be returned, unless the Projection using this Query limits the number of content items displayed."));
+            }
 
             #endregion
 
@@ -185,7 +190,7 @@ namespace Orchard.Projections.Controllers {
                             Category = f.Category,
                             Type = f.Type,
                             SortCriterionRecordId = sortCriterion.Id,
-                            DisplayText = String.IsNullOrWhiteSpace(sortCriterion.Description) ? f.Display(new SortCriterionContext { State = FormParametersHelper.ToDynamic(sortCriterion.State) }).Text : sortCriterion.Description  
+                            DisplayText = String.IsNullOrWhiteSpace(sortCriterion.Description) ? f.Display(new SortCriterionContext { State = FormParametersHelper.ToDynamic(sortCriterion.State) }).Text : sortCriterion.Description
                         });
                 }
             }

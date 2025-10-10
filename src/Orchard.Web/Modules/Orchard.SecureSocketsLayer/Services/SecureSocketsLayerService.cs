@@ -205,7 +205,8 @@ namespace Orchard.SecureSocketsLayer.Services {
                         SecureEverything = settingsPart.SecureEverything,
                         SecureHostName = settingsPart.SecureHostName,
                         InsecureHostName = settingsPart.InsecureHostName,
-                        Enabled = settingsPart.Enabled
+                        Enabled = settingsPart.Enabled,
+                        UsePermanentRedirect = settingsPart.UsePermanentRedirect
                     };
                 });
         }

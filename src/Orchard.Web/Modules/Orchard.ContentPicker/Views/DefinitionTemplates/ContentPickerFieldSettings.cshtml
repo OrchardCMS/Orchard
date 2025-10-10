@@ -14,7 +14,7 @@
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
     <span class="hint">@T("The help text is written under the field when authors are selecting content items.")</span>
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>
@@ -27,7 +27,16 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.DisplayedContentTypes)">@T("Content Types and Parts")</label>
-        @Html.TextBoxFor(m => m.DisplayedContentTypes) 
+        @Html.TextBoxFor(m => m.DisplayedContentTypes)
         <span class="hint">@T("A comma separated value of all the content types or content parts to display.")</span>
     </div>
 </fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value for the array of selected Ids")</label>
+        @Html.TextBoxFor(m => m.DefaultValue, new { @class = "text large tokenized"})
+        <span class="hint">@T("A comma separated list of the ids of selected Items. It also accepts {{ or }} as separators, in line with the serialization normally used for this field.")</span>
+    </div>
+</fieldset>
+
+@Display.TokenHint()

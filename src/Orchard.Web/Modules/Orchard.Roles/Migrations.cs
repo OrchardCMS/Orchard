@@ -7,6 +7,8 @@ using Orchard.Data.Migration;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
+using Orchard.Roles.Constants;
+using ContentsPermissions = Orchard.Core.Contents.Permissions;
 
 namespace Orchard.Roles {
     public class RolesDataMigration : DataMigrationImpl {
@@ -58,32 +60,32 @@ namespace Orchard.Roles {
         public int UpdateFrom1() {
 
             // creates default permissions for Orchard v1.4 instances and earlier
-            _roleService.CreatePermissionForRole("Anonymous", Orchard.Core.Contents.Permissions.ViewContent.Name);
-            _roleService.CreatePermissionForRole("Authenticated", Orchard.Core.Contents.Permissions.ViewContent.Name);
+            _roleService.CreatePermissionForRole(SystemRoles.Anonymous, ContentsPermissions.ViewContent.Name);
+            _roleService.CreatePermissionForRole(SystemRoles.Authenticated, ContentsPermissions.ViewContent.Name);
 
             return 2;
         }
         public int UpdateFrom2() {
             //Assigns the "Create Permission" to all roles able to create contents
             var contentEditPermissions = new[]  {
-                Core.Contents.Permissions.EditContent,
-                Core.Contents.Permissions.EditOwnContent
+                ContentsPermissions.EditContent,
+                ContentsPermissions.EditOwnContent
             };
 
-            var dynamicPermissions = new Orchard.Core.Contents.DynamicPermissions(_contentDefinitionManager);
+            var dynamicPermissions = new DynamicPermissions(_contentDefinitionManager);
             var securableTypes = _contentDefinitionManager.ListTypeDefinitions()
                         .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Securable);
-            var permissionTemplates = Core.Contents.DynamicPermissions.PermissionTemplates;
+            var permissionTemplates = DynamicPermissions.PermissionTemplates;
             List<object> dynContentPermissions = new List<object>();
 
             foreach (var typeDefinition in securableTypes) {
                 dynContentPermissions.Add(new {
-                    Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.EditContent.Name], typeDefinition),
-                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
+                    Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[ContentsPermissions.EditContent.Name], typeDefinition),
+                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[ContentsPermissions.CreateContent.Name], typeDefinition)
                 });
                 dynContentPermissions.Add(new {
-                    Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.EditOwnContent.Name], typeDefinition),
-                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[Core.Contents.Permissions.CreateContent.Name], typeDefinition)
+                    Permission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[ContentsPermissions.EditOwnContent.Name], typeDefinition),
+                    CreatePermission = DynamicPermissions.CreateDynamicPermission(permissionTemplates[ContentsPermissions.CreateContent.Name], typeDefinition)
                 });
             }
             var roles = _roleService.GetRoles();
@@ -91,13 +93,13 @@ namespace Orchard.Roles {
                 var existingPermissionsNames = role.RolesPermissions.Select(x => x.Permission.Name).ToList();
                 var checkForDynamicPermissions = true;
                 var updateRole = false;
-                if (existingPermissionsNames.Any(x => x == Core.Contents.Permissions.CreateContent.Name)) {
+                if (existingPermissionsNames.Any(x => x == ContentsPermissions.CreateContent.Name)) {
                     continue; // Skipping this role cause it already has the Create content permission
                 }
                 var simulation = UserSimulation.Create(role.Name);
                 foreach (var contentEditPermission in contentEditPermissions) {
                     if (_authorizationService.TryCheckAccess(contentEditPermission, simulation, null)) {
-                        existingPermissionsNames.Add(Core.Contents.Permissions.CreateContent.Name);
+                        existingPermissionsNames.Add(ContentsPermissions.CreateContent.Name);
                         checkForDynamicPermissions = false;
                         updateRole = true;
                         break;

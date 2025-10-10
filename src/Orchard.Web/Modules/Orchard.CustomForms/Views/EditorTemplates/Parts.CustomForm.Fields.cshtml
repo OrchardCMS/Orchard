@@ -25,6 +25,12 @@
     <label for="@Html.FieldIdFor(m => m.CustomFormPart.SaveContentItem)" class="forcheckbox">@T("Save the content item once the form is submitted")</label>
     <span class="hint">@T("Check if you want to save the content item associated to the form. Leave empty if you just want to trigger an action on the event.")</span>
 </fieldset>
+<fieldset data-controllerid="@Html.FieldIdFor(m => m.CustomFormPart.SaveContentItem)">
+    <h3>@T("For versionable contents ONLY")</h3>
+    @Html.EditorFor(m => m.CustomFormPart.SavePublishContentItem)
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.SavePublishContentItem)" class="forcheckbox">@T("Publish the content item once it has been saved")</label>
+    <span class="hint">@T("Check if you want to also publish the content. Leave empty if you just want to save the content as draft.")</span>
+</fieldset>
 
 <fieldset>
     @Html.EditorFor(m => m.CustomFormPart.CustomMessage)
@@ -42,7 +48,11 @@
     @Html.TextBoxFor(m => m.CustomFormPart.SubmitButtonText, new { @class = "text large", @Value = (Model.CustomFormPart.SubmitButtonText ?? @T("Submit").Text) })
     <span class="hint">@T("The text of the submit button.")</span>
 </fieldset>
-
+<fieldset>
+    @Html.LabelFor(m => m.CustomFormPart.PublishButtonText)
+    @Html.TextBoxFor(m => m.CustomFormPart.PublishButtonText, new { @class = "text large", @Value = (Model.CustomFormPart.PublishButtonText ?? @T("Publish").Text) })
+    <span class="hint">@T("The text of the publish button.")</span>
+</fieldset>
 <fieldset>
     @Html.EditorFor(m => m.CustomFormPart.Redirect)
     <label for="@Html.FieldIdFor(m => m.CustomFormPart.Redirect)" class="forcheckbox">@T("Redirect the user once the form is submitted")</label>

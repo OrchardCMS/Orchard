@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Orchard.Blogs.Services;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
@@ -26,7 +27,7 @@ namespace Orchard.Blogs {
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
-            var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
+            var blogs = _blogService.Get(VersionOptions.Latest).Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
@@ -41,7 +42,7 @@ namespace Orchard.Blogs {
             if (singleBlog != null)
                 menu.Add(T("New Post"), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogId = singleBlog.Id}).Permission(Permissions.MetaListOwnBlogs));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.MetaListOwnBlogs));
 
             menu.Add(T("New Blog"), "1.2",
                      item =>

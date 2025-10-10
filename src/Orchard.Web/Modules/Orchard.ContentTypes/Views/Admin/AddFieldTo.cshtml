@@ -1,9 +1,11 @@
 @using Orchard.Utility.Extensions
+
 @model Orchard.ContentTypes.ViewModels.AddFieldViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
 
-    Layout.Title = T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString();
+    Layout.Title = T("Add New Field To \"{0}\"", Html.Raw(Model.Part.DisplayName)).Text;
 
     var returnUrl = Request.QueryString["returnUrl"];
 }
@@ -31,48 +33,48 @@
 }
 
 @using(Script.Foot()){
-<script type="text/javascript">
-//<![CDATA[
-    $(function(){
-        var $name = $("#@Html.FieldIdFor(m=>m.Name)");
-        var $displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)");
-        var partName = "@Model.Part.Name";
+    <script type="text/javascript">
+    //<![CDATA[
+        $(function(){
+            var $name = $("#@Html.FieldIdFor(m=>m.Name)");
+            var $displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)");
+            var partName = "@Model.Part.Name";
         
-        var jsonUrl = "@Url.Action("FieldName", "Admin", new RouteValueDictionary { {"Area","Orchard.ContentTypes"} } )";
-        var version = 0;
+            var jsonUrl = "@Url.Action("FieldName", "Admin", new RouteValueDictionary { {"Area","Orchard.ContentTypes"} } )";
+            var version = 0;
         
-        var nameAltered;
-        $name.keypress(function() {
-            nameAltered = true;
-        });
+            var nameAltered;
+            $name.keypress(function() {
+                nameAltered = true;
+            });
         
-        var compute = function() {
-            // stop processing automatically if altered by the user
-            if(nameAltered) {
-                return true;
-            }
+            var compute = function() {
+                // stop processing automatically if altered by the user
+                if(nameAltered) {
+                    return true;
+                }
 
-            $.post(jsonUrl, {
-                    partName: partName,
-                    displayName: $displayName.val(),
-                    version: ++version,
-                    __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
-                },
-                function(data) {
-                    if(version == data.version) {
-                        $name.val(data.result);
-                    }
-                },
-                "json"
-            );
-        };
+                $.post(jsonUrl, {
+                        partName: partName,
+                        displayName: $displayName.val(),
+                        version: ++version,
+                        __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
+                    },
+                    function(data) {
+                        if(version == data.version) {
+                            $name.val(data.result);
+                        }
+                    },
+                    "json"
+                );
+            };
         
-        //pull technical name input from tab order
-        $name.attr("tabindex", -1);
+            //pull technical name input from tab order
+            $name.attr("tabindex", -1);
         
-        $displayName.keyup(compute);
-        $displayName.blur(compute);
-    })
-//]]>
-</script>
+            $displayName.keyup(compute);
+            $displayName.blur(compute);
+        })
+    //]]>
+    </script>
 }

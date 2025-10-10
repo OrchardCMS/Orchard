@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net/
-Version: 1.10.3
-OrchardVersion: 1.10.3
+Version: 1.10.4
+OrchardVersion: 1.10.4
 Description: Adds output caching functionality
 Features:
     Orchard.OutputCache:
@@ -20,3 +20,8 @@ Features:
         Description: Activates a provider that stores output cache data in the App_Data folder.
         Category: Performance
         Dependencies: Orchard.OutputCache
+    Orchard.OutputCache.CacheByRole:
+        Name: Cache By Role
+        Description: Adds the user role in the cache key
+        Category: Performance
+        Dependencies: Orchard.OutputCache, Orchard.Roles

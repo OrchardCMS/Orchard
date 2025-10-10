@@ -40,7 +40,7 @@
   <!-- Finding the restored NuGet package of NUnit (version number doesn't matter)
        to be able to reference the test runner executable (http://stackoverflow.com/a/25617556). -->
   <ItemGroup>
-    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit*\tools\nunit-console.exe" />
+    <NUnitPackageFiles Include="$(SrcFolder)\packages\NUnit.Runners.*\tools\nunit-console.exe" />
     <NUnitPackageToolsFolder Include="@(NUnitPackageFiles->'%(RootDir)%(Directory)'->Distinct())" />
   </ItemGroup>
 
@@ -113,29 +113,25 @@
   </Target>
   
   <Target Name="Compile">
+    <CallTarget Targets="DevCompile"/>
     <!-- Compile to "OutputFolder" -->
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
-      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder);MvcBuildViews=false" />
+      Properties="Configuration=$(Configuration);OutputPath=$(CompileFolder)" />
+  </Target>
+  
+  <Target Name="DevCompile">
+    <!-- To make sure that Roslyn tools are available, since it's included with Orchard.Web, which is not referenced by
+    other projects, so it will be built towards the end. -->
+    <MSBuild
+      Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
+      Targets="CopyRoslynCompilerFilesToOutputDirectory" />
     <!-- Compile to "regular" output folder for devs using VS locally -->
     <MSBuild
       Projects="$(Solution)"
       Targets="Build"
       Properties="Configuration=$(Configuration);MvcBuildViews=$(MvcBuildViews)" />
-  </Target>
-  
-  <Target Name="BuildViews">
-    <!-- To make sure that Roslyn tools are available, even if the Compile task was not called before this. -->
-    <MSBuild
-      Projects="$(OrchardWebFolder)\Orchard.Web.csproj"
-      Targets="CopyRoslynFilesToOutputFolder"
-      Properties="Configuration=$(Configuration)" />
-    <!-- The actual compilation with views also compiled. -->
-    <MSBuild
-      Projects="$(Solution)"
-      Targets="Build"
-      Properties="Configuration=$(Configuration);MvcBuildViews=true" />
   </Target>
 
   <Target Name="CompileMsBuildTasks">
@@ -165,7 +161,7 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="@(NUnitPackageToolsFolder)" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" ExcludeCategory="longrunning" />
   </Target>
 
-  <Target Name="Spec" DependsOnTargets="Package-Stage">
+  <Target Name="Spec" DependsOnTargets="Compile">
     <!-- Running SpecFlow tests -->
     <CreateItem Include="$(CompileFolder)\*.Specs.*dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
@@ -195,7 +191,6 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
-      <Stage-Roslyn Include="$(SrcFolder)\Orchard.Web\bin\roslyn\*" />
      
       <!-- Get list of module names from the module definition files within ModulesSrcFolder -->
       <Stage-Modules-Definitions Include="$(ModulesSrcFolder)\**\Module.txt" />
@@ -237,7 +232,7 @@
 
     <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
          only want to include the files that are _not_ already present in 
-         the "Orchard.Web\Bin" folder (except for "Orchard.Web\bin\roslyn"). -->
+         the "Orchard.Web\Bin" folder. -->
     <FilterModuleBinaries
       ModulesBinaries="@(Stage-Modules-Binaries)"
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
@@ -267,7 +262,6 @@
     <Copy SourceFiles="@(Stage-Themes-Custom)" DestinationFiles="@(Stage-Themes-Custom->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFiles="@(Stage-Themes-Binaries-Unique->'$(StageFolder)\Themes\%(ThemeName)\%(RecursiveDir)%(Filename)%(Extension)')"/>
     <Copy SourceFiles="@(Stage-Themes-Sources)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(Stage-Roslyn)" DestinationFolder="$(StageFolder)\bin\roslyn"/>
 
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>

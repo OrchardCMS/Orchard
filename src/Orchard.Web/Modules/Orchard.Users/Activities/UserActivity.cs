@@ -128,7 +128,7 @@ namespace Orchard.Users.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("User send challenge email."); }
+            get { return T("User sent challenge email."); }
         }
     }
 
@@ -151,6 +151,17 @@ namespace Orchard.Users.Activities {
 
         public override LocalizedString Description {
             get { return T("User is approved."); }
+        }
+    }
+
+    [OrchardFeature("Orchard.Users.Workflows")]
+    public class UserDisabledActivity : UserActivity {
+        public override string Name {
+            get { return "UserDisabled"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("User is Disabled."); }
         }
     }
 }

@@ -49,5 +49,10 @@ namespace Orchard.Blogs.Models {
         public DateTime? PublishedUtc {
             get { return this.As<ICommonPart>().PublishedUtc; }
         }
+
+        public DateTime? ArchiveSync {
+            get { return this.Retrieve(x => x.ArchiveSync); }
+            set { this.Store(x => x.ArchiveSync, value); }
+        }
     }
 }

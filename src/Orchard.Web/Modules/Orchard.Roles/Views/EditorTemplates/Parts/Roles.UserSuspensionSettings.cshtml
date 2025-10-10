@@ -1,0 +1,26 @@
+﻿@model Orchard.Roles.ViewModels.RolesUserSuspensionSettingsViewModel
+
+<fieldset>
+    <legend>
+        @T("Automated User Moderation: rules on roles")
+    </legend>
+    <div>
+        <p>@T("Select the user roles that will be safe from automated user suspension (this only applies if automated suspension is enabled).")</p>
+        <div style="margin-left: 30px;">
+            @if (Model.Configuration.Any()) {
+                var index = 0;
+                foreach (var entry in Model.Configuration) {
+                    @Html.Hidden("Configuration["+index+"].RoleId", entry.RoleId)
+                    <div>
+                        @Html.CheckBox("Configuration["+index+"].IsSafeFromSuspension", entry.IsSafeFromSuspension)
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Configuration[index].IsSafeFromSuspension)">@entry.RoleLabel</label>
+                    </div>
+
+                    index++;
+                }
+            } else {
+                <p>@T("There are no roles.")</p>
+            }
+        </div>
+    </div>
+</fieldset>

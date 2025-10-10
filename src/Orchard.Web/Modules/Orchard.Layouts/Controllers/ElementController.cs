@@ -30,8 +30,8 @@ namespace Orchard.Layouts.Controllers {
             IElementManager elementManager,
             IShapeFactory shapeFactory,
             ITransactionManager transactionManager,
-            IContentManager contentManager, 
-            IObjectStore objectStore, 
+            IContentManager contentManager,
+            IObjectStore objectStore,
             IShapeDisplay shapeDisplay,
             ILayoutModelMapper mapper) {
 
@@ -57,9 +57,10 @@ namespace Orchard.Layouts.Controllers {
             };
 
             _objectStore.Set(session, state);
-            return RedirectToAction("Edit", new {session});
+
+            return RedirectToAction("Edit", new { session });
         }
-        
+
         public ViewResult Edit(string session) {
             var sessionState = _objectStore.Get<ElementSessionState>(session);
             var contentId = sessionState.ContentId;
@@ -151,9 +152,7 @@ namespace Orchard.Layouts.Controllers {
             if (contentId == null && contentType == null)
                 return DescribeElementsContext.Empty;
 
-            var part = contentId != null && contentId != 0 ? _contentManager.Get<ILayoutAspect>(contentId.Value)
-                ?? _contentManager.New<ILayoutAspect>(contentType)
-                : _contentManager.New<ILayoutAspect>(contentType);
+            var part = _contentManager.Get<ILayoutAspect>(contentId.Value, VersionOptions.Latest) ?? _contentManager.New<ILayoutAspect>(contentType);
 
             return new DescribeElementsContext {
                 Content = part

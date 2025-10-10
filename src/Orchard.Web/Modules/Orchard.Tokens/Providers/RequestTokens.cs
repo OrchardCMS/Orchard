@@ -15,7 +15,7 @@ namespace Orchard.Tokens.Providers {
         public RequestTokens(IWorkContextAccessor workContextAccessor, IContentManager contentManager) {
             _workContextAccessor = workContextAccessor;
             _contentManager = contentManager;
-            _textChainableTokens = new string[] { "QueryString", "Form" };
+            _textChainableTokens = new string[] { "QueryString", "Form", "Header" };
             T = NullLocalizer.Instance;
         }
 
@@ -27,6 +27,8 @@ namespace Orchard.Tokens.Providers {
                 .Token("Form:*", T("Form:<element>"), T("The Form value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'Form:(param1)'."))
                 .Token("Route:*", T("Route:<key>"), T("The Route value for the specified key."))
                 .Token("Content", T("Content"), T("The request routed Content Item."), "Content")
+                .Token("Header:*", T("Header:<element>"), T("The request routed Content Item."), "The Header value for the specified element. To chain text, surround the <element> with parentheses, e.g. 'Header:(param1)'.")
+
             ;
         }
 
@@ -44,20 +46,29 @@ namespace Orchard.Tokens.Providers {
              */
             context.For("Request", _workContextAccessor.GetContext().HttpContext.Request)
                 .Token(
-                    FilterTokenParam,
+                    token => token.StartsWith("QueryString:", StringComparison.OrdinalIgnoreCase) ? FilterTokenParam(token) : null,
                     (token, request) => {
                         return request.QueryString.Get(token);
                     }
                 )
+                .Chain(token => token.StartsWith("QueryString:", StringComparison.OrdinalIgnoreCase) ? FilterChainParam(token) : null,
+                "Text", (token, request) => request.QueryString.Get(token))
                 .Token(
-                    FilterTokenParam,
+                    token => token.StartsWith("Form:", StringComparison.OrdinalIgnoreCase) ? FilterTokenParam(token) : null,
                     (token, request) => request.Form.Get(token)
                 )
+                .Chain(token => token.StartsWith("Form:", StringComparison.OrdinalIgnoreCase) ? FilterChainParam(token) : null
+                , "Text", (token, request) => request.Form.Get(token))
+                .Token(
+                    token => token.StartsWith("Header:", StringComparison.OrdinalIgnoreCase) ? FilterTokenParam(token) : null,
+                    (token, request) => request.Headers[token]
+                )
+                .Chain(token => token.StartsWith("Header:", StringComparison.OrdinalIgnoreCase) ? FilterChainParam(token) : null,
+                "Text", (token, request) => request.Headers[token])
                 .Token(
                     token => token.StartsWith("Route:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Route:".Length) : null,
                     (token, request) => GetRouteValue(token, request)
-                )
-                .Chain(FilterChainParam, "Text", (token, request) => request.QueryString.Get(token))
+                )             
                 .Token("Content",
                     (request) => DisplayText(GetRoutedContentItem(request))
                 )

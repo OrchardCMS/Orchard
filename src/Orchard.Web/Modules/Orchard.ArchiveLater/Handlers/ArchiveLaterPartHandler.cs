@@ -11,6 +11,8 @@ namespace Orchard.ArchiveLater.Handlers {
 
             OnLoading<ArchiveLaterPart>((context, part) => LazyLoadHandlers(part));
             OnVersioning<ArchiveLaterPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
+            OnRemoved<ArchiveLaterPart>((context, part) => _archiveLaterService.RemoveArchiveLaterTasks(part.ContentItem));
+            OnDestroyed<ArchiveLaterPart>((context, part) => _archiveLaterService.RemoveArchiveLaterTasks(part.ContentItem));
         }
 
         protected void LazyLoadHandlers(ArchiveLaterPart part) {

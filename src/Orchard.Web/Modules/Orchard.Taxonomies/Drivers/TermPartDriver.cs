@@ -52,7 +52,11 @@ namespace Orchard.Taxonomies.Drivers {
                     var pagerParameters = new PagerParameters();
                     var httpContext = _httpContextAccessor.Current();
                     if (httpContext != null) {
-                        pagerParameters.Page = Convert.ToInt32(httpContext.Request.QueryString["page"]);
+                        // Check if "page" parameter is a valid number.
+                        int page = 0;
+                        if (int.TryParse(httpContext.Request.QueryString["page"], out page)) {
+                            pagerParameters.Page = page;
+                        }
                     }
 
                     var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -95,22 +99,6 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override DriverResult Editor(TermPart termPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(termPart, Prefix, null, null);
-            StringBuilder fullWeightBuilder = new StringBuilder();
-            string parentOldFullWeight = termPart.FullWeight == null ? termPart.FullWeight : "";
-            TermPart containerTerm = termPart;
-
-            for (int i = 0; i < termPart.Path.Count(x => x == '/') - 1; i++) {
-                containerTerm = containerTerm.Container.As<TermPart>();
-                fullWeightBuilder.Insert(0, containerTerm.Weight.ToString("D6") + "." + containerTerm.Id.ToString() + "/");
-            }
-            fullWeightBuilder.Append(termPart.Weight.ToString("D6") + "." + "/");
-
-            termPart.FullWeight = fullWeightBuilder.ToString();
-
-            foreach (var childTerm in _taxonomyService.GetChildren(termPart)) {
-                childTerm.FullWeight = _taxonomyService.ProcessChildrenFullWeight(childTerm.FullWeight, termPart.FullWeight, parentOldFullWeight);
-            }
-
             return Editor(termPart, shapeHelper);
         }
 
@@ -163,20 +151,23 @@ namespace Orchard.Taxonomies.Drivers {
                 var pathContentItem = context.GetItemFromSession(identityPath);
                 part.Path += pathContentItem.Id + "/";
                 if (createFullWeigth) {
-                    part.FullWeight = part.FullWeight + pathContentItem.As<TermPart>().Weight.ToString("D6") + "." + pathContentItem.Id.ToString() + "/";
+                    part.FullWeight = _taxonomyService.ComputeFullWeight(part);
                 }
             }
             if (createFullWeigth) {
-                part.FullWeight = part.FullWeight + part.Weight.ToString("D6") + "." + part.Id + "/";
+                part.FullWeight = _taxonomyService.ComputeFullWeight(part);
             }
         }
 
         protected override void Cloning(TermPart originalPart, TermPart clonePart, CloneContentContext context) {
-            clonePart.Count = originalPart.Count;
+            // Arguably, copying the container/parent should be done elsewhere,
+            // but since it is required to be certain of its value for proper use
+            // of the TermPart we also do it here.
             clonePart.Selectable = originalPart.Selectable;
             clonePart.Weight = originalPart.Weight;
             clonePart.TaxonomyId = originalPart.TaxonomyId;
-            clonePart.Path = originalPart.Path;
+            clonePart.Container = originalPart.Container;
+            _taxonomyService.ProcessPath(clonePart);
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Orchard.Fields.Drivers {
     public class EnumerationFieldDriver : ContentFieldDriver<EnumerationField> {

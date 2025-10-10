@@ -16,6 +16,11 @@ namespace Orchard.Users.ViewModels {
             set { User.As<UserPart>().Email = value; }
         }
 
+        public bool ForcePasswordChange {
+            get { return User.As<UserPart>().ForcePasswordChange; }
+            set { User.As<UserPart>().ForcePasswordChange = value; }
+        }
+
         public IContent User { get; set; }
     }
 }

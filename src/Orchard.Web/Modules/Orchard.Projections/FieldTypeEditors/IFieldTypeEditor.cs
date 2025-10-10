@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Projections.Models;
 
 namespace Orchard.Projections.FieldTypeEditors {
     /// <summary>

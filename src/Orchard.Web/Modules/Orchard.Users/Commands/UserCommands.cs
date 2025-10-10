@@ -43,14 +43,14 @@ namespace Orchard.Users.Commands {
             }
 
             IDictionary<string, LocalizedString> validationErrors;
-            if (!_userService.PasswordMeetsPolicies(Password, out validationErrors)) {
+            if (!_userService.PasswordMeetsPolicies(Password, null, out validationErrors)) {
                 foreach (var error in validationErrors) {
                     Context.Output.WriteLine(error.Value);
                 }
                 return;
             }
 
-            var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true));
+            var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true, false));
             if (user == null) {
                 Context.Output.WriteLine(T("Could not create user {0}. The authentication provider returned an error", UserName));
                 return;

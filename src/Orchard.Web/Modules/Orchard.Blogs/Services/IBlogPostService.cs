@@ -10,6 +10,7 @@ namespace Orchard.Blogs.Services {
         IEnumerable<BlogPostPart> Get(BlogPart blogPart);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData);
+        IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData, int skip, int count);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count, VersionOptions versionOptions);
         int PostCount(BlogPart blogPart);

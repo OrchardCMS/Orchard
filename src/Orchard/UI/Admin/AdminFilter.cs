@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Localization;
@@ -34,7 +35,11 @@ namespace Orchard.UI.Admin {
         }
 
         public static bool IsApplied(RequestContext context) {
-            return context.HttpContext.Items.Contains(typeof(AdminFilter));
+            return IsApplied(context.HttpContext);
+        }
+
+        public static bool IsApplied(HttpContextBase context) {
+            return context.Items.Contains(typeof(AdminFilter));
         }
 
         private static bool IsAdmin(AuthorizationContext filterContext) {

@@ -1,5 +1,5 @@
 ﻿@model Orchard.OutputCache.ViewModels.IndexViewModel
-           
+
 @{
     Layout.Title = T("Cache Settings");
 
@@ -10,8 +10,7 @@
             .ToDictionary(x => x.Key, x => x.Select(y => y));
 }
 
-@using (Html.BeginFormAntiForgeryPost())
-{
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
 
     <fieldset>
@@ -39,11 +38,11 @@
         <label>@T("Vary by Query String Parameters")</label>
         <div>
             @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "False", new { Id = "varyByQueryStringExclusiveMode" })
-            <label for="varyByQueryStringExclusiveMode" class="forcheckbox">@T("Vary by only the following query string parameters")</label>
+            <label for="varyByQueryStringExclusiveMode" class="forcheckbox">@T("Vary by only the following query string parameters. If left empty, cache will not vary by any query string parameter.")</label>
         </div>
         <div>
             @Html.RadioButtonFor(m => m.VaryByQueryStringIsExclusive, "True", new { Id = "varyByQueryStringInclusiveMode" })
-            <label for="varyByQueryStringInclusiveMode" class="forcheckbox">@T("Vary by all except the following query string parameters")</label>
+            <label for="varyByQueryStringInclusiveMode" class="forcheckbox">@T("Vary by all except the following query string parameters. If left empty, cache will vary by every query string parameter.")</label>
         </div>
         <div>
             @Html.TextBoxFor(m => m.VaryByQueryStringParameters, new { @class = "text medium" })
@@ -107,21 +106,21 @@
             </thead>
             @foreach (var routeConfig in featureRouteConfigs[feature]) {
                 var index = Model.RouteConfigs.IndexOf(routeConfig);
-            <tr>
-                <td style="width: 100%;">@routeConfig.Url</td>
-                <td>@routeConfig.Priority</td>    
-                <td>
-                    @Html.TextBoxFor(m => m.RouteConfigs[index].Duration, new { @class = "text small" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(m => m.RouteConfigs[index].GraceTime, new { @class = "text small" })
-                </td>
-                @Html.HiddenFor(m => m.RouteConfigs[index].RouteKey)
-            </tr>
+                <tr>
+                    <td style="width: 100%;">@routeConfig.Url</td>
+                    <td>@routeConfig.Priority</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.RouteConfigs[index].Duration, new { @class = "text small" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.RouteConfigs[index].GraceTime, new { @class = "text small" })
+                    </td>
+                    @Html.HiddenFor(m => m.RouteConfigs[index].RouteKey)
+                </tr>
             }
         </table>
     }
-    
+
     <span class="hint">@T("* Leave Duration column empty to use default duration, enter 0 to disable caching for the route.")</span>
     <span class="hint">@T("** Leave Grace Time column empty to use default grace time, enter 0 to disable grace time for the route.")</span>
 

@@ -53,7 +53,7 @@ namespace Orchard.Email.Services {
                 smtpClient.EnableSsl = smtpSettings.EnableSsl;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-                context.MailMessage.From = new MailAddress(smtpSettings.Address);
+                context.MailMessage.From = new MailAddress(smtpSettings.FromAddress);
                 context.MailMessage.IsBodyHtml = !String.IsNullOrWhiteSpace(context.MailMessage.Body) && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
 
                 try {

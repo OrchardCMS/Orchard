@@ -28,7 +28,7 @@ namespace Orchard.Alias.Implementation {
         }
 
         public RouteValueDictionary Get(string aliasPath) {
-            return _aliasStorage.Get(aliasPath).ToRouteValueDictionary();
+            return _aliasStorage.Get(aliasPath)?.ToRouteValueDictionary();
         }
 
         public void Set(string aliasPath, RouteValueDictionary routeValues, string aliasSource, bool isManaged) {

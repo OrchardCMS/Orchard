@@ -1,6 +1,6 @@
 ﻿using Orchard.ContentManagement;
 
-namespace Orchard.Projections {
+namespace Orchard.Projections.Models {
     public static class QueryVersionScopeOptionsExtensions {
         public static VersionOptions ToVersionOptions(this QueryVersionScopeOptions scope) {
             switch (scope) {

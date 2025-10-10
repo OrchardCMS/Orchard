@@ -97,7 +97,7 @@ namespace Orchard.OpenId.Services {
             var localUser =
                 _membershipService.GetUser(userName) ??
                 _membershipService.CreateUser(new CreateUserParams(
-                    userName, Membership.GeneratePassword(16, 1), userName, string.Empty, string.Empty, true
+                    userName, Membership.GeneratePassword(16, 1), userName, string.Empty, string.Empty, true, false
                 ));
 
             return _localAuthenticationUser = localUser;

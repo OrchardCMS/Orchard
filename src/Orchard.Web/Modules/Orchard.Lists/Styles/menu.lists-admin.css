@@ -1,0 +1,7 @@
+﻿.navicon-lists {
+    background-image: url(images/menu.lists.png) !important;
+}
+
+.navicon-lists:hover {
+    background-position: 0 -30px !important;
+}

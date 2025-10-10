@@ -57,19 +57,25 @@ namespace Orchard.Taxonomies.Handlers {
         }
 
         private void InitializerTermsLoader(TermsPart part) {
-            if (part._termParts != null) {
-                return;
-            }
-
             var queryHint = new QueryHints()
                 .ExpandRecords("ContentTypeRecord", "CommonPartRecord", "TermsPartRecord");
 
+            // Get TermRecordIds for each field before the delegate inside the for iterator.
+            // This avoids the TermsPart.Record lifetime scope to be disposed when executed, since ContentPart.Record is a LazyField.
+            var groupedRecordIds = part.Record.Terms
+                .GroupBy(tci => tci.Field)
+                .ToDictionary(g => g.Key,
+                    g => g.Select(tci => tci.TermRecord.Id).ToArray());
 
             foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
                 var tempField = field.Name;
                 field.TermsField.Loader(() => {
-                    var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
-                    var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
+                    var terms = Enumerable.Empty<TermPart>();
+                    if (groupedRecordIds.TryGetValue(tempField, out var fieldTermRecordIds)) {
+                        // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                        terms = part.ContentItem.ContentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
+                    }
+                    
                     return terms.ToList();
                 });
             }
@@ -77,10 +83,12 @@ namespace Orchard.Taxonomies.Handlers {
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
             part._termParts.Loader(() => {
                 var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
-                var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
+                // Using context content item's ContentManager instead of injected one to avoid lifetime scope exceptions in case of LazyFields.
+                var terms = part.ContentItem.ContentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
+                var publishedTermIds = terms.Select(t => t.Key);
                 return
-                    part.Terms.Select(
+                    part.Terms.Where(t => publishedTermIds.Contains(t.TermRecord.Id)).Select(
                         x =>
                             new TermContentItemPart {
                                 Field = x.Field,

@@ -69,6 +69,7 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         public void Set(string partName, string fieldName, string valueName, string value, bool versionable = false) {
+            InfosetHelper.ThrowIfContainsInvalidXmlCharacter(value);
 
             var element = versionable ? VersionInfoset.Element : Infoset.Element;
 

@@ -35,7 +35,7 @@ namespace Orchard.Core.Common.OwnerEditor {
 
         protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(OwnerEditorPermissions.MayEditContentOwner, currentUser, part)) {
                 return null;
             }
 

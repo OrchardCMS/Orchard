@@ -4,12 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using NHibernate.Cfg;
+using NHibernate.Dialect;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
-using NHibernate.Dialect;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
@@ -65,8 +65,7 @@ namespace Orchard.Data.Migration.Generator {
                 .CreateProvider(parameters)
                 .BuildConfiguration(parameters);
 
-            Dialect.GetDialect(configuration.Properties);
-            var mapping = configuration.BuildMapping();
+            var mapping = configuration.BuildMapping(Dialect.GetDialect(configuration.Properties));
 
             // get the table mappings using reflection
             var tablesField = typeof(Configuration).GetField("tables", BindingFlags.Instance | BindingFlags.NonPublic);

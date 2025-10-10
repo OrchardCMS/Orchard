@@ -12,10 +12,13 @@ namespace Orchard.CustomForms.Models {
         public virtual string Message { get; set; }
         public virtual bool CustomMessage { get; set; }
         public virtual bool SaveContentItem { get; set; }
+        public virtual bool SavePublishContentItem { get; set; }
         [StringLengthMax]
         public virtual string RedirectUrl { get; set; }
         public virtual bool Redirect { get; set; }
 
         public virtual string SubmitButtonText { get; set; }
+        public virtual string PublishButtonText { get; set; }
+        
     }
 }

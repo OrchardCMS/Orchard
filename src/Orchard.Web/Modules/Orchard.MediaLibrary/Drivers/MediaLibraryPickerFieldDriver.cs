@@ -45,7 +45,7 @@ namespace Orchard.MediaLibrary.Drivers {
                         ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty).ToList(),
                     };
 
-                    model.SelectedIds = string.Concat(",", field.Ids);
+                    model.SelectedIds = string.Join(",", field.Ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/MediaLibraryPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
@@ -73,14 +73,20 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override void Importing(ContentPart part, Fields.MediaLibraryPickerField field, ImportContentContext context) {
-            var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
-            if (contentItemIds != null) {
-                field.Ids = contentItemIds.Split(',')
-                    .Select(context.GetItemFromSession)
-                    .Select(contentItem => contentItem.Id).ToArray();
-            }
-            else {
-                field.Ids = new int[0];
+            // If nothing about the field is inside the context, field is not modified.
+            // For this reason, check if the current element is inside the ImportContentContext.
+            var element = context.Data.Element(field.FieldDefinition.Name + "." + field.Name);
+            if (element != null) {
+                var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
+                if (contentItemIds != null) {
+                    if (!string.IsNullOrWhiteSpace(contentItemIds)) {
+                        field.Ids = contentItemIds.Split(',')
+                            .Select(context.GetItemFromSession)
+                            .Select(contentItem => contentItem.Id).ToArray();
+                    }
+                } else {
+                    field.Ids = new int[0];
+                }
             }
         }
 

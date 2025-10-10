@@ -14,6 +14,7 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Handlers;
 using Orchard.Core.Settings.Metadata;
+using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Core.Settings.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -50,7 +51,7 @@ namespace Orchard.Tests.Modules.Users.Services
         private CultureInfo _currentCulture;
         private Mock<WorkContext> _workContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _currentCulture = Thread.CurrentThread.CurrentCulture;
             var databaseFileName = System.IO.Path.GetTempFileName();
@@ -59,10 +60,15 @@ namespace Orchard.Tests.Modules.Users.Services
                 typeof(UserPartRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord));
+                typeof(ContentTypeRecord),
+                typeof(ContentPartDefinitionRecord),
+                typeof(ContentPartFieldDefinitionRecord),
+                typeof(ContentFieldDefinitionRecord),
+                typeof(ContentTypeDefinitionRecord),
+                typeof(ContentTypePartDefinitionRecord));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             Thread.CurrentThread.CurrentCulture = _currentCulture;
         }
@@ -124,7 +130,7 @@ namespace Orchard.Tests.Modules.Users.Services
 
         [Test]
         public void NonceShouldBeDecryptable() {
-            var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true));
+            var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true, false));
             var nonce = _userService.CreateNonce(user, new TimeSpan(1, 0, 0));
 
             Assert.That(nonce, Is.Not.Empty);
@@ -145,7 +151,7 @@ namespace Orchard.Tests.Modules.Users.Services
             Thread.CurrentThread.CurrentCulture = turkishCulture;
 
             // Create user lower case
-            _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true));
+            _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true, false));
 
             // Verify unicity with upper case which with turkish coallition would yeld admin with an i without the dot and therefore generate a different user name
             Assert.That(_userService.VerifyUserUnicity("ADMIN", "differentfoo@bar.com"), Is.False);

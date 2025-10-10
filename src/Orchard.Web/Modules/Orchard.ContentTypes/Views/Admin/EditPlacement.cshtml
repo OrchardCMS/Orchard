@@ -1,17 +1,23 @@
 @using Orchard.ContentTypes.Services
+@using Orchard.ContentTypes.ViewModels
+
 @model Orchard.ContentTypes.ViewModels.EditPlacementViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("PlacementEditor").AtFoot();
-    Layout.Title = T("Edit Placement - {0}", Model.ContentTypeDefinition.DisplayName).ToString();
+    Layout.Title = T("Edit Placement - {0}", Html.Raw(Model.ContentTypeDefinition.DisplayName)).Text;
 
-    int i = 0;
 }
+@functions
+{
+    private int i = 0;
+}
+@helper RenderPlacement(DriverResultPlacement p) {
+    var placement = p.PlacementSettings;
 
-@helper RenderPlacement(DriverResultPlacement p, int i) {
-var placement = p.PlacementSettings;
     <li class="place" data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
-        <span class="toggle">Show Editor Shape</span>
+        <span class="toggle" data-text-show="@T("Show Editor Shape")" data-text-hide="@T("Hide Editor Shape")">@T("Show Editor Shape")</span>
         <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
         <div class="shape-editor">
             @try {
@@ -20,37 +26,58 @@ var placement = p.PlacementSettings;
             catch {
             }
         </div>
+
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.ShapeType, new { @class = "type" })
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Differentiator, new { @class = "differentiator" })
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Zone, new { @class = "zone" })
         @Html.HiddenFor(m => m.AllPlacements[i].PlacementSettings.Position, new { @class = "position" })
     </li>
+    {
+        i++;
+    }
+}
+
+@helper RenderCard(Card card) {
+    <li data-tab="@(card.TabName)" data-card="@(card.Name)" class="zone-container card-container">
+        @if (!string.IsNullOrWhiteSpace(card.Name)) {
+            <a class="delete">@T("Delete")</a>
+            <div class="card-type"><h2>@card.Name</h2></div>
+        }
+        <ul class="carddrag">
+            @foreach (var p in card.Placements) {
+                @RenderPlacement(p);
+            }
+        </ul>
+    </li>
 }
 
 <div id="save-message" class="message message-Warning">@T("You need to hit \"Save\" in order to save your changes.")</div>
-
+@* Alert messages *@
+<div style="display:none">
+    <div id="nested-cards" title="@T("Drag&Drop")">
+        <p>@T("Nested cards are not allowed.")</p>
+    </div>
+</div>
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <div id="placement">
-        <div data-tab="" class="zone-container" id="content-tab">
-            <h2>Content</h2>
+        <div data-tab="" class="zone-container tab-container" id="content-tab">
+            <h2>@T("Content")</h2>
             <ul class="tabdrag">
-                @foreach (var p in Model.Content) {
-                    @RenderPlacement(p, i);
-                    i++;
+                @foreach (var c in Model.Content.Cards) {
+                    @RenderCard(c);
                 }
             </ul>
         </div>
 
         <div id="sortableTabs">
             @foreach (var tab in Model.Tabs) {
-                <div data-tab="@tab.Key" class="zone-container tab-container">
-                    <a class="delete">Delete</a>
-                    <h2>@tab.Key</h2>
+                <div data-tab="@tab.Name" class="zone-container tab-container">
+                    <a class="delete">@T("Delete")</a>
+                    <h2>@tab.Name</h2>
                     <ul class="tabdrag">
-                        @foreach (var p in tab.Value) {
-                            @RenderPlacement(p, i);
-                            i++;
+                        @foreach (var c in tab.Cards) {
+                            @RenderCard(c);
                         }
                     </ul>
                 </div>
@@ -61,11 +88,11 @@ var placement = p.PlacementSettings;
     <div>
         <input type="text" id="tabName" />
         <button class="primaryAction" id="newTab">@T("New Tab")</button>
+        <button class="primaryAction" id="newCard">@T("New Card")</button>
     </div>
 
     <fieldset class="action">
         <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
         <button class="primaryAction" type="submit" name="submit.Restore" value="Restore" itemprop="RemoveUrl" data-message="@T("Are you sure you want to restore these placements?")">@T("Restore")</button>
     </fieldset>
-
 }

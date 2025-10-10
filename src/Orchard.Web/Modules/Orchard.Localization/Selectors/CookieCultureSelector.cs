@@ -1,4 +1,3 @@
-using System;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -6,6 +5,7 @@ using Orchard.Localization.Providers;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CultureSelector")]
@@ -18,7 +18,8 @@ namespace Orchard.Localization.Selectors {
         private const string AdminCookieName = "OrchardCurrentCulture-Admin";
         private const int DefaultExpireTimeYear = 1;
 
-        public CookieCultureSelector(IHttpContextAccessor httpContextAccessor,
+        public CookieCultureSelector(
+            IHttpContextAccessor httpContextAccessor,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
@@ -31,15 +32,14 @@ namespace Orchard.Localization.Selectors {
 
             if (httpContext == null) return;
 
-            var cookieName = ContextHelpers.IsRequestAdmin(httpContext) ? AdminCookieName : FrontEndCookieName;
+            var cookieName = AdminFilter.IsApplied(httpContext) ? AdminCookieName : FrontEndCookieName;
 
             var cookie = new HttpCookie(cookieName, culture) {
-                Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear), 
+                Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear),
+                Domain = httpContext.Request.IsLocal ? null : httpContext.Request.Url.Host
             };
 
-            cookie.Domain = !httpContext.Request.IsLocal ? httpContext.Request.Url.Host : null;
-
-            if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+            if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
                 cookie.Path = GetCookiePath(httpContext);
             }
 
@@ -51,7 +51,7 @@ namespace Orchard.Localization.Selectors {
         public CultureSelectorResult GetCulture(HttpContextBase context) {
             if (context == null) return null;
 
-            var cookieName = ContextHelpers.IsRequestAdmin(context) ? AdminCookieName : FrontEndCookieName;
+            var cookieName = AdminFilter.IsApplied(context) ? AdminCookieName : FrontEndCookieName;
 
             var cookie = context.Request.Cookies.Get(cookieName);
 

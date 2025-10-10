@@ -55,7 +55,6 @@ namespace Orchard.Data.Providers {
                                     .SetProperty(NHibernate.Cfg.Environment.PropertyUseReflectionOptimizer, Boolean.TrueString)
                                     .SetProperty(NHibernate.Cfg.Environment.QueryStartupChecking, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.ShowSql, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.StatementFetchSize, "100")
                                     .SetProperty(NHibernate.Cfg.Environment.UseProxyValidator, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.UseSqlComments, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, Boolean.TrueString)
@@ -153,7 +152,7 @@ namespace Orchard.Data.Providers {
                 //    }));
                 //}
 
-                var keyToLoad = new EntityKey(@event.EntityId, entityPersister, source.EntityMode);
+                var keyToLoad = new EntityKey(@event.EntityId, entityPersister);
 
                 if (loadType.IsNakedEntityReturned) {
                     @event.Result = Load(@event, entityPersister, keyToLoad, loadType);

@@ -30,12 +30,13 @@ namespace Orchard.Taxonomies.Drivers {
 
                         }
                     }
-               
+
                 var viewModel = new LocalizedTaxonomiesViewModel {
                     ContentType = part.ContentItem.ContentType,
                     FieldName = field.Name,
                     Id = part.ContentItem.Id,
-                    Setting = taxonomySettings
+                    Setting = taxonomySettings,
+                    PartName = part.PartDefinition.Name
                 };
                 return shapeHelper.EditorTemplate(TemplateName: templateName, Model: viewModel, Prefix: GetPrefix(field, part));
             });

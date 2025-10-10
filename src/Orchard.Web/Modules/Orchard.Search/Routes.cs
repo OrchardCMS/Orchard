@@ -36,6 +36,21 @@ namespace Orchard.Search {
                             {"area", "Orchard.Search"}
                         },
                         new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route("Admin/Search/BlogSearch/{blogId}",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Search"},
+                            {"controller", "BlogSearch"},
+                            {"action", "Index"},
+                            {"blogId", UrlParameter.Optional}
+                        },
+                        null,
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Search"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
 

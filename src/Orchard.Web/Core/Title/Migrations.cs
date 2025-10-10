@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Core.Title.Settings;
 
 namespace Orchard.Core.Title {
     public class Migrations : DataMigrationImpl {
@@ -9,7 +10,7 @@ namespace Orchard.Core.Title {
             SchemaBuilder.CreateTable("TitlePartRecord", 
                 table => table
                     .ContentPartVersionRecord()
-                    .Column<string>("Title", column => column.WithLength(1024))
+                    .Column<string>("Title", column => column.WithLength(TitlePartSettings.MaxTitleLength))
                 );
 
             ContentDefinitionManager.AlterPartDefinition("TitlePart", builder => builder

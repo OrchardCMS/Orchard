@@ -15,7 +15,15 @@
     <div>
         @Html.CheckBoxFor(m => m.AllowCustomPattern)
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowCustomPattern)">@T("Allow custom patterns")</label>
-        <span class="hint">@T("Allow the user to change the pattern on each item")</span>
+        <span class="hint">@T("Allow the user to change the pattern on each item.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.AllowSetAsHomePage)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AllowSetAsHomePage)">@T("Allow \"Set as home page\"")</label>
+        <span class="hint">@T("Allow the user to set a content item of this type as the home page.")</span>
+        <span class="hint">@T("NOTE: Certain combinations of content type definitions and permission settings can create circumstances for non-Admin users with Dashboard access to remove the home page without the ability to set another one. Use this option with caution.")</span>
     </div>
 </fieldset>
 <fieldset>

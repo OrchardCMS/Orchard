@@ -14,6 +14,10 @@
     </Match>
 
     <!-- MediaPart -->
+    <Match ContentPart="MediaPart">
+        <Place Content_UnpublishButton="-" />
+    </Match>
+
     <Match DisplayType="SummaryAdmin">
         <Place Parts_Media_SummaryAdmin="Meta:5"
                Parts_Media_Actions="Footer"
@@ -132,9 +136,9 @@
       Parts_MediaLibrary_Navigation="Navigation:5"
   />
 
-  <Place
-  Parts_MediaLibraryLocalization_Actions="Actions:6"
-  Parts_MediaLibraryLocalization_Navigation="Navigation:1"
+    <Place
+    Parts_MediaLibraryLocalization_Actions="Actions:6"
+    Parts_MediaLibraryLocalization_Navigation="Navigation:1"
   />
 
 

@@ -12,12 +12,12 @@
     <Place Parts_Blogs_Blog_Fields="Content:2"/>
     <Place Parts_Blogs_BlogArchives_Edit="Content:5"/>
     <Place Parts_Blogs_RecentBlogPosts_Edit="Content:5"/>
-    <Place Blog_DeleteButton="Sidebar:25" />
     <!-- widgets -->
     <Place Parts_Blogs_BlogArchives="Content"/>
     <Place Parts_Blogs_RecentBlogPosts="Content"/>
     <!-- default positioning -->
     <Match ContentType="Blog">
+        <Place Content_UnpublishButton="-"/>
         <Match DisplayType="Detail">
             <Place Parts_Common_Metadata="-"/>
             <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" /> but...

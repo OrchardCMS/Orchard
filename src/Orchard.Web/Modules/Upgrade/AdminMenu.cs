@@ -19,6 +19,7 @@ namespace Upgrade {
                     .Add(T("Messaging (1.8)"), "1.1", item => item.Action("Index", "Messaging", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Media (1.7)"), "2", item => item.Action("Index", "Media", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Taxonomies (1.7)"), "3", item => item.Action("Index", "Taxonomy", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
+                    .Add(T("Taxonomies (1.10)"), "3", item => item.Action("Index110", "Taxonomy", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Content Picker (1.7)"), "4", item => item.Action("Index", "ContentPicker", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Fields (1.5)"), "5", item => item.Action("Index", "Field", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Menu (1.5)"), "6", item => item.Action("Index", "Menu", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))

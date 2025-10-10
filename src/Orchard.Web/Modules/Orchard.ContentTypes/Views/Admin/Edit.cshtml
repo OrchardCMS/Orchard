@@ -1,10 +1,10 @@
-@using Orchard.Utility.Extensions;
 @model Orchard.ContentTypes.ViewModels.EditTypeViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Layout.Title = T("Edit Content Type - {0}", Html.Raw(Model.DisplayName)).Text;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl;
 }
 
 <div class="manage">
@@ -45,13 +45,13 @@
     </div> 
 }
 
-@using(Script.Foot()){
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
-        $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
-    })(jQuery);
-//]]>
-</script>
+@using(Script.Foot()) {
+    <script type="text/javascript">
+    //<![CDATA[
+        (function ($) {
+            $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
+            $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
+        })(jQuery);
+    //]]>
+    </script>
 }

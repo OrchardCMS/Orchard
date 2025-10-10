@@ -33,23 +33,19 @@ namespace Orchard.Widgets.Drivers {
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix))
             };
 
-            if (layerPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
-
             return Combined(results.ToArray());
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {
-            if(updater.TryUpdateModel(layerPart, Prefix, null, null)) {
+            if (updater.TryUpdateModel(layerPart, Prefix, null, null)) {
                 if (String.IsNullOrWhiteSpace(layerPart.LayerRule)) {
                     layerPart.LayerRule = "true";
                 }
 
                 if (_widgetsService.GetLayers()
-                    .Any(l => 
+                    .Any(l =>
                         l.Id != layerPart.Id
-                        && String.Equals(l.Name, layerPart.Name, StringComparison.InvariantCultureIgnoreCase))) { 
+                        && String.Equals(l.Name, layerPart.Name, StringComparison.InvariantCultureIgnoreCase))) {
                     updater.AddModelError("Name", T("A Layer with the same name already exists"));
                 }
 
@@ -82,7 +78,7 @@ namespace Orchard.Widgets.Drivers {
 
             var rule = context.Attribute(part.PartDefinition.Name, "LayerRule");
             if (rule != null) {
-                part.LayerRule = rule;    
+                part.LayerRule = rule;
             }
         }
 

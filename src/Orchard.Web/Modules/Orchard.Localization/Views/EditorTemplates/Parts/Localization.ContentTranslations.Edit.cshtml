@@ -7,7 +7,7 @@
 <fieldset class="localization culture-selection">
     <label for="@Html.FieldIdFor(m => m.SelectedCulture)">@T("Content Localization")</label>
     <div>
-        @if (!string.IsNullOrEmpty(Model.SelectedCulture)) {
+        @if ((!string.IsNullOrEmpty(Model.SelectedCulture) && ViewData.ModelState.IsValid) || !Model.DisplayLanguageSelection) {
             @T("This is the <em>{0}</em> variation of the content",
                 Html.Encode(Model.SelectedCulture))
 
@@ -47,7 +47,8 @@
                             Html.FieldIdFor(m => m.SelectedCulture),
                             Html.FieldNameFor(m => m.SelectedCulture),
                             Model.MissingCultures,
-                            Model.SelectedCulture),
+                            Model.SelectedCulture,
+                            !ViewData.ModelState.IsValid),
                         Html.ItemEditLink(masterContent));
             }
             else {
@@ -56,9 +57,10 @@
                             Html.FieldIdFor(m => m.SelectedCulture),
                             Html.FieldNameFor(m => m.SelectedCulture),
                             Model.MissingCultures,
-                            Model.SelectedCulture));
+                            Model.SelectedCulture,
+                            !ViewData.ModelState.IsValid));
             }
-        
+
             if (Model.ContentLocalizations.Localizations.Any()) {
                 <dl class="content-localization">
                     <dt>@T("Other translations:")</dt>
@@ -68,37 +70,48 @@
                             Html.ItemEditLink(c.Culture.Culture, c, new { ReturnUrl = returnUrl }), "localizations");
                         }
                         else {
-                        @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
-                            Html.ItemEditLink(c.Culture.Culture, c), "localizations");
+                            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
+                                Html.ItemEditLink(c.Culture.Culture, c), "localizations");
                         }
                     </dd>
                 </dl>
             }
         }
-        
+
     </div>
 </fieldset>
 
 
 
 @functions{
-    private IHtmlString BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
+    private IHtmlString BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture, bool addSelectedCulture) {
         TagBuilder selectTag = new TagBuilder("select");
         selectTag.Attributes["id"] = id;
         selectTag.Attributes["name"] = name;
+
+        if (addSelectedCulture) {
+            TagBuilder optionTagCulture = new TagBuilder("option");
+            optionTagCulture.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(culture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            optionTagCulture.Attributes["selected"] = "selected";
+            optionTagCulture.SetInnerText(Html.Encode(culture));
+            selectTag.InnerHtml += optionTagCulture.ToString();
+        }
 
         foreach (var siteCulture in siteCultures) {
             TagBuilder optionTag = new TagBuilder("option");
             optionTag.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(siteCulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
 
-            if (string.IsNullOrEmpty(culture)) {
-                if (siteCulture == WorkContext.CurrentSite.SiteCulture) {
-                    optionTag.Attributes["selected"] = "selected";
+            // If the form is in error, the culture remains the one previously selected.
+            if (!addSelectedCulture) {
+                if (string.IsNullOrEmpty(culture)) {
+                    if (siteCulture == WorkContext.CurrentSite.SiteCulture) {
+                        optionTag.Attributes["selected"] = "selected";
+                    }
                 }
-            }
-            else {
-                if (siteCulture == culture) {
-                    optionTag.Attributes["selected"] = "selected";
+                else {
+                    if (siteCulture == culture) {
+                        optionTag.Attributes["selected"] = "selected";
+                    }
                 }
             }
             optionTag.SetInnerText(Html.Encode(siteCulture));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
@@ -7,6 +8,8 @@ using Orchard.Utility;
 
 namespace Orchard.ContentManagement {
     public static class InfosetHelper {
+        public static readonly char[] InvalidXmlCharacters =
+            Enumerable.Range(0, 32).Except(new[] { 9, 10, 13 }).Select(codePoint => Char.ConvertFromUtf32(codePoint)[0]).ToArray();
 
         public static TProperty Retrieve<TPart, TProperty>(this TPart contentPart,
             Expression<Func<TPart, TProperty>> targetExpression,
@@ -128,6 +131,22 @@ namespace Orchard.ContentManagement {
             var versioned = typeof(ContentPartVersionRecord).IsAssignableFrom(typeof(TRecord));
             propertyInfo.SetValue(contentPart.Record, value, null);
             contentPart.Store(name, value, versioned);
+        }
+
+        /// <summary>
+        /// Checks the given string and throws an <see cref="ArgumentException"/> if it contains characters that are
+        /// invalid in XML. Otherwise just returns the original string.
+        /// </summary>
+        /// <param name="value">The string to check for invalid XML characters.</param>
+        /// <exception cref="ArgumentException">Thrown if the string contains invalid characters.</exception>
+        /// <returns>The original string if no invalid characters were found.</returns>
+        public static string ThrowIfContainsInvalidXmlCharacter(string value) {
+            if (!value.Any(character => InvalidXmlCharacters.Contains(character))) {
+                return value;
+            }
+
+            throw new ArgumentException(
+                $"The string contains character(s) that are invalid in XML and which should be removed.");
         }
     }
 }

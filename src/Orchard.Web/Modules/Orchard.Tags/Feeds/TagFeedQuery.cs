@@ -1,34 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Xml.Linq;
-using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Feeds.Models;
-using Orchard.Core.Feeds.StandardBuilders;
-using Orchard.Mvc.Extensions;
-using Orchard.Services;
-using Orchard.Utility.Extensions;
-using Orchard.Core.Feeds;
-using Orchard.Tags.Services;
-using Orchard.Localization;
 using System.Web.Routing;
+using System.Xml.Linq;
+using Orchard.Core.Feeds;
+using Orchard.Core.Feeds.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Mvc.Extensions;
+using Orchard.Tags.Services;
 
 namespace Orchard.Tags.Feeds {
     [OrchardFeature("Orchard.Tags.Feeds")]
     public class TagFeedQuery : IFeedQueryProvider, IFeedQuery {
-        private readonly IContentManager _contentManager;
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
         private readonly ITagService _tagService;
 
-        public TagFeedQuery(
-            IContentManager contentManager, 
-            IEnumerable<IHtmlFilter> htmlFilters,
-            ITagService tagService) {
-            _contentManager = contentManager;
+        public TagFeedQuery(ITagService tagService) {
             _tagService = tagService;
-            _htmlFilters = htmlFilters;
 
             T = NullLocalizer.Instance;
         }
@@ -42,11 +29,11 @@ namespace Orchard.Tags.Feeds {
 
             var tagName = (string)tagIdValue.ConvertTo(typeof(string));
             var tag = _tagService.GetTagByName(tagName);
-            
+
             if (tag == null) {
                 return null;
             }
-            
+
             return new FeedQueryMatch { FeedQuery = this, Priority = -5 };
         }
 
@@ -57,10 +44,10 @@ namespace Orchard.Tags.Feeds {
 
             var limitValue = context.ValueProvider.GetValue("limit");
             var limit = 20;
-            if (limitValue != null) { 
+            if (limitValue != null) {
                 Int32.TryParse(Convert.ToString(limitValue), out limit);
             }
-            
+
             limit = Math.Min(limit, 100);
 
             var tagName = (string)tagIdValue.ConvertTo(typeof(string));

@@ -6,32 +6,32 @@ using Orchard.Fields.Settings;
 namespace Orchard.Fields.Fields {
     public class DateTimeField : ContentField {
 
-        public DateTime DateTime {
+        public DateTime? DateTime {
             get {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                var value = Storage.Get<DateTime>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    return new DateTime(value.Year, value.Month, value.Day);
-                }
-                return value;
+                var settings = PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                var value = Storage.Get<DateTime?>();
+
+                return value.HasValue && settings.Display == DateTimeFieldDisplays.DateOnly ?
+                    new DateTime(value.Value.Year, value.Value.Month, value.Value.Day) : value;
             }
 
             set {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                    Storage.Set(new DateTime(value.Year, value.Month, value.Day));
+                if (value.HasValue) {
+                    var settings = PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+
+                    Storage.Set(settings.Display == DateTimeFieldDisplays.DateOnly ?
+                        new DateTime(value.Value.Year, value.Value.Month, value.Value.Day) : value.Value);
                 }
                 else {
-                    Storage.Set(value);
+                    Storage.Set<DateTime?>(null);
                 }
             }
         }
 
         public DateTimeFieldDisplays Display {
             get {
-                var settings = this.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                return settings.Display;
+                return PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>().Display;
             }
         }
-    } 
+    }
 }

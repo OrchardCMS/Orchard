@@ -1,3 +1,4 @@
 ﻿<Placement>
     <Place Parts_Roles_UserRoles_Edit="Content:10"/>
+    <Place Parts_Roles_UserSuspensionSettings_Edit="Content:6.1"/>
 </Placement>

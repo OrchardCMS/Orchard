@@ -16,9 +16,8 @@ namespace Orchard.Tests {
         private int _x;
 
         [Test]
-        [ExpectedException(typeof (ApplicationException), ExpectedMessage = "Boom")]
         public void ExceptionsCanBeVerified() {
-            throw new ApplicationException("Boom");
+            Assert.Throws<ApplicationException>(() => throw new ApplicationException("Boom"), "Boom");
         }
 
         [Test]

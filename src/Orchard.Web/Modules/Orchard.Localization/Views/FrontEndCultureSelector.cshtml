@@ -3,6 +3,7 @@
 @using Orchard.ContentManagement
 @using Orchard.ContentManagement.Aspects
 @using Orchard.Localization.Services
+
 @{
     var localizableAspects = Enumerable.Empty<ILocalizableAspect>();
     var homePage = WorkContext.Resolve<IHomeAliasService>().GetHomePage();
@@ -12,26 +13,24 @@
         localizableAspects = localizationService.GetLocalizations(homePage).Concat(new[] { homePage.As<ILocalizableAspect>() });
     }
 }
+
 @if (localizableAspects.Any()) {
-<div>
-    <ul>
-        @foreach (var localization in localizableAspects) {
+    <div>
+        <ul>
+            @foreach (var localization in localizableAspects.Where(localization => !string.IsNullOrEmpty(localization.Culture))) {
+                var culture = CultureInfo.GetCultureInfo(localization.Culture);
 
-            if (localization.Culture == null) {
-                continue;
+                if (culture is object) {
+                    <li>
+                        @if (localization.Culture.Equals(WorkContext.CurrentCulture, StringComparison.InvariantCultureIgnoreCase)) {
+                            <a href="@Url.ItemDisplayUrl(localization)">@T("{0} (current)", culture.DisplayName)</a>
+                        }
+                        else {
+                            <a href="@Url.ItemDisplayUrl(localization)">@culture.DisplayName</a>
+                        }
+                    </li>
+                }
             }
-
-            var culture = CultureInfo.GetCultureInfo(localization.Culture);
-
-            <li>
-                @if (localization.Culture.Equals(WorkContext.CurrentCulture, StringComparison.InvariantCultureIgnoreCase)) {
-                    <a href="@Url.ItemDisplayUrl(localization)">@T("{0} (current)", culture.DisplayName)</a>
-                }
-                else {
-                    <a href="@Url.ItemDisplayUrl(localization)">@T("{0}", culture.DisplayName)</a>
-                }
-            </li>
-        }
-    </ul>
-</div>
+        </ul>
+    </div>
 }

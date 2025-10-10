@@ -128,9 +128,10 @@ namespace Orchard.Tests.Environment {
             var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
             var settingsD = new ShellSettings { Name = "Delta", RequestUrlPrefix = "Quux" };
             table.Add(settings);
+            // add this shell first, because the order the shells where processed used to matter
+            table.Add(settingsG);
             table.Add(settingsA);
             table.Add(settingsB);
-            table.Add(settingsG);
             table.Add(settingsD);
 
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));

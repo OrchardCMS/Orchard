@@ -1,6 +1,6 @@
 ﻿@using Orchard.ContentManagement
-@using Orchard.Localization.Models;
-@using Orchard.Utility.Extensions;
+@using Orchard.Localization.Models
+@using Orchard.Utility.Extensions
 
 @{
     Style.Include("media-library-picker-admin.css");
@@ -46,8 +46,8 @@
                         <div class="thumbnail">
                             @Display(BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
-                                <h3>@Html.ItemDisplayText(contentItem)</h3>
-                                <p class="publication-status" data-bind="text: mediaInfos">
+                                <h3 title="@Html.ItemDisplayText(contentItem)">@Html.ItemDisplayText(contentItem)</h3>
+                                <p class="publication-status" data-bind="text: publicationStatus">
                                     @(contentItem.IsPublished() ? "" : T("Draft").Text)
                                     @{
                                         var localizationPart = contentItem.As<LocalizationPart>();

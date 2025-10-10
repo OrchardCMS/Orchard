@@ -69,4 +69,23 @@ namespace Orchard.Search {
             return 1;
         }
     }
+
+    [OrchardFeature("Orchard.Search.Blogs")]
+    public class BlogsMigration : DataMigrationImpl {
+        private readonly IIndexManager _indexManager;
+
+        public BlogsMigration(IIndexManager indexManager) {
+            _indexManager = indexManager;
+        }
+
+        public int Create() {
+
+            _indexManager.GetSearchIndexProvider().CreateIndex(BlogSearchConstants.ADMIN_BLOGPOSTS_INDEX);
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithSetting("TypeIndexing.Indexes", BlogSearchConstants.ADMIN_BLOGPOSTS_INDEX + ":latest"));
+
+            return 1;
+        }
+    }
+
 }

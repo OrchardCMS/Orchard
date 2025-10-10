@@ -10,5 +10,12 @@ namespace Orchard.MediaProcessing.Services {
         void DeleteImageProfile(int id);
         void MoveUp(int filterId);
         void MoveDown(int filterId);
+        bool PurgeImageProfile(int id);
+        bool PurgeObsoleteImageProfiles();
+    }
+
+    public static class ImageProfileServiceExtensions {
+        public static string GetNameHashCode(this IImageProfileService service, string name) =>
+            name.GetHashCode().ToString("x").ToLowerInvariant();
     }
 }

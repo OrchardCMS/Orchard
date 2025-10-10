@@ -89,19 +89,19 @@
                         <ul class="action-links">
                             @if (commentEntry.Comment.Status != CommentStatus.Approved) {
                                 <li class="action-link">
-                                    <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>
+                                    <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.RawUrl})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>
                                 </li>
                             }
                             else {
                                 <li class="action-link">
-                                    <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>
+                                    <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = Request.RawUrl})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>
                                 </li>
                             }
                             <li class="action-link">
                                 <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>
                             </li>
                             <li class="action-link">
-                                <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                                <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                             </li>
                         </ul>
                     </td>

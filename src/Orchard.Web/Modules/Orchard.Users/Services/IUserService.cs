@@ -1,5 +1,6 @@
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace Orchard.Users.Services {
     public interface IUserService : IDependency {
         bool VerifyUserUnicity(string userName, string email);
         bool VerifyUserUnicity(int id, string userName, string email);
+        UserPart GetUserByNameOrEmail(string usernameOrEmail);
 
         void SendChallengeEmail(IUser user, Func<string, string> createUrl);
         IUser ValidateChallenge(string challengeToken);
@@ -17,6 +19,7 @@ namespace Orchard.Users.Services {
         string CreateNonce(IUser user, TimeSpan delay);
         bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc);
 
-        bool PasswordMeetsPolicies(string password, out IDictionary<string, LocalizedString> validationErrors);
+        bool PasswordMeetsPolicies(string password, IUser user, out IDictionary<string, LocalizedString> validationErrors);
+        bool UsernameMeetsPolicies(string username, string email,  out List<UsernameValidationError> validationErrors);
     }
 }

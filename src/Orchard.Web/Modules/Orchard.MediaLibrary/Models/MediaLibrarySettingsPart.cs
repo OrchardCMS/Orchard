@@ -13,6 +13,11 @@ namespace Orchard.MediaLibrary.Models {
             set { this.Store(x => x.UploadAllowedFileTypeWhitelist, value); }
         }
 
+        public int LimitConcurrentUploads {
+            get { return this.Retrieve(x => x.LimitConcurrentUploads); }
+            set { this.Store(x => x.LimitConcurrentUploads, value); }
+        }
+
         public bool IsFileAllowed(string filename) {
 
             var allowedExtensions = (UploadAllowedFileTypeWhitelist ?? "")

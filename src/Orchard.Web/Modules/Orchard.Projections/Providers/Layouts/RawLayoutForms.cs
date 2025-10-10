@@ -53,19 +53,19 @@ namespace Orchard.Projections.Providers.Layouts {
                                 Description: T("The class to provide on each item."),
                                 Classes: new[] { "text medium", "tokenized" }
                                 ),
-                            _Prepend: Shape.TextBox(
+                            _Prepend: Shape.TextArea(
                                 Id: "prepend", Name: "Prepend",
                                 Title: T("Prepend"),
                                 Description: T("Some HTML to insert before the first element."),
                                 Classes: new[] { "text medium", "tokenized" }
                                 ),
-                            _Separator: Shape.TextBox(
+                            _Separator: Shape.TextArea(
                                 Id: "separator", Name: "Separator",
                                 Title: T("Separator"),
                                 Description: T("Some HTML to insert between two items."),
                                 Classes: new[] { "text medium", "tokenized" }
                                 ),
-                            _Append: Shape.TextBox(
+                            _Append: Shape.TextArea(
                                 Id: "append", Name: "Append",
                                 Title: T("Append"),
                                 Description: T("Some HTML to insert after the last element."),

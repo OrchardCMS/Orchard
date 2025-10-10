@@ -128,7 +128,7 @@ namespace Orchard.FileSystems.Media {
         void SaveStream(string path, Stream inputStream);
 
         /// <summary>
-        /// Combines to paths.
+        /// Combines two paths.
         /// </summary>
         /// <param name="path1">The parent path.</param>
         /// <param name="path2">The child path.</param>

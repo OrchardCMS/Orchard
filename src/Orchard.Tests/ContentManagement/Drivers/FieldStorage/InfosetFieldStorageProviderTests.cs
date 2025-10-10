@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -121,6 +122,16 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         [Test, Ignore("implementation pending")]
         public void VersionedSettingOnInfosetField() {
             Assert.Fail("todo");
+        }
+
+        [Test]
+        public void ForbiddenXmlCharactersCauseException() {
+            var part = CreateContentItemPart();
+            var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
+
+            foreach (var character in InfosetHelper.InvalidXmlCharacters) {
+                Assert.Throws<ArgumentException>(() => storage.Set("alpha", character));
+            }
         }
     }
 }

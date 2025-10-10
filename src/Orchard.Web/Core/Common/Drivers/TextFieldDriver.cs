@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -10,13 +8,14 @@ using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Common.Drivers {
     public class TextFieldDriver : ContentFieldDriver<TextField> {
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IHtmlFilterProcessor _htmlFilterProcessor;
 
-        public TextFieldDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
-            _htmlFilters = htmlFilters;
+        public TextFieldDriver(IOrchardServices services, IHtmlFilterProcessor htmlFilterProcessor) {
+            _htmlFilterProcessor = htmlFilterProcessor;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -36,8 +35,7 @@ namespace Orchard.Core.Common.Drivers {
             return ContentShape("Fields_Common_Text", GetDifferentiator(field, part),
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
-
-                    object fieldValue = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)));
+                    var fieldValue = new HtmlString(_htmlFilterProcessor.ProcessFilters(field.Value, settings.Flavor, part));
                     return shapeHelper.Fields_Common_Text(Name: field.Name, Value: fieldValue);
                 });
         }
@@ -70,6 +68,16 @@ namespace Orchard.Core.Common.Drivers {
 
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError("Text", T("The {0} field is required.", T(field.DisplayName)));
+                }
+
+                if (settings.MaxLength > 0) {
+
+                    var value = new HtmlString(_htmlFilterProcessor.ProcessFilters(field.Value, settings.Flavor, part))
+                        .ToString().RemoveTags();
+
+                    if (value.Length > settings.MaxLength) {
+                        updater.AddModelError("Text", T("The maximum allowed length for the field {0} is {1}", T(field.DisplayName), settings.MaxLength));
+                    }
                 }
             }
 

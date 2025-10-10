@@ -13,8 +13,6 @@ using System.Xml;
 
 namespace Orchard.Fields.Drivers {
     public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
-        private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
-
         public DateTimeFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices) {
             Services = services;
             DateLocalizationServices = dateLocalizationServices;
@@ -34,50 +32,48 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override DriverResult Display(ContentPart part, DateTimeField field, string displayType, dynamic shapeHelper) {
-            return ContentShape("Fields_DateTime", // this is just a key in the Shape Table
-                GetDifferentiator(field, part),
-                () => {
-                    var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                    var value = field.DateTime;
-                    var options = new DateLocalizationOptions();
+            return ContentShape("Fields_DateTime", GetDifferentiator(field, part), () => {
+                var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
+                var value = field.DateTime;
+                var options = new DateLocalizationOptions();
 
-                    // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
-                    if (settings.Display == DateTimeFieldDisplays.DateOnly) {
-                        options.EnableTimeZoneConversion = false;
-                    }
-
-                    // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
-                    if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
-                        options.EnableCalendarConversion = false;
-                        options.IgnoreDate = true;
-                    }
-
-                    var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
-                    var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
-
-                    var viewModel = new DateTimeFieldViewModel {
-                        Name = field.DisplayName,
-                        Hint = settings.Hint,
-                        IsRequired = settings.Required,
-                        Editor = new DateTimeEditor() {
-                            Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
-                            Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
-                            ShowDate = showDate,
-                            ShowTime = showTime,
-                            DatePlaceholder = settings.DatePlaceholder,
-                            TimePlaceholder = settings.TimePlaceholder
-                        }
-                    };
-
-                    return shapeHelper.Fields_DateTime( // this is the actual Shape which will be resolved (Fields/DateTime.cshtml)
-                        Model: viewModel);
+                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                    options.EnableTimeZoneConversion = false;
                 }
-            );
+
+                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                    options.EnableCalendarConversion = false;
+                    options.IgnoreDate = true;
+                }
+
+                var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+                var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
+
+                var viewModel = new DateTimeFieldViewModel {
+                    Name = field.DisplayName,
+                    Hint = settings.Hint,
+                    Value = value,
+                    IsRequired = settings.Required,
+                    Editor = new DateTimeEditor() {
+                        Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
+                        Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
+                        ShowDate = showDate,
+                        ShowTime = showTime,
+                        DatePlaceholder = settings.DatePlaceholder,
+                        TimePlaceholder = settings.TimePlaceholder
+                    }
+                };
+
+                // this is the actual Shape which will be resolved (Fields/DateTime.cshtml)
+                return shapeHelper.Fields_DateTime(Model: viewModel);
+            });
         }
 
         protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-            var value = part.IsNew() && field.DateTime == default(DateTime) ? settings.DefaultValue : field.DateTime;
+            var value = part.IsNew() && field.DateTime == null ? settings.DefaultValue : field.DateTime;
             var options = new DateLocalizationOptions();
 
             // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
@@ -97,6 +93,7 @@ namespace Orchard.Fields.Drivers {
             var viewModel = new DateTimeFieldViewModel {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
+                Value = value,
                 IsRequired = settings.Required,
                 Editor = new DateTimeEditor() {
                     Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
@@ -109,16 +106,14 @@ namespace Orchard.Fields.Drivers {
             };
 
             return ContentShape("Fields_DateTime_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: GetPrefix(field, part)));
+                () => shapeHelper.EditorTemplate(TemplateName: "Fields/DateTime.Edit", Model: viewModel, Prefix: GetPrefix(field, part)));
         }
 
         protected override DriverResult Editor(ContentPart part, DateTimeField field, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new DateTimeFieldViewModel();
 
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
-
                 var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-
                 var options = new DateLocalizationOptions();
 
                 // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
@@ -138,7 +133,7 @@ namespace Orchard.Fields.Drivers {
                 DateTime? value = null;
 
                 // Try to parse data if not required or if there are no missing fields.
-                if (!settings.Required || ((!showDate || !String.IsNullOrWhiteSpace(viewModel.Editor.Date)) && (!showTime || !String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
+                if (!settings.Required || ((!showDate || !string.IsNullOrWhiteSpace(viewModel.Editor.Date)) && (!showTime || !string.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
                     try {
                         value = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time, options);
                     }
@@ -158,18 +153,20 @@ namespace Orchard.Fields.Drivers {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", T(field.DisplayName)));
                 }
 
-                field.DateTime = value.HasValue ? value.Value : DateTime.MinValue;
+                field.DateTime = value;
             }
 
             return Editor(part, field, shapeHelper);
         }
 
         protected override void Importing(ContentPart part, DateTimeField field, ImportContentContext context) {
-            context.ImportAttribute(GetPrefix(field, part), "Value", v => field.Storage.Set(null, XmlConvert.ToDateTime(v, XmlDateTimeSerializationMode.Utc)));
+            context.ImportAttribute(field.FieldDefinition.Name + "." + field.Name, "Value", v =>
+                field.DateTime = string.IsNullOrEmpty(v) ? null : (DateTime?)XmlConvert.ToDateTime(v, XmlDateTimeSerializationMode.Utc));
         }
 
         protected override void Exporting(ContentPart part, DateTimeField field, ExportContentContext context) {
-            context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
+            context.Element(field.FieldDefinition.Name + "." + field.Name)
+                .SetAttributeValue("Value", field.DateTime.HasValue ? XmlConvert.ToString(field.DateTime.Value, XmlDateTimeSerializationMode.Utc) : "");
         }
 
         protected override void Cloning(ContentPart part, DateTimeField originalField, DateTimeField cloneField, CloneContentContext context) {

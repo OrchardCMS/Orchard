@@ -1,4 +1,6 @@
 ﻿@model NavigationManagementViewModel
+
+@using Orchard.ContentManagement;
 @using Orchard.Core.Navigation.ViewModels;
 @using Orchard.Utility.Extensions;
 
@@ -117,10 +119,23 @@ for (int i = index; i < Model.MenuItemEntries.Count; i++) {
                 <span class="navigation-actions action-links">
                     <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
                     <span class="action-link">
+                        @{
+                            var menuItemHasPublished = menuPartEntry.ContentItem.HasPublished();
+                        }
+
+                        @Html.Link(
+                            menuItemHasPublished ? T("Unpublish").Text : T("Publish").Text,
+                            Url.Action(
+                                menuItemHasPublished ? "Unpublish": "Publish",
+                                "Admin",
+                                new { area = "Navigation", id = menuPartEntry.ContentItem.Id }),
+                            new { itemprop = "UnsafeUrl" })
+                    </span>
+                    <span class="action-link">
                         @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })
                     </span>
                     <span class="action-link">
-			@Html.Link(T("Delete").Text, Url.ItemRemoveUrl(menuPartEntry.ContentItem,null), new { itemprop = "RemoveUrl UnsafeUrl" })
+			            @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(menuPartEntry.ContentItem, null), new { itemprop = "RemoveUrl UnsafeUrl" })
                     </span>
                 </span>
             </div>

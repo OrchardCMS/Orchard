@@ -6,13 +6,13 @@ using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
-using Orchard.Core.Title.Models;
-using Orchard.Validation;
 using Orchard.MediaLibrary.Providers;
+using Orchard.Validation;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -21,7 +21,6 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
         private readonly IMediaFolderProvider _mediaFolderProvider;
-        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?', '#' };
 
         public MediaLibraryService(
             IOrchardServices orchardServices,
@@ -95,7 +94,8 @@ namespace Orchard.MediaLibrary.Services {
 
             if (!String.IsNullOrEmpty(folderPath)) {
                 if (recursive) {
-                    query = query.Join<MediaPartRecord>().Where(m => m.FolderPath.StartsWith(folderPath));
+                    var subfolderSearch = folderPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? folderPath : folderPath + Path.DirectorySeparatorChar;
+                    query = query.Join<MediaPartRecord>().Where(m => (m.FolderPath == folderPath || m.FolderPath.StartsWith(subfolderSearch)));
                 }
                 else {
                     query = query.Join<MediaPartRecord>().Where(m => m.FolderPath == folderPath);
@@ -145,12 +145,6 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public string GetUniqueFilename(string folderPath, string filename) {
-
-            // remove any char which is unallowed in an HTTP request
-            foreach (var unallowedChar in HttpUnallowed) {
-                filename = filename.Replace(unallowedChar.ToString(), "");
-            }
-
             // compute a unique filename
             var uniqueFilename = filename;
             var index = 1;
@@ -177,9 +171,9 @@ namespace Orchard.MediaLibrary.Services {
             var mediaFile = BuildMediaFile(relativePath, storageFile);
 
             using (var stream = storageFile.OpenRead()) {
-                var mediaFactory = GetMediaFactory(stream, mimeType, contentType);
-                if (mediaFactory == null)
-                    throw new Exception(T("No media factory available to handle this resource.").Text);
+                var mediaFactory = GetMediaFactory(stream, mimeType, contentType)
+                    ?? throw new Exception(T("No media factory available to handle this resource.").Text);
+
                 var mediaPart = mediaFactory.CreateMedia(stream, mediaFile.Name, mimeType, contentType);
                 if (mediaPart != null) {
                     mediaPart.FolderPath = relativePath;
@@ -256,7 +250,7 @@ namespace Orchard.MediaLibrary.Services {
             if (_orchardServices.Authorizer.Authorize(Permissions.ManageMediaContent)) {
                 return true;
             }
-            if (_orchardServices.WorkContext.CurrentUser==null)
+            if (_orchardServices.WorkContext.CurrentUser == null)
                 return _orchardServices.Authorizer.Authorize(permission);
             // determines the folder type: public, user own folder (my), folder of another user (private)
             var rootedFolderPath = this.GetRootedFolderPath(folderPath) ?? "";
@@ -268,7 +262,7 @@ namespace Orchard.MediaLibrary.Services {
                 isMyfolder = true;
             }
 
-            if(isMyfolder) {
+            if (isMyfolder) {
                 return _orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia);
             }
             else { // other

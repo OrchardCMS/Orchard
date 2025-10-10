@@ -13,5 +13,6 @@ namespace Orchard.AuditTrail.Services.Models {
         public IDictionary<string, object> EventData { get; set; }
         public string EventFilterKey { get; set; }
         public string EventFilterData { get; set; }
+        public AuditTrailEventDescriptor EventDescriptor { get; set; }
     }
 }

@@ -1,7 +1,8 @@
 @model Orchard.ContentTypes.ViewModels.RemoveFieldViewModel
+
 @{
     Style.Require("ContentTypesAdmin");
-    Layout.Title = T("Remove the \"{0}\" part from  \"{1}\"", Model.Name, Model.Part.DisplayName).ToString();
+    Layout.Title = T("Remove the \"{0}\" Content Field from \"{1}\"", Model.Name, Html.Raw(Model.Part.DisplayName)).Text;
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

@@ -17,9 +17,7 @@
             // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceMediaPicker');
             ed.addCommand('mceMediaLibrary', function () {
                 ed.focus();
-                var adminIndex = location.href.toLowerCase().indexOf("/admin/");
-                if (adminIndex === -1) return;
-                var url = location.href.substr(0, adminIndex) + "/Admin/Orchard.MediaLibrary?dialog=true";
+                var url = baseOrchardPath + "Admin/Orchard.MediaLibrary?dialog=true";
                 $.colorbox({
                     href: url,
                     iframe: true,
@@ -41,7 +39,7 @@
 
                         var newContent = '';
                         for (var i = 0; i < selectedData.length; i++) {
-                            var renderMedia = location.href.substr(0, adminIndex) + "/Admin/Orchard.MediaLibrary/MediaItem/" + selectedData[i].id + "?displayType=Raw";
+                            var renderMedia = baseOrchardPath + "/Admin/Orchard.MediaLibrary/MediaItem/" + selectedData[i].id + "?displayType=Raw";
                             $.ajax({
                                 async: false,
                                 type: 'GET',

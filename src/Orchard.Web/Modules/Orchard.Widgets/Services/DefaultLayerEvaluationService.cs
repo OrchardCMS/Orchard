@@ -6,17 +6,27 @@ using Orchard.Logging;
 using Orchard.Widgets.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
+using Orchard.Caching;
 
 namespace Orchard.Widgets.Services{
     public class DefaultLayerEvaluationService : ILayerEvaluationService {
         private readonly IConditionManager _conditionManager;
         private readonly IOrchardServices _orchardServices;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
 
         private readonly LazyField<int[]> _activeLayerIDs; 
 
-        public DefaultLayerEvaluationService(IConditionManager conditionManager, IOrchardServices orchardServices) {
+        public DefaultLayerEvaluationService(
+            IConditionManager conditionManager,
+            IOrchardServices orchardServices,
+            ICacheManager cacheManager,
+            ISignals signals) {
+
             _conditionManager = conditionManager;
             _orchardServices = orchardServices;
+            _cacheManager = cacheManager;
+            _signals = signals;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -42,7 +52,15 @@ namespace Orchard.Widgets.Services{
             // Once the Condition Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
-            var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
+            var activeLayers = _cacheManager.Get(LayerPart.AllLayersCacheKey, true, ctx => {
+                // invalidation signal 
+                ctx.Monitor(_signals.When(LayerPart.AllLayersCacheEvictSignal));
+                // cache
+                return _orchardServices
+                    .ContentManager
+                    .Query<LayerPart>()
+                    .ForType("Layer").List();
+            });
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {

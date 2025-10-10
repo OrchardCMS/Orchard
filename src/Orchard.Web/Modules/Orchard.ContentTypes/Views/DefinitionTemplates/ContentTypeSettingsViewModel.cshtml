@@ -4,7 +4,7 @@
     @Html.EditorFor(m => m.Creatable)
     <label for="@Html.FieldIdFor(m => m.Creatable)" class="forcheckbox">@T("Creatable")</label>
     @Html.ValidationMessageFor(m => m.Creatable)
-    <span class="hint">@T("Determines if an instance of this content type can be created through the UI.")</span>
+    <span class="hint">@T("Determines if this type is listed among the types creatable through the UI. This setting doesn't affect security.")</span>
 </fieldset>
 
 <fieldset>

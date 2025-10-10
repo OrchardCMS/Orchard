@@ -6,5 +6,8 @@
         <label for="@Html.IdFor(m => m.UploadAllowedFileTypeWhitelist)">@T("Accepted file extensions")</label>
         @Html.TextBoxFor(m => m.UploadAllowedFileTypeWhitelist, new { @class = "text large"})
         <span class="hint">@T("A comma separated list of file extensions, e.g., \".jpg, .avi, .txt\". Leave empty to accept any file types.")</span>
+        <label for="@Html.IdFor(m => m.LimitConcurrentUploads)">@T("Concurrent uploads limit")</label>
+        @Html.TextBoxFor(m => m.LimitConcurrentUploads, new { @class = "text medium"})
+        <span class="hint">@T("To limit the number of concurrent uploads, set this value to an integer greater than 0")</span>
     </div>
 </fieldset>

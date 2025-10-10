@@ -1,15 +1,9 @@
 ﻿using System.Collections.Generic;
 using Autofac;
-using Moq;
 using NUnit.Framework;
-using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
-using Orchard.Email.Services;
-using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
-using Orchard.Tests.Messaging;
 using Orchard.Tests.Modules.Stubs;
-using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Modules.Email {
     [TestFixture]
@@ -30,10 +24,10 @@ namespace Orchard.Tests.Modules.Email {
             var container = builder.Build();
             _messageService = container.Resolve<IMessageService>();
         }
-    
+
         [Test]
         public void CanSendEmailUsingAddresses() {
-            _messageService.Send("Email", new Dictionary<string, object>() { {"", null} });
+            _messageService.Send("Email", new Dictionary<string, object>() { { "", null } });
             Assert.That(_smtpChannel.Processed, Is.Not.Null);
         }
 

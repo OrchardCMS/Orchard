@@ -30,6 +30,7 @@ namespace Orchard.Users.Services {
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly IAppConfigurationAccessor _appConfigurationAccessor;
+        private readonly IPasswordService _passwordService;
         private readonly IClock _clock;
 
         public MembershipService(
@@ -40,7 +41,8 @@ namespace Orchard.Users.Services {
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
-            IAppConfigurationAccessor appConfigurationAccessor) {
+            IAppConfigurationAccessor appConfigurationAccessor,
+            IPasswordService passwordService) {
             _orchardServices = orchardServices;
             _messageService = messageService;
             _userEventHandlers = userEventHandlers;
@@ -48,6 +50,7 @@ namespace Orchard.Users.Services {
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
             _appConfigurationAccessor = appConfigurationAccessor;
+            _passwordService = passwordService;
             _clock = clock;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -72,14 +75,15 @@ namespace Orchard.Users.Services {
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
             user.HashAlgorithm = PBKDF2;
             user.CreatedUtc = _clock.UtcNow;
+            user.ForcePasswordChange = createUserParams.ForcePasswordChange;
             SetPassword(user, createUserParams.Password);
 
-            if ( registrationSettings != null) {
+            if (registrationSettings != null) {
                 user.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
                 user.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
             }
 
-            if(createUserParams.IsApproved) {
+            if (createUserParams.IsApproved) {
                 user.RegistrationStatus = UserStatus.Approved;
                 user.EmailStatus = UserStatus.Approved;
             }
@@ -87,7 +91,7 @@ namespace Orchard.Users.Services {
             var userContext = new UserContext { User = user, Cancel = false, UserParameters = createUserParams };
             _userEventHandlers.Creating(userContext);
 
-            if(userContext.Cancel) {
+            if (userContext.Cancel) {
                 return null;
             }
 
@@ -98,15 +102,15 @@ namespace Orchard.Users.Services {
                 _userEventHandlers.Approved(user);
             }
 
-            if ( registrationSettings != null
+            if (registrationSettings != null
                 && registrationSettings.UsersAreModerated
                 && registrationSettings.NotifyModeration
                 && !createUserParams.IsApproved) {
                 var usernames = String.IsNullOrWhiteSpace(registrationSettings.NotificationsRecipients)
                                     ? new string[0]
-                                    : registrationSettings.NotificationsRecipients.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                                    : registrationSettings.NotificationsRecipients.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach ( var userName in usernames ) {
+                foreach (var userName in usernames) {
                     if (String.IsNullOrWhiteSpace(userName)) {
                         continue;
                     }
@@ -142,7 +146,13 @@ namespace Orchard.Users.Services {
             if (user == null)
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if (user == null || ValidatePassword(user.As<UserPart>(), password) == false) {
+            if (user == null || !_passwordService.IsMatch(new PasswordContext {
+                Password = user.Password,
+                HashAlgorithm = user.HashAlgorithm,
+                PasswordFormat = user.PasswordFormat,
+                PasswordSalt = user.PasswordSalt,
+                User = user
+            }, password)) {
                 validationErrors.Add(T("The username or e-mail or password provided is incorrect."));
                 return null;
             }
@@ -157,7 +167,24 @@ namespace Orchard.Users.Services {
         }
 
         public bool PasswordIsExpired(IUser user, int days) {
-            return user.As<UserPart>().LastPasswordChangeUtc.Value.AddDays(days) < _clock.UtcNow;
+            // TODO: add providers to extend this
+
+            // Null check on LastPasswordChangeUtc.
+            // If this is null, use CreatedUtc as if it's the last password change date.
+            // If both are null, consider the password to be expired.
+            var passwordIsExpired = true;
+            DateTime? date = null;
+            date = user.As<UserPart>().LastPasswordChangeUtc;                       
+            if (date == null) {
+                date = user.As<UserPart>().CreatedUtc;
+            }
+            if (date != null) {
+                passwordIsExpired = date.Value.AddDays(days) < _clock.UtcNow;
+            }
+            var securityPart = user.As<UserSecurityConfigurationPart>();
+            var preventExpiration = securityPart != null && securityPart.PreventPasswordExpiration;
+            return passwordIsExpired
+                && !preventExpiration;
         }
 
         public void SetPassword(IUser user, string password) {
@@ -182,117 +209,27 @@ namespace Orchard.Users.Services {
             userPart.LastPasswordChangeUtc = _clock.UtcNow;
         }
 
-        private bool ValidatePassword(UserPart userPart, string password) {
-            // Note - the password format stored with the record is used
-            // otherwise changing the password format on the site would invalidate
-            // all logins
-            switch (userPart.PasswordFormat) {
-                case MembershipPasswordFormat.Clear:
-                    return ValidatePasswordClear(userPart, password);
-                case MembershipPasswordFormat.Hashed:
-                    return ValidatePasswordHashed(userPart, password);
-                case MembershipPasswordFormat.Encrypted:
-                    return ValidatePasswordEncrypted(userPart, password);
-                default:
-                    throw new ApplicationException("Unexpected password format value");
-            }
-        }
-
         private static void SetPasswordClear(UserPart userPart, string password) {
             userPart.PasswordFormat = MembershipPasswordFormat.Clear;
             userPart.Password = password;
             userPart.PasswordSalt = null;
         }
 
-        private static bool ValidatePasswordClear(UserPart userPart, string password) {
-            return userPart.Password == password;
-        }
-
-        private static void SetPasswordHashed(UserPart userPart, string password) {
+        private void SetPasswordHashed(UserPart userPart, string password) {
             var saltBytes = new byte[0x10];
             using (var random = new RNGCryptoServiceProvider()) {
                 random.GetBytes(saltBytes);
             }
 
             userPart.PasswordFormat = MembershipPasswordFormat.Hashed;
-            userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
+            userPart.Password = PasswordExtensions.ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
             userPart.PasswordSalt = Convert.ToBase64String(saltBytes);
-        }
-
-        private bool ValidatePasswordHashed(UserPart userPart, string password) {
-            var saltBytes = Convert.FromBase64String(userPart.PasswordSalt);
-
-            bool isValid;
-            if (userPart.HashAlgorithm == PBKDF2) {
-                // We can't reuse ComputeHashBase64 as the internally generated salt repeated calls to Crypto.HashPassword() return different results.
-                isValid = Crypto.VerifyHashedPassword(userPart.Password, Encoding.Unicode.GetString(CombineSaltAndPassword(saltBytes, password)));
-            }
-            else {
-                isValid = SecureStringEquality(userPart.Password, ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password));
-            }
-
-            // Migrating older password hashes to Default algorithm if necessary and enabled.
-            if (isValid && userPart.HashAlgorithm != DefaultHashAlgorithm) {
-                var keepOldConfiguration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
-                if (String.IsNullOrEmpty(keepOldConfiguration) || keepOldConfiguration.Equals("false", StringComparison.OrdinalIgnoreCase)) {
-                    userPart.HashAlgorithm = DefaultHashAlgorithm;
-                    userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
-                }
-            }
-
-            return isValid;
-        }
-
-        private static string ComputeHashBase64(string hashAlgorithmName, byte[] saltBytes, string password) {
-            var combinedBytes = CombineSaltAndPassword(saltBytes, password);
-
-            // Extending HashAlgorithm would be too complicated: http://stackoverflow.com/questions/6460711/adding-a-custom-hashalgorithmtype-in-c-sharp-asp-net?lq=1
-            if (hashAlgorithmName == PBKDF2) {
-                // HashPassword() already returns a base64 string.
-                return Crypto.HashPassword(Encoding.Unicode.GetString(combinedBytes));
-            }
-            else {
-                using (var hashAlgorithm = HashAlgorithm.Create(hashAlgorithmName)) {
-                    return Convert.ToBase64String(hashAlgorithm.ComputeHash(combinedBytes));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Compares two strings without giving hint about the time it takes to do so.
-        /// </summary>
-        /// <param name="a">The first string to compare.</param>
-        /// <param name="b">The second string to compare.</param>
-        /// <returns><c>true</c> if both strings are equal, <c>false</c>.</returns>
-        private bool SecureStringEquality(string a, string b) {
-            if (a == null || b == null || (a.Length != b.Length)) {
-                return false;
-            }
-
-            var aBytes = Encoding.Unicode.GetBytes(a);
-            var bBytes = Encoding.Unicode.GetBytes(b);
-
-            var bytesAreEqual = true;
-            for (int i = 0; i < a.Length; i++) {
-                bytesAreEqual &= (aBytes[i] == bBytes[i]);
-            }
-
-            return bytesAreEqual;
-        }
-
-        private static byte[] CombineSaltAndPassword(byte[] saltBytes, string password) {
-            var passwordBytes = Encoding.Unicode.GetBytes(password);
-            return saltBytes.Concat(passwordBytes).ToArray();
         }
 
         private void SetPasswordEncrypted(UserPart userPart, string password) {
             userPart.Password = Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(password)));
             userPart.PasswordSalt = null;
             userPart.PasswordFormat = MembershipPasswordFormat.Encrypted;
-        }
-
-        private bool ValidatePasswordEncrypted(UserPart userPart, string password) {
-            return String.Equals(password, Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(userPart.Password))), StringComparison.Ordinal);
         }
 
     }

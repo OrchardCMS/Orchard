@@ -38,6 +38,8 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         private void Set(XElement element, string partName, string fieldName, string valueName, string value) {
+            InfosetHelper.ThrowIfContainsInvalidXmlCharacter(value);
+
             var partElement = element.Element(partName);
             if (partElement == null) {
                 partElement = new XElement(partName);

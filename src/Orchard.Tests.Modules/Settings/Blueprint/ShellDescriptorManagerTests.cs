@@ -14,6 +14,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 using Orchard.Caching;
 using Orchard.Core.Settings.State.Records;
+using Orchard.Locking;
 
 namespace Orchard.Tests.Modules.Settings.Blueprint {
     [TestFixture]
@@ -24,6 +25,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
             builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
             builder.RegisterType<DefaultCacheContextAccessor>().As<ICacheContextAccessor>();
+            builder.RegisterType<LockingProvider>().As<ILockingProvider>();
+            builder.RegisterType<Signals>().As<ISignals>().SingleInstance();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();

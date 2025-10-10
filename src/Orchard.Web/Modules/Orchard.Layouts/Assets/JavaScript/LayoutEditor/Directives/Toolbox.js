@@ -145,6 +145,8 @@
                                 connectWith: _(parentClasses).map(function (e) { return "#" + editorId + " " + e + ":not(.layout-container-sealed) > .layout-element-wrapper > .layout-children"; }).join(", "),
                                 placeholder: placeholderClasses,
                                 "ui-floating": floating,
+                                helper: "clone", // We clone the element and we append it to the body because the container overflow is set to auto (see: Assets\Less\LayoutEditor\Toolbox.less) and otherwise it could not be moved with drag&drop
+                                appendTo: "body",
                                 create: function (e, ui) {
                                     e.target.isToolbox = true; // Will indicate to connected sortables that dropped items were sent from toolbox.
                                 },
@@ -179,29 +181,7 @@
                     }
                 ],
                 templateUrl: environment.templateUrl("Toolbox"),
-                replace: true,
-                link: function (scope, element) {
-                    var toolbox = element.find(".layout-toolbox");
-                    $(window).on("resize scroll", function (e) {
-                        var canvas = element.parent().find(".layout-canvas");
-                        // If the canvas is taller than the toolbox, make the toolbox sticky-positioned within the editor
-                        // to help the user avoid excessive vertical scrolling.
-                        var canvasIsTaller = !!canvas && canvas.height() > toolbox.height();
-                        var windowPos = $(window).scrollTop();
-                        if (canvasIsTaller && windowPos > element.offset().top + element.height() - toolbox.height()) {
-                            toolbox.addClass("sticky-bottom");
-                            toolbox.removeClass("sticky-top");
-                        }
-                        else if (canvasIsTaller && windowPos > element.offset().top) {
-                            toolbox.addClass("sticky-top");
-                            toolbox.removeClass("sticky-bottom");
-                        }
-                        else {
-                            toolbox.removeClass("sticky-top");
-                            toolbox.removeClass("sticky-bottom");
-                        }
-                    });
-                }
+                replace: true
             };
         }
     ]);

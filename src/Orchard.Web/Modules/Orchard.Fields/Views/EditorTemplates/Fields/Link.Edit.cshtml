@@ -25,7 +25,7 @@
     </div>
     <div class="editor-field">
         @(settings.Required ? Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder, required = "required" }) : Html.TextBoxFor(m => m.Value, new { @class = "text large", placeholder = settings.UrlPlaceholder }))
-        <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
+        <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, #some_id, ...")</span>
     </div>
     @if (settings.LinkTextMode == LinkTextMode.Optional || settings.LinkTextMode == LinkTextMode.Required) {
         <div class="editor-label">

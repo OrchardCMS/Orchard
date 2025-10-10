@@ -1,0 +1,35 @@
+﻿@model  Orchard.Users.ViewModels.UserEditViewModel
+
+@using Orchard.Users.Models;
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions;
+
+<style type="text/css">
+    .approve-user {
+        float: left;
+        clear: none;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .approve-user legend {
+        display: none;
+    }
+
+    .approve-user button {
+        margin-left: 4px;
+    }
+</style>
+<fieldset class="approve-user">
+    <legend>@T("Approve User")</legend>
+    @if (Model.User != null) {
+        var user = Model.User.As<UserPart>();
+        if (user.RegistrationStatus == UserStatus.Pending) {
+            <button type="submit" name="submit.Save" value="submit.ApproveUser">@T("Approve")</button>
+        }
+        else {
+            <button type="submit" name="submit.Save" value="submit.DisableUser">@T("Disable")</button>
+        }
+    }
+</fieldset>

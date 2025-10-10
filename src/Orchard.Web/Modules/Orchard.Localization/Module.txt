@@ -2,14 +2,14 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.10.3
-OrchardVersion: 1.10.3
+Version: 1.10.4
+OrchardVersion: 1.10.4
 Description: The localization module enables the localization of content items.
 Features:
     Orchard.Localization:
         Description: Enables localization of content items.
         Category: Content
-        Dependencies: Settings
+        Dependencies: Settings, Orchard.Autoroute
         Name: Content Localization
     Orchard.Localization.DateTimeFormat:
         Description: Enables PO-based translation of date/time formats and names of days and months.
@@ -30,7 +30,7 @@ Features:
         Description: Enables transliteration of the autoroute slug when creating a piece of content.
         Category: Content
         Name: URL Transliteration
-        Dependencies: Orchard.Localization.Transliteration, Orchard.Autoroute
+        Dependencies: Orchard.Localization.Transliteration
 	Orchard.Localization.CultureNeutralPartsAndFields:
         Description: Enables the synchronization among localizations of parts and fields specifically marked as "Culture Neutral".
         Category: Content

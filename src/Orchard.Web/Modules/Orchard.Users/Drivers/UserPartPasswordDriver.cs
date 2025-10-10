@@ -1,29 +1,33 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
-using System.Collections.Generic;
-using System.Web.Mvc;
 
-namespace Orchard.Users.Drivers{
+namespace Orchard.Users.Drivers {
 
     [OrchardFeature("Orchard.Users.PasswordEditor")]
     public class UserPartPasswordDriver : ContentPartDriver<UserPart> {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
+        private readonly IUserEventHandler _userEventHandler;
 
         public Localizer T { get; set; }
-        
+
         public UserPartPasswordDriver(
             MembershipService membershipService,
-            IUserService userService) {
+            IUserService userService,
+            IUserEventHandler userEventHandler) {
 
             _membershipService = membershipService;
             _userService = userService;
+            _userEventHandler = userEventHandler;
             T = NullLocalizer.Instance;
         }
 
@@ -37,27 +41,35 @@ namespace Orchard.Users.Drivers{
 
         protected override DriverResult Editor(UserPart part, IUpdateModel updater, dynamic shapeHelper) {
             var editModel = new UserEditPasswordViewModel { User = part };
-            if (updater != null) {               
-                if (updater.TryUpdateModel(editModel,Prefix,null,null)) {
+            var canUpdatePassword = true;
+            if (updater != null) {
+                if (updater.TryUpdateModel(editModel, Prefix, null, null)) {
                     if (!(string.IsNullOrEmpty(editModel.Password) && string.IsNullOrEmpty(editModel.ConfirmPassword))) {
                         if (string.IsNullOrEmpty(editModel.Password) || string.IsNullOrEmpty(editModel.ConfirmPassword)) {
                             updater.AddModelError("MissingPassword", T("Password or Confirm Password field is empty."));
-                        }
-                        else {
-                            if (editModel.Password != editModel.ConfirmPassword){
+                            canUpdatePassword = false;
+                        } else {
+                            if (editModel.Password != editModel.ConfirmPassword) {
                                 updater.AddModelError("ConfirmPassword", T("Password confirmation must match."));
-                            }
-                            var actUser = _membershipService.GetUser(part.UserName);
-                            _membershipService.SetPassword(actUser, editModel.Password);
+                                canUpdatePassword = false;
+                            }                            
                         }
-                   	IDictionary<string, LocalizedString> validationErrors;
-                   	if (!_userService.PasswordMeetsPolicies(editModel.Password, out validationErrors)) {
-                        	updater.AddModelErrors(validationErrors);
-                    	}
+                        IDictionary<string, LocalizedString> validationErrors;
+                        if (!_userService.PasswordMeetsPolicies(editModel.Password, part, out validationErrors)) {
+                            updater.AddModelErrors(validationErrors);
+                            canUpdatePassword = false;
+                        }
+                        if (canUpdatePassword) {
+                            var actUser = _membershipService.GetUser(part.UserName);
+                            // I need to store current password in a variable to save it in the PasswordHistoryRepository.
+                            _userEventHandler.ChangingPassword(actUser, editModel.Password);                         
+                            _membershipService.SetPassword(actUser, editModel.Password);
+                            _userEventHandler.ChangedPassword(actUser, editModel.Password);
+                        }
                     }
                 }
             }
             return Editor(part, shapeHelper);
-        }  
+        }
     }
 }

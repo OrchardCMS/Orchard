@@ -67,6 +67,7 @@ namespace Orchard.ContentManagement.Drivers {
             newShapeMetadata.DisplayType = displayType;
             newShapeMetadata.PlacementSource = placement.Source;
             newShapeMetadata.Tab = placement.GetTab();
+            newShapeMetadata.Card = placement.GetCard();
             
             // If a specific shape is provided, remove all previous alternates and wrappers.
             if (!String.IsNullOrEmpty(placement.ShapeType)) {

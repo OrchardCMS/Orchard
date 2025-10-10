@@ -1,6 +1,5 @@
-﻿@using Orchard.Comments.Models;
+﻿@using Orchard.Comments.Models
 @using Orchard.ContentManagement
-@using Orchard.Utility.Extensions
 
 @{
     CommentPart comment = Model.ContentPart;
@@ -11,12 +10,12 @@
     <ul class="action-links">
         @if (comment.Status != CommentStatus.Pending) {
             <li class="action-link">
-                @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new { area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
             </li>
         }
         else {
             <li class="action-link">
-                @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new { area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+                @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.RawUrl }), new {itemprop = "UnsafeUrl"})
             </li>
         }
     </ul>

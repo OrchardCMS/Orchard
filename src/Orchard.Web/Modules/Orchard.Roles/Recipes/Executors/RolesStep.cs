@@ -35,12 +35,12 @@ namespace Orchard.Roles.Recipes.Executors {
                         role = _roleService.GetRoleByName(roleName);
                     }
 
-                    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    var permissions = roleElement.Attribute("Permissions").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Trim());
                     // Only import permissions for currenlty installed modules.
                     var permissionsValid = permissions.Where(permission => installedPermissions.Any(x => x.Name == permission)).ToList();
 
                     // Union to keep existing permissions.
-                    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)));
+                    _roleService.UpdateRole(role.Id, role.Name, permissionsValid.Union(role.RolesPermissions.Select(p => p.Permission.Name)).ToList());
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "Error while importing role '{0}'.", roleName);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -11,22 +10,22 @@ using Orchard.Mvc.Extensions;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Services;
-using Orchard.Utility.Extensions;
 
-namespace Orchard.Projections.StandardQueries {
+namespace Orchard.Projections.StandardQueries
+{
     public class QueryFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
         private readonly IProjectionManager _projectionManager;
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IHtmlFilterProcessor _htmlFilterProcessor;
 
         public QueryFeedQuery(
             IContentManager contentManager,
             IProjectionManager projectionManager,
-            IEnumerable<IHtmlFilter> htmlFilters)
+            IHtmlFilterProcessor htmlFilterProcessor)
         {
             _contentManager = contentManager;
             _projectionManager = projectionManager;
-            _htmlFilters = htmlFilters;
+            _htmlFilterProcessor = htmlFilterProcessor;
         }
 
         public FeedQueryMatch Match(FeedContext context) {
@@ -55,7 +54,7 @@ namespace Orchard.Projections.StandardQueries {
                 return;
             }
 
-            var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilters);
+            var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilterProcessor);
             if (context.Format == "rss") {
                 var link = new XElement("link");
                 context.Response.Element.SetElementValue("title", inspector.Title);

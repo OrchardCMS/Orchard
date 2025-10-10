@@ -53,7 +53,7 @@ namespace Orchard.Core.Containers.Drivers {
                 var query = _contentManager
                 .Query(VersionOptions.Published)
                 .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
-                .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
+                .Join<ContainablePartRecord>().OrderBy(x => x.Position);
 
                 var metadata = container.ContentManager.GetItemMetadata(container);
                 if (metadata != null) {

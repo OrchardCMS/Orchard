@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
+using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment;
@@ -13,9 +14,12 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Projections.Services {
     public class PropertyShapes : IDependency {
         private readonly Work<ITokenizer> _tokenizerWork;
+        private readonly Work<IConditionManager> _conditionManagerWork;
+        private readonly Dictionary<string, bool> _evaluations = new Dictionary<string, bool>();
 
-        public PropertyShapes(Work<ITokenizer> tokenizerWork) {
+        public PropertyShapes(Work<ITokenizer> tokenizerWork, Work<IConditionManager> conditionManagerWork) {
             _tokenizerWork = tokenizerWork;
+            _conditionManagerWork = conditionManagerWork;
             T = NullLocalizer.Instance;
         }
 
@@ -24,7 +28,7 @@ namespace Orchard.Projections.Services {
         [Shape]
         public void Properties(dynamic Display, TextWriter Output, HtmlHelper Html, IEnumerable<dynamic> Items) {
             foreach (var item in Items) {
-                if((bool)item.Property.ExcludeFromDisplay) {
+                if ((bool)item.Property.ExcludeFromDisplay) {
                     continue;
                 }
 
@@ -32,54 +36,55 @@ namespace Orchard.Projections.Services {
             }
         }
 
-        [Shape] 
+        [Shape]
         public void LayoutGroup(dynamic Display, TextWriter Output, HtmlHelper Html, dynamic Key, dynamic List) {
-            Output.WriteLine(Display(Key)); 
+            Output.WriteLine(Display(Key));
             Output.WriteLine(Display(List));
         }
 
         [Shape]
         public void PropertyWrapper(
-            dynamic Display, 
-            TextWriter Output, 
+            dynamic Display,
+            TextWriter Output,
             HtmlHelper Html,
-            UrlHelper Url, 
+            UrlHelper Url,
             dynamic Item,
             ContentItem ContentItem,
             ContentItemMetadata ContentItemMetadata,
-            PropertyRecord Property
-            ) {
-
-            // Display will encode any string which is not IHtmlString
+            PropertyRecord Property) {
+            // Display will encode any string which is not IHtmlString.
             string resultOutput = Convert.ToString(Display(Item));
-            var resultIsEmpty = String.IsNullOrEmpty(resultOutput) || (resultOutput == "0" && Property.ZeroIsEmpty);
 
-            if(Property.HideEmpty && resultIsEmpty) {
+            var tokenData = new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } };
+
+            if (!string.IsNullOrWhiteSpace(Property.RewriteOutputCondition) &&
+                _conditionManagerWork.Value.Matches(_tokenizerWork.Value.Replace(Property.RewriteOutputCondition, tokenData)))
+                resultOutput = string.IsNullOrWhiteSpace(Property.RewriteText) ? "" : _tokenizerWork.Value.Replace(Property.RewriteText, tokenData);
+
+            var resultIsEmpty = string.IsNullOrEmpty(resultOutput) || (resultOutput == "0" && Property.ZeroIsEmpty);
+
+            if (Property.HideEmpty && resultIsEmpty) {
                 return;
             }
 
-            if(Property.RewriteOutput) {
-                resultOutput = _tokenizerWork.Value.Replace(Property.RewriteText, new Dictionary<string, object> { { "Text", resultOutput }, { "Content", ContentItem } });
-            }
-
-            if(Property.StripHtmlTags) {
+            if (Property.StripHtmlTags) {
                 resultOutput = resultOutput.RemoveTags();
             }
 
-            if(Property.TrimLength) {
+            if (Property.TrimLength) {
                 var ellipsis = Property.AddEllipsis ? "&#160;&#8230;" : "";
                 resultOutput = resultOutput.Ellipsize(Property.MaxLength, ellipsis, Property.TrimOnWordBoundary);
             }
 
-            if(Property.TrimWhiteSpace) {
+            if (Property.TrimWhiteSpace) {
                 resultOutput = resultOutput.Trim();
             }
 
-            if(Property.PreserveLines) {
-                using(var sw = new StringWriter()) {
-                    using(var sr = new StringReader(resultOutput)) {
+            if (Property.PreserveLines) {
+                using (var sw = new StringWriter()) {
+                    using (var sr = new StringReader(resultOutput)) {
                         string line;
-                        while(null != (line = sr.ReadLine())) {
+                        while (null != (line = sr.ReadLine())) {
                             sw.WriteLine(line);
                             sw.WriteLine("<br />");
                         }
@@ -89,7 +94,7 @@ namespace Orchard.Projections.Services {
             }
 
             var wrapperTag = new TagBuilder(Property.CustomizeWrapperHtml && !String.IsNullOrEmpty(Property.CustomWrapperTag) ? Property.CustomWrapperTag : "div");
-            
+
             if (Property.CustomizeWrapperHtml && !String.IsNullOrEmpty(Property.CustomWrapperCss)) {
                 wrapperTag.AddCssClass(_tokenizerWork.Value.Replace(Property.CustomWrapperCss, new Dictionary<string, object>()));
             }
@@ -113,11 +118,11 @@ namespace Orchard.Projections.Services {
 
                 if (!(Property.CustomizeLabelHtml && Property.CustomLabelTag == "-")) {
                     Output.Write(labelTag.ToString(TagRenderMode.EndTag));
-                } 
+                }
             }
 
             var propertyTag = new TagBuilder(Property.CustomizePropertyHtml && !String.IsNullOrEmpty(Property.CustomPropertyTag) ? Property.CustomPropertyTag : "span");
-            
+
             if (Property.CustomizePropertyHtml && !String.IsNullOrEmpty(Property.CustomPropertyCss)) {
                 propertyTag.AddCssClass(_tokenizerWork.Value.Replace(Property.CustomPropertyCss, new Dictionary<string, object>()));
             }
