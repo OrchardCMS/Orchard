@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -43,7 +44,7 @@ namespace Orchard.MediaProcessing.Drivers {
         protected override DriverResult Editor(ImageProfilePart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentName = part.Name;
             var viewModel = new ImageProfileViewModel();
-            
+
             // It would be nice if IUpdateModel provided access to the IsValid property of the Controller, instead of having to track a local flag.
             var isValid = updater.TryUpdateModel(viewModel, Prefix, null, null);
             if (String.IsNullOrWhiteSpace(viewModel.Name)) {
@@ -111,7 +112,7 @@ namespace Orchard.MediaProcessing.Drivers {
             clonePart.Name = originalPart.Name;
             clonePart.ModifiedUtc = originalPart.ModifiedUtc;
             clonePart.Record.Filters = originalPart.Filters;
-            clonePart.Record.FileNames = originalPart.FileNames;
+            clonePart.Record.FileNames = new List<FileNameRecord>();
         }
     }
 }
