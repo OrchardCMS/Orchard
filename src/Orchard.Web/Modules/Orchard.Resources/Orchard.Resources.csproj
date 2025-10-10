@@ -311,9 +311,7 @@
     <Content Include="Assets\Js\jQuery.Utilities\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery.Utilities\jquery.utils.js" />
     <Content Include="Assets\Js\Knockout\knockout.js" />
-    <Content Include="Assets\Js\Moment\moment.js" />
     <Content Include="Assets\Js\Underscore\underscore.js" />
-    <Content Include="Assets\Js\Uri\uri.js" />
     <Content Include="Scripts\Angular\angular-resource.js" />
     <Content Include="Scripts\Angular\angular-resource.min.js" />
     <Content Include="Scripts\Angular\angular-sanitize.js" />
@@ -766,14 +764,10 @@
     <Content Include="Scripts\jQuery\jquery.min.js" />
     <Content Include="Scripts\Knockout\knockout.js" />
     <Content Include="Scripts\Knockout\knockout.min.js" />
-    <Content Include="Scripts\Moment\moment.js" />
-    <Content Include="Scripts\Moment\moment.min.js" />
     <Content Include="Scripts\jQuery.TimeEntry\jquery.timeentry.js" />
     <Content Include="Scripts\jQuery.TimeEntry\jquery.timeentry.min.js" />
     <Content Include="Scripts\Underscore\underscore.js" />
     <Content Include="Scripts\Underscore\underscore.min.js" />
-    <Content Include="Scripts\Uri\uri.js" />
-    <Content Include="Scripts\Uri\uri.min.js" />
     <Content Include="Styles\Bootstrap\bootstrap-grid.css" />
     <Content Include="Styles\Bootstrap\bootstrap-grid.min.css" />
     <Content Include="Styles\Bootstrap\bootstrap-reboot.css" />
@@ -972,9 +966,7 @@
     <Compile Include="ResourceManifests\jQueryTimeEntry.cs" />
     <Compile Include="ResourceManifests\jQueryUtilities.cs" />
     <Compile Include="ResourceManifests\jQueryUI.cs" />
-    <Compile Include="ResourceManifests\Uri.cs" />
     <Compile Include="ResourceManifests\jQueryBlockUI.cs" />
-    <Compile Include="ResourceManifests\Moment.cs" />
     <Compile Include="ResourceManifests\Knockout.cs" />
     <Compile Include="ResourceManifests\History.cs" />
     <Compile Include="ResourceManifests\FontAwesome.cs" />
