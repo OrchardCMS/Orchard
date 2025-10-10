@@ -119,7 +119,7 @@ namespace Orchard.Core.Navigation.Drivers {
         protected override void Cloning(MenuPart originalPart, MenuPart clonePart, CloneContentContext context) {
             clonePart.MenuText = originalPart.MenuText;
             clonePart.MenuPosition = originalPart.MenuPosition;
-            clonePart.Menu = context.CloneContentItem;
+            clonePart.Menu = originalPart.Menu;
         }
     }
 }
