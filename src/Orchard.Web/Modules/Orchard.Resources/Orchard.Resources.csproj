@@ -345,7 +345,6 @@
     <Content Include="Assets\Js\jQuery\jquery.plugin.js" />
     <Content Include="Assets\Js\jQuery\jquery.utils.js" />
     <Content Include="Assets\Js\Knockout\knockout-3.4.0.js" />
-    <Content Include="Assets\Js\Moment\moment.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ar.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-ca.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-cs.js" />
@@ -372,7 +371,6 @@
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry-zh-TW.js" />
     <Content Include="Assets\Js\TimeEntry\jquery.timeentry.js" />
     <Content Include="Assets\Js\Underscore\underscore.js" />
-    <Content Include="Assets\Js\Uri\uri.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="Scripts\angular-sanitize.js" />
@@ -759,14 +757,10 @@
     <Content Include="Scripts\jquery.utils.min.js" />
     <Content Include="Scripts\knockout.js" />
     <Content Include="Scripts\knockout.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\TimeEntry\jquery.timeentry.js" />
     <Content Include="Scripts\TimeEntry\jquery.timeentry.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
-    <Content Include="Scripts\uri.js" />
-    <Content Include="Scripts\uri.min.js" />
     <Content Include="Styles\bootstrap.css" />
     <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\Calendars\jquery.calendars.picker.full.css" />
@@ -933,12 +927,9 @@
     <Content Include="Assets\Scss\Bootstrap\_type.scss" />
     <Content Include="Assets\Scss\Bootstrap\_utilities.scss" />
     <Content Include="Assets\Scss\Bootstrap\_variables.scss" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Uri.cs" />
     <Compile Include="BlockUI.cs" />
-    <Compile Include="Moment.cs" />
     <Compile Include="Knockout.cs" />
     <Compile Include="History.cs" />
     <Compile Include="FontAwesome.cs" />
