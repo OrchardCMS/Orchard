@@ -7,6 +7,7 @@ on:
     branches:
       - 1.10.x
       - dev
+      - task/nuget-updates
   schedule:
     - cron: '0 0 * * 1' # Every Monday midnight.
 

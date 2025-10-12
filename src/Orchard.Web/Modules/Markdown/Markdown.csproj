@@ -52,8 +52,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Markdig.Signed, Version=0.22.1.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Markdig.Signed.0.22.1\lib\net452\Markdig.Signed.dll</HintPath>
+    <Reference Include="Markdig.Signed, Version=0.42.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Markdig.Signed.0.42.0\lib\net462\Markdig.Signed.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
