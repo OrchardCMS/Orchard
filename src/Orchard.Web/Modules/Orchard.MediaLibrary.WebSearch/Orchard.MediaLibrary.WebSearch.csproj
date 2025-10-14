@@ -78,8 +78,8 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="RestEase, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\RestEase.1.4.9\lib\net45\RestEase.dll</HintPath>
+    <Reference Include="RestEase, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\RestEase.1.6.4\lib\net452\RestEase.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
