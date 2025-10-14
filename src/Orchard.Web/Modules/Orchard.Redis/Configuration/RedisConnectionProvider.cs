@@ -2,15 +2,15 @@
 using System.Collections.Concurrent;
 using System.Configuration;
 using Orchard.Environment.Configuration;
+using Orchard.Localization;
 using Orchard.Logging;
 using StackExchange.Redis;
-using Orchard.UI.Notify;
-using Orchard.Localization;
 
 namespace Orchard.Redis.Configuration {
 
     public class RedisConnectionProvider : IRedisConnectionProvider {
-        private static ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> _connectionMultiplexers = new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
+        private static ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>> _connectionMultiplexers =
+            new ConcurrentDictionary<string, Lazy<ConnectionMultiplexer>>();
         private readonly ShellSettings _shellSettings;
 
         public RedisConnectionProvider(ShellSettings shellSettings) {
@@ -26,7 +26,8 @@ namespace Orchard.Redis.Configuration {
             var _tenantSettingsKey = _shellSettings.Name + ":" + service;
             var _defaultSettingsKey = service;
 
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings[_tenantSettingsKey] ?? ConfigurationManager.ConnectionStrings[_defaultSettingsKey];
+            var connectionStringSettings = ConfigurationManager.ConnectionStrings[_tenantSettingsKey]
+                ?? ConfigurationManager.ConnectionStrings[_defaultSettingsKey];
 
             if (connectionStringSettings == null) {
                 return null;
