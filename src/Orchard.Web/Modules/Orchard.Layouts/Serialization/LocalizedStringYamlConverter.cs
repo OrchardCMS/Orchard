@@ -8,9 +8,10 @@ namespace Orchard.Layouts.Serialization {
     public class LocalizedStringYamlConverter : IYamlTypeConverter {
         public bool Accepts(Type type) => type == typeof(LocalizedString);
 
-        public object ReadYaml(IParser parser, Type type) => new LocalizedString(parser.Consume<Scalar>()?.Value);
+        public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer) =>
+            new LocalizedString(parser.Consume<Scalar>()?.Value);
 
-        public void WriteYaml(IEmitter emitter, object value, Type type) =>
+        public void WriteYaml(IEmitter emitter, object value, Type type, ObjectSerializer serializer) =>
             emitter.Emit(new Scalar((value as LocalizedString)?.Text ?? ""));
     }
 }
