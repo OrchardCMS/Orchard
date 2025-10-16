@@ -95,8 +95,6 @@ namespace Orchard.Data.Migration {
                 // Workaround to avoid some Transaction issue for PostgreSQL.
                 if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase)) {
                     _transactionManager.RequireNew();
-                    distributedLockSchemaBuilder.CreateSchema();
-                    return;
                 }
 
                 distributedLockSchemaBuilder.CreateSchema();
