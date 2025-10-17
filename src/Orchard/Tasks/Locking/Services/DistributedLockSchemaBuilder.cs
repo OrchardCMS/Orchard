@@ -1,15 +1,12 @@
 ﻿using System;
 using Orchard.Data.Migration.Schema;
-using Orchard.Environment.Configuration;
 
 namespace Orchard.Tasks.Locking.Services {
     public class DistributedLockSchemaBuilder {
-        private readonly ShellSettings _shellSettings;
         private readonly SchemaBuilder _schemaBuilder;
         private const string TableName = "Orchard_Framework_DistributedLockRecord";
 
-        public DistributedLockSchemaBuilder(ShellSettings shellSettings, SchemaBuilder schemaBuilder) {
-            _shellSettings = shellSettings;
+        public DistributedLockSchemaBuilder(SchemaBuilder schemaBuilder) {
             _schemaBuilder = schemaBuilder;
         }
 
@@ -28,8 +25,7 @@ namespace Orchard.Tasks.Locking.Services {
 
         public bool SchemaExists() {
             try {
-                var tablePrefix = string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : $"{_shellSettings.DataTablePrefix}_";
-                _schemaBuilder.ExecuteSql($"select * from {tablePrefix}{TableName}");
+                _schemaBuilder.ExecuteSql($"select 1 from {_schemaBuilder.TableDbName(TableName)}");
 
                 return true;
             }
