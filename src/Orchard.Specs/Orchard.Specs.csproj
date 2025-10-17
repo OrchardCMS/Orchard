@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.props" Condition="Exists('..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -33,6 +34,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,17 +89,14 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=5.5.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.5.5.2\lib\net48\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.mocks, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.7.1\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
@@ -111,6 +111,9 @@
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -142,20 +145,16 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TechTalk.SpecFlow, Version=1.9.0.77, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpecFlow.1.9.0\lib\net35\TechTalk.SpecFlow.dll</HintPath>
+    <Reference Include="TechTalk.SpecFlow, Version=2.4.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
+      <HintPath>..\packages\SpecFlow.2.4.1\lib\net45\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Admin.feature.cs">
       <DependentUpon>Admin.feature</DependentUpon>
     </Compile>
-    <Compile Include="Autoroute.feature.cs">
+    <Compile Include="Tests\Autoroute.feature.cs">
       <DependentUpon>Autoroute.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Bindings\BindingBase.cs" />
     <Compile Include="Bindings\CommandLine.cs" />
@@ -164,75 +163,47 @@
     <Compile Include="Bindings\HtmlNodeExtensions.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Bindings\UsersPermissionsAndRoles.cs" />
-    <Compile Include="Blogs.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Blogs.feature.cs">
       <DependentUpon>Blogs.feature</DependentUpon>
     </Compile>
-    <Compile Include="Boolean.feature.cs">
+    <Compile Include="Tests\Boolean.feature.cs">
       <DependentUpon>Boolean.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Comments.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Comments.feature.cs">
       <DependentUpon>Comments.feature</DependentUpon>
     </Compile>
-    <Compile Include="ContentRights.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\ContentRights.feature.cs">
       <DependentUpon>ContentRights.feature</DependentUpon>
     </Compile>
-    <Compile Include="ContentTypes.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\ContentTypes.feature.cs">
       <DependentUpon>ContentTypes.feature</DependentUpon>
     </Compile>
-    <Compile Include="DateTime.feature.cs">
+    <Compile Include="Tests\DateTime.feature.cs">
       <DependentUpon>DateTime.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Enumeration.feature.cs">
+    <Compile Include="Tests\Enumeration.feature.cs">
       <DependentUpon>Enumeration.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Settings.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Settings.feature.cs">
       <DependentUpon>Settings.feature</DependentUpon>
     </Compile>
-    <Compile Include="Text.feature.cs">
+    <Compile Include="Tests\Text.feature.cs">
       <DependentUpon>Text.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Input.feature.cs">
+    <Compile Include="Tests\Input.feature.cs">
       <DependentUpon>Input.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Link.feature.cs">
+    <Compile Include="Tests\Link.feature.cs">
       <DependentUpon>Link.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="MediaPicker.feature.cs">
+    <Compile Include="Tests\MediaPicker.feature.cs">
       <DependentUpon>MediaPicker.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Numeric.feature.cs">
+    <Compile Include="Tests\Numeric.feature.cs">
       <DependentUpon>Numeric.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Tags.feature.cs">
+    <Compile Include="Tests\Tags.feature.cs">
       <DependentUpon>Tags.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
     <Compile Include="Hosting\MessageSink.cs" />
@@ -242,54 +213,34 @@
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
-    <Compile Include="Lists.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Lists.feature.cs">
       <DependentUpon>Lists.feature</DependentUpon>
     </Compile>
-    <Compile Include="Media.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Media.feature.cs">
       <DependentUpon>Media.feature</DependentUpon>
     </Compile>
-    <Compile Include="Modules.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Modules.feature.cs">
       <DependentUpon>Modules.feature</DependentUpon>
     </Compile>
-    <Compile Include="MultiTenancy.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\MultiTenancy.feature.cs">
       <DependentUpon>MultiTenancy.feature</DependentUpon>
     </Compile>
-    <Compile Include="Pages.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Pages.feature.cs">
       <DependentUpon>Pages.feature</DependentUpon>
     </Compile>
-    <Compile Include="PermissionModel.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\PermissionModel.feature.cs">
       <DependentUpon>PermissionModel.feature</DependentUpon>
     </Compile>
-    <Compile Include="Setup.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Setup.feature.cs">
       <DependentUpon>Setup.feature</DependentUpon>
     </Compile>
-    <Compile Include="SiteCompilation.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\SiteCompilation.feature.cs">
       <DependentUpon>SiteCompilation.feature</DependentUpon>
     </Compile>
-    <Compile Include="Users.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Users.feature.cs">
       <DependentUpon>Users.feature</DependentUpon>
     </Compile>
-    <Compile Include="UsingSpecFlow.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\UsingSpecFlow.feature.cs">
       <DependentUpon>UsingSpecFlow.feature</DependentUpon>
     </Compile>
     <Compile Include="Util\PathExtensions.cs" />
@@ -300,14 +251,10 @@
     <Compile Include="Hosting\WebHostAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bindings\SanityCheck.cs" />
-    <Compile Include="WebHosting.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\WebHosting.feature.cs">
       <DependentUpon>WebHosting.feature</DependentUpon>
     </Compile>
-    <Compile Include="Widgets.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tests\Widgets.feature.cs">
       <DependentUpon>Widgets.feature</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -326,46 +273,19 @@
     <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Admin.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Admin.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\Admin.feature" />
     <None Include="App.Config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Autoroute.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Autoroute.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Blogs.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Blogs.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Boolean.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Boolean.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Comments.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Comments.feature.cs</LastGenOutput>
-    </None>
-    <None Include="ContentRights.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ContentRights.feature.cs</LastGenOutput>
-    </None>
-    <None Include="ContentTypes.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\Autoroute.feature" />
+    <None Include="Tests\Blogs.feature" />
+    <None Include="Tests\Boolean.feature" />
+    <None Include="Tests\Comments.feature" />
+    <None Include="Tests\ContentRights.feature" />
+    <None Include="Tests\ContentTypes.feature" />
     <Content Include="Content\orchard.core.po" />
-    <None Include="DateTime.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>DateTime.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Enumeration.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Enumeration.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\DateTime.feature" />
+    <None Include="Tests\Enumeration.feature" />
     <WebConfigsToTransform Include="Hosting\Orchard.Web\Config\HostComponents.config">
       <SubType>Designer</SubType>
     </WebConfigsToTransform>
@@ -376,42 +296,15 @@
       <DependentUpon>HostComponents.config</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="Settings.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Text.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Text.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Input.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Input.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Link.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Link.feature.cs</LastGenOutput>
-    </None>
-    <None Include="MediaPicker.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>MediaPicker.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Numeric.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Numeric.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Tags.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Tags.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Lists.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Lists.feature.cs</LastGenOutput>
-    </None>
-    <None Include="PermissionModel.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>PermissionModel.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\Settings.feature" />
+    <None Include="Tests\Text.feature" />
+    <None Include="Tests\Input.feature" />
+    <None Include="Tests\Link.feature" />
+    <None Include="Tests\MediaPicker.feature" />
+    <None Include="Tests\Numeric.feature" />
+    <None Include="Tests\Tags.feature" />
+    <None Include="Tests\Lists.feature" />
+    <None Include="Tests\PermissionModel.feature" />
     <Content Include="Hosting\TemplateConfigs\DisableDynamicCompilation.HostComponents.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -420,10 +313,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="SiteCompilation.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>SiteCompilation.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\SiteCompilation.feature" />
     <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -433,42 +323,15 @@
     <Content Include="Hosting\Orchard.Web\Config\Host.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Media.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Media.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Modules.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Modules.feature.cs</LastGenOutput>
-    </None>
-    <None Include="MultiTenancy.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Pages.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Pages.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Users.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Users.feature.cs</LastGenOutput>
-    </None>
-    <None Include="WebHosting.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>WebHosting.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Setup.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Setup.feature.cs</LastGenOutput>
-    </None>
-    <None Include="UsingSpecFlow.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>UsingSpecFlow.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Widgets.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Widgets.feature.cs</LastGenOutput>
-    </None>
+    <None Include="Tests\Media.feature" />
+    <None Include="Tests\Modules.feature" />
+    <None Include="Tests\MultiTenancy.feature" />
+    <None Include="Tests\Pages.feature" />
+    <None Include="Tests\Users.feature" />
+    <None Include="Tests\WebHosting.feature" />
+    <None Include="Tests\Setup.feature" />
+    <None Include="Tests\UsingSpecFlow.feature" />
+    <None Include="Tests\Widgets.feature" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
@@ -548,6 +411,16 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\SpecFlow.2.4.1\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.4.1\build\SpecFlow.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SpecFlow.2.4.1\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.4.1\build\SpecFlow.targets'))" />
+    <Error Condition="!Exists('..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.props'))" />
+    <Error Condition="!Exists('..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.targets'))" />
+  </Target>
+  <Import Project="..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.targets" Condition="Exists('..\packages\SpecFlow.Tools.MsBuild.Generation.2.4.1\build\SpecFlow.Tools.MsBuild.Generation.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

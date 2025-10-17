@@ -1,28 +1,28 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Autofac;
 using Moq;
 using NHibernate;
+using NHibernate.Exceptions;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.Data;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
-using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
-using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement;
-using System.Collections.Generic;
+using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
@@ -40,7 +40,7 @@ namespace Orchard.Tests.ContentManagement {
         private ISession _session;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -66,7 +66,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
-            builder.RegisterInstance(new ShellSettings {Name = ShellSettings.DefaultName, DataProvider = "SqlCe"});
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
 
             builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
             builder.RegisterType<BetaPartHandler>().As<IContentHandler>();
@@ -78,7 +78,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
@@ -115,9 +115,9 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(foo.GetType(), Is.EqualTo(typeof(AlphaPart)));
         }
 
-        [Test, ExpectedException(typeof(InvalidCastException))]
+        [Test]
         public void StronglyTypedNewShouldThrowCastExceptionIfNull() {
-            _manager.New<BetaPart>(DefaultAlphaName);
+            Assert.Throws<InvalidCastException>(() => _manager.New<BetaPart>(DefaultAlphaName));
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace Orchard.Tests.ContentManagement {
 
             _contentDefinitionManager.Setup(contentDefinitionManager => contentDefinitionManager.ListTypeDefinitions())
                 .Returns(new List<ContentTypeDefinition> { alphaType, betaType, gammaType, deltaType });
-            
+
             var types = _manager.GetContentTypeDefinitions();
 
             // Validate that the expected types were obtained
@@ -224,12 +224,15 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
         }
 
-        [Test, ExpectedException]
+        [Test]
         public void StandardStringsShouldNotHaveAStandardSize() {
             var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
-            var mega = new MegaRecord() { SmallStuff = new string('x', 256) };
-            megaRepository.Create(mega);
-            _session.Flush();
+
+            Assert.Throws<GenericADOException>(() => {
+                var mega = new MegaRecord() { SmallStuff = new string('x', 256) };
+                megaRepository.Create(mega);
+                _session.Flush();
+            });
         }
 
         private ContentItemRecord CreateModelRecord(string contentType) {
@@ -404,8 +407,7 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DraftRequiredShouldAlwaysBuildNewVersionFromPublishedIfDraftNotFound()
-        {
+        public void DraftRequiredShouldAlwaysBuildNewVersionFromPublishedIfDraftNotFound() {
             Trace.WriteLine("gamma1");
             var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
             Trace.WriteLine("flush");
@@ -426,8 +428,7 @@ namespace Orchard.Tests.ContentManagement {
             Trace.WriteLine("Restore gamma1 as Latest");
             var gamma2 = _manager.Get(gamma1.Id, VersionOptions.Published);
             var publishedVersion = gamma2.Record.Versions.SingleOrDefault(x => x.Published);
-            if (publishedVersion != null)
-            {
+            if (publishedVersion != null) {
                 publishedVersion.Latest = true;
             }
             Trace.WriteLine("flush");
@@ -452,7 +453,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Clear();
 
             Trace.WriteLine("gammaDraft1");
-            var gammaDraft1 = _manager.GetMany<ContentItem>(new [] { gamma1.Id }, VersionOptions.Draft, QueryHints.Empty);
+            var gammaDraft1 = _manager.GetMany<ContentItem>(new[] { gamma1.Id }, VersionOptions.Draft, QueryHints.Empty);
             Assert.That(gammaDraft1.Count(), Is.EqualTo(0));
             Trace.WriteLine("flush");
             _session.Flush();

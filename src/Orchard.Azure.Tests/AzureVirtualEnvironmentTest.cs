@@ -14,7 +14,7 @@ namespace Orchard.Azure.Tests {
         protected abstract void OnInit();
 
         
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup() {
             if (!Process.GetProcessesByName("AzureStorageEmulator").Any()) {
                 var azureSDKPath = ConfigurationManager.AppSettings["AzureSDK"];
@@ -43,7 +43,7 @@ namespace Orchard.Azure.Tests {
             OnInit();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void FixtureTearDown() {
             if (_storageEmulator != null)
                 _storageEmulator.Close();

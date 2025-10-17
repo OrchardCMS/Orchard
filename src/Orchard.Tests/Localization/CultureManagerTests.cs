@@ -31,7 +31,7 @@ namespace Orchard.Tests.Localization {
         private string _databaseFileName;
         private StubWorkContext _stubWorkContext;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitFixture() {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -69,7 +69,7 @@ namespace Orchard.Tests.Localization {
             _session.Close();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TermFixture() {
             File.Delete(_databaseFileName);
         }
