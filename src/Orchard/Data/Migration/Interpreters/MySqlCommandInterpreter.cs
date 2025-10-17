@@ -21,9 +21,7 @@ namespace Orchard.Data.Migration.Interpreters {
             T = NullLocalizer.Instance;
         }
 
-        public string DataProvider {
-            get { return "MySql"; }
-        }
+        public string DataProvider => "MySql";
 
         public Localizer T { get; set; }
 
@@ -40,32 +38,37 @@ namespace Orchard.Data.Migration.Interpreters {
             var builder = new StringBuilder();
 
             builder.AppendFormat("alter table {0} modify column {1} ",
-                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
-                            _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
             var initLength = builder.Length;
 
-            // type
+            // Type.
             if (command.DbType != DbType.Object) {
-                builder.Append(DefaultDataMigrationInterpreter.GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
-            } else {
-                if (command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
-                    throw new OrchardException(T("Error while executing data migration: you need to specify the field's type in order to change its properties"));
-                }
+                builder.Append(DefaultDataMigrationInterpreter.GetTypeName(
+                    _dialectLazy.Value,
+                    command.DbType,
+                    command.Length,
+                    command.Precision,
+                    command.Scale));
+            }
+            else if (command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
+                throw new OrchardException(
+                    T("Error while executing data migration: You need to specify the field's type in order to change its properties."));
             }
 
-            // [default value]
+            // Default value.
             var builder2 = new StringBuilder();
 
             builder2.AppendFormat("alter table {0} alter column {1} ",
-                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
-                            _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
+                _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
             var initLength2 = builder2.Length;
 
             if (command.Default != null) {
                 builder2.Append(" set default ").Append(_dataMigrationInterpreter.ConvertToSqlValue(command.Default)).Append(" ");
             }
 
-            // result
+            // Result.
             var result = new List<string>();
 
             if (builder.Length > initLength) {
@@ -79,51 +82,52 @@ namespace Orchard.Data.Migration.Interpreters {
             return result.ToArray();
         }
 
-        private string PrefixTableName(string tableName) {
-            if (string.IsNullOrEmpty(_shellSettings.DataTablePrefix))
-                return tableName;
-            return _shellSettings.DataTablePrefix + "_" + tableName;
-        }
+        private string PrefixTableName(string tableName) =>
+            string.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? tableName : $"{_shellSettings.DataTablePrefix}_{tableName}";
 
         public string[] CreateStatements(AddIndexCommand command) {
             var session = _transactionManager.GetSession();
 
             using (var sqlCommand = session.Connection.CreateCommand()) {
-                var columnNames = String.Join(", ", command.ColumnNames.Select(c => string.Format("'{0}'", c)));
+                var columnNames = String.Join(", ", command.ColumnNames.Select(column => $"'{column}'"));
                 var tableName = PrefixTableName(command.TableName);
                 var columnList = command.ColumnNames.ToList();
                 var indexMaximumLength = 767;
                 var longColumnNames = new List<string>();
 
                 if (columnList.Count > 1) {
-                    string sqlComplicatedIndexes = @"SELECT SUM(CHARACTER_MAXIMUM_LENGTH)  FROM INFORMATION_SCHEMA.COLUMNS 
-                               WHERE table_name = '{1}' AND COLUMN_NAME in  ({0}) AND TABLE_SCHEMA = '{2}' AND
-                                     (Data_type = 'varchar');";
-                    sqlComplicatedIndexes = string.Format(sqlComplicatedIndexes, columnNames, tableName, session.Connection.Database);
-                    sqlCommand.CommandText = sqlComplicatedIndexes;
+                    sqlCommand.CommandText = $@"
+                        SELECT SUM(CHARACTER_MAXIMUM_LENGTH)
+                        FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE table_name = '{tableName}'
+                            AND COLUMN_NAME in ({columnNames})
+                            AND TABLE_SCHEMA = '{session.Connection.Database}'
+                            AND (Data_type = 'varchar');";
+
                     using (var reader = sqlCommand.ExecuteReader()) {
                         reader.Read();
                         if (!reader.IsDBNull(0)) {
                             var characterMaximumLength = reader.GetInt32(0);
                             indexMaximumLength -= characterMaximumLength;
                             if (indexMaximumLength < 0) {
-                                throw new InvalidOperationException("Cannot create index because indexMaximumLength less than 0");
+                                throw new InvalidOperationException("Cannot create index because indexMaximumLength is less than 0!");
                             }
                         }
                     }
                 }
-                // check whether the index contains big nvarchar columns or text fields
-                string sql = @"SELECT  COLUMN_NAME  FROM INFORMATION_SCHEMA.COLUMNS 
-                               WHERE table_name = '{1}' AND COLUMN_NAME in  ({0}) AND TABLE_SCHEMA = '{2}' AND
-                                     ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > 767) OR data_type= 'text');";
+                // Check whether the index contains big nvarchar columns or text fields.
+                sqlCommand.CommandText = $@"
+                    SELECT COLUMN_NAME
+                    FROM INFORMATION_SCHEMA.COLUMNS 
+                    WHERE table_name = '{tableName}'
+                        AND COLUMN_NAME in ({columnNames})
+                        AND TABLE_SCHEMA = '{session.Connection.Database}'
+                        AND ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > {indexMaximumLength}) OR data_type= 'text');";
 
-                sql = string.Format(sql, columnNames, tableName, session.Connection.Database);
-                sqlCommand.CommandText = sql;
                 using (var reader = sqlCommand.ExecuteReader()) {
-                    // Provide prefix for string columns with length longer than 767
+                    // Provide prefix for string columns with length more than 767.
                     while (reader.Read()) {
-                        var columnName = reader.GetString(0);
-                        longColumnNames.Add(columnName);
+                        longColumnNames.Add(reader.GetString(0));
                     }
 
                 }
@@ -131,15 +135,15 @@ namespace Orchard.Data.Migration.Interpreters {
                 if (longColumnNames.Count > 0) {
                     var columnPrefixKeyPartLength = indexMaximumLength / longColumnNames.Count;
                     foreach (var columnName in longColumnNames) {
-                        columnList[columnList.IndexOf(columnName)] = string.Format("{0}({1})", columnName, columnPrefixKeyPartLength);
+                        columnList[columnList.IndexOf(columnName)] = $"{columnName}({columnPrefixKeyPartLength})";
                     }
                 }
 
-                return new[] {string.Format("create index {1} on {0} ({2}) ",
-                            _dialectLazy.Value.QuoteForTableName(tableName),
-                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.IndexName)),
-                            String.Join(", ", columnList))};
-
+                return new[] {
+                    string.Format("create index {1} on {0} ({2}) ",
+                        _dialectLazy.Value.QuoteForTableName(tableName),
+                        _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.IndexName)),
+                        string.Join(", ", columnList))};
             }
         }
     }
