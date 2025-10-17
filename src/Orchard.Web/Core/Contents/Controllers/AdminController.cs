@@ -443,8 +443,8 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (!Services.Authorizer.Authorize(Permissions.CreateContent, originalContentItem, T("Couldn't clone content")))
-            	return new HttpUnauthorizedResult();
-            
+                return new HttpUnauthorizedResult();
+
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(originalContentItem.ContentType);
 

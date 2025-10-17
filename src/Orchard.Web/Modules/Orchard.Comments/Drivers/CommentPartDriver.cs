@@ -2,14 +2,14 @@ using System;
 using System.Globalization;
 using System.Xml;
 using Orchard.Comments.Models;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Services;
-using Orchard.Localization;
 using Orchard.Comments.Services;
-using Orchard.UI.Notify;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Localization;
+using Orchard.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Drivers {
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
@@ -42,17 +42,17 @@ namespace Orchard.Comments.Drivers {
             return Combined(
                 ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment()),
                 ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin())
-                );
+            );
         }
 
         // GET
         protected override DriverResult Editor(CommentPart part, dynamic shapeHelper) {
             if (UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
-                return ContentShape("Parts_Comment_AdminEdit", 
+                return ContentShape("Parts_Comment_AdminEdit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment.AdminEdit", Model: part, Prefix: Prefix));
             }
             else {
-                return ContentShape("Parts_Comment_Edit", 
+                return ContentShape("Parts_Comment_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
             }
         }
@@ -103,9 +103,9 @@ namespace Orchard.Comments.Drivers {
             }
 
             var currentUser = workContext.CurrentUser;
-            part.UserName = (currentUser != null ? currentUser.UserName : null);
+            part.UserName = currentUser?.UserName;
 
-            if (currentUser != null) 
+            if (currentUser != null)
                 part.Author = currentUser.UserName;
             else if (string.IsNullOrWhiteSpace(part.Author)) {
                 updater.AddModelError("Comments.Author", T("Name is mandatory"));

@@ -4,8 +4,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentPicker.Models;
 using Orchard.ContentPicker.ViewModels;
 using Orchard.Core.Navigation;
-using Orchard.Core.Navigation.Models;
-using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
 
@@ -17,7 +15,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         public ContentMenuItemPartDriver(
             IContentManager contentManager,
-            IAuthorizationService authorizationService, 
+            IAuthorizationService authorizationService,
             IWorkContextAccessor workContextAccessor) {
             _contentManager = contentManager;
             _authorizationService = authorizationService;
@@ -29,14 +27,13 @@ namespace Orchard.ContentPicker.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(ContentMenuItemPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_ContentMenuItem_Edit",
-                                () => {
-                                    var model = new ContentMenuItemEditViewModel {
-                                        ContentItemId = part.Content == null ? -1 : part.Content.Id,
-                                        Part = part
-                                    };
-                                    return shapeHelper.EditorTemplate(TemplateName: "Parts.ContentMenuItem.Edit", Model: model, Prefix: Prefix);
-                                });
+            return ContentShape("Parts_ContentMenuItem_Edit", () => {
+                var model = new ContentMenuItemEditViewModel {
+                    ContentItemId = part.Content == null ? -1 : part.Content.Id,
+                    Part = part
+                };
+                return shapeHelper.EditorTemplate(TemplateName: "Parts.ContentMenuItem.Edit", Model: model, Prefix: Prefix);
+            });
         }
 
         protected override DriverResult Editor(ContentMenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -48,9 +45,9 @@ namespace Orchard.ContentPicker.Drivers {
 
             var model = new ContentMenuItemEditViewModel();
 
-            if(updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 var contentItem = _contentManager.Get(model.ContentItemId, VersionOptions.Latest);
-                if(contentItem == null) {
+                if (contentItem == null) {
                     updater.AddModelError("ContentItemId", T("You must select a Content Item"));
                 }
                 else {
@@ -67,12 +64,14 @@ namespace Orchard.ContentPicker.Drivers {
                 return;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "ContentItem", 
+            context.ImportAttribute(
+                part.PartDefinition.Name,
+                "ContentItem",
                 contentItemId => {
                     var contentItem = context.GetItemFromSession(contentItemId);
                     part.Content = contentItem;
-                }, () => 
-                    part.Content = null
+                },
+                () => part.Content = null
             );
         }
 

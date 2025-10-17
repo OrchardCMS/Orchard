@@ -22,15 +22,14 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_BlogArchives",
-                                () => {
-                                    var blog = _blogService.Get(part.BlogId, VersionOptions.Published).As<BlogPart>();
+            return ContentShape("Parts_Blogs_BlogArchives", () => {
+                var blog = _blogService.Get(part.BlogId, VersionOptions.Published).As<BlogPart>();
 
-                                    if (blog == null)
-                                        return null;
+                if (blog == null)
+                    return null;
 
-                                    return shapeHelper.Parts_Blogs_BlogArchives(Blog: blog, Archives: _blogPostService.GetArchives(blog));
-                                });
+                return shapeHelper.Parts_Blogs_BlogArchives(Blog: blog, Archives: _blogPostService.GetArchives(blog));
+            });
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
@@ -40,7 +39,7 @@ namespace Orchard.Blogs.Drivers {
             };
 
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {

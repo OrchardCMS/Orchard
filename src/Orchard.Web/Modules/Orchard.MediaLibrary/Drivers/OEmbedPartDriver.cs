@@ -1,11 +1,10 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Xml;
+using System.Xml.Linq;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
-using Orchard.MediaLibrary.Models;
-using System.Xml;
-using System.Xml.Linq;
 using Orchard.ContentManagement.Handlers;
-using System.Collections;
+using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class OEmbedPartDriver : ContentPartDriver<OEmbedPart> {
@@ -76,6 +75,6 @@ namespace Orchard.MediaLibrary.Drivers {
                 cloneElement.Add(partCloneElement);
                 partCloneElement.Add(partOriginalElement.Elements());
             }
-        }        
+        }
     }
 }

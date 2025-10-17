@@ -9,7 +9,6 @@ using Orchard.Search.Models;
 using Orchard.Search.ViewModels;
 
 namespace Orchard.Search.Drivers {
-
     public class SearchSettingsPartDriver : ContentPartDriver<SearchSettingsPart> {
         private readonly IIndexManager _indexManager;
 

@@ -10,7 +10,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_Audio_SummaryAdmin", () => shapeHelper.Parts_Audio_SummaryAdmin()),
                 ContentShape("Parts_Audio_Summary", () => shapeHelper.Parts_Audio_Summary()),
                 ContentShape("Parts_Audio", () => shapeHelper.Parts_Audio())
-                );
+            );
         }
 
         protected override void Exporting(AudioPart part, ContentManagement.Handlers.ExportContentContext context) {
@@ -27,7 +27,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 part.Length = int.Parse(length)
             );
         }
-        
+
         protected override void Cloning(AudioPart originalPart, AudioPart clonePart, CloneContentContext context) {
             clonePart.Length = originalPart.Length;
         }

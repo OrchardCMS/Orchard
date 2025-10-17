@@ -37,7 +37,7 @@ namespace Orchard.Search.Drivers {
                 };
 
                 if (updater != null) {
-                    if (updater.TryUpdateModel(viewModel, Prefix, null, new[] {"AvailableIndexes"})) {
+                    if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableIndexes" })) {
                         part.OverrideIndex = viewModel.OverrideIndex;
                         part.SelectedIndex = viewModel.SelectedIndex;
                     }

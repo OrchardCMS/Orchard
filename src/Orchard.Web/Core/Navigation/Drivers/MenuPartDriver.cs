@@ -18,8 +18,8 @@ namespace Orchard.Core.Navigation.Drivers {
         private readonly IMenuService _menuService;
 
         public MenuPartDriver(
-            IAuthorizationService authorizationService, 
-            INavigationManager navigationManager, 
+            IAuthorizationService authorizationService,
+            INavigationManager navigationManager,
             IOrchardServices orchardServices,
             IMenuService menuService) {
             _authorizationService = authorizationService;
@@ -59,7 +59,7 @@ namespace Orchard.Core.Navigation.Drivers {
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MenuPartViewModel();
 
-            if(updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
 
                 if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
@@ -104,7 +104,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
             // is it on a menu ?
-            if(part.Menu == null) {
+            if (part.Menu == null) {
                 return;
             }
 

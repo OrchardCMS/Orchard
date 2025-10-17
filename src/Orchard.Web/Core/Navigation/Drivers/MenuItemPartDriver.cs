@@ -30,9 +30,7 @@ namespace Orchard.Core.Navigation.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)) // tests if the current user has permissions to manage that specific menu
                 return null;
 
-            if (updater != null) {
-                updater.TryUpdateModel(part, Prefix, null, null);
-            }
+            updater?.TryUpdateModel(part, Prefix, null, null);
 
             return Editor(part, shapeHelper);
         }

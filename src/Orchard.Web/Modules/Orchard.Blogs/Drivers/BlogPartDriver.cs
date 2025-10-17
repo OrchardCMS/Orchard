@@ -32,7 +32,7 @@ namespace Orchard.Blogs.Drivers {
             return Editor(blogPart, shapeHelper);
         }
 
-        protected override void Importing(BlogPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(BlogPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Drivers {
             );
         }
 
-        protected override void Exporting(BlogPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(BlogPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PostCount", part.PostCount);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FeedProxyUrl", part.FeedProxyUrl);

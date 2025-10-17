@@ -31,8 +31,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             foreach (var typePartDefinition in contentTypeDefinition.Parts) {
                 var partName = typePartDefinition.PartDefinition.Name;
                 var partInfo = partInfos.FirstOrDefault(pi => pi.PartName == partName);
-                var part = partInfo != null 
-                    ? partInfo.Factory(typePartDefinition) 
+                var part = partInfo != null
+                    ? partInfo.Factory(typePartDefinition)
                     : new ContentPart { TypePartDefinition = typePartDefinition };
                 context.Builder.Weld(part);
             }
@@ -45,24 +45,21 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         public override void BuildDisplay(BuildDisplayContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildDisplay(context);
-                if (result != null)
-                    result.Apply(context);
+                result?.Apply(context);
             }, Logger);
         }
 
         public override void BuildEditor(BuildEditorContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildEditor(context);
-                if (result != null)
-                    result.Apply(context);
+                result?.Apply(context);
             }, Logger);
         }
 
         public override void UpdateEditor(UpdateEditorContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.UpdateEditor(context);
-                if (result != null)
-                    result.Apply(context);
+                result?.Apply(context);
             }, Logger);
         }
 

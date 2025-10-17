@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.AntiSpam.Models;
-using Orchard.AntiSpam.Settings;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
@@ -39,12 +38,9 @@ namespace Orchard.AntiSpam.Drivers {
             }
 
             var status = context.Attribute(part.PartDefinition.Name, "Status");
-            
-            if (status != null) {
-                SpamStatus value;
-                if(Enum.TryParse(status, out value)) {
-                    part.Status = value;
-                }
+
+            if (status != null && Enum.TryParse(status, out SpamStatus value)) {
+                part.Status = value;
             }
         }
 
@@ -55,6 +51,6 @@ namespace Orchard.AntiSpam.Drivers {
         protected override void Cloning(SpamFilterPart originalPart, SpamFilterPart clonePart, CloneContentContext context) {
             clonePart.Status = originalPart.Status;
         }
-        
+
     }
 }

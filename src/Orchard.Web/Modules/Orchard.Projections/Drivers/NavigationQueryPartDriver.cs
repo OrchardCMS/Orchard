@@ -28,7 +28,6 @@ namespace Orchard.Projections.Drivers {
 
         protected override DriverResult Editor(NavigationQueryPart part, dynamic shapeHelper) {
             return ContentShape("Parts_NavigationQueryPart_Edit", () => {
-
                 var model = new NavigationQueryPartEditViewModel {
                     Items = part.Items,
                     Skip = part.Skip,

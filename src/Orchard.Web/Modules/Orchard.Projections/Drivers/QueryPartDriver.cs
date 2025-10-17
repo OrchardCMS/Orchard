@@ -10,7 +10,6 @@ using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
 
 namespace Orchard.Projections.Drivers {
-
     public class QueryPartDriver : ContentPartDriver<QueryPart> {
         private readonly IProjectionManager _projectionManager;
         private readonly IFormManager _formManager;
