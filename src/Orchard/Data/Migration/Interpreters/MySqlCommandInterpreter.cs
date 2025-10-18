@@ -97,12 +97,12 @@ namespace Orchard.Data.Migration.Interpreters {
 
                 if (columnList.Count > 1) {
                     sqlCommand.CommandText = $@"
-                        SELECT SUM(CHARACTER_MAXIMUM_LENGTH)
-                        FROM INFORMATION_SCHEMA.COLUMNS 
-                        WHERE table_name = '{tableName}'
-                            AND COLUMN_NAME in ({columnNames})
-                            AND TABLE_SCHEMA = '{session.Connection.Database}'
-                            AND (Data_type = 'varchar');";
+SELECT SUM(CHARACTER_MAXIMUM_LENGTH)
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE table_name = '{tableName}'
+    AND COLUMN_NAME in ({columnNames})
+    AND TABLE_SCHEMA = '{session.Connection.Database}'
+    AND (Data_type = 'varchar');";
 
                     using (var reader = sqlCommand.ExecuteReader()) {
                         reader.Read();
@@ -117,12 +117,12 @@ namespace Orchard.Data.Migration.Interpreters {
                 }
                 // Check whether the index contains big nvarchar columns or text fields.
                 sqlCommand.CommandText = $@"
-                    SELECT COLUMN_NAME
-                    FROM INFORMATION_SCHEMA.COLUMNS 
-                    WHERE table_name = '{tableName}'
-                        AND COLUMN_NAME in ({columnNames})
-                        AND TABLE_SCHEMA = '{session.Connection.Database}'
-                        AND ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > {indexMaximumLength}) OR data_type= 'text');";
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE table_name = '{tableName}'
+    AND COLUMN_NAME in ({columnNames})
+    AND TABLE_SCHEMA = '{session.Connection.Database}'
+    AND ((Data_type = 'varchar' and CHARACTER_MAXIMUM_LENGTH > {indexMaximumLength}) OR data_type= 'text');";
 
                 using (var reader = sqlCommand.ExecuteReader()) {
                     // Provide prefix for string columns with length more than 767.
