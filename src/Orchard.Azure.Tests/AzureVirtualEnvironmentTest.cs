@@ -1,52 +1,24 @@
-﻿using System;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Microsoft.WindowsAzure.Storage;
+﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using NUnit.Framework;
+using Orchard.Azure.Services.Environment.Configuration;
 
 namespace Orchard.Azure.Tests {
     public abstract class AzureVirtualEnvironmentTest {
-        private Process _storageEmulator;
+        protected IPlatformConfigurationAccessor PlatformConfigurationAccessor = new DefaultPlatformConfigurationAccessor();
+        protected abstract string StorageConnectionStringName { get; }
+        protected CloudStorageAccount DevAccount { get; private set; }
 
         protected abstract void OnInit();
 
-        
         [OneTimeSetUp]
         public void FixtureSetup() {
-            if (!Process.GetProcessesByName("AzureStorageEmulator").Any()) {
-                var azureSDKPath = ConfigurationManager.AppSettings["AzureSDK"];
-                var storageEmulatorRelativePath = "Storage Emulator\\AzureStorageEmulator.exe";
+            var connectionString = PlatformConfigurationAccessor.GetSetting(StorageConnectionStringName, "default", "");
 
-                if (String.IsNullOrEmpty(azureSDKPath)) {
-                    throw new ConfigurationErrorsException("Could not find the AppSetting \"AzureSDK\" that indicates the path to the Azure SDK on the local file system.");
-                }
-
-                var storageEmulatorAbsolutePath = Path.Combine(azureSDKPath, storageEmulatorRelativePath);
-
-                if (!File.Exists(storageEmulatorAbsolutePath)) {
-                    throw new ConfigurationErrorsException("Could not find the executable to start the Azure Storage Emulator.");
-                }
-
-                var storageEmulatorStartInfo = new ProcessStartInfo {
-                    Arguments = "start",
-                    FileName = storageEmulatorAbsolutePath
-                };
-
-                _storageEmulator = new Process { StartInfo = storageEmulatorStartInfo };
-                _storageEmulator.Start();
-                _storageEmulator.WaitForExit();
-            }
+            CloudStorageAccount.TryParse(connectionString, out CloudStorageAccount devAccount);
+            DevAccount = devAccount;
 
             OnInit();
-        }
-
-        [OneTimeTearDown]
-        public void FixtureTearDown() {
-            if (_storageEmulator != null)
-                _storageEmulator.Close();
         }
 
         protected void DeleteAllBlobs(string containerName, CloudStorageAccount account) {
@@ -54,24 +26,24 @@ namespace Orchard.Azure.Tests {
             var container = blobClient.GetContainerReference(containerName);
 
             foreach (var blob in container.ListBlobs()) {
-                if (blob is CloudBlob) {
-                    ((CloudBlob)blob).DeleteIfExists();
+                if (blob is CloudBlob blobLeaf) {
+                    blobLeaf.DeleteIfExists();
                 }
 
-                if (blob is CloudBlobDirectory) {
-                    DeleteAllBlobs((CloudBlobDirectory)blob);
+                if (blob is CloudBlobDirectory directory) {
+                    DeleteAllBlobs(directory);
                 }
             }
         }
 
         private static void DeleteAllBlobs(CloudBlobDirectory cloudBlobDirectory) {
             foreach (var blob in cloudBlobDirectory.ListBlobs()) {
-                if (blob is CloudBlob) {
-                    ((CloudBlob)blob).DeleteIfExists();
+                if (blob is CloudBlob blobLeaf) {
+                    blobLeaf.DeleteIfExists();
                 }
 
-                if (blob is CloudBlobDirectory) {
-                    DeleteAllBlobs((CloudBlobDirectory)blob);
+                if (blob is CloudBlobDirectory directory) {
+                    DeleteAllBlobs(directory);
                 }
             }
         }
