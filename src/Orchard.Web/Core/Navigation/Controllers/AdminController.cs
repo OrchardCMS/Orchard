@@ -231,9 +231,11 @@ namespace Orchard.Core.Navigation.Controllers {
             _contentManager.Create(contentItem);
 
             menuPart.Menu = menu;
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
 
             var model = _contentManager.UpdateEditor(contentItem, this);
+
+            // This needs to be called after UpdateEditor for INavigationFilters not to operate with stale data.
+            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();

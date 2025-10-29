@@ -5,13 +5,13 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Templates.Models;
 using Orchard.Templates.Services;
 using Orchard.Templates.ViewModels;
 using Orchard.Utility.Extensions;
-using Orchard.Core.Title.Models;
 
 namespace Orchard.Templates.Drivers {
     public class ShapePartDriver : ContentPartDriver<ShapePart> {
@@ -31,13 +31,11 @@ namespace Orchard.Templates.Drivers {
 
         Localizer T { get; set; }
 
-        protected override DriverResult Display(ShapePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Shape_SummaryAdmin", () => shapeHelper.Parts_Shape_SummaryAdmin());
-        }
+        protected override DriverResult Display(ShapePart part, string displayType, dynamic shapeHelper) =>
+            ContentShape("Parts_Shape_SummaryAdmin", () => shapeHelper.Parts_Shape_SummaryAdmin());
 
-        protected override DriverResult Editor(ShapePart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-        }
+        protected override DriverResult Editor(ShapePart part, dynamic shapeHelper) =>
+            Editor(part, null, shapeHelper);
 
         protected override DriverResult Editor(ShapePart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new ShapePartViewModel {
@@ -99,6 +97,11 @@ namespace Orchard.Templates.Drivers {
                 part.Template = shapeElement.Value;
                 context.ImportAttribute(part.PartDefinition.Name, "RenderingMode", value => part.RenderingMode = (RenderingMode)Enum.Parse(typeof(RenderingMode), value));
             }
+        }
+
+        protected override void Cloning(ShapePart originalPart, ShapePart clonePart, CloneContentContext context) {
+            clonePart.Template = originalPart.Template;
+            clonePart.RenderingMode = originalPart.RenderingMode;
         }
 
         private bool ValidateShapeName(ShapePart part, IUpdateModel updater) {

@@ -4,13 +4,13 @@ using System.Web.Mvc;
 using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
 using Orchard.Core.Containers.Settings;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainablePartDriver : ContentPartDriver<ContainablePart> {
@@ -95,6 +95,10 @@ namespace Orchard.Core.Containers.Drivers {
 
         protected override void Exporting(ContainablePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Position);
+        }
+
+        protected override void Cloning(ContainablePart originalPart, ContainablePart clonePart, CloneContentContext context) {
+            clonePart.Position = originalPart.Position;
         }
     }
 }

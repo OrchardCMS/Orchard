@@ -11,7 +11,6 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
-using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Core.Navigation.Drivers {
     public class MenuWidgetPartDriver : ContentPartDriver<MenuWidgetPart> {
@@ -41,10 +40,10 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape( "Parts_MenuWidget", () => {
+            return ContentShape("Parts_MenuWidget", () => {
                 var menu = _menuService.GetMenu(part.MenuContentItemId);
-                
-                if(menu == null) {
+
+                if (menu == null) {
                     return null;
                 }
 
@@ -57,9 +56,9 @@ namespace Orchard.Core.Navigation.Drivers {
                 }
 
                 var localized = new List<MenuItem>();
-                foreach(var menuItem in menuItems) {
+                foreach (var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral
-                    if(menuItem.Content == null) {
+                    if (menuItem.Content == null) {
                         localized.Add(menuItem);
                     }
 
@@ -73,7 +72,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
                 var request = _workContextAccessor.GetContext().HttpContext.Request;
                 var routeData = request.RequestContext.RouteData;
-                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);                            
+                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);
                 var menuShape = shapeHelper.Menu();
 
                 if (part.Breadcrumb) {
@@ -135,9 +134,9 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     // limit the number of levels to display (down from and including the start level)
-                    if(part.Levels > 0) {
+                    if (part.Levels > 0) {
                         var current = topLevelItems.ToList();
-                        for (var i = 1; current.Any() && i < part.Levels; i++ ) {
+                        for (var i = 1; current.Any() && i < part.Levels; i++) {
                             var temp = new List<MenuItem>();
                             foreach (var menuItem in current) {
                                 temp.AddRange(menuItem.Items);
@@ -147,7 +146,7 @@ namespace Orchard.Core.Navigation.Drivers {
                         // cut the sub-levels beneath any menu items that are at the lowest level being displayed
                         foreach (var menuItem in current) {
                             menuItem.Items = Enumerable.Empty<MenuItem>();
-                        }                
+                        }
                     }
                     menuItems = topLevelItems;
                 }
@@ -160,29 +159,29 @@ namespace Orchard.Core.Navigation.Drivers {
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);
             });
         }
-        
+
         protected override DriverResult Editor(MenuWidgetPart part, dynamic shapeHelper) {
             return ContentShape("Parts_MenuWidget_Edit", () => {
 
-                    var model = new MenuWidgetViewModel {
-                        CurrentMenuId = part.MenuContentItemId,
-                        StartLevel = part.StartLevel,
-                        StopLevel = part.Levels,
-                        Breadcrumb = part.Breadcrumb,
-                        AddCurrentPage = part.AddCurrentPage,
-                        AddHomePage = part.AddHomePage,
-                        ShowFullMenu = part.ShowFullMenu,
-                        Menus = _menuService.GetMenus(),
-                    };
+                var model = new MenuWidgetViewModel {
+                    CurrentMenuId = part.MenuContentItemId,
+                    StartLevel = part.StartLevel,
+                    StopLevel = part.Levels,
+                    Breadcrumb = part.Breadcrumb,
+                    AddCurrentPage = part.AddCurrentPage,
+                    AddHomePage = part.AddHomePage,
+                    ShowFullMenu = part.ShowFullMenu,
+                    Menus = _menuService.GetMenus(),
+                };
 
-                    return shapeHelper.EditorTemplate(TemplateName: "Parts.MenuWidget.Edit", Model: model, Prefix: Prefix);
-                });
+                return shapeHelper.EditorTemplate(TemplateName: "Parts.MenuWidget.Edit", Model: model, Prefix: Prefix);
+            });
         }
 
         protected override DriverResult Editor(MenuWidgetPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MenuWidgetViewModel();
 
-            if(updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.StartLevel = model.StartLevel;
                 part.Levels = model.StopLevel;
                 part.Breadcrumb = model.Breadcrumb;
@@ -223,5 +222,14 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ShowFullMenu", part.ShowFullMenu);
         }
 
+        protected override void Cloning(MenuWidgetPart originalPart, MenuWidgetPart clonePart, CloneContentContext context) {
+            clonePart.StartLevel = originalPart.StartLevel;
+            clonePart.Levels = originalPart.Levels;
+            clonePart.Breadcrumb = originalPart.Breadcrumb;
+            clonePart.AddCurrentPage = originalPart.AddCurrentPage;
+            clonePart.AddHomePage = originalPart.AddHomePage;
+            clonePart.ShowFullMenu = originalPart.ShowFullMenu;
+            clonePart.MenuContentItemId = originalPart.MenuContentItemId;
+        }
     }
 }

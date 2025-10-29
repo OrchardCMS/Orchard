@@ -10,7 +10,6 @@ using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
 
 namespace Orchard.Projections.Drivers {
-
     public class QueryPartDriver : ContentPartDriver<QueryPart> {
         private readonly IProjectionManager _projectionManager;
         private readonly IFormManager _formManager;
@@ -126,7 +125,8 @@ namespace Orchard.Projections.Drivers {
                 return;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "VersionScope", scope => part.VersionScope = (QueryVersionScopeOptions)Enum.Parse(typeof(QueryVersionScopeOptions), scope));
+            context.ImportAttribute(part.PartDefinition.Name, "VersionScope", scope =>
+                part.VersionScope = (QueryVersionScopeOptions)Enum.Parse(typeof(QueryVersionScopeOptions), scope));
 
             var queryElement = context.Data.Element(part.PartDefinition.Name);
 
@@ -197,7 +197,9 @@ namespace Orchard.Projections.Drivers {
                     DisplayType = layout.Attribute("DisplayType").Value,
                     State = state,
                     Type = type,
-                    GUIdentifier = string.IsNullOrWhiteSpace(layout.Attribute("GUIdentifier").Value) ? Guid.NewGuid().ToString() : layout.Attribute("GUIdentifier").Value,
+                    GUIdentifier = string.IsNullOrWhiteSpace(layout.Attribute("GUIdentifier").Value)
+                        ? Guid.NewGuid().ToString()
+                        : layout.Attribute("GUIdentifier").Value,
                     Properties = layout.Element("Properties").Elements("Property").Select(GetProperty).ToList(),
                     GroupProperty = GetProperty(layout.Element("Group").Element("Property"))
                 };
@@ -286,6 +288,93 @@ namespace Orchard.Projections.Drivers {
                 TrimWhiteSpace = Convert.ToBoolean(property.Attribute("TrimWhiteSpace").Value),
                 ZeroIsEmpty = Convert.ToBoolean(property.Attribute("ZeroIsEmpty").Value),
             };
+        }
+
+        protected override void Cloning(QueryPart originalPart, QueryPart clonePart, CloneContentContext context) {
+            clonePart.VersionScope = originalPart.VersionScope;
+
+            clonePart.Record.FilterGroups = originalPart.FilterGroups.Select(originalGroup => {
+                var cloneGroup = new FilterGroupRecord {
+                    QueryPartRecord = clonePart.Record
+                };
+
+                cloneGroup.Filters = originalGroup.Filters.Select(filter => new FilterRecord {
+                    Category = filter.Category,
+                    Description = filter.Description,
+                    Position = filter.Position,
+                    State = filter.State,
+                    Type = filter.Type,
+                    FilterGroupRecord = cloneGroup
+                }).ToList();
+
+                return cloneGroup;
+            }).ToList();
+
+            clonePart.Record.SortCriteria = originalPart.SortCriteria.Select(sortCriterion => new SortCriterionRecord {
+                Category = sortCriterion.Category,
+                Description = sortCriterion.Description,
+                Position = sortCriterion.Position,
+                State = sortCriterion.State,
+                Type = sortCriterion.Type,
+                QueryPartRecord = clonePart.Record
+            }).ToList();
+
+            clonePart.Record.Layouts = originalPart.Layouts.Select(layout => {
+                var cloneLayout = new LayoutRecord {
+                    Category = layout.Category,
+                    Description = layout.Description,
+                    Display = layout.Display,
+                    DisplayType = layout.DisplayType,
+                    GUIdentifier = Guid.NewGuid().ToString(),
+                    State = layout.State,
+                    Type = layout.Type,
+                    QueryPartRecord = clonePart.Record
+                };
+
+                cloneLayout.Properties = layout.Properties.Select(property => {
+                    var cloneProperty = new PropertyRecord {
+                        AddEllipsis = property.AddEllipsis,
+                        Category = property.Category,
+                        CreateLabel = property.CreateLabel,
+                        CustomLabelCss = property.CustomLabelCss,
+                        Description = property.Description,
+                        CustomLabelTag = property.CustomLabelTag,
+                        CustomPropertyCss = property.CustomPropertyCss,
+                        CustomPropertyTag = property.CustomPropertyTag,
+                        CustomWrapperCss = property.CustomWrapperCss,
+                        CustomWrapperTag = property.CustomWrapperTag,
+                        CustomizeLabelHtml = property.CustomizeLabelHtml,
+                        CustomizePropertyHtml = property.CustomizePropertyHtml,
+                        CustomizeWrapperHtml = property.CustomizeWrapperHtml,
+                        ExcludeFromDisplay = property.ExcludeFromDisplay,
+                        HideEmpty = property.HideEmpty,
+                        Label = property.Label,
+                        LinkToContent = property.LinkToContent,
+                        MaxLength = property.MaxLength,
+                        NoResultText = property.NoResultText,
+                        Position = property.Position,
+                        PreserveLines = property.PreserveLines,
+                        RewriteOutputCondition = property.RewriteOutputCondition,
+                        RewriteText = property.RewriteText,
+                        State = property.State,
+                        StripHtmlTags = property.StripHtmlTags,
+                        TrimLength = property.TrimLength,
+                        TrimOnWordBoundary = property.TrimOnWordBoundary,
+                        TrimWhiteSpace = property.TrimWhiteSpace,
+                        Type = property.Type,
+                        ZeroIsEmpty = property.ZeroIsEmpty,
+                        LayoutRecord = cloneLayout
+                    };
+
+                    if (cloneLayout.GroupProperty == null && layout.GroupProperty == property) {
+                        cloneLayout.GroupProperty = cloneProperty;
+                    }
+
+                    return cloneProperty;
+                }).ToList();
+
+                return cloneLayout;
+            }).ToList();
         }
     }
 }

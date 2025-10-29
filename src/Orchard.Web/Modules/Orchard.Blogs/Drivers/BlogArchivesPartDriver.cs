@@ -13,7 +13,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IContentManager _contentManager;
 
         public BlogArchivesPartDriver(
-            IBlogService blogService, 
+            IBlogService blogService,
             IBlogPostService blogPostService,
             IContentManager contentManager) {
             _blogService = blogService;
@@ -22,25 +22,24 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_BlogArchives",
-                                () => {
-                                    var blog = _blogService.Get(part.BlogId, VersionOptions.Published).As<BlogPart>();
+            return ContentShape("Parts_Blogs_BlogArchives", () => {
+                var blog = _blogService.Get(part.BlogId, VersionOptions.Published).As<BlogPart>();
 
-                                    if (blog == null)
-                                        return null;
+                if (blog == null)
+                    return null;
 
-                                    return shapeHelper.Parts_Blogs_BlogArchives(Blog: blog, Archives: _blogPostService.GetArchives(blog));
-                                });
+                return shapeHelper.Parts_Blogs_BlogArchives(Blog: blog, Archives: _blogPostService.GetArchives(blog));
+            });
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel {
                 BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
-                };
+            };
 
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -69,5 +68,8 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
         }
 
+        protected override void Cloning(BlogArchivesPart originalPart, BlogArchivesPart clonePart, CloneContentContext context) {
+            clonePart.BlogId = originalPart.BlogId;
+        }
     }
 }

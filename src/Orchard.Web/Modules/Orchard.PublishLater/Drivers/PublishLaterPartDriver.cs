@@ -56,12 +56,12 @@ namespace Orchard.PublishLater.Drivers {
         protected override DriverResult Display(PublishLaterPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_PublishLater_Metadata",
-                             () => shapeHelper.Parts_PublishLater_Metadata(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
+                    () => shapeHelper.Parts_PublishLater_Metadata(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
                 ContentShape("Parts_PublishLater_Metadata_Summary",
-                             () => shapeHelper.Parts_PublishLater_Metadata_Summary(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
+                    () => shapeHelper.Parts_PublishLater_Metadata_Summary(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
                 ContentShape("Parts_PublishLater_Metadata_SummaryAdmin",
-                             () => shapeHelper.Parts_PublishLater_Metadata_SummaryAdmin(ScheduledPublishUtc: part.ScheduledPublishUtc.Value))
-                );
+                    () => shapeHelper.Parts_PublishLater_Metadata_SummaryAdmin(ScheduledPublishUtc: part.ScheduledPublishUtc.Value))
+            );
         }
 
         private PublishLaterViewModel BuildViewModelFromPart(PublishLaterPart part) {
@@ -79,7 +79,7 @@ namespace Orchard.PublishLater.Drivers {
             var model = BuildViewModelFromPart(part);
 
             return ContentShape("Parts_PublishLater_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(PublishLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -101,7 +101,7 @@ namespace Orchard.PublishLater.Drivers {
                         }
                     }
                     catch (FormatException) {
-                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                                             
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));
                     }
                 }
                 else {
@@ -133,6 +133,10 @@ namespace Orchard.PublishLater.Drivers {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("ScheduledPublishUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
             }
+        }
+
+        protected override void Cloning(PublishLaterPart originalPart, PublishLaterPart clonePart, CloneContentContext context) {
+            clonePart.ScheduledPublishUtc.Value = originalPart.ScheduledPublishUtc.Value;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
@@ -17,8 +18,8 @@ namespace Orchard.Core.Navigation.Drivers {
         private readonly IMenuService _menuService;
 
         public MenuPartDriver(
-            IAuthorizationService authorizationService, 
-            INavigationManager navigationManager, 
+            IAuthorizationService authorizationService,
+            INavigationManager navigationManager,
             IOrchardServices orchardServices,
             IMenuService menuService) {
             _authorizationService = authorizationService;
@@ -58,7 +59,7 @@ namespace Orchard.Core.Navigation.Drivers {
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MenuPartViewModel();
 
-            if(updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
 
                 if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
@@ -103,7 +104,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
             // is it on a menu ?
-            if(part.Menu == null) {
+            if (part.Menu == null) {
                 return;
             }
 
@@ -113,6 +114,12 @@ namespace Orchard.Core.Navigation.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+        }
+
+        protected override void Cloning(MenuPart originalPart, MenuPart clonePart, CloneContentContext context) {
+            clonePart.MenuText = originalPart.MenuText;
+            clonePart.MenuPosition = originalPart.MenuPosition;
+            clonePart.Menu = originalPart.Menu;
         }
     }
 }

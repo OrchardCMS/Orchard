@@ -9,7 +9,6 @@ using Orchard.Search.Models;
 using Orchard.Search.ViewModels;
 
 namespace Orchard.Search.Drivers {
-
     public class SearchSettingsPartDriver : ContentPartDriver<SearchSettingsPart> {
         private readonly IIndexManager _indexManager;
 
@@ -22,10 +21,8 @@ namespace Orchard.Search.Drivers {
 
         protected override string Prefix { get { return "SearchSettings"; } }
 
-        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-            
-        }
+        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) =>
+            Editor(part, null, shapeHelper);
 
         protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             return Combined(

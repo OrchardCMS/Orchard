@@ -23,9 +23,8 @@ namespace Orchard.Taxonomies.Drivers {
 
         protected override string Prefix { get { return "TaxonomyNavigationPart"; } }
 
-        protected override DriverResult Editor(TaxonomyNavigationPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-        }
+        protected override DriverResult Editor(TaxonomyNavigationPart part, dynamic shapeHelper) =>
+            Editor(part, null, shapeHelper);
 
         protected override DriverResult Editor(TaxonomyNavigationPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape(
@@ -112,24 +111,27 @@ namespace Orchard.Taxonomies.Drivers {
             part.LevelsToDisplay = Int32.Parse(context.Attribute(part.PartDefinition.Name, "LevelsToDisplay"));
 
             var taxonomyId = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
-            var taxonomy = context.GetItemFromSession(taxonomyId);
-
-            if (taxonomy == null) {
-                throw new OrchardException(T("Unknown taxonomy: {0}", taxonomyId));
-            }
+            var taxonomy = context.GetItemFromSession(taxonomyId)
+                ?? throw new OrchardException(T("Unknown taxonomy: {0}", taxonomyId));
 
             part.TaxonomyId = taxonomy.Id;
-
             var termId = context.Attribute(part.PartDefinition.Name, "TermId");
-            if (!String.IsNullOrEmpty(termId)) {
-                var term = context.GetItemFromSession(termId);
 
-                if (term == null) {
-                    throw new OrchardException(T("Unknown term: {0}", termId));
-                }
+            if (!String.IsNullOrEmpty(termId)) {
+                var term = context.GetItemFromSession(termId)
+                    ?? throw new OrchardException(T("Unknown term: {0}", termId));
 
                 part.TermId = term.Id;
             }
+        }
+
+        protected override void Cloning(TaxonomyNavigationPart originalPart, TaxonomyNavigationPart clonePart, CloneContentContext context) {
+            clonePart.DisplayContentCount = originalPart.DisplayContentCount;
+            clonePart.DisplayRootTerm = originalPart.DisplayRootTerm;
+            clonePart.HideEmptyTerms = originalPart.HideEmptyTerms;
+            clonePart.LevelsToDisplay = originalPart.LevelsToDisplay;
+            clonePart.TaxonomyId = originalPart.TaxonomyId;
+            clonePart.TermId = originalPart.TermId;
         }
     }
 }

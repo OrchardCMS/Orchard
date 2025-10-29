@@ -2,12 +2,13 @@ using System;
 using System.Globalization;
 using System.Xml;
 using Orchard.Comments.Models;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Services;
-using Orchard.Localization;
 using Orchard.Comments.Services;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Localization;
+using Orchard.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Drivers {
@@ -41,17 +42,17 @@ namespace Orchard.Comments.Drivers {
             return Combined(
                 ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment()),
                 ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin())
-                );
+            );
         }
 
         // GET
         protected override DriverResult Editor(CommentPart part, dynamic shapeHelper) {
             if (UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
-                return ContentShape("Parts_Comment_AdminEdit", 
+                return ContentShape("Parts_Comment_AdminEdit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment.AdminEdit", Model: part, Prefix: Prefix));
             }
             else {
-                return ContentShape("Parts_Comment_Edit", 
+                return ContentShape("Parts_Comment_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
             }
         }
@@ -102,9 +103,9 @@ namespace Orchard.Comments.Drivers {
             }
 
             var currentUser = workContext.CurrentUser;
-            part.UserName = (currentUser != null ? currentUser.UserName : null);
+            part.UserName = currentUser?.UserName;
 
-            if (currentUser != null) 
+            if (currentUser != null)
                 part.Author = currentUser.UserName;
             else if (string.IsNullOrWhiteSpace(part.Author)) {
                 updater.AddModelError("Comments.Author", T("Name is mandatory"));
@@ -225,6 +226,34 @@ namespace Orchard.Comments.Drivers {
                     var repliedOnIdentity = _contentManager.GetItemMetadata(repliedOn).Identity;
                     context.Element(part.PartDefinition.Name).SetAttributeValue("RepliedOn", repliedOnIdentity.ToString());
                 }
+            }
+        }
+
+        protected override void Cloning(CommentPart originalPart, CommentPart clonePart, CloneContentContext context) {
+            clonePart.Author = originalPart.Author;
+            clonePart.SiteName = originalPart.SiteName;
+            clonePart.UserName = originalPart.UserName;
+            clonePart.Email = originalPart.Email;
+            clonePart.Position = originalPart.Position;
+            clonePart.Status = originalPart.Status;
+            clonePart.CommentDateUtc = originalPart.CommentDateUtc;
+            clonePart.CommentText = originalPart.CommentText;
+            var commentedOn = _contentManager.Get(originalPart.CommentedOn);
+            if (commentedOn != null) {
+                clonePart.CommentedOn = originalPart.CommentedOn;
+            }
+            if (originalPart.RepliedOn.HasValue) {
+                var repliedOn = _contentManager.Get(originalPart.RepliedOn.Value);
+                if (repliedOn != null) {
+                    clonePart.RepliedOn = originalPart.RepliedOn;
+                }
+            }
+            else {
+                clonePart.RepliedOn = null;
+            }
+            var commentedOnContainer = _contentManager.Get(originalPart.CommentedOnContainer);
+            if (commentedOnContainer != null) {
+                clonePart.CommentedOnContainer = originalPart.CommentedOnContainer;
             }
         }
     }
