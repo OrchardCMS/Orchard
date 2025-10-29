@@ -23,7 +23,6 @@
             "Assets/JavaScript/LayoutEditor/Directives/Child.js",
             "Assets/JavaScript/LayoutEditor/Directives/Column.js",
             "Assets/JavaScript/LayoutEditor/Directives/Content.js",
-            "Assets/JavaScript/LayoutEditor/Directives/Html.js",
             "Assets/JavaScript/LayoutEditor/Directives/Grid.js",
             "Assets/JavaScript/LayoutEditor/Directives/Row.js",
             "Assets/JavaScript/LayoutEditor/Directives/Popup.js",
@@ -43,8 +42,7 @@
             "Assets/JavaScript/Models/Grid.js",
             "Assets/JavaScript/Models/Row.js",
             "Assets/JavaScript/Models/Column.js",
-            "Assets/JavaScript/Models/Content.js",
-            "Assets/JavaScript/Models/Html.js"
+            "Assets/JavaScript/Models/Content.js"
         ],
         "output": "Scripts/Models.js"
     }

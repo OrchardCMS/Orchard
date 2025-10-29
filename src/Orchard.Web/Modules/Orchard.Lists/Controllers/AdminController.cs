@@ -301,8 +301,17 @@ namespace Orchard.Lists.Controllers {
 
         [HttpPost]
         public ActionResult Insert(int containerId, int itemId, PagerParameters pagerParameters) {
-            var container = _containerService.Get(containerId, VersionOptions.Latest);
+            ActionResult redirectToList() =>
+                RedirectToAction("List", new { containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize });
+
             var item = _contentManager.Get(itemId, VersionOptions.Latest, new QueryHints().ExpandParts<CommonPart, ContainablePart>());
+            if (item == null || !item.Has<ContainablePart>()) {
+                _services.Notifier.Error(T("Item not found or doesn't have ContainablePart."));
+
+                return redirectToList();
+            }
+
+            var container = _containerService.Get(containerId, VersionOptions.Latest);
             var commonPart = item.As<CommonPart>();
             var previousItemContainer = commonPart.Container;
             var itemMetadata = _contentManager.GetItemMetadata(item);
@@ -328,7 +337,8 @@ namespace Orchard.Lists.Controllers {
 
             _containerService.MoveItem(item.As<ContainablePart>(), container, position);
             _services.Notifier.Information(message);
-            return RedirectToAction("List", new { containerId, page = pagerParameters.Page, pageSize = pagerParameters.PageSize });
+
+            return redirectToList();
         }
 
         [HttpPost]

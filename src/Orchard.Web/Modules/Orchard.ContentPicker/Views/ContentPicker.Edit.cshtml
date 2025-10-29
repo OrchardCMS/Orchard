@@ -2,7 +2,7 @@
 @using Orchard.Environment.Configuration
 @{
     Script.Require("ContentPicker").AtFoot();
-    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryUI").AtFoot();
     Style.Include("content-picker-admin.css");
 
     var required = ((bool?)Model.Required) ?? false;

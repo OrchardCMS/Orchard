@@ -65,14 +65,14 @@
     // if necessary.
     if (calendarName != "gregorian") {
         // Include the appropriate calendar module.
-        Script.Include(String.Format("Calendars/jquery.calendars.{0}.js", calendarName), String.Format("Calendars/jquery.calendars.{0}.min.js", calendarName)).AtFoot();
+        Script.Include(String.Format("jQuery.Calendars/jquery.calendars.{0}.js", calendarName), String.Format("jQuery.Calendars/jquery.calendars.{0}.min.js", calendarName)).AtFoot();
 
         // Look for a matching localization module and include it if found.
         var c = currentCulture;
         do {
-            var localizationFileName = String.Format("Calendars/jquery.calendars.{0}-{1}.js", calendarName, c.Name);
+            var localizationFileName = String.Format("jQuery.Calendars/jquery.calendars.{0}-{1}.js", calendarName, c.Name);
             if (File.Exists(HostingEnvironment.MapPath(String.Format("~/Modules/Orchard.Resources/Scripts/{0}", localizationFileName)))) {
-                var localizationMinFileName = String.Format("Calendars/jquery.calendars.{0}-{1}.min.js", calendarName, c.Name);
+                var localizationMinFileName = String.Format("jQuery.Calendars/jquery.calendars.{0}-{1}.min.js", calendarName, c.Name);
                 Script.Include(localizationFileName, localizationMinFileName).AtFoot();
                 includedLocalization = c.Name;
                 break;

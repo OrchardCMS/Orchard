@@ -1,0 +1,14 @@
+﻿[
+    {
+        "inputs": [ "Assets/Scripts/orchard-blogs-archives.js" ],
+        "output": "Scripts/orchard-blogs-archives.js"
+    },
+    {
+        "inputs": [ "Assets/Styles/orchard-blogs-admin.css" ],
+        "output": "Styles/orchard-blogs-admin.css"
+    },
+    {
+        "inputs": [ "Assets/Styles/orchard-blogs-archives.css" ],
+        "output": "Styles/orchard-blogs-archives.css"
+    }
+]

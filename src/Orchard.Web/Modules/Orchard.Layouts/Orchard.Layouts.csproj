@@ -156,7 +156,6 @@
     <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\element-editor.css" />
     <Content Include="Styles\element-browser.css" />
-    <Content Include="Styles\default-grid.css" />
     <Content Include="Styles\edit.png" />
     <Content Include="Styles\menu.layouts.png" />
     <Content Include="Styles\overlay.png" />
@@ -535,7 +534,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Break.cshtml" />
-    <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Layout.Recursive.cshtml" />

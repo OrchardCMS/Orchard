@@ -146,6 +146,9 @@
     <Compile Include="ViewModels\RecentBlogPostsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Scripts\orchard-blogs-archives.js" />
+    <Content Include="Assets\Styles\orchard-blogs-admin.css" />
+    <Content Include="Assets\Styles\orchard-blogs-archives.css" />
     <Content Include="Content\Admin\images\draft.gif" />
     <Content Include="Content\Admin\images\offline.gif" />
     <Content Include="Content\Admin\images\online.gif" />
@@ -240,6 +243,7 @@
     <Content Include="Views\Content-BlogPost.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
