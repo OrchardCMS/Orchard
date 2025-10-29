@@ -4,13 +4,13 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Tasks.Locking.Services {
     public class DistributedLockSchemaBuilder {
-        private readonly SchemaBuilder _schemaBuilder;
         private readonly ShellSettings _shellSettings;
+        private readonly SchemaBuilder _schemaBuilder;
         private const string TableName = "Orchard_Framework_DistributedLockRecord";
 
-        public DistributedLockSchemaBuilder(SchemaBuilder schemaBuilder, ShellSettings shellSettings) {
-            _schemaBuilder = schemaBuilder;
+        public DistributedLockSchemaBuilder(ShellSettings shellSettings, SchemaBuilder schemaBuilder) {
             _shellSettings = shellSettings;
+            _schemaBuilder = schemaBuilder;
         }
 
         public void CreateSchema() {
