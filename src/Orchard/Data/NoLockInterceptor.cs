@@ -9,9 +9,9 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Data {
     public class NoLockInterceptor : EmptyInterceptor, ISessionInterceptor {
-
         private readonly ShellSettings _shellSettings;
         private readonly IEnumerable<INoLockTableProvider> _noLockTableProviders;
+        private readonly bool _supportsNoLock;
 
         public NoLockInterceptor(
             ShellSettings shellSettings,
@@ -19,6 +19,10 @@ namespace Orchard.Data {
 
             _shellSettings = shellSettings;
             _noLockTableProviders = noLockTableProviders;
+
+            // Only SQL Server supports NOLOCK.
+            var provider = _shellSettings?.DataProvider?.ToLower();
+            _supportsNoLock = provider == "sqlserver" || provider == "sqlce";
         }
 
         private List<string> _tableNames;
@@ -27,7 +31,7 @@ namespace Orchard.Data {
                 if (_tableNames == null) {
                     _tableNames = new List<string>(
                         _noLockTableProviders
-                            .SelectMany(nltp => nltp.GetTableNames())
+                            .SelectMany(providers => providers.GetTableNames())
                             .Distinct(StringComparer.OrdinalIgnoreCase)
                             .Select(n => GetPrefixedTableName(n.Trim())));
                 }
@@ -45,6 +49,11 @@ namespace Orchard.Data {
 
         // based on https://stackoverflow.com/a/39518098/2669614
         public override SqlString OnPrepareStatement(SqlString sql) {
+            // Skip entirely for providers that do not support NOLOCK
+            if (!_supportsNoLock) {
+                return sql;
+            }
+
             // only work on select queries
             if (sql.StartsWithCaseInsensitive("select")) {
                 // see whether we have anything to add the NOLOCK hint to
@@ -66,7 +75,7 @@ namespace Orchard.Data {
                     // The captured strings in this group are ordered with respect to where they are
                     // found in the original string: that means that each string may be contained
                     // in any, all or none of the following ones in the array. When a captured string
-                    // is part of another, it is so in its entirety, meaning there cannote be a case
+                    // is part of another, it is so in its entirety, meaning there cannot be a case
                     // when two captured strings intersect partially.
                     // Take for example the following query:
                     //
@@ -148,10 +157,11 @@ namespace Orchard.Data {
                                         // starting from the end.
                                         var oFromEnd = outer.OriginalEnd - inner.OriginalIndex;
                                         insertionIndex = outer.Value.Length - oFromEnd;
-                                    } else {
+                                    }
+                                    else {
                                         // outer is still the same as what we captured originally
                                         // we are changing it here for the first time.
-                                        // This means the index of our ssubstring within it has not changed
+                                        // This means the index of our substring within it has not changed
                                     }
                                     outer.Value = outer.Value
                                         // Remove old substring
@@ -231,7 +241,7 @@ namespace Orchard.Data {
                         if (tableItem != null) {
                             // the table is involved in this statement
                             var tableIndex = parts.IndexOf(tableItem);
-                            // recompute whereIndex in case we added stuff to parts
+                            // re-compute whereIndex in case we added stuff to parts
                             whereIndex = whereItem != null ? parts.IndexOf(whereItem) : parts.Count;
                             if (tableIndex > fromIndex && tableIndex < whereIndex) { // sanity check
                                                                                      // if before the table name we have "," or "FROM", this is not a join, but rather
@@ -243,11 +253,13 @@ namespace Orchard.Data {
                                     if (parts[tableIndex + 1].Equals("where", StringComparison.OrdinalIgnoreCase)) {
                                         // There is no alias in the query, so we add "WITH(NOLOCK)" immediately after table name but before the "where" clause.
                                         parts.Insert(tableIndex + 1, "WITH(NOLOCK)");
-                                    } else {
+                                    }
+                                    else {
                                         // We add "WITH(NOLOCK)" after the table alias.
                                         parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
                                     }
-                                } else {
+                                }
+                                else {
                                     // probably doing a join, so edit the next "on" and make it
                                     // "WITH (NOLOCK) on"
                                     for (int i = tableIndex + 1; i < whereIndex; i++) {
@@ -271,6 +283,5 @@ namespace Orchard.Data {
                 return query;
             }
         }
-
     }
 }

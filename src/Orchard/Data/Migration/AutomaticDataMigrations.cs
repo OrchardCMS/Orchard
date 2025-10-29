@@ -5,9 +5,9 @@ using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Features;
+using Orchard.Exceptions;
 using Orchard.Logging;
 using Orchard.Tasks.Locking.Services;
-using Orchard.Exceptions;
 
 namespace Orchard.Data.Migration {
     /// <summary>
@@ -44,16 +44,21 @@ namespace Orchard.Data.Migration {
         public void Activated() {
             EnsureDistributedLockSchemaExists();
 
-            IDistributedLock @lock;
-            if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(30), TimeSpan.FromMilliseconds(250), out @lock)) {
+            if (_distributedLockService.TryAcquireLock(
+                GetType().FullName,
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromMilliseconds(250),
+                out IDistributedLock @lock)) {
                 using (@lock) {
-                    // Let's make sure that the basic set of features is enabled.  If there are any that are not enabled, then let's enable them first.
+                    // Let's make sure that the basic set of features is enabled.
+                    // If there are any that are not enabled, then let's enable them first.
                     var theseFeaturesShouldAlwaysBeActive = new[] {
                         "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Scheduling", "Settings", "Shapes", "Title"
                     };
 
                     var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
-                    var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
+                    var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(
+                        shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
                     if (featuresToEnable.Any()) {
                         _featureManager.EnableFeatures(featuresToEnable, true);
                     }
@@ -78,10 +83,10 @@ namespace Orchard.Data.Migration {
         }
 
         /// <summary>
-        /// This ensures that the framework migrations have run for the distributed locking feature, as existing Orchard installations will not have the required tables when upgrading.
+        /// This ensures that the framework migrations have run for the distributed locking feature, as existing
+        /// Orchard installations will not have the required tables when upgrading.
         /// </summary>
-        private void EnsureDistributedLockSchemaExists()
-        {
+        private void EnsureDistributedLockSchemaExists() {
             // Ensure the distributed lock record schema exists.
             var schemaBuilder = new SchemaBuilder(_dataMigrationInterpreter);
             var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
@@ -90,8 +95,6 @@ namespace Orchard.Data.Migration {
                 // Workaround to avoid some Transaction issue for PostgreSQL.
                 if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase)) {
                     _transactionManager.RequireNew();
-                    distributedLockSchemaBuilder.CreateSchema();
-                    return;
                 }
 
                 distributedLockSchemaBuilder.CreateSchema();
