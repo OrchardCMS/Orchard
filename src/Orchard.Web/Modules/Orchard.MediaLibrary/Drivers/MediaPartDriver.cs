@@ -32,10 +32,11 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override DriverResult Editor(MediaPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_Media_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts.Media.Edit", Model: part, Prefix: Prefix));
+            return ContentShape("Parts_Media_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Media.Edit", Model: part, Prefix: Prefix));
         }
 
-        protected override void Importing(MediaPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(MediaPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -76,12 +77,12 @@ namespace Orchard.MediaLibrary.Drivers {
         }
 
         protected override void Cloning(MediaPart originalPart, MediaPart clonePart, CloneContentContext context) {
-            clonePart.Caption = originalPart.Caption;
-            clonePart.FileName = originalPart.FileName;
-            clonePart.FolderPath = originalPart.FolderPath;
-            clonePart.LogicalType = originalPart.LogicalType;
-            clonePart.AlternateText = originalPart.AlternateText;
             clonePart.MimeType = originalPart.MimeType;
+            clonePart.Caption = originalPart.Caption;
+            clonePart.AlternateText = originalPart.AlternateText;
+            clonePart.FolderPath = originalPart.FolderPath;
+            clonePart.FileName = originalPart.FileName;
+            clonePart.LogicalType = originalPart.LogicalType;
         }
     }
 }

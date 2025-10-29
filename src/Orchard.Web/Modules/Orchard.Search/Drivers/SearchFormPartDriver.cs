@@ -37,7 +37,7 @@ namespace Orchard.Search.Drivers {
                 };
 
                 if (updater != null) {
-                    if (updater.TryUpdateModel(viewModel, Prefix, null, new[] {"AvailableIndexes"})) {
+                    if (updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableIndexes" })) {
                         part.OverrideIndex = viewModel.OverrideIndex;
                         part.SelectedIndex = viewModel.SelectedIndex;
                     }
@@ -55,6 +55,11 @@ namespace Orchard.Search.Drivers {
         protected override void Importing(SearchFormPart part, ImportContentContext context) {
             context.ImportAttribute(part.PartDefinition.Name, "OverrideIndex", x => part.OverrideIndex = XmlHelper.Parse<bool>(x));
             context.ImportAttribute(part.PartDefinition.Name, "SelectedIndex", x => part.SelectedIndex = x);
+        }
+
+        protected override void Cloning(SearchFormPart originalPart, SearchFormPart clonePart, CloneContentContext context) {
+            clonePart.OverrideIndex = originalPart.OverrideIndex;
+            clonePart.SelectedIndex = originalPart.SelectedIndex;
         }
     }
 }

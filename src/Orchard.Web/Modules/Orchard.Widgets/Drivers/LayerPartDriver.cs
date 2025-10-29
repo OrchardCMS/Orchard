@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Orchard.Conditions.Services;
 using Orchard.ContentManagement;
@@ -10,7 +9,6 @@ using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
-
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
         private readonly IConditionManager _conditionManager;
         private readonly IWidgetsService _widgetsService;
@@ -18,7 +16,6 @@ namespace Orchard.Widgets.Drivers {
         public LayerPartDriver(
             IConditionManager conditionManager,
             IWidgetsService widgetsService) {
-
             _conditionManager = conditionManager;
             _widgetsService = widgetsService;
 
@@ -27,14 +24,9 @@ namespace Orchard.Widgets.Drivers {
 
         public Localizer T { get; set; }
 
-        protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
-            var results = new List<DriverResult> {
-                ContentShape("Parts_Widgets_LayerPart",
-                             () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix))
-            };
-
-            return Combined(results.ToArray());
-        }
+        protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) =>
+            ContentShape("Parts_Widgets_LayerPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix));
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(layerPart, Prefix, null, null)) {
@@ -86,6 +78,12 @@ namespace Orchard.Widgets.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("LayerRule", part.LayerRule);
+        }
+
+        protected override void Cloning(LayerPart originalPart, LayerPart clonePart, CloneContentContext context) {
+            clonePart.Name = originalPart.Name;
+            clonePart.Description = originalPart.Description;
+            clonePart.LayerRule = originalPart.LayerRule;
         }
     }
 }

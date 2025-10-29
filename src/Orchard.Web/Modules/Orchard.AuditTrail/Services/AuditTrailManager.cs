@@ -22,7 +22,6 @@ namespace Orchard.AuditTrail.Services {
     /// </summary>
     public class AuditTrailManager : Component, IAuditTrailManager {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailRepository;
-        private readonly ITransactionManager _transactionManager;
         private readonly IAuditTrailEventProvider _providers;
         private readonly IClock _clock;
         private readonly IAuditTrailEventHandler _auditTrailEventHandlers;
@@ -35,7 +34,6 @@ namespace Orchard.AuditTrail.Services {
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
-            ITransactionManager transactionManager,
             IAuditTrailEventProvider providers,
             IClock clock,
             IAuditTrailEventHandler auditTrailEventHandlers,
@@ -47,7 +45,6 @@ namespace Orchard.AuditTrail.Services {
             IClientHostAddressAccessor clientHostAddressAccessor) {
 
             _auditTrailRepository = auditTrailRepository;
-            _transactionManager = transactionManager;
             _providers = providers;
             _clock = clock;
             _auditTrailEventHandlers = auditTrailEventHandlers;
@@ -261,9 +258,13 @@ namespace Orchard.AuditTrail.Services {
             var dateThreshold = (_clock.UtcNow.EndOfDay() - retentionPeriod);
             var query = _auditTrailRepository.Table.Where(x => x.CreatedUtc <= dateThreshold);
 
-            _transactionManager.GetSession().Delete(query);
+            var recordsToDeleteArray = query.ToArray();
 
-            return query.ToArray();
+            foreach (var record in query) {
+                _auditTrailRepository.Delete(record);
+            }
+
+            return recordsToDeleteArray;
         }
 
         public string SerializeProviderConfiguration(IEnumerable<AuditTrailEventSetting> settings) {

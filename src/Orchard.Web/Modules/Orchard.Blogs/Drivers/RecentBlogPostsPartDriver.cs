@@ -14,7 +14,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IContentManager _contentManager;
 
         public RecentBlogPostsPartDriver(
-            IBlogService blogService, 
+            IBlogService blogService,
             IContentManager contentManager) {
             _blogService = blogService;
             _contentManager = contentManager;
@@ -22,7 +22,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
-            var blog = _contentManager.Get<BlogPart>(part.BlogId);
+                var blog = _contentManager.Get<BlogPart>(part.BlogId);
 
                 if (blog == null) {
                     return null;
@@ -86,6 +86,11 @@ namespace Orchard.Blogs.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
+        }
+
+        protected override void Cloning(RecentBlogPostsPart originalPart, RecentBlogPostsPart clonePart, CloneContentContext context) {
+            clonePart.BlogId = originalPart.BlogId;
+            clonePart.Count = originalPart.Count;
         }
     }
 }

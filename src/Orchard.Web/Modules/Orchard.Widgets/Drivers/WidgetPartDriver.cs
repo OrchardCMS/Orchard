@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
-
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;
@@ -16,7 +15,6 @@ namespace Orchard.Widgets.Drivers {
         public WidgetPartDriver(IWidgetsService widgetsService, IContentManager contentManager) {
             _widgetsService = widgetsService;
             _contentManager = contentManager;
-
             T = NullLocalizer.Instance;
         }
 
@@ -30,12 +28,8 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
-            var results = new List<DriverResult> {
-                ContentShape("Parts_Widgets_WidgetPart",
-                             () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
-            };
-
-            return Combined(results.ToArray());
+            return ContentShape("Parts_Widgets_WidgetPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
@@ -99,6 +93,15 @@ namespace Orchard.Widgets.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("RenderTitle", part.RenderTitle);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CssClasses", part.CssClasses);
+        }
+
+        protected override void Cloning(WidgetPart originalPart, WidgetPart clonePart, CloneContentContext context) {
+            clonePart.Title = originalPart.Title;
+            clonePart.Position = originalPart.Position;
+            clonePart.Zone = originalPart.Zone;
+            clonePart.RenderTitle = originalPart.RenderTitle;
+            clonePart.Name = originalPart.Name;
+            clonePart.CssClasses = originalPart.CssClasses;
         }
     }
 }

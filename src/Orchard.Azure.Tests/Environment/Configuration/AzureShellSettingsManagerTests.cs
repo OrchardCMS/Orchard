@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.WindowsAzure.Storage;
 using NUnit.Framework;
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
@@ -8,14 +7,14 @@ using Orchard.FileSystems.Media;
 namespace Orchard.Azure.Tests.Environment.Configuration {
     [TestFixture]
     public class AzureShellSettingsManagerTests : AzureVirtualEnvironmentTest {
+        private IShellSettingsManager _shellSettingsManager;
 
-        protected CloudStorageAccount DevAccount;
-        protected IShellSettingsManager ShellSettingsManager;
+        protected override string StorageConnectionStringName { get; } = Constants.ShellSettingsStorageConnectionStringSettingName;
 
         protected override void OnInit() {
-
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
-            ShellSettingsManager = new AzureBlobShellSettingsManager(new Moq.Mock<IMimeTypeProvider>().Object, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
+            _shellSettingsManager = new AzureBlobShellSettingsManager(
+                new Moq.Mock<IMimeTypeProvider>().Object,
+                new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]
@@ -33,9 +32,9 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
 
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
 
-            var settings = ShellSettingsManager.LoadSettings().Single();
+            var settings = _shellSettingsManager.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
             Assert.That(settings.DataProvider, Is.EqualTo("SQLCe"));
@@ -44,10 +43,10 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
 
         [Test]
         public void SettingsShouldBeOverwritable() {
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
 
-            var settings = ShellSettingsManager.LoadSettings().Single();
+            var settings = _shellSettingsManager.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
             Assert.That(settings.DataProvider, Is.EqualTo("SQLCe2"));
@@ -57,10 +56,10 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         [Test]
         public void MultipleFilesCanBeDetected() {
 
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Another", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Another", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
 
-            var settings = ShellSettingsManager.LoadSettings();
+            var settings = _shellSettingsManager.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
             var def = settings.Single(x => x.Name == "Default");
@@ -76,15 +75,15 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
 
         [Test]
         public void NewSettingsCanBeStored() {
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
 
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
 
-            Assert.That(ShellSettingsManager.LoadSettings().Count(), Is.EqualTo(1));
-            ShellSettingsManager.SaveSettings(foo);
-            Assert.That(ShellSettingsManager.LoadSettings().Count(), Is.EqualTo(2));
+            Assert.That(_shellSettingsManager.LoadSettings().Count(), Is.EqualTo(1));
+            _shellSettingsManager.SaveSettings(foo);
+            Assert.That(_shellSettingsManager.LoadSettings().Count(), Is.EqualTo(2));
 
-            foo = ShellSettingsManager.LoadSettings().Where(s => s.Name == "Foo").Single();
+            foo = _shellSettingsManager.LoadSettings().Where(s => s.Name == "Foo").Single();
             Assert.That(foo.Name, Does.Contain("Foo"));
             Assert.That(foo.DataProvider, Does.Contain("Bar"));
             Assert.That(foo.DataConnectionString, Does.Contain("Quux"));
@@ -92,9 +91,9 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
 
         [Test]
         public void SettingsCanContainSeparatorChar() {
-            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;" });
+            _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;" });
 
-            var settings = ShellSettingsManager.LoadSettings().Where(s => s.Name == "Default").Single();
+            var settings = _shellSettingsManager.LoadSettings().Where(s => s.Name == "Default").Single();
             Assert.That(settings.DataConnectionString, Is.EqualTo("Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;"));
         }
     }

@@ -66,7 +66,7 @@ namespace Orchard.ArchiveLater.Drivers {
             var model = BuildViewModelFromPart(part);
 
             return ContentShape("Parts_ArchiveLater_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -76,10 +76,10 @@ namespace Orchard.ArchiveLater.Drivers {
                 if (model.ArchiveLater) {
                     try {
                         var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
-                        _archiveLaterService.ArchiveLater(model.ContentItem, utcDateTime.HasValue ? utcDateTime.Value : DateTime.MaxValue);
+                        _archiveLaterService.ArchiveLater(model.ContentItem, utcDateTime ?? DateTime.MaxValue);
                     }
                     catch (FormatException) {
-                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                        
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));
                     }
                 }
                 else {
@@ -88,7 +88,7 @@ namespace Orchard.ArchiveLater.Drivers {
             }
 
             return ContentShape("Parts_ArchiveLater_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override void Importing(ArchiveLaterPart part, ImportContentContext context) {
@@ -109,5 +109,10 @@ namespace Orchard.ArchiveLater.Drivers {
                     .SetAttributeValue("ScheduledArchiveUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
             }
         }
+
+        protected override void Cloning(ArchiveLaterPart originalPart, ArchiveLaterPart clonePart, CloneContentContext context) {
+            clonePart.ScheduledArchiveUtc.Value = originalPart.ScheduledArchiveUtc.Value;
+        }
+
     }
 }

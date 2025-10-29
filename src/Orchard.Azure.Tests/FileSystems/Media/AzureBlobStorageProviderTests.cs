@@ -1,52 +1,46 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using NUnit.Framework;
-using System.Linq;
-using Orchard.Environment.Configuration;
 using Orchard.Azure.Services.FileSystems.Media;
+using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
-using Microsoft.WindowsAzure.Storage;
-using Orchard.Azure.Services.Environment.Configuration;
 
 namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
-
-        private CloudStorageAccount _devAccount;
-        private IPlatformConfigurationAccessor _platformConfigurationAccessor;
         private AzureBlobStorageProvider _azureBlobStorageProvider;
 
-        protected override void OnInit() {
+        protected override string StorageConnectionStringName { get; } = Constants.MediaStorageStorageConnectionStringSettingName;
 
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out _devAccount);
-            _platformConfigurationAccessor = new DefaultPlatformConfigurationAccessor();
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, new ConfigurationMimeTypeProvider(), _platformConfigurationAccessor);
+        protected override void OnInit() {
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(
+                new ShellSettings { Name = "default" },
+                new ConfigurationMimeTypeProvider(),
+                PlatformConfigurationAccessor);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, _devAccount);
+            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, DevAccount);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void GetFileShouldOnlyAcceptRelativePath() {
             _azureBlobStorageProvider.CreateFile("foo.txt");
-            _azureBlobStorageProvider.GetFile("/foo.txt");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.GetFile("/foo.txt"));
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void GetFileThatDoesNotExistShouldThrow() {
-            _azureBlobStorageProvider.GetFile("notexisting");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.GetFile("notexisting"));
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DeleteFileThatDoesNotExistShouldThrow() {
-            _azureBlobStorageProvider.DeleteFile("notexisting");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.DeleteFile("notexisting"));
         }
 
         [Test]
@@ -72,12 +66,11 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void CreateFileShouldThrowAnExceptionIfAlreadyExisting() {
             var storageFile = _azureBlobStorageProvider.CreateFile("foo.txt");
             Assert.AreEqual(storageFile.GetSize(), 0);
 
-            _azureBlobStorageProvider.CreateFile("foo.txt");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.CreateFile("foo.txt"));
         }
 
         [Test]
@@ -108,10 +101,9 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void CreateFolderThatExistsShouldThrow() {
             _azureBlobStorageProvider.CreateFile("folder/foo.txt");
-            _azureBlobStorageProvider.CreateFolder("folder");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.CreateFolder("folder"));
         }
 
         [Test]
@@ -196,10 +188,9 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void CannotCreateAlreadyExistingFolders() {
             _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
-            _azureBlobStorageProvider.CreateFolder("folder1");
+            Assert.Throws<ArgumentException>(() => _azureBlobStorageProvider.CreateFolder("folder1"));
         }
 
         [Test]
@@ -210,21 +201,21 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
 
         [Test]
         public void ShouldReadWriteFiles() {
-            const string teststring = "This is a test string.";
+            const string testString = "This is a test string.";
 
             var foo = _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
 
-            using ( var stream = foo.OpenWrite() )
-            using ( var writer = new StreamWriter(stream) )
-                writer.Write(teststring);
+            using (var stream = foo.OpenWrite())
+            using (var writer = new StreamWriter(stream))
+                writer.Write(testString);
 
             string content;
-            using ( var stream = foo.OpenRead() )
-            using ( var reader = new StreamReader(stream) ) {
+            using (var stream = foo.OpenRead())
+            using (var reader = new StreamReader(stream)) {
                 content = reader.ReadToEnd();
             }
 
-            Assert.AreEqual(teststring, content);
+            Assert.AreEqual(testString, content);
         }
 
         [Test]
@@ -243,19 +234,17 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             using (var sr = new StreamReader(sf.OpenRead())) {
                 content = sr.ReadToEnd();
             }
-            
+
             Assert.That(content, Is.EqualTo("fo"));
         }
 
         [Test]
-        public void HttpContextWeaverShouldBeDisposed()
-        {
+        public void HttpContextWeaverShouldBeDisposed() {
             _azureBlobStorageProvider.CreateFile("foo1.txt");
             _azureBlobStorageProvider.CreateFile("foo2.txt");
             _azureBlobStorageProvider.CreateFile("foo3.txt");
 
-            foreach(var f in _azureBlobStorageProvider.ListFiles(""))
-            {
+            foreach (var _ in _azureBlobStorageProvider.ListFiles("")) {
                 Assert.That(HttpContext.Current, Is.Null);
             }
         }
@@ -278,8 +267,7 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
 
 
         [Test]
-        public void GetStoragePathShouldReturnAValidLocalPath()
-        {
+        public void GetStoragePathShouldReturnAValidLocalPath() {
             _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
             var publicPath = _azureBlobStorageProvider.GetPublicUrl("folder1/foo.txt");
             var storagePath = _azureBlobStorageProvider.GetStoragePath(publicPath);
@@ -289,12 +277,10 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        public void GetStoragePathShouldReturnNullIfPathIsNotLocal()
-        {
+        public void GetStoragePathShouldReturnNullIfPathIsNotLocal() {
             var storagePath = _azureBlobStorageProvider.GetStoragePath("http://orchardproject.net/foo");
 
             Assert.IsNull(storagePath);
         }
-
     }
 }

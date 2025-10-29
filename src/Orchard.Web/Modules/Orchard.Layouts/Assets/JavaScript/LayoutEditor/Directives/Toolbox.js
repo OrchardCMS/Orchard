@@ -127,7 +127,7 @@
                                     break;
                                 case "Column":
                                     parentClasses = [".layout-row:not(.layout-row-full)"];
-                                    placeholderClasses = "layout-element layout-container layout-column ui-sortable-placeholder";
+                                    placeholderClasses = "layout-element layout-container layout-column col ui-sortable-placeholder";
                                     floating = true; // To ensure a smooth horizontal-list reordering. https://github.com/angular-ui/ui-sortable#floating
                                     break;
                                 case "Content":

@@ -4,7 +4,7 @@
 
 @{
     Style.Include("media-gallery-admin");
-    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryUI").AtFoot();
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaGalleryFieldSettings>();
     var descriminator = Html.FieldIdFor(m => m.Field.Items);

@@ -7,7 +7,7 @@
     // these need to be in the head because MediaBrowser.js defines a callback that the thumbnail images call when they load,
     // which could happen as soon as they render.
     Style.Require("jQueryUI_Orchard").AtHead();
-    Script.Require("jQueryUI_Tabs").AtHead();
+    Script.Require("jQueryUI").AtHead();
     Script.Include("MediaBrowser.js").AtHead();
 
     SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");

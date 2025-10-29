@@ -5,13 +5,13 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentPermissions.Models;
+using Orchard.ContentPermissions.Settings;
+using Orchard.ContentPermissions.ViewModels;
 using Orchard.Localization;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
-using Orchard.ContentPermissions.Models;
-using Orchard.ContentPermissions.Settings;
-using Orchard.ContentPermissions.ViewModels;
 
 namespace Orchard.ContentPermissions.Drivers {
     public class ContentPermissionsPartDriver : ContentPartDriver<ContentPermissionsPart> {
@@ -50,7 +50,7 @@ namespace Orchard.ContentPermissions.Drivers {
 
                 var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 
-                if(settings == null) {
+                if (settings == null) {
                     settings = new ContentPermissionsPartSettings {
                         View = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null) }).ToList()),
                         ViewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null) }).ToList()),
@@ -73,12 +73,12 @@ namespace Orchard.ContentPermissions.Drivers {
                     model = new ContentPermissionsPartViewModel {
                         ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.View),
                         ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.ViewOwn),
-                        PublishRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Publish),
-                        PublishOwnRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.PublishOwn),
-                        EditRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Edit),
-                        EditOwnRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.EditOwn),
-                        DeleteRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Delete),
-                        DeleteOwnRoles= ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DeleteOwn),
+                        PublishRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Publish),
+                        PublishOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.PublishOwn),
+                        EditRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Edit),
+                        EditOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.EditOwn),
+                        DeleteRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Delete),
+                        DeleteOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DeleteOwn),
                         PreviewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Preview),
                         PreviewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.PreviewOwn),
                         AllRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DisplayedRoles)
@@ -185,46 +185,60 @@ namespace Orchard.ContentPermissions.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "PreviewOwnContent", s => part.PreviewOwnContent = s);
         }
 
+        protected override void Cloning(ContentPermissionsPart originalPart, ContentPermissionsPart clonePart, CloneContentContext context) {
+            clonePart.Enabled = originalPart.Enabled;
+            clonePart.ViewContent = originalPart.ViewContent;
+            clonePart.EditContent = originalPart.EditContent;
+            clonePart.PublishContent = originalPart.PublishContent;
+            clonePart.DeleteContent = originalPart.DeleteContent;
+            clonePart.PreviewContent = originalPart.PreviewContent;
+            clonePart.ViewOwnContent = originalPart.ViewOwnContent;
+            clonePart.EditOwnContent = originalPart.EditOwnContent;
+            clonePart.PublishOwnContent = originalPart.PublishOwnContent;
+            clonePart.DeleteOwnContent = originalPart.DeleteOwnContent;
+            clonePart.PreviewOwnContent = originalPart.PreviewOwnContent;
+        }
+
         private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings) {
             // reset permissions the user can't change
             if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, part.ContentItem)) {
-                part.ViewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null)})) : settings.View;
+                part.ViewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null) })) : settings.View;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.ViewOwnContent, part.ContentItem)) {
-                part.ViewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null)})) : settings.ViewOwn;
+                part.ViewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null) })) : settings.ViewOwn;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, part.ContentItem)) {
-                part.PublishContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishContent, UserSimulation.Create(x), null)})) : settings.Publish;
+                part.PublishContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishContent, UserSimulation.Create(x), null) })) : settings.Publish;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent, part.ContentItem)) {
-                part.PublishOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishOwnContent, UserSimulation.Create(x), null)})) : settings.PublishOwn;
+                part.PublishOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishOwnContent, UserSimulation.Create(x), null) })) : settings.PublishOwn;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, part.ContentItem)) {
-                part.EditContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditContent, UserSimulation.Create(x), null)})) : settings.Edit;
+                part.EditContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditContent, UserSimulation.Create(x), null) })) : settings.Edit;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.EditOwnContent, part.ContentItem)) {
-                part.EditOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null)})) : settings.EditOwn;
+                part.EditOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null) })) : settings.EditOwn;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, part.ContentItem)) {
-                part.DeleteContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null)})) : settings.Delete;
+                part.DeleteContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null) })) : settings.Delete;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent, part.ContentItem)) {
-                part.DeleteOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null)})) : settings.DeleteOwn;
+                part.DeleteOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null) })) : settings.DeleteOwn;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewContent, part.ContentItem)) {
-                part.PreviewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null)})) : settings.Preview;
+                part.PreviewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null) })) : settings.Preview;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent, part.ContentItem)) {
-                part.PreviewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null)})) : settings.PreviewOwn;
+                part.PreviewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) })) : settings.PreviewOwn;
             }
         }
     }

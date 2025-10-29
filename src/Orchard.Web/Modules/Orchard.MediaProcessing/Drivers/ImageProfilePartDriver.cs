@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -27,26 +28,26 @@ namespace Orchard.MediaProcessing.Drivers {
             get { return "MediaProcessing"; }
         }
 
-        protected override DriverResult Display(ImageProfilePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_MediaProcessing_ImageProfile",
-                                () => shapeHelper.Parts_MediaProcessing_ImageProfile(Name: part.Name));
-        }
+        protected override DriverResult Display(ImageProfilePart part, string displayType, dynamic shapeHelper) =>
+            ContentShape("Parts_MediaProcessing_ImageProfile", () =>
+                shapeHelper.Parts_MediaProcessing_ImageProfile(Name: part.Name));
 
         protected override DriverResult Editor(ImageProfilePart part, dynamic shapeHelper) {
             var viewModel = new ImageProfileViewModel {
                 Name = part.Name
             };
-            return ContentShape("Parts_MediaProcessing_ImageProfile_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: Prefix));
+
+            return ContentShape("Parts_MediaProcessing_ImageProfile_Edit", () =>
+                shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(ImageProfilePart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentName = part.Name;
             var viewModel = new ImageProfileViewModel();
-            
+
             // It would be nice if IUpdateModel provided access to the IsValid property of the Controller, instead of having to track a local flag.
             var isValid = updater.TryUpdateModel(viewModel, Prefix, null, null);
-            if (String.IsNullOrWhiteSpace(viewModel.Name)) {
+            if (string.IsNullOrWhiteSpace(viewModel.Name)) {
                 updater.AddModelError("Name", T("The Name can't be empty."));
                 isValid = false;
             }
@@ -71,17 +72,17 @@ namespace Orchard.MediaProcessing.Drivers {
             element.Add(
                 new XAttribute("Name", part.Name),
                 new XElement("Filters",
-                             part.Filters.Select(filter =>
-                                                 new XElement("Filter",
-                                                              new XAttribute("Description", filter.Description ?? ""),
-                                                              new XAttribute("Category", filter.Category ?? ""),
-                                                              new XAttribute("Type", filter.Type ?? ""),
-                                                              new XAttribute("Position", filter.Position),
-                                                              new XAttribute("State", filter.State ?? "")
-                                                     )
-                                 )
+                    part.Filters.Select(filter =>
+                        new XElement("Filter",
+                            new XAttribute("Description", filter.Description ?? ""),
+                            new XAttribute("Category", filter.Category ?? ""),
+                            new XAttribute("Type", filter.Type ?? ""),
+                            new XAttribute("Position", filter.Position),
+                            new XAttribute("State", filter.State ?? "")
+                        )
                     )
-                );
+                )
+            );
         }
 
         protected override void Importing(ImageProfilePart part, ImportContentContext context) {
@@ -105,6 +106,22 @@ namespace Orchard.MediaProcessing.Drivers {
             foreach (var result in filterRecords) {
                 part.Record.Filters.Add(result);
             }
+        }
+
+        protected override void Cloning(ImageProfilePart originalPart, ImageProfilePart clonePart, CloneContentContext context) {
+            clonePart.Name = originalPart.Name;
+            clonePart.ModifiedUtc = originalPart.ModifiedUtc;
+            clonePart.Record.FileNames = new List<FileNameRecord>();
+            clonePart.Record.Filters = originalPart.Filters.Select(filter =>
+                new FilterRecord {
+                    Description = filter.Description,
+                    Category = filter.Category,
+                    Type = filter.Type,
+                    Position = filter.Position,
+                    State = filter.State,
+                    ImageProfilePartRecord = clonePart.Record
+                }).ToList(
+            );
         }
     }
 }

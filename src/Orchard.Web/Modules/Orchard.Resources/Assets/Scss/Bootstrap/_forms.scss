@@ -31,7 +31,7 @@
   }
 
   // Customize the `:focus` state to imitate native WebKit styles.
-  @include form-control-focus();
+  @include form-control-focus($ignore-warning: true);
 
   // Placeholder
   &::placeholder {
@@ -53,7 +53,22 @@
   }
 }
 
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  &.form-control {
+    appearance: none; // Fix appearance for date inputs in Safari
+  }
+}
+
 select.form-control {
+  // Remove select outline from select box in FF
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 $input-color;
+  }
+
   &:focus::-ms-value {
     // Suppress the nested default white text on blue background highlight given to
     // the selected option text when the (still closed) <select> receives focus
@@ -80,23 +95,23 @@ select.form-control {
 // For use with horizontal and inline forms, when you need the label (or legend)
 // text to align with the form controls.
 .col-form-label {
-  padding-top: calc(#{$input-padding-y} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
+  padding-top: add($input-padding-y, $input-border-width);
+  padding-bottom: add($input-padding-y, $input-border-width);
   margin-bottom: 0; // Override the `<label>/<legend>` default
   @include font-size(inherit); // Override the `<legend>` default
   line-height: $input-line-height;
 }
 
 .col-form-label-lg {
-  padding-top: calc(#{$input-padding-y-lg} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y-lg} + #{$input-border-width});
+  padding-top: add($input-padding-y-lg, $input-border-width);
+  padding-bottom: add($input-padding-y-lg, $input-border-width);
   @include font-size($input-font-size-lg);
   line-height: $input-line-height-lg;
 }
 
 .col-form-label-sm {
-  padding-top: calc(#{$input-padding-y-sm} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y-sm} + #{$input-border-width});
+  padding-top: add($input-padding-y-sm, $input-border-width);
+  padding-bottom: add($input-padding-y-sm, $input-border-width);
   @include font-size($input-font-size-sm);
   line-height: $input-line-height-sm;
 }
@@ -110,9 +125,9 @@ select.form-control {
 .form-control-plaintext {
   display: block;
   width: 100%;
-  padding-top: $input-padding-y;
-  padding-bottom: $input-padding-y;
+  padding: $input-padding-y 0;
   margin-bottom: 0; // match inputs if this class comes on inputs with default margins
+  @include font-size($input-font-size);
   line-height: $input-line-height;
   color: $input-plaintext-color;
   background-color: transparent;
@@ -184,13 +199,13 @@ textarea.form-control {
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -$form-grid-gutter-width / 2;
-  margin-left: -$form-grid-gutter-width / 2;
+  margin-right: -$form-grid-gutter-width * .5;
+  margin-left: -$form-grid-gutter-width * .5;
 
   > .col,
   > [class*="col-"] {
-    padding-right: $form-grid-gutter-width / 2;
-    padding-left: $form-grid-gutter-width / 2;
+    padding-right: $form-grid-gutter-width * .5;
+    padding-left: $form-grid-gutter-width * .5;
   }
 }
 
@@ -210,6 +225,8 @@ textarea.form-control {
   margin-top: $form-check-input-margin-y;
   margin-left: -$form-check-input-gutter;
 
+  // Use [disabled] and :disabled for workaround https://github.com/twbs/bootstrap/issues/28247
+  &[disabled] ~ .form-check-label,
   &:disabled ~ .form-check-label {
     color: $text-muted;
   }

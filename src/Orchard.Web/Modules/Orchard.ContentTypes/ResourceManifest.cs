@@ -7,7 +7,7 @@ namespace Orchard.ContentTypes {
 
             builder.Add().DefineScript("PlacementEditor")
                 .SetUrl("admin-placementeditor.js")
-                .SetDependencies("jQueryUI_Sortable");
+                .SetDependencies("jQueryUI");
         }
     }
 }

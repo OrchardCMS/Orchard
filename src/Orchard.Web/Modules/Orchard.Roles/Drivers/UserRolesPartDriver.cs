@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.Drivers;
-using Orchard.Data;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Roles.Events;
 using Orchard.Roles.Models;
@@ -10,7 +12,6 @@ using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
-using System.Collections.Generic;
 
 namespace Orchard.Roles.Drivers {
     public class UserRolesPartDriver : ContentPartDriver<UserRolesPart> {
@@ -49,42 +50,38 @@ namespace Orchard.Roles.Drivers {
 
         public Localizer T { get; set; }
 
-        private Lazy<IEnumerable<RoleRecord>> _allRoles;
+        private readonly Lazy<IEnumerable<RoleRecord>> _allRoles;
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) {
-
-            return ContentShape("Parts_Roles_UserRoles_Edit",
-                () => {
-                    var currentUser = _authenticationService.GetAuthenticatedUser();
-                    // Get the roles we are authorized to assign
-                    var authorizedRoleIds = _allRoles.Value
-                        .Where(rr => _authorizationService.TryCheckAccess(
-                            Permissions.CreatePermissionForAssignRole(rr.Name),
-                            currentUser,
-                            userRolesPart))
-                        .Select(rr => rr.Id).ToList();
-                    // If the user has no roles they can assign, we will show nothing
-                    if (!authorizedRoleIds.Any()) {
-                        return null;
-                    }
-                    var allRoles = _allRoles.Value
-                        .Select(x => new UserRoleEntry {
-                            RoleId = x.Id,
-                            Name = x.Name,
-                            Granted = userRolesPart.Roles.Contains(x.Name)
-                        });
-                    var model = new UserRolesViewModel {
-                        User = userRolesPart.As<IUser>(),
-                        UserRoles = userRolesPart,
-                        Roles = allRoles.ToList(),
-                        AuthorizedRoleIds = authorizedRoleIds
-                    };
-                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
-                });
-        }
+        protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) =>
+            ContentShape("Parts_Roles_UserRoles_Edit", () => {
+                var currentUser = _authenticationService.GetAuthenticatedUser();
+                // Get the roles we are authorized to assign
+                var authorizedRoleIds = _allRoles.Value
+                    .Where(rr => _authorizationService.TryCheckAccess(
+                        Permissions.CreatePermissionForAssignRole(rr.Name),
+                        currentUser,
+                        userRolesPart))
+                    .Select(rr => rr.Id).ToList();
+                // If the user has no roles they can assign, we will show nothing
+                if (!authorizedRoleIds.Any()) {
+                    return null;
+                }
+                var allRoles = _allRoles.Value
+                    .Select(x => new UserRoleEntry {
+                        RoleId = x.Id,
+                        Name = x.Name,
+                        Granted = userRolesPart.Roles.Contains(x.Name)
+                    });
+                var model = new UserRolesViewModel {
+                    User = userRolesPart.As<IUser>(),
+                    UserRoles = userRolesPart,
+                    Roles = allRoles.ToList(),
+                    AuthorizedRoleIds = authorizedRoleIds
+                };
+                return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
+            });
 
         protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper) {
-
             var currentUser = _authenticationService.GetAuthenticatedUser();
             // Get the roles we are authorized to assign
             var authorizedRoleIds = _allRoles.Value
@@ -135,11 +132,10 @@ namespace Orchard.Roles.Drivers {
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
-        private static UserRolesViewModel BuildEditorViewModel(UserRolesPart userRolesPart) {
-            return new UserRolesViewModel { User = userRolesPart.As<IUser>(), UserRoles = userRolesPart };
-        }
+        private static UserRolesViewModel BuildEditorViewModel(UserRolesPart userRolesPart) =>
+            new UserRolesViewModel { User = userRolesPart.As<IUser>(), UserRoles = userRolesPart };
 
-        protected override void Importing(UserRolesPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(UserRolesPart part, ImportContentContext context) {
             // Don't do anything if the tag is not specified.
             if (context.Data.Element(part.PartDefinition.Name) == null) {
                 return;
@@ -168,7 +164,7 @@ namespace Orchard.Roles.Drivers {
             });
         }
 
-        protected override void Exporting(UserRolesPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(UserRolesPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", string.Join(",", part.Roles));
         }
     }
