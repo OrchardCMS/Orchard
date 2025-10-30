@@ -76,17 +76,17 @@ namespace Orchard.Blogs.Services {
             var query = GetBlogQuery(blogPart, VersionOptions.Published);
 
             if (archiveData.Day > 0) {
-                var dayDate = new DateTime(archiveData.Year, archiveData.Month, archiveData.Day);
+                var dayDate = new DateTime(archiveData.Year, archiveData.Month, archiveData.Day, 0, 0, 0, DateTimeKind.Utc);
 
                 query = query.Where(cr => cr.CreatedUtc >= dayDate && cr.CreatedUtc < dayDate.AddDays(1));
             }
             else if (archiveData.Month > 0) {
-                var monthDate = new DateTime(archiveData.Year, archiveData.Month, 1);
+                var monthDate = new DateTime(archiveData.Year, archiveData.Month, 1, 0, 0, 0, DateTimeKind.Utc);
 
                 query = query.Where(cr => cr.CreatedUtc >= monthDate && cr.CreatedUtc < monthDate.AddMonths(1));
             }
             else {
-                var yearDate = new DateTime(archiveData.Year, 1, 1);
+                var yearDate = new DateTime(archiveData.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
                 query = query.Where(cr => cr.CreatedUtc >= yearDate && cr.CreatedUtc < yearDate.AddYears(1));
             }
