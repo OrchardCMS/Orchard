@@ -3,33 +3,46 @@ using NHibernate.Type;
 
 namespace NHibernate.Linq.Expressions
 {
-    public class PropertyAccessExpression : NHibernateExpression
-    {
-        public string Name { get; }
+	public class PropertyAccessExpression : NHibernateExpression
+	{
+		private readonly string _name;
+		private readonly EntityExpression _expression;
+		private readonly IType _nhibernateType;
 
-        public EntityExpression Expression { get; }
+		public string Name
+		{
+			get { return _name; }
+		}
 
-        public IType NHibernateType { get; }
+		public EntityExpression Expression
+		{
+			get { return _expression; }
+		}
 
-        public PropertyAccessExpression(string name, System.Type type, IType nhibernateType, EntityExpression expression)
-            : this(name, type, nhibernateType, expression, NHibernateExpressionType.PropertyAccess) { }
+		public IType NHibernateType
+		{
+			get { return _nhibernateType; }
+		}
 
-        protected PropertyAccessExpression(string name, System.Type type, IType nhibernateType, EntityExpression expression, NHibernateExpressionType nodeType)
-            : base(nodeType, type)
-        {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-            if (type == null) throw new ArgumentNullException("type");
-            if (nhibernateType == null) throw new ArgumentNullException("nhibernateType");
-            if (expression == null) throw new ArgumentNullException("expression");
+		public PropertyAccessExpression(string name, System.Type type, IType nhibernateType, EntityExpression expression)
+			: this(name, type, nhibernateType, expression, NHibernateExpressionType.PropertyAccess) { }
 
-            Name = name;
-            Expression = expression;
-            NHibernateType = nhibernateType;
-        }
+		protected PropertyAccessExpression(string name, System.Type type, IType nhibernateType, EntityExpression expression, NHibernateExpressionType nodeType)
+			: base(nodeType, type)
+		{
+			if (String.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+			if (type == null) throw new ArgumentNullException("type");
+			if (nhibernateType == null) throw new ArgumentNullException("nhibernateType");
+			if (expression == null) throw new ArgumentNullException("expression");
 
-        public override string ToString()
-        {
-            return this.Expression.ToString() + "." + this.Name;
-        }
-    }
+			_name = name;
+			_expression = expression;
+			_nhibernateType = nhibernateType;
+		}
+
+		public override string ToString()
+		{
+			return this.Expression.ToString() + "." + this.Name;
+		}
+	}
 }
