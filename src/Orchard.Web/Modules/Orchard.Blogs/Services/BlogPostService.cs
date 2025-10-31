@@ -150,7 +150,7 @@ namespace Orchard.Blogs.Services
         public DateTime? GetScheduledPublishUtc(BlogPostPart blogPostPart)
         {
             var task = _publishingTaskManager.GetPublishTask(blogPostPart.ContentItem);
-            return (task == null ? null : task.ScheduledUtc);
+            return task == null ? null : task.ScheduledUtc;
         }
 
         private IContentQuery<ContentItem, CommonPartRecord> GetBlogQuery(BlogPart blog, VersionOptions versionOptions)

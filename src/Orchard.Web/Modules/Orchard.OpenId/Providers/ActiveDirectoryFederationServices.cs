@@ -39,7 +39,7 @@ namespace Orchard.OpenId.Providers
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
                 settings = site.As<ActiveDirectoryFederationServicesSettingsPart>();
 
-                return (settings != null && settings.IsValid());
+                return settings != null && settings.IsValid();
             }
             catch (Exception)
             {

@@ -26,7 +26,7 @@ namespace Orchard.Media.Helpers
             string currentPath = string.Empty;
             foreach (string navigationPart in navigationParts)
             {
-                currentPath = (string.IsNullOrEmpty(currentPath) ? navigationPart : currentPath + "\\" + navigationPart);
+                currentPath = string.IsNullOrEmpty(currentPath) ? navigationPart : currentPath + "\\" + navigationPart;
                 navigations.Add(new FolderNavigation { FolderName = navigationPart, FolderPath = currentPath });
             }
 

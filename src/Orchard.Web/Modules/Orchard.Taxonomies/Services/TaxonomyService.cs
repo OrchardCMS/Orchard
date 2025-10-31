@@ -259,23 +259,17 @@ namespace Orchard.Taxonomies.Services
         public int GetTermsCount(int taxonomyId)
         {
             // If taxonomyId isn't valid, return 0 without executing the query.
-            if (taxonomyId <= 0)
-            {
-                return 0;
-            }
-            return GetTermsQuery(taxonomyId)
-                .Count();
+            return taxonomyId <= 0
+                ? 0
+                : GetTermsQuery(taxonomyId).Count();
         }
 
         public TermPart GetTerm(int id)
         {
             // If term id isn't valid, return null without executing the query.
-            if (id <= 0)
-            {
-                return null;
-            }
-            return GetTermsQuery()
-                .Where(x => x.Id == id).List().FirstOrDefault();
+            return id <= 0
+                ? null
+                : GetTermsQuery().Where(x => x.Id == id).List().FirstOrDefault();
         }
 
         public IEnumerable<TermPart> GetTermsForContentItem(
@@ -301,15 +295,13 @@ namespace Orchard.Taxonomies.Services
         public TermPart GetTermByName(int taxonomyId, string name)
         {
             // If taxonomyId isn't valid, return null without executing the query.
-            if (taxonomyId <= 0)
-            {
-                return null;
-            }
-            return GetTermsQuery(taxonomyId)
-                .Join<TitlePartRecord>()
-                .Where(r => r.Title == name)
-                .List()
-                .FirstOrDefault();
+            return taxonomyId <= 0
+                ? null
+                : GetTermsQuery(taxonomyId)
+		            .Join<TitlePartRecord>()
+		            .Where(r => r.Title == name)
+		            .List()
+		            .FirstOrDefault();
         }
 
         public void CreateTerm(TermPart termPart)
@@ -398,20 +390,15 @@ namespace Orchard.Taxonomies.Services
             var query = _contentManager
                 .Query<TermsPart, TermsPartRecord>();
 
-            if (string.IsNullOrWhiteSpace(fieldName))
-            {
-                query = query.Where(
+            query = string.IsNullOrWhiteSpace(fieldName)
+                ? query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.TermRecord.Id == term.Id
-                        || tr.TermRecord.Path.StartsWith(rootPath)));
-            }
-            else
-            {
-                query = query.Where(
+                        || tr.TermRecord.Path.StartsWith(rootPath)))
+                : query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.Field == fieldName
                          && (tr.TermRecord.Id == term.Id || tr.TermRecord.Path.StartsWith(rootPath))));
-            }
 
             return query;
         }
@@ -706,7 +693,7 @@ namespace Orchard.Taxonomies.Services
                 .Where(sib => sib.Weight == part.Weight)
                 .Select(tp => tp.Id)
                 .ToArray();
-            var siblingsWeight = (1048575).ToString("X5");
+            var siblingsWeight = 1048575.ToString("X5");
             for (int i = 0; i < siblingsIds.Length; i++)
             {
                 if (siblingsIds[i] == part.Id)

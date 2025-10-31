@@ -84,8 +84,8 @@ namespace Orchard.Mvc.Routes
                     {
                         object extensionId;
                         var route = routeDescriptor.Route as Route;
-                        if (route.DataTokens != null && route.DataTokens.TryGetValue("area", out extensionId) ||
-                           route.Defaults != null && route.Defaults.TryGetValue("area", out extensionId))
+                        if ((route.DataTokens != null && route.DataTokens.TryGetValue("area", out extensionId)) ||
+                           (route.Defaults != null && route.Defaults.TryGetValue("area", out extensionId)))
                         {
                             extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString());
                         }

@@ -91,7 +91,7 @@ namespace Orchard.FileSystems.Dependencies
 
         private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies, Func<DependencyDescriptor, string> fileHashProvider)
         {
-            Func<string, XName> ns = (name => XName.Get(name));
+            Func<string, XName> ns = name => XName.Get(name);
 
             var elements = dependencies
                 .Where(dep => IsSupportedLoader(dep.LoaderName))
@@ -108,7 +108,7 @@ namespace Orchard.FileSystems.Dependencies
 
         private IEnumerable<ActivatedExtensionDescriptor> ReadDescriptors(string persistancePath)
         {
-            Func<string, XName> ns = (name => XName.Get(name));
+            Func<string, XName> ns = name => XName.Get(name);
             Func<XElement, string, string> elem = (e, name) => e.Element(ns(name)).Value;
 
             XDocument document = ReadDocument(persistancePath);

@@ -87,7 +87,7 @@ namespace Orchard.Email.Forms
                                 Id: "priority",
                                 Name: "Priority",
                                 Title: T("Priority"),
-                                Description: ("The priority of this message.")
+                                Description: "The priority of this message."
                             ));
 
                         form._Type._Priority.Add(new SelectListItem { Value = "-50", Text = T("Low").Text });

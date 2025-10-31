@@ -101,7 +101,7 @@ namespace Orchard.Mvc.Html
         {
             unchecked
             {
-                var result = (ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0);
+                var result = ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0;
                 result = (result * 397) ^ (FileName != null ? FileName.GetHashCode() : 0);
                 result = (result * 397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return result;

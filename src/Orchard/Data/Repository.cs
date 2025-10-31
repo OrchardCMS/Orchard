@@ -143,7 +143,7 @@ namespace Orchard.Data
                 var genericArgument = type.GetGenericArguments().First();
                 var genericType = typeof(List<>).MakeGenericType(new[] { genericArgument });
 
-                var listValues = ((IList)value);
+                var listValues = (IList)value;
                 values[index] = Activator.CreateInstance(genericType, new[] { listValues });
             }
 

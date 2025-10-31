@@ -532,7 +532,7 @@ Features:
                 foreach (var type in feature.ExportedTypes)
                 {
                     Assert.That(type != typeof(Phi));
-                    Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
+                    Assert.That(type == typeof(Alpha) || (type == typeof(Beta)));
                 }
             }
         }

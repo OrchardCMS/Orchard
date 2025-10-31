@@ -234,7 +234,7 @@ namespace Orchard.Environment.ShellBuilders
             return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records") || mapAsRecordAttr?.Enabled == true) &&
                    mapAsRecordAttr?.Enabled != false &&
                    type.GetProperty("Id") != null &&
-                   (type.GetProperty("Id").GetAccessors()).All(x => x.IsVirtual) &&
+                   type.GetProperty("Id").GetAccessors().All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
                    (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));

@@ -179,7 +179,7 @@ namespace Lucene.Services
             using (var writer = new IndexWriter(GetDirectory(indexName), _analyzerProvider.GetAnalyzer(indexName), false, IndexWriter.MaxFieldLength.UNLIMITED))
             {
                 // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
-                var pageCount = documentIds.Count() / BatchSize + 1;
+                var pageCount = (documentIds.Count() / BatchSize) + 1;
                 for (int page = 0; page < pageCount; page++)
                 {
                     var query = new BooleanQuery();

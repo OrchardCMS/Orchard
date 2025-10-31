@@ -277,7 +277,7 @@ namespace Orchard.AuditTrail.Services
 
         public IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod)
         {
-            var dateThreshold = (_clock.UtcNow.EndOfDay() - retentionPeriod);
+            var dateThreshold = _clock.UtcNow.EndOfDay() - retentionPeriod;
             var query = _auditTrailRepository.Table.Where(x => x.CreatedUtc <= dateThreshold);
 
             var recordsToDeleteArray = query.ToArray();
@@ -328,10 +328,7 @@ namespace Orchard.AuditTrail.Services
         {
             var settings = _siteService.GetSiteSettings().As<AuditTrailSettingsPart>();
 
-            if (!settings.EnableClientIpAddressLogging)
-                return null;
-
-            return _clientHostAddressAccessor.GetClientAddress();
+            return !settings.EnableClientIpAddressLogging ? null : _clientHostAddressAccessor.GetClientAddress();
         }
 
         private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor)

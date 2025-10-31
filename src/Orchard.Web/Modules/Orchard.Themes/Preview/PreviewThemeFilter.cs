@@ -28,7 +28,7 @@ namespace Orchard.Themes.Preview
 
         public void OnResultExecuting(ResultExecutingContext filterContext)
         {
-            if (filterContext.Result as ViewResult == null)
+            if ((filterContext.Result as ViewResult) == null)
             {
                 return;
             }

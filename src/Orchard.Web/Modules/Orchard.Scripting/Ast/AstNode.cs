@@ -14,7 +14,7 @@ namespace Orchard.Scripting.Ast
         {
             var sb = new StringBuilder();
             sb.Append(this.GetType().Name);
-            var ewt = (this as IAstNodeWithToken);
+            var ewt = this as IAstNodeWithToken;
             if (ewt != null)
             {
                 sb.Append(" - ");

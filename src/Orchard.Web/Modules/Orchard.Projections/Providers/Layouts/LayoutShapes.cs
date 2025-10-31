@@ -39,13 +39,13 @@ namespace Orchard.Projections.Providers.Layouts
             }
 
             // resolves which item to display in a specific cell
-            Func<int, int, int> seekItem = (row, col) => row * Columns + col;
-            int maxRows = (itemsCount - 1) / Columns + 1;
+            Func<int, int, int> seekItem = (row, col) => (row * Columns) + col;
+            int maxRows = ((itemsCount - 1) / Columns) + 1;
             int maxCols = Columns;
 
             if (!Horizontal)
             {
-                seekItem = (row, col) => col * Columns + row;
+                seekItem = (row, col) => (col * Columns) + row;
                 maxCols = maxRows;
                 maxRows = Columns;
             }

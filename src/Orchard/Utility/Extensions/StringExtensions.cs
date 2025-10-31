@@ -270,7 +270,7 @@ namespace Orchard.Utility.Extensions
 
         public static bool IsSpace(this char c)
         {
-            return (c == '\r' || c == '\n' || c == '\t' || c == '\f' || c == ' ');
+            return c == '\r' || c == '\n' || c == '\t' || c == '\f' || c == ' ';
         }
 
         public static string RemoveDiacritics(this string name)
@@ -287,7 +287,7 @@ namespace Orchard.Utility.Extensions
                 }
             }
 
-            return (sb.ToString().Normalize(NormalizationForm.FormC));
+            return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
         public static string Strip(this string subject, params char[] stripped)

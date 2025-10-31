@@ -34,7 +34,7 @@ namespace Orchard.PublishLater.Services
         DateTime? IPublishLaterService.GetScheduledPublishUtc(PublishLaterPart publishLaterPart)
         {
             IScheduledTask task = _publishingTaskManager.GetPublishTask(publishLaterPart.ContentItem);
-            return (task == null ? null : task.ScheduledUtc);
+            return task == null ? null : task.ScheduledUtc;
         }
     }
 }

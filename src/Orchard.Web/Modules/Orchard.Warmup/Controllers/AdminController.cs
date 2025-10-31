@@ -76,7 +76,7 @@ namespace Orchard.Warmup.Controllers
                             {
                                 continue;
                             }
-                            if (!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !(relativeUrl.StartsWith("/")))
+                            if (!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !relativeUrl.StartsWith("/"))
                             {
                                 AddModelError("Urls", T("\"{0}\" is an invalid warmup url.", relativeUrl));
                             }

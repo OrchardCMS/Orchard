@@ -208,22 +208,12 @@ namespace Orchard.Tokens.Providers
         private IContent Container(IContent content)
         {
             var commonPart = content.As<ICommonPart>();
-            if (commonPart == null)
-            {
-                return null;
-            }
-
-            return commonPart.Container;
+            return commonPart == null ? null : commonPart.Container;
         }
 
         private string DisplayText(IContent content)
         {
-            if (content == null)
-            {
-                return string.Empty;
-            }
-
-            return _contentManager.GetItemMetadata(content).DisplayText;
+            return content == null ? string.Empty : _contentManager.GetItemMetadata(content).DisplayText;
         }
 
         private object Date(IContent content)
@@ -233,22 +223,12 @@ namespace Orchard.Tokens.Providers
 
         private string DisplayUrl(IContent content)
         {
-            if (content == null)
-            {
-                return string.Empty;
-            }
-
-            return _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues);
+            return content == null ? string.Empty : _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues);
         }
 
         private string EditUrl(IContent content)
         {
-            if (content == null)
-            {
-                return string.Empty;
-            }
-
-            return _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
+            return content == null ? string.Empty : _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
         }
 
         private string Body(IContent content)
@@ -259,12 +239,7 @@ namespace Orchard.Tokens.Providers
             }
 
             var bodyPart = content.As<BodyPart>();
-            if (bodyPart == null)
-            {
-                return string.Empty;
-            }
-
-            return bodyPart.Text;
+            return bodyPart == null ? string.Empty : bodyPart.Text;
         }
 
         //returns Id:* Token
@@ -281,28 +256,17 @@ namespace Orchard.Tokens.Providers
 
             chainIndex = token.IndexOf(".");
             tokenLength = (tokenPrefix + ":").Length;
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
+            if (!token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
             {
                 return null;
             }
-            else if (chainIndex == 0)
-            {// "." has not be found
-                result = token.Substring(tokenLength);
-            }
             else
-            {
-                result = token.Substring(0, chainIndex);
+            {// "." has not be found
+                result = chainIndex == 0 ? token.Substring(tokenLength) : token.Substring(0, chainIndex);
             }
 
             // return the resulting id if it is a number, otherwise an empty string
-            if (int.TryParse(result.Substring(tokenPrefix.Length + 1), out var contentid))
-            {
-                return result;
-            }
-            else
-            {
-                return "";
-            }
+            return int.TryParse(result.Substring(tokenPrefix.Length + 1), out var contentid) ? result : "";
         }
     }
 }

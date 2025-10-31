@@ -80,7 +80,7 @@ namespace Orchard.Tests.Storage
         [Test]
         public void GetFileThatDoesNotExistShouldThrow()
         {
-            Assert.Throws<ArgumentException>((() => _storageProvider.GetFile("notexisting")));
+            Assert.Throws<ArgumentException>(() => _storageProvider.GetFile("notexisting"));
         }
 
         [Test]

@@ -46,10 +46,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy
 
         private static string SafeName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return string.Empty;
-
-            return name.Strip(UnsafeCharList).ToLowerInvariant();
+            return string.IsNullOrWhiteSpace(name) ? string.Empty : name.Strip(UnsafeCharList).ToLowerInvariant();
         }
 
         public static string GetAlternateShapeNameFromFileName(string fileName)
@@ -118,7 +115,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy
                             hit.fileVirtualPath,
                             shapeDescriptor => displayContext =>
                             {
-                                var shape = ((dynamic)displayContext.Value);
+                                var shape = (dynamic)displayContext.Value;
                                 var output = displayContext.ViewContext.Writer;
                                 ResourceDefinition resource = shape.Resource;
                                 var url = GetResourceUrl(shape.Url, AddHash(hit.fileVirtualPath));
@@ -167,29 +164,19 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy
                 return null;
             }
             var encodedValue = HttpUtility.UrlEncode(value);
-            if (url.Contains("?"))
-            {
-                if (url.EndsWith("&"))
-                {
-                    return string.Format("{0}{1}={2}", url, name, encodedValue);
-                }
-                else
-                {
-                    return string.Format("{0}&{1}={2}", url, name, encodedValue);
-                }
-            }
-            else
-            {
-                return string.Format("{0}?{1}={2}", url, name, encodedValue);
-            }
+            return url.Contains("?")
+                ? url.EndsWith("&")
+                    ? string.Format("{0}{1}={2}", url, name, encodedValue)
+                    : string.Format("{0}&{1}={2}", url, name, encodedValue)
+                : string.Format("{0}?{1}={2}", url, name, encodedValue);
         }
 
         private string GetResourceUrl(string shapeUrl, string fileVirtualPath)
         {
-            if (string.IsNullOrEmpty(shapeUrl)) return fileVirtualPath;
-
-            return GetPathFromRelativeUrl(shapeUrl).Equals(GetPathFromRelativeUrl(fileVirtualPath), StringComparison.InvariantCultureIgnoreCase) ?
-                shapeUrl : fileVirtualPath;
+            return string.IsNullOrEmpty(shapeUrl)
+                ? fileVirtualPath
+                : GetPathFromRelativeUrl(shapeUrl).Equals(GetPathFromRelativeUrl(fileVirtualPath), StringComparison.InvariantCultureIgnoreCase)
+                	? shapeUrl : fileVirtualPath;
         }
 
         private string GetPathFromRelativeUrl(string url)

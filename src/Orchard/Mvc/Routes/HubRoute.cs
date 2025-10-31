@@ -105,7 +105,7 @@ namespace Orchard.Mvc.Routes
                 return 0;
             }
 
-            if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(other.Name) || Name == other.Name)
+            if ((string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(other.Name)) || Name == other.Name)
             {
                 return 0;
             }

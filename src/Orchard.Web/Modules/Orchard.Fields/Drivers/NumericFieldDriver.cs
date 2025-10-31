@@ -123,7 +123,7 @@ namespace Orchard.Fields.Drivers
 
         protected override void Importing(ContentPart part, NumericField field, ImportContentContext context)
         {
-            Action empty = (() => field.Value = (decimal?)null);
+            Action empty = () => field.Value = (decimal?)null;
             var element = context.Data.Element(field.FieldDefinition.Name + "." + field.Name);
             // If element is not in the ImportContentContext, field must not be reset.
             if (element == null)

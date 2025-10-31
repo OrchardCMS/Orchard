@@ -447,7 +447,7 @@ namespace Orchard.Forms.Shapes
                     {
                         var itemStr = (string)item;
                         selectItem.Text = itemStr;
-                        selectItem.Selected = (itemStr == Convert.ToString(Shape.Value));
+                        selectItem.Selected = itemStr == Convert.ToString(Shape.Value);
                     }
                     else
                     {
@@ -456,7 +456,7 @@ namespace Orchard.Forms.Shapes
                         {
                             var value = GetSelectProperty(item, DataValueField);
                             selectItem.Value = Convert.ToString(value);
-                            selectItem.Selected = (value == Shape.Value);
+                            selectItem.Selected = value == Shape.Value;
                         }
                     }
                 }

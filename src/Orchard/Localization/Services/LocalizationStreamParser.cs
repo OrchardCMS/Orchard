@@ -61,8 +61,8 @@ namespace Orchard.Localization.Services
 
                 string nextPoLine = reader.ReadLine() ?? "";
 
-                while (nextPoLine != null && (!nextPoLine.StartsWith("#") && !nextPoLine.StartsWith(MsgctxtScope) &&
-                                              !nextPoLine.StartsWith(MsgidScope) && !nextPoLine.StartsWith(MsgstrScope)))
+                while (nextPoLine != null && !nextPoLine.StartsWith("#") && !nextPoLine.StartsWith(MsgctxtScope) &&
+                                              !nextPoLine.StartsWith(MsgidScope) && !nextPoLine.StartsWith(MsgstrScope))
                 {
                     currentPoLine = string.Concat(currentPoLine, TrimQuote(nextPoLine));
                     nextPoLine = reader.ReadLine();

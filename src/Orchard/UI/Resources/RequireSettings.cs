@@ -160,11 +160,11 @@ namespace Orchard.UI.Resources
 
         public RequireSettings Combine(RequireSettings other)
         {
-            var settings = (new RequireSettings
+            var settings = new RequireSettings
             {
                 Name = Name,
                 Type = Type
-            }).AtLocation(Location).AtLocation(other.Location)
+            }.AtLocation(Location).AtLocation(other.Location)
                 .WithBasePath(BasePath).WithBasePath(other.BasePath)
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)

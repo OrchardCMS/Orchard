@@ -64,7 +64,7 @@ namespace Orchard.Environment.Configuration
                     if (index <= 0)
                         continue;
                     var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
-                    return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+                    return string.IsNullOrEmpty(moduleName) ? null : moduleName;
                 }
             }
             return null;

@@ -344,7 +344,7 @@ namespace Orchard.Scripting.Compiler
 
         private bool Eof()
         {
-            return (_index >= _expression.Length);
+            return _index >= _expression.Length;
         }
     }
 }

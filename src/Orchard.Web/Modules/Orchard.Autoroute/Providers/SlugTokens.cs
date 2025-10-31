@@ -44,9 +44,9 @@ namespace Orchard.Autoroute.Providers
         {
             context.For<IContent>("Content")
                 // {Content.Slug}
-                .Token("Slug", (content => content == null ? string.Empty : _slugService.Slugify(content)))
-                .Chain("Slug", "Text", (content => content == null ? string.Empty : _slugService.Slugify(content)))
-                .Token("Path", (content =>
+                .Token("Slug", content => content == null ? string.Empty : _slugService.Slugify(content))
+                .Chain("Slug", "Text", content => content == null ? string.Empty : _slugService.Slugify(content))
+                .Token("Path", content =>
                 {
                     var autoroutePart = content.As<AutoroutePart>();
                     if (autoroutePart == null)
@@ -55,9 +55,9 @@ namespace Orchard.Autoroute.Providers
                     }
                     var isHomePage = _homeAliasService.IsHomePage(autoroutePart);
                     return isHomePage ? string.Empty : autoroutePart.DisplayAlias;
-                }))
+                })
                 // {Content.ParentPath}
-                .Token("ParentPath", (content =>
+                .Token("ParentPath", content =>
                 {
                     var common = content.As<CommonPart>();
                     if (common == null || common.Container == null)
@@ -74,11 +74,11 @@ namespace Orchard.Autoroute.Providers
 
                     var isHomePage = _homeAliasService.IsHomePage(containerAutoroutePart);
                     return isHomePage ? "/" : containerAutoroutePart.DisplayAlias + "/";
-                }));
+                });
 
             context.For<ContentTypeDefinition>("TypeDefinition")
                 // {Content.ContentType.Slug}
-                .Token("Slug", (ctd => _slugService.Slugify(ctd.DisplayName)));
+                .Token("Slug", ctd => _slugService.Slugify(ctd.DisplayName));
 
             context.For<string>("Text")
                 .Token("Slug", text => _slugService.Slugify(text));

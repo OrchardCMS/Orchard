@@ -17,7 +17,7 @@ namespace Orchard.Collections
         public int TotalItemCount { get; set; }
 
         public int TotalPageCount => (int)Math.Ceiling((double)TotalItemCount / PageSize);
-        public int StartPosition => (PageNumber - 1) * PageSize + 1;
+        public int StartPosition => ((PageNumber - 1) * PageSize) + 1;
         public int EndPosition => PageNumber * PageSize > TotalItemCount ? TotalItemCount : PageNumber * PageSize;
 
         #endregion

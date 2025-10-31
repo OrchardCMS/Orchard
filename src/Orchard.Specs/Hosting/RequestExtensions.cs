@@ -36,7 +36,7 @@ namespace Orchard.Specs.Hosting
             }
 
             var physicalFilePath = physicalPath.Combine(details.UrlPath.TrimStart('/', '\\'));
-            details.Page = (isHomepage ? "" : physicalFilePath.GetRelativePath(physicalPath).ToString());
+            details.Page = isHomepage ? "" : physicalFilePath.GetRelativePath(physicalPath).ToString();
 
             if (!File.Exists(physicalFilePath))
                 details.Page = details.Page.Replace('\\', '/');

@@ -47,12 +47,7 @@ namespace Orchard.Warmup.Services
             }
             catch (WebException e)
             {
-                if (e.Response as HttpWebResponse != null)
-                {
-                    return new DownloadResult { StatusCode = ((HttpWebResponse)e.Response).StatusCode };
-                }
-
-                return null;
+                return (e.Response as HttpWebResponse) != null ? new DownloadResult { StatusCode = ((HttpWebResponse)e.Response).StatusCode } : null;
             }
             catch (Exception e)
             {

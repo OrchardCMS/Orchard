@@ -89,12 +89,7 @@ namespace Orchard.DisplayManagement.Shapes
             // try to access an existing member
             var strinIndex = index as string;
 
-            if (strinIndex != null && TryGetMemberImpl(strinIndex, out result))
-            {
-                return true;
-            }
-
-            return base.TryGetIndex(binder, indexes, out result);
+            return strinIndex != null && TryGetMemberImpl(strinIndex, out result) ? true : base.TryGetIndex(binder, indexes, out result);
         }
 
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
@@ -148,7 +143,7 @@ namespace Orchard.DisplayManagement.Shapes
 
         public override int GetHashCode()
         {
-            return (Properties != null ? Properties.GetHashCode() : 0);
+            return Properties != null ? Properties.GetHashCode() : 0;
         }
 
         #region InterfaceProxyBehavior
@@ -506,12 +501,7 @@ namespace Orchard.DisplayManagement.Shapes
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return true;
-            }
-
-            return ReferenceEquals(obj, Nil.Instance);
+            return obj == null ? true : ReferenceEquals(obj, Nil.Instance);
         }
 
         public override int GetHashCode()

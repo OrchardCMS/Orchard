@@ -182,7 +182,7 @@ namespace Orchard.DesignerTools.Services
                     continue;
                 }
 
-                if ((o is ContentPart && (member.Name == "ContentItem")))
+                if (o is ContentPart && (member.Name == "ContentItem"))
                 {
                     continue;
                 }
@@ -302,7 +302,7 @@ namespace Orchard.DesignerTools.Services
                 // remove central part if tool long
                 if (formatted.Length > MaxStringLength)
                 {
-                    formatted = formatted.Substring(0, MaxStringLength / 2) + "..." + formatted.Substring(formatted.Length - MaxStringLength / 2);
+                    formatted = formatted.Substring(0, MaxStringLength / 2) + "..." + formatted.Substring(formatted.Length - (MaxStringLength / 2));
                 }
 
                 formatted = "\"" + formatted + "\"";
@@ -314,12 +314,7 @@ namespace Orchard.DesignerTools.Services
         private static string FormatType(object item)
         {
             var shape = item as IShape;
-            if (shape != null)
-            {
-                return shape.Metadata.Type + " Shape";
-            }
-
-            return FormatType(item.GetType());
+            return shape != null ? shape.Metadata.Type + " Shape" : FormatType(item.GetType());
         }
 
         private static string FormatType(Type type)

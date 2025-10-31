@@ -94,7 +94,7 @@ namespace Orchard.Search.Controllers
             {
                 Query = q,
                 TotalItemCount = searchHits.TotalItemCount,
-                StartPosition = (pager.Page - 1) * pager.PageSize + 1,
+                StartPosition = ((pager.Page - 1) * pager.PageSize) + 1,
                 EndPosition = pager.Page * pager.PageSize > searchHits.TotalItemCount ? searchHits.TotalItemCount : pager.Page * pager.PageSize,
                 ContentItems = list,
                 Pager = pagerShape,

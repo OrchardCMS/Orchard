@@ -67,7 +67,7 @@ namespace Orchard.FileSystems.Dependencies
 
         private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath)
         {
-            Func<string, XName> ns = (name => XName.Get(name));
+            Func<string, XName> ns = name => XName.Get(name);
             Func<XElement, string, string> elem = (e, name) => e.Element(ns(name)).Value;
 
             if (!_appDataFolder.FileExists(persistancePath))
@@ -96,7 +96,7 @@ namespace Orchard.FileSystems.Dependencies
 
         private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies)
         {
-            Func<string, XName> ns = (name => XName.Get(name));
+            Func<string, XName> ns = name => XName.Get(name);
 
             var document = new XDocument();
             document.Add(new XElement(ns("Dependencies")));

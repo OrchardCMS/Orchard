@@ -63,7 +63,7 @@ namespace Orchard.HostContext
             if (context.DisplayUsageHelp)
                 return;
 
-            context.DisplayUsageHelp = (context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any());
+            context.DisplayUsageHelp = context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any();
             if (context.DisplayUsageHelp)
             {
                 _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");

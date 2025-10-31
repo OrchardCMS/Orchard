@@ -58,10 +58,7 @@ namespace Orchard.FileSystems.Dependencies
                 return null;
 
             var moduleId = ModuleMatch(virtualPath, prefix);
-            if (moduleId == null)
-                return null;
-
-            return _extensionDependenciesManager.GetDescriptor(moduleId);
+            return moduleId == null ? null : _extensionDependenciesManager.GetDescriptor(moduleId);
         }
 
         private static string ModuleMatch(string virtualPath, string prefix)
@@ -71,7 +68,7 @@ namespace Orchard.FileSystems.Dependencies
                 return null;
 
             var moduleId = virtualPath.Substring(prefix.Length, index - prefix.Length);
-            return (string.IsNullOrEmpty(moduleId) ? null : moduleId);
+            return string.IsNullOrEmpty(moduleId) ? null : moduleId;
         }
 
         private static string PrefixMatch(string virtualPath, params string[] prefixes)

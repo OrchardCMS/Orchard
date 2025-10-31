@@ -53,17 +53,14 @@ namespace Orchard.Mvc.AntiForgery
 
             var currentModule = GetArea(context.RouteData);
             return !string.IsNullOrEmpty(currentModule)
-                   && (_extensionManager.AvailableExtensions()
+                   && _extensionManager.AvailableExtensions()
                        .First(descriptor => string.Equals(descriptor.Id, currentModule, StringComparison.OrdinalIgnoreCase))
-                       .AntiForgery.Equals("enabled", StringComparison.OrdinalIgnoreCase));
+                       .AntiForgery.Equals("enabled", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string GetArea(RouteData routeData)
         {
-            if (routeData.Values.ContainsKey("area"))
-                return routeData.Values["area"] as string;
-
-            return routeData.DataTokens["area"] as string ?? "";
+            return routeData.Values.ContainsKey("area") ? routeData.Values["area"] as string : routeData.DataTokens["area"] as string ?? "";
         }
 
         private static bool ShouldValidateGet(AuthorizationContext context)

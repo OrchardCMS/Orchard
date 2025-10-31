@@ -102,14 +102,7 @@ namespace Orchard.Tokens.Providers
             if (!token.StartsWith(tokenName, StringComparison.OrdinalIgnoreCase)) return null;
             string tokenPrefix;
             int chainIndex, tokenLength;
-            if (token.IndexOf(":") == -1)
-            {
-                tokenPrefix = token;
-            }
-            else
-            {
-                tokenPrefix = token.Substring(0, token.IndexOf(":"));
-            }
+            tokenPrefix = token.IndexOf(":") == -1 ? token : token.Substring(0, token.IndexOf(":"));
             if (!_textChainableTokens.Contains(tokenPrefix, StringComparer.OrdinalIgnoreCase))
             {
                 return token.StartsWith(tokenName, StringComparison.OrdinalIgnoreCase) ? token.Substring(tokenName.Length) : null;
@@ -118,15 +111,11 @@ namespace Orchard.Tokens.Providers
             // use ")." as chars combination to discover the end of the parameter
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
-            if (chainIndex == 0)
-            {// ")." has not be found
-                return token.Substring(tokenLength).Trim(new char[] { '(', ')' });
-            }
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
-            {
-                return null;
-            }
-            return token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' });
+            return chainIndex == 0
+                ? token.Substring(tokenLength).Trim(new char[] { '(', ')' })
+                : !token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength
+	                ? null
+	                : token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' });
         }
 
         /// <summary>
@@ -141,14 +130,7 @@ namespace Orchard.Tokens.Providers
             string tokenPrefix;
             int chainIndex, tokenLength;
 
-            if (token.IndexOf(":") == -1)
-            {
-                tokenPrefix = token;
-            }
-            else
-            {
-                tokenPrefix = token.Substring(0, token.IndexOf(":"));
-            }
+            tokenPrefix = token.IndexOf(":") == -1 ? token : token.Substring(0, token.IndexOf(":"));
             if (!_textChainableTokens.Contains(tokenPrefix, StringComparer.OrdinalIgnoreCase))
             {
                 return new Tuple<string, string>(token, token);
@@ -157,16 +139,11 @@ namespace Orchard.Tokens.Providers
             // use ")." as chars combination to discover the end of the parameter
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
-            if (chainIndex == 0)
-            { // ")." has not be found
-                return new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), "");
-            }
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
-            {
-                return null;
-            }
-            return new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' }), token.Substring(chainIndex + 1));
-
+            return chainIndex == 0
+                ? new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), "")
+                : !token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength
+	                ? null
+	                : new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' }), token.Substring(chainIndex + 1));
         }
 
         private static string TrimStart(string param, string token)

@@ -110,7 +110,7 @@ namespace Orchard.MediaLibrary.Services
                 if (recursive)
                 {
                     var subfolderSearch = folderPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? folderPath : folderPath + Path.DirectorySeparatorChar;
-                    query = query.Join<MediaPartRecord>().Where(m => (m.FolderPath == folderPath || m.FolderPath.StartsWith(subfolderSearch)));
+                    query = query.Join<MediaPartRecord>().Where(m => m.FolderPath == folderPath || m.FolderPath.StartsWith(subfolderSearch));
                 }
                 else
                 {
@@ -217,10 +217,7 @@ namespace Orchard.MediaLibrary.Services
                 .Where(x => x != null)
                 .OrderByDescending(x => x.Priority);
 
-            if (!requestMediaFactoryResults.Any())
-                return null;
-
-            return requestMediaFactoryResults.First().MediaFactory;
+            return !requestMediaFactoryResults.Any() ? null : requestMediaFactoryResults.First().MediaFactory;
         }
 
         /// <summary>
@@ -300,14 +297,9 @@ namespace Orchard.MediaLibrary.Services
                 isMyfolder = true;
             }
 
-            if (isMyfolder)
-            {
-                return _orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia);
-            }
-            else
-            { // other
-                return _orchardServices.Authorizer.Authorize(permission);
-            }
+            return isMyfolder
+                ? _orchardServices.Authorizer.Authorize(Permissions.ManageOwnMedia)
+                : _orchardServices.Authorizer.Authorize(permission);
         }
 
         /// <summary>

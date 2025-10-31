@@ -69,9 +69,9 @@ namespace Orchard.Tests.Localization
 
         public override T GetState<T>(string name)
         {
-            if (name == "CurrentCulture") return (T)((object)CultureName);
-            if (name == "CurrentCalendar") return (T)((object)CalendarName);
-            if (name == "CurrentTimeZone") return (T)((object)TimeZone);
+            if (name == "CurrentCulture") return (T)(object)CultureName;
+            if (name == "CurrentCalendar") return (T)(object)CalendarName;
+            if (name == "CurrentTimeZone") return (T)(object)TimeZone;
             throw new NotImplementedException(string.Format("Property '{0}' is not implemented.", name));
         }
 

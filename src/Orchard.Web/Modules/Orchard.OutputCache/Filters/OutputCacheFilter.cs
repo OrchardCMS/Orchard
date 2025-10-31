@@ -452,7 +452,7 @@ namespace Orchard.OutputCache.Filters
                     continue;
 
                 // In exclusive mode, don't vary if the key matches
-                if (CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters != null && CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                if (CacheSettings.VaryByQueryStringIsExclusive && CacheSettings.VaryByQueryStringParameters != null && CacheSettings.VaryByQueryStringParameters.Contains(key))
                     continue;
 
                 // In inclusive mode, don't vary if the key doesn't match
@@ -550,14 +550,7 @@ namespace Orchard.OutputCache.Filters
                 qs.Add(_refreshKey, refresh.ToString("x"));
                 var querystring = "?" + string.Join("&", Array.ConvertAll(qs.AllKeys, k => string.Format("{0}={1}", HttpUtility.UrlEncode(k), HttpUtility.UrlEncode(qs[k]))));
 
-                if (epIndex > 0)
-                {
-                    redirectUrl = redirectUrl.Substring(0, epIndex) + querystring;
-                }
-                else
-                {
-                    redirectUrl = redirectUrl + querystring;
-                }
+                redirectUrl = epIndex > 0 ? redirectUrl.Substring(0, epIndex) + querystring : redirectUrl + querystring;
             }
 
             filterContext.Result = new RedirectResult(redirectUrl, redirectResult.Permanent);

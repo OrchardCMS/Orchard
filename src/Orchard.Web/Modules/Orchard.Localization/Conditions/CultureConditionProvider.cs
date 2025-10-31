@@ -51,7 +51,7 @@ namespace Orchard.Localization.Conditions
                 .Cast<bool>()
                 .SingleOrDefault();
 
-            ruleContext.Result = (isRtl == currentUserCulture.TextInfo.IsRightToLeft);
+            ruleContext.Result = isRtl == currentUserCulture.TextInfo.IsRightToLeft;
         }
 
         private void ProcessCultureCode(dynamic ruleContext)

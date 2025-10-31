@@ -40,7 +40,7 @@ namespace Orchard.ArchiveLater.Services
             var task = _scheduledTaskManager.GetTasks(archiveLaterPart.ContentItem)
                 .SingleOrDefault(t => t.TaskType == UnpublishTaskType);
 
-            return (task == null ? null : task.ScheduledUtc);
+            return task == null ? null : task.ScheduledUtc;
         }
 
         public void RemoveArchiveLaterTasks(ContentItem contentItem)

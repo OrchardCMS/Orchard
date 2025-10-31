@@ -125,7 +125,7 @@ namespace Orchard.ContentManagement
         public static void Store<TProperty>(this InfosetPart infosetPart, string partName, string name, TProperty value, bool versioned = false)
         {
 
-            var infoset = (versioned ? infosetPart.VersionInfoset : infosetPart.Infoset);
+            var infoset = versioned ? infosetPart.VersionInfoset : infosetPart.Infoset;
             var partElement = infoset.Element.Element(partName);
             if (partElement == null)
             {
@@ -157,13 +157,9 @@ namespace Orchard.ContentManagement
         /// <returns>The original string if no invalid characters were found.</returns>
         public static string ThrowIfContainsInvalidXmlCharacter(string value)
         {
-            if (!value.Any(character => InvalidXmlCharacters.Contains(character)))
-            {
-                return value;
-            }
-
-            throw new ArgumentException(
-                $"The string contains character(s) that are invalid in XML and which should be removed.");
+            return !value.Any(character => InvalidXmlCharacters.Contains(character))
+                ? value
+                : throw new ArgumentException($"The string contains character(s) that are invalid in XML and which should be removed.");
         }
     }
 }

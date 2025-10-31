@@ -21,10 +21,10 @@ namespace Orchard.PublishLater.ViewModels
         {
             get
             {
-                return (
+                return 
                     (ContentItem.VersionRecord != null)
                     && ((ContentItem.VersionRecord.Published == false)
-                        || (ContentItem.VersionRecord.Published && ContentItem.VersionRecord.Latest == false)));
+                        || (ContentItem.VersionRecord.Published && ContentItem.VersionRecord.Latest == false));
             }
         }
 

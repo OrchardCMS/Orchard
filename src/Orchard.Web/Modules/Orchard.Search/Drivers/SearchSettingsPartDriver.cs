@@ -76,7 +76,7 @@ namespace Orchard.Search.Drivers
                             };
                             foreach (var field in _indexManager.GetSearchIndexProvider().GetFields(x))
                             {
-                                indexSettings.Fields.Add(new SearchSettingsEntry { Field = field, Selected = (searchFields.ContainsKey(x) && searchFields[x].Contains(field)) });
+                                indexSettings.Fields.Add(new SearchSettingsEntry { Field = field, Selected = searchFields.ContainsKey(x) && searchFields[x].Contains(field) });
                             }
 
                             return indexSettings;

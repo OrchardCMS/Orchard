@@ -611,7 +611,7 @@ namespace Orchard.Core.Shapes
                     var route = shapeRoute as RouteData;
                     if (route != null)
                     {
-                        shapeRouteData = (route).Values;
+                        shapeRouteData = route.Values;
                     }
                 }
 
@@ -1039,17 +1039,9 @@ namespace Orchard.Core.Shapes
         /// </summary>
         private IHtmlString EncodeOrDisplay(dynamic Value, dynamic Display, HtmlHelper Html)
         {
-            if (Value is IHtmlString)
-            {
-                return Value;
-            }
-
-            if (Value is IShape)
-            {
-                return Display(Value).ToString();
-            }
-
-            return Html.Raw(Html.Encode(Value.ToString()));
+            return Value is IHtmlString
+                ? (IHtmlString)Value
+                : Value is IShape ? (IHtmlString)Display(Value).ToString() : (IHtmlString)Html.Raw(Html.Encode(Value.ToString()));
         }
     }
 }

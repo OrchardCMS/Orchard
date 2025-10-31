@@ -204,15 +204,9 @@ namespace Orchard.ContentManagement
             {
 
                 var doubleValue = (double)(object)value;
-                if (double.IsPositiveInfinity(doubleValue))
-                {
-                    return "infinity";
-                }
-                if (double.IsNegativeInfinity(doubleValue))
-                {
-                    return "-infinity";
-                }
-                return doubleValue.ToString(CultureInfo.InvariantCulture);
+                return double.IsPositiveInfinity(doubleValue)
+                    ? "infinity"
+                    : double.IsNegativeInfinity(doubleValue) ? "-infinity" : doubleValue.ToString(CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(float) ||
@@ -220,15 +214,9 @@ namespace Orchard.ContentManagement
             {
 
                 var floatValue = (float)(object)value;
-                if (float.IsPositiveInfinity(floatValue))
-                {
-                    return "infinity";
-                }
-                if (float.IsNegativeInfinity(floatValue))
-                {
-                    return "-infinity";
-                }
-                return floatValue.ToString(CultureInfo.InvariantCulture);
+                return float.IsPositiveInfinity(floatValue)
+                    ? "infinity"
+                    : float.IsNegativeInfinity(floatValue) ? "-infinity" : floatValue.ToString(CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(decimal) ||
@@ -246,12 +234,9 @@ namespace Orchard.ContentManagement
 
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
 
-            if (underlyingType.IsEnum)
-            {
-                return value.ToString();
-            }
-
-            throw new NotSupportedException(string.Format("Could not handle type {0}", type.Name));
+            return underlyingType.IsEnum
+                ? value.ToString()
+                : throw new NotSupportedException(string.Format("Could not handle type {0}", type.Name));
         }
 
         /// <summary>
@@ -269,8 +254,8 @@ namespace Orchard.ContentManagement
                 return (T)(object)value;
             }
             if (value == null ||
-                "null".Equals(value, StringComparison.Ordinal) &&
-                ((!type.IsValueType || Nullable.GetUnderlyingType(type) != null)))
+                ("null".Equals(value, StringComparison.Ordinal) &&
+                (!type.IsValueType || Nullable.GetUnderlyingType(type) != null)))
             {
 
                 return default(T);
@@ -278,15 +263,19 @@ namespace Orchard.ContentManagement
 
             if ("infinity".Equals(value, StringComparison.Ordinal))
             {
-                if (type == typeof(float) || type == typeof(float?)) return (T)(object)float.PositiveInfinity;
-                if (type == typeof(double) || type == typeof(double?)) return (T)(object)double.PositiveInfinity;
-                throw new NotSupportedException(string.Format("Infinity not supported for type {0}", type.Name));
+                return type == typeof(float) || type == typeof(float?)
+                    ? (T)(object)float.PositiveInfinity
+                    : type == typeof(double) || type == typeof(double?)
+	                    ? (T)(object)double.PositiveInfinity
+	                    : throw new NotSupportedException(string.Format("Infinity not supported for type {0}", type.Name));
             }
             if ("-infinity".Equals(value, StringComparison.Ordinal))
             {
-                if (type == typeof(float)) return (T)(object)float.NegativeInfinity;
-                if (type == typeof(double)) return (T)(object)double.NegativeInfinity;
-                throw new NotSupportedException(string.Format("Infinity not supported for type {0}", type.Name));
+                return type == typeof(float)
+                    ? (T)(object)float.NegativeInfinity
+                    : type == typeof(double)
+	                    ? (T)(object)double.NegativeInfinity
+	                    : throw new NotSupportedException(string.Format("Infinity not supported for type {0}", type.Name));
             }
             if (type == typeof(char) || type == typeof(char?))
             {
@@ -328,12 +317,9 @@ namespace Orchard.ContentManagement
 
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
 
-            if (underlyingType.IsEnum)
-            {
-                return (T)Enum.Parse(underlyingType, value);
-            }
-
-            throw new NotSupportedException(string.Format("Could not handle type {0}", type.Name));
+            return underlyingType.IsEnum
+                ? (T)Enum.Parse(underlyingType, value)
+                : throw new NotSupportedException(string.Format("Could not handle type {0}", type.Name));
         }
 
         /// <summary>

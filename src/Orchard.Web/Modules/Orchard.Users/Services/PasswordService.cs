@@ -101,7 +101,7 @@ namespace Orchard.Users.Services
             var bytesAreEqual = true;
             for (int i = 0; i < a.Length; i++)
             {
-                bytesAreEqual &= (aBytes[i] == bBytes[i]);
+                bytesAreEqual &= aBytes[i] == bBytes[i];
             }
 
             return bytesAreEqual;

@@ -204,7 +204,7 @@ namespace Orchard.UI.Zones
         {
             unchecked
             {
-                int hashCode = (_parent != null ? _parent.GetHashCode() : 0);
+                int hashCode = _parent != null ? _parent.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (_potentialZoneName != null ? _potentialZoneName.GetHashCode() : 0);
                 return hashCode;
             }

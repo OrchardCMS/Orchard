@@ -82,7 +82,7 @@ namespace Orchard.MediaProcessing.Services
             // If content item is null (it means it's not passed as a parameter of the ResizeMediaUrl call),
             // this function processes the file like it did before this patch;
             // this means it could possibly throw and log exceptions for svg files.
-            bool checkForProfile = (contentItem == null || contentItem.Has<ImagePart>());
+            bool checkForProfile = contentItem == null || contentItem.Has<ImagePart>();
 
             if (checkForProfile)
             {

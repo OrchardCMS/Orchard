@@ -93,7 +93,7 @@ namespace Orchard.Commands
 
         private static CommandHandlerDescriptor GetDescriptor(IDictionary<string, object> metadata)
         {
-            return ((CommandHandlerDescriptor)metadata[typeof(CommandHandlerDescriptor).FullName]);
+            return (CommandHandlerDescriptor)metadata[typeof(CommandHandlerDescriptor).FullName];
         }
 
         private class Match

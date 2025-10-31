@@ -110,7 +110,7 @@ namespace Orchard.Setup.Controllers
             }
             if (model.Recipe == null)
             {
-                if (!(recipes.Select(r => r.Name).Contains(DefaultRecipe)))
+                if (!recipes.Select(r => r.Name).Contains(DefaultRecipe))
                 {
                     ModelState.AddModelError("Recipe", T("No recipes were found.").Text);
                 }

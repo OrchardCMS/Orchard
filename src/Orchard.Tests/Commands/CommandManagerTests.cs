@@ -33,7 +33,7 @@ namespace Orchard.Tests.Commands
         [Test]
         public void ManagerCanRunACompositeCommand()
         {
-            var context = new CommandParameters { Arguments = ("Foo Bar Bleah").Split(' '), Output = new StringWriter() };
+            var context = new CommandParameters { Arguments = "Foo Bar Bleah".Split(' '), Output = new StringWriter() };
             _manager.Execute(context);
             Assert.That(context.Output.ToString(), Is.EqualTo("Bleah"));
         }

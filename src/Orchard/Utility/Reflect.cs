@@ -114,7 +114,7 @@ namespace Orchard.Utility
                 case ExpressionType.Call:
                     var callExpression = (MethodCallExpression)expression;
                     MethodInfo method = callExpression.Method;
-                    bool isIndexer = (method.Name == "get_Item" && method.IsSpecialName);
+                    bool isIndexer = method.Name == "get_Item" && method.IsSpecialName;
                     if (!isIndexer)
                     {
                         goto default;

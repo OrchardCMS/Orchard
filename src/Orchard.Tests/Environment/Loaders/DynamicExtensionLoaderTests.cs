@@ -128,7 +128,7 @@ namespace Orchard.Tests.Environment.Loaders
 
             // Result for project b and c
             _mockedStubProjectFileParser
-                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => (virtualPath == project2Path || virtualPath == project3Path))))
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == project2Path || virtualPath == project3Path)))
                 .Returns(
                     new ProjectFileDescriptor
                     {

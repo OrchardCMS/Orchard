@@ -208,12 +208,7 @@ namespace Orchard.Scripting.Compiler
             var expr = ParseExpression();
 
             // ')'
-            if (IsMatch(TokenKind.CloseParen) == null)
-            {
-                return ExpectedTokenError(TokenKind.CloseParen);
-            }
-
-            return expr;
+            return IsMatch(TokenKind.CloseParen) == null ? ExpectedTokenError(TokenKind.CloseParen) : expr;
         }
 
         private AstNode ParseMethodCallExpression()
@@ -221,7 +216,7 @@ namespace Orchard.Scripting.Compiler
             var target = _lexer.Token();
             _lexer.NextToken();
 
-            bool isParenthesizedCall = (IsMatch(TokenKind.OpenParen) != null);
+            bool isParenthesizedCall = IsMatch(TokenKind.OpenParen) != null;
 
             // This is to avoid parsing method calls within method calls that have no
             // parenthesis (language ambiguity)

@@ -83,8 +83,8 @@ namespace Orchard.Recipes.Providers.Executors
                     //If arg is not empty and starts with '/'
 
                     int index = arg.IndexOf(':');
-                    var switchName = (index < 0 ? arg.Substring(1) : arg.Substring(1, index - 1));
-                    var switchValue = (index < 0 || index >= arg.Length ? string.Empty : arg.Substring(index + 1));
+                    var switchName = index < 0 ? arg.Substring(1) : arg.Substring(1, index - 1);
+                    var switchValue = index < 0 || index >= arg.Length ? string.Empty : arg.Substring(index + 1);
 
                     if (string.IsNullOrEmpty(switchName))
                     {

@@ -80,7 +80,7 @@ namespace Orchard.Taxonomies.Drivers
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null))
             {
                 var checkedTerms = viewModel.Terms
-                    .Where(t => (t.IsChecked || t.Id == viewModel.SingleTermId))
+                    .Where(t => t.IsChecked || t.Id == viewModel.SingleTermId)
                     .Select(t => GetOrCreateTerm(t, viewModel.TaxonomyId, field))
                     .Where(t => t != null).ToList();
 

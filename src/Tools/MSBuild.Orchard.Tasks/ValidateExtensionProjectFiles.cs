@@ -113,7 +113,7 @@ namespace MSBuild.Orchard.Tasks
 
                 foreach (var element in elements)
                 {
-                    var filePath = (element.Attribute(Include) == null ? null : element.Attribute(Include).Value);
+                    var filePath = element.Attribute(Include) == null ? null : element.Attribute(Include).Value;
                     bool isValid = IsValidExcludeFile(filePath);
                     if (!isValid)
                     {

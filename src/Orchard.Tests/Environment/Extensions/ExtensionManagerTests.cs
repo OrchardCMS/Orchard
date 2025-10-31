@@ -472,7 +472,7 @@ Features:
                 foreach (var type in feature.ExportedTypes)
                 {
                     Assert.That(type != typeof(Phi));
-                    Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
+                    Assert.That(type == typeof(Alpha) || (type == typeof(Beta)));
                 }
             }
         }
@@ -594,8 +594,8 @@ Name: {0}
 Version: 1.0.3
 OrchardVersion: 1{1}{2}",
              name,
-             (dependencies == null ? null : "\nDependencies: " + dependencies),
-             (priority == null ? null : "\nPriority:" + priority));
+             dependencies == null ? null : "\nDependencies: " + dependencies,
+             priority == null ? null : "\nPriority:" + priority);
         }
 
         private static void AssertFeaturesAreInOrder(StubFolders folder, StubLoaders loader, string expectedOrder)

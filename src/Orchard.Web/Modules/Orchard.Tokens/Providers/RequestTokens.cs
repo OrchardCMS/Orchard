@@ -85,12 +85,7 @@ namespace Orchard.Tokens.Providers
         private static string GetRouteValue(string token, HttpRequestBase request)
         {
             object result;
-            if (!request.RequestContext.RouteData.Values.TryGetValue(token, out result))
-            {
-                return string.Empty;
-            }
-
-            return result.ToString();
+            return !request.RequestContext.RouteData.Values.TryGetValue(token, out result) ? string.Empty : result.ToString();
         }
 
         private ContentItem GetRoutedContentItem(HttpRequestBase request)
@@ -134,12 +129,7 @@ namespace Orchard.Tokens.Providers
 
         private string DisplayText(IContent content)
         {
-            if (content == null)
-            {
-                return string.Empty;
-            }
-
-            return _contentManager.GetItemMetadata(content).DisplayText;
+            return content == null ? string.Empty : _contentManager.GetItemMetadata(content).DisplayText;
         }
 
         private static string FilterTokenParam(string token)
@@ -159,15 +149,11 @@ namespace Orchard.Tokens.Providers
             // use ")." as chars combination to discover the end of the parameter
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
-            if (chainIndex == 0)
-            {// ")." has not be found
-                return token.Substring(tokenLength).Trim(new char[] { '(', ')' });
-            }
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
-            {
-                return null;
-            }
-            return token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' });
+            return chainIndex == 0
+                ? token.Substring(tokenLength).Trim(new char[] { '(', ')' })
+                : !token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength
+	                ? null
+	                : token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' });
         }
         private static Tuple<string, string> FilterChainParam(string token)
         {
@@ -187,16 +173,11 @@ namespace Orchard.Tokens.Providers
             // use ")." as chars combination to discover the end of the parameter
             chainIndex = token.IndexOf(").") + 1;
             tokenLength = (tokenPrefix + ":").Length;
-            if (chainIndex == 0)
-            { // ")." has not be found
-                return new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), "");
-            }
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
-            {
-                return null;
-            }
-            return new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' }), token.Substring(chainIndex + 1));
-
+            return chainIndex == 0
+                ? new Tuple<string, string>(token.Substring(tokenLength).Trim(new char[] { '(', ')' }), "")
+                : !token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength
+	                ? null
+	                : new Tuple<string, string>(token.Substring(tokenLength, chainIndex - tokenLength).Trim(new char[] { '(', ')' }), token.Substring(chainIndex + 1));
         }
     }
 

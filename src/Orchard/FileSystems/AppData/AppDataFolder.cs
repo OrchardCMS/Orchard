@@ -60,7 +60,7 @@ namespace Orchard.FileSystems.AppData
             const string extension = "deleted";
             for (int i = 0; i < 100; i++)
             {
-                var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
+                var newExtension = i == 0 ? extension : string.Format("{0}{1}", extension, i);
                 var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
                 try
                 {

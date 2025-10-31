@@ -179,7 +179,7 @@ namespace Orchard.Mvc.ViewEngines.Razor
                 return null;
 
             var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
-            return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+            return string.IsNullOrEmpty(moduleName) ? null : moduleName;
         }
 
         private static string PrefixMatch(string virtualPath, params string[] prefixes)

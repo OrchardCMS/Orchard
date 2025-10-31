@@ -17,10 +17,7 @@ namespace Orchard.ContentManagement
                 return null;
 
             var part = contentItem.Get<T>();
-            if (part == null)
-                throw new InvalidCastException();
-
-            return part;
+            return part == null ? throw new InvalidCastException() : part;
         }
 
         public static void Create(this IContentManager manager, IContent content)
@@ -216,26 +213,19 @@ namespace Orchard.ContentManagement
         public static TContent BuildDisplayShape<TContent>(this IContentManager manager, int id, string displayType) where TContent : class, IContent
         {
             var content = manager.Get<TContent>(id);
-            if (content == null)
-                return null;
-            return manager.BuildDisplay(content, displayType);
+            return content == null ? null : (TContent)manager.BuildDisplay(content, displayType);
         }
 
         public static TContent BuildEditorShape<TContent>(this IContentManager manager, int id) where TContent : class, IContent
         {
             var content = manager.Get<TContent>(id);
-            if (content == null)
-                return null;
-            return manager.BuildEditor(content);
-
+            return content == null ? null : (TContent)manager.BuildEditor(content);
         }
 
         public static TContent UpdateEditorShape<TContent>(this IContentManager manager, int id, IUpdateModel updater) where TContent : class, IContent
         {
             var content = manager.Get<TContent>(id);
-            if (content == null)
-                return null;
-            return manager.UpdateEditor(content, updater);
+            return content == null ? null : (TContent)manager.UpdateEditor(content, updater);
         }
 
 
@@ -272,10 +262,9 @@ namespace Orchard.ContentManagement
         }
         public static bool HasDraft(this IContent content)
         {
-            return (
-                       (content.ContentItem.VersionRecord != null)
-                       && ((content.ContentItem.VersionRecord.Published == false)
-                           || (content.ContentItem.VersionRecord.Published && content.ContentItem.VersionRecord.Latest == false)));
+            return (content.ContentItem.VersionRecord != null)
+				&& ((content.ContentItem.VersionRecord.Published == false)
+					|| (content.ContentItem.VersionRecord.Published && content.ContentItem.VersionRecord.Latest == false));
         }
         public static bool HasPublished(this IContent content)
         {
