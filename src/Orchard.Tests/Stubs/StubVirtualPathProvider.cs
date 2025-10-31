@@ -8,14 +8,12 @@ namespace Orchard.Tests.Stubs
 {
     public class StubVirtualPathProvider : IVirtualPathProvider
     {
-        private readonly StubFileSystem _fileSystem;
-
         public StubVirtualPathProvider(StubFileSystem fileSystem)
         {
-            _fileSystem = fileSystem;
+            FileSystem = fileSystem;
         }
 
-        public StubFileSystem FileSystem => _fileSystem;
+        public StubFileSystem FileSystem { get; }
 
         private string ToFileSystemPath(string path)
         {
@@ -59,27 +57,27 @@ namespace Orchard.Tests.Stubs
 
         public bool FileExists(string virtualPath)
         {
-            return _fileSystem.GetFileEntry(ToFileSystemPath(virtualPath)) != null;
+            return FileSystem.GetFileEntry(ToFileSystemPath(virtualPath)) != null;
         }
 
         public Stream OpenFile(string virtualPath)
         {
-            return _fileSystem.OpenFile(ToFileSystemPath(virtualPath));
+            return FileSystem.OpenFile(ToFileSystemPath(virtualPath));
         }
 
         public StreamWriter CreateText(string virtualPath)
         {
-            return new StreamWriter(_fileSystem.CreateFile(ToFileSystemPath(virtualPath)));
+            return new StreamWriter(FileSystem.CreateFile(ToFileSystemPath(virtualPath)));
         }
 
         public Stream CreateFile(string virtualPath)
         {
-            return _fileSystem.CreateFile(ToFileSystemPath(virtualPath));
+            return FileSystem.CreateFile(ToFileSystemPath(virtualPath));
         }
 
         public DateTime GetFileLastWriteTimeUtc(string virtualPath)
         {
-            return _fileSystem.GetFileEntry(ToFileSystemPath(virtualPath)).LastWriteTimeUtc;
+            return FileSystem.GetFileEntry(ToFileSystemPath(virtualPath)).LastWriteTimeUtc;
         }
 
         public string GetFileHash(string virtualPath)
@@ -94,17 +92,17 @@ namespace Orchard.Tests.Stubs
 
         public void DeleteFile(string virtualPath)
         {
-            _fileSystem.DeleteFile(ToFileSystemPath(virtualPath));
+            FileSystem.DeleteFile(ToFileSystemPath(virtualPath));
         }
 
         public bool DirectoryExists(string virtualPath)
         {
-            return _fileSystem.GetDirectoryEntry(ToFileSystemPath(virtualPath)) != null;
+            return FileSystem.GetDirectoryEntry(ToFileSystemPath(virtualPath)) != null;
         }
 
         public void CreateDirectory(string virtualPath)
         {
-            _fileSystem.CreateDirectoryEntry(ToFileSystemPath(virtualPath));
+            FileSystem.CreateDirectoryEntry(ToFileSystemPath(virtualPath));
         }
 
         public void DeleteDirectory(string virtualPath)
@@ -119,14 +117,14 @@ namespace Orchard.Tests.Stubs
 
         public IEnumerable<string> ListFiles(string path)
         {
-            return _fileSystem.GetDirectoryEntry(ToFileSystemPath(path))
+            return FileSystem.GetDirectoryEntry(ToFileSystemPath(path))
                 .Files
                 .Select(f => Combine(path, f.Name));
         }
 
         public IEnumerable<string> ListDirectories(string path)
         {
-            return _fileSystem.GetDirectoryEntry(ToFileSystemPath(path))
+            return FileSystem.GetDirectoryEntry(ToFileSystemPath(path))
                 .Directories
                 .Select(f => Combine(path, f.Name));
         }

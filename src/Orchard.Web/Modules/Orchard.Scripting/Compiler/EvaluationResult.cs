@@ -4,11 +4,9 @@ namespace Orchard.Scripting.Compiler
 {
     public class EvaluationResult
     {
-        private readonly object _value;
-
         public EvaluationResult(object value)
         {
-            _value = value;
+            Value = value;
         }
 
         public static EvaluationResult Result(object value)
@@ -23,7 +21,7 @@ namespace Orchard.Scripting.Compiler
             return new EvaluationResult(new Error { Message = message });
         }
 
-        public object Value => _value;
+        public object Value { get; }
 
         public bool IsError => Value is Error;
         public bool IsNil => IsNull;

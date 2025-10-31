@@ -9,7 +9,6 @@ namespace Orchard.ContentManagement.MetaData.Builders
     public class ContentPartDefinitionBuilder
     {
         private readonly ContentPartDefinition _part;
-        private string _name;
         private readonly IList<ContentPartFieldDefinition> _fields;
         private readonly SettingsDictionary _settings;
 
@@ -31,22 +30,22 @@ namespace Orchard.ContentManagement.MetaData.Builders
             }
             else
             {
-                _name = existing.Name;
+                Name = existing.Name;
                 _fields = existing.Fields.ToList();
                 _settings = new SettingsDictionary(existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
         }
 
-        public string Name => _name;
+        public string Name { get; private set; }
 
         public ContentPartDefinition Build()
         {
-            return new ContentPartDefinition(_name, _fields, _settings);
+            return new ContentPartDefinition(Name, _fields, _settings);
         }
 
         public ContentPartDefinitionBuilder Named(string name)
         {
-            _name = name;
+            Name = name;
             return this;
         }
 

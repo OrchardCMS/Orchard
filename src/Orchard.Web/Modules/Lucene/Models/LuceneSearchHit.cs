@@ -7,14 +7,13 @@ namespace Lucene.Models
     public class LuceneSearchHit : ISearchHit
     {
         private readonly Document _doc;
-        private readonly float _score;
 
-        public float Score => _score;
+        public float Score { get; }
 
         public LuceneSearchHit(Document document, float score)
         {
             _doc = document;
-            _score = score;
+            Score = score;
         }
 
         public int ContentItemId => GetInt("id");

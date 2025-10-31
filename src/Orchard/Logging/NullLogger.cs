@@ -4,9 +4,7 @@ namespace Orchard.Logging
 {
     public class NullLogger : ILogger
     {
-        private static readonly ILogger _instance = new NullLogger();
-
-        public static ILogger Instance => _instance;
+        public static ILogger Instance { get; } = new NullLogger();
 
         public bool IsEnabled(LogLevel level)
         {

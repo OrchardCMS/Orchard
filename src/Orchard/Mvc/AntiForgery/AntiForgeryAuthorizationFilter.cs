@@ -95,18 +95,17 @@ namespace Orchard.Mvc.AntiForgery
 
         private class HackHttpContext : HttpContextWrapper
         {
-            private readonly HttpContextBase _originalHttpContextBase;
             private readonly HttpContext _originalHttpContext;
             private HttpRequestWrapper _request;
 
             public HackHttpContext(HttpContextBase httpContextBase, HttpContext httpContext)
                 : base(httpContext)
             {
-                _originalHttpContextBase = httpContextBase;
+                OriginalHttpContextBase = httpContextBase;
                 _originalHttpContext = httpContext;
             }
 
-            public HttpContextBase OriginalHttpContextBase => _originalHttpContextBase;
+            public HttpContextBase OriginalHttpContextBase { get; }
 
             public override HttpRequestBase Request
             {

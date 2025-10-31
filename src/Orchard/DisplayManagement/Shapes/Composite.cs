@@ -15,9 +15,6 @@ namespace Orchard.DisplayManagement.Shapes
 {
     public class Composite : DynamicObject
     {
-
-        private readonly IDictionary _props = new HybridDictionary();
-
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return TryGetMemberImpl(binder.Name, out result);
@@ -25,9 +22,9 @@ namespace Orchard.DisplayManagement.Shapes
 
         protected virtual bool TryGetMemberImpl(string name, out object result)
         {
-            if (_props.Contains(name))
+            if (Properties.Contains(name))
             {
-                result = _props[name];
+                result = Properties[name];
                 return true;
             }
 
@@ -42,7 +39,7 @@ namespace Orchard.DisplayManagement.Shapes
 
         protected bool TrySetMemberImpl(string name, object value)
         {
-            _props[name] = value;
+            Properties[name] = value;
             return true;
         }
 
@@ -83,9 +80,9 @@ namespace Orchard.DisplayManagement.Shapes
 
             var index = indexes.Single();
 
-            if (_props.Contains(index))
+            if (Properties.Contains(index))
             {
-                result = _props[index];
+                result = Properties[index];
                 return true;
             }
 
@@ -117,11 +114,11 @@ namespace Orchard.DisplayManagement.Shapes
                 return true;
             }
 
-            _props[indexes.Single()] = value;
+            Properties[indexes.Single()] = value;
             return true;
         }
 
-        public IDictionary Properties => _props;
+        public IDictionary Properties { get; } = new HybridDictionary();
 
         public static bool operator ==(Composite a, Nil b) => null == a;
 
@@ -129,7 +126,7 @@ namespace Orchard.DisplayManagement.Shapes
 
         protected bool Equals(Composite other)
         {
-            return Equals(_props, other._props);
+            return Equals(Properties, other.Properties);
         }
 
         public override bool Equals(object obj)
@@ -151,7 +148,7 @@ namespace Orchard.DisplayManagement.Shapes
 
         public override int GetHashCode()
         {
-            return (_props != null ? _props.GetHashCode() : 0);
+            return (Properties != null ? Properties.GetHashCode() : 0);
         }
 
         #region InterfaceProxyBehavior
@@ -459,8 +456,7 @@ namespace Orchard.DisplayManagement.Shapes
 
     public class Nil : DynamicObject
     {
-        static readonly Nil Singleton = new Nil();
-        public static Nil Instance => Singleton;
+        public static Nil Instance { get; } = new Nil();
 
         private Nil()
         {

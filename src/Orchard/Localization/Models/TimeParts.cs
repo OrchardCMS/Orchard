@@ -13,30 +13,25 @@ namespace Orchard.Localization.Models
             {
                 throw new ArgumentOutOfRangeException(string.Format("The specified offset {0} does not match the specified kind {1}.", offset, kind));
             }
-            _hour = hour;
-            _minute = minute;
-            _second = second;
-            _millisecond = millisecond;
-            _kind = kind;
+            Hour = hour;
+            Minute = minute;
+            Second = second;
+            Millisecond = millisecond;
+            Kind = kind;
             _offset = offset;
         }
 
-        private readonly int _hour;
-        private readonly int _minute;
-        private readonly int _second;
-        private readonly int _millisecond;
-        private readonly DateTimeKind _kind;
         private readonly TimeSpan _offset;
 
-        public int Hour => _hour;
+        public int Hour { get; }
 
-        public int Minute => _minute;
+        public int Minute { get; }
 
-        public int Second => _second;
+        public int Second { get; }
 
-        public int Millisecond => _millisecond;
+        public int Millisecond { get; }
 
-        public DateTimeKind Kind => _kind;
+        public DateTimeKind Kind { get; }
 
         public TimeSpan? Offset => _offset;
 
@@ -46,17 +41,17 @@ namespace Orchard.Localization.Models
                 DateTime.MinValue.Year,
                 DateTime.MinValue.Month,
                 DateTime.MinValue.Day,
-                _hour > 0 ? _hour : DateTime.MinValue.Hour,
-                _minute > 0 ? _minute : DateTime.MinValue.Minute,
-                _second > 0 ? _second : DateTime.MinValue.Second,
-                _millisecond > 0 ? _millisecond : DateTime.MinValue.Millisecond,
-                _kind
+                Hour > 0 ? Hour : DateTime.MinValue.Hour,
+                Minute > 0 ? Minute : DateTime.MinValue.Minute,
+                Second > 0 ? Second : DateTime.MinValue.Second,
+                Millisecond > 0 ? Millisecond : DateTime.MinValue.Millisecond,
+                Kind
             );
         }
 
         public override string ToString()
         {
-            return string.Format("{0}:{1}:{2}.{3}-{4}-{5}", _hour, _minute, _second, _millisecond, _kind, _offset);
+            return string.Format("{0}:{1}:{2}.{3}-{4}-{5}", Hour, Minute, Second, Millisecond, Kind, _offset);
         }
     }
 }

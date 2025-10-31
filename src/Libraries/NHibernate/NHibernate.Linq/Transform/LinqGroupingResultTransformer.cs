@@ -98,7 +98,6 @@ namespace NHibernate.Linq.Transform
     /// <typeparam name="TElement"></typeparam>
     internal class Grouping<TKey, TElement> : IGrouping<TKey, TElement>, IGrouping
     {
-        private readonly TKey key;
         private readonly IList<TElement> list = new List<TElement>();
 
         /// <summary>
@@ -107,7 +106,7 @@ namespace NHibernate.Linq.Transform
         /// <param name="key"></param>
         public Grouping(TKey key)
         {
-            this.key = key;
+            this.Key = key;
         }
 
         #region IGrouping Members
@@ -128,7 +127,7 @@ namespace NHibernate.Linq.Transform
         /// <summary>
         /// Gets the key of the <see cref="T:System.Linq.IGrouping`2"/>.
         /// </summary>
-        public TKey Key => key;
+        public TKey Key { get; }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

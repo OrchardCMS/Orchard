@@ -16,8 +16,6 @@ namespace NHibernate.Linq.Visitors
     {
         private readonly ICriteria rootCriteria;
         private readonly bool createCriteriaForCollections;
-        private ICriteria currentCriteria;
-        private Expression currentExpression;
         private StringBuilder memberNameBuilder;
         private string currentAssociationPath;
         private bool isQueringEntity;
@@ -33,16 +31,16 @@ namespace NHibernate.Linq.Visitors
             }
         }
 
-        public ICriteria CurrentCriteria => currentCriteria;
+        public ICriteria CurrentCriteria { get; private set; }
 
-        public Expression CurrentExpression => currentExpression;
+        public Expression CurrentExpression { get; private set; }
 
         public MemberNameVisitor(ICriteria criteria)
             : this(criteria, false) { }
 
         public MemberNameVisitor(ICriteria criteria, bool createCriteriaForCollections)
         {
-            this.rootCriteria = this.currentCriteria = criteria;
+            this.rootCriteria = this.CurrentCriteria = criteria;
             this.createCriteriaForCollections = createCriteriaForCollections;
             this.memberNameBuilder = new StringBuilder();
         }
@@ -56,9 +54,9 @@ namespace NHibernate.Linq.Visitors
         private ICriteria EnsureCriteria(string associationPath, string alias)
         {
             ICriteria criteria;
-            if ((criteria = currentCriteria.GetCriteriaByAlias(alias)) == null)
+            if ((criteria = CurrentCriteria.GetCriteriaByAlias(alias)) == null)
             {
-                criteria = currentCriteria.CreateCriteria(associationPath, alias, JoinType.LeftOuterJoin);
+                criteria = CurrentCriteria.CreateCriteria(associationPath, alias, JoinType.LeftOuterJoin);
             }
             return criteria;
         }
@@ -80,15 +78,15 @@ namespace NHibernate.Linq.Visitors
         {
             expr = (EntityExpression)base.VisitEntity(expr);
 
-            if (currentCriteria.GetCriteriaByAlias(expr.Alias) != null || !IsRootEntity(expr))
+            if (CurrentCriteria.GetCriteriaByAlias(expr.Alias) != null || !IsRootEntity(expr))
             {
                 if (!string.IsNullOrEmpty(expr.AssociationPath))
-                    currentCriteria = EnsureCriteria(expr.AssociationPath, expr.Alias);
+                    CurrentCriteria = EnsureCriteria(expr.AssociationPath, expr.Alias);
 
                 ResetMemberName(expr.Alias + ".");
             }
             currentAssociationPath = expr.AssociationPath;
-            currentExpression = expr;
+            CurrentExpression = expr;
             isQueringEntity = true;
 
             return expr;
@@ -99,7 +97,7 @@ namespace NHibernate.Linq.Visitors
             expr = (PropertyAccessExpression)base.VisitPropertyAccess(expr);
             memberNameBuilder.Append(expr.Name + ".");
 
-            currentExpression = expr;
+            CurrentExpression = expr;
             isQueringEntity = false;
 
             return expr;
@@ -110,13 +108,13 @@ namespace NHibernate.Linq.Visitors
             expr = (CollectionAccessExpression)base.VisitCollectionAccess(expr);
             //memberNameBuilder.Append(expr.Name + ".");
             ResetMemberName(expr.Name + ".");
-            currentExpression = expr;
+            CurrentExpression = expr;
 
             if (createCriteriaForCollections)
             {
                 if (expr.ElementExpression != null)
                 {
-                    currentCriteria = EnsureCriteria(expr.Name, expr.ElementExpression.Alias);
+                    CurrentCriteria = EnsureCriteria(expr.Name, expr.ElementExpression.Alias);
                 }
             }
 

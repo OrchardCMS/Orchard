@@ -6,8 +6,6 @@ namespace Orchard.Blogs.Models
 {
     public class ArchiveData : IEquatable<ArchiveData>, IComparable<ArchiveData>
     {
-        private static readonly string _defaultString = DateTime.Now.Year.ToString();
-
         private static readonly Regex archiveDataRegex =
             new Regex(@"^(?<year>\d{4})(?:/(?<month>\d{1,2})?(?:/(?<day>\d{1,2})?)?)?(?:/(?:page(?<page>\d+))?)?$",
                       RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -57,7 +55,7 @@ namespace Orchard.Blogs.Models
         public int Month { get; private set; }
         public int Day { get; private set; }
 
-        public static string DefaultString => _defaultString;
+        public static string DefaultString { get; } = DateTime.Now.Year.ToString();
 
         #region IComparable<ArchiveData> Members
 

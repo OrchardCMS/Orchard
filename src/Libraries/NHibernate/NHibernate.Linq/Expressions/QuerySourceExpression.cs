@@ -4,13 +4,11 @@ namespace NHibernate.Linq.Expressions
 {
     public class QuerySourceExpression : NHibernateExpression
     {
-        private readonly string _alias;
-        private readonly IQueryable _query;
         private readonly System.Type _elementType;
 
-        public string Alias => _alias;
+        public string Alias { get; }
 
-        public IQueryable Query => _query;
+        public IQueryable Query { get; }
 
         public System.Type ElementType => _elementType ?? Query.ElementType;
 
@@ -20,8 +18,8 @@ namespace NHibernate.Linq.Expressions
         public QuerySourceExpression(string alias, IQueryable query, System.Type elementType)
             : base(NHibernateExpressionType.QuerySource, query.GetType())
         {
-            _alias = alias;
-            _query = query;
+            Alias = alias;
+            Query = query;
             _elementType = elementType;
         }
 

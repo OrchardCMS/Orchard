@@ -13,14 +13,13 @@ namespace NHibernate.Linq
     {
         private readonly QueryProvider provider;
         private readonly Expression expression;
-        private readonly QueryOptions queryOptions;
 
         public Query(QueryProvider provider, QueryOptions queryOptions)
         {
             if (provider == null) throw new ArgumentNullException("provider");
 
             this.provider = provider;
-            this.queryOptions = queryOptions;
+            this.QueryOptions = queryOptions;
             this.expression = Expression.Constant(this);
         }
 
@@ -33,7 +32,7 @@ namespace NHibernate.Linq
                 throw new ArgumentOutOfRangeException("expression");
 
             this.provider = provider;
-            this.queryOptions = queryOptions;
+            this.QueryOptions = queryOptions;
             this.expression = expression;
         }
 
@@ -43,11 +42,11 @@ namespace NHibernate.Linq
 
         IQueryProvider IQueryable.Provider => this.provider;
 
-        public QueryOptions QueryOptions => queryOptions;
+        public QueryOptions QueryOptions { get; }
 
         public IQueryable<T> Expand(string path)
         {
-            queryOptions.AddExpansion(path);
+            QueryOptions.AddExpansion(path);
 
             return this;
         }

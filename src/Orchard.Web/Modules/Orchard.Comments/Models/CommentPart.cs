@@ -8,11 +8,8 @@ namespace Orchard.Comments.Models
 {
     public class CommentPart : ContentPart<CommentPartRecord>
     {
-        private readonly LazyField<ContentItem> _commentedOnContentItem = new LazyField<ContentItem>();
-        private readonly LazyField<ContentItemMetadata> _commentedOnContentItemMetadata = new LazyField<ContentItemMetadata>();
-
-        public LazyField<ContentItem> CommentedOnContentItemField => _commentedOnContentItem;
-        public LazyField<ContentItemMetadata> CommentedOnContentItemMetadataField => _commentedOnContentItemMetadata;
+        public LazyField<ContentItem> CommentedOnContentItemField { get; } = new LazyField<ContentItem>();
+        public LazyField<ContentItemMetadata> CommentedOnContentItemMetadataField { get; } = new LazyField<ContentItemMetadata>();
 
         [StringLength(255)]
         public string Author
@@ -82,14 +79,14 @@ namespace Orchard.Comments.Models
 
         public ContentItem CommentedOnContentItem
         {
-            get { return _commentedOnContentItem.Value; }
-            set { _commentedOnContentItem.Value = value; }
+            get { return CommentedOnContentItemField.Value; }
+            set { CommentedOnContentItemField.Value = value; }
         }
 
         public ContentItemMetadata CommentedOnContentItemMetadata
         {
-            get { return _commentedOnContentItemMetadata.Value; }
-            set { _commentedOnContentItemMetadata.Value = value; }
+            get { return CommentedOnContentItemMetadataField.Value; }
+            set { CommentedOnContentItemMetadataField.Value = value; }
         }
 
         public int CommentedOnContainer

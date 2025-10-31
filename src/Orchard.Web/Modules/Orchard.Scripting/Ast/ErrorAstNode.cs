@@ -4,18 +4,15 @@ namespace Orchard.Scripting.Ast
 {
     public class ErrorAstNode : AstNode, IAstNodeWithToken
     {
-        private readonly Token _token;
-        private readonly string _message;
-
         public ErrorAstNode(Token token, string message)
         {
-            _token = token;
-            _message = message;
+            Token = token;
+            Message = message;
         }
 
-        public Token Token => _token;
+        public Token Token { get; }
 
-        public string Message => _message;
+        public string Message { get; }
 
         public override string ToString()
         {

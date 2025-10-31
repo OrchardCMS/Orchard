@@ -98,20 +98,19 @@ namespace Orchard.Tests.Stubs
         {
             private readonly StubFileSystem _stubFileSystem;
             private readonly string _path;
-            private bool _isCurrent;
 
             public Token(StubFileSystem stubFileSystem, string path)
             {
                 _stubFileSystem = stubFileSystem;
                 _path = path;
-                _isCurrent = true;
+                IsCurrent = true;
             }
 
-            public bool IsCurrent => _isCurrent;
+            public bool IsCurrent { get; private set; }
 
             public void OnChange()
             {
-                _isCurrent = false;
+                IsCurrent = false;
                 _stubFileSystem.DetachToken(_path);
             }
         }
@@ -153,18 +152,17 @@ namespace Orchard.Tests.Stubs
             {
                 private readonly T[] _buffer;
                 private readonly int _offset;
-                private readonly int _count;
 
                 public ArrayWrapper(T[] buffer, int offset, int count)
                 {
                     _buffer = buffer;
                     _offset = offset;
-                    _count = count;
+                    Count = count;
                 }
 
                 public IEnumerator<T> GetEnumerator()
                 {
-                    for (int i = _offset; i < _count; i++)
+                    for (int i = _offset; i < Count; i++)
                         yield return _buffer[i];
                 }
 
@@ -190,7 +188,7 @@ namespace Orchard.Tests.Stubs
 
                 public void CopyTo(T[] array, int arrayIndex)
                 {
-                    Array.Copy(_buffer, _offset, array, arrayIndex, _count);
+                    Array.Copy(_buffer, _offset, array, arrayIndex, Count);
                 }
 
                 public bool Remove(T item)
@@ -198,7 +196,7 @@ namespace Orchard.Tests.Stubs
                     throw new NotImplementedException();
                 }
 
-                public int Count => _count;
+                public int Count { get; }
 
                 public bool IsReadOnly => true;
             }
@@ -234,17 +232,16 @@ namespace Orchard.Tests.Stubs
 
         public class FileEntryReadStream : Stream
         {
-            private readonly FileEntry _entry;
             private readonly IClock _clock;
             private int _position;
 
             public FileEntryReadStream(FileEntry entry, IClock clock)
             {
-                _entry = entry;
+                FileEntry = entry;
                 _clock = clock;
             }
 
-            public FileEntry FileEntry => _entry;
+            public FileEntry FileEntry { get; }
 
             public override void Flush()
             {
@@ -262,7 +259,7 @@ namespace Orchard.Tests.Stubs
                         _position += (int)offset;
                         break;
                     case SeekOrigin.End:
-                        _position = _entry.Content.Count - (int)offset;
+                        _position = FileEntry.Content.Count - (int)offset;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException("origin");
@@ -277,10 +274,10 @@ namespace Orchard.Tests.Stubs
 
             public override int Read(byte[] buffer, int offset, int count)
             {
-                int remaingCount = _entry.Content.Count - _position;
+                int remaingCount = FileEntry.Content.Count - _position;
                 count = Math.Min(count, remaingCount);
 
-                _entry.Content.CopyTo(_position, buffer, offset, count);
+                FileEntry.Content.CopyTo(_position, buffer, offset, count);
 
                 _position += count;
                 return count;
@@ -297,7 +294,7 @@ namespace Orchard.Tests.Stubs
 
             public override bool CanWrite => false;
 
-            public override long Length => _entry.Content.Count;
+            public override long Length => FileEntry.Content.Count;
 
             public override long Position
             {

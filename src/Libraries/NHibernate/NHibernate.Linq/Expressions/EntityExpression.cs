@@ -5,26 +5,21 @@ namespace NHibernate.Linq.Expressions
 {
     public class EntityExpression : NHibernateExpression
     {
-        private readonly string _alias;
-        private readonly string _associationPath;
-        private readonly IClassMetadata _metaData;
-        private readonly Expression _expression;
+        public string Alias { get; }
 
-        public string Alias => _alias;
+        public string AssociationPath { get; }
 
-        public string AssociationPath => _associationPath;
+        public IClassMetadata MetaData { get; }
 
-        public IClassMetadata MetaData => _metaData;
-
-        public Expression Expression => _expression;
+        public Expression Expression { get; }
 
         public EntityExpression(string associationPath, string alias, System.Type type, IClassMetadata metaData, Expression expression)
             : base(IsRoot(expression) ? NHibernateExpressionType.RootEntity : NHibernateExpressionType.Entity, type)
         {
-            _associationPath = associationPath;
-            _alias = alias;
-            _metaData = metaData;
-            _expression = expression;
+            AssociationPath = associationPath;
+            Alias = alias;
+            MetaData = metaData;
+            Expression = expression;
         }
 
         private static bool IsRoot(Expression expr)

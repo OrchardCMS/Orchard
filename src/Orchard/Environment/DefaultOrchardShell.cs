@@ -24,7 +24,6 @@ namespace Orchard.Environment
         private readonly IRoutePublisher _routePublisher;
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
-        private readonly ISweepGenerator _sweepGenerator;
         private readonly IEnumerable<IOwinMiddlewareProvider> _owinMiddlewareProviders;
         private readonly ShellSettings _shellSettings;
 
@@ -45,7 +44,7 @@ namespace Orchard.Environment
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
-            _sweepGenerator = sweepGenerator;
+            Sweep = sweepGenerator;
             _owinMiddlewareProviders = owinMiddlewareProviders;
             _shellSettings = shellSettings;
 
@@ -53,7 +52,7 @@ namespace Orchard.Environment
         }
 
         public ILogger Logger { get; set; }
-        public ISweepGenerator Sweep => _sweepGenerator;
+        public ISweepGenerator Sweep { get; }
 
         public void Activate()
         {
@@ -94,7 +93,7 @@ namespace Orchard.Environment
                 }
             }
 
-            _sweepGenerator.Activate();
+            Sweep.Activate();
         }
 
         public void Terminate()
@@ -110,7 +109,7 @@ namespace Orchard.Environment
                 }
             });
 
-            SafelyTerminate(() => _sweepGenerator.Terminate());
+            SafelyTerminate(() => Sweep.Terminate());
         }
 
         private void SafelyTerminate(Action action)

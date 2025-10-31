@@ -6,7 +6,6 @@ namespace Orchard.ArchiveLater.Models
 {
     public class ArchiveLaterPart : ContentPart
     {
-        private readonly LazyField<DateTime?> _scheduledArchiveUtc = new LazyField<DateTime?>();
-        public LazyField<DateTime?> ScheduledArchiveUtc => _scheduledArchiveUtc;
+        public LazyField<DateTime?> ScheduledArchiveUtc { get; } = new LazyField<DateTime?>();
     }
 }

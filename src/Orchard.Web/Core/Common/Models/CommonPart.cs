@@ -8,23 +8,20 @@ namespace Orchard.Core.Common.Models
 {
     public class CommonPart : ContentPart<CommonPartRecord>, ICommonPart
     {
-        private readonly LazyField<IUser> _owner = new LazyField<IUser>();
-        private readonly LazyField<IContent> _container = new LazyField<IContent>();
+        public LazyField<IUser> OwnerField { get; } = new LazyField<IUser>();
 
-        public LazyField<IUser> OwnerField => _owner;
-
-        public LazyField<IContent> ContainerField => _container;
+        public LazyField<IContent> ContainerField { get; } = new LazyField<IContent>();
 
         public IUser Owner
         {
-            get { return _owner.Value; }
-            set { _owner.Value = value; }
+            get { return OwnerField.Value; }
+            set { OwnerField.Value = value; }
         }
 
         public IContent Container
         {
-            get { return _container.Value; }
-            set { _container.Value = value; }
+            get { return ContainerField.Value; }
+            set { ContainerField.Value = value; }
         }
 
         public DateTime? CreatedUtc

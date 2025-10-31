@@ -7,7 +7,6 @@ namespace Orchard.WebApi
 {
     public class AutofacWebApiDependencyResolver : IDependencyResolver
     {
-        readonly ILifetimeScope _container;
         readonly IDependencyScope _rootDependencyScope;
 
         //internal static readonly string ApiRequestTag = "AutofacWebRequest";
@@ -16,11 +15,11 @@ namespace Orchard.WebApi
         {
             if (container == null) throw new ArgumentNullException("container");
 
-            _container = container;
+            Container = container;
             _rootDependencyScope = new AutofacWebApiDependencyScope(container);
         }
 
-        public ILifetimeScope Container => _container;
+        public ILifetimeScope Container { get; }
 
         public object GetService(Type serviceType)
         {
@@ -34,7 +33,7 @@ namespace Orchard.WebApi
 
         public IDependencyScope BeginScope()
         {
-            ILifetimeScope lifetimeScope = _container.BeginLifetimeScope();
+            ILifetimeScope lifetimeScope = Container.BeginLifetimeScope();
             return new AutofacWebApiDependencyScope(lifetimeScope);
         }
 

@@ -5,15 +5,11 @@ namespace NHibernate.Linq.Expressions
 {
     public class PropertyAccessExpression : NHibernateExpression
     {
-        private readonly string _name;
-        private readonly EntityExpression _expression;
-        private readonly IType _nhibernateType;
+        public string Name { get; }
 
-        public string Name => _name;
+        public EntityExpression Expression { get; }
 
-        public EntityExpression Expression => _expression;
-
-        public IType NHibernateType => _nhibernateType;
+        public IType NHibernateType { get; }
 
         public PropertyAccessExpression(string name, System.Type type, IType nhibernateType, EntityExpression expression)
             : this(name, type, nhibernateType, expression, NHibernateExpressionType.PropertyAccess) { }
@@ -26,9 +22,9 @@ namespace NHibernate.Linq.Expressions
             if (nhibernateType == null) throw new ArgumentNullException("nhibernateType");
             if (expression == null) throw new ArgumentNullException("expression");
 
-            _name = name;
-            _expression = expression;
-            _nhibernateType = nhibernateType;
+            Name = name;
+            Expression = expression;
+            NHibernateType = nhibernateType;
         }
 
         public override string ToString()

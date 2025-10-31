@@ -7,32 +7,28 @@ namespace Orchard.Data.Migration.Schema
 {
     public class SchemaBuilder
     {
-        private readonly IDataMigrationInterpreter _interpreter;
-        private readonly string _featurePrefix;
-        private readonly Func<string, string> _formatPrefix;
-
         public Localizer T { get; set; }
 
         public SchemaBuilder(IDataMigrationInterpreter interpreter, string featurePrefix = null, Func<string, string> formatPrefix = null)
         {
-            _interpreter = interpreter;
-            _featurePrefix = featurePrefix ?? string.Empty;
-            _formatPrefix = formatPrefix ?? (s => s ?? string.Empty);
+            Interpreter = interpreter;
+            FeaturePrefix = featurePrefix ?? string.Empty;
+            FormatPrefix = formatPrefix ?? (s => s ?? string.Empty);
             T = NullLocalizer.Instance;
         }
 
-        public IDataMigrationInterpreter Interpreter => _interpreter;
+        public IDataMigrationInterpreter Interpreter { get; }
 
-        public string FeaturePrefix => _featurePrefix;
+        public string FeaturePrefix { get; }
 
-        public Func<string, string> FormatPrefix => _formatPrefix;
+        public Func<string, string> FormatPrefix { get; }
 
         /// <summary>
         /// Translate Table name into database table name - including prefixes.
         /// </summary>
         public virtual string TableDbName(string srcTable, string featurePrefixOverride = null)
         {
-            return _interpreter.PrefixTableName(FormatPrefix(featurePrefixOverride ?? FeaturePrefix) + srcTable);
+            return Interpreter.PrefixTableName(FormatPrefix(featurePrefixOverride ?? FeaturePrefix) + srcTable);
         }
 
         /// <summary>
@@ -40,12 +36,12 @@ namespace Orchard.Data.Migration.Schema
         /// </summary>
         public virtual string RemoveDataTablePrefix(string prefixedTableName)
         {
-            return _interpreter.RemovePrefixFromTableName(prefixedTableName);
+            return Interpreter.RemovePrefixFromTableName(prefixedTableName);
         }
 
         public SchemaBuilder CreateTable(string name, Action<CreateTableCommand> table)
         {
-            var createTable = new CreateTableCommand(string.Concat(_formatPrefix(_featurePrefix), name));
+            var createTable = new CreateTableCommand(string.Concat(FormatPrefix(FeaturePrefix), name));
             table(createTable);
             Run(createTable);
             return this;
@@ -53,7 +49,7 @@ namespace Orchard.Data.Migration.Schema
 
         public SchemaBuilder AlterTable(string name, Action<AlterTableCommand> table)
         {
-            var alterTable = new AlterTableCommand(string.Concat(_formatPrefix(_featurePrefix), name));
+            var alterTable = new AlterTableCommand(string.Concat(FormatPrefix(FeaturePrefix), name));
             table(alterTable);
             Run(alterTable);
             return this;
@@ -61,7 +57,7 @@ namespace Orchard.Data.Migration.Schema
 
         public SchemaBuilder DropTable(string name)
         {
-            var deleteTable = new DropTableCommand(string.Concat(_formatPrefix(_featurePrefix), name));
+            var deleteTable = new DropTableCommand(string.Concat(FormatPrefix(FeaturePrefix), name));
             Run(deleteTable);
             return this;
         }
@@ -90,47 +86,47 @@ namespace Orchard.Data.Migration.Schema
 
         private void Run(ISchemaBuilderCommand command)
         {
-            _interpreter.Visit(command);
+            Interpreter.Visit(command);
         }
 
         public SchemaBuilder CreateForeignKey(string name, string srcTable, string[] srcColumns, string destTable, string[] destColumns)
         {
-            var command = new CreateForeignKeyCommand(name, string.Concat(_formatPrefix(_featurePrefix), srcTable), srcColumns, string.Concat(_formatPrefix(_featurePrefix), destTable), destColumns);
+            var command = new CreateForeignKeyCommand(name, string.Concat(FormatPrefix(FeaturePrefix), srcTable), srcColumns, string.Concat(FormatPrefix(FeaturePrefix), destTable), destColumns);
             Run(command);
             return this;
         }
 
         public SchemaBuilder CreateForeignKey(string name, string srcModule, string srcTable, string[] srcColumns, string destTable, string[] destColumns)
         {
-            var command = new CreateForeignKeyCommand(name, string.Concat(_formatPrefix(srcModule), srcTable), srcColumns, string.Concat(_formatPrefix(_featurePrefix), destTable), destColumns);
+            var command = new CreateForeignKeyCommand(name, string.Concat(FormatPrefix(srcModule), srcTable), srcColumns, string.Concat(FormatPrefix(FeaturePrefix), destTable), destColumns);
             Run(command);
             return this;
         }
 
         public SchemaBuilder CreateForeignKey(string name, string srcTable, string[] srcColumns, string destModule, string destTable, string[] destColumns)
         {
-            var command = new CreateForeignKeyCommand(name, string.Concat(_formatPrefix(_featurePrefix), srcTable), srcColumns, string.Concat(_formatPrefix(destModule), destTable), destColumns);
+            var command = new CreateForeignKeyCommand(name, string.Concat(FormatPrefix(FeaturePrefix), srcTable), srcColumns, string.Concat(FormatPrefix(destModule), destTable), destColumns);
             Run(command);
             return this;
         }
 
         public SchemaBuilder CreateForeignKey(string name, string srcModule, string srcTable, string[] srcColumns, string destModule, string destTable, string[] destColumns)
         {
-            var command = new CreateForeignKeyCommand(name, string.Concat(_formatPrefix(srcModule), srcTable), srcColumns, string.Concat(_formatPrefix(destModule), destTable), destColumns);
+            var command = new CreateForeignKeyCommand(name, string.Concat(FormatPrefix(srcModule), srcTable), srcColumns, string.Concat(FormatPrefix(destModule), destTable), destColumns);
             Run(command);
             return this;
         }
 
         public SchemaBuilder DropForeignKey(string srcTable, string name)
         {
-            var command = new DropForeignKeyCommand(string.Concat(_formatPrefix(_featurePrefix), srcTable), name);
+            var command = new DropForeignKeyCommand(string.Concat(FormatPrefix(FeaturePrefix), srcTable), name);
             Run(command);
             return this;
         }
 
         public SchemaBuilder DropForeignKey(string srcModule, string srcTable, string name)
         {
-            var command = new DropForeignKeyCommand(string.Concat(_formatPrefix(srcModule), srcTable), name);
+            var command = new DropForeignKeyCommand(string.Concat(FormatPrefix(srcModule), srcTable), name);
             Run(command);
             return this;
         }

@@ -6,14 +6,12 @@ namespace Orchard.Core.Navigation.Models
 {
     public class MenuPart : ContentPart<MenuPartRecord>
     {
-
-        private readonly LazyField<IContent> _menu = new LazyField<IContent>();
-        public LazyField<IContent> MenuField => _menu;
+        public LazyField<IContent> MenuField { get; } = new LazyField<IContent>();
 
         public IContent Menu
         {
-            get { return _menu.Value; }
-            set { _menu.Value = value; }
+            get { return MenuField.Value; }
+            set { MenuField.Value = value; }
         }
 
         [StringLength(MenuPartRecord.DefaultMenuTextLength)]

@@ -193,10 +193,7 @@ namespace Orchard.Core.Tests.Common.Providers
 
         class UpdateModelStub : IUpdateModel
         {
-
-            ModelStateDictionary _modelState = new ModelStateDictionary();
-
-            public ModelStateDictionary ModelErrors => _modelState;
+            public ModelStateDictionary ModelErrors { get; } = new ModelStateDictionary();
 
             public string Owner { get; set; }
 
@@ -208,7 +205,7 @@ namespace Orchard.Core.Tests.Common.Providers
 
             public void AddModelError(string key, LocalizedString errorMessage)
             {
-                _modelState.AddModelError(key, errorMessage.ToString());
+                ModelErrors.AddModelError(key, errorMessage.ToString());
             }
         }
 

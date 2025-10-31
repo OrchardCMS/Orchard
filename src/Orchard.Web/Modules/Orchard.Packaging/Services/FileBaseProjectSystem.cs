@@ -11,7 +11,6 @@ namespace Orchard.Packaging.Services
     {
         private const string NetFrameworkIdentifier = ".NETFramework";
         private const string BinDir = "bin";
-        private readonly string _root;
         private DateTime? _writeTimeUtcForAddedFiles;
 
         public FileBasedProjectSystem(string root)
@@ -20,10 +19,10 @@ namespace Orchard.Packaging.Services
             {
                 throw new ArgumentException("root");
             }
-            _root = root;
+            Root = root;
         }
 
-        public string Root => _root;
+        public string Root { get; }
 
         public virtual string ProjectName => Root;
 

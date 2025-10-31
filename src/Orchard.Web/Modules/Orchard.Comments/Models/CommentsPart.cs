@@ -6,22 +6,19 @@ namespace Orchard.Comments.Models
 {
     public class CommentsPart : ContentPart<CommentsPartRecord>
     {
-        private readonly LazyField<IList<CommentPart>> _comments = new LazyField<IList<CommentPart>>();
-        private readonly LazyField<IList<CommentPart>> _pendingComments = new LazyField<IList<CommentPart>>();
-
-        public LazyField<IList<CommentPart>> CommentsField => _comments;
-        public LazyField<IList<CommentPart>> PendingCommentsField => _pendingComments;
+        public LazyField<IList<CommentPart>> CommentsField { get; } = new LazyField<IList<CommentPart>>();
+        public LazyField<IList<CommentPart>> PendingCommentsField { get; } = new LazyField<IList<CommentPart>>();
 
         public IList<CommentPart> Comments
         {
-            get { return _comments.Value; }
-            set { _comments.Value = value; }
+            get { return CommentsField.Value; }
+            set { CommentsField.Value = value; }
         }
 
         public IList<CommentPart> PendingComments
         {
-            get { return _pendingComments.Value; }
-            set { _pendingComments.Value = value; }
+            get { return PendingCommentsField.Value; }
+            set { PendingCommentsField.Value = value; }
         }
 
         public bool CommentsShown

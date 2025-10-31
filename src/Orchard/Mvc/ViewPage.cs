@@ -20,11 +20,9 @@ namespace Orchard.Mvc
         private ResourceRegister _stylesheetRegister;
 
         private object _display;
-        private Localizer _localizer = NullLocalizer.Instance;
         private object _layout;
-        private WorkContext _workContext;
 
-        public Localizer T => _localizer;
+        public Localizer T { get; private set; } = NullLocalizer.Instance;
         public dynamic Display => _display;
         public ScriptRegister Script
         {
@@ -36,16 +34,16 @@ namespace Orchard.Mvc
         }
 
         public dynamic Layout => _layout;
-        public WorkContext WorkContext => _workContext;
+        public WorkContext WorkContext { get; private set; }
 
         private IDisplayHelperFactory _displayHelperFactory;
-        public IDisplayHelperFactory DisplayHelperFactory => _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+        public IDisplayHelperFactory DisplayHelperFactory => _displayHelperFactory ?? (_displayHelperFactory = WorkContext.Resolve<IDisplayHelperFactory>());
 
         private IShapeFactory _shapeFactory;
-        public IShapeFactory ShapeFactory => _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+        public IShapeFactory ShapeFactory => _shapeFactory ?? (_shapeFactory = WorkContext.Resolve<IShapeFactory>());
 
         private IAuthorizer _authorizer;
-        public IAuthorizer Authorizer => _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+        public IAuthorizer Authorizer => _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
 
         public ResourceRegister Style
         {
@@ -60,11 +58,11 @@ namespace Orchard.Mvc
         {
             base.InitHelpers();
 
-            _workContext = ViewContext.GetWorkContext();
+            WorkContext = ViewContext.GetWorkContext();
 
-            _localizer = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
+            T = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
-            _layout = _workContext.Layout;
+            _layout = WorkContext.Layout;
         }
 
         public virtual void RegisterLink(LinkEntry link)

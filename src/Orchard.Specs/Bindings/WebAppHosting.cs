@@ -19,21 +19,15 @@ namespace Orchard.Specs.Bindings
     [Binding]
     public class WebAppHosting
     {
-        private WebHost _webHost;
-        private RequestDetails _details;
         private HtmlDocument _doc;
         private MessageSink _messages;
         private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
         private ExtensionDeploymentOptions _moduleDeploymentOptions = ExtensionDeploymentOptions.CompiledAssembly;
         private DynamicCompilationOption _dynamicCompilationOption = DynamicCompilationOption.Enabled;
 
-        public WebHost Host => _webHost;
+        public WebHost Host { get; private set; }
 
-        public RequestDetails Details
-        {
-            get { return _details; }
-            set { _details = value; }
-        }
+        public RequestDetails Details { get; set; }
 
         [BeforeTestRun]
         public static void BeforeTestRun()
@@ -55,19 +49,19 @@ namespace Orchard.Specs.Bindings
         [BeforeScenario]
         public void CleanOutTheOldWebHost()
         {
-            if (_webHost != null)
+            if (Host != null)
             {
-                _webHost.Clean();
-                _webHost = null;
+                Host.Clean();
+                Host = null;
             }
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-            if (_webHost != null)
+            if (Host != null)
             {
-                _webHost.Dispose();
+                Host.Dispose();
             }
         }
 
@@ -105,7 +99,7 @@ namespace Orchard.Specs.Bindings
         [Given(@"I have a clean site based on (.*) at ""(.*)""")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory)
         {
-            _webHost = new WebHost(_orchardTemp);
+            Host = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, virtualDirectory ?? "/", _dynamicCompilationOption);
             var shuttle = new Shuttle();
             Host.Execute(() => Executor(shuttle));

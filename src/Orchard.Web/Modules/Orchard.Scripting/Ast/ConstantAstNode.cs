@@ -4,16 +4,14 @@ namespace Orchard.Scripting.Ast
 {
     public class ConstantAstNode : AstNode, IAstNodeWithToken
     {
-        private readonly Token _token;
-
         public ConstantAstNode(Token token)
         {
-            _token = token;
+            Token = token;
         }
 
-        public Token Token => _token;
+        public Token Token { get; }
 
-        public object Value => _token.Value;
+        public object Value => Token.Value;
 
         public override object Accept(AstVisitor visitor)
         {

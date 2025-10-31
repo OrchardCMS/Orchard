@@ -18,24 +18,22 @@ namespace Orchard.Mvc
         private ResourceRegister _stylesheetRegister;
 
         private object _display;
-        private Localizer _localizer = NullLocalizer.Instance;
         private object _layout;
-        private WorkContext _workContext;
 
-        public Localizer T => _localizer;
+        public Localizer T { get; private set; } = NullLocalizer.Instance;
         public dynamic Display => _display;
         public dynamic New => ShapeFactory;
         public dynamic Layout => _layout;
-        public WorkContext WorkContext => _workContext;
+        public WorkContext WorkContext { get; private set; }
 
         private IDisplayHelperFactory _displayHelperFactory;
-        public IDisplayHelperFactory DisplayHelperFactory => _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+        public IDisplayHelperFactory DisplayHelperFactory => _displayHelperFactory ?? (_displayHelperFactory = WorkContext.Resolve<IDisplayHelperFactory>());
 
         private IShapeFactory _shapeFactory;
-        public IShapeFactory ShapeFactory => _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+        public IShapeFactory ShapeFactory => _shapeFactory ?? (_shapeFactory = WorkContext.Resolve<IShapeFactory>());
 
         private IAuthorizer _authorizer;
-        public IAuthorizer Authorizer => _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+        public IAuthorizer Authorizer => _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
 
         public ScriptRegister Script
         {
@@ -83,11 +81,11 @@ namespace Orchard.Mvc
 
         public override void RenderView(ViewContext viewContext)
         {
-            _workContext = viewContext.GetWorkContext();
+            WorkContext = viewContext.GetWorkContext();
 
-            _localizer = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
+            T = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(viewContext, this);
-            _layout = _workContext.Layout;
+            _layout = WorkContext.Layout;
 
             base.RenderView(viewContext);
         }

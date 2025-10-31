@@ -6,15 +6,13 @@ namespace Orchard.Mvc.AntiForgery
     [AttributeUsage(AttributeTargets.Method)]
     public class ValidateAntiForgeryTokenOrchardAttribute : FilterAttribute
     {
-        private readonly bool _enabled = true;
-
         public ValidateAntiForgeryTokenOrchardAttribute() : this(true) { }
 
         public ValidateAntiForgeryTokenOrchardAttribute(bool enabled)
         {
-            _enabled = enabled;
+            Enabled = enabled;
         }
 
-        public bool Enabled => _enabled;
+        public bool Enabled { get; } = true;
     }
 }

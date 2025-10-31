@@ -11,19 +11,18 @@ namespace Orchard.Tests.Stubs
     public class StubAppDataFolder : IAppDataFolder
     {
         private readonly IClock _clock;
-        private readonly StubFileSystem _fileSystem;
 
         public StubAppDataFolder(IClock clock)
         {
             _clock = clock;
-            _fileSystem = new StubFileSystem(_clock);
+            FileSystem = new StubFileSystem(_clock);
         }
 
-        public StubFileSystem FileSystem => _fileSystem;
+        public StubFileSystem FileSystem { get; }
 
         public IEnumerable<string> ListFiles(string path)
         {
-            var entry = _fileSystem.GetDirectoryEntry(path);
+            var entry = FileSystem.GetDirectoryEntry(path);
             if (entry == null)
                 throw new ArgumentException();
 
@@ -32,7 +31,7 @@ namespace Orchard.Tests.Stubs
 
         public IEnumerable<string> ListDirectories(string path)
         {
-            var entry = _fileSystem.GetDirectoryEntry(path);
+            var entry = FileSystem.GetDirectoryEntry(path);
             if (entry == null)
                 throw new ArgumentException();
 
@@ -41,7 +40,7 @@ namespace Orchard.Tests.Stubs
 
         public bool FileExists(string path)
         {
-            return _fileSystem.GetFileEntry(path) != null;
+            return FileSystem.GetFileEntry(path) != null;
         }
 
         public string Combine(params string[] paths)
@@ -62,7 +61,7 @@ namespace Orchard.Tests.Stubs
 
         public Stream CreateFile(string path)
         {
-            return _fileSystem.CreateFile(path);
+            return FileSystem.CreateFile(path);
         }
 
         public string ReadFile(string path)
@@ -78,14 +77,14 @@ namespace Orchard.Tests.Stubs
 
         public Stream OpenFile(string path)
         {
-            return _fileSystem.OpenFile(path);
+            return FileSystem.OpenFile(path);
         }
 
         public void StoreFile(string sourceFileName, string destinationPath)
         {
             using (var inputStream = File.OpenRead(sourceFileName))
             {
-                using (var outputStream = _fileSystem.CreateFile(destinationPath))
+                using (var outputStream = FileSystem.CreateFile(destinationPath))
                 {
                     byte[] buffer = new byte[1024];
                     for (; ; )
@@ -101,12 +100,12 @@ namespace Orchard.Tests.Stubs
 
         public void DeleteFile(string path)
         {
-            _fileSystem.DeleteFile(path);
+            FileSystem.DeleteFile(path);
         }
 
         public DateTime GetFileLastWriteTimeUtc(string path)
         {
-            var entry = _fileSystem.GetFileEntry(path);
+            var entry = FileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new ArgumentException();
             return entry.LastWriteTimeUtc;
@@ -114,17 +113,17 @@ namespace Orchard.Tests.Stubs
 
         public void CreateDirectory(string path)
         {
-            _fileSystem.CreateDirectoryEntry(path);
+            FileSystem.CreateDirectoryEntry(path);
         }
 
         public bool DirectoryExists(string path)
         {
-            return _fileSystem.GetDirectoryEntry(path) != null;
+            return FileSystem.GetDirectoryEntry(path) != null;
         }
 
         public IVolatileToken WhenPathChanges(string path)
         {
-            return _fileSystem.WhenPathChanges(path);
+            return FileSystem.WhenPathChanges(path);
         }
 
         public string MapPath(string path)
@@ -139,7 +138,7 @@ namespace Orchard.Tests.Stubs
 
         public DateTime GetLastWriteTimeUtc(string path)
         {
-            var entry = _fileSystem.GetFileEntry(path);
+            var entry = FileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new InvalidOperationException();
             return entry.LastWriteTimeUtc;

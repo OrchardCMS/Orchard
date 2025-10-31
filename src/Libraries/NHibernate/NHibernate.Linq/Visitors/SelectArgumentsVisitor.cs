@@ -30,7 +30,6 @@ namespace NHibernate.Linq.Visitors
         private readonly ICriteria _rootCriteria;
         private readonly ISession _session;
         private readonly List<IProjection> _projections;
-        private IResultTransformer _transformer;
         private ICriteriaQuery _criteriaQuery;
 
         public IProjection Projection
@@ -51,7 +50,7 @@ namespace NHibernate.Linq.Visitors
             }
         }
 
-        public IResultTransformer Transformer => _transformer;
+        public IResultTransformer Transformer { get; private set; }
 
         private ICriteriaQuery CriteriaQuery
         {
@@ -153,7 +152,7 @@ namespace NHibernate.Linq.Visitors
         protected override NewExpression VisitNew(NewExpression expr)
         {
             NewExpression newExpr = base.VisitNew(expr);
-            _transformer = new TypeSafeConstructorMemberInitResultTransformer(expr);
+            Transformer = new TypeSafeConstructorMemberInitResultTransformer(expr);
 
             var aggregators = expr.Arguments.Where(arg => arg is MethodCallExpression && SupportsMethod(((MethodCallExpression)arg).Method.Name));
             if (aggregators.Any())
@@ -174,7 +173,7 @@ namespace NHibernate.Linq.Visitors
         protected override Expression VisitMemberInit(MemberInitExpression expr)
         {
             Expression newExpr = base.VisitMemberInit(expr);
-            _transformer = new TypeSafeConstructorMemberInitResultTransformer(expr);
+            Transformer = new TypeSafeConstructorMemberInitResultTransformer(expr);
             return newExpr;
         }
 
@@ -330,7 +329,7 @@ namespace NHibernate.Linq.Visitors
         {
             if (_rootCriteria.GetCriteriaByAlias(expr.Alias) != null)
             {
-                _transformer = new LinqJoinResultsTransformer(expr.Type);
+                Transformer = new LinqJoinResultsTransformer(expr.Type);
             }
 
             return expr;

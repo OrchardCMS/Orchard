@@ -8,11 +8,10 @@ namespace Orchard.ContentManagement
     public class QueryHints
     {
         private readonly List<string> _records = new List<string>();
-        private static readonly QueryHints _empty = new QueryHints();
 
         public IEnumerable<string> Records => _records;
 
-        public static QueryHints Empty => _empty;
+        public static QueryHints Empty { get; } = new QueryHints();
 
         public QueryHints ExpandRecords(IEnumerable<string> records)
         {

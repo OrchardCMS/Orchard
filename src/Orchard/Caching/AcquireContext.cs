@@ -24,13 +24,11 @@ namespace Orchard.Caching
     /// </summary>
     public class SimpleAcquireContext : IAcquireContext
     {
-        private readonly Action<IVolatileToken> _monitor;
-
         public SimpleAcquireContext(Action<IVolatileToken> monitor)
         {
-            _monitor = monitor;
+            Monitor = monitor;
         }
 
-        public Action<IVolatileToken> Monitor => _monitor;
+        public Action<IVolatileToken> Monitor { get; }
     }
 }

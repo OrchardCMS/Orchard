@@ -7,21 +7,20 @@ namespace Orchard.Tasks.Locking.Services
     {
 
         private readonly string _name;
-        private readonly string _internalName;
         private readonly Action _releaseLockAction;
         private int _count;
 
         internal DistributedLock(string name, string internalName, Action releaseLockAction)
         {
             _name = name;
-            _internalName = internalName;
+            InternalName = internalName;
             _releaseLockAction = releaseLockAction;
             _count = 1;
         }
 
         string IDistributedLock.Name => _name;
 
-        internal string InternalName => _internalName;
+        internal string InternalName { get; }
 
         internal void Increment()
         {

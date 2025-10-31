@@ -70,13 +70,12 @@ namespace Orchard.Environment
 
         class HttpContextScopeImplementation : IWorkContextScope
         {
-            readonly WorkContext _workContext;
             readonly Action _disposer;
 
             public HttpContextScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, HttpContextBase httpContext, object workContextKey)
             {
-                _workContext = lifetimeScope.Resolve<WorkContext>();
-                httpContext.Items[workContextKey] = _workContext;
+                WorkContext = lifetimeScope.Resolve<WorkContext>();
+                httpContext.Items[workContextKey] = WorkContext;
 
                 _disposer = () =>
                 {
@@ -91,7 +90,7 @@ namespace Orchard.Environment
                 _disposer();
             }
 
-            public WorkContext WorkContext => _workContext;
+            public WorkContext WorkContext { get; }
 
             public TService Resolve<TService>()
             {
@@ -106,7 +105,6 @@ namespace Orchard.Environment
 
         class CallContextScopeImplementation : IWorkContextScope
         {
-            readonly WorkContext _workContext;
             readonly Action _disposer;
 
             public CallContextScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, string workContextSlot)
@@ -114,11 +112,11 @@ namespace Orchard.Environment
 
                 CallContext.LogicalSetData(workContextSlot, null);
 
-                _workContext = lifetimeScope.Resolve<WorkContext>();
+                WorkContext = lifetimeScope.Resolve<WorkContext>();
                 var httpContext = lifetimeScope.Resolve<HttpContextBase>();
-                _workContext.HttpContext = httpContext;
+                WorkContext.HttpContext = httpContext;
 
-                CallContext.LogicalSetData(workContextSlot, new ObjectHandle(_workContext));
+                CallContext.LogicalSetData(workContextSlot, new ObjectHandle(WorkContext));
 
                 _disposer = () =>
                 {
@@ -133,7 +131,7 @@ namespace Orchard.Environment
                 _disposer();
             }
 
-            public WorkContext WorkContext => _workContext;
+            public WorkContext WorkContext { get; }
 
             public TService Resolve<TService>()
             {

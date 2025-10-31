@@ -243,16 +243,15 @@ namespace Orchard.Packaging.Services
         {
             private readonly IWebSiteFolder _webSiteFolder;
             private readonly string _virtualPath;
-            private readonly string _packagePath;
 
             public VirtualPackageFile(IWebSiteFolder webSiteFolder, string virtualPath, string packagePath)
             {
                 _webSiteFolder = webSiteFolder;
                 _virtualPath = virtualPath;
-                _packagePath = packagePath;
+                Path = packagePath;
             }
 
-            public string Path => _packagePath;
+            public string Path { get; }
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Supposed to return an open stream.")]
             public Stream GetStream()

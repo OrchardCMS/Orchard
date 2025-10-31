@@ -4,14 +4,8 @@ namespace Orchard.Caching
 {
     public class DefaultCacheContextAccessor : ICacheContextAccessor
     {
-        [ThreadStatic]
-        private static IAcquireContext _threadInstance;
-
-        public static IAcquireContext ThreadInstance
-        {
-            get { return _threadInstance; }
-            set { _threadInstance = value; }
-        }
+        [field: ThreadStatic]
+        public static IAcquireContext ThreadInstance { get; set; }
 
         public IAcquireContext Current
         {

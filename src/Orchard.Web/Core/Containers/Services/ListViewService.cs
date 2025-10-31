@@ -15,14 +15,12 @@ namespace Orchard.Core.Containers.Services
 
     public class ListViewService : IListViewService
     {
-        private readonly IEnumerable<IListViewProvider> _providers;
-
         public ListViewService(IEnumerable<IListViewProvider> providers)
         {
-            _providers = providers.OrderBy(x => x.Priority);
+            Providers = providers.OrderBy(x => x.Priority);
         }
 
-        public IEnumerable<IListViewProvider> Providers => _providers;
+        public IEnumerable<IListViewProvider> Providers { get; }
 
         public IListViewProvider GetProvider(string name)
         {

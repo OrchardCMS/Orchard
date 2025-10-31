@@ -20,18 +20,17 @@ namespace Orchard.Parameters
         public class State
         {
             private readonly string _commandLine;
-            private readonly StringBuilder _stringBuilder;
             private readonly List<string> _arguments;
             private int _index;
 
             public State(string commandLine)
             {
                 _commandLine = commandLine;
-                _stringBuilder = new StringBuilder();
+                StringBuilder = new StringBuilder();
                 _arguments = new List<string>();
             }
 
-            public StringBuilder StringBuilder => _stringBuilder;
+            public StringBuilder StringBuilder { get; }
             public bool EOF => _index >= _commandLine.Length;
             public char Current => _commandLine[_index];
             public IEnumerable<string> Arguments => _arguments;

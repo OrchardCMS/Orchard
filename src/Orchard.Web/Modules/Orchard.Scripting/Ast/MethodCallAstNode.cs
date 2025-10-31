@@ -5,21 +5,18 @@ namespace Orchard.Scripting.Ast
 {
     public class MethodCallAstNode : AstNode, IAstNodeWithToken
     {
-        private readonly Token _token;
-        private readonly IList<AstNode> _arguments;
-
         public MethodCallAstNode(Token token, IList<AstNode> arguments)
         {
-            _token = token;
-            _arguments = arguments;
+            Token = token;
+            Arguments = arguments;
         }
 
-        public Token Target => _token;
-        public IList<AstNode> Arguments => _arguments;
+        public Token Target => Token;
+        public IList<AstNode> Arguments { get; }
 
-        public Token Token => _token;
+        public Token Token { get; }
 
-        public override IEnumerable<AstNode> Children => _arguments;
+        public override IEnumerable<AstNode> Children => Arguments;
 
         public override object Accept(AstVisitor visitor)
         {

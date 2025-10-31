@@ -18,22 +18,19 @@ namespace Orchard.Localization.Models
 
         public DateTimeParts(int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeKind kind, TimeSpan offset)
         {
-            _date = new DateParts(year, month, day);
-            _time = new TimeParts(hour, minute, second, millisecond, kind, offset);
+            Date = new DateParts(year, month, day);
+            Time = new TimeParts(hour, minute, second, millisecond, kind, offset);
         }
 
         public DateTimeParts(DateParts dateParts, TimeParts timeParts)
         {
-            _date = dateParts;
-            _time = timeParts;
+            Date = dateParts;
+            Time = timeParts;
         }
 
-        private readonly DateParts _date;
-        private readonly TimeParts _time;
+        public DateParts Date { get; }
 
-        public DateParts Date => _date;
-
-        public TimeParts Time => _time;
+        public TimeParts Time { get; }
 
         public DateTime ToDateTime(Calendar calendar)
         {
@@ -52,7 +49,7 @@ namespace Orchard.Localization.Models
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", _date, _time);
+            return string.Format("{0} {1}", Date, Time);
         }
     }
 }

@@ -7,22 +7,19 @@ namespace Orchard.Localization.Models
 {
     public sealed class LocalizationPart : ContentPart<LocalizationPartRecord>, ILocalizableAspect
     {
-        private readonly LazyField<CultureRecord> _culture = new LazyField<CultureRecord>();
-        private readonly LazyField<IContent> _masterContentItem = new LazyField<IContent>();
-
-        public LazyField<CultureRecord> CultureField => _culture;
-        public LazyField<IContent> MasterContentItemField => _masterContentItem;
+        public LazyField<CultureRecord> CultureField { get; } = new LazyField<CultureRecord>();
+        public LazyField<IContent> MasterContentItemField { get; } = new LazyField<IContent>();
 
         public CultureRecord Culture
         {
-            get { return _culture.Value; }
-            set { _culture.Value = value; }
+            get { return CultureField.Value; }
+            set { CultureField.Value = value; }
         }
 
         public IContent MasterContentItem
         {
-            get { return _masterContentItem.Value; }
-            set { _masterContentItem.Value = value; }
+            get { return MasterContentItemField.Value; }
+            set { MasterContentItemField.Value = value; }
         }
 
         public bool HasTranslationGroup => Record.MasterContentItemId != 0;

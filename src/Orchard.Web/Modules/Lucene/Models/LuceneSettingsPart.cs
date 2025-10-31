@@ -12,12 +12,11 @@ namespace Lucene.Models
             set { this.Store(x => x.LuceneAnalyzerSelectorMappingsSerialized, value); }
         }
 
-        private readonly LazyField<IEnumerable<LuceneAnalyzerSelectorMapping>> _luceneAnalyzerSelectorMappings = new LazyField<IEnumerable<LuceneAnalyzerSelectorMapping>>();
-        internal LazyField<IEnumerable<LuceneAnalyzerSelectorMapping>> LuceneAnalyzerSelectorMappingsField => _luceneAnalyzerSelectorMappings;
+        internal LazyField<IEnumerable<LuceneAnalyzerSelectorMapping>> LuceneAnalyzerSelectorMappingsField { get; } = new LazyField<IEnumerable<LuceneAnalyzerSelectorMapping>>();
         public IEnumerable<LuceneAnalyzerSelectorMapping> LuceneAnalyzerSelectorMappings
         {
-            get { return _luceneAnalyzerSelectorMappings.Value; }
-            set { _luceneAnalyzerSelectorMappings.Value = value; }
+            get { return LuceneAnalyzerSelectorMappingsField.Value; }
+            set { LuceneAnalyzerSelectorMappingsField.Value = value; }
         }
     }
 }

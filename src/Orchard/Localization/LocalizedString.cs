@@ -9,23 +9,18 @@ namespace Orchard.Localization
     /// </summary>
     public class LocalizedString : MarshalByRefObject, IHtmlString
     {
-        private readonly string _localized;
-        private readonly string _scope;
-        private readonly string _textHint;
-        private readonly object[] _args;
-
         public LocalizedString(string languageNeutral)
         {
-            _localized = languageNeutral;
-            _textHint = languageNeutral;
+            Text = languageNeutral;
+            TextHint = languageNeutral;
         }
 
         public LocalizedString(string localized, string scope, string textHint, object[] args)
         {
-            _localized = localized;
-            _scope = scope;
-            _textHint = textHint;
-            _args = args;
+            Text = localized;
+            Scope = scope;
+            TextHint = textHint;
+            Args = args;
         }
 
         public static LocalizedString TextOrDefault(string text, LocalizedString defaultValue)
@@ -35,38 +30,38 @@ namespace Orchard.Localization
             return new LocalizedString(text);
         }
 
-        public string Scope => _scope;
+        public string Scope { get; }
 
         /// <summary>
         /// The HTML-Encoded original text
         /// </summary>
-        public string TextHint => _textHint;
+        public string TextHint { get; }
 
-        public object[] Args => _args;
+        public object[] Args { get; }
 
         /// <summary>
         /// The HTML-encoded localized text
         /// </summary>
-        public string Text => _localized;
+        public string Text { get; }
 
         /// <summary>
         /// The HTML-encoded localized text
         /// </summary>
         public override string ToString()
         {
-            return _localized;
+            return Text;
         }
 
         string IHtmlString.ToHtmlString()
         {
-            return _localized;
+            return Text;
         }
 
         public override int GetHashCode()
         {
             var hashCode = 0;
-            if (_localized != null)
-                hashCode ^= _localized.GetHashCode();
+            if (Text != null)
+                hashCode ^= Text.GetHashCode();
             return hashCode;
         }
 
@@ -76,7 +71,7 @@ namespace Orchard.Localization
                 return false;
 
             var that = (LocalizedString)obj;
-            return string.Equals(_localized, that._localized);
+            return string.Equals(Text, that.Text);
         }
 
         public override object InitializeLifetimeService()

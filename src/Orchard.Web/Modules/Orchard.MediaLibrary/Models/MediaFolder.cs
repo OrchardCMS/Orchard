@@ -8,14 +8,8 @@ namespace Orchard.MediaLibrary.Models
         public string MediaPath { get; set; }
         public string User { get; set; }
         public DateTime LastUpdated { get; set; }
+        internal Lazy<long> SizeField { get; set; }
 
-        private Lazy<long> _size;
-        internal Lazy<long> SizeField
-        {
-            get { return _size; }
-            set { _size = value; }
-        }
-
-        public long Size => _size.Value;
+        public long Size => SizeField.Value;
     }
 }

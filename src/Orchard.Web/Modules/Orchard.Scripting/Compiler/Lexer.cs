@@ -39,14 +39,12 @@ namespace Orchard.Scripting.Compiler
 
         public struct Marker
         {
-            private readonly int _tokenIndex;
-
             public Marker(int tokenIndex)
             {
-                _tokenIndex = tokenIndex;
+                TokenIndex = tokenIndex;
             }
 
-            public int TokenIndex => _tokenIndex;
+            public int TokenIndex { get; }
         }
     }
 }
