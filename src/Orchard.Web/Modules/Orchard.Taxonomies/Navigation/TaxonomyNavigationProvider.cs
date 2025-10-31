@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,17 +9,20 @@ using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Taxonomies.Navigation {
+namespace Orchard.Taxonomies.Navigation
+{
     /// <summary>
     /// Dynamically injects taxonomy items as menu items on TaxonomyNavigationMenuItem elements
     /// </summary>
-    public class TaxonomyNavigationProvider : INavigationFilter {
+    public class TaxonomyNavigationProvider : INavigationFilter
+    {
         private readonly IContentManager _contentManager;
         private readonly ITaxonomyService _taxonomyService;
 
         public TaxonomyNavigationProvider(
             IContentManager contentManager,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService)
+        {
             _contentManager = contentManager;
             _taxonomyService = taxonomyService;
 
@@ -32,10 +35,13 @@ namespace Orchard.Taxonomies.Navigation {
         // add that root to the results.
         private Dictionary<string, TermPart[]> _termsMemory;
 
-        public IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> items) {
+        public IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> items)
+        {
 
-            foreach (var item in items) {
-                if (item.Content != null && item.Content.ContentItem.ContentType == "TaxonomyNavigationMenuItem") {
+            foreach (var item in items)
+            {
+                if (item.Content != null && item.Content.ContentItem.ContentType == "TaxonomyNavigationMenuItem")
+                {
 
                     var taxonomyNavigationPart = item.Content.As<TaxonomyNavigationPart>();
 
@@ -43,16 +49,20 @@ namespace Orchard.Taxonomies.Navigation {
 
                     TermPart[] allTerms;
                     string memoryKey;
-                    if (rootTerm != null) {
+                    if (rootTerm != null)
+                    {
                         memoryKey = $"{rootTerm.Id}_{taxonomyNavigationPart.DisplayRootTerm}";
-                        if (!_termsMemory.ContainsKey(memoryKey)) {
+                        if (!_termsMemory.ContainsKey(memoryKey))
+                        {
                             // if DisplayRootTerm is specified add it to the menu items to render
                             _termsMemory[memoryKey] = _taxonomyService.GetChildren(rootTerm, taxonomyNavigationPart.DisplayRootTerm).ToArray();
                         }
                     }
-                    else {
+                    else
+                    {
                         memoryKey = taxonomyNavigationPart.TaxonomyId.ToString();
-                        if (!_termsMemory.ContainsKey(memoryKey)) {
+                        if (!_termsMemory.ContainsKey(memoryKey))
+                        {
                             _termsMemory[memoryKey] = _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId).ToArray();
                         }
                     }
@@ -66,44 +76,52 @@ namespace Orchard.Taxonomies.Navigation {
                     var rootPath = rootTerm == null || taxonomyNavigationPart.DisplayRootTerm ? "" : rootTerm.FullPath;
 
                     var startLevel = rootLevel + 1;
-                    if (rootTerm == null || taxonomyNavigationPart.DisplayRootTerm) {
+                    if (rootTerm == null || taxonomyNavigationPart.DisplayRootTerm)
+                    {
                         startLevel = rootLevel;
                     }
 
-                    var endLevel = Int32.MaxValue;
-                    if (taxonomyNavigationPart.LevelsToDisplay > 0) {
+                    var endLevel = int.MaxValue;
+                    if (taxonomyNavigationPart.LevelsToDisplay > 0)
+                    {
                         endLevel = startLevel + taxonomyNavigationPart.LevelsToDisplay - 1;
                     }
 
-                    foreach (var contentItem in allTerms) {
-                        if (contentItem != null) {
+                    foreach (var contentItem in allTerms)
+                    {
+                        if (contentItem != null)
+                        {
                             var part = contentItem;
                             var level = part.GetLevels();
 
                             // filter levels ?
-                            if (level < startLevel || level > endLevel) {
+                            if (level < startLevel || level > endLevel)
+                            {
                                 continue;
                             }
 
                             // ignore menu item if there are no content items associated to the term
-                            if (taxonomyNavigationPart.HideEmptyTerms && part.Count == 0) {
+                            if (taxonomyNavigationPart.HideEmptyTerms && part.Count == 0)
+                            {
                                 continue;
                             }
 
                             var menuText = _contentManager.GetItemMetadata(part).DisplayText;
                             var routes = _contentManager.GetItemMetadata(part).DisplayRouteValues;
 
-                            if (taxonomyNavigationPart.DisplayContentCount) {
+                            if (taxonomyNavigationPart.DisplayContentCount)
+                            {
                                 menuText += " (" + part.Count + ")";
                             }
 
                             // create 
                             var positions = contentItem.FullPath.Substring(rootPath.Length)
                                 .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(p => Array.FindIndex(allTerms, t => t.Id == Int32.Parse(p)))
+                                .Select(p => Array.FindIndex(allTerms, t => t.Id == int.Parse(p)))
                                 .ToArray();
 
-                            var inserted = new MenuItem {
+                            var inserted = new MenuItem
+                            {
                                 Text = new LocalizedString(menuText),
                                 IdHint = item.IdHint,
                                 Classes = item.Classes,
@@ -113,7 +131,7 @@ namespace Orchard.Taxonomies.Navigation {
                                 RouteValues = routes,
                                 LocalNav = item.LocalNav,
                                 Items = new MenuItem[0],
-                                Position = menuPosition + ":" + String.Join(".", positions.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray()),
+                                Position = menuPosition + ":" + string.Join(".", positions.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray()),
                                 Permissions = item.Permissions,
                                 Content = part
                             };
@@ -122,7 +140,8 @@ namespace Orchard.Taxonomies.Navigation {
                         }
                     }
                 }
-                else {
+                else
+                {
                     yield return item;
                 }
             }

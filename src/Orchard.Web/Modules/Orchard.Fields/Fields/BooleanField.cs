@@ -1,12 +1,14 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Fields.Fields {
-    public class BooleanField : ContentField {
+namespace Orchard.Fields.Fields
+{
+    public class BooleanField : ContentField
+    {
 
-        public Boolean? Value {
-            get { return Storage.Get<Boolean?>(); }
+        public bool? Value
+        {
+            get { return Storage.Get<bool?>(); }
 
             set { Storage.Set(value); }
         }

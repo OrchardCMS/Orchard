@@ -1,23 +1,26 @@
-﻿using System.Linq;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Configuration {
+namespace Orchard.Tests.Environment.Configuration
+{
     [TestFixture]
-    public class DefaultTenantManagerTests {
+    public class DefaultTenantManagerTests
+    {
         private StubAppDataFolder _appDataFolder;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var clock = new StubClock();
             _appDataFolder = new StubAppDataFolder(clock);
         }
 
         [Test]
-        public void SingleSettingsFileShouldComeBackAsExpected() {
+        public void SingleSettingsFileShouldComeBackAsExpected()
+        {
 
             _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
@@ -31,7 +34,8 @@ namespace Orchard.Tests.Environment.Configuration {
 
 
         [Test]
-        public void MultipleFilesCanBeDetected() {
+        public void MultipleFilesCanBeDetected()
+        {
 
             _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
             _appDataFolder.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SqlCe2\r\nDataConnectionString: something else2");
@@ -52,11 +56,12 @@ namespace Orchard.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void NewSettingsCanBeStored() {
+        public void NewSettingsCanBeStored()
+        {
             _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
-            var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};
+            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
 
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
             loader.SaveSettings(foo);
@@ -69,7 +74,8 @@ namespace Orchard.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void CustomSettingsCanBeRetrieved() {
+        public void CustomSettingsCanBeRetrieved()
+        {
             _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nProperty1: Foo\r\nProperty2: Bar");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
@@ -83,7 +89,8 @@ namespace Orchard.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void CustomSettingsCanBeStoredAndRetrieved() {
+        public void CustomSettingsCanBeStoredAndRetrieved()
+        {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings { Name = "Default" };
             foo["Property1"] = "Foo";
@@ -99,7 +106,8 @@ namespace Orchard.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void EncryptionSettingsAreStoredAndReadable() {
+        public void EncryptionSettingsAreStoredAndReadable()
+        {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux", EncryptionAlgorithm = "AES", EncryptionKey = "ABCDEFG", HashAlgorithm = "HMACSHA256", HashKey = "HIJKLMN" };
             loader.SaveSettings(foo);
@@ -115,7 +123,8 @@ namespace Orchard.Tests.Environment.Configuration {
 
 
         [Test]
-        public void SettingsDontLoseTenantState() {
+        public void SettingsDontLoseTenantState()
+        {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings { Name = "Default" };
             foo.State = TenantState.Disabled;

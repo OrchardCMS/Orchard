@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Castle.Core.Internal;
@@ -8,9 +8,11 @@ using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Tests.UI.Navigation {
+namespace Orchard.Tests.UI.Navigation
+{
     [TestFixture]
-    public class MenuFilterTests {
+    public class MenuFilterTests
+    {
         private const string FirstLevel1Action = "FirstLevel1";
         private const string SecondLevel1Action = "SecondLevel1";
         private const string SecondLevel2Action = "SecondLevel2";
@@ -24,13 +26,15 @@ namespace Orchard.Tests.UI.Navigation {
         private const string FourthLevel4Action = "FourthLevel4";
 
         [Test]
-        public void MockNavManagerWorks() {
+        public void MockNavManagerWorks()
+        {
             var main = GetNavigationManager().Object.BuildMenu("main");
             Assert.That(main.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void FindSelectedPathScenario2() {
+        public void FindSelectedPathScenario2()
+        {
             NavigationBuilder navigationBuilder = BuildMenuScenario2();
             IEnumerable<MenuItem> menuItems = navigationBuilder.Build();
 
@@ -49,7 +53,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void FindParentLocalTaskScenario2() {
+        public void FindParentLocalTaskScenario2()
+        {
             NavigationBuilder navigationBuilder = BuildMenuScenario2();
             IEnumerable<MenuItem> menuItems = navigationBuilder.Build();
 
@@ -60,9 +65,10 @@ namespace Orchard.Tests.UI.Navigation {
             MenuItem parentNode = MenuFilterAccessor.FindParentLocalTaskAccessor(selectedPath);
 
             Assert.That(parentNode, Is.EqualTo(FindMenuItem(menuItems, "B")));
-        } 
+        }
 
-        private static Mock<INavigationManager> GetNavigationManager() {
+        private static Mock<INavigationManager> GetNavigationManager()
+        {
             var mainMenu = new[] { new MenuItem { Text = new LocalizedString("The Main Menu") } };
             var adminMenu = new[] { new MenuItem { Text = new LocalizedString("The Admin Menu") } };
             var navigationManager = new Mock<INavigationManager>();
@@ -71,7 +77,8 @@ namespace Orchard.Tests.UI.Navigation {
             return navigationManager;
         }
 
-        private static NavigationBuilder BuildMenuScenario1() {
+        private static NavigationBuilder BuildMenuScenario1()
+        {
             NavigationBuilder navigationBuilder = new NavigationBuilder();
             navigationBuilder.Add(new LocalizedString("X"), "0",
                 menu => menu
@@ -85,7 +92,8 @@ namespace Orchard.Tests.UI.Navigation {
             return navigationBuilder;
         }
 
-        private static NavigationBuilder BuildMenuScenario2() {
+        private static NavigationBuilder BuildMenuScenario2()
+        {
             NavigationBuilder navigationBuilder = new NavigationBuilder();
             navigationBuilder.Add(new LocalizedString("X"), "0",
                 menu => menu
@@ -103,13 +111,16 @@ namespace Orchard.Tests.UI.Navigation {
             return navigationBuilder;
         }
 
-        protected static MenuItem FindMenuItem(IEnumerable<MenuItem> menuItems, string text) {
+        protected static MenuItem FindMenuItem(IEnumerable<MenuItem> menuItems, string text)
+        {
             Queue<MenuItem> remainingItems = new Queue<MenuItem>(menuItems);
 
-            while (remainingItems.Count > 0) {
+            while (remainingItems.Count > 0)
+            {
                 MenuItem currentMenuItem = remainingItems.Dequeue();
 
-                if (currentMenuItem.Text.TextHint.Equals(text)) {
+                if (currentMenuItem.Text.TextHint.Equals(text))
+                {
                     return currentMenuItem;
                 }
 
@@ -119,7 +130,8 @@ namespace Orchard.Tests.UI.Navigation {
             return null;
         }
 
-        private static RouteData GetRouteData(MenuItem menuItem) {
+        private static RouteData GetRouteData(MenuItem menuItem)
+        {
             RouteData routeData = new RouteData();
             routeData.Values["area"] = menuItem.RouteValues["area"];
             routeData.Values["controller"] = menuItem.RouteValues["controller"];
@@ -128,17 +140,21 @@ namespace Orchard.Tests.UI.Navigation {
             return routeData;
         }
 
-        private class MenuFilterAccessor : MenuFilter {
+        private class MenuFilterAccessor : MenuFilter
+        {
             public MenuFilterAccessor(INavigationManager navigationManager,
             IWorkContextAccessor workContextAccessor,
             IShapeFactory shapeFactory) :
-                base(navigationManager, workContextAccessor, shapeFactory) {}
+                base(navigationManager, workContextAccessor, shapeFactory)
+            { }
 
-            public static Stack<MenuItem> FindSelectedPathAccessor(IEnumerable<MenuItem> menuItems, RouteData currentRouteData) {
+            public static Stack<MenuItem> FindSelectedPathAccessor(IEnumerable<MenuItem> menuItems, RouteData currentRouteData)
+            {
                 return NavigationHelper.SetSelectedPath(menuItems, null, currentRouteData);
             }
 
-            public static MenuItem FindParentLocalTaskAccessor(Stack<MenuItem> selectedPath) {
+            public static MenuItem FindParentLocalTaskAccessor(Stack<MenuItem> selectedPath)
+            {
                 return NavigationHelper.FindParentLocalTask(selectedPath);
             }
         }

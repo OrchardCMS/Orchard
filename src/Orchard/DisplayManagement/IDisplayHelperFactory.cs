@@ -1,10 +1,12 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
-namespace Orchard.DisplayManagement {
+namespace Orchard.DisplayManagement
+{
     /// <summary>
     /// Used to create a dynamic, contextualized Display object to dispatch shape rendering
     /// </summary>
-    public interface IDisplayHelperFactory : IDependency {
+    public interface IDisplayHelperFactory : IDependency
+    {
         dynamic CreateHelper(ViewContext viewContext, IViewDataContainer viewDataContainer);
     }
 }

@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,21 +10,22 @@ using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Templates.Compilation.Razor;
 
-namespace Orchard.Templates.Services {
+namespace Orchard.Templates.Services
+{
     [OrchardFeature("Orchard.Templates.Razor")]
-    public class RazorTemplateProcessor : TemplateProcessorImpl {
+    public class RazorTemplateProcessor : TemplateProcessorImpl
+    {
         private readonly IRazorCompiler _compiler;
         private readonly HttpContextBase _httpContextBase;
         private readonly IWorkContextAccessor _wca;
 
-        public override string Type {
-            get { return "Razor"; }
-        }
+        public override string Type => "Razor";
 
         public RazorTemplateProcessor(
             IRazorCompiler compiler,
             HttpContextBase httpContextBase,
-            IWorkContextAccessor wca) {
+            IWorkContextAccessor wca)
+        {
 
             _compiler = compiler;
             _httpContextBase = httpContextBase;
@@ -35,12 +35,14 @@ namespace Orchard.Templates.Services {
 
         ILogger Logger { get; set; }
 
-        public override void Verify(string template) {
+        public override void Verify(string template)
+        {
             _compiler.CompileRazor(template, null, new Dictionary<string, object>());
         }
 
-        public override string Process(string template, string name, DisplayContext context = null, dynamic model = null) {
-            if (String.IsNullOrEmpty(template))
+        public override string Process(string template, string name, DisplayContext context = null, dynamic model = null)
+        {
+            if (string.IsNullOrEmpty(template))
                 return string.Empty;
 
             var compiledTemplate = _compiler.CompileRazor(template, name, new Dictionary<string, object>());
@@ -48,12 +50,16 @@ namespace Orchard.Templates.Services {
             return result;
         }
 
-        private string ActivateAndRenderTemplate(IRazorTemplateBase obj, DisplayContext displayContext, string templateVirtualPath, object model) {
+        private string ActivateAndRenderTemplate(IRazorTemplateBase obj, DisplayContext displayContext, string templateVirtualPath, object model)
+        {
             var buffer = new StringBuilder(1024);
-            using (var writer = new StringWriter(buffer)) {
-                using (var htmlWriter = new HtmlTextWriter(writer)) {
+            using (var writer = new StringWriter(buffer))
+            {
+                using (var htmlWriter = new HtmlTextWriter(writer))
+                {
 
-                    if (displayContext != null && displayContext.ViewContext.Controller != null) {
+                    if (displayContext != null && displayContext.ViewContext.Controller != null)
+                    {
                         var shapeViewContext = new ViewContext(
                             displayContext.ViewContext.Controller.ControllerContext,
                             displayContext.ViewContext.View,
@@ -68,7 +74,8 @@ namespace Orchard.Templates.Services {
                         obj.ViewData = new ViewDataDictionary(displayContext.ViewDataContainer.ViewData) { Model = model };
                         obj.InitHelpers();
                     }
-                    else {
+                    else
+                    {
 
                         // Setup a fake view context in order to support razor syntax inside of HTML attributes,
                         // for instance: <a href="@WorkContext.CurrentSite.BaseUrl">Homepage</a>.
@@ -97,7 +104,8 @@ namespace Orchard.Templates.Services {
 
         private class StubController : Controller { }
 
-        private class StubView : IView {
+        private class StubView : IView
+        {
             public void Render(ViewContext viewContext, TextWriter writer) { }
         }
     }

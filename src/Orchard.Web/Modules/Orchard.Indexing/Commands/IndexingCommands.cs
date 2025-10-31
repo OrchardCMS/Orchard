@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement;
@@ -6,8 +6,10 @@ using Orchard.Indexing.Services;
 using Orchard.Tasks.Indexing;
 using static Orchard.Indexing.Helpers.IndexingHelpers;
 
-namespace Orchard.Indexing.Commands {
-    public class IndexingCommands : DefaultOrchardCommandHandler {
+namespace Orchard.Indexing.Commands
+{
+    public class IndexingCommands : DefaultOrchardCommandHandler
+    {
         private readonly IIndexManager _indexManager;
         private readonly IIndexingService _indexingService;
         private readonly IIndexingTaskManager _indexingTaskManager;
@@ -17,7 +19,8 @@ namespace Orchard.Indexing.Commands {
             IIndexManager indexManager,
             IIndexingService indexingService,
             IIndexingTaskManager indexingTaskManager,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
             _indexManager = indexManager;
@@ -32,26 +35,33 @@ namespace Orchard.Indexing.Commands {
 
         [CommandName("index create")]
         [CommandHelp("index create <index>\r\n\t" + "Creates a new index with the specified name")]
-        public void Create(string index) {
-            if (!_indexManager.HasIndexProvider()) {
+        public void Create(string index)
+        {
+            if (!_indexManager.HasIndexProvider())
+            {
                 Context.Output.WriteLine(T("No index service available"));
                 return;
             }
 
-            if (!IsValidIndexName(index)) {
+            if (!IsValidIndexName(index))
+            {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
 
             var indexProvider = _indexManager.GetSearchIndexProvider();
-            if (indexProvider == null) {
+            if (indexProvider == null)
+            {
                 Context.Output.WriteLine(T("No indexing service was found. Please enable a module like Lucene."));
             }
-            else {
-                if (indexProvider.Exists(index)) {
+            else
+            {
+                if (indexProvider.Exists(index))
+                {
                     Context.Output.WriteLine(T("The specified index already exists."));
                 }
-                else {
+                else
+                {
                     _indexManager.GetSearchIndexProvider().CreateIndex(index);
                     Context.Output.WriteLine(T("New index has been created successfully."));
                 }
@@ -60,8 +70,10 @@ namespace Orchard.Indexing.Commands {
 
         [CommandName("index update")]
         [CommandHelp("index update <index>\r\n\t" + "Updates the specified index")]
-        public void Update(string index) {
-            if (!IsValidIndexName(index)) {
+        public void Update(string index)
+        {
+            if (!IsValidIndexName(index))
+            {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
@@ -72,8 +84,10 @@ namespace Orchard.Indexing.Commands {
 
         [CommandName("index rebuild")]
         [CommandHelp("index rebuild <index> \r\n\t" + "Rebuilds the specified index")]
-        public void Rebuild(string index) {
-            if (!IsValidIndexName(index)) {
+        public void Rebuild(string index)
+        {
+            if (!IsValidIndexName(index))
+            {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
@@ -85,13 +99,16 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index query")]
         [CommandHelp("index query <index> /Query:<query>\r\n\t" + "Searches the specified <query> terms in the specified index")]
         [OrchardSwitches("Query")]
-        public void Search(string index) {
-            if (!IsValidIndexName(index)) {
+        public void Search(string index)
+        {
+            if (!IsValidIndexName(index))
+            {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
 
-            if (!_indexManager.HasIndexProvider()) {
+            if (!_indexManager.HasIndexProvider())
+            {
                 Context.Output.WriteLine(T("No index available"));
                 return;
             }
@@ -103,10 +120,11 @@ namespace Orchard.Indexing.Commands {
             Context.Output.WriteLine("┌──────────────────────────────────────────────────────────────┬────────┐");
             Context.Output.WriteLine("│ {0} │ {1,6} │", "Title" + new string(' ', 60 - "Title".Length), "Score");
             Context.Output.WriteLine("├──────────────────────────────────────────────────────────────┼────────┤");
-            foreach (var searchHit in results) {
+            foreach (var searchHit in results)
+            {
                 var contentItem = _contentManager.Get(searchHit.ContentItemId);
                 var metadata = _contentManager.GetItemMetadata(contentItem);
-                var title = String.IsNullOrWhiteSpace(metadata.DisplayText) ? "- no title -" : metadata.DisplayText;
+                var title = string.IsNullOrWhiteSpace(metadata.DisplayText) ? "- no title -" : metadata.DisplayText;
                 title = title.Substring(0, Math.Min(60, title.Length));
                 var score = Math.Round(searchHit.Score, 2).ToString();
                 Context.Output.WriteLine("│ {0} │ {1,6} │", title + new string(' ', 60 - title.Length), score);
@@ -120,13 +138,16 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index stats")]
         [CommandHelp("index stats <index>\r\n\t" + "Displays some statistics about the search index")]
         [OrchardSwitches("IndexName")]
-        public void Stats(string index) {
-            if (!IsValidIndexName(index)) {
+        public void Stats(string index)
+        {
+            if (!IsValidIndexName(index))
+            {
                 Context.Output.WriteLine(T("Invalid index name."));
                 return;
             }
 
-            if (!_indexManager.HasIndexProvider()) {
+            if (!_indexManager.HasIndexProvider())
+            {
                 Context.Output.WriteLine(T("No index available"));
                 return;
             }
@@ -137,8 +158,10 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index refresh")]
         [CommandHelp("index refresh /ContentItem:<content item id> \r\n\t" + "Refreshes the index for the specified <content item id>")]
         [OrchardSwitches("ContentItem")]
-        public void Refresh() {
-            if (!int.TryParse(ContentItem, out int contentItemId)) {
+        public void Refresh()
+        {
+            if (!int.TryParse(ContentItem, out int contentItemId))
+            {
                 Context.Output.WriteLine(T("Invalid content item id. Not an integer."));
                 return;
             }
@@ -152,8 +175,10 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index delete")]
         [CommandHelp("index delete /ContentItem:<content item id>\r\n\t" + "Deletes the specified <content item id> from the index")]
         [OrchardSwitches("ContentItem")]
-        public void Delete() {
-            if (!int.TryParse(ContentItem, out int contentItemId)) {
+        public void Delete()
+        {
+            if (!int.TryParse(ContentItem, out int contentItemId))
+            {
                 Context.Output.WriteLine(T("Invalid content item id. Not an integer."));
                 return;
             }

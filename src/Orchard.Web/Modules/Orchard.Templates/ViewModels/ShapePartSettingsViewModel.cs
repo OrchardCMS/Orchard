@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Templates.Services;
 
-namespace Orchard.Templates.ViewModels {
-    public class ShapePartSettingsViewModel {
+namespace Orchard.Templates.ViewModels
+{
+    public class ShapePartSettingsViewModel
+    {
 
         [UIHint("TemplateProcessorPicker")]
         public string Processor { get; set; }

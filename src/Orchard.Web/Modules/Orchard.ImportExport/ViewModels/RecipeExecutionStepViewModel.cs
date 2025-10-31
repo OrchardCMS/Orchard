@@ -1,7 +1,9 @@
-﻿using Orchard.Localization;
+using Orchard.Localization;
 
-namespace Orchard.ImportExport.ViewModels {
-    public class RecipeExecutionStepViewModel {
+namespace Orchard.ImportExport.ViewModels
+{
+    public class RecipeExecutionStepViewModel
+    {
         public string Name { get; set; }
         public LocalizedString DisplayName { get; set; }
         public LocalizedString Description { get; set; }

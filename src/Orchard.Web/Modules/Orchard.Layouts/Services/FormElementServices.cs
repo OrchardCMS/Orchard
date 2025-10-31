@@ -1,8 +1,11 @@
 using Orchard.Forms.Services;
 
-namespace Orchard.Layouts.Services {
-    public class FormsBasedElementServices : IFormsBasedElementServices {
-        public FormsBasedElementServices(IFormManager formManager, ICultureAccessor cultureAccessor) {
+namespace Orchard.Layouts.Services
+{
+    public class FormsBasedElementServices : IFormsBasedElementServices
+    {
+        public FormsBasedElementServices(IFormManager formManager, ICultureAccessor cultureAccessor)
+        {
             FormManager = formManager;
             CultureAccessor = cultureAccessor;
         }

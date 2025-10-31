@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Globalization;
-using System.Linq;
 
-namespace Orchard.Localization.Models {
-    public struct DateParts {
+namespace Orchard.Localization.Models
+{
+    public struct DateParts
+    {
 
-        public static DateParts MinValue {
-            get {
-                return new DateParts(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
-            }
-        }
+        public static DateParts MinValue => new DateParts(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
 
-        public DateParts(int year, int month, int day) {
+        public DateParts(int year, int month, int day)
+        {
             _year = year;
             _month = month;
             _day = day;
@@ -22,23 +19,12 @@ namespace Orchard.Localization.Models {
         private readonly int _month;
         private readonly int _year;
 
-        public int Year {
-            get {
-                return _year;
-            }
-        }
-        public int Month {
-            get {
-                return _month;
-            }
-        }
-        public int Day {
-            get {
-                return _day;
-            }
-        }
+        public int Year => _year;
+        public int Month => _month;
+        public int Day => _day;
 
-        public DateTime ToDateTime(Calendar calendar) {
+        public DateTime ToDateTime(Calendar calendar)
+        {
             return new DateTime(
                 _year > 0 ? _year : DateTime.MinValue.Year,
                 _month > 0 ? _month : DateTime.MinValue.Month,
@@ -51,8 +37,9 @@ namespace Orchard.Localization.Models {
             );
         }
 
-        public override string ToString() {
-            return String.Format("{0}-{1}-{2}", _year, _month, _day);
+        public override string ToString()
+        {
+            return string.Format("{0}-{1}-{2}", _year, _month, _day);
         }
     }
 }

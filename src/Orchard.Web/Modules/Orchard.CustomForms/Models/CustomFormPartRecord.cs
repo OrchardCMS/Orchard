@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
-namespace Orchard.CustomForms.Models {
-    public class CustomFormPartRecord : ContentPartRecord {
+namespace Orchard.CustomForms.Models
+{
+    public class CustomFormPartRecord : ContentPartRecord
+    {
         [StringLength(255)]
         public virtual string ContentType { get; set; }
         public virtual bool UseContentTypePermissions { get; set; }
@@ -19,6 +21,6 @@ namespace Orchard.CustomForms.Models {
 
         public virtual string SubmitButtonText { get; set; }
         public virtual string PublishButtonText { get; set; }
-        
+
     }
 }

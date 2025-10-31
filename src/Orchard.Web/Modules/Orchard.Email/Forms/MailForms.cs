@@ -1,20 +1,24 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Email.Forms {
+namespace Orchard.Email.Forms
+{
 
-    public class MailForms : IFormProvider {
+    public class MailForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public MailForms(IShapeFactory shapeFactory) {
+        public MailForms(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, dynamic> form =
                 shape => Shape.Form(
                 Id: "ActionEmail",
@@ -72,39 +76,48 @@ namespace Orchard.Email.Forms {
         }
     }
 
-    public class MailFormsValidator : IFormEventHandler {
+    public class MailFormsValidator : IFormEventHandler
+    {
         public Localizer T { get; set; }
 
-        public void Building(BuildingContext context) {
+        public void Building(BuildingContext context)
+        {
         }
 
-        public void Built(BuildingContext context) {
+        public void Built(BuildingContext context)
+        {
         }
 
-        public void Validating(ValidatingContext context) {
+        public void Validating(ValidatingContext context)
+        {
             if (context.FormName != "ActivityActionEmail") return;
 
             var recipientFormValue = context.ValueProvider.GetValue("Recipient");
-            var recipient = recipientFormValue != null ? recipientFormValue.AttemptedValue : String.Empty;
+            var recipient = recipientFormValue != null ? recipientFormValue.AttemptedValue : string.Empty;
 
-            if (recipient == String.Empty) {
+            if (recipient == string.Empty)
+            {
                 context.ModelState.AddModelError("Recipient", T("You must select at least one recipient").Text);
             }
 
-            if (context.ValueProvider.GetValue("Subject").AttemptedValue == String.Empty) {
+            if (context.ValueProvider.GetValue("Subject").AttemptedValue == string.Empty)
+            {
                 context.ModelState.AddModelError("Subject", T("You must provide a Subject").Text);
             }
 
-            if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
+            if (context.ValueProvider.GetValue("Body").AttemptedValue == string.Empty)
+            {
                 context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
             }
 
-            if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == String.Empty && recipient == "other") {
+            if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == string.Empty && recipient == "other")
+            {
                 context.ModelState.AddModelError("RecipientOther", T("You must provide an e-mail address").Text);
             }
         }
 
-        public void Validated(ValidatingContext context) {
+        public void Validated(ValidatingContext context)
+        {
         }
     }
 }

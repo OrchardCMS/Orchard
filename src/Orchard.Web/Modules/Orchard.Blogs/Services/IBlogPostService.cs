@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.Blogs.Services {
-    public interface IBlogPostService : IDependency {
+namespace Orchard.Blogs.Services
+{
+    public interface IBlogPostService : IDependency
+    {
         BlogPostPart Get(int id);
         BlogPostPart Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart);

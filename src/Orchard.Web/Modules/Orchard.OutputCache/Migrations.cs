@@ -1,18 +1,22 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.Data.Migration;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.OutputCache
+{
+    public class Migrations : DataMigrationImpl
+    {
 
         private readonly IOrchardServices _orchardServices;
 
-        public Migrations(IOrchardServices orchardServices) {
+        public Migrations(IOrchardServices orchardServices)
+        {
             _orchardServices = orchardServices;
         }
 
-        public int Create() {
-            
+        public int Create()
+        {
+
             SchemaBuilder.CreateTable("CacheParameterRecord",
                     table => table
                         .Column<int>("Id", c => c.PrimaryKey().Identity())
@@ -24,7 +28,8 @@ namespace Orchard.OutputCache {
             return 7;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.CreateTable("CacheParameterRecord",
                 table => table
                     .Column<int>("Id", c => c.PrimaryKey().Identity())
@@ -35,11 +40,13 @@ namespace Orchard.OutputCache {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             SchemaBuilder.AlterTable("CacheParameterRecord",
                     table => table
                         .AddColumn<int>("MaxAge")
@@ -47,18 +54,22 @@ namespace Orchard.OutputCache {
 
             return 4;
         }
-        
-        public int UpdateFrom4() {
+
+        public int UpdateFrom4()
+        {
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             return 6;
         }
 
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             SchemaBuilder.AlterTable("CacheParameterRecord",
-                    table => {
+                    table =>
+                    {
                         table.DropColumn("MaxAge");
                         table.AddColumn<int>("GraceTime");
                     });
@@ -66,15 +77,19 @@ namespace Orchard.OutputCache {
             return 7;
         }
 
-        public int UpdateFrom7() {
+        public int UpdateFrom7()
+        {
             var cacheSettings = _orchardServices.WorkContext.CurrentSite.As<CacheSettingsPart>();
-            if (!string.IsNullOrWhiteSpace(cacheSettings.VaryByQueryStringParameters)) {
+            if (!string.IsNullOrWhiteSpace(cacheSettings.VaryByQueryStringParameters))
+            {
                 // Prevent behavior from changing if vary on querystring was used prior to introduction of exclusive mode
                 cacheSettings.VaryByQueryStringIsExclusive = false;
             }
-            else {
+            else
+            {
                 cacheSettings.VaryByQueryStringIsExclusive = true; // Default mode
-            };
+            }
+            ;
             return 8;
         }
     }

@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.Localization;
 
-namespace Orchard.Users.Services {
+namespace Orchard.Users.Services
+{
 
-    public enum Severity {
+    public enum Severity
+    {
         Warning,
         Fatal
     }
 
-    public class UsernameValidationError {
+    public class UsernameValidationError
+    {
 
         private Severity _severity;
         private string _key;
         private LocalizedString _errorMessage;
 
-        public UsernameValidationError(Severity severity, string key, LocalizedString errorMessage) {
+        public UsernameValidationError(Severity severity, string key, LocalizedString errorMessage)
+        {
             Severity = severity;
             Key = key;
             ErrorMessage = errorMessage;

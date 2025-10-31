@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Data.Migration.Schema {
-    public abstract class SchemaCommand : ISchemaBuilderCommand {
-        protected SchemaCommand(string name, SchemaCommandType type ) {
+namespace Orchard.Data.Migration.Schema
+{
+    public abstract class SchemaCommand : ISchemaBuilderCommand
+    {
+        protected SchemaCommand(string name, SchemaCommandType type)
+        {
             TableCommands = new List<TableCommand>();
             Type = type;
             WithName(name);
@@ -13,13 +16,15 @@ namespace Orchard.Data.Migration.Schema {
 
         public SchemaCommandType Type { get; private set; }
 
-        public SchemaCommand WithName(string name) {
+        public SchemaCommand WithName(string name)
+        {
             Name = name;
             return this;
         }
     }
 
-    public enum SchemaCommandType {
+    public enum SchemaCommandType
+    {
         CreateTable,
         DropTable,
         AlterTable,

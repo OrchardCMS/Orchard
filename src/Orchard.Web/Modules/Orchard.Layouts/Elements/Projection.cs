@@ -1,59 +1,70 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 
-namespace Orchard.Layouts.Elements {
-    public class Projection : Element {
+namespace Orchard.Layouts.Elements
+{
+    public class Projection : Element
+    {
 
-        public override string Category {
-            get { return "Content"; }
-        }
+        public override string Category => "Content";
 
-        public string QueryLayoutId {
+        public string QueryLayoutId
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.QueryLayoutId); }
             set { this.Store(x => x.QueryLayoutId, value); }
         }
 
-        public int? QueryId {
-            get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[0]);
+        public int? QueryId
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[0]);
             }
-            set {
-                QueryLayoutId = String.Format("{0};{1}", value, LayoutId);
-            }
-        }
-
-        public int? LayoutId {
-            get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[1]);
-            }
-            set {
-                QueryLayoutId = String.Format("{0};{1}", QueryId, value);
+            set
+            {
+                QueryLayoutId = string.Format("{0};{1}", value, LayoutId);
             }
         }
 
-        public int ItemsToDisplay {
+        public int? LayoutId
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[1]);
+            }
+            set
+            {
+                QueryLayoutId = string.Format("{0};{1}", QueryId, value);
+            }
+        }
+
+        public int ItemsToDisplay
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.ItemsToDisplay); }
             set { this.Store(x => x.ItemsToDisplay, value); }
         }
 
-        public int Skip {
+        public int Skip
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.Skip); }
             set { this.Store(x => x.Skip, value); }
         }
 
-        public int MaxItems {
+        public int MaxItems
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.MaxItems); }
             set { this.Store(x => x.MaxItems, value); }
         }
 
-        public string PagerSuffix {
+        public string PagerSuffix
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.PagerSuffix); }
             set { this.Store(x => x.PagerSuffix, value); }
         }
 
-        public bool DisplayPager {
+        public bool DisplayPager
+        {
             get { return ElementDataHelper.Retrieve(this, x => x.DisplayPager); }
             set { this.Store(x => x.DisplayPager, value); }
         }

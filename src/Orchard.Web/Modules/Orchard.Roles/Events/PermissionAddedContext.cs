@@ -1,3 +1,4 @@
-﻿namespace Orchard.Roles.Events {
-    public class PermissionAddedContext : PermissionRoleContext {}
+namespace Orchard.Roles.Events
+{
+    public class PermissionAddedContext : PermissionRoleContext { }
 }

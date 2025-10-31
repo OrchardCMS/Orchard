@@ -1,17 +1,20 @@
-﻿using Orchard.Caching;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Themes.Models;
 
-namespace Orchard.Themes.Services {
-    public interface ISiteThemeService : IDependency {
+namespace Orchard.Themes.Services
+{
+    public interface ISiteThemeService : IDependency
+    {
         ExtensionDescriptor GetSiteTheme();
         void SetSiteTheme(string themeName);
         string GetCurrentThemeName();
     }
 
-    public class SiteThemeService : ISiteThemeService {
+    public class SiteThemeService : ISiteThemeService
+    {
         public const string CurrentThemeSignal = "SiteCurrentTheme";
 
         private readonly IExtensionManager _extensionManager;
@@ -23,7 +26,8 @@ namespace Orchard.Themes.Services {
             IOrchardServices orchardServices,
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
-            ISignals signals) {
+            ISignals signals)
+        {
 
             _orchardServices = orchardServices;
             _extensionManager = extensionManager;
@@ -31,20 +35,24 @@ namespace Orchard.Themes.Services {
             _signals = signals;
         }
 
-        public ExtensionDescriptor GetSiteTheme() {
+        public ExtensionDescriptor GetSiteTheme()
+        {
             string currentThemeName = GetCurrentThemeName();
             return string.IsNullOrEmpty(currentThemeName) ? null : _extensionManager.GetExtension(GetCurrentThemeName());
         }
 
-        public void SetSiteTheme(string themeName) {
+        public void SetSiteTheme(string themeName)
+        {
             var site = _orchardServices.WorkContext.CurrentSite;
             site.As<ThemeSiteSettingsPart>().CurrentThemeName = themeName;
 
             _signals.Trigger(CurrentThemeSignal);
         }
 
-        public string GetCurrentThemeName() {
-            return _cacheManager.Get("CurrentThemeName", ctx => {
+        public string GetCurrentThemeName()
+        {
+            return _cacheManager.Get("CurrentThemeName", ctx =>
+            {
                 ctx.Monitor(_signals.When(CurrentThemeSignal));
                 return _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
             });

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -15,28 +15,35 @@ using Orchard.Tests.Stubs;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Tests.UI.Navigation {
+namespace Orchard.Tests.UI.Navigation
+{
     [TestFixture]
-    public class NavigationManagerTests {
+    public class NavigationManagerTests
+    {
         [Test]
-        public void EmptyMenuIfNameDoesntMatch() {
+        public void EmptyMenuIfNameDoesntMatch()
+        {
             var manager = new NavigationManager(new[] { new StubProvider() }, new IMenuProvider[] { }, new StubAuth(), new INavigationFilter[0], new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices(), new ShellSettings());
 
             var menuItems = manager.BuildMenu("primary");
             Assert.That(menuItems.Count(), Is.EqualTo(0));
         }
 
-        public class StubAuth : IAuthorizationService {
-            public void CheckAccess(Permission permission, IUser user, IContent content) {
+        public class StubAuth : IAuthorizationService
+        {
+            public void CheckAccess(Permission permission, IUser user, IContent content)
+            {
             }
 
-            public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
+            public bool TryCheckAccess(Permission permission, IUser user, IContent content)
+            {
                 return true;
             }
         }
 
         [Test]
-        public void NavigationManagerShouldUseProvidersToBuildNamedMenu() {
+        public void NavigationManagerShouldUseProvidersToBuildNamedMenu()
+        {
             var manager = new NavigationManager(new[] { new StubProvider() }, new IMenuProvider[] { }, new StubAuth(), new INavigationFilter[0], new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices(), new ShellSettings());
 
             var menuItems = manager.BuildMenu("admin");
@@ -48,7 +55,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NavigationManagerShouldCatchProviderErrors() {
+        public void NavigationManagerShouldCatchProviderErrors()
+        {
             var manager = new NavigationManager(new[] { new BrokenProvider() }, new IMenuProvider[] { }, new StubAuth(), new INavigationFilter[0], new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices(), new ShellSettings());
 
             var menuItems = manager.BuildMenu("admin");
@@ -56,7 +64,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NavigationManagerShouldMergeAndOrderNavigation() {
+        public void NavigationManagerShouldMergeAndOrderNavigation()
+        {
             var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new IMenuProvider[] { }, new StubAuth(), new INavigationFilter[0], new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices(), new ShellSettings());
 
             var menuItems = manager.BuildMenu("admin");
@@ -82,10 +91,12 @@ namespace Orchard.Tests.UI.Navigation {
             Assert.That(subitem2.Position, Is.EqualTo("1.b"));
         }
 
-        public class StubProvider : INavigationProvider {
-            public string MenuName { get { return "admin"; } }
+        public class StubProvider : INavigationProvider
+        {
+            public string MenuName => "admin";
 
-            public void GetNavigation(NavigationBuilder builder) {
+            public void GetNavigation(NavigationBuilder builder)
+            {
                 var T = NullLocalizer.Instance;
                 builder
                     .Add(new LocalizedString("Foo", "", "Foo", null), "1.0", x => x.Action("foo"))
@@ -93,18 +104,22 @@ namespace Orchard.Tests.UI.Navigation {
             }
         }
 
-        public class BrokenProvider : INavigationProvider {
-            public string MenuName { get { return "admin"; } }
+        public class BrokenProvider : INavigationProvider
+        {
+            public string MenuName => "admin";
 
-            public void GetNavigation(NavigationBuilder builder) {
+            public void GetNavigation(NavigationBuilder builder)
+            {
                 throw new NullReferenceException();
             }
         }
 
-        public class Stub2Provider : INavigationProvider {
-            public string MenuName { get { return "admin"; } }
+        public class Stub2Provider : INavigationProvider
+        {
+            public string MenuName => "admin";
 
-            public void GetNavigation(NavigationBuilder builder) {
+            public void GetNavigation(NavigationBuilder builder)
+            {
                 var T = NullLocalizer.Instance;
                 builder
                     .Add(new LocalizedString("Frap", "", "Frap", null), "3.0", x => x.Action("foo"))
@@ -113,40 +128,35 @@ namespace Orchard.Tests.UI.Navigation {
         }
     }
 
-    public class StubOrchardServices : IOrchardServices {
+    public class StubOrchardServices : IOrchardServices
+    {
         private readonly ILifetimeScope _lifetimeScope;
 
-        public StubOrchardServices() {}
+        public StubOrchardServices() { }
 
-        public StubOrchardServices(ILifetimeScope lifetimeScope) {
+        public StubOrchardServices(ILifetimeScope lifetimeScope)
+        {
             _lifetimeScope = lifetimeScope;
         }
 
-        public IContentManager ContentManager {
-            get { throw new NotImplementedException(); }
-        }
+        public IContentManager ContentManager => throw new NotImplementedException();
 
-        public ITransactionManager TransactionManager {
-            get { throw new NotImplementedException(); }
-        }
+        public ITransactionManager TransactionManager => throw new NotImplementedException();
 
-        public IAuthorizer Authorizer {
-            get { throw new NotImplementedException(); }
-        }
+        public IAuthorizer Authorizer => throw new NotImplementedException();
 
-        public INotifier Notifier {
-            get { throw new NotImplementedException(); }
-        }
+        public INotifier Notifier => throw new NotImplementedException();
 
-        public dynamic New {
-            get { throw new NotImplementedException(); }
-        }
+        public dynamic New => throw new NotImplementedException();
 
         private WorkContext _workContext;
-        public WorkContext WorkContext {
-            get {
-                if(_workContext == null) {
-                    _workContext = new StubWorkContextAccessor(_lifetimeScope).GetContext(); 
+        public WorkContext WorkContext
+        {
+            get
+            {
+                if (_workContext == null)
+                {
+                    _workContext = new StubWorkContextAccessor(_lifetimeScope).GetContext();
                 }
 
                 return _workContext;

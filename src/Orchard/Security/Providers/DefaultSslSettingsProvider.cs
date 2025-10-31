@@ -1,14 +1,18 @@
-﻿using System.Web.Security;
+using System.Web.Security;
 
-namespace Orchard.Security.Providers {
-    public class DefaultSslSettingsProvider : ISslSettingsProvider {
+namespace Orchard.Security.Providers
+{
+    public class DefaultSslSettingsProvider : ISslSettingsProvider
+    {
         public bool RequireSSL { get; set; }
 
-        public DefaultSslSettingsProvider() {
+        public DefaultSslSettingsProvider()
+        {
             RequireSSL = FormsAuthentication.RequireSSL;
         }
 
-        public bool GetRequiresSSL() {
+        public bool GetRequiresSSL()
+        {
             return RequireSSL;
         }
     }

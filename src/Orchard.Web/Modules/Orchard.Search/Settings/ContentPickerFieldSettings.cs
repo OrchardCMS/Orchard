@@ -1,6 +1,9 @@
-﻿namespace Orchard.Search.Settings {
-    public class ContentPickerSearchFieldSettings {
-        public ContentPickerSearchFieldSettings() {
+namespace Orchard.Search.Settings
+{
+    public class ContentPickerSearchFieldSettings
+    {
+        public ContentPickerSearchFieldSettings()
+        {
             ShowSearchTab = true;
         }
 

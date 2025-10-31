@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.CustomForms {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.CustomForms
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             ContentDefinitionManager.AlterTypeDefinition("CustomForm",
                 cfg => cfg
                     .WithPart("CommonPart")
@@ -32,7 +35,8 @@ namespace Orchard.CustomForms {
             return 1;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("CustomFormWidget",
                 cfg => cfg
                     .WithPart("WidgetPart")
@@ -45,7 +49,8 @@ namespace Orchard.CustomForms {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterTypeDefinition("CustomForm", cfg =>
                 cfg.Draftable(false)
                 );
@@ -53,25 +58,29 @@ namespace Orchard.CustomForms {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("SubmitButtonText"));
 
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("UseContentTypePermissions"));
 
             return 5;
         }
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<bool>("SavePublishContentItem", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("PublishButtonText"));
             return 6;
         }
 
 
-        public void Uninstall() {
+        public void Uninstall()
+        {
             ContentDefinitionManager.DeleteTypeDefinition("CustomForm");
         }
     }

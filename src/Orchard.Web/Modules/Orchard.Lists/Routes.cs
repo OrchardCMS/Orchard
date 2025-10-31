@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Lists {
-    public class Routes : IRouteProvider {
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+namespace Orchard.Lists
+{
+    public class Routes : IRouteProvider
+    {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
             var routeDescriptors = new[] {
                 new RouteDescriptor {
                     Priority = 5,
@@ -85,7 +88,8 @@ namespace Orchard.Lists {
                 },
             };
 
-            foreach (var routeDescriptor in routeDescriptors) {
+            foreach (var routeDescriptor in routeDescriptors)
+            {
                 routes.Add(routeDescriptor);
             }
         }

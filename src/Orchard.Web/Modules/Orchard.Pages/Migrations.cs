@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Pages {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Pages
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Page",
                 cfg => cfg
                 .WithPart("CommonPart", p => p
@@ -23,7 +26,8 @@ namespace Orchard.Pages {
             return 3;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "True")));
             return 2;
         }

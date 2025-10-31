@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Moq;
@@ -22,13 +22,16 @@ using Orchard.Tests;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Projections.Tests.Services {
+namespace Orchard.Projections.Tests.Services
+{
     [TestFixture]
-    public class FieldIndexServiceTests : DatabaseEnabledTestsBase {
+    public class FieldIndexServiceTests : DatabaseEnabledTestsBase
+    {
         private IFieldIndexService _service;
         private IContentManager _contentManager;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
 
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<FieldIndexPartHandler>().As<IContentHandler>();
@@ -42,7 +45,7 @@ namespace Orchard.Projections.Tests.Services {
             // ContentDefinitionManager
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
@@ -51,7 +54,8 @@ namespace Orchard.Projections.Tests.Services {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             _service = _container.Resolve<IFieldIndexService>();
@@ -59,8 +63,10 @@ namespace Orchard.Projections.Tests.Services {
         }
 
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof(ContentPartDefinitionRecord),
                     typeof(ContentPartFieldDefinitionRecord),
@@ -73,7 +79,7 @@ namespace Orchard.Projections.Tests.Services {
                     typeof(ContentTypeRecord),
 
                     typeof(FieldIndexPartRecord),
-                    
+
                     typeof(StringFieldIndexRecord),
                     typeof(IntegerFieldIndexRecord),
                     typeof(DecimalFieldIndexRecord),
@@ -83,14 +89,16 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void StringValuesShouldBePersisted() {
+        public void StringValuesShouldBePersisted()
+        {
             SaveObject<string>(null);
             SaveObject("");
             SaveObject("Bar");
         }
 
         [Test]
-        public void IntegerValuesShouldBePersisted() {
+        public void IntegerValuesShouldBePersisted()
+        {
             SaveObject<int?>(null);
             SaveObject(0);
             SaveObject(-42);
@@ -100,7 +108,8 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void DateTimeValuesShouldBePersisted() {
+        public void DateTimeValuesShouldBePersisted()
+        {
             SaveObject<DateTime?>(null);
             SaveObject(DateTime.MinValue);
             SaveObject(DateTime.MaxValue);
@@ -108,14 +117,16 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void BooleanValuesShouldBePersisted() {
+        public void BooleanValuesShouldBePersisted()
+        {
             SaveObject<bool?>(null);
             SaveObject(true);
             SaveObject(false);
         }
 
         [Test]
-        public void DecimalValuesShouldBePersisted() {
+        public void DecimalValuesShouldBePersisted()
+        {
             SaveObject<decimal?>(null);
             SaveObject(0m);
             SaveObject(-42m);
@@ -123,13 +134,15 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test, Ignore("SqlCe exception")]
-        public void EdgeDecimalValuesShouldBePersisted() {
+        public void EdgeDecimalValuesShouldBePersisted()
+        {
             SaveObject(decimal.MaxValue);
             SaveObject(decimal.MinValue);
         }
 
         [Test]
-        public void DoubleValuesShouldBePersisted() {
+        public void DoubleValuesShouldBePersisted()
+        {
             SaveObject<double?>(null);
             SaveObject(0D);
             SaveObject(-42D);
@@ -139,7 +152,8 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void FloatValuesShouldBePersisted() {
+        public void FloatValuesShouldBePersisted()
+        {
             SaveObject<float?>(null);
             SaveObject(0F);
             SaveObject(-42F);
@@ -149,13 +163,15 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void CharValuesShouldBePersisted() {
+        public void CharValuesShouldBePersisted()
+        {
             SaveObject<char?>(null);
             SaveObject('a');
             SaveObject('ê');
         }
 
-        private void SaveObject<T>(T fieldValue) {
+        private void SaveObject<T>(T fieldValue)
+        {
             var thing = _contentManager.New("thing");
             _contentManager.Create(thing);
 
@@ -169,14 +185,17 @@ namespace Orchard.Projections.Tests.Services {
             Assert.That(value, Is.EqualTo(fieldValue));
         }
 
-        public class ThingHandler : ContentHandler {
-            public ThingHandler() {
+        public class ThingHandler : ContentHandler
+        {
+            public ThingHandler()
+            {
                 Filters.Add(new ActivatingFilter<Thing>("thing"));
                 Filters.Add(new ActivatingFilter<FieldIndexPart>("thing"));
             }
         }
 
-        public class Thing : ContentPart {
+        public class Thing : ContentPart
+        {
         }
     }
 }

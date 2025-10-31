@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.ContentManagement.MetaData.Models {
-    public class ContentPartDefinition {
-        public ContentPartDefinition(string name, IEnumerable<ContentPartFieldDefinition> fields, SettingsDictionary settings) {
+namespace Orchard.ContentManagement.MetaData.Models
+{
+    public class ContentPartDefinition
+    {
+        public ContentPartDefinition(string name, IEnumerable<ContentPartFieldDefinition> fields, SettingsDictionary settings)
+        {
             Name = name;
             Fields = fields.ToReadOnlyCollection();
             Settings = settings;
         }
 
-        public ContentPartDefinition(string name) {
+        public ContentPartDefinition(string name)
+        {
             Name = name;
             Fields = Enumerable.Empty<ContentPartFieldDefinition>();
             Settings = new SettingsDictionary();

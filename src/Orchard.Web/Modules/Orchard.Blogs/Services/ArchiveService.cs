@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Blogs.Models;
@@ -6,8 +6,10 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 
-namespace Orchard.Blogs.Services {
-    public class ArchiveService : IArchiveService {
+namespace Orchard.Blogs.Services
+{
+    public class ArchiveService : IArchiveService
+    {
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -15,38 +17,45 @@ namespace Orchard.Blogs.Services {
         public ArchiveService(
             IRepository<BlogPartArchiveRecord> blogArchiveRepository,
             IContentManager contentManager,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
             _blogArchiveRepository = blogArchiveRepository;
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
         }
 
-        public void RebuildArchive(BlogPart blogPart) {
+        public void RebuildArchive(BlogPart blogPart)
+        {
 
             var first = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id).OrderBy<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
 
-            if (first == null) {
+            if (first == null)
+            {
                 return;
             }
 
             var last = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id).OrderByDescending<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
 
             DateTime? start = DateTime.MaxValue;
-            if (first.As<CommonPart>() != null) {
+            if (first.As<CommonPart>() != null)
+            {
                 start = first.As<CommonPart>().CreatedUtc;
             }
 
             DateTime? end = DateTime.MinValue;
-            if (last.As<CommonPart>() != null) {
+            if (last.As<CommonPart>() != null)
+            {
                 end = last.As<CommonPart>().CreatedUtc;
             }
 
             // delete previous archive records
-            foreach (var record in _blogArchiveRepository.Table.Where(x => x.BlogPart.Id == blogPart.Id)) {
+            foreach (var record in _blogArchiveRepository.Table.Where(x => x.BlogPart.Id == blogPart.Id))
+            {
                 _blogArchiveRepository.Delete(record);
             }
 
-            if (!start.HasValue || !end.HasValue) {
+            if (!start.HasValue || !end.HasValue)
+            {
                 return;
             }
 
@@ -56,16 +65,20 @@ namespace Orchard.Blogs.Services {
             // build a collection of all the post dates
             var blogPostDates = new List<DateTime>();
             var blogPosts = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id);
-            foreach (var blogPost in blogPosts.List()) {
+            foreach (var blogPost in blogPosts.List())
+            {
                 if (blogPost.As<CommonPart>() != null)
-                    if (blogPost.As<CommonPart>().CreatedUtc.HasValue) {
+                    if (blogPost.As<CommonPart>().CreatedUtc.HasValue)
+                    {
                         DateTime timeZoneAdjustedCreatedDate = TimeZoneInfo.ConvertTimeFromUtc(blogPost.As<CommonPart>().CreatedUtc.Value, timeZone);
                         blogPostDates.Add(timeZoneAdjustedCreatedDate);
                     }
             }
 
-            for (int year = start.Value.Year; year <= end.Value.Year; year++) {
-                for (int month = 1; month <= 12; month++) {
+            for (int year = start.Value.Year; year <= end.Value.Year; year++)
+            {
+                for (int month = 1; month <= 12; month++)
+                {
                     var fromDateUtc = new DateTime(year, month, 1);
                     var from = TimeZoneInfo.ConvertTimeFromUtc(fromDateUtc, timeZone);
                     var to = TimeZoneInfo.ConvertTimeFromUtc(fromDateUtc.AddMonths(1), timeZone);

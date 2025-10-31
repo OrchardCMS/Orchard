@@ -1,22 +1,27 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Environment;
 
-namespace Orchard.Tests.Environment {
+namespace Orchard.Tests.Environment
+{
     [TestFixture]
-    public class OrchardStarterTests {
+    public class OrchardStarterTests
+    {
         [Test]
-        public void DefaultOrchardHostInstanceReturnedByCreateHost() {
+        public void DefaultOrchardHostInstanceReturnedByCreateHost()
+        {
             var host = OrchardStarter.CreateHost(b => b.RegisterInstance(new ControllerBuilder()));
             Assert.That(host, Is.TypeOf<DefaultOrchardHost>());
         }
 
         [Test]
-        public void ContainerResolvesServicesInSameOrderTheyAreRegistered() {
-            var container = OrchardStarter.CreateHostContainer(builder => {
+        public void ContainerResolvesServicesInSameOrderTheyAreRegistered()
+        {
+            var container = OrchardStarter.CreateHostContainer(builder =>
+            {
                 builder.RegisterType<Component1>().As<IServiceA>();
                 builder.RegisterType<Component2>().As<IServiceA>();
             });
@@ -27,8 +32,10 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void MostRecentlyRegisteredServiceReturnsFromSingularResolve() {
-            var container = OrchardStarter.CreateHostContainer(builder => {
+        public void MostRecentlyRegisteredServiceReturnsFromSingularResolve()
+        {
+            var container = OrchardStarter.CreateHostContainer(builder =>
+            {
                 builder.RegisterType<Component1>().As<IServiceA>();
                 builder.RegisterType<Component2>().As<IServiceA>();
             });
@@ -37,10 +44,10 @@ namespace Orchard.Tests.Environment {
             Assert.That(service, Is.TypeOf<Component2>());
         }
 
-        public interface IServiceA {}
+        public interface IServiceA { }
 
-        public class Component1 : IServiceA {}
+        public class Component1 : IServiceA { }
 
-        public class Component2 : IServiceA {}
+        public class Component2 : IServiceA { }
     }
 }

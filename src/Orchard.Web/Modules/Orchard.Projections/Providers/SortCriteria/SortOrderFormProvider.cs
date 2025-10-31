@@ -1,24 +1,29 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Providers.SortCriteria {
-    public class SortCriterionFormProvider : IFormProvider {
+namespace Orchard.Projections.Providers.SortCriteria
+{
+    public class SortCriterionFormProvider : IFormProvider
+    {
 
         public const string FormName = "SortOrder";
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public SortCriterionFormProvider(IShapeFactory shapeFactory) {
+        public SortCriterionFormProvider(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         _Options: Shape.Fieldset(
@@ -42,12 +47,16 @@ namespace Orchard.Projections.Providers.SortCriteria {
         }
     }
 
-    public class SortCriterionFormValidator : FormHandler {
+    public class SortCriterionFormValidator : FormHandler
+    {
         public Localizer T { get; set; }
 
-        public override void Validating(ValidatingContext context) {
-            if (context.FormName == SortCriterionFormProvider.FormName) {
-                if (context.ValueProvider.GetValue("Sort") == null) {
+        public override void Validating(ValidatingContext context)
+        {
+            if (context.FormName == SortCriterionFormProvider.FormName)
+            {
+                if (context.ValueProvider.GetValue("Sort") == null)
+                {
                     context.ModelState.AddModelError("Sort", T("The Sort field is required.").Text);
                 }
             }

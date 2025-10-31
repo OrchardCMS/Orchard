@@ -1,28 +1,34 @@
-﻿using Orchard.ContentManagement;
+using System.Collections.Generic;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using System.Collections.Generic;
-using System.Globalization;
 
-namespace Orchard.Fields.Settings {
-    public class InputFieldListModeEvents : ContentDefinitionEditorEventsBase {
+namespace Orchard.Fields.Settings
+{
+    public class InputFieldListModeEvents : ContentDefinitionEditorEventsBase
+    {
 
-        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
-            if (definition.FieldDefinition.Name == "InputField") {
+        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition)
+        {
+            if (definition.FieldDefinition.Name == "InputField")
+            {
                 var model = definition.Settings.GetModel<InputFieldSettings>();
                 yield return DefinitionTemplate(model);
             }
         }
 
-        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.FieldType != "InputField") {
+        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel)
+        {
+            if (builder.FieldType != "InputField")
+            {
                 yield break;
             }
 
             var model = new InputFieldSettings();
-            if (updateModel.TryUpdateModel(model, "InputFieldSettings", null, null)) {
+            if (updateModel.TryUpdateModel(model, "InputFieldSettings", null, null))
+            {
                 builder.WithSetting("InputFieldSettings.Type", model.Type.ToString());
                 builder.WithSetting("InputFieldSettings.Title", model.Title);
                 builder.WithSetting("InputFieldSettings.Hint", model.Hint);

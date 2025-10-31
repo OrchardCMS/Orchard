@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.MediaPicker.Fields;
 
-namespace Orchard.MediaPicker.ViewModels {
+namespace Orchard.MediaPicker.ViewModels
+{
 
-    public class MediaGalleryFieldViewModel {
+    public class MediaGalleryFieldViewModel
+    {
 
         public ICollection<MediaGalleryItem> Items { get; set; }
         public string SelectedItems { get; set; }

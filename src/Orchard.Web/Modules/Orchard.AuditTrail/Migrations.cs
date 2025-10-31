@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.AuditTrail {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.AuditTrail
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("AuditTrailEventRecord", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<DateTime>("CreatedUtc")
@@ -27,7 +30,8 @@ namespace Orchard.AuditTrail {
             return 2;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.AlterTable("AuditTrailEventRecord", table => table
                 .AddColumn<string>("ClientIpAddress", c => c.WithLength(46)));
             return 2;

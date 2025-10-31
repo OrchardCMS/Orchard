@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -6,27 +6,33 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.Core.Common.Services {
-    public class XmlRpcHandler : IXmlRpcHandler {
+namespace Orchard.Core.Common.Services
+{
+    public class XmlRpcHandler : IXmlRpcHandler
+    {
         private readonly IContentManager _contentManager;
 
-        public XmlRpcHandler(IContentManager contentManager) {
+        public XmlRpcHandler(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public void SetCapabilities(XElement options) {
+        public void SetCapabilities(XElement options)
+        {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsCustomDate", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context) {
-            switch (context.Request.MethodName) {
+        public void Process(XmlRpcContext context)
+        {
+            switch (context.Request.MethodName)
+            {
                 case "metaWeblog.newPost":
                     MetaWeblogSetCustomCreatedDate(
                         Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
-                        (XRpcStruct) context.Request.Params[3].Value,
+                        (XRpcStruct)context.Request.Params[3].Value,
                         Convert.ToBoolean(context.Request.Params[4].Value),
                         context._drivers);
                     break;
@@ -35,14 +41,15 @@ namespace Orchard.Core.Common.Services {
                         Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
-                        (XRpcStruct) context.Request.Params[3].Value,
+                        (XRpcStruct)context.Request.Params[3].Value,
                         Convert.ToBoolean(context.Request.Params[4].Value),
                         context._drivers);
                     break;
             }
         }
 
-        private void MetaWeblogSetCustomCreatedDate(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogSetCustomCreatedDate(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers)
+        {
             if (!publish)
                 return;
 
@@ -50,7 +57,8 @@ namespace Orchard.Core.Common.Services {
             if (createdUtc == null || createdUtc > DateTime.UtcNow)
                 return;
 
-            var driver = new XmlRpcDriver(item => {
+            var driver = new XmlRpcDriver(item =>
+            {
                 if (!(item is int))
                     return;
 
@@ -68,20 +76,24 @@ namespace Orchard.Core.Common.Services {
                 drivers.Add(driver);
         }
 
-        private static int GetId(XRpcMethodResponse response) {
+        private static int GetId(XRpcMethodResponse response)
+        {
             return response != null && response.Params.Count == 1 && response.Params[0].Value is int
                        ? Convert.ToInt32(response.Params[0].Value)
                        : 0;
         }
 
-        public class XmlRpcDriver : IXmlRpcDriver {
+        public class XmlRpcDriver : IXmlRpcDriver
+        {
             private readonly Action<object> _process;
 
-            public XmlRpcDriver(Action<object> process) {
+            public XmlRpcDriver(Action<object> process)
+            {
                 _process = process;
             }
 
-            public void Process(object item) {
+            public void Process(object item)
+            {
                 _process(item);
             }
         }

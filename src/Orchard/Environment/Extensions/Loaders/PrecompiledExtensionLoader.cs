@@ -9,12 +9,14 @@ using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Extensions.Loaders
+{
     /// <summary>
     /// Load an extension by looking into the "bin" subdirectory of an
     /// extension directory.
     /// </summary>
-    public class PrecompiledExtensionLoader : ExtensionLoaderBase {
+    public class PrecompiledExtensionLoader : ExtensionLoaderBase
+    {
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -27,7 +29,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             IAssemblyProbingFolder assemblyProbingFolder,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor)
-            : base(dependenciesFolder) {
+            : base(dependenciesFolder)
+        {
             _hostEnvironment = hostEnvironment;
             _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
@@ -41,33 +44,40 @@ namespace Orchard.Environment.Extensions.Loaders {
         public bool Disabled { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        public override int Order { get { return 30; } }
+        public override int Order => 30;
 
-        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency)
+        {
             yield return new ExtensionCompilationReference { AssemblyName = dependency.Name };
         }
 
-        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
+        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency)
+        {
             yield return _assemblyProbingFolder.GetAssemblyVirtualPath(dependency.Name);
         }
 
-        public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            if (_assemblyProbingFolder.AssemblyExists(dependency.Name)) {
+        public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency)
+        {
+            if (_assemblyProbingFolder.AssemblyExists(dependency.Name))
+            {
                 ctx.DeleteActions.Add(
-                    () => {
+                    () =>
+                    {
                         Logger.Information("ExtensionRemoved: Deleting assembly \"{0}\" from probing directory", dependency.Name);
                         _assemblyProbingFolder.DeleteAssembly(dependency.Name);
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(dependency.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(dependency.Name))
+                {
                     Logger.Information("ExtensionRemoved: Module \"{0}\" is removed and its assembly is loaded, forcing AppDomain restart", dependency.Name);
                     ctx.RestartAppDomain = true;
                 }
             }
         }
 
-        public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+        public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+        {
             string sourceFileName = _virtualPathProvider.MapPath(GetAssemblyPath(extension));
 
             // Copy the assembly if it doesn't exist or if it is older than the source file.
@@ -75,34 +85,41 @@ namespace Orchard.Environment.Extensions.Loaders {
                 !_assemblyProbingFolder.AssemblyExists(extension.Id) ||
                 File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(extension.Id);
 
-            if (copyAssembly) {
+            if (copyAssembly)
+            {
                 ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Id, sourceFileName));
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(extension.Id)) {
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Id))
+                {
                     Logger.Information("ExtensionRemoved: Module \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", extension.Id);
                     ctx.RestartAppDomain = true;
                 }
             }
         }
 
-        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            if (_assemblyProbingFolder.AssemblyExists(extension.Id)) {
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+        {
+            if (_assemblyProbingFolder.AssemblyExists(extension.Id))
+            {
                 ctx.DeleteActions.Add(
-                    () => {
+                    () =>
+                    {
                         Logger.Information("ExtensionDeactivated: Deleting assembly \"{0}\" from probing directory", extension.Id);
                         _assemblyProbingFolder.DeleteAssembly(extension.Id);
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(extension.Id)) {
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Id))
+                {
                     Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Id);
                     ctx.RestartAppDomain = true;
                 }
             }
         }
 
-        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry)
+        {
             if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
                 return;
 
@@ -113,18 +130,21 @@ namespace Orchard.Environment.Extensions.Loaders {
                 !_assemblyProbingFolder.AssemblyExists(referenceEntry.Name) ||
                 File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(referenceEntry.Name);
 
-            if (copyAssembly) {
+            if (copyAssembly)
+            {
                 context.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(referenceEntry.Name, sourceFileName));
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name))
+                {
                     Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
                     context.RestartAppDomain = true;
                 }
             }
         }
 
-        public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+        public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor)
+        {
             if (Disabled)
                 return;
 
@@ -133,7 +153,8 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
-            if (assemblyPath != null) {
+            if (assemblyPath != null)
+            {
                 Logger.Debug("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
                 return;
@@ -143,13 +164,15 @@ namespace Orchard.Environment.Extensions.Loaders {
             // may exist later if it is recompiled in Visual Studio for example, and we need to 
             // detect that as a change of configuration.
             var assemblyDirectory = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin");
-            if (_virtualPathProvider.DirectoryExists(assemblyDirectory)) {
+            if (_virtualPathProvider.DirectoryExists(assemblyDirectory))
+            {
                 Logger.Debug("Monitoring virtual path \"{0}\"", assemblyDirectory);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyDirectory));
             }
         }
 
-        public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+        public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor)
+        {
             if (Disabled)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
@@ -163,7 +186,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 .ListFiles(_virtualPathProvider.GetDirectoryName(assemblyPath))
                 .Where(s => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(s), ".dll"))
                 .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Id))
-                .Select(path => new ExtensionReferenceProbeEntry {
+                .Select(path => new ExtensionReferenceProbeEntry
+                {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = Path.GetFileNameWithoutExtension(path),
@@ -175,18 +199,21 @@ namespace Orchard.Environment.Extensions.Loaders {
             return result;
         }
 
-        public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+        public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references)
+        {
             // A pre-compiled module is _not_ compatible with a dynamically loaded module
             // because a pre-compiled module usually references a pre-compiled assembly binary
             // which will have a different identity (i.e. name) from the dynamic module.
             bool result = references.All(r => r.Loader.GetType() != typeof(DynamicExtensionLoader));
-            if (!result) {
+            if (!result)
+            {
                 Logger.Information("Extension \"{0}\" will not be loaded as pre-compiled extension because one or more referenced extension is dynamically compiled", extension.Id);
             }
             return result;
         }
 
-        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor)
+        {
             if (Disabled)
                 return null;
 
@@ -196,7 +223,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (assemblyPath == null)
                 return null;
 
-            var result = new ExtensionProbeEntry {
+            var result = new ExtensionProbeEntry
+            {
                 Descriptor = descriptor,
                 Loader = this,
                 VirtualPath = assemblyPath,
@@ -207,7 +235,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return result;
         }
 
-        public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
+        public override Assembly LoadReference(DependencyReferenceDescriptor reference)
+        {
             if (Disabled)
                 return null;
 
@@ -219,7 +248,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return result;
         }
 
-        protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+        protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor)
+        {
             if (Disabled)
                 return null;
 
@@ -231,14 +261,16 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             Logger.Information("Done loading pre-compiled extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
-            return new ExtensionEntry {
+            return new ExtensionEntry
+            {
                 Descriptor = descriptor,
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes()
             };
         }
 
-        public string GetAssemblyPath(ExtensionDescriptor descriptor) {
+        public string GetAssemblyPath(ExtensionDescriptor descriptor)
+        {
             var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin",
                                                             descriptor.Id + ".dll");
             if (!_virtualPathProvider.FileExists(assemblyPath))
@@ -247,9 +279,11 @@ namespace Orchard.Environment.Extensions.Loaders {
             return assemblyPath;
         }
 
-        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+        public override bool LoaderIsSuitable(ExtensionDescriptor descriptor)
+        {
             var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+            if (dependency != null && dependency.LoaderName == this.Name)
+            {
                 return _assemblyProbingFolder.AssemblyExists(descriptor.Id);
             }
 

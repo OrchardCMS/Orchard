@@ -1,16 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 
-namespace Orchard.Widgets.Models {
-    public class WidgetPart : ContentPart<WidgetPartRecord>, ITitleAspect {
+namespace Orchard.Widgets.Models
+{
+    public class WidgetPart : ContentPart<WidgetPartRecord>, ITitleAspect
+    {
 
         /// <summary>
         /// The widget's title.
         /// </summary>
-        public string Title {
+        public string Title
+        {
             get { return Retrieve(x => x.Title); }
             set { Store(x => x.Title, value); }
         }
@@ -19,7 +22,8 @@ namespace Orchard.Widgets.Models {
         /// The zone where the widget is to be displayed.
         /// </summary>
         [Required]
-        public string Zone {
+        public string Zone
+        {
             get { return Retrieve(x => x.Zone); }
             set { Store(x => x.Zone, value); }
         }
@@ -27,7 +31,8 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// Whether or not the Title should be rendered on the front-end.
         /// </summary>
-        public bool RenderTitle {
+        public bool RenderTitle
+        {
             get { return Retrieve(x => x.RenderTitle); }
             set { Store(x => x.RenderTitle, value); }
         }
@@ -36,7 +41,8 @@ namespace Orchard.Widgets.Models {
         /// The widget's position within the zone.
         /// </summary>
         [Required]
-        public string Position {
+        public string Position
+        {
             get { return Retrieve(x => x.Position); }
             set { Store(x => x.Position, value); }
         }
@@ -44,7 +50,8 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The technical name of the widget.
         /// </summary>
-        public string Name {
+        public string Name
+        {
             get { return Retrieve(x => x.Name); }
             set { Store(x => x.Name, value); }
         }
@@ -52,7 +59,8 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The layerPart where the widget belongs.
         /// </summary>
-        public LayerPart LayerPart {
+        public LayerPart LayerPart
+        {
             get { return this.As<ICommonPart>().Container.As<LayerPart>(); }
             set { this.As<ICommonPart>().Container = value; }
         }
@@ -60,8 +68,10 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The layerPart identifier.
         /// </summary>
-        public int? LayerId {
-            get {
+        public int? LayerId
+        {
+            get
+            {
                 var layerPart = LayerPart;
                 return layerPart != null ? layerPart.Id : default(int?);
             }
@@ -82,7 +92,8 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// Css classes for the widget.
         /// </summary>
-        public string CssClasses {
+        public string CssClasses
+        {
             get { return this.Retrieve(x => x.CssClasses); }
             set { this.Store(x => x.CssClasses, value); }
         }

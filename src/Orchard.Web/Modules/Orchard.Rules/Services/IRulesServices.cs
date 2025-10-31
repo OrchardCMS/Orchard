@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Rules.Models;
 
-namespace Orchard.Rules.Services {
-    public interface IRulesServices : IDependency {
+namespace Orchard.Rules.Services
+{
+    public interface IRulesServices : IDependency
+    {
         RuleRecord CreateRule(string name);
         RuleRecord GetRule(int id);
         IEnumerable<RuleRecord> GetRules();

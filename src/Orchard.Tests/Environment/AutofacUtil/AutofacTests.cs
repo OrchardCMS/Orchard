@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
 
-namespace Orchard.Tests.Environment.AutofacUtil {
+namespace Orchard.Tests.Environment.AutofacUtil
+{
     [TestFixture]
-    public class AutofacTests {
+    public class AutofacTests
+    {
         public interface IFoo { }
         public class Foo1 : IFoo { }
         public class Foo2 : IFoo { }
         public class Foo3 : IFoo { }
 
         [Test(Description = "Exercises a problem in a previous version, to make sure older Autofac.dll isn't picked up")]
-        public void EnumerablesFromDifferentLifetimeScopesShouldReturnDifferentCollections() {
+        public void EnumerablesFromDifferentLifetimeScopesShouldReturnDifferentCollections()
+        {
             var rootBuilder = new ContainerBuilder();
             rootBuilder.RegisterType<Foo1>().As<IFoo>();
             var rootContainer = rootBuilder.Build();

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Tags.Models;
 
-namespace Orchard.Tags.Services {
-    public interface ITagService : IDependency {
+namespace Orchard.Tags.Services
+{
+    public interface ITagService : IDependency
+    {
         IEnumerable<TagRecord> GetTags();
 
         /// <summary>

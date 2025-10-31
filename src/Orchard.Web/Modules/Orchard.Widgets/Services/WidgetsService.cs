@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
-using Orchard.Core.Common.Models;
 
-namespace Orchard.Widgets.Services {
+namespace Orchard.Widgets.Services
+{
 
-    public class WidgetsService : IWidgetsService {
+    public class WidgetsService : IWidgetsService
+    {
         private readonly IFeatureManager _featureManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IContentManager _contentManager;
@@ -18,14 +20,16 @@ namespace Orchard.Widgets.Services {
         public WidgetsService(
             IContentManager contentManager,
             IFeatureManager featureManager,
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager)
+        {
 
             _contentManager = contentManager;
             _featureManager = featureManager;
             _extensionManager = extensionManager;
         }
 
-        public IEnumerable<Tuple<string, string>> GetWidgetTypes() {
+        public IEnumerable<Tuple<string, string>> GetWidgetTypes()
+        {
             return _contentManager.GetContentTypeDefinitions()
                 .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Widget")
                 .Select(contentTypeDefinition =>
@@ -34,18 +38,21 @@ namespace Orchard.Widgets.Services {
                         contentTypeDefinition.Settings.ContainsKey("Description") ? contentTypeDefinition.Settings["Description"] : null));
         }
 
-        public IEnumerable<string> GetWidgetTypeNames() {
+        public IEnumerable<string> GetWidgetTypeNames()
+        {
             return GetWidgetTypes().Select(type => type.Item1);
         }
 
-        public IEnumerable<LayerPart> GetLayers() {
+        public IEnumerable<LayerPart> GetLayers()
+        {
             return _contentManager
                 .Query<LayerPart, LayerPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets() {
+        public IEnumerable<WidgetPart> GetWidgets()
+        {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .ForVersion(VersionOptions.Latest)
@@ -53,7 +60,8 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetOrphanedWidgets() {
+        public IEnumerable<WidgetPart> GetOrphanedWidgets()
+        {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .ForVersion(VersionOptions.Latest)
@@ -62,7 +70,8 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
+        public IEnumerable<WidgetPart> GetWidgets(int layerId)
+        {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .ForVersion(VersionOptions.Latest)
@@ -71,7 +80,8 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
+        public IEnumerable<WidgetPart> GetWidgets(int[] layerIds)
+        {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
@@ -79,18 +89,21 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<string> GetZones() {
+        public IEnumerable<string> GetZones()
+        {
             return _featureManager.GetEnabledFeatures()
                 .Select(x => x.Extension)
                 .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType) && x.Zones != null)
-                .SelectMany(x => x.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .SelectMany(x => x.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 .Select(x => x.Trim())
                 .Distinct()
                 .ToArray();
         }
 
-        public IEnumerable<string> GetZones(ExtensionDescriptor theme) {
-            if(theme == null) {
+        public IEnumerable<string> GetZones(ExtensionDescriptor theme)
+        {
+            if (theme == null)
+            {
                 return Enumerable.Empty<string>();
             }
 
@@ -98,17 +111,18 @@ namespace Orchard.Widgets.Services {
 
             // get the zones for this theme
             if (theme.Zones != null)
-                zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                zones = theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .Distinct()
                     .ToList();
 
             // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
-            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme))
+            {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
                 if (theme != null && theme.Zones != null)
-                    zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    zones = theme.Zones.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(x => x.Trim())
                         .Distinct()
                         .ToList();
@@ -117,13 +131,16 @@ namespace Orchard.Widgets.Services {
             return zones;
         }
 
-        public LayerPart GetLayer(int layerId) {
+        public LayerPart GetLayer(int layerId)
+        {
             return GetLayers().FirstOrDefault(layer => layer.Id == layerId);
         }
 
-        public LayerPart CreateLayer(string name, string description, string layerRule) {
+        public LayerPart CreateLayer(string name, string description, string layerRule)
+        {
             LayerPart layerPart = _contentManager.Create<LayerPart>("Layer",
-                layer => {
+                layer =>
+                {
                     layer.Name = name;
                     layer.Description = description;
                     layer.LayerRule = layerRule;
@@ -132,9 +149,11 @@ namespace Orchard.Widgets.Services {
             return layerPart;
         }
 
-        public void DeleteLayer(int layerId) {
+        public void DeleteLayer(int layerId)
+        {
             // Delete widgets in the layer
-            foreach (WidgetPart widgetPart in GetWidgets(layerId)) {
+            foreach (WidgetPart widgetPart in GetWidgets(layerId))
+            {
                 DeleteWidget(widgetPart.Id);
             }
 
@@ -142,7 +161,8 @@ namespace Orchard.Widgets.Services {
             _contentManager.Remove(GetLayer(layerId).ContentItem);
         }
 
-        public WidgetPart GetWidget(int widgetId) {
+        public WidgetPart GetWidget(int widgetId)
+        {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .ForVersion(VersionOptions.Latest)
@@ -151,12 +171,14 @@ namespace Orchard.Widgets.Services {
                 .FirstOrDefault();
         }
 
-        public WidgetPart CreateWidget(int layerId, string widgetType, string title, string position, string zone) {
+        public WidgetPart CreateWidget(int layerId, string widgetType, string title, string position, string zone)
+        {
             LayerPart layerPart = GetLayer(layerId);
 
             WidgetPart widgetPart = _contentManager.Create<WidgetPart>(widgetType,
                 VersionOptions.Draft,
-                widget => {
+                widget =>
+                {
                     widget.Title = title;
                     widget.Position = position;
                     widget.Zone = zone;
@@ -166,14 +188,17 @@ namespace Orchard.Widgets.Services {
             return widgetPart;
         }
 
-        public void DeleteWidget(int widgetId) {
+        public void DeleteWidget(int widgetId)
+        {
             _contentManager.Remove(GetWidget(widgetId).ContentItem);
         }
 
-        public bool MoveWidgetUp(int widgetId) {
+        public bool MoveWidgetUp(int widgetId)
+        {
             return MoveWidgetUp(GetWidget(widgetId));
         }
-        public bool MoveWidgetUp(WidgetPart widgetPart) {
+        public bool MoveWidgetUp(WidgetPart widgetPart)
+        {
             int currentPosition = ParsePosition(widgetPart);
 
             WidgetPart widgetBefore = GetWidgets()
@@ -181,7 +206,8 @@ namespace Orchard.Widgets.Services {
                 .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) < currentPosition);
 
-            if (widgetBefore != null) {
+            if (widgetBefore != null)
+            {
                 widgetPart.Position = widgetBefore.Position;
                 MakeRoomForWidgetPosition(widgetPart);
                 return true;
@@ -190,10 +216,12 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        public bool MoveWidgetDown(int widgetId) {
+        public bool MoveWidgetDown(int widgetId)
+        {
             return MoveWidgetDown(GetWidget(widgetId));
         }
-        public bool MoveWidgetDown(WidgetPart widgetPart) {
+        public bool MoveWidgetDown(WidgetPart widgetPart)
+        {
             int currentPosition = ParsePosition(widgetPart);
 
             WidgetPart widgetAfter = GetWidgets()
@@ -201,7 +229,8 @@ namespace Orchard.Widgets.Services {
                 .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) > currentPosition);
 
-            if (widgetAfter != null) {
+            if (widgetAfter != null)
+            {
                 widgetAfter.Position = widgetPart.Position;
                 MakeRoomForWidgetPosition(widgetAfter);
                 return true;
@@ -210,15 +239,18 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        public bool MoveWidgetToLayer(int widgetId, int? layerId) {
+        public bool MoveWidgetToLayer(int widgetId, int? layerId)
+        {
             return MoveWidgetToLayer(GetWidget(widgetId), layerId);
         }
-        public bool MoveWidgetToLayer(WidgetPart widgetPart, int? layerId) {
+        public bool MoveWidgetToLayer(WidgetPart widgetPart, int? layerId)
+        {
             LayerPart layer = layerId.HasValue
                 ? GetLayer(layerId.Value)
                 : GetLayers().FirstOrDefault();
 
-            if (layer != null) {
+            if (layer != null)
+            {
                 widgetPart.LayerPart = layer;
                 return true;
             }
@@ -226,10 +258,12 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        public void MakeRoomForWidgetPosition(int widgetId) {
+        public void MakeRoomForWidgetPosition(int widgetId)
+        {
             MakeRoomForWidgetPosition(GetWidget(widgetId));
         }
-        public void MakeRoomForWidgetPosition(WidgetPart widgetPart) {
+        public void MakeRoomForWidgetPosition(WidgetPart widgetPart)
+        {
             int targetPosition = ParsePosition(widgetPart);
 
             IEnumerable<WidgetPart> widgetsToMove = GetWidgets()
@@ -245,7 +279,8 @@ namespace Orchard.Widgets.Services {
                 widget.Position = (++position).ToString();
         }
 
-        private static int ParsePosition(WidgetPart widgetPart) {
+        private static int ParsePosition(WidgetPart widgetPart)
+        {
             int value;
             if (!int.TryParse(widgetPart.Position, out value))
                 return 0;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Moq;
@@ -23,8 +23,8 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
+using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Services;
@@ -33,17 +33,17 @@ using Orchard.Tests.Modules.Users;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
-using Orchard.Tests.Utility;
-using Orchard.Messaging.Services;
-using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Comments.Services {
+namespace Orchard.Tests.Modules.Comments.Services
+{
     [TestFixture]
-    public class CommentServiceTests : DatabaseEnabledTestsBase {
+    public class CommentServiceTests : DatabaseEnabledTestsBase
+    {
         private IContentManager _contentManager;
         private ICommentService _commentService;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<CommentService>().As<ICommentService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -73,21 +73,24 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterInstance(new Mock<IShapeDisplay>().Object);
             builder.RegisterInstance(new Mock<IMessageService>().Object);
             builder.RegisterType<StubClock>().As<IClock>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
             _commentService = _container.Resolve<ICommentService>();
             _contentManager = _container.Resolve<IContentManager>();
         }
 
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof(CommentsPartRecord),
                     typeof(CommentPartRecord),
@@ -99,7 +102,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void CommentedItemShouldHaveACommentPart() {
+        public void CommentedItemShouldHaveACommentPart()
+        {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);
             _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -108,8 +112,10 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void GetCommentsShouldReturnAllComments() {
-            for (int i = 0; i < 12; i++) {
+        public void GetCommentsShouldReturnAllComments()
+        {
+            for (int i = 0; i < 12; i++)
+            {
                 var commentedItem = _contentManager.New("commentedItem");
                 _contentManager.Create(commentedItem);
                 _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -120,7 +126,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void GetCommentedContentShouldReturnCommentedContentItem() {
+        public void GetCommentedContentShouldReturnCommentedContentItem()
+        {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);
             _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -130,7 +137,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void CommentsShouldBePendingByDefault() {
+        public void CommentsShouldBePendingByDefault()
+        {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);
             _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -140,7 +148,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void ApproveShouldUpdateCommentStatus() {
+        public void ApproveShouldUpdateCommentStatus()
+        {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);
             _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -151,7 +160,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void UnapproveShouldPendComment() {
+        public void UnapproveShouldPendComment()
+        {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);
             _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -161,15 +171,17 @@ namespace Orchard.Tests.Modules.Comments.Services {
             Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Approved));
 
             _commentService.UnapproveComment(commentId);
-            
+
             Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Pending));
         }
 
         [Test]
-        public void DeleteShouldRemoveComments() {
+        public void DeleteShouldRemoveComments()
+        {
             var commentIds = new int[12];
 
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 12; i++)
+            {
                 var commentedItem = _contentManager.New("commentedItem");
                 _contentManager.Create(commentedItem);
                 _contentManager.Create(commentedItem, VersionOptions.Published);
@@ -178,7 +190,8 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(12));
 
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 12; i++)
+            {
                 _commentService.DeleteComment(commentIds[i]);
             }
 
@@ -186,34 +199,42 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
     }
 
-    public class CommentedItemHandler : ContentHandler {
-        public CommentedItemHandler() {
+    public class CommentedItemHandler : ContentHandler
+    {
+        public CommentedItemHandler()
+        {
             Filters.Add(new ActivatingFilter<CommentedItem>("commentedItem"));
             Filters.Add(new ActivatingFilter<CommentPart>("commentedItem"));
             Filters.Add(new ActivatingFilter<CommonPart>("commentedItem"));
         }
     }
 
-    public class CommentedItem : ContentPart {
+    public class CommentedItem : ContentPart
+    {
     }
 
-    public class CommentedItemDriver : ContentPartDriver<CommentedItem> {
+    public class CommentedItemDriver : ContentPartDriver<CommentedItem>
+    {
         public static readonly string ContentTypeName = "commentedItem";
     }
 
-    public class ProcessingEngineStub : IProcessingEngine {
+    public class ProcessingEngineStub : IProcessingEngine
+    {
 
         public void Initialize() { }
 
-        public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string messageName, Dictionary<string, object> parameters) {
+        public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string messageName, Dictionary<string, object> parameters)
+        {
             return "";
         }
 
-        public bool AreTasksPending() {
+        public bool AreTasksPending()
+        {
             return false;
         }
 
-        public void ExecuteNextTask() {
+        public void ExecuteNextTask()
+        {
         }
     }
 }

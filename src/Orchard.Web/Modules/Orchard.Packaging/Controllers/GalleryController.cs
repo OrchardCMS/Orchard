@@ -20,14 +20,15 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 using ILogger = Orchard.Logging.ILogger;
 using NullLogger = Orchard.Logging.NullLogger;
 
-namespace Orchard.Packaging.Controllers {
+namespace Orchard.Packaging.Controllers
+{
     [OrchardFeature("Gallery")]
     [Themed, Admin]
-    public class GalleryController : Controller {
+    public class GalleryController : Controller
+    {
         private readonly ShellSettings _shellSettings;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
@@ -38,7 +39,8 @@ namespace Orchard.Packaging.Controllers {
             ShellSettings shellSettings,
             IPackagingSourceManager packagingSourceManager,
             IExtensionManager extensionManager,
-            IOrchardServices services) {
+            IOrchardServices services)
+        {
 
             _shellSettings = shellSettings;
             _packagingSourceManager = packagingSourceManager;
@@ -54,17 +56,20 @@ namespace Orchard.Packaging.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Sources() {
+        public ActionResult Sources()
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list sources")))
                 return new HttpUnauthorizedResult();
 
-            return View(new PackagingSourcesViewModel {
+            return View(new PackagingSourcesViewModel
+            {
                 Sources = _packagingSourceManager.GetSources(),
             });
         }
 
         [HttpPost]
-        public ActionResult Remove(int id) {
+        public ActionResult Remove(int id)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
                 return new HttpUnauthorizedResult();
 
@@ -73,7 +78,8 @@ namespace Orchard.Packaging.Controllers {
             return RedirectToAction("Sources");
         }
 
-        public ActionResult AddSource() {
+        public ActionResult AddSource()
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
@@ -81,33 +87,40 @@ namespace Orchard.Packaging.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddSource(string url) {
+        public ActionResult AddSource(string url)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            if (!String.IsNullOrEmpty(url)) {
-                if (!url.StartsWith("http")) {
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (!url.StartsWith("http"))
+                {
                     ModelState.AddModelError("Url", T("The Url is not valid").Text);
                 }
             }
-            else if (String.IsNullOrWhiteSpace(url)) {
+            else if (string.IsNullOrWhiteSpace(url))
+            {
                 ModelState.AddModelError("Url", T("Url is required").Text);
             }
 
             string title = null;
             // try to load the feed
-            try {
+            try
+            {
                 XNamespace atomns = "http://www.w3.org/2005/Atom";
                 var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
                 var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
                 if (titleNode != null)
                     title = titleNode.Value;
 
-                if (String.IsNullOrWhiteSpace(title)) {
+                if (string.IsNullOrWhiteSpace(title))
+                {
                     ModelState.AddModelError("Url", T("The feed has no title.").Text);
                 }
-            } 
-            catch {
+            }
+            catch
+            {
                 ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
             }
 
@@ -120,7 +133,8 @@ namespace Orchard.Packaging.Controllers {
             return RedirectToAction("Sources");
         }
 
-        public ActionResult Modules(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
+        public ActionResult Modules(PackagingExtensionsOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list Modules")))
                 return new HttpUnauthorizedResult();
 
@@ -128,7 +142,8 @@ namespace Orchard.Packaging.Controllers {
             return ListExtensions(options, DefaultExtensionTypes.Module, pager);
         }
 
-        public ActionResult Themes(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
+        public ActionResult Themes(PackagingExtensionsOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list Themes")))
                 return new HttpUnauthorizedResult();
 
@@ -136,7 +151,8 @@ namespace Orchard.Packaging.Controllers {
             return ListExtensions(options, DefaultExtensionTypes.Theme, pager);
         }
 
-        protected ActionResult ListExtensions(PackagingExtensionsOptions options, string packageType, Pager pager) {
+        protected ActionResult ListExtensions(PackagingExtensionsOptions options, string packageType, Pager pager)
+        {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == options.SourceId).FirstOrDefault();
 
             var sources = selectedSource != null
@@ -146,8 +162,10 @@ namespace Orchard.Packaging.Controllers {
 
             IEnumerable<PackagingEntry> extensions = null;
             int totalCount = 0;
-            foreach (var source in sources) {
-                try {
+            foreach (var source in sources)
+            {
+                try
+                {
                     Expression<Func<PublishedPackage, bool>> packagesCriteria = p => p.PackageType == packageType &&
                                 p.IsLatestVersion &&
                                 (string.IsNullOrEmpty(options.SearchText)
@@ -157,10 +175,12 @@ namespace Orchard.Packaging.Controllers {
 
                     var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
                         source,
-                        packages => {
+                        packages =>
+                        {
                             packages = packages.Where(packagesCriteria);
 
-                            switch (options.Order) {
+                            switch (options.Order)
+                            {
                                 case PackagingExtensionsOrder.Downloads:
                                     packages = packages.OrderByDescending(p => p.DownloadCount).ThenBy(p => p.Title);
                                     break;
@@ -172,7 +192,8 @@ namespace Orchard.Packaging.Controllers {
                                     break;
                             }
 
-                            if (pager.PageSize != 0) {
+                            if (pager.PageSize != 0)
+                            {
                                 packages = packages.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
                             }
 
@@ -187,8 +208,10 @@ namespace Orchard.Packaging.Controllers {
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
 
                     // apply another paging rule in case there were multiple sources
-                    if (sources.Count() > 1) {
-                        switch (options.Order) {
+                    if (sources.Count() > 1)
+                    {
+                        switch (options.Order)
+                        {
                             case PackagingExtensionsOrder.Downloads:
                                 extensions = extensions.OrderByDescending(p => p.DownloadCount).ThenBy(p => p.Title);
                                 break;
@@ -200,12 +223,14 @@ namespace Orchard.Packaging.Controllers {
                                 break;
                         }
 
-                        if (pager.PageSize != 0) {
+                        if (pager.PageSize != 0)
+                        {
                             extensions = extensions.Take(pager.PageSize);
                         }
                     }
-                } 
-                catch (Exception exception) {
+                }
+                catch (Exception exception)
+                {
                     Services.Notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message));
                 }
             }
@@ -227,17 +252,21 @@ namespace Orchard.Packaging.Controllers {
                 .Join(extensions, extensionDescriptor => extensionDescriptor.Id, packaginEntry => packaginEntry.ExtensionId(),
                       (extensionDescriptor, packagingEntry) => new Tuple<ExtensionDescriptor, PackagingEntry>(extensionDescriptor, packagingEntry));
 
-            foreach (Tuple<ExtensionDescriptor, PackagingEntry> packagings in extensionDescriptors) {
+            foreach (Tuple<ExtensionDescriptor, PackagingEntry> packagings in extensionDescriptors)
+            {
                 packagings.Item2.Installed = true;
 
-                if (_extensionDisplayEventHandler != null) {
-                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1, ControllerContext.RequestContext)) {
+                if (_extensionDisplayEventHandler != null)
+                {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1, ControllerContext.RequestContext))
+                    {
                         packagings.Item2.Notifications.Add(notification);
                     }
                 }
             }
 
-            return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel {
+            return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel
+            {
                 Extensions = extensions,
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 Pager = pagerShape,

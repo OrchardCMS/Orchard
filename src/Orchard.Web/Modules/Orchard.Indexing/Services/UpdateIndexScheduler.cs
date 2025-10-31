@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
 
-namespace Orchard.Indexing.Services {
-    public class UpdateIndexScheduler : IUpdateIndexScheduler, IIndexNotifierHandler {
+namespace Orchard.Indexing.Services
+{
+    public class UpdateIndexScheduler : IUpdateIndexScheduler, IIndexNotifierHandler
+    {
         private readonly IProcessingEngine _processingEngine;
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
@@ -16,14 +18,16 @@ namespace Orchard.Indexing.Services {
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
             Lazy<IIndexingTaskExecutor> indexingTaskExecutor
-            ) {
+            )
+        {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _indexingTaskExecutor = indexingTaskExecutor;
         }
 
-        public void Schedule(string indexName) {
+        public void Schedule(string indexName)
+        {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             _processingEngine.AddTask(
                 _shellSettings,
@@ -33,8 +37,10 @@ namespace Orchard.Indexing.Services {
             );
         }
 
-        public void UpdateIndex(string indexName) {
-            if(_indexingTaskExecutor.Value.UpdateIndexBatch(indexName)) {
+        public void UpdateIndex(string indexName)
+        {
+            if (_indexingTaskExecutor.Value.UpdateIndexBatch(indexName))
+            {
                 Schedule(indexName);
             }
         }

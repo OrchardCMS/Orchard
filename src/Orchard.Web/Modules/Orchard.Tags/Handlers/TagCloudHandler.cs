@@ -1,18 +1,21 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Tags.Models;
 using Orchard.Tags.Services;
 
-namespace Orchard.Tags.Handlers {
+namespace Orchard.Tags.Handlers
+{
     [OrchardFeature("Orchard.Tags.TagCloud")]
-    public class TagCloudHandler : ContentHandler {
+    public class TagCloudHandler : ContentHandler
+    {
         private readonly ISignals _signals;
 
         public TagCloudHandler(
             ITagCloudService tagCloudService,
-            ISignals signals) {
+            ISignals signals)
+        {
 
             _signals = signals;
 
@@ -26,7 +29,8 @@ namespace Orchard.Tags.Handlers {
             OnUnpublished<TagsPart>((context, part) => InvalidateTagCloudCache());
         }
 
-        public void InvalidateTagCloudCache() {
+        public void InvalidateTagCloudCache()
+        {
             _signals.Trigger(TagCloudService.TagCloudTagsChanged);
         }
     }

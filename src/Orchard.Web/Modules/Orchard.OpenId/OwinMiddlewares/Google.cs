@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
@@ -9,24 +9,30 @@ using Orchard.OpenId.Models;
 using Orchard.Owin;
 using Owin;
 
-namespace Orchard.OpenId.OwinMiddlewares {
+namespace Orchard.OpenId.OwinMiddlewares
+{
     [OrchardFeature("Orchard.OpenId.Google")]
-    public class Google : IOwinMiddlewareProvider {
+    public class Google : IOwinMiddlewareProvider
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public Google(IWorkContextAccessor workContextAccessor) {
+        public Google(IWorkContextAccessor workContextAccessor)
+        {
             _workContextAccessor = workContextAccessor;
         }
 
-        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
+        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares()
+        {
             var workContext = _workContextAccessor.GetContext();
             var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
-            if (settings == null || !settings.IsValid()) {
+            if (settings == null || !settings.IsValid())
+            {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 
-            var authenticationOptions = new GoogleOAuth2AuthenticationOptions {
+            var authenticationOptions = new GoogleOAuth2AuthenticationOptions
+            {
                 ClientId = settings.ClientId,
                 ClientSecret = settings.ClientSecret,
                 CallbackPath = new PathString(GetCallbackPath(workContext, settings))
@@ -42,7 +48,8 @@ namespace Orchard.OpenId.OwinMiddlewares {
             };
         }
 
-        private string GetCallbackPath(WorkContext workContext, GoogleSettingsPart settings) {
+        private string GetCallbackPath(WorkContext workContext, GoogleSettingsPart settings)
+        {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 

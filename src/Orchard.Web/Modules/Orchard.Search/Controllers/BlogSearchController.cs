@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -20,10 +20,12 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Search.Controllers {
+namespace Orchard.Search.Controllers
+{
     [OrchardFeature("Orchard.Search.Blogs")]
     [Admin]
-    public class BlogSearchController : Controller {
+    public class BlogSearchController : Controller
+    {
         private readonly ISearchService _searchService;
         private readonly ISiteService _siteService;
         private readonly IIndexManager _indexManager;
@@ -43,7 +45,8 @@ namespace Orchard.Search.Controllers {
             IAuthorizer authorizer,
             ICultureManager cultureManager,
             INavigationManager navigationManager,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
 
             _searchService = searchService;
             _siteService = siteService;
@@ -64,13 +67,16 @@ namespace Orchard.Search.Controllers {
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult Index(int blogId, PagerParameters pagerParameters, string searchText = "") {
+        public ActionResult Index(int blogId, PagerParameters pagerParameters, string searchText = "")
+        {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
-            try {
-                if (!string.IsNullOrWhiteSpace(searchText)) {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
                     var searchableTypes = new List<string>();
                     // add the type to the list of types we will filter for
                     // BlogPost for now but we would add more types in the future (i.e. "Article")
@@ -93,7 +99,8 @@ namespace Orchard.Search.Controllers {
                         .NotAnalyzed()
                         .AsFilter();
 
-                    foreach (var searchableType in searchableTypes) {
+                    foreach (var searchableType in searchableTypes)
+                    {
                         // filter by type
                         searchBuilder
                             .WithField("type", searchableType)
@@ -102,7 +109,8 @@ namespace Orchard.Search.Controllers {
                     }
                     // pagination
                     var totalCount = searchBuilder.Count();
-                    if (pager != null) {
+                    if (pager != null)
+                    {
                         searchBuilder = searchBuilder
                             .Slice(
                                 (pager.Page > 0 ? pager.Page - 1 : 0) * pager.PageSize,
@@ -111,7 +119,8 @@ namespace Orchard.Search.Controllers {
                     // search
                     var searchResults = searchBuilder.Search();
                     // prepare the shape for the page
-                    searchHits = new PageOfItems<ISearchHit>(searchResults.Select(searchHit => searchHit)) {
+                    searchHits = new PageOfItems<ISearchHit>(searchResults.Select(searchHit => searchHit))
+                    {
                         PageNumber = pager != null ? pager.Page : 0,
                         PageSize = pager != null ? (pager.PageSize != 0 ? pager.PageSize : totalCount) : totalCount,
                         TotalItemCount = totalCount
@@ -119,15 +128,18 @@ namespace Orchard.Search.Controllers {
                 }
 
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
             }
 
             var list = Services.New.List();
-            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Latest, QueryHints.Empty)) {
+            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Latest, QueryHints.Empty))
+            {
                 // ignore search results which content item has been removed
-                if (contentItem == null) {
+                if (contentItem == null)
+                {
                     searchHits.TotalItemCount--;
                     continue;
                 }

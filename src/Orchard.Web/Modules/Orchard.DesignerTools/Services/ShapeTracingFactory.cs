@@ -1,22 +1,20 @@
-﻿using System;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
-using System.Xml.Linq;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
 using Orchard.Security;
-using Orchard.Themes;
 using Orchard.UI;
 using Orchard.UI.Admin;
-using System.Web;
 
-namespace Orchard.DesignerTools.Services {
+namespace Orchard.DesignerTools.Services
+{
     [OrchardFeature("Orchard.DesignerTools")]
-    public class ShapeTracingFactory : IShapeFactoryEvents, IShapeDisplayEvents {
+    public class ShapeTracingFactory : IShapeFactoryEvents, IShapeDisplayEvents
+    {
         private readonly WorkContext _workContext;
         private readonly IShapeTableManager _shapeTableManager;
         private readonly IWebSiteFolder _webSiteFolder;
@@ -26,18 +24,20 @@ namespace Orchard.DesignerTools.Services {
         private int _shapeId;
 
         public ShapeTracingFactory(
-            IWorkContextAccessor workContextAccessor, 
+            IWorkContextAccessor workContextAccessor,
             IShapeTableManager shapeTableManager,
             IWebSiteFolder webSiteFolder,
             IAuthorizer authorizer
-            ) {
+            )
+        {
             _workContext = workContextAccessor.GetContext();
             _shapeTableManager = shapeTableManager;
             _webSiteFolder = webSiteFolder;
             _authorizer = authorizer;
         }
 
-        private bool IsActivable() {
+        private bool IsActivable()
+        {
             // don't activate if no HttpContext
             if (_workContext.HttpContext == null)
                 return false;
@@ -53,16 +53,20 @@ namespace Orchard.DesignerTools.Services {
             return true;
         }
 
-        public void Creating(ShapeCreatingContext context) {
+        public void Creating(ShapeCreatingContext context)
+        {
         }
 
-        public void Created(ShapeCreatedContext context) {
-            if(!IsActivable()) {
+        public void Created(ShapeCreatedContext context)
+        {
+            if (!IsActivable())
+            {
                 return;
             }
 
             // prevent reentrance as some methods could create new shapes, and trigger this event
-            if(_processing) {
+            if (_processing)
+            {
                 return;
             }
 
@@ -74,13 +78,15 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "ContentZone"
                 && context.ShapeType != "ShapeTracingMeta"
                 && context.ShapeType != "ShapeTracingTemplates"
-                && context.ShapeType != "DateTimeRelative") {
+                && context.ShapeType != "DateTimeRelative")
+            {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
                 var currentTheme = _workContext.CurrentTheme;
                 var shapeTable = _shapeTableManager.GetShapeTable(currentTheme.Id);
 
-                if (!shapeTable.Descriptors.ContainsKey(shapeMetadata.Type)) {
+                if (!shapeTable.Descriptors.ContainsKey(shapeMetadata.Type))
+                {
                     _processing = false;
                     return;
                 }
@@ -91,19 +97,22 @@ namespace Orchard.DesignerTools.Services {
 
             _processing = false;
         }
-        public void Displaying(ShapeDisplayingContext context) {}
+        public void Displaying(ShapeDisplayingContext context) { }
 
-        public void OnDisplaying(ShapeDisplayingContext context) {
-            if (!IsActivable()) {
+        public void OnDisplaying(ShapeDisplayingContext context)
+        {
+            if (!IsActivable())
+            {
                 return;
             }
 
             var shape = context.Shape;
-            var shapeMetadata = (ShapeMetadata) context.Shape.Metadata;
+            var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
             var currentTheme = _workContext.CurrentTheme;
             var shapeTable = _shapeTableManager.GetShapeTable(currentTheme.Id);
 
-            if (!shapeMetadata.Wrappers.Contains("ShapeTracingWrapper")) {
+            if (!shapeMetadata.Wrappers.Contains("ShapeTracingWrapper"))
+            {
                 return;
             }
 
@@ -119,57 +128,72 @@ namespace Orchard.DesignerTools.Services {
             shape.Template = null;
             shape.OriginalTemplate = descriptor.BindingSource;
 
-            foreach (var extension in new[] { ".cshtml", ".aspx" }) {
-                foreach (var alternate in shapeMetadata.Alternates.Reverse().Concat(new [] {shapeMetadata.Type}) ) {
+            foreach (var extension in new[] { ".cshtml", ".aspx" })
+            {
+                foreach (var alternate in shapeMetadata.Alternates.Reverse().Concat(new[] { shapeMetadata.Type }))
+                {
                     var alternateFilename = FormatShapeFilename(alternate, shapeMetadata.Type, shapeMetadata.DisplayType, currentTheme.Location + "/" + currentTheme.Id, extension);
-                    if (_webSiteFolder.FileExists(alternateFilename)) {
+                    if (_webSiteFolder.FileExists(alternateFilename))
+                    {
                         shape.Template = alternateFilename;
                     }
                 }
             }
 
-            if(shape.Template == null) {
+            if (shape.Template == null)
+            {
                 shape.Template = descriptor.BindingSource;
             }
 
-            if(shape.Template == null) {
+            if (shape.Template == null)
+            {
                 shape.Template = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
             }
 
-            if (shape.OriginalTemplate == null) {
+            if (shape.OriginalTemplate == null)
+            {
                 shape.OriginalTemplate = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
             }
 
-            try {
+            try
+            {
                 // we know that templates are classes if they contain ':'
-                if (!shape.Template.Contains(":") && _webSiteFolder.FileExists(shape.Template)) {
+                if (!shape.Template.Contains(":") && _webSiteFolder.FileExists(shape.Template))
+                {
                     shape.TemplateContent = _webSiteFolder.ReadFile(shape.Template);
                 }
             }
-            catch {
+            catch
+            {
                 // the url might be invalid in case of a code shape
             }
 
-            if (shapeMetadata.PlacementSource != null && _webSiteFolder.FileExists(shapeMetadata.PlacementSource)) {
+            if (shapeMetadata.PlacementSource != null && _webSiteFolder.FileExists(shapeMetadata.PlacementSource))
+            {
                 context.Shape.PlacementContent = _webSiteFolder.ReadFile(shapeMetadata.PlacementSource);
             }
 
             // Inject the Zone name
-            if(shapeMetadata.Type == "Zone") {
-                shape.Hint = ((Zone) shape).ZoneName;
+            if (shapeMetadata.Type == "Zone")
+            {
+                shape.Hint = ((Zone)shape).ZoneName;
             }
 
             shape.ShapeId = _shapeId++;
         }
 
 
-        public void Displayed(ShapeDisplayedContext context) {
+        public void Displayed(ShapeDisplayedContext context)
+        {
         }
 
-        private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
+        private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension)
+        {
 
-            if (!String.IsNullOrWhiteSpace(displayType)) {
-                if (shape.StartsWith(shapeType + "_" + displayType)) {
+            if (!string.IsNullOrWhiteSpace(displayType))
+            {
+                if (shape.StartsWith(shapeType + "_" + displayType))
+                {
                     shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType;
                 }
             }

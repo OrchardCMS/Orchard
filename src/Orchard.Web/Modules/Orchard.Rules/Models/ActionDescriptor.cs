@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 
-namespace Orchard.Rules.Models {
-    public class ActionDescriptor {
+namespace Orchard.Rules.Models
+{
+    public class ActionDescriptor
+    {
         public string Category { get; set; }
         public string Type { get; set; }
         public LocalizedString Name { get; set; }

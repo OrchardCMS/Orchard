@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using NUnit.Framework;
 using Orchard.Scripting.Ast;
 using Orchard.Scripting.Compiler;
 
-namespace Orchard.Tests.Modules.Scripting {
+namespace Orchard.Tests.Modules.Scripting
+{
     [TestFixture]
-    public class ParserTests {
+    public class ParserTests
+    {
         [Test]
-        public void ParserShouldUnderstandConstantExpressions() {
+        public void ParserShouldUnderstandConstantExpressions()
+        {
             var tree = new Parser("true").Parse();
             CheckTree(tree, new object[] {
                 "const", true,
@@ -16,7 +19,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldIgnoreWhitespaces() {
+        public void ParserShouldIgnoreWhitespaces()
+        {
             var tree = new Parser("  true \n  ").Parse();
             CheckTree(tree, new object[] {
                 "const", true,
@@ -24,7 +28,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandBinaryExpressions() {
+        public void ParserShouldUnderstandBinaryExpressions()
+        {
             var tree = new Parser("true+true").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
@@ -34,7 +39,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandCommandExpressions() {
+        public void ParserShouldUnderstandCommandExpressions()
+        {
             var tree = new Parser("print 'foo', 'bar'").Parse();
             CheckTree(tree, new object[] {
                 "call", TokenKind.Identifier, "print",
@@ -44,7 +50,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandCallExpressions() {
+        public void ParserShouldUnderstandCallExpressions()
+        {
             var tree = new Parser("print('foo', 'bar')").Parse();
             CheckTree(tree, new object[] {
                 "call", TokenKind.Identifier, "print",
@@ -54,7 +61,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandCallExpressions2() {
+        public void ParserShouldUnderstandCallExpressions2()
+        {
             var tree = new Parser("print 1+2").Parse();
             CheckTree(tree, new object[] {
                 "call", TokenKind.Identifier, "print",
@@ -65,7 +73,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence() {
+        public void ParserShouldUnderstandOperatorPrecedence()
+        {
             var tree = new Parser("1+2*3").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
@@ -77,7 +86,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence2() {
+        public void ParserShouldUnderstandOperatorPrecedence2()
+        {
             var tree = new Parser("1*2+3").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
@@ -89,7 +99,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence3() {
+        public void ParserShouldUnderstandOperatorPrecedence3()
+        {
             var tree = new Parser("not true or true").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Or,
@@ -100,7 +111,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence4() {
+        public void ParserShouldUnderstandOperatorPrecedence4()
+        {
             var tree = new Parser("not (true or true)").Parse();
             CheckTree(tree, new object[] {
                 "unop", TokenKind.Not,
@@ -111,7 +123,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence5() {
+        public void ParserShouldUnderstandOperatorPrecedence5()
+        {
             var tree = new Parser("1+2+3").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
@@ -123,7 +136,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandOperatorPrecedence6() {
+        public void ParserShouldUnderstandOperatorPrecedence6()
+        {
             var tree = new Parser("1+2-3").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Minus,
@@ -135,7 +149,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators() {
+        public void ParserShouldUnderstandRelationalOperators()
+        {
             var tree = new Parser("true == true").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.EqualEqual,
@@ -145,7 +160,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators2() {
+        public void ParserShouldUnderstandRelationalOperators2()
+        {
             var tree = new Parser("1 != 2").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.NotEqual,
@@ -155,7 +171,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators3() {
+        public void ParserShouldUnderstandRelationalOperators3()
+        {
             var tree = new Parser("1 < 2").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.LessThan,
@@ -165,7 +182,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators4() {
+        public void ParserShouldUnderstandRelationalOperators4()
+        {
             var tree = new Parser("1 <= 2").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.LessThanEqual,
@@ -175,7 +193,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators5() {
+        public void ParserShouldUnderstandRelationalOperators5()
+        {
             var tree = new Parser("1 > 2").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.GreaterThan,
@@ -185,7 +204,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators6() {
+        public void ParserShouldUnderstandRelationalOperators6()
+        {
             var tree = new Parser("1 >= 2").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.GreaterThanEqual,
@@ -195,7 +215,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperators7() {
+        public void ParserShouldUnderstandRelationalOperators7()
+        {
             var tree = new Parser("null == null").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.EqualEqual,
@@ -205,7 +226,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperatorPrecedence() {
+        public void ParserShouldUnderstandRelationalOperatorPrecedence()
+        {
             var tree = new Parser("1 < 2 or 2 > 3 and !false").Parse();
             CheckTree(tree, new object[] {
                   "binop", TokenKind.And,
@@ -222,7 +244,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandRelationalOperatorPrecedence2() {
+        public void ParserShouldUnderstandRelationalOperatorPrecedence2()
+        {
             var tree = new Parser("1 < 2 and 2 > 3 or !false").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Or,
@@ -239,7 +262,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandParenthesis() {
+        public void ParserShouldUnderstandParenthesis()
+        {
             var tree = new Parser("1*(2+3)").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Mul,
@@ -251,7 +275,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldUnderstandComplexExpressions() {
+        public void ParserShouldUnderstandComplexExpressions()
+        {
             var tree = new Parser("not 1 * (2 / 4 * 6 + (3))").Parse();
             CheckTree(tree, new object[] {
                 "unop", TokenKind.Not,
@@ -268,7 +293,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldContainErrorExpressions() {
+        public void ParserShouldContainErrorExpressions()
+        {
             var tree = new Parser("1 + not 3").Parse();
             CheckTree(tree, new object[] {
                 "error",
@@ -276,7 +302,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void ParserShouldContainErrorExpressions2() {
+        public void ParserShouldContainErrorExpressions2()
+        {
             var tree = new Parser("1 +").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
@@ -285,7 +312,8 @@ namespace Orchard.Tests.Modules.Scripting {
             });
         }
 
-        private void CheckTree(AbstractSyntaxTree tree, object[] objects) {
+        private void CheckTree(AbstractSyntaxTree tree, object[] objects)
+        {
             Assert.That(tree, Is.Not.Null);
             Assert.That(tree.Root, Is.Not.Null);
 
@@ -294,10 +322,12 @@ namespace Orchard.Tests.Modules.Scripting {
             Assert.That(index, Is.EqualTo(objects.Length));
         }
 
-        private void CheckExpression(AstNode astNode, int indent, object[] objects, ref int index) {
+        private void CheckExpression(AstNode astNode, int indent, object[] objects, ref int index)
+        {
             var exprName = (string)objects[index++];
             Type type = null;
-            switch (exprName) {
+            switch (exprName)
+            {
                 case "const":
                     type = typeof(ConstantAstNode);
                     break;
@@ -321,21 +351,26 @@ namespace Orchard.Tests.Modules.Scripting {
 
             Assert.That(astNode.GetType(), Is.EqualTo(type));
 
-            if (exprName == "const") {
+            if (exprName == "const")
+            {
                 Assert.That((astNode as ConstantAstNode).Value, Is.EqualTo(objects[index++]));
             }
-            else if (exprName == "binop") {
+            else if (exprName == "binop")
+            {
                 Assert.That((astNode as BinaryAstNode).Operator.Kind, Is.EqualTo(objects[index++]));
             }
-            else if (exprName == "unop") {
+            else if (exprName == "unop")
+            {
                 Assert.That((astNode as UnaryAstNode).Operator.Kind, Is.EqualTo(objects[index++]));
             }
-            else if (exprName == "call") {
+            else if (exprName == "call")
+            {
                 Assert.That((astNode as MethodCallAstNode).Token.Kind, Is.EqualTo(objects[index++]));
                 Assert.That((astNode as MethodCallAstNode).Token.Value, Is.EqualTo(objects[index++]));
             }
 
-            foreach (var child in astNode.Children) {
+            foreach (var child in astNode.Children)
+            {
                 CheckExpression(child, indent + 1, objects, ref index);
             }
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -8,13 +8,16 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class ShapeHelperTests {
+    public class ShapeHelperTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
@@ -28,7 +31,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CreatingNewShapeTypeByName() {
+        public void CreatingNewShapeTypeByName()
+        {
             dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha();
@@ -37,7 +41,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CreatingShapeWithAdditionalNamedParameters() {
+        public void CreatingShapeWithAdditionalNamedParameters()
+        {
             dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha(one: 1, two: "dos");
@@ -48,7 +53,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void WithPropertyBearingObjectInsteadOfNamedParameters() {
+        public void WithPropertyBearingObjectInsteadOfNamedParameters()
+        {
             dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha(new { one = 1, two = "dos" });

@@ -1,18 +1,19 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Core.Title.Settings {
-    public class TitlePartSettingsEvents : ContentDefinitionEditorEventsBase {
+namespace Orchard.Core.Title.Settings
+{
+    public class TitlePartSettingsEvents : ContentDefinitionEditorEventsBase
+    {
 
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
-            if (definition.PartDefinition.Name != "TitlePart") {
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition)
+        {
+            if (definition.PartDefinition.Name != "TitlePart")
+            {
                 yield break;
             }
 
@@ -24,15 +25,18 @@ namespace Orchard.Core.Title.Settings {
             yield return DefinitionTemplate(settings);
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel)
+        {
 
-            if (builder.Name != "TitlePart") {
+            if (builder.Name != "TitlePart")
+            {
                 yield break;
             }
 
             var model = new TitlePartSettings();
 
-            if (updateModel.TryUpdateModel(model, "TitlePartSettings", null, null)) {
+            if (updateModel.TryUpdateModel(model, "TitlePartSettings", null, null))
+            {
                 builder.WithSetting("TitlePartSettings.MaxLength", model.MaxLength.ToString());
 
             }

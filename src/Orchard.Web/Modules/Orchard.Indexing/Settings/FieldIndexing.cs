@@ -1,6 +1,9 @@
-﻿namespace Orchard.Indexing.Settings {
-    public class FieldIndexing {
-        public FieldIndexing() {
+namespace Orchard.Indexing.Settings
+{
+    public class FieldIndexing
+    {
+        public FieldIndexing()
+        {
             Analyzed = true;
             TagsRemoved = true;
         }

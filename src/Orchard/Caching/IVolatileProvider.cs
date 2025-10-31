@@ -1,4 +1,6 @@
-﻿namespace Orchard.Caching {
-    public interface IVolatileProvider : ISingletonDependency {
+namespace Orchard.Caching
+{
+    public interface IVolatileProvider : ISingletonDependency
+    {
     }
 }

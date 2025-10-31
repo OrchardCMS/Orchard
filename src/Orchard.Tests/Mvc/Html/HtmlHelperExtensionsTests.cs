@@ -1,17 +1,20 @@
-﻿using System.IO;
+using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Moq;
 using NUnit.Framework;
 using Orchard.Mvc.Html;
-using System.Collections.Generic;
 
-namespace Orchard.Tests.Mvc.Html {
+namespace Orchard.Tests.Mvc.Html
+{
     [TestFixture]
-    public class HtmlHelperExtensionsTests {
+    public class HtmlHelperExtensionsTests
+    {
         [Test]
-        public void LinkReturnsIHtmlString() {
+        public void LinkReturnsIHtmlString()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -25,7 +28,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkHtmlEncodesLinkText() {
+        public void LinkHtmlEncodesLinkText()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -39,7 +43,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkHtmlAttributeEncodesHref() {
+        public void LinkHtmlAttributeEncodesHref()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -53,7 +58,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkHtmlAttributeEncodesAttributes() {
+        public void LinkHtmlAttributeEncodesAttributes()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -67,7 +73,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkOrDefaultReturnsIHtmlString() {
+        public void LinkOrDefaultReturnsIHtmlString()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -81,7 +88,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkOrDefaultHtmlEncodesLinkText() {
+        public void LinkOrDefaultHtmlEncodesLinkText()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -95,7 +103,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkOrDefaultWithoutHrefHtmlEncodesLinkText() {
+        public void LinkOrDefaultWithoutHrefHtmlEncodesLinkText()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -109,7 +118,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void LinkOrDefaultWithHrefHtmlAttributeEncodesHref() {
+        public void LinkOrDefaultWithHrefHtmlAttributeEncodesHref()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -123,7 +133,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void SelectOptionHtmlEncodesText() {
+        public void SelectOptionHtmlEncodesText()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -137,7 +148,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void UnorderedListWithNullItemsReturnsEmptyHtmlString() {
+        public void UnorderedListWithNullItemsReturnsEmptyHtmlString()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -151,7 +163,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void UnorderedListWithEmptyItemsReturnsEmptyHtmlString() {
+        public void UnorderedListWithEmptyItemsReturnsEmptyHtmlString()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -165,14 +178,19 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void HtmlHelperForEnablesLocalHelperMethods() {
+        public void HtmlHelperForEnablesLocalHelperMethods()
+        {
             //arrange
-            var controller = new FooController {
+            var controller = new FooController
+            {
                 ControllerContext = new ControllerContext()
             };
-            var viewContext = new ViewContext {
-                ViewData = new ViewDataDictionary {
-                    TemplateInfo = new TemplateInfo {
+            var viewContext = new ViewContext
+            {
+                ViewData = new ViewDataDictionary
+                {
+                    TemplateInfo = new TemplateInfo
+                    {
                         HtmlFieldPrefix = "topprefix"
                     }
                 },
@@ -184,7 +202,7 @@ namespace Orchard.Tests.Mvc.Html {
             var viewDataContainer = new Mock<IViewDataContainer>();
             viewDataContainer.SetupGet(o => o.ViewData).Returns(() => new ViewDataDictionary());
             var html = new HtmlHelper(viewContext, viewDataContainer.Object);
-            var localHelper = html.HtmlHelperFor(new {SomeString = "foo"}, "prefix");
+            var localHelper = html.HtmlHelperFor(new { SomeString = "foo" }, "prefix");
 
             //act
             var result = localHelper.LabelFor(p => p.SomeString, "bar", null);
@@ -195,7 +213,8 @@ namespace Orchard.Tests.Mvc.Html {
         private class FooController : Controller { }
 
         [Test]
-        public void Ellipsize_DontCutHtmlEncodedChars() {
+        public void Ellipsize_DontCutHtmlEncodedChars()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();
@@ -210,7 +229,8 @@ namespace Orchard.Tests.Mvc.Html {
         }
 
         [Test]
-        public void Excerpt_DontCutHtmlEncodedChars() {
+        public void Excerpt_DontCutHtmlEncodedChars()
+        {
             //arrange
             var viewContext = new ViewContext();
             var viewDataContainer = new Mock<IViewDataContainer>();

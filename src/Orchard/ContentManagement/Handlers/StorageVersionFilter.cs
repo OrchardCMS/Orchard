@@ -2,18 +2,24 @@ using System.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 
-namespace Orchard.ContentManagement.Handlers {
-    public class StorageVersionFilter<TRecord> : StorageFilter<TRecord> where TRecord : ContentPartVersionRecord, new() {
+namespace Orchard.ContentManagement.Handlers
+{
+    public class StorageVersionFilter<TRecord> : StorageFilter<TRecord> where TRecord : ContentPartVersionRecord, new()
+    {
         public StorageVersionFilter(IRepository<TRecord> repository)
-            : base(repository) {
+            : base(repository)
+        {
         }
 
-        protected override TRecord GetRecordCore(ContentItemVersionRecord versionRecord) {
+        protected override TRecord GetRecordCore(ContentItemVersionRecord versionRecord)
+        {
             return _repository.Get(versionRecord.Id);
         }
 
-        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null) {
-            if (record == null) {
+        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null)
+        {
+            if (record == null)
+            {
                 record = new TRecord();
             }
             record.ContentItemRecord = versionRecord.ContentItemRecord;
@@ -22,7 +28,8 @@ namespace Orchard.ContentManagement.Handlers {
             return record;
         }
 
-        protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {
+        protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building)
+        {
             // move known ORM values over
             _repository.Copy(existing.Record, building.Record);
 
@@ -33,12 +40,14 @@ namespace Orchard.ContentManagement.Handlers {
             _repository.Create(building.Record);
         }
 
-        protected override void Destroying(DestroyContentContext context, ContentPart<TRecord> instance) {
+        protected override void Destroying(DestroyContentContext context, ContentPart<TRecord> instance)
+        {
             // Get all content item version records.
             var allVersions = context.ContentItem.Record.Versions.ToArray();
 
             // For each version record, delete its part record (ID of versioned part records is the same as the ID of a version record).
-            foreach (var versionRecord in allVersions) {
+            foreach (var versionRecord in allVersions)
+            {
                 var partRecord = _repository.Get(versionRecord.Id);
 
                 if (partRecord != null)

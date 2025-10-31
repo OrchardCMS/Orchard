@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Locking {
-    public interface ILockingProvider : IDependency {
+namespace Orchard.Locking
+{
+    public interface ILockingProvider : IDependency
+    {
 
         /// <summary>
         /// Handles locking on a given object to execute the desired critical code. Optionally, it is possible

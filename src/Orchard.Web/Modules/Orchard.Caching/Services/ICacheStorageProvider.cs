@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Caching.Services {
-    public interface ICacheStorageProvider : IDependency {
+namespace Orchard.Caching.Services
+{
+    public interface ICacheStorageProvider : IDependency
+    {
         object Get<T>(string key);
         void Put<T>(string key, T value);
         void Put<T>(string key, T value, TimeSpan validFor);
@@ -9,7 +11,8 @@ namespace Orchard.Caching.Services {
         void Clear();
     }
 
-    public interface ICacheStorageProviderWithKeyPrefix : ICacheStorageProvider {
+    public interface ICacheStorageProviderWithKeyPrefix : ICacheStorageProvider
+    {
         void Clear(string key);
     }
 }

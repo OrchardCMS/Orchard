@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orchard.Core.Common.Settings {
+namespace Orchard.Core.Common.Settings
+{
 
-    public class TextFieldSettings {
+    public class TextFieldSettings
+    {
         [DataType("Flavor")]
         public string Flavor { get; set; }
         public bool Required { get; set; }

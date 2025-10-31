@@ -1,24 +1,21 @@
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
 
-namespace Orchard.Layouts.Elements {
-    public class Heading : ContentElement {
-        
-        public override string Category {
-            get { return "Content"; }
-        }
+namespace Orchard.Layouts.Elements
+{
+    public class Heading : ContentElement
+    {
 
-        public override LocalizedString DisplayText {
-            get { return T("Heading h1-h6"); }
-        }
+        public override string Category => "Content";
 
-        public override string ToolboxIcon {
-            get { return "\uf1dc"; }
-        }
+        public override LocalizedString DisplayText => T("Heading h1-h6");
 
-        public int Level {
+        public override string ToolboxIcon => "\uf1dc";
+
+        public int Level
+        {
             get { return this.Retrieve(h => h.Level); }
-            set { this.Store(h => h.Level, value);}
+            set { this.Store(h => h.Level, value); }
         }
     }
 }

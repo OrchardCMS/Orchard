@@ -4,17 +4,22 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Core.Contents.Security {
-    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
+namespace Orchard.Core.Contents.Security
+{
+    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler
+    {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
 
-        public void Adjust(CheckAccessContext context) {
+        public void Adjust(CheckAccessContext context)
+        {
             if (!context.Granted &&
-                context.Content.Is<ICommonPart>()) {
+                context.Content.Is<ICommonPart>())
+            {
 
                 if (OwnerVariationExists(context.Permission) &&
-                    HasOwnership(context.User, context.Content)) {
+                    HasOwnership(context.User, context.Content))
+                {
 
                     context.Adjusted = true;
                     context.Permission = GetOwnerVariation(context.Permission);
@@ -23,10 +28,12 @@ namespace Orchard.Core.Contents.Security {
                 var typeDefinition = context.Content.ContentItem.TypeDefinition;
 
                 // replace permission if a content type specific version exists
-                if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable) {
+                if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable)
+                {
                     var permission = GetContentTypeVariation(context.Permission);
 
-                    if (permission != null) {
+                    if (permission != null)
+                    {
                         context.Adjusted = true;
                         context.Permission = DynamicPermissions.CreateDynamicPermission(permission, typeDefinition);
                     }
@@ -34,7 +41,8 @@ namespace Orchard.Core.Contents.Security {
             }
         }
 
-        private static bool HasOwnership(IUser user, IContent content) {
+        private static bool HasOwnership(IUser user, IContent content)
+        {
             if (user == null || content == null)
                 return false;
 
@@ -45,11 +53,13 @@ namespace Orchard.Core.Contents.Security {
             return user.Id == common.Owner.Id;
         }
 
-        private static bool OwnerVariationExists(Permission permission) {
+        private static bool OwnerVariationExists(Permission permission)
+        {
             return GetOwnerVariation(permission) != null;
         }
 
-        private static Permission GetOwnerVariation(Permission permission) {
+        private static Permission GetOwnerVariation(Permission permission)
+        {
             if (permission.Name == Permissions.PublishContent.Name)
                 return Permissions.PublishOwnContent;
             if (permission.Name == Permissions.EditContent.Name)
@@ -64,7 +74,8 @@ namespace Orchard.Core.Contents.Security {
             return null;
         }
 
-        private static Permission GetContentTypeVariation(Permission permission) {
+        private static Permission GetContentTypeVariation(Permission permission)
+        {
             return DynamicPermissions.ConvertToDynamicPermission(permission);
         }
     }

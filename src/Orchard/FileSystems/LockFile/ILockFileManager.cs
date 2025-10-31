@@ -1,13 +1,15 @@
-﻿using Orchard.Caching;
+using Orchard.Caching;
 
-namespace Orchard.FileSystems.LockFile {
+namespace Orchard.FileSystems.LockFile
+{
     /// <summary>
     /// Abstraction for lock files creation.
     /// </summary>
     /// <remarks>
     /// All virtual paths passed in or returned are relative to "~/App_Data".
     /// </remarks>
-    public interface ILockFileManager : IVolatileProvider {
+    public interface ILockFileManager : IVolatileProvider
+    {
         /// <summary>
         /// Attempts to acquire an exclusive lock file.
         /// </summary>

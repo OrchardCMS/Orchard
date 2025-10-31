@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -7,9 +7,11 @@ using Orchard.OpenId.Models;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 
-namespace Orchard.Azure.Authentication.Services.Google {
+namespace Orchard.Azure.Authentication.Services.Google
+{
     [OrchardFeature("Orchard.OpenId.Google")]
-    public class MissingSettingsBanner : INotificationProvider {
+    public class MissingSettingsBanner : INotificationProvider
+    {
         private readonly IOrchardServices _orchardServices;
         private readonly UrlHelper _urlHelper;
 
@@ -23,11 +25,13 @@ namespace Orchard.Azure.Authentication.Services.Google {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<NotifyEntry> GetNotifications() {
+        public IEnumerable<NotifyEntry> GetNotifications()
+        {
             var workContext = _orchardServices.WorkContext;
             var settings = workContext.CurrentSite.As<GoogleSettingsPart>();
 
-            if (settings == null || !settings.IsValid()) {
+            if (settings == null || !settings.IsValid())
+            {
                 var url = _urlHelper.Action("OpenId", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Google settings</a> need to be configured.", url), Type = NotifyType.Warning };
             }

@@ -1,9 +1,13 @@
-﻿using System.Web;
+using System.Web;
 
-namespace Orchard.CulturePicker.Services {
-    public static class Utils {
-        public static string GetReturnUrl(HttpRequestBase request) {
-            if (request.UrlReferrer == null) {
+namespace Orchard.CulturePicker.Services
+{
+    public static class Utils
+    {
+        public static string GetReturnUrl(HttpRequestBase request)
+        {
+            if (request.UrlReferrer == null)
+            {
                 return "";
             }
 
@@ -11,17 +15,21 @@ namespace Orchard.CulturePicker.Services {
             return HttpUtility.UrlDecode(localUrl);
         }
 
-        public static string GetAppRelativePath(string logicalPath, HttpRequestBase request) {
-            if (request.ApplicationPath == null) {
+        public static string GetAppRelativePath(string logicalPath, HttpRequestBase request)
+        {
+            if (request.ApplicationPath == null)
+            {
                 return "";
             }
 
             logicalPath = logicalPath.ToLower();
             string appPath = request.ApplicationPath.ToLower();
-            if (appPath != "/") {
+            if (appPath != "/")
+            {
                 appPath += "/";
             }
-            else {
+            else
+            {
                 return logicalPath.Substring(1);
             }
 

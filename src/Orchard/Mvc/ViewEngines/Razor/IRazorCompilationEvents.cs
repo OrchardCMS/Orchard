@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +10,10 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Logging;
 
-namespace Orchard.Mvc.ViewEngines.Razor {
-    public interface IRazorCompilationEvents {
+namespace Orchard.Mvc.ViewEngines.Razor
+{
+    public interface IRazorCompilationEvents
+    {
         void CodeGenerationStarted(RazorBuildProvider provider);
         void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e);
     }
@@ -25,7 +27,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
     /// * BuildManager.GetCompiledAssembly("~/Modules/Bar/Bar.csproj");
     /// * Assembly.Load("Foo");
     /// </summary>
-    public class DefaultRazorCompilationEvents : IRazorCompilationEvents {
+    public class DefaultRazorCompilationEvents : IRazorCompilationEvents
+    {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IBuildManager _buildManager;
@@ -37,7 +40,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             IExtensionDependenciesManager extensionDependenciesManager,
             IBuildManager buildManager,
             IEnumerable<IExtensionLoader> loaders,
-            IAssemblyLoader assemblyLoader) {
+            IAssemblyLoader assemblyLoader)
+        {
 
             _dependenciesFolder = dependenciesFolder;
             _extensionDependenciesManager = extensionDependenciesManager;
@@ -49,14 +53,16 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public ILogger Logger { get; set; }
 
-        public void CodeGenerationStarted(RazorBuildProvider provider) {
+        public void CodeGenerationStarted(RazorBuildProvider provider)
+        {
             var assembliesToAdd = new List<Assembly>();
 
             DependencyDescriptor moduleDependencyDescriptor = GetModuleDependencyDescriptor(provider.VirtualPath);
 
             IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
             List<DependencyDescriptor> filteredDependencyDescriptors;
-            if (moduleDependencyDescriptor != null) {
+            if (moduleDependencyDescriptor != null)
+            {
                 // Add module
                 filteredDependencyDescriptors = new List<DependencyDescriptor> { moduleDependencyDescriptor };
 
@@ -64,14 +70,16 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 filteredDependencyDescriptors.AddRange(moduleDependencyDescriptor.References
                     .Select(reference => dependencyDescriptors
                         .FirstOrDefault(dependency => dependency.Name == reference.Name)
-                        ?? new DependencyDescriptor {
+                        ?? new DependencyDescriptor
+                        {
                             LoaderName = reference.LoaderName,
                             Name = reference.Name,
                             VirtualPath = reference.VirtualPath
-                            }
+                        }
                         ));
             }
-            else {
+            else
+            {
                 // Fall back for themes
                 filteredDependencyDescriptors = dependencyDescriptors.ToList();
             }
@@ -79,7 +87,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             var entries = filteredDependencyDescriptors
                 .SelectMany(descriptor => _loaders
                                               .Where(loader => descriptor.LoaderName == loader.Name)
-                                              .Select(loader => new {
+                                              .Select(loader => new
+                                              {
                                                   loader,
                                                   descriptor,
                                                   references = loader.GetCompilationReferences(descriptor),
@@ -87,14 +96,18 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                               }));
 
             // Add assemblies
-            foreach (var entry in entries) {
-                foreach (var reference in entry.references) {
-                    if (!string.IsNullOrEmpty(reference.AssemblyName)) {
+            foreach (var entry in entries)
+            {
+                foreach (var reference in entry.references)
+                {
+                    if (!string.IsNullOrEmpty(reference.AssemblyName))
+                    {
                         var assembly = _assemblyLoader.Load(reference.AssemblyName);
                         if (assembly != null)
                             assembliesToAdd.Add(assembly);
                     }
-                    if (!string.IsNullOrEmpty(reference.BuildProviderTarget)) {
+                    if (!string.IsNullOrEmpty(reference.BuildProviderTarget))
+                    {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
                         var assembly = _buildManager.GetCompiledAssembly(reference.BuildProviderTarget);
                         if (assembly != null)
@@ -103,7 +116,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 }
             }
 
-            foreach (var assembly in assembliesToAdd) {
+            foreach (var assembly in assembliesToAdd)
+            {
                 provider.AssemblyBuilder.AddAssemblyReference(assembly);
             }
 
@@ -114,30 +128,38 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            foreach (var virtualDependency in virtualDependencies) {
+            foreach (var virtualDependency in virtualDependencies)
+            {
                 provider.AddVirtualPathDependency(virtualDependency);
             }
 
             // Logging
-            if (Logger.IsEnabled(LogLevel.Debug)) {
-                if (assembliesToAdd.Count == 0 && provider.VirtualPathDependencies == null) {
+            if (Logger.IsEnabled(LogLevel.Debug))
+            {
+                if (assembliesToAdd.Count == 0 && provider.VirtualPathDependencies == null)
+                {
                     Logger.Debug("CodeGenerationStarted(\"{0}\") - no dependencies.", provider.VirtualPath);
                 }
-                else {
+                else
+                {
                     Logger.Debug("CodeGenerationStarted(\"{0}\") - Dependencies: ", provider.VirtualPath);
-                    if (provider.VirtualPathDependencies != null) {
-                        foreach (var virtualPath in provider.VirtualPathDependencies) {
+                    if (provider.VirtualPathDependencies != null)
+                    {
+                        foreach (var virtualPath in provider.VirtualPathDependencies)
+                        {
                             Logger.Debug("  VirtualPath: \"{0}\"", virtualPath);
                         }
                     }
-                    foreach (var assembly in assembliesToAdd) {
+                    foreach (var assembly in assembliesToAdd)
+                    {
                         Logger.Debug("  Reference: \"{0}\"", assembly);
                     }
                 }
             }
         }
 
-        private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath) {
+        private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath)
+        {
             var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
             var prefix = PrefixMatch(appRelativePath, new[] { "~/Modules/", "~/Core/" });
             if (prefix == null)
@@ -150,7 +172,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return _dependenciesFolder.GetDescriptor(moduleName);
         }
 
-        private static string ModuleMatch(string virtualPath, string prefix) {
+        private static string ModuleMatch(string virtualPath, string prefix)
+        {
             var index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
             if (index < 0)
                 return null;
@@ -159,12 +182,14 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
         }
 
-        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
+        private static string PrefixMatch(string virtualPath, params string[] prefixes)
+        {
             return prefixes
                 .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e) {
+        public void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e)
+        {
         }
     }
 }

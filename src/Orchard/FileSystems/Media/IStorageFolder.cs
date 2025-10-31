@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.FileSystems.Media {
-    public interface IStorageFolder {
+namespace Orchard.FileSystems.Media
+{
+    public interface IStorageFolder
+    {
         string GetPath();
         string GetName();
         long GetSize();

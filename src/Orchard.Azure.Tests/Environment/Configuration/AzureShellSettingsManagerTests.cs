@@ -1,36 +1,42 @@
-﻿using System.Linq;
+using System.Linq;
 using NUnit.Framework;
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 
-namespace Orchard.Azure.Tests.Environment.Configuration {
+namespace Orchard.Azure.Tests.Environment.Configuration
+{
     [TestFixture]
-    public class AzureShellSettingsManagerTests : AzureVirtualEnvironmentTest {
+    public class AzureShellSettingsManagerTests : AzureVirtualEnvironmentTest
+    {
         private IShellSettingsManager _shellSettingsManager;
 
         protected override string StorageConnectionStringName { get; } = Constants.ShellSettingsStorageConnectionStringSettingName;
 
-        protected override void OnInit() {
+        protected override void OnInit()
+        {
             _shellSettingsManager = new AzureBlobShellSettingsManager(
                 new Moq.Mock<IMimeTypeProvider>().Object,
                 new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             // ensure default container is empty before running any test
             DeleteAllBlobs(Constants.ShellSettingsDefaultContainerName, DevAccount);
         }
 
         [TearDown]
-        public void TearDown() {
+        public void TearDown()
+        {
             // ensure default container is empty after running tests
             DeleteAllBlobs(Constants.ShellSettingsDefaultContainerName, DevAccount);
         }
 
         [Test]
-        public void SingleSettingsFileShouldComeBackAsExpected() {
+        public void SingleSettingsFileShouldComeBackAsExpected()
+        {
 
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
 
@@ -42,7 +48,8 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void SettingsShouldBeOverwritable() {
+        public void SettingsShouldBeOverwritable()
+        {
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
 
@@ -54,7 +61,8 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void MultipleFilesCanBeDetected() {
+        public void MultipleFilesCanBeDetected()
+        {
 
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Another", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
@@ -74,7 +82,8 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void NewSettingsCanBeStored() {
+        public void NewSettingsCanBeStored()
+        {
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
 
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
@@ -90,7 +99,8 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         }
 
         [Test]
-        public void SettingsCanContainSeparatorChar() {
+        public void SettingsCanContainSeparatorChar()
+        {
             _shellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;" });
 
             var settings = _shellSettingsManager.LoadSettings().Where(s => s.Name == "Default").Single();

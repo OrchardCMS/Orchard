@@ -1,12 +1,15 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Web.Tests.Stubs;
 
-namespace Orchard.Web.Tests.Routes {
+namespace Orchard.Web.Tests.Routes
+{
     [TestFixture]
-    public class RouteTests {
+    public class RouteTests
+    {
         [Test]
-        public void RouteForEmbeddedResource() {
+        public void RouteForEmbeddedResource()
+        {
             // Arrange
             var context = new StubContext("~/foo.axd/bar/baz/biff");
             var routes = new RouteCollection();
@@ -21,7 +24,8 @@ namespace Orchard.Web.Tests.Routes {
         }
 
         [Test]
-        public void RouteWithTooManySegments() {
+        public void RouteWithTooManySegments()
+        {
             // Arrange
             var context = new StubContext("~/a/b/c/d");
             var routes = new RouteCollection();

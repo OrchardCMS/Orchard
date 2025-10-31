@@ -1,21 +1,26 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Workflows.Forms {
-    public class BranchForms : IFormProvider {
+namespace Orchard.Workflows.Forms
+{
+    public class BranchForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public BranchForms(IShapeFactory shapeFactory) {
+        public BranchForms(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, dynamic> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "BranchNames",

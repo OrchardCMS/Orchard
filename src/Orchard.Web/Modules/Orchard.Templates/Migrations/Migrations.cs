@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Templates {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Templates
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
 
             ContentDefinitionManager.AlterPartDefinition("ShapePart", part => part
                 .Attachable()

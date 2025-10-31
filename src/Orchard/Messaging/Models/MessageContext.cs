@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Messaging.Models {
+namespace Orchard.Messaging.Models
+{
     [Obsolete]
-    public class MessageContext {
+    public class MessageContext
+    {
         public MailMessage MailMessage { get; private set; }
         public string Type { get; set; }
         public string Service { get; set; }
@@ -17,7 +19,8 @@ namespace Orchard.Messaging.Models {
         public Dictionary<string, string> Properties { get; private set; }
         public bool MessagePrepared { get; set; }
 
-        public MessageContext() {
+        public MessageContext()
+        {
             Properties = new Dictionary<string, string>();
             MailMessage = new MailMessage();
             Addresses = Enumerable.Empty<string>();

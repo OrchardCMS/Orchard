@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Configuration;
@@ -7,36 +7,41 @@ using Orchard.OutputCache.Services;
 using Orchard.Redis.Configuration;
 using StackExchange.Redis;
 
-namespace Orchard.Redis.OutputCache {
+namespace Orchard.Redis.OutputCache
+{
     [OrchardFeature("Orchard.Redis.OutputCache")]
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultTagCache")]
-    public class RedisTagCache : ITagCache {
+    public class RedisTagCache : ITagCache
+    {
         private readonly IRedisConnectionProvider _redisConnectionProvider;
         private readonly string _connectionString;
         private readonly ConnectionMultiplexer _connectionMultiplexer;
         private readonly ShellSettings _shellSettings;
 
-        public RedisTagCache(IRedisConnectionProvider redisConnectionProvider, ShellSettings shellSettings) {
+        public RedisTagCache(IRedisConnectionProvider redisConnectionProvider, ShellSettings shellSettings)
+        {
             _redisConnectionProvider = redisConnectionProvider;
             _connectionString = _redisConnectionProvider.GetConnectionString(RedisOutputCacheStorageProvider.ConnectionStringKey);
             _connectionMultiplexer = _redisConnectionProvider.GetConnection(_connectionString);
             _shellSettings = shellSettings;
         }
 
-        private IDatabase Database {
-            get { return _connectionMultiplexer.GetDatabase(); }
-        }
+        private IDatabase Database => _connectionMultiplexer.GetDatabase();
 
-        public void Tag(string tag, params string[] keys) {
-            if (_connectionMultiplexer == null) {
+        public void Tag(string tag, params string[] keys)
+        {
+            if (_connectionMultiplexer == null)
+            {
                 return;
             }
 
             Database.SetAdd(GetLocalizedKey(tag), Array.ConvertAll(keys, x => (RedisValue)x));
         }
 
-        public IEnumerable<string> GetTaggedItems(string tag) {
-            if (_connectionMultiplexer == null) {
+        public IEnumerable<string> GetTaggedItems(string tag)
+        {
+            if (_connectionMultiplexer == null)
+            {
                 return new string[0];
             }
 
@@ -46,15 +51,18 @@ namespace Orchard.Redis.OutputCache {
             return Array.ConvertAll(values, x => (string)x);
         }
 
-        public void RemoveTag(string tag) {
-            if (_connectionMultiplexer == null) {
+        public void RemoveTag(string tag)
+        {
+            if (_connectionMultiplexer == null)
+            {
                 return;
             }
 
             Database.KeyDelete(GetLocalizedKey(tag));
         }
 
-        private string GetLocalizedKey(string key) {
+        private string GetLocalizedKey(string key)
+        {
             return _shellSettings.Name + ":Tag:" + key;
         }
     }

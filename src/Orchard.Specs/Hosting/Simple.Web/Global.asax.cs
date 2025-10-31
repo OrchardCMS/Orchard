@@ -1,9 +1,10 @@
-﻿using System.Web;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Specs.Hosting.Orchard.Web;
 
-namespace Orchard.Specs.Hosting.Simple.Web {
+namespace Orchard.Specs.Hosting.Simple.Web
+{
     public class MvcApplication : HttpApplication
     {
         protected void Application_Start()

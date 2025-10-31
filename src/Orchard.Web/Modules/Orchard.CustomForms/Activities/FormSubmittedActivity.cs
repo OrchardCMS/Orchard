@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -6,30 +5,34 @@ using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.CustomForms.Activities {
-    public class FormSubmittedActivity : Event {
+namespace Orchard.CustomForms.Activities
+{
+    public class FormSubmittedActivity : Event
+    {
 
         public const string EventName = "FormSubmitted";
 
         public Localizer T { get; set; }
 
-        public override bool CanStartWorkflow {
-            get { return true; }
-        }
+        public override bool CanStartWorkflow => true;
 
-        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            try {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
+            try
+            {
 
                 var state = activityContext.GetState<string>("CustomForms");
 
                 // "" means 'any'
-                if (String.IsNullOrEmpty(state)) {
+                if (string.IsNullOrEmpty(state))
+                {
                     return true;
                 }
 
                 var content = workflowContext.Tokens["CustomForm"] as ContentItem;
 
-                if (content == null) {
+                if (content == null)
+                {
                     return false;
                 }
 
@@ -40,36 +43,29 @@ namespace Orchard.CustomForms.Activities {
                 return customForms.Any(x => x == content);
 
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return new[] { T("Done") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             yield return T("Done");
         }
 
-        public override string Form {
-            get {
-                return "SelectCustomForms";
-            }
-        }
+        public override string Form => "SelectCustomForms";
 
-        public override string Name {
-            get { return EventName; }
-        }
+        public override string Name => EventName;
 
-        public override LocalizedString Category {
-            get { return T("Content Items"); }
-        }
+        public override LocalizedString Category => T("Content Items");
 
-        public override LocalizedString Description {
-            get { return T("A custom form is submitted."); }
-        }
+        public override LocalizedString Description => T("A custom form is submitted.");
     }
 
 }

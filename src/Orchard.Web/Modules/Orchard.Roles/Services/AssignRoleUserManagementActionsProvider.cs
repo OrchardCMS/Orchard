@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
@@ -10,8 +9,10 @@ using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Users.Services;
 
-namespace Orchard.Roles.Services {
-    public class AssignRoleUserManagementActionsProvider : IUserManagementActionsProvider {
+namespace Orchard.Roles.Services
+{
+    public class AssignRoleUserManagementActionsProvider : IUserManagementActionsProvider
+    {
         private readonly IRoleService _roleService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IAuthenticationService _authenticationService;
@@ -23,7 +24,8 @@ namespace Orchard.Roles.Services {
             IRoleService roleService,
             IAuthorizationService authorizationService,
             IAuthenticationService authenticationService,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
 
             _roleService = roleService;
             _authorizationService = authorizationService;
@@ -37,10 +39,12 @@ namespace Orchard.Roles.Services {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<Func<HtmlHelper, MvcHtmlString>> UserActionLinks(IUser user) {
+        public IEnumerable<Func<HtmlHelper, MvcHtmlString>> UserActionLinks(IUser user)
+        {
             // Get the user whose roles we want to assign
             var userRolesPart = user.As<UserRolesPart>();
-            if (userRolesPart == null) {
+            if (userRolesPart == null)
+            {
                 yield break;
             }
             var currentUser = _authenticationService.GetAuthenticatedUser();
@@ -52,7 +56,8 @@ namespace Orchard.Roles.Services {
                     userRolesPart))
                 .Select(rr => rr.Id).ToList();
             // If the user has no roles they can assign, we will show nothing
-            if (!authorizedRoleIds.Any()) {
+            if (!authorizedRoleIds.Any())
+            {
                 yield break;
             }
 
@@ -60,7 +65,8 @@ namespace Orchard.Roles.Services {
                 (Html => Html.ActionLink(
                     T("Roles").ToString(),
                     "Assign",
-                    new {
+                    new
+                    {
                         Area = "Orchard.Roles",
                         Controller = "Admin",
                         id = user.Id,

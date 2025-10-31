@@ -1,39 +1,36 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.OpenId.Models;
 using Orchard.OpenId.Services;
 using Orchard.Settings;
 
-namespace Orchard.OpenId.Providers {
+namespace Orchard.OpenId.Providers
+{
     [OrchardFeature("Orchard.OpenId.ActiveDirectoryFederationServices")]
-    public class ActiveDirectoryFederationServices : IOpenIdProvider {
+    public class ActiveDirectoryFederationServices : IOpenIdProvider
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public ActiveDirectoryFederationServices(
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
 
             _workContextAccessor = workContextAccessor;
         }
 
-        public string AuthenticationType {
-            get { return "OpenIdConnect"; }
-        }
+        public string AuthenticationType => "OpenIdConnect";
 
-        public string Name {
-            get { return "ADFS"; }
-        }
+        public string Name => "ADFS";
 
-        public string DisplayName {
-            get { return "Active Directory Federation Services"; }
-        }
+        public string DisplayName => "Active Directory Federation Services";
 
-        public bool IsValid {
-            get { return IsProviderValid(); }
-        }
+        public bool IsValid => IsProviderValid();
 
-        private bool IsProviderValid() {
-            try {
+        private bool IsProviderValid()
+        {
+            try
+            {
                 ActiveDirectoryFederationServicesSettingsPart settings;
                 ISite site;
 
@@ -44,7 +41,8 @@ namespace Orchard.OpenId.Providers {
 
                 return (settings != null && settings.IsValid());
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
         }

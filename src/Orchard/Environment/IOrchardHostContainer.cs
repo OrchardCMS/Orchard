@@ -1,5 +1,7 @@
-﻿namespace Orchard.Environment {
-    public interface IOrchardHostContainer {
+namespace Orchard.Environment
+{
+    public interface IOrchardHostContainer
+    {
         T Resolve<T>();
     }
 }

@@ -1,18 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
+using Orchard.Environment.Descriptor;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Descriptor;
 using Orchard.Environment.Features;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Modules.Models;
 using Orchard.UI.Notify;
 
-namespace Orchard.Modules.Services {
-    public class ModuleService : IModuleService {
+namespace Orchard.Modules.Services
+{
+    public class ModuleService : IModuleService
+    {
         private readonly IFeatureManager _featureManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManager _extensionManager;
@@ -25,7 +27,8 @@ namespace Orchard.Modules.Services {
                 IVirtualPathProvider virtualPathProvider,
                 IExtensionManager extensionManager,
                 IShellDescriptorManager shellDescriptorManager,
-                ICacheManager cacheManager) {
+                ICacheManager cacheManager)
+        {
 
             Services = orchardServices;
 
@@ -35,7 +38,8 @@ namespace Orchard.Modules.Services {
             _shellDescriptorManager = shellDescriptorManager;
             _cacheManager = cacheManager;
 
-            if (_featureManager.FeatureDependencyNotification == null) {
+            if (_featureManager.FeatureDependencyNotification == null)
+            {
                 _featureManager.FeatureDependencyNotification = GenerateWarning;
             }
 
@@ -49,7 +53,8 @@ namespace Orchard.Modules.Services {
         /// Retrieves an enumeration of the available features together with its state (enabled / disabled).
         /// </summary>
         /// <returns>An enumeration of the available features together with its state (enabled / disabled).</returns>
-        public IEnumerable<ModuleFeature> GetAvailableFeatures() {
+        public IEnumerable<ModuleFeature> GetAvailableFeatures()
+        {
             var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
             return _extensionManager.AvailableExtensions()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
@@ -61,7 +66,8 @@ namespace Orchard.Modules.Services {
         /// Enables a list of features.
         /// </summary>
         /// <param name="featureIds">The IDs for the features to be enabled.</param>
-        public void EnableFeatures(IEnumerable<string> featureIds) {
+        public void EnableFeatures(IEnumerable<string> featureIds)
+        {
             EnableFeatures(featureIds, false);
         }
 
@@ -70,8 +76,10 @@ namespace Orchard.Modules.Services {
         /// </summary>
         /// <param name="featureIds">The IDs for the features to be enabled.</param>
         /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
-        public void EnableFeatures(IEnumerable<string> featureIds, bool force) {
-            foreach (string featureId in _featureManager.EnableFeatures(featureIds, force)) {
+        public void EnableFeatures(IEnumerable<string> featureIds, bool force)
+        {
+            foreach (string featureId in _featureManager.EnableFeatures(featureIds, force))
+            {
                 var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
                 Services.Notifier.Success(T("{0} was enabled", featureName));
             }
@@ -81,7 +89,8 @@ namespace Orchard.Modules.Services {
         /// Disables a list of features.
         /// </summary>
         /// <param name="featureIds">The IDs for the features to be disabled.</param>
-        public void DisableFeatures(IEnumerable<string> featureIds) {
+        public void DisableFeatures(IEnumerable<string> featureIds)
+        {
             DisableFeatures(featureIds, false);
         }
 
@@ -90,8 +99,10 @@ namespace Orchard.Modules.Services {
         /// </summary>
         /// <param name="featureIds">The IDs for the features to be disabled.</param>
         /// <param name="force">Boolean parameter indicating if the feature should disable the features which depend on it if required or fail otherwise.</param>
-        public void DisableFeatures(IEnumerable<string> featureIds, bool force) {
-            foreach (string featureId in _featureManager.DisableFeatures(featureIds, force)) {
+        public void DisableFeatures(IEnumerable<string> featureIds, bool force)
+        {
+            foreach (string featureId in _featureManager.DisableFeatures(featureIds, force))
+            {
                 var featureName = _featureManager.GetAvailableFeatures().Single(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
                 Services.Notifier.Success(T("{0} was disabled", featureName));
             }
@@ -101,10 +112,13 @@ namespace Orchard.Modules.Services {
         /// Determines if a module was recently installed by using the project's last written time.
         /// </summary>
         /// <param name="extensionDescriptor">The extension descriptor.</param>
-        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor) {
-            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor => {
+        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor)
+        {
+            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor =>
+            {
                 string projectFile = GetManifestPath(extensionDescriptor);
-                if (!string.IsNullOrEmpty(projectFile)) {
+                if (!string.IsNullOrEmpty(projectFile))
+                {
                     // If project file was modified less than 24 hours ago, the module was recently deployed
                     return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
                 }
@@ -115,7 +129,8 @@ namespace Orchard.Modules.Services {
             return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
         }
 
-        public IEnumerable<FeatureDescriptor> GetDependentFeatures(string featureId) {
+        public IEnumerable<FeatureDescriptor> GetDependentFeatures(string featureId)
+        {
             var dependants = _featureManager.GetDependentFeatures(featureId);
             var availableFeatures = _featureManager.GetAvailableFeatures().ToLookup(f => f.Id, StringComparer.OrdinalIgnoreCase);
 
@@ -129,24 +144,29 @@ namespace Orchard.Modules.Services {
         /// </summary>
         /// <param name="extensionDescriptor">The module's extension descriptor.</param>
         /// <returns>The full path to the module's manifest file.</returns>
-        private string GetManifestPath(ExtensionDescriptor extensionDescriptor) {
+        private string GetManifestPath(ExtensionDescriptor extensionDescriptor)
+        {
             string projectPath = _virtualPathProvider.Combine(extensionDescriptor.Location, extensionDescriptor.Id, "module.txt");
 
-            if (!_virtualPathProvider.FileExists(projectPath)) {
+            if (!_virtualPathProvider.FileExists(projectPath))
+            {
                 return null;
             }
 
             return projectPath;
         }
 
-        private static ModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {
-            return new ModuleFeature {
-                                         Descriptor = feature.Descriptor,
-                                         IsEnabled = isEnabled
-                                     };
+        private static ModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled)
+        {
+            return new ModuleFeature
+            {
+                Descriptor = feature.Descriptor,
+                IsEnabled = isEnabled
+            };
         }
 
-        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion) {
+        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion)
+        {
             if (featuresInQuestion.Count() < 1)
                 return;
 

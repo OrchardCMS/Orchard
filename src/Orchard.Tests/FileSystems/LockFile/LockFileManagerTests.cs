@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,27 +8,32 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.LockFile;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.FileSystems.LockFile {
+namespace Orchard.Tests.FileSystems.LockFile
+{
     [TestFixture]
-    public class LockFileManagerTests {
+    public class LockFileManagerTests
+    {
         private string _tempFolder;
         private IAppDataFolder _appDataFolder;
         private ILockFileManager _lockFileManager;
         private StubClock _clock;
 
-        public class StubAppDataFolderRoot : IAppDataFolderRoot {
+        public class StubAppDataFolderRoot : IAppDataFolderRoot
+        {
             public string RootPath { get; set; }
             public string RootFolder { get; set; }
         }
 
-        public static IAppDataFolder CreateAppDataFolder(string tempFolder) {
-            var folderRoot = new StubAppDataFolderRoot {RootPath = "~/App_Data", RootFolder = tempFolder};
+        public static IAppDataFolder CreateAppDataFolder(string tempFolder)
+        {
+            var folderRoot = new StubAppDataFolderRoot { RootPath = "~/App_Data", RootFolder = tempFolder };
             var monitor = new StubVirtualPathMonitor();
             return new AppDataFolder(folderRoot, monitor);
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
             _appDataFolder = CreateAppDataFolder(_tempFolder);
@@ -38,12 +43,14 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             Directory.Delete(_tempFolder, true);
         }
 
         [Test]
-        public void LockShouldBeGrantedWhenDoesNotExist() {
+        public void LockShouldBeGrantedWhenDoesNotExist()
+        {
             ILockFile lockFile = null;
             var granted = _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
 
@@ -54,21 +61,24 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [Test]
-        public void ExistingLockFileShouldPreventGrants() {
+        public void ExistingLockFileShouldPreventGrants()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
-            
+
             Assert.That(_lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile), Is.False);
             Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.True);
             Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void ReleasingALockShouldAllowGranting() {
+        public void ReleasingALockShouldAllowGranting()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
 
-            using (lockFile) {
+            using (lockFile)
+            {
                 Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.True);
                 Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(1));
             }
@@ -78,28 +88,31 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [Test]
-        public void ReleasingAReleasedLockShouldWork() {
+        public void ReleasingAReleasedLockShouldWork()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
-            
+
             Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.True);
             Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(1));
-            
+
             lockFile.Release();
             Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.False);
             Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(0));
-            
+
             lockFile.Release();
             Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.False);
             Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void DisposingLockShouldReleaseIt() {
+        public void DisposingLockShouldReleaseIt()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
 
-            using (lockFile) {
+            using (lockFile)
+            {
                 Assert.That(_lockFileManager.IsLocked("foo.txt.lock"), Is.True);
                 Assert.That(_appDataFolder.ListFiles("").Count(), Is.EqualTo(1));
             }
@@ -109,7 +122,8 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [Test]
-        public void ExpiredLockShouldBeAvailable() {
+        public void ExpiredLockShouldBeAvailable()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
 
@@ -119,7 +133,8 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [Test]
-        public void ShouldGrantExpiredLock() {
+        public void ShouldGrantExpiredLock()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile);
 
@@ -134,9 +149,11 @@ namespace Orchard.Tests.FileSystems.LockFile {
         private static readonly object _synLock = new object();
 
         [Test]
-        public void AcquiringLockShouldBeThreadSafe() {
+        public void AcquiringLockShouldBeThreadSafe()
+        {
             var threads = new List<Thread>();
-            for(var i=0; i<10; i++) {
+            for (var i = 0; i < 10; i++)
+            {
                 var t = new Thread(PlayWithAcquire);
                 t.Start();
                 threads.Add(t);
@@ -147,7 +164,8 @@ namespace Orchard.Tests.FileSystems.LockFile {
         }
 
         [Test]
-        public void IsLockedShouldBeThreadSafe() {
+        public void IsLockedShouldBeThreadSafe()
+        {
             var threads = new List<Thread>();
             for (var i = 0; i < 10; i++)
             {
@@ -160,24 +178,29 @@ namespace Orchard.Tests.FileSystems.LockFile {
             Assert.That(_lockCount, Is.EqualTo(0));
         }
 
-        private void PlayWithAcquire() {
-            var r = new Random(DateTime.Now.Millisecond); 
+        private void PlayWithAcquire()
+        {
+            var r = new Random(DateTime.Now.Millisecond);
             ILockFile lockFile = null;
 
             // loop until the lock has been acquired
-            for (;;) {
-                if (!_lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile)) {
+            for (; ; )
+            {
+                if (!_lockFileManager.TryAcquireLock("foo.txt.lock", ref lockFile))
+                {
                     continue;
                 }
 
-                lock (_synLock) {
+                lock (_synLock)
+                {
                     _lockCount++;
                     Assert.That(_lockCount, Is.EqualTo(1));
                 }
 
                 // keep the lock for a certain time
                 Thread.Sleep(r.Next(200));
-                lock (_synLock) {
+                lock (_synLock)
+                {
                     _lockCount--;
                     Assert.That(_lockCount, Is.EqualTo(0));
                 }
@@ -187,29 +210,35 @@ namespace Orchard.Tests.FileSystems.LockFile {
             }
         }
 
-        private void PlayWithIsLocked() {
-            var r = new Random(DateTime.Now.Millisecond); 
+        private void PlayWithIsLocked()
+        {
+            var r = new Random(DateTime.Now.Millisecond);
             ILockFile lockFile = null;
             const string path = "foo.txt.lock";
 
             // loop until the lock has been acquired
-            for (;;) {
-                if(_lockFileManager.IsLocked(path)) {
+            for (; ; )
+            {
+                if (_lockFileManager.IsLocked(path))
+                {
                     continue;
                 }
 
-                if (!_lockFileManager.TryAcquireLock(path, ref lockFile)) {
+                if (!_lockFileManager.TryAcquireLock(path, ref lockFile))
+                {
                     continue;
                 }
 
-                lock (_synLock) {
+                lock (_synLock)
+                {
                     _lockCount++;
                     Assert.That(_lockCount, Is.EqualTo(1));
                 }
 
                 // keep the lock for a certain time
                 Thread.Sleep(r.Next(200));
-                lock (_synLock) {
+                lock (_synLock)
+                {
                     _lockCount--;
                     Assert.That(_lockCount, Is.EqualTo(0));
                 }

@@ -5,16 +5,19 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Services
+{
     [OrchardFeature("Orchard.Localization.CultureSelector")]
-    public class AdminCultureSelectorFactory : ShapeDisplayEvents {
+    public class AdminCultureSelectorFactory : ShapeDisplayEvents
+    {
         private readonly ICultureManager _cultureManager;
         private readonly WorkContext _workContext;
 
         public AdminCultureSelectorFactory(
-            IWorkContextAccessor workContextAccessor, 
+            IWorkContextAccessor workContextAccessor,
             IShapeFactory shapeFactory,
-            ICultureManager cultureManager) {
+            ICultureManager cultureManager)
+        {
             _cultureManager = cultureManager;
             _workContext = workContextAccessor.GetContext();
             Shape = shapeFactory;
@@ -22,7 +25,8 @@ namespace Orchard.Localization.Services {
 
         dynamic Shape { get; set; }
 
-        private bool IsActivable() {
+        private bool IsActivable()
+        {
             // activate on admin screen only
             if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
                 return true;
@@ -30,11 +34,15 @@ namespace Orchard.Localization.Services {
             return false;
         }
 
-        public override void Displaying(ShapeDisplayingContext context) {
-            context.ShapeMetadata.OnDisplaying(displayedContext => {
-                if (displayedContext.ShapeMetadata.Type == "Layout" && IsActivable()) {
+        public override void Displaying(ShapeDisplayingContext context)
+        {
+            context.ShapeMetadata.OnDisplaying(displayedContext =>
+            {
+                if (displayedContext.ShapeMetadata.Type == "Layout" && IsActivable())
+                {
                     var supportedCultures = _cultureManager.ListCultures().ToList();
-                    if (supportedCultures.Count() > 1) {
+                    if (supportedCultures.Count() > 1)
+                    {
                         _workContext.Layout.Header.Add(Shape.AdminCultureSelector(SupportedCultures: supportedCultures));
                     }
                 }

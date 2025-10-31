@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Web.Routing;
 
-namespace Orchard.ContentManagement {
-    public class ContentItemMetadata {
+namespace Orchard.ContentManagement
+{
+    public class ContentItemMetadata
+    {
         private RouteValueDictionary _adminRouteValues;
 
-        public ContentItemMetadata() {
+        public ContentItemMetadata()
+        {
             Identity = new ContentIdentity();
         }
         public string DisplayText { get; set; }
@@ -15,7 +18,8 @@ namespace Orchard.ContentManagement {
         public RouteValueDictionary EditorRouteValues { get; set; }
         public RouteValueDictionary CreateRouteValues { get; set; }
         public RouteValueDictionary RemoveRouteValues { get; set; }
-        public RouteValueDictionary AdminRouteValues {
+        public RouteValueDictionary AdminRouteValues
+        {
             get { return _adminRouteValues ?? EditorRouteValues; }
             set { _adminRouteValues = value; }
         }
@@ -25,7 +29,8 @@ namespace Orchard.ContentManagement {
         public readonly IList<GroupInfo> EditorGroupInfo = new List<GroupInfo>();
     }
 
-    public enum ContentItemRoute {
+    public enum ContentItemRoute
+    {
         Admin,
         Create,
         Editor,

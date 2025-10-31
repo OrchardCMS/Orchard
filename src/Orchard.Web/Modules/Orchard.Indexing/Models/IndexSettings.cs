@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Xml.Linq;
 
 namespace Orchard.Indexing.Models
 {
-    public enum IndexingMode {
+    public enum IndexingMode
+    {
         Rebuild,
         Update
     }
 
-    public class IndexSettings {
+    public class IndexSettings
+    {
         public IndexingMode Mode { get; set; }
         public int LastIndexedId { get; set; }
         public int LastContentId { get; set; }
@@ -21,31 +23,37 @@ namespace Orchard.Indexing.Models
         public static readonly string TagLastContentId = "LastContentId";
         public static readonly string TagLastIndexedUtc = "LastIndexedUtc";
 
-        public IndexSettings() {
+        public IndexSettings()
+        {
             Mode = IndexingMode.Rebuild;
             LastIndexedId = 0;
             LastContentId = 0;
             LastIndexedUtc = DateTime.MinValue;
         }
 
-        public static IndexSettings Parse(string content) {
+        public static IndexSettings Parse(string content)
+        {
 
-            try {
+            try
+            {
                 var doc = XDocument.Parse(content);
 
-                return new IndexSettings {
-                    Mode = (IndexingMode) Enum.Parse(typeof (IndexingMode), doc.Descendants(TagMode).First().Value),
-                    LastIndexedId = Int32.Parse(doc.Descendants(TagLastIndexedId).First().Value),
-                    LastContentId = Int32.Parse(doc.Descendants(TagLastContentId).First().Value),
+                return new IndexSettings
+                {
+                    Mode = (IndexingMode)Enum.Parse(typeof(IndexingMode), doc.Descendants(TagMode).First().Value),
+                    LastIndexedId = int.Parse(doc.Descendants(TagLastIndexedId).First().Value),
+                    LastContentId = int.Parse(doc.Descendants(TagLastContentId).First().Value),
                     LastIndexedUtc = DateTime.Parse(doc.Descendants(TagLastIndexedUtc).First().Value).ToUniversalTime()
                 };
             }
-            catch {
+            catch
+            {
                 return new IndexSettings();
             }
         }
 
-        public string ToXml() {
+        public string ToXml()
+        {
             return new XDocument(
                     new XElement(TagSettings,
                         new XElement(TagMode, Mode),

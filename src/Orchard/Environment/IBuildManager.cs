@@ -1,29 +1,33 @@
-﻿using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
+using Orchard.Exceptions;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using System;
-using Orchard.Exceptions;
 
-namespace Orchard.Environment {
-    public interface IBuildManager : IDependency {
+namespace Orchard.Environment
+{
+    public interface IBuildManager : IDependency
+    {
         IEnumerable<Assembly> GetReferencedAssemblies();
         bool HasReferencedAssembly(string name);
         Assembly GetReferencedAssembly(string name);
         Assembly GetCompiledAssembly(string virtualPath);
     }
 
-    public class DefaultBuildManager : IBuildManager {
+    public class DefaultBuildManager : IBuildManager
+    {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IAssemblyLoader _assemblyLoader;
 
         public ILogger Logger { get; set; }
 
         public DefaultBuildManager(
-            IVirtualPathProvider virtualPathProvider, 
-            IAssemblyLoader assemblyLoader) {
+            IVirtualPathProvider virtualPathProvider,
+            IAssemblyLoader assemblyLoader)
+        {
 
             _virtualPathProvider = virtualPathProvider;
             _assemblyLoader = assemblyLoader;
@@ -31,16 +35,19 @@ namespace Orchard.Environment {
             Logger = NullLogger.Instance;
         }
 
-        public IEnumerable<Assembly> GetReferencedAssemblies() {
+        public IEnumerable<Assembly> GetReferencedAssemblies()
+        {
             return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
         }
 
-        public bool HasReferencedAssembly(string name) {
+        public bool HasReferencedAssembly(string name)
+        {
             var assemblyPath = _virtualPathProvider.Combine("~/bin", name + ".dll");
             return _virtualPathProvider.FileExists(assemblyPath);
         }
 
-        public Assembly GetReferencedAssembly(string name) {
+        public Assembly GetReferencedAssembly(string name)
+        {
             if (!HasReferencedAssembly(name))
                 return null;
 
@@ -48,12 +55,16 @@ namespace Orchard.Environment {
         }
 
 
-        public Assembly GetCompiledAssembly(string virtualPath) {
-            try {
+        public Assembly GetCompiledAssembly(string virtualPath)
+        {
+            try
+            {
                 return BuildManager.GetCompiledAssembly(virtualPath);
             }
-            catch (Exception ex) {
-                if (ex.IsFatal()) {               
+            catch (Exception ex)
+            {
+                if (ex.IsFatal())
+                {
                     throw;
                 }
                 Logger.Warning(ex, "Error when compiling assembly under {0}.", virtualPath);

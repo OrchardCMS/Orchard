@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -13,9 +13,11 @@ using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.UI.Notify;
 
-namespace Orchard.Taxonomies.Handlers {
+namespace Orchard.Taxonomies.Handlers
+{
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
-    public class LocalizedTaxonomyFieldHandler : ContentHandler {
+    public class LocalizedTaxonomyFieldHandler : ContentHandler
+    {
 
         private readonly INotifier _notifier;
         private readonly ILocalizationService _localizationService;
@@ -33,7 +35,8 @@ namespace Orchard.Taxonomies.Handlers {
                 ITaxonomyExtensionsService taxonomyExtensionsService,
                 IContentManager contentManager,
                 ICultureManager cultureManager
-            ) {
+            )
+        {
             _notifier = notifier;
             _localizationService = localizationService;
             _taxonomyService = taxonomyService;
@@ -43,27 +46,32 @@ namespace Orchard.Taxonomies.Handlers {
             T = NullLocalizer.Instance;
         }
 
-        private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
+        private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part)
+        {
             return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
                 .Where(c => c.Culture != null)
                 .ToList();
         }
-        private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture) {
+        private List<string> RetrieveMissingCultures(LocalizationPart part, bool excludePartCulture)
+        {
             var editorLocalizations = GetEditorLocalizations(part);
             var cultures = _cultureManager
                 .ListCultures()
                 .Where(s => editorLocalizations.All(l => l.Culture.Culture != s))
                 .ToList();
-            if (excludePartCulture) {
+            if (excludePartCulture)
+            {
                 cultures.Remove(part.Culture.Culture);
             }
             return cultures;
         }
 
-        protected override void BuildEditorShape(BuildEditorContext context) {
+        protected override void BuildEditorShape(BuildEditorContext context)
+        {
             // case new translation of contentitem
             var localizationPart = context.ContentItem.As<LocalizationPart>();
-            if (localizationPart == null || localizationPart.Culture != null || context.ContentItem.As<LocalizationPart>().MasterContentItem == null || context.ContentItem.As<LocalizationPart>().MasterContentItem.Id == 0) {
+            if (localizationPart == null || localizationPart.Culture != null || context.ContentItem.As<LocalizationPart>().MasterContentItem == null || context.ContentItem.As<LocalizationPart>().MasterContentItem.Id == 0)
+            {
                 return;
             }
             var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
@@ -71,17 +79,24 @@ namespace Orchard.Taxonomies.Handlers {
                 return; // contentitem without taxonomy
             base.BuildEditorShape(context);
             var missingCultures = RetrieveMissingCultures(localizationPart, localizationPart.Culture != null);
-            foreach (var partFieldDefinition in partFieldDefinitions) {
-                if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize) {
+            foreach (var partFieldDefinition in partFieldDefinitions)
+            {
+                if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize)
+                {
                     var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
                     var newTermParts = new List<TermPart>();
-                    foreach (var originalTermPart in originalTermParts) {
+                    foreach (var originalTermPart in originalTermParts)
+                    {
                         var masterTermPart = _taxonomyExtensionsService.GetMasterItem(originalTermPart.ContentItem);
-                        if (masterTermPart != null) {
-                            foreach (var missingCulture in missingCultures) {
+                        if (masterTermPart != null)
+                        {
+                            foreach (var missingCulture in missingCultures)
+                            {
                                 var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
-                                if (newTerm != null) {
-                                    if (!newTermParts.Contains(newTerm.ContentItem.As<TermPart>())) { //Prevent duplicates
+                                if (newTerm != null)
+                                {
+                                    if (!newTermParts.Contains(newTerm.ContentItem.As<TermPart>()))
+                                    { //Prevent duplicates
                                         newTermParts.Add(newTerm.ContentItem.As<TermPart>());
                                     }
                                 }
@@ -97,28 +112,37 @@ namespace Orchard.Taxonomies.Handlers {
             }
         }
 
-        protected override void UpdateEditorShape(UpdateEditorContext context) {
+        protected override void UpdateEditorShape(UpdateEditorContext context)
+        {
             // case contentitem without localization and taxonomyfield localized
-            if (context.ContentItem.As<LocalizationPart>() != null) {
+            if (context.ContentItem.As<LocalizationPart>() != null)
+            {
                 return;
             }
             var partFieldDefinitions = context.ContentItem.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField");
-            if (partFieldDefinitions == null || !partFieldDefinitions.Any()) {
+            if (partFieldDefinitions == null || !partFieldDefinitions.Any())
+            {
                 return;
             }
             base.UpdateEditorShape(context);
             var allCultures = _cultureManager.ListCultures();
-            if (allCultures.Count() > 1) {
-                foreach (var partFieldDefinition in partFieldDefinitions) {
-                    if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize) {
+            if (allCultures.Count() > 1)
+            {
+                foreach (var partFieldDefinition in partFieldDefinitions)
+                {
+                    if (partFieldDefinition.Settings.GetModel<TaxonomyFieldLocalizationSettings>().TryToLocalize)
+                    {
                         var taxonomyUsed = _taxonomyService.GetTaxonomyByName(partFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy);
                         var originalTermParts = _taxonomyService.GetTermsForContentItem(context.ContentItem.Id, partFieldDefinition.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToList();
                         var newTermParts = new List<TermPart>();
-                        foreach (var originalTermPart in originalTermParts) {
+                        foreach (var originalTermPart in originalTermParts)
+                        {
                             newTermParts.Add(originalTermPart);
                             var masterTermPart = _taxonomyExtensionsService.GetMasterItem(originalTermPart.ContentItem);
-                            if (masterTermPart != null) {
-                                foreach (var missingCulture in allCultures) {
+                            if (masterTermPart != null)
+                            {
+                                foreach (var missingCulture in allCultures)
+                                {
                                     var newTerm = _localizationService.GetLocalizedContentItem(masterTermPart, missingCulture);
                                     if (newTerm != null)
                                         newTermParts.Add(newTerm.As<TermPart>());

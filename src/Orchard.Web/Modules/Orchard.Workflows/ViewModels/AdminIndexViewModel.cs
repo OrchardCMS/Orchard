@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Workflows.Models;
 
-namespace Orchard.Workflows.ViewModels {
+namespace Orchard.Workflows.ViewModels
+{
 
-    public class AdminIndexViewModel {
+    public class AdminIndexViewModel
+    {
         public IList<WorkflowDefinitionEntry> WorkflowDefinitions { get; set; }
         public AdminIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }
 
-    public class WorkflowDefinitionEntry {
+    public class WorkflowDefinitionEntry
+    {
         public WorkflowDefinitionRecord WorkflowDefinitionRecord { get; set; }
         public bool IsChecked { get; set; }
 
@@ -17,23 +20,27 @@ namespace Orchard.Workflows.ViewModels {
         public string Name { get; set; }
     }
 
-    public class AdminIndexOptions {
+    public class AdminIndexOptions
+    {
         public string Search { get; set; }
         public WorkflowDefinitionOrder Order { get; set; }
         public WorkflowDefinitionFilter Filter { get; set; }
         public WorkflowDefinitionBulk BulkAction { get; set; }
     }
 
-    public enum WorkflowDefinitionOrder {
+    public enum WorkflowDefinitionOrder
+    {
         Name,
         Creation
     }
 
-    public enum WorkflowDefinitionFilter {
+    public enum WorkflowDefinitionFilter
+    {
         All
     }
 
-    public enum WorkflowDefinitionBulk {
+    public enum WorkflowDefinitionBulk
+    {
         None,
         Delete
     }

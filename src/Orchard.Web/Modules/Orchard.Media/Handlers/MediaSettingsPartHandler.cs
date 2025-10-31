@@ -1,12 +1,15 @@
-﻿using Orchard.ContentManagement;
-using Orchard.Data;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Media.Models;
 
-namespace Orchard.Media.Handlers {
-    public class MediaSettingsPartHandler : ContentHandler {
-        public MediaSettingsPartHandler(IRepository<MediaSettingsPartRecord> repository) {
+namespace Orchard.Media.Handlers
+{
+    public class MediaSettingsPartHandler : ContentHandler
+    {
+        public MediaSettingsPartHandler(IRepository<MediaSettingsPartRecord> repository)
+        {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<MediaSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
@@ -15,7 +18,8 @@ namespace Orchard.Media.Handlers {
 
         public Localizer T { get; set; }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);

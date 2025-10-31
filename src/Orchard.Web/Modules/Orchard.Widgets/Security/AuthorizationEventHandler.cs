@@ -1,37 +1,48 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Widgets.Security {
-    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
+namespace Orchard.Widgets.Security
+{
+    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler
+    {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
 
-        public void Adjust(CheckAccessContext context) {
+        public void Adjust(CheckAccessContext context)
+        {
             Permission permission = context.Permission;
             // adjusting permissions only if the content is not securable
             if (!context.Granted &&
-                context.Content.Is<ICommonPart>()) {
+                context.Content.Is<ICommonPart>())
+            {
                 var typeDefinition = context.Content.ContentItem.TypeDefinition;
-                if (!typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable) {
-                    if (context.Content.Is<WidgetPart>()) {
-                        if (context.Permission == Core.Contents.Permissions.CreateContent) {
+                if (!typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable)
+                {
+                    if (context.Content.Is<WidgetPart>())
+                    {
+                        if (context.Permission == Core.Contents.Permissions.CreateContent)
+                        {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.EditContent, context)) {
+                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.EditContent, context))
+                        {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.PublishContent, context)) {
+                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.PublishContent, context))
+                        {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.DeleteContent, context)) {
+                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.DeleteContent, context))
+                        {
                             permission = Permissions.ManageWidgets;
                         }
                     }
-                    if (permission != context.Permission) {
+                    if (permission != context.Permission)
+                    {
                         context.Permission = permission;
                         context.Adjusted = true;
                     }
@@ -39,7 +50,8 @@ namespace Orchard.Widgets.Security {
             }
         }
 
-        private static bool HasOwnership(IUser user, IContent content) {
+        private static bool HasOwnership(IUser user, IContent content)
+        {
             if (user == null || content == null)
                 return false;
 
@@ -50,8 +62,10 @@ namespace Orchard.Widgets.Security {
             return user.Id == common.Owner.Id;
         }
 
-        private static Permission TryGetOwnerVariation(Permission permission, CheckAccessContext context) {
-            if (HasOwnership(context.User, context.Content)) {
+        private static Permission TryGetOwnerVariation(Permission permission, CheckAccessContext context)
+        {
+            if (HasOwnership(context.User, context.Content))
+            {
                 if (permission.Name == Core.Contents.Permissions.PublishContent.Name)
                     return Core.Contents.Permissions.PublishOwnContent;
                 if (permission.Name == Core.Contents.Permissions.EditContent.Name)
@@ -65,7 +79,8 @@ namespace Orchard.Widgets.Security {
 
                 return null;
             }
-            else {
+            else
+            {
                 return permission;
             }
         }

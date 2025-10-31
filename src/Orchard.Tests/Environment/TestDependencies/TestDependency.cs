@@ -1,24 +1,31 @@
-﻿namespace Orchard.Tests.Environment.TestDependencies {
-    
-    public interface ITestDependency : IDependency {
-        
-    }
+namespace Orchard.Tests.Environment.TestDependencies
+{
 
-    public class TestDependency : ITestDependency{
-    }
-
-    public interface ITestSingletonDependency : ISingletonDependency {
+    public interface ITestDependency : IDependency
+    {
 
     }
 
-    public class TestSingletonDependency : ITestSingletonDependency {
+    public class TestDependency : ITestDependency
+    {
+    }
+
+    public interface ITestSingletonDependency : ISingletonDependency
+    {
+
+    }
+
+    public class TestSingletonDependency : ITestSingletonDependency
+    {
     }
 
 
-    public interface ITestTransientDependency : ITransientDependency {
+    public interface ITestTransientDependency : ITransientDependency
+    {
 
     }
 
-    public class TestTransientDependency : ITestTransientDependency {
+    public class TestTransientDependency : ITestTransientDependency
+    {
     }
 }

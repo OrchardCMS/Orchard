@@ -1,37 +1,44 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Alias.Implementation.Holder;
 
-namespace Orchard.Alias.ViewModels {
+namespace Orchard.Alias.ViewModels
+{
 
-    public class AdminIndexViewModel {
+    public class AdminIndexViewModel
+    {
         public IList<AliasEntry> AliasEntries { get; set; }
         public AdminIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }
 
-    public class AliasEntry {
+    public class AliasEntry
+    {
         public AliasInfo Alias { get; set; }
         public bool IsChecked { get; set; }
     }
 
-    public class AdminIndexOptions {
+    public class AdminIndexOptions
+    {
         public string Search { get; set; }
         public AliasOrder Order { get; set; }
         public AliasFilter Filter { get; set; }
         public AliasBulkAction BulkAction { get; set; }
     }
 
-    public enum AliasOrder {
+    public enum AliasOrder
+    {
         Path
     }
 
-    public enum AliasFilter {
+    public enum AliasFilter
+    {
         All,
         Managed,
         Unmanaged
     }
 
-    public enum AliasBulkAction {
+    public enum AliasBulkAction
+    {
         None,
         Delete
     }

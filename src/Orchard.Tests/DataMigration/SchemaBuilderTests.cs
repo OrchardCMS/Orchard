@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -17,9 +17,11 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 
-namespace Orchard.Tests.DataMigration {
+namespace Orchard.Tests.DataMigration
+{
     [TestFixture]
-    public class SchemaBuilderTestsBase {
+    public class SchemaBuilderTestsBase
+    {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
         private string _databaseFileName;
@@ -29,7 +31,8 @@ namespace Orchard.Tests.DataMigration {
         private ISession _session;
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFileName);
 
@@ -60,7 +63,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void AllMethodsShouldBeCalledSuccessfully() {
+        public void AllMethodsShouldBeCalledSuccessfully()
+        {
 
             _schemaBuilder
                 .CreateTable("User", table => table
@@ -86,7 +90,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void CreateCommandShouldBeHandled() {
+        public void CreateCommandShouldBeHandled()
+        {
 
             _schemaBuilder
                 .CreateTable("User", table => table
@@ -100,7 +105,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void GenericCreateCommandShouldBeHandled() {
+        public void GenericCreateCommandShouldBeHandled()
+        {
             _schemaBuilder
                 .CreateTable("User", table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -115,7 +121,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void DropTableCommandShouldBeHandled() {
+        public void DropTableCommandShouldBeHandled()
+        {
             _schemaBuilder
                 .CreateTable("User", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
@@ -131,14 +138,16 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void CustomSqlStatementsShouldBeHandled() {
+        public void CustomSqlStatementsShouldBeHandled()
+        {
 
             _schemaBuilder
                 .ExecuteSql("select 1");
         }
 
         [Test]
-        public void AlterTableCommandShouldBeHandled() {
+        public void AlterTableCommandShouldBeHandled()
+        {
 
             _schemaBuilder
                 .CreateTable("User", table => table
@@ -165,7 +174,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void ForeignKeyShouldBeCreatedAndRemoved() {
+        public void ForeignKeyShouldBeCreatedAndRemoved()
+        {
 
             _schemaBuilder
                 .CreateTable("User", table => table
@@ -181,7 +191,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void BiggerDataShouldNotFit() {
+        public void BiggerDataShouldNotFit()
+        {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
@@ -193,18 +204,19 @@ namespace Orchard.Tests.DataMigration {
 
             // should throw an exception if trying to write more data
             Assert.Throws<OrchardException>(() => _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256))));
+                .ExecuteSql(string.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new string('x', 256))));
 
             _schemaBuilder
                 .AlterTable("ContentItemRecord", table => table
                     .AlterColumn("Data", column => column.WithType(DbType.String).WithLength(257)));
 
             _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+                .ExecuteSql(string.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new string('x', 256)));
         }
 
         [Test]
-        public void ShouldAllowFieldSizeAlteration() {
+        public void ShouldAllowFieldSizeAlteration()
+        {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
@@ -220,11 +232,12 @@ namespace Orchard.Tests.DataMigration {
 
             // should write successfully a bigger value now
             _schemaBuilder
-                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 2048)));
+                .ExecuteSql(string.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new string('x', 2048)));
         }
 
         [Test]
-        public void ChangingSizeWithoutTypeShouldNotBeAllowed() {
+        public void ChangingSizeWithoutTypeShouldNotBeAllowed()
+        {
             _schemaBuilder
                 .CreateTable("ContentItemRecord", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
@@ -238,7 +251,8 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void PrecisionAndScaleAreApplied() {
+        public void PrecisionAndScaleAreApplied()
+        {
 
             _schemaBuilder
                 .CreateTable("Product", table => table
@@ -246,7 +260,7 @@ namespace Orchard.Tests.DataMigration {
                     );
 
             _schemaBuilder
-                .ExecuteSql(String.Format("INSERT INTO TEST_Product (Price) VALUES ({0})", "123456.123456789"));
+                .ExecuteSql(string.Format("INSERT INTO TEST_Product (Price) VALUES ({0})", "123456.123456789"));
 
             var query = _session.CreateSQLQuery("SELECT MAX(Price) FROM TEST_Product");
             Assert.That(query.UniqueResult(), Is.EqualTo(123456.123456789m));

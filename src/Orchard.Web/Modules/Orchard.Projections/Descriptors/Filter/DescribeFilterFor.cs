@@ -1,12 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Descriptors.Filter {
-    public class DescribeFilterFor {
+namespace Orchard.Projections.Descriptors.Filter
+{
+    public class DescribeFilterFor
+    {
         private readonly string _category;
 
-        public DescribeFilterFor(string category, LocalizedString name, LocalizedString description) {
+        public DescribeFilterFor(string category, LocalizedString name, LocalizedString description)
+        {
             Types = new List<FilterDescriptor>();
             _category = category;
             Name = name;
@@ -17,7 +20,8 @@ namespace Orchard.Projections.Descriptors.Filter {
         public LocalizedString Description { get; private set; }
         public List<FilterDescriptor> Types { get; private set; }
 
-        public DescribeFilterFor Element(string type, LocalizedString name, LocalizedString description, Action<FilterContext> filter, Func<FilterContext, LocalizedString> display, string form = null) {
+        public DescribeFilterFor Element(string type, LocalizedString name, LocalizedString description, Action<FilterContext> filter, Func<FilterContext, LocalizedString> display, string form = null)
+        {
             Types.Add(new FilterDescriptor { Type = type, Name = name, Description = description, Category = _category, Filter = filter, Display = display, Form = form });
             return this;
         }

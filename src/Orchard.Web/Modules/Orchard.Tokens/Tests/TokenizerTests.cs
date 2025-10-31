@@ -1,16 +1,19 @@
-﻿using System;
+using System;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Tokens.Implementation;
 
-namespace Orchard.Tokens.Tests {
+namespace Orchard.Tokens.Tests
+{
     [TestFixture]
-    public class TokenizerTests {
+    public class TokenizerTests
+    {
         private IContainer _container;
         private ITokenizer _tokenizer;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<Tokenizer>().As<ITokenizer>();
             builder.RegisterType<TokenManager>().As<ITokenManager>();
@@ -20,20 +23,23 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestGlobalTokens() {
+        public void TestGlobalTokens()
+        {
             Assert.That(_tokenizer.Replace("{Site.Global1}", null), Is.EqualTo("[global1]"));
             Assert.That(_tokenizer.Replace("{Site.Global2}", null), Is.EqualTo("[global2]"));
             Assert.That(_tokenizer.Replace("{Site.Global1}{Site.Global2}{Site.Global1}{Site.Global2}", null), Is.EqualTo("[global1][global2][global1][global2]"));
         }
 
         [Test]
-        public void TestContextTokens() {
+        public void TestContextTokens()
+        {
             Assert.That(_tokenizer.Replace("{User.Name}", null), Is.EqualTo("CurrentUser"));
             Assert.That(_tokenizer.Replace("{User.Name}", new { User = new TestUser { UserName = "LocalUser" } }), Is.EqualTo("LocalUser"));
         }
 
         [Test]
-        public void TestChainedTokens() {
+        public void TestChainedTokens()
+        {
             Assert.That(_tokenizer.Replace("{Site.CurrentUser.Name}", null), Is.EqualTo("CurrentUser"));
             Assert.That(_tokenizer.Replace("{Site.CurrentUser.Name}", new { User = new TestUser { UserName = "ShouldStillUseParentValue" } }), Is.EqualTo("CurrentUser"));
             Assert.That(_tokenizer.Replace("{Site.CurrentUser.Birthdate}", null), Is.EqualTo("Nov 15"));
@@ -41,19 +47,22 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestParameterizedTokens() {
+        public void TestParameterizedTokens()
+        {
             Assert.That(_tokenizer.Replace("{Users.User:User2}", null), Is.EqualTo("User2"));
             Assert.That(_tokenizer.Replace("{Users.User:FakeUser}", null), Is.EqualTo(""));
         }
 
         [Test]
-        public void TestParameterizedChainedTokens() {
+        public void TestParameterizedChainedTokens()
+        {
             Assert.That(_tokenizer.Replace("{Users.User:User2.Email}", null), Is.EqualTo("user2@test.com"));
             Assert.That(_tokenizer.Replace("{Users.User:FakeUser.Email}", null), Is.EqualTo(""));
         }
 
         [Test]
-        public void TestMissingTokens() {
+        public void TestMissingTokens()
+        {
             Assert.That(_tokenizer.Replace("[{Site.NotAToken}]", null), Is.EqualTo("[]"));
             Assert.That(_tokenizer.Replace("[{NotATokenType.Foo}]", null), Is.EqualTo("[]"));
             Assert.That(_tokenizer.Replace("[{Site.CurrentUser.NotASubToken}]", null), Is.EqualTo("[]"));
@@ -62,55 +71,64 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestTokenCaseSensitivity() {
+        public void TestTokenCaseSensitivity()
+        {
             Assert.That(_tokenizer.Replace("{Site.Global1}", null), Is.EqualTo("[global1]"));
             Assert.That(_tokenizer.Replace("{site.Global1}", null), Is.EqualTo(""));
             Assert.That(_tokenizer.Replace("{Site.global1}", null), Is.EqualTo(""));
         }
 
         [Test]
-        public void TestTokenEscapeSequences() {
+        public void TestTokenEscapeSequences()
+        {
             Assert.That(_tokenizer.Replace("{{escaped}} {Site.Global1} }}{{ {{{{ }}}}", null), Is.EqualTo("{escaped} [global1] }{ {{ }}"));
             Assert.That(_tokenizer.Replace("{{{Site.Global1}}}", null), Is.EqualTo("{[global1]}"));
             Assert.That(_tokenizer.Replace("{Date.Now.{{yyyy}}}", null), Is.EqualTo(DateTime.UtcNow.ToString("{yyyy}")));
         }
 
         [Test]
-        public void TestHtmlEncodedByDefault() {
+        public void TestHtmlEncodedByDefault()
+        {
             Assert.That(_tokenizer.Replace("{Date.Now.<>}", null), Is.EqualTo("&lt;&gt;"));
         }
 
         [Test]
-        public void TestNoEncode() {
+        public void TestNoEncode()
+        {
             Assert.That(_tokenizer.Replace("{Date.Now.<>}", null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }), Is.EqualTo("<>"));
         }
 
         [Test]
-        public void TestPredicate() {
+        public void TestPredicate()
+        {
             Assert.That(_tokenizer.Replace("{Site.Global1}{Site.Global2}", null, new ReplaceOptions { Predicate = token => token == "Site.Global2" }), Is.EqualTo("{Site.Global1}[global2]"));
         }
 
         [Test]
-        public void HashTokenShouldBeReplaced() {
+        public void HashTokenShouldBeReplaced()
+        {
             Assert.That(_tokenizer.Replace("foo #{Site.Global1}", null), Is.EqualTo("foo [global1]"));
             Assert.That(_tokenizer.Replace("#{Site.Global1}#{Site.Global2}", null), Is.EqualTo("[global1][global2]"));
         }
 
         [Test]
-        public void HashInsideTokenShouldBeIgnored() {
+        public void HashInsideTokenShouldBeIgnored()
+        {
             Assert.That(_tokenizer.Replace("{Site.Global1.#}", null), Is.EqualTo(""));
             Assert.That(_tokenizer.Replace("#{Site.Global1.#}", null), Is.EqualTo(""));
         }
 
         [Test]
-        public void SimplePatterShouldBeIgnoredWhenHashIsPresent() {
+        public void SimplePatterShouldBeIgnoredWhenHashIsPresent()
+        {
             Assert.That(_tokenizer.Replace("#{Site.Global1}", null), Is.EqualTo("[global1]"));
             Assert.That(_tokenizer.Replace("{#{Site.Global1}}", null), Is.EqualTo("{[global1]}"));
             Assert.That(_tokenizer.Replace("{Site.Global1}#{Site.Global1}", null), Is.EqualTo("{Site.Global1}[global1]"));
         }
 
         [Test]
-        public void HashPatternCanBeEscaped() {
+        public void HashPatternCanBeEscaped()
+        {
             Assert.That(_tokenizer.Replace("##{Site.Global1}", null), Is.EqualTo("#[global1]"));
             Assert.That(_tokenizer.Replace("#{{Site.Global1}}", null), Is.EqualTo("#{Site.Global1}"));
         }

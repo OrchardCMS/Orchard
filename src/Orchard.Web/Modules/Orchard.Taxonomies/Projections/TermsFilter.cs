@@ -1,26 +1,30 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Taxonomies.Models;
-using Orchard.Taxonomies.Services;
 using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Drivers;
+using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
 
-namespace Orchard.Taxonomies.Projections {
-    public interface IFilterProvider : IEventHandler {
+namespace Orchard.Taxonomies.Projections
+{
+    public interface IFilterProvider : IEventHandler
+    {
         void Describe(dynamic describe);
     }
 
-    public class TermsFilter : IFilterProvider {
+    public class TermsFilter : IFilterProvider
+    {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IWorkContextAccessor _workContextAccessor;
         private int _termsFilterId;
 
         public TermsFilter(ITaxonomyService taxonomyService,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
             _taxonomyService = taxonomyService;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
@@ -28,7 +32,8 @@ namespace Orchard.Taxonomies.Projections {
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic describe) {
+        public void Describe(dynamic describe)
+        {
             describe.For("Taxonomy", T("Taxonomy"), T("Taxonomy"))
                 .Element("HasTerms", T("Has Terms"), T("Categorized content items"),
                     (Action<dynamic>)ApplyFilter,
@@ -37,16 +42,19 @@ namespace Orchard.Taxonomies.Projections {
                 );
         }
 
-        public void ApplyFilter(dynamic context) {
+        public void ApplyFilter(dynamic context)
+        {
             var termIds = (string)context.State.TermIds;
 
-            if (!String.IsNullOrEmpty(termIds)) {
+            if (!string.IsNullOrEmpty(termIds))
+            {
                 var ids = termIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     // Int32.Parse throws for empty strings
                     .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Select(Int32.Parse).ToArray();
+                    .Select(int.Parse).ToArray();
 
-                if (ids.Length == 0) {
+                if (ids.Length == 0)
+                {
                     return;
                 }
 
@@ -56,9 +64,11 @@ namespace Orchard.Taxonomies.Projections {
 
                 bool.TryParse(context.State.TranslateTerms?.Value, out bool translateTerms);
                 if (translateTerms &&
-                    _workContextAccessor.GetContext().TryResolve<ILocalizationService>(out var localizationService)) {
+                    _workContextAccessor.GetContext().TryResolve<ILocalizationService>(out var localizationService))
+                {
                     var localizedTerms = new List<TermPart>();
-                    foreach (var termPart in terms) {
+                    foreach (var termPart in terms)
+                    {
                         localizedTerms.AddRange(
                             localizationService.GetLocalizations(termPart)
                                 .Select(l => l.As<TermPart>()));
@@ -69,12 +79,15 @@ namespace Orchard.Taxonomies.Projections {
 
                 var allChildren = new List<TermPart>();
                 bool.TryParse(context.State.ExcludeChildren?.Value, out bool excludeChildren);
-                foreach (var term in terms) {
-                    if (term == null) {
+                foreach (var term in terms)
+                {
+                    if (term == null)
+                    {
                         continue;
                     }
                     allChildren.Add(term);
-                    if (!excludeChildren) {
+                    if (!excludeChildren)
+                    {
                         allChildren.AddRange(_taxonomyService.GetChildren(term));
                     }
                 }
@@ -83,7 +96,8 @@ namespace Orchard.Taxonomies.Projections {
 
                 var allIds = allChildren.Select(x => x.Id).ToList();
 
-                switch (op) {
+                switch (op)
+                {
                     case 0: // is one of
                         // Unique alias so we always get a unique join everytime so can have > 1 HasTerms filter on a query.
                         Action<IAliasFactory> s = alias => alias.ContentPartRecord<TermsPartRecord>().Property("Terms", "terms" + _termsFilterId++);
@@ -91,7 +105,8 @@ namespace Orchard.Taxonomies.Projections {
                         context.Query.Where(s, f);
                         break;
                     case 1: // is all of
-                        foreach (var id in allIds) {
+                        foreach (var id in allIds)
+                        {
                             var termId = id;
                             Action<IAliasFactory> selector =
                                 alias => alias.ContentPartRecord<TermsPartRecord>().Property("Terms", "terms" + termId);
@@ -103,25 +118,28 @@ namespace Orchard.Taxonomies.Projections {
             }
         }
 
-        public LocalizedString DisplayFilter(dynamic context) {
+        public LocalizedString DisplayFilter(dynamic context)
+        {
             var terms = (string)context.State.TermIds;
 
-            if (String.IsNullOrEmpty(terms)) {
+            if (string.IsNullOrEmpty(terms))
+            {
                 return T("Any term");
             }
 
-            var tagNames = terms.Split(new[] { ',' }).Select(x => _taxonomyService.GetTerm(Int32.Parse(x)).Name);
+            var tagNames = terms.Split(new[] { ',' }).Select(x => _taxonomyService.GetTerm(int.Parse(x)).Name);
 
             int op = Convert.ToInt32(context.State.Operator);
-            switch (op) {
+            switch (op)
+            {
                 case 0:
-                    return T("Categorized with one of {0}", String.Join(", ", tagNames));
+                    return T("Categorized with one of {0}", string.Join(", ", tagNames));
 
                 case 1:
-                    return T("Categorized with all of {0}", String.Join(", ", tagNames));
+                    return T("Categorized with all of {0}", string.Join(", ", tagNames));
             }
 
-            return T("Categorized with {0}", String.Join(", ", tagNames));
+            return T("Categorized with {0}", string.Join(", ", tagNames));
         }
     }
 }

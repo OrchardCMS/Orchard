@@ -1,13 +1,16 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Tests.UI.Navigation {
+namespace Orchard.Tests.UI.Navigation
+{
     [TestFixture]
-    public class MenuItemComparerTests {
+    public class MenuItemComparerTests
+    {
         [Test]
-        public void TextShouldCauseDifferenceAndNullRouteValuesAreEqual() {
+        public void TextShouldCauseDifferenceAndNullRouteValuesAreEqual()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello") };
             var item2 = new MenuItem { Text = new LocalizedString("hello") };
             var item3 = new MenuItem { Text = new LocalizedString("hello3") };
@@ -15,7 +18,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NullRouteValuesShouldEqualEmptyRouteValues() {
+        public void NullRouteValuesShouldEqualEmptyRouteValues()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello") };
             var item2 = new MenuItem { Text = new LocalizedString("hello") };
             var item3 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary() };
@@ -24,7 +28,8 @@ namespace Orchard.Tests.UI.Navigation {
             AssertSameSameSame(item3, item4, item1);
         }
         [Test]
-        public void AdditionalPropertiesShouldMismatch() {
+        public void AdditionalPropertiesShouldMismatch()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = 1 }) };
             var item2 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = 1 }) };
             var item3 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = 1, two = 2 }) };
@@ -32,7 +37,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void ValueTypeShouldMismatch() {
+        public void ValueTypeShouldMismatch()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = 1 }) };
             var item2 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = 1 }) };
             var item3 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1" }) };
@@ -40,7 +46,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void ValuesShouldMismatch() {
+        public void ValuesShouldMismatch()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }) };
             var item2 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }) };
             var item3 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "3" }) };
@@ -48,14 +55,16 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void PositionAndChildrenDontMatter() {
+        public void PositionAndChildrenDontMatter()
+        {
             var item1 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }) };
             var item2 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }), Position = "4.0" };
             var item3 = new MenuItem { Text = new LocalizedString("hello"), RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }), Items = new[] { new MenuItem() } };
             AssertSameSameSame(item1, item2, item3);
         }
 
-        private static void AssertSameSameDifferent(MenuItem item1, MenuItem item2, MenuItem item3) {
+        private static void AssertSameSameDifferent(MenuItem item1, MenuItem item2, MenuItem item3)
+        {
             var comparer = new MenuItemComparer();
 
             Assert.That(comparer.Equals(item1, item2), Is.True);
@@ -68,7 +77,8 @@ namespace Orchard.Tests.UI.Navigation {
             //Assert.That(comparer.GetHashCode(item2), Is.Not.EqualTo(comparer.GetHashCode(item3)));
         }
 
-        private static void AssertSameSameSame(MenuItem item1, MenuItem item2, MenuItem item3) {
+        private static void AssertSameSameSame(MenuItem item1, MenuItem item2, MenuItem item3)
+        {
             var comparer = new MenuItemComparer();
 
             Assert.That(comparer.Equals(item1, item2), Is.True);

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Message;
 using Orchard.Glimpse.Models;
 
-namespace Orchard.Glimpse.Services {
-    public interface IGlimpseService : IDependency {
+namespace Orchard.Glimpse.Services
+{
+    public interface IGlimpseService : IDependency
+    {
         /// <summary>
         /// Executes an action, and times how long the execution takes
         /// </summary>

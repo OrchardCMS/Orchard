@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -9,8 +8,10 @@ using Orchard.UI.Navigation;
 
 // ReSharper disable InconsistentNaming
 
-namespace Orchard.ContentPicker.Services {
-    public class ContentPickerShapes : IShapeTableProvider {
+namespace Orchard.ContentPicker.Services
+{
+    public class ContentPickerShapes : IShapeTableProvider
+    {
         private readonly Work<INavigationManager> _navigationManager;
         private readonly Work<WorkContext> _workContext;
         private readonly Work<IShapeFactory> _shapeFactory;
@@ -18,24 +19,29 @@ namespace Orchard.ContentPicker.Services {
         public ContentPickerShapes(
             Work<INavigationManager> navigationManager,
             Work<WorkContext> workContext,
-            Work<IShapeFactory> shapeFactory) {
+            Work<IShapeFactory> shapeFactory)
+        {
             _navigationManager = navigationManager;
             _workContext = workContext;
             _shapeFactory = shapeFactory;
         }
 
-        public void Discover(ShapeTableBuilder builder) {
+        public void Discover(ShapeTableBuilder builder)
+        {
             builder.Describe("ContentPicker")
-                .OnDisplaying(displaying => {
+                .OnDisplaying(displaying =>
+                {
                     ContentItem contentItem = displaying.Shape.ContentItem;
-                    if (contentItem != null) {
+                    if (contentItem != null)
+                    {
                         displaying.ShapeMetadata.Alternates.Add("ContentPicker_" + displaying.ShapeMetadata.DisplayType);
                     }
-                });            
+                });
         }
-        
+
         [Shape]
-        public IHtmlString ContentPickerNavigation(dynamic Display) {
+        public IHtmlString ContentPickerNavigation(dynamic Display)
+        {
 
             IEnumerable<MenuItem> menuItems = _navigationManager.Value.BuildMenu("content-picker");
 

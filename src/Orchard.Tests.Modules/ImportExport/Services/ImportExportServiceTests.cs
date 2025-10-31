@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Autofac;
 using Moq;
 using NHibernate;
@@ -27,16 +27,19 @@ using Orchard.Tests.Modules.Recipes.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
 
-namespace Orchard.Tests.Modules.ImportExport.Services {
+namespace Orchard.Tests.Modules.ImportExport.Services
+{
     [TestFixture]
-    public class ImportExportManagerTests {
+    public class ImportExportManagerTests
+    {
         private IContainer _container;
         private IImportExportService _importExportService;
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -47,7 +50,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<ImportExportService>().As<IImportExportService>();
             builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>();
@@ -81,7 +85,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         }
 
         [Test]
-        public void ImportSucceedsWhenRecipeContainsImportSteps() {
+        public void ImportSucceedsWhenRecipeContainsImportSteps()
+        {
             Assert.DoesNotThrow(() => _importExportService.Import(
 @"<Orchard>
     <Recipe>
@@ -92,7 +97,8 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         }
 
         [Test]
-        public void ImportDoesntFailWhenRecipeContainsNonImportSteps() {
+        public void ImportDoesntFailWhenRecipeContainsNonImportSteps()
+        {
             Assert.DoesNotThrow(() => _importExportService.Import(
 @"<Orchard>
     <Recipe>
@@ -103,12 +109,15 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         }
     }
 
-    public class StubShellDescriptorManager : IShellDescriptorManager {
-        public ShellDescriptor GetShellDescriptor() {
+    public class StubShellDescriptorManager : IShellDescriptorManager
+    {
+        public ShellDescriptor GetShellDescriptor()
+        {
             return new ShellDescriptor();
         }
 
-        public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {
+        public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters)
+        {
         }
     }
 }

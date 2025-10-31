@@ -1,7 +1,9 @@
-﻿using Orchard.Roles.Models;
+using Orchard.Roles.Models;
 
-namespace Orchard.Roles.Events {
-    public class PermissionRoleContext : RoleContext {
+namespace Orchard.Roles.Events
+{
+    public class PermissionRoleContext : RoleContext
+    {
         public PermissionRecord Permission { get; set; }
     }
 }

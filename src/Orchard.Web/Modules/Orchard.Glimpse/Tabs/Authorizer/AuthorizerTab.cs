@@ -1,13 +1,17 @@
-﻿using System.Linq;
+using System.Linq;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Extensions;
 
-namespace Orchard.Glimpse.Tabs.Authorizer {
-    public class AuthorizerTab : TabBase, ITabSetup, IKey, ILayoutControl {
-        public override object GetData(ITabContext context) {
+namespace Orchard.Glimpse.Tabs.Authorizer
+{
+    public class AuthorizerTab : TabBase, ITabSetup, IKey, ILayoutControl
+    {
+        public override object GetData(ITabContext context)
+        {
             var messages = context.GetMessages<AuthorizerMessage>().ToList();
 
-            if (!messages.Any()) {
+            if (!messages.Any())
+            {
                 return null;
             }
 
@@ -16,7 +20,8 @@ namespace Orchard.Glimpse.Tabs.Authorizer {
 
         public override string Name => "Authorizer";
 
-        public void Setup(ITabSetupContext context) {
+        public void Setup(ITabSetupContext context)
+        {
             context.PersistMessages<AuthorizerMessage>();
         }
 

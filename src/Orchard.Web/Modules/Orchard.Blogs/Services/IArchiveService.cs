@@ -1,7 +1,9 @@
-﻿using Orchard.Blogs.Models;
+using Orchard.Blogs.Models;
 
-namespace Orchard.Blogs.Services {
-    public interface IArchiveService : IDependency {
+namespace Orchard.Blogs.Services
+{
+    public interface IArchiveService : IDependency
+    {
         void RebuildArchive(BlogPart blog);
     }
 }

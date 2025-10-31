@@ -1,7 +1,9 @@
 using Orchard.Data.Conventions;
 
-namespace Orchard.Tests.ContentManagement.Records {
-    public class MegaRecord {
+namespace Orchard.Tests.ContentManagement.Records
+{
+    public class MegaRecord
+    {
         public virtual int Id { get; set; }
 
         [StringLengthMax]

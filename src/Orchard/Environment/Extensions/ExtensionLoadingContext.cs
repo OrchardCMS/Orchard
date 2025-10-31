@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions {
-    public class ExtensionLoadingContext {
-        public ExtensionLoadingContext() {
+namespace Orchard.Environment.Extensions
+{
+    public class ExtensionLoadingContext
+    {
+        public ExtensionLoadingContext()
+        {
             ProcessedExtensions = new Dictionary<string, ExtensionProbeEntry>(StringComparer.OrdinalIgnoreCase);
             ProcessedReferences = new Dictionary<string, ExtensionReferenceProbeEntry>(StringComparer.OrdinalIgnoreCase);
             DeleteActions = new List<Action>();

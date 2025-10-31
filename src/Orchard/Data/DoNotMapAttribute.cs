@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 
-namespace Orchard.Data {
+namespace Orchard.Data
+{
     /// <summary>
     /// Mark a property to be excluded from NHibernate mapping
     /// </summary>
-    public class DoNotMapAttribute : Attribute {
+    public class DoNotMapAttribute : Attribute
+    {
     }
 }
 

@@ -1,68 +1,84 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Indexing {
-    public class NullSearchBuilder : ISearchBuilder {
-        public ISearchBuilder Parse(string defaultField, string query, bool escape) {
-            return this; 
-        }
-
-        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape) {
+namespace Orchard.Indexing
+{
+    public class NullSearchBuilder : ISearchBuilder
+    {
+        public ISearchBuilder Parse(string defaultField, string query, bool escape)
+        {
             return this;
         }
 
-        public ISearchBuilder WithGroup(Action<ISearchBuilder> groupSearchBuilder) {
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape)
+        {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, bool value) {
+        public ISearchBuilder WithGroup(Action<ISearchBuilder> groupSearchBuilder)
+        {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, DateTime value) {
+        public ISearchBuilder WithField(string field, bool value)
+        {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, string value) {
+        public ISearchBuilder WithField(string field, DateTime value)
+        {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, int value) {
+        public ISearchBuilder WithField(string field, string value)
+        {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, double value) {
+        public ISearchBuilder WithField(string field, int value)
+        {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true) {
+        public ISearchBuilder WithField(string field, double value)
+        {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, double? min, double? max, bool includeMin = true, bool includeMax = true) {
+        public ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true)
+        {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, DateTime? min, DateTime? max, bool includeMin = true, bool includeMax = true) {
+        public ISearchBuilder WithinRange(string field, double? min, double? max, bool includeMin = true, bool includeMax = true)
+        {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true) {
+        public ISearchBuilder WithinRange(string field, DateTime? min, DateTime? max, bool includeMin = true, bool includeMax = true)
+        {
+            return this;
+        }
+
+        public ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true)
+        {
             return this;
         }
 
         /// <summary>
         /// Mark a clause as a mandatory match. By default all clauses are optional.
         /// </summary>
-        public ISearchBuilder Mandatory() {
+        public ISearchBuilder Mandatory()
+        {
             return this;
         }
 
         /// <summary>
         /// Mark a clause as a forbidden match.
         /// </summary>
-        public ISearchBuilder Forbidden() {
+        public ISearchBuilder Forbidden()
+        {
             return this;
         }
 
@@ -70,11 +86,13 @@ namespace Orchard.Indexing {
         /// Applied on string clauses, it removes the default Prefix mecanism. Like 'broadcast' won't
         /// return 'broadcasting'. 
         /// </summary>
-        public ISearchBuilder ExactMatch() {
+        public ISearchBuilder ExactMatch()
+        {
             return this;
         }
 
-        public ISearchBuilder NotAnalyzed() {
+        public ISearchBuilder NotAnalyzed()
+        {
             return this;
         }
 
@@ -83,7 +101,8 @@ namespace Orchard.Indexing {
         /// </summary>
         /// <param name="weight">A value greater than zero, by which the score will be multiplied. 
         /// If greater than 1, it will improve the weight of a clause</param>
-        public ISearchBuilder Weighted(float weight) {
+        public ISearchBuilder Weighted(float weight)
+        {
             return this;
         }
 
@@ -92,31 +111,38 @@ namespace Orchard.Indexing {
         /// For instance, if the other clauses returns nothing, even if this filter has matches the
         /// end result will be empty. It's like a two-pass query
         /// </summary>
-        public ISearchBuilder AsFilter() {
+        public ISearchBuilder AsFilter()
+        {
             return this;
         }
 
-        public ISearchBuilder SortBy(string name) {
+        public ISearchBuilder SortBy(string name)
+        {
             return this;
         }
 
-        public ISearchBuilder SortByInteger(string name) {
+        public ISearchBuilder SortByInteger(string name)
+        {
             return this;
         }
 
-        public ISearchBuilder SortByBoolean(string name) {
+        public ISearchBuilder SortByBoolean(string name)
+        {
             return this;
         }
 
-        public ISearchBuilder SortByString(string name) {
+        public ISearchBuilder SortByString(string name)
+        {
             return this;
         }
 
-        public ISearchBuilder SortByDouble(string name) {
+        public ISearchBuilder SortByDouble(string name)
+        {
             return this;
         }
 
-        public ISearchBuilder SortByDateTime(string name) {
+        public ISearchBuilder SortByDateTime(string name)
+        {
             return this;
         }
 
@@ -125,22 +151,27 @@ namespace Orchard.Indexing {
             return this;
         }
 
-        public ISearchBuilder Slice(int skip, int count) {
+        public ISearchBuilder Slice(int skip, int count)
+        {
             return this;
         }
 
-        public IEnumerable<ISearchHit> Search() {
+        public IEnumerable<ISearchHit> Search()
+        {
             return Enumerable.Empty<ISearchHit>();
         }
-        public ISearchHit Get(int documentId) {
+        public ISearchHit Get(int documentId)
+        {
             return null;
         }
 
-        public ISearchBits GetBits() {
+        public ISearchBits GetBits()
+        {
             throw new NotImplementedException();
         }
 
-        public int Count() {
+        public int Count()
+        {
             return 0;
         }
 

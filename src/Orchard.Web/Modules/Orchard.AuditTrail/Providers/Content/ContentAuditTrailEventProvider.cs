@@ -1,14 +1,17 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.AuditTrail.Providers.Content {
-    public class ContentAuditTrailEventProvider : AuditTrailEventProviderBase {
+namespace Orchard.AuditTrail.Providers.Content
+{
+    public class ContentAuditTrailEventProvider : AuditTrailEventProviderBase
+    {
         private readonly IContentManager _contentManager;
-        public ContentAuditTrailEventProvider(IContentManager contentManager) {
+        public ContentAuditTrailEventProvider(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
@@ -22,13 +25,15 @@ namespace Orchard.AuditTrail.Providers.Content {
         public const string Exported = "Exported";
         public const string Restored = "Restored";
 
-        public static Filters CreateFilters(int contentId, IUpdateModel updateModel) {
+        public static Filters CreateFilters(int contentId, IUpdateModel updateModel)
+        {
             return new Filters(updateModel) {
                 {"content", contentId.ToString(CultureInfo.InvariantCulture)}
             };
         }
 
-        public override void Describe(DescribeContext context) {
+        public override void Describe(DescribeContext context)
+        {
             context.For("Content", T("Content Items"))
                 .Event(this, Created, T("Created"), T("A content item was created."), enableByDefault: true)
                 .Event(this, Saved, T("Saved"), T("A content item was saved."), enableByDefault: true)
@@ -44,7 +49,8 @@ namespace Orchard.AuditTrail.Providers.Content {
             context.DisplayFilter(DisplayFilter);
         }
 
-        private void QueryFilter(QueryFilterContext context) {
+        private void QueryFilter(QueryFilterContext context)
+        {
             if (!context.Filters.ContainsKey("content"))
                 return;
 
@@ -52,9 +58,11 @@ namespace Orchard.AuditTrail.Providers.Content {
             context.Query = context.Query.Where(x => x.EventFilterKey == "content" && x.EventFilterData == contentId.ToString());
         }
 
-        private void DisplayFilter(DisplayFilterContext context) {
+        private void DisplayFilter(DisplayFilterContext context)
+        {
             var contentItemId = context.Filters.Get("content").ToInt32();
-            if (contentItemId != null) {
+            if (contentItemId != null)
+            {
                 var contentItem = _contentManager.Get(contentItemId.Value, VersionOptions.AllVersions);
                 var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentItem(ContentItem: contentItem);
 

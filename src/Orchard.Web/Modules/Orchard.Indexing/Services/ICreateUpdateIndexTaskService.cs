@@ -1,10 +1,12 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 
-namespace Orchard.Indexing.Services {
+namespace Orchard.Indexing.Services
+{
     /// <summary>
     /// Manages the creation of indexing tasks in batches.
     /// </summary>
-    public interface ICreateUpdateIndexTaskService : IEventHandler {
+    public interface ICreateUpdateIndexTaskService : IEventHandler
+    {
         /// <summary>
         /// Creates the next set of indexing task batches, and renews itself with the next batch.
         /// </summary>

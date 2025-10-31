@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Email.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
@@ -8,13 +8,16 @@ using Orchard.Messaging.Services;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Email.Activities {
-    public interface IJobsQueueService : IEventHandler {
+namespace Orchard.Email.Activities
+{
+    public interface IJobsQueueService : IEventHandler
+    {
         void Enqueue(string message, object parameters, int priority);
     }
 
     [OrchardFeature("Orchard.Email.Workflows")]
-    public class EmailActivity : Task {
+    public class EmailActivity : Task
+    {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
         public ILogger Logger { get; set; }
@@ -22,7 +25,8 @@ namespace Orchard.Email.Activities {
         public EmailActivity(
             IMessageService messageService,
             IJobsQueueService jobsQueueService
-            ) {
+            )
+        {
             _messageService = messageService;
             _jobsQueueService = jobsQueueService;
             Logger = NullLogger.Instance;
@@ -31,29 +35,21 @@ namespace Orchard.Email.Activities {
 
         public Localizer T { get; set; }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return new[] { T("Done"), T("Failed") };
         }
 
-        public override string Form {
-            get {
-                return "EmailActivity";
-            }
-        }
+        public override string Form => "EmailActivity";
 
-        public override LocalizedString Category {
-            get { return T("Messaging"); }
-        }
+        public override LocalizedString Category => T("Messaging");
 
-        public override string Name {
-            get { return "SendEmail"; }
-        }
+        public override string Name => "SendEmail";
 
-        public override LocalizedString Description {
-            get { return T("Sends an email to a specific user."); }
-        }
+        public override LocalizedString Description => T("Sends an email to a specific user.");
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             var body = activityContext.GetState<string>("Body");
             var subject = activityContext.GetState<string>("Subject");
             var recipients = activityContext.GetState<string>("Recipients");
@@ -72,17 +68,21 @@ namespace Orchard.Email.Activities {
                 {"NotifyReadEmail", notifyReadEmail }
             };
 
-            if (string.IsNullOrWhiteSpace(recipients)) {
+            if (string.IsNullOrWhiteSpace(recipients))
+            {
                 Logger.Error("Email message doesn't have any recipient for Workflow {0}", workflowContext.Record.WorkflowDefinitionRecord.Name);
                 yield return T("Failed");
             }
-            else {
+            else
+            {
                 var queued = activityContext.GetState<bool>("Queued");
 
-                if (!queued) {
+                if (!queued)
+                {
                     _messageService.Send(SmtpMessageChannel.MessageType, parameters);
                 }
-                else {
+                else
+                {
                     var priority = activityContext.GetState<int>("Priority");
                     _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = parameters }, priority);
                 }

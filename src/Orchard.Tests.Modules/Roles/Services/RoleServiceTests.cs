@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -12,10 +12,13 @@ using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Roles.Services {
+namespace Orchard.Tests.Modules.Roles.Services
+{
     [TestFixture]
-    public class RoleServiceTests : DatabaseEnabledTestsBase {
-        public override void Register(ContainerBuilder builder) {
+    public class RoleServiceTests : DatabaseEnabledTestsBase
+    {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<RoleService>().As<IRoleService>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
@@ -23,28 +26,26 @@ namespace Orchard.Tests.Modules.Roles.Services {
             builder.RegisterInstance(new Mock<IRoleEventHandler>().Object);
         }
 
-        public class TestPermissionProvider : IPermissionProvider {
-            public Feature Feature {
-                get { return new Feature { Descriptor = new FeatureDescriptor { Id = "RoleServiceTests" } }; }
-            }
+        public class TestPermissionProvider : IPermissionProvider
+        {
+            public Feature Feature => new Feature { Descriptor = new FeatureDescriptor { Id = "RoleServiceTests" } };
 
-            public IEnumerable<Permission> GetPermissions() {
+            public IEnumerable<Permission> GetPermissions()
+            {
                 return "alpha,beta,gamma,delta".Split(',').Select(name => new Permission { Name = name });
             }
 
-            public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+            {
                 return Enumerable.Empty<PermissionStereotype>();
             }
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
-                return new[] { typeof(RoleRecord), typeof(PermissionRecord), typeof(RolesPermissionsRecord) };
-            }
-        }
+        protected override IEnumerable<Type> DatabaseTypes => new[] { typeof(RoleRecord), typeof(PermissionRecord), typeof(RolesPermissionsRecord) };
 
         [Test]
-        public void CreateRoleShouldAddToList() {
+        public void CreateRoleShouldAddToList()
+        {
             var service = _container.Resolve<IRoleService>();
             service.CreateRole("one");
             service.CreateRole("two");
@@ -60,7 +61,8 @@ namespace Orchard.Tests.Modules.Roles.Services {
         }
 
         [Test]
-        public void PermissionChangesShouldBeVisibleImmediately() {
+        public void PermissionChangesShouldBeVisibleImmediately()
+        {
 
             var service = _container.Resolve<IRoleService>();
 
@@ -91,7 +93,8 @@ namespace Orchard.Tests.Modules.Roles.Services {
         }
 
         [Test]
-        public void ShouldNotCreateARoleTwice() {
+        public void ShouldNotCreateARoleTwice()
+        {
             var service = _container.Resolve<IRoleService>();
             service.CreateRole("one");
             service.CreateRole("two");

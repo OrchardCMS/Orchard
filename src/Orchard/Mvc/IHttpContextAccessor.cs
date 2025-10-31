@@ -1,7 +1,9 @@
-﻿using System.Web;
+using System.Web;
 
-namespace Orchard.Mvc {
-    public interface IHttpContextAccessor {
+namespace Orchard.Mvc
+{
+    public interface IHttpContextAccessor
+    {
         HttpContextBase Current();
         void Set(HttpContextBase httpContext);
     }

@@ -3,10 +3,14 @@ using System.Linq;
 using Glimpse.Core.Tab.Assist;
 using Orchard.Glimpse.Models;
 
-namespace Orchard.Glimpse.Extensions {
-    public static class TabSectionExtensions {
-        public static void AddTimingSummary(this TabSection section, IEnumerable<IDurationMessage> messages) {
-            if (!section.Rows.Any()) {
+namespace Orchard.Glimpse.Extensions
+{
+    public static class TabSectionExtensions
+    {
+        public static void AddTimingSummary(this TabSection section, IEnumerable<IDurationMessage> messages)
+        {
+            if (!section.Rows.Any())
+            {
                 return;
             }
 
@@ -17,7 +21,8 @@ namespace Orchard.Glimpse.Extensions {
             var itemCount = messages.Count();
             row.Column($"{itemCount} item{(itemCount == 1 ? "" : "s")}");
 
-            for (int i = 0; i < columnCount - 3; i++) {
+            for (int i = 0; i < columnCount - 3; i++)
+            {
                 row.Column("");
             }
 

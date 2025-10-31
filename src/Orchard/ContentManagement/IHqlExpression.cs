@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Orchard.ContentManagement {
+namespace Orchard.ContentManagement
+{
 
-    public interface IHqlExpressionFactory {
+    public interface IHqlExpressionFactory
+    {
 
         void Eq(string propertyName, object value);
         void Like(string propertyName, string value, HqlMatchMode matchMode);

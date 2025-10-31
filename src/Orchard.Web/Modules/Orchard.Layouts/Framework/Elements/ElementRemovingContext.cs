@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 
-namespace Orchard.Layouts.Framework.Elements {
-    public class ElementRemovingContext {
-        public ElementRemovingContext(Element element, IEnumerable<Element> elements, IEnumerable<Element> removedElements, IContent content) {
+namespace Orchard.Layouts.Framework.Elements
+{
+    public class ElementRemovingContext
+    {
+        public ElementRemovingContext(Element element, IEnumerable<Element> elements, IEnumerable<Element> removedElements, IContent content)
+        {
             Element = element;
             Elements = elements;
             RemovedElements = removedElements;

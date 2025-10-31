@@ -1,34 +1,40 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Taxonomies.Helpers;
-using Orchard.Taxonomies.Services;
 using Orchard.DisplayManagement;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Taxonomies.Helpers;
+using Orchard.Taxonomies.Services;
 
-namespace Orchard.Taxonomies.Projections {
-    public interface IFormProvider : IEventHandler {
+namespace Orchard.Taxonomies.Projections
+{
+    public interface IFormProvider : IEventHandler
+    {
         void Describe(dynamic context);
     }
 
-    public class TermsFilterForms : IFormProvider {
+    public class TermsFilterForms : IFormProvider
+    {
         private readonly ITaxonomyService _taxonomyService;
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public TermsFilterForms(
             IShapeFactory shapeFactory,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService)
+        {
             _taxonomyService = taxonomyService;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "SelectTerms",
@@ -61,17 +67,21 @@ namespace Orchard.Taxonomies.Projections {
                         )
                     );
 
-                    foreach (var taxonomy in _taxonomyService.GetTaxonomies()) {
+                    foreach (var taxonomy in _taxonomyService.GetTaxonomies())
+                    {
                         var tGroup = new SelectListGroup { Name = taxonomy.Name };
                         f._Terms.Add(tGroup);
-                        foreach (var term in _taxonomyService.GetTerms(taxonomy.Id)) {
+                        foreach (var term in _taxonomyService.GetTerms(taxonomy.Id))
+                        {
                             var gap = new string('-', term.GetLevels());
 
-                            if (gap.Length > 0) {
+                            if (gap.Length > 0)
+                            {
                                 gap += " ";
                             }
 
-                            f._Terms.Add(new SelectListItem {
+                            f._Terms.Add(new SelectListItem
+                            {
                                 Value = term.Id.ToString(),
                                 Text = gap + term.Name,
                                 Group = tGroup
@@ -89,27 +99,31 @@ namespace Orchard.Taxonomies.Projections {
             );
         }
 
-        public void Export(dynamic state, ExportContentContext context) {
+        public void Export(dynamic state, ExportContentContext context)
+        {
             string termIds = Convert.ToString(state.TermIds);
 
-            if (!String.IsNullOrEmpty(termIds)) {
-                var ids = termIds.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
+            if (!string.IsNullOrEmpty(termIds))
+            {
+                var ids = termIds.Split(new[] { ',' }).Select(int.Parse).ToArray();
                 var terms = ids.Select(_taxonomyService.GetTerm).ToList();
                 var identities = terms.Select(context.ContentManager.GetItemMetadata).Select(x => x.Identity.ToString()).ToArray();
 
-                state.TermIds = String.Join(",", identities);
+                state.TermIds = string.Join(",", identities);
             }
         }
 
-        public void Import(dynamic state, ImportContentContext context) {
+        public void Import(dynamic state, ImportContentContext context)
+        {
             string termIdentities = Convert.ToString(state.TermIds);
 
-            if (!String.IsNullOrEmpty(termIdentities)) {
+            if (!string.IsNullOrEmpty(termIdentities))
+            {
                 var identities = termIdentities.Split(new[] { ',' }).ToArray();
                 var terms = identities.Select(context.GetItemFromSession).ToList();
                 var ids = terms.Select(x => x.Id).Select(x => x.ToString()).ToArray();
 
-                state.TermIds = String.Join(",", ids);
+                state.TermIds = string.Join(",", ids);
             }
         }
     }

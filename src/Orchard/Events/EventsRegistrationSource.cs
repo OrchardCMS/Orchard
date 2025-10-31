@@ -1,23 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Castle.DynamicProxy;
 
-namespace Orchard.Events {
-    public class EventsRegistrationSource : IRegistrationSource {
+namespace Orchard.Events
+{
+    public class EventsRegistrationSource : IRegistrationSource
+    {
         private readonly DefaultProxyBuilder _proxyBuilder;
 
-        public EventsRegistrationSource() {
+        public EventsRegistrationSource()
+        {
             _proxyBuilder = new DefaultProxyBuilder();
         }
 
-        public bool IsAdapterForIndividualComponents {
-            get { return false; }
-        }
+        public bool IsAdapterForIndividualComponents => false;
 
-        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor) {
+        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
+        {
             var serviceWithType = service as IServiceWithType;
             if (serviceWithType == null)
                 yield break;
@@ -33,7 +35,8 @@ namespace Orchard.Events {
 
 
             var rb = RegistrationBuilder
-                .ForDelegate((ctx, parameters) => {
+                .ForDelegate((ctx, parameters) =>
+                {
                     var interceptors = new IInterceptor[] { new EventsInterceptor(ctx.Resolve<IEventBus>()) };
                     var args = new object[] { interceptors, null };
                     return Activator.CreateInstance(interfaceProxyType, args);

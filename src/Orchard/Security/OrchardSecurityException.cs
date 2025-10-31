@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
-namespace Orchard.Security {
+namespace Orchard.Security
+{
     [Serializable]
-    public class OrchardSecurityException : OrchardCoreException {
+    public class OrchardSecurityException : OrchardCoreException
+    {
         public OrchardSecurityException(LocalizedString message) : base(message) { }
         public OrchardSecurityException(LocalizedString message, Exception innerException) : base(message, innerException) { }
         protected OrchardSecurityException(SerializationInfo info, StreamingContext context) : base(info, context) { }

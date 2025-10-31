@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,14 +20,17 @@ using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 using Orchard.UI.Notify;
 
-namespace Orchard.Tests.Modules.Tags.Services {
+namespace Orchard.Tests.Modules.Tags.Services
+{
     [TestFixture]
-    public class TagsServiceTests : DatabaseEnabledTestsBase {
+    public class TagsServiceTests : DatabaseEnabledTestsBase
+    {
         private Mock<IAuthorizationService> _authz;
         private ITagService _tagService;
         private IContentManager _contentManager;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             _authz = new Mock<IAuthorizationService>();
 
             builder.RegisterAutoMocking(MockBehavior.Loose);
@@ -45,7 +48,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             _tagService = _container.Resolve<ITagService>();
@@ -53,26 +57,31 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
-                    typeof(ContentItemRecord), 
-                    typeof(ContentItemVersionRecord), 
-                    typeof(ContentTypeRecord), 
-                    typeof(TagsPartRecord), 
-                    typeof(TagRecord), 
+                    typeof(ContentItemRecord),
+                    typeof(ContentItemVersionRecord),
+                    typeof(ContentTypeRecord),
+                    typeof(TagsPartRecord),
+                    typeof(TagRecord),
                     typeof(ContentTagRecord)
                 };
             }
         }
 
         [Test]
-        public void TagServiceShouldResolve() {
+        public void TagServiceShouldResolve()
+        {
         }
 
         [Test]
-        public void CreateTagShouldBePersistent() {
-            for (int i = 0; i < 10; i++) {
+        public void CreateTagShouldBePersistent()
+        {
+            for (int i = 0; i < 10; i++)
+            {
                 _tagService.CreateTag("tag" + i);
             }
 
@@ -88,7 +97,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
 
 
         [Test]
-        public void TagsShouldBeAvailableWhenGettingContentItem() {
+        public void TagsShouldBeAvailableWhenGettingContentItem()
+        {
             var thing = _contentManager.New("thing");
             _contentManager.Create(thing);
             _tagService.UpdateTagsForContentItem(thing, new string[] { "tag1", "tag2", "tag3" });
@@ -102,7 +112,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
         [Test]
-        public void TagsShouldDeletedAferRemovingContentItem() {
+        public void TagsShouldDeletedAferRemovingContentItem()
+        {
             var thing = _contentManager.New("thing");
             _contentManager.Create(thing, VersionOptions.Published);
             _tagService.UpdateTagsForContentItem(thing, new string[] { "tag1", "tag2", "tag3" });
@@ -123,7 +134,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
         [Test]
-        public void ContentItemsShouldBeReturnedFromTagService() {
+        public void ContentItemsShouldBeReturnedFromTagService()
+        {
             var thing1 = _contentManager.New("thing");
             _contentManager.Create(thing1);
             _tagService.UpdateTagsForContentItem(thing1, new string[] { "tag1", "tag2", "tag3" });
@@ -151,14 +163,15 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
         [Test]
-        public void TagsDeletionShouldDeleteTagsAndAssociations() {
+        public void TagsDeletionShouldDeleteTagsAndAssociations()
+        {
             var thing1 = _contentManager.New("thing");
             _contentManager.Create(thing1);
-            _tagService.UpdateTagsForContentItem(thing1, new string[] {"tag1", "tag2", "tag3"});
+            _tagService.UpdateTagsForContentItem(thing1, new string[] { "tag1", "tag2", "tag3" });
 
             var thing2 = _contentManager.New("thing");
             _contentManager.Create(thing2);
-            _tagService.UpdateTagsForContentItem(thing2, new string[] {"tag2", "tag3", "tag4"});
+            _tagService.UpdateTagsForContentItem(thing2, new string[] { "tag2", "tag3", "tag4" });
 
             ClearSession();
 
@@ -201,7 +214,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
 
 
         [Test]
-        public void TagsAssociationsShouldBeCreatedCorrectly() {
+        public void TagsAssociationsShouldBeCreatedCorrectly()
+        {
             var thing1 = _contentManager.New("thing");
             _contentManager.Create(thing1);
             _tagService.UpdateTagsForContentItem(thing1, new string[] { "tag1", "tag2", "tag3" });
@@ -240,7 +254,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
         [Test]
-        public void RenamingATagShouldMergeTaggedItems() {
+        public void RenamingATagShouldMergeTaggedItems()
+        {
             var thing1 = _contentManager.New("thing");
             _contentManager.Create(thing1);
             _tagService.UpdateTagsForContentItem(thing1, new string[] { "tag1", "tag2", "tag3" });
@@ -274,14 +289,17 @@ namespace Orchard.Tests.Modules.Tags.Services {
             Assert.That(_contentManager.Get(thing3.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
         }
 
-        public class ThingHandler : ContentHandler {
-            public ThingHandler() {
+        public class ThingHandler : ContentHandler
+        {
+            public ThingHandler()
+            {
                 Filters.Add(new ActivatingFilter<Thing>("thing"));
                 Filters.Add(new ActivatingFilter<TagsPart>("thing"));
             }
         }
 
-        public class Thing : ContentPart {
+        public class Thing : ContentPart
+        {
         }
     }
 }

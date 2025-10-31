@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.UI.Notify {
+namespace Orchard.UI.Notify
+{
     /// <summary>
     /// Notification manager for UI notifications
     /// </summary>
@@ -10,7 +11,8 @@ namespace Orchard.UI.Notify {
     /// Where such notifications are displayed depends on the theme used. Default themes contain a 
     /// Messages zone for this.
     /// </remarks>
-    public interface INotifier : IDependency {
+    public interface INotifier : IDependency
+    {
         /// <summary>
         /// Adds a new UI notification
         /// </summary>
@@ -25,22 +27,26 @@ namespace Orchard.UI.Notify {
         IEnumerable<NotifyEntry> List();
     }
 
-    public class Notifier : INotifier {
+    public class Notifier : INotifier
+    {
         private readonly IList<NotifyEntry> _entries;
 
-        public Notifier() {
+        public Notifier()
+        {
             Logger = NullLogger.Instance;
             _entries = new List<NotifyEntry>();
         }
 
         public ILogger Logger { get; set; }
 
-        public void Add(NotifyType type, LocalizedString message) {
+        public void Add(NotifyType type, LocalizedString message)
+        {
             Logger.Information("Notification {0} message: {1}", type, message);
             _entries.Add(new NotifyEntry { Type = type, Message = message });
         }
 
-        public IEnumerable<NotifyEntry> List() {
+        public IEnumerable<NotifyEntry> List()
+        {
             return _entries;
         }
     }

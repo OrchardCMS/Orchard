@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,9 +11,11 @@ using Orchard.Media.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
 
-namespace Orchard.Tests.Modules.Media.Services {
+namespace Orchard.Tests.Modules.Media.Services
+{
     [TestFixture]
-    public class MediaServiceTests {
+    public class MediaServiceTests
+    {
         private const string FolderName1 = "Folder1";
         private const string FolderName2 = "Folder2";
         private const string FolderName3 = "Folder3";
@@ -37,22 +39,26 @@ namespace Orchard.Tests.Modules.Media.Services {
         private MediaServiceAccessor MediaService { get; set; }
 
         [SetUp]
-        public void Setup() {
+        public void Setup()
+        {
             OrchardServices = new StubOrchardServices();
             StorageProvider = new StubStorageProvider(new ShellSettings { Name = ShellSettings.DefaultName });
             MediaService = new MediaServiceAccessor(StorageProvider, OrchardServices);
         }
 
         [Test]
-        public void GetPublicUrlTests() {
+        public void GetPublicUrlTests()
+        {
             Assert.That(() => MediaService.GetPublicUrl(null), Throws.InstanceOf(typeof(ArgumentException)), "null relative path is invalid");
             Assert.That(MediaService.GetPublicUrl(TextFileName), Is.EqualTo(string.Format("/{0}/{1}/{2}", MediaFolder, ShellSettings.DefaultName, TextFileName)), "base path file");
             Assert.That(MediaService.GetPublicUrl(string.Format("{0}/{1}", InnerDirectory, TextFileName)), Is.EqualTo(string.Format("/{0}/{1}/{2}/{3}", MediaFolder, ShellSettings.DefaultName, InnerDirectory, TextFileName)), "file within directory");
         }
 
         [Test]
-        public void GetMediaFoldersTest() {
-            StorageProvider.ListFoldersPredicate = path => {
+        public void GetMediaFoldersTest()
+        {
+            StorageProvider.ListFoldersPredicate = path =>
+            {
                 return string.IsNullOrEmpty(path) ? new[] { new StubStorageFolder(FolderName1) }
                             : string.Equals(path, FolderName1) ? new[] { new StubStorageFolder(FolderName2), new StubStorageFolder(FolderName3) }
                                  : new StubStorageFolder[] { };
@@ -72,14 +78,16 @@ namespace Orchard.Tests.Modules.Media.Services {
         }
 
         [Test]
-        public void UnzipMediaFileArchiveNotNullParametersTest() {
+        public void UnzipMediaFileArchiveNotNullParametersTest()
+        {
             // Test basic parameter validation
             Assert.That(() => MediaService.UnzipMediaFileArchiveAccessor(null, new MemoryStream()), Throws.InstanceOf(typeof(ArgumentException)));
             Assert.That(() => MediaService.UnzipMediaFileArchiveAccessor(FolderName1, null), Throws.InstanceOf(typeof(ArgumentException)));
         }
 
         [Test]
-        public void UnzipMediaFileArchiveAdministratorTest() {
+        public void UnzipMediaFileArchiveAdministratorTest()
+        {
             // Test unzip some valid and invalid files as an administrator user
             StorageProvider.SavedStreams.Clear();
             StubWorkContextAccessor.WorkContextImpl.StubSite.DefaultSuperUser = OrchardServices.WorkContext.CurrentUser.UserName;
@@ -99,7 +107,8 @@ namespace Orchard.Tests.Modules.Media.Services {
         }
 
         [Test]
-        public void UnzipMediaFileArchiveNonAdministratorNoWhitelistTest() {
+        public void UnzipMediaFileArchiveNonAdministratorNoWhitelistTest()
+        {
             // Test unzip some files as a non administrator user and without a white list (everything should be rejected by default)
             StorageProvider.SavedStreams.Clear();
             StubWorkContextAccessor.WorkContextImpl.StubSite.DefaultSuperUser = "myuser";
@@ -116,16 +125,19 @@ namespace Orchard.Tests.Modules.Media.Services {
         }
 
         [Test]
-        public void UnzipMediaFileArchiveNonAdministratorWhitelistTest() {
+        public void UnzipMediaFileArchiveNonAdministratorWhitelistTest()
+        {
             // Test unzip some files as a non administrator user but with a white list
             StorageProvider.SavedStreams.Clear();
             StubWorkContextAccessor.WorkContextImpl.StubSite.DefaultSuperUser = "myuser";
 
-            MediaSettingsPart mediaSettingsPart = new MediaSettingsPart {
+            MediaSettingsPart mediaSettingsPart = new MediaSettingsPart
+            {
                 Record = new MediaSettingsPartRecord { UploadAllowedFileTypeWhitelist = "txt dll config" }
             };
 
-            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext => {
+            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext =>
+            {
                 workContext.CurrentSite.ContentItem.Weld(mediaSettingsPart);
             };
 
@@ -143,15 +155,18 @@ namespace Orchard.Tests.Modules.Media.Services {
         }
 
         [Test]
-        public void WebConfigIsBlackListed() {
+        public void WebConfigIsBlackListed()
+        {
             StorageProvider.SavedStreams.Clear();
             StubWorkContextAccessor.WorkContextImpl.StubSite.DefaultSuperUser = "myuser";
 
-            MediaSettingsPart mediaSettingsPart = new MediaSettingsPart {
+            MediaSettingsPart mediaSettingsPart = new MediaSettingsPart
+            {
                 Record = new MediaSettingsPartRecord { UploadAllowedFileTypeWhitelist = "txt dll config" }
             };
 
-            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext => {
+            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext =>
+            {
                 workContext.CurrentSite.ContentItem.Weld(mediaSettingsPart);
             };
 
@@ -159,7 +174,8 @@ namespace Orchard.Tests.Modules.Media.Services {
             Assert.That(MediaService.FileAllowedAccessor("dummy/web.config", true), Is.False);
         }
 
-        private MemoryStream CreateZipMemoryStream() {
+        private MemoryStream CreateZipMemoryStream()
+        {
             var entries = new List<string> {
                 TextFileName, WebconfigFileName, DllFileName, ZipFileName, NoExtensionFileName, PaddedWebconfigFileName,
                 FinalDottedWebconfigFileName, PaddedTextFileName, FinalDottedTextFileName
@@ -167,11 +183,14 @@ namespace Orchard.Tests.Modules.Media.Services {
 
             // Setup memory stream with zip archive for more complex scenarios
             MemoryStream memoryStream = new MemoryStream();
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true)) {
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true))
+            {
                 var content = new byte[] { 0x01 };
-                foreach (var entry in entries) {
+                foreach (var entry in entries)
+                {
                     var zipEntry = archive.CreateEntry(entry);
-                    using (var zipStream = zipEntry.Open()) {
+                    using (var zipStream = zipEntry.Open())
+                    {
                         zipStream.Write(content, 0, 1);
                     }
                     ++content[0];
@@ -181,134 +200,166 @@ namespace Orchard.Tests.Modules.Media.Services {
             return new MemoryStream(memoryStream.ToArray());
         }
 
-        private class MediaServiceAccessor : MediaService {
+        private class MediaServiceAccessor : MediaService
+        {
             public MediaServiceAccessor(IStorageProvider storageProvider, IOrchardServices orchardServices)
                 : base(storageProvider, orchardServices) { }
 
-            public void UnzipMediaFileArchiveAccessor(string targetFolder, Stream zipStream) {
+            public void UnzipMediaFileArchiveAccessor(string targetFolder, Stream zipStream)
+            {
                 UnzipMediaFileArchive(targetFolder, zipStream);
             }
 
-            public bool FileAllowedAccessor(string fileName, bool allowZip) {
+            public bool FileAllowedAccessor(string fileName, bool allowZip)
+            {
                 return FileAllowed(fileName, allowZip);
             }
         }
 
-        private class StubStorageProvider : IStorageProvider {
+        private class StubStorageProvider : IStorageProvider
+        {
             private FileSystemStorageProvider FileSystemStorageProvider { get; set; }
             public Func<string, IEnumerable<IStorageFolder>> ListFoldersPredicate { get; set; }
             public List<string> SavedStreams { get; set; }
 
-            public StubStorageProvider(ShellSettings settings) {
+            public StubStorageProvider(ShellSettings settings)
+            {
                 FileSystemStorageProvider = new FileSystemStorageProvider(settings);
                 SavedStreams = new List<string>();
             }
 
-            public bool FileExists(string path) {
+            public bool FileExists(string path)
+            {
                 throw new NotImplementedException();
             }
 
-            public string GetPublicUrl(string path) {
+            public string GetPublicUrl(string path)
+            {
                 return FileSystemStorageProvider.GetPublicUrl(path);
             }
 
-            public string GetStoragePath(string url) {
+            public string GetStoragePath(string url)
+            {
                 throw new NotImplementedException();
             }
 
-            public IStorageFile GetFile(string path) {
+            public IStorageFile GetFile(string path)
+            {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<IStorageFile> ListFiles(string path) {
+            public IEnumerable<IStorageFile> ListFiles(string path)
+            {
                 throw new NotImplementedException();
             }
 
-            public bool FolderExists(string path) {
+            public bool FolderExists(string path)
+            {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<IStorageFolder> ListFolders(string path) {
+            public IEnumerable<IStorageFolder> ListFolders(string path)
+            {
                 return ListFoldersPredicate(path);
             }
 
-            public bool TryCreateFolder(string path) {
+            public bool TryCreateFolder(string path)
+            {
                 return false;
             }
 
-            public void CreateFolder(string path) {
+            public void CreateFolder(string path)
+            {
             }
 
-            public void DeleteFolder(string path) {
+            public void DeleteFolder(string path)
+            {
             }
 
-            public void RenameFolder(string path, string newPath) {
+            public void RenameFolder(string path, string newPath)
+            {
             }
 
-            public void DeleteFile(string path) {
+            public void DeleteFile(string path)
+            {
             }
 
-            public void RenameFile(string path, string newPath) {
+            public void RenameFile(string path, string newPath)
+            {
             }
 
-            public void CopyFile(string originalPath, string duplicatePath) {
+            public void CopyFile(string originalPath, string duplicatePath)
+            {
             }
 
-            public IStorageFile CreateFile(string path) {
+            public IStorageFile CreateFile(string path)
+            {
                 throw new NotImplementedException();
             }
 
-            public string Combine(string path1, string path2) {
+            public string Combine(string path1, string path2)
+            {
                 return FileSystemStorageProvider.Combine(path1, path2);
             }
 
-            public bool TrySaveStream(string path, Stream inputStream) {
+            public bool TrySaveStream(string path, Stream inputStream)
+            {
                 try { SaveStream(path, inputStream); }
                 catch { return false; }
 
                 return true;
             }
 
-            public void SaveStream(string path, Stream inputStream) {
+            public void SaveStream(string path, Stream inputStream)
+            {
                 SavedStreams.Add(path);
             }
 
 
-            public string GetLocalPath(string url) {
+            public string GetLocalPath(string url)
+            {
                 throw new NotImplementedException();
             }
 
 
-            public string GetRelativePath(string path) {
+            public string GetRelativePath(string path)
+            {
                 throw new NotImplementedException();
             }
         }
 
-        private class StubStorageFolder : IStorageFolder {
+        private class StubStorageFolder : IStorageFolder
+        {
             public string Path { get; set; }
             public string Name { get; set; }
 
-            public StubStorageFolder(string name) {
+            public StubStorageFolder(string name)
+            {
                 Name = name;
             }
 
-            public string GetPath() {
+            public string GetPath()
+            {
                 return Path;
             }
 
-            public string GetName() {
+            public string GetName()
+            {
                 return Name;
             }
 
-            public long GetSize() {
+            public long GetSize()
+            {
                 return 0;
             }
 
-            public DateTime GetLastUpdated() {
+            public DateTime GetLastUpdated()
+            {
                 return DateTime.Now;
             }
 
-            public IStorageFolder GetParent() {
+            public IStorageFolder GetParent()
+            {
                 return new StubStorageFolder("");
             }
         }

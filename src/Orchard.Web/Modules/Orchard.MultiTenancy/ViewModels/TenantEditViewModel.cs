@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Orchard.Environment.Configuration;
 using Orchard.MultiTenancy.Annotations;
-using System.Collections.Generic;
 
-namespace Orchard.MultiTenancy.ViewModels {
-    public class TenantEditViewModel  {
-        public TenantEditViewModel() {
+namespace Orchard.MultiTenancy.ViewModels
+{
+    public class TenantEditViewModel
+    {
+        public TenantEditViewModel()
+        {
             Themes = new List<ThemeEntry>();
             Modules = new List<ModuleEntry>();
         }

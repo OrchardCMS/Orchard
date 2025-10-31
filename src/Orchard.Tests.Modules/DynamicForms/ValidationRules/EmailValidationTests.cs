@@ -1,14 +1,17 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using NUnit.Framework;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.DynamicForms.ValidationRules;
 
-namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
+namespace Orchard.Tests.Modules.DynamicForms.ValidationRules
+{
     [TestFixture]
-    public class EmailValidationTests {
+    public class EmailValidationTests
+    {
         [SetUp]
-        public void Init() {
-            _context = new ValidateInputContext {ModelState = new ModelStateDictionary(), FieldName = "Email Address"};
+        public void Init()
+        {
+            _context = new ValidateInputContext { ModelState = new ModelStateDictionary(), FieldName = "Email Address" };
             _validator = new EmailAddress();
         }
 
@@ -16,7 +19,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         private EmailAddress _validator;
 
         [Test]
-        public void InvalidateDoubleDotDomain() {
+        public void InvalidateDoubleDotDomain()
+        {
             _context.AttemptedValue = "x@example..com";
 
             _validator.Validate(_context);
@@ -25,7 +29,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void InvalidateMissingAt() {
+        public void InvalidateMissingAt()
+        {
             _context.AttemptedValue = "x.example.com";
 
             _validator.Validate(_context);
@@ -34,7 +39,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void InvalidateMissingDomain() {
+        public void InvalidateMissingDomain()
+        {
             _context.AttemptedValue = "x@";
 
             _validator.Validate(_context);
@@ -43,7 +49,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void InvalidateMissingLocalPart() {
+        public void InvalidateMissingLocalPart()
+        {
             _context.AttemptedValue = "@example.com";
 
             _validator.Validate(_context);
@@ -52,7 +59,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void ValidateMissingTLD() {
+        public void ValidateMissingTLD()
+        {
             _context.AttemptedValue = "something@localhost";
 
             _validator.Validate(_context);
@@ -61,7 +69,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void ValidateOneLetterTLD() {
+        public void ValidateOneLetterTLD()
+        {
             _context.AttemptedValue = "something@example.x";
 
             _validator.Validate(_context);
@@ -70,7 +79,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void ValidateTenLetterTLD() {
+        public void ValidateTenLetterTLD()
+        {
             _context.AttemptedValue = "something@example.accountant";
 
             _validator.Validate(_context);
@@ -79,7 +89,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void ValidateThreeLetterTLD() {
+        public void ValidateThreeLetterTLD()
+        {
             _context.AttemptedValue = "something@example.com";
 
             _validator.Validate(_context);
@@ -88,7 +99,8 @@ namespace Orchard.Tests.Modules.DynamicForms.ValidationRules {
         }
 
         [Test]
-        public void ValidateTwoLetterTLD() {
+        public void ValidateTwoLetterTLD()
+        {
             _context.AttemptedValue = "something@example.io";
 
             _validator.Validate(_context);

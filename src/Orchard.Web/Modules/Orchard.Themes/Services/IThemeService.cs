@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Themes.Services {
-    public interface IThemeService : IDependency {
+namespace Orchard.Themes.Services
+{
+    public interface IThemeService : IDependency
+    {
         void DisableThemeFeatures(string themeName);
         void EnableThemeFeatures(string themeName);
         bool IsRecentlyInstalled(ExtensionDescriptor module);

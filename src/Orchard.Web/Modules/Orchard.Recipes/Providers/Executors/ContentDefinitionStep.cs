@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using Orchard.ContentManagement.MetaData;
@@ -7,24 +7,24 @@ using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Recipes.Providers.Executors {
-    public class ContentDefinitionStep : RecipeExecutionStep {
+namespace Orchard.Recipes.Providers.Executors
+{
+    public class ContentDefinitionStep : RecipeExecutionStep
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentDefinitionReader _contentDefinitionReader;
         private readonly IContentDefinitionEventHandler _contentDefinitonEventHandlers;
 
-        public override string Name { get { return "ContentDefinition"; } }
+        public override string Name => "ContentDefinition";
 
-        public override IEnumerable<string> Names
-        {
-            get { return new[] {Name, "Metadata"}; }
-        }
+        public override IEnumerable<string> Names => new[] { Name, "Metadata" };
 
         public ContentDefinitionStep(
-            IContentDefinitionManager contentDefinitionManager, 
-            IContentDefinitionReader contentDefinitionReader, 
+            IContentDefinitionManager contentDefinitionManager,
+            IContentDefinitionReader contentDefinitionReader,
             IContentDefinitionEventHandler contentDefinitonEventHandlers,
-            RecipeExecutionLogger logger) : base(logger) {
+            RecipeExecutionLogger logger) : base(logger)
+        {
 
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionReader = contentDefinitionReader;
@@ -44,22 +44,28 @@ namespace Orchard.Recipes.Providers.Executors {
          */
         // Set type settings and attach parts to types.
         // Create dynamic parts.
-        public override void Execute(RecipeExecutionContext context) {
-            foreach (var metadataElement in context.RecipeStep.Step.Elements()) {
+        public override void Execute(RecipeExecutionContext context)
+        {
+            foreach (var metadataElement in context.RecipeStep.Step.Elements())
+            {
                 Logger.Debug("Processing element '{0}'.", metadataElement.Name.LocalName);
-                switch (metadataElement.Name.LocalName) {
+                switch (metadataElement.Name.LocalName)
+                {
                     case "Types":
-                        foreach (var element in metadataElement.Elements()) {
+                        foreach (var element in metadataElement.Elements())
+                        {
                             var typeElement = element;
                             var typeName = XmlConvert.DecodeName(element.Name.LocalName);
 
                             Logger.Information("Importing content type '{0}'.", typeName);
-                            try {
+                            try
+                            {
                                 _contentDefinitonEventHandlers.ContentTypeImporting(new ContentTypeImportingContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName), ContentTypeName = typeName });
                                 _contentDefinitionManager.AlterTypeDefinition(typeName, alteration => _contentDefinitionReader.Merge(typeElement, alteration));
                                 _contentDefinitonEventHandlers.ContentTypeImported(new ContentTypeImportedContext { ContentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName) });
                             }
-                            catch (Exception ex) {
+                            catch (Exception ex)
+                            {
                                 Logger.Error(ex, "Error while importing content type '{0}'.", typeName);
                                 throw;
                             }
@@ -67,17 +73,20 @@ namespace Orchard.Recipes.Providers.Executors {
                         break;
 
                     case "Parts":
-                        foreach (var element in metadataElement.Elements()) {
+                        foreach (var element in metadataElement.Elements())
+                        {
                             var partElement = element;
                             var partName = XmlConvert.DecodeName(element.Name.LocalName);
 
                             Logger.Information("Importing content part '{0}'.", partName);
-                            try {
+                            try
+                            {
                                 _contentDefinitonEventHandlers.ContentPartImporting(new ContentPartImportingContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName), ContentPartName = partName });
-                            _contentDefinitionManager.AlterPartDefinition(partName, alteration => _contentDefinitionReader.Merge(partElement, alteration));
-                            _contentDefinitonEventHandlers.ContentPartImported(new ContentPartImportedContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName)});
+                                _contentDefinitionManager.AlterPartDefinition(partName, alteration => _contentDefinitionReader.Merge(partElement, alteration));
+                                _contentDefinitonEventHandlers.ContentPartImported(new ContentPartImportedContext { ContentPartDefinition = _contentDefinitionManager.GetPartDefinition(partName) });
                             }
-                            catch (Exception ex) {
+                            catch (Exception ex)
+                            {
                                 Logger.Error(ex, "Error while importing content part '{0}'.", partName);
                                 throw;
                             }

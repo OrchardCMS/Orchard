@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.DynamicForms.Activities;
@@ -9,19 +8,23 @@ using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 
-namespace Orchard.DynamicForms.Handlers {
-    public class FormSubmissionCoordinator : FormEventHandlerBase {
+namespace Orchard.DynamicForms.Handlers
+{
+    public class FormSubmissionCoordinator : FormEventHandlerBase
+    {
         private readonly INotifier _notifier;
         private readonly IWorkflowManager _workflowManager;
         private readonly ITokenizer _tokenizer;
 
-        public FormSubmissionCoordinator(INotifier notifier, IWorkflowManager workflowManager, ITokenizer tokenizer) {
+        public FormSubmissionCoordinator(INotifier notifier, IWorkflowManager workflowManager, ITokenizer tokenizer)
+        {
             _notifier = notifier;
             _workflowManager = workflowManager;
             _tokenizer = tokenizer;
         }
 
-        public override void Validated(FormValidatedEventContext context) {
+        public override void Validated(FormValidatedEventContext context)
+        {
             if (!context.ModelState.IsValid)
                 return;
 
@@ -30,7 +33,8 @@ namespace Orchard.DynamicForms.Handlers {
             var values = context.Values;
             var formService = context.FormService;
             var formValuesDictionary = values.ToTokenDictionary();
-            var formTokenContext = new FormSubmissionTokenContext {
+            var formTokenContext = new FormSubmissionTokenContext
+            {
                 Form = form,
                 ModelState = context.ModelState,
                 PostedValues = values
@@ -42,19 +46,21 @@ namespace Orchard.DynamicForms.Handlers {
             };
 
             // Store the submission.
-            if (form.StoreSubmission == true) {
+            if (form.StoreSubmission == true)
+            {
                 formService.CreateSubmission(formName, values);
             }
 
             // Create content item.
             var contentItem = default(ContentItem);
-            if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType)) {
+            if (form.CreateContent == true && !string.IsNullOrWhiteSpace(form.FormBindingContentType))
+            {
                 contentItem = formService.CreateContentItem(form, context.ValueProvider);
                 formTokenContext.CreatedContent = contentItem;
             }
 
             // Notifiy.
-            if (!String.IsNullOrWhiteSpace(form.Notification))
+            if (!string.IsNullOrWhiteSpace(form.Notification))
                 _notifier.Success(T(_tokenizer.Replace(T(form.Notification).Text, tokenData)));
 
             // Trigger workflow event.

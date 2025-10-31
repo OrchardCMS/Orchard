@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Services {
-    public interface IElementManager : IDependency {
+namespace Orchard.Layouts.Services
+{
+    public interface IElementManager : IDependency
+    {
         IEnumerable<ElementDescriptor> DescribeElements(DescribeElementsContext context);
         IEnumerable<CategoryDescriptor> GetCategories(DescribeElementsContext context);
         ElementDescriptor GetElementDescriptorByTypeName(DescribeElementsContext context, string typeName);

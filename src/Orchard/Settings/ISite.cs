@@ -1,10 +1,12 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.Settings {
+namespace Orchard.Settings
+{
     /// <summary>
     /// Interface provided by the "settings" model.
     /// </summary>
-    public interface ISite : IContent {
+    public interface ISite : IContent
+    {
         string PageTitleSeparator { get; }
         string SiteName { get; }
         string SiteSalt { get; }

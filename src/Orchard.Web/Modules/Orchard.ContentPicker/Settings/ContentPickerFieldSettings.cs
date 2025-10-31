@@ -1,6 +1,9 @@
-﻿namespace Orchard.ContentPicker.Settings {
-    public class ContentPickerFieldSettings {
-        public ContentPickerFieldSettings() {
+namespace Orchard.ContentPicker.Settings
+{
+    public class ContentPickerFieldSettings
+    {
+        public ContentPickerFieldSettings()
+        {
             ShowContentTab = true;
         }
 

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Core.Common.Services {
-    public interface IFlavorService : IDependency {
+namespace Orchard.Core.Common.Services
+{
+    public interface IFlavorService : IDependency
+    {
         IList<string> GetFlavors();
     }
 }

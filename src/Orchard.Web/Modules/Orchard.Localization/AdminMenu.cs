@@ -1,13 +1,16 @@
 using Orchard.Environment.Extensions;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Localization {
+namespace Orchard.Localization
+{
     [OrchardFeature("Orchard.Localization.Transliteration")]
-    public class AdminMenu : INavigationProvider {
+    public class AdminMenu : INavigationProvider
+    {
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder
                 .Add(T("Settings"), menu => menu
                     .Add(T("Transliteration"), "10.0", subMenu => subMenu.Action("Index", "TransliterationAdmin", new { area = "Orchard.Localization" })

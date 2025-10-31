@@ -1,6 +1,9 @@
-﻿namespace Orchard.Workflows.Models {
-    public class CancellationToken {
-        public void Cancel() {
+namespace Orchard.Workflows.Models
+{
+    public class CancellationToken
+    {
+        public void Cancel()
+        {
             IsCancelled = true;
         }
 

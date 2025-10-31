@@ -2,50 +2,59 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using Orchard.Host;
 using Orchard.Parameters;
 
-namespace Orchard.HostContext {
-    public class CommandHostContextProvider : ICommandHostContextProvider {
+namespace Orchard.HostContext
+{
+    public class CommandHostContextProvider : ICommandHostContextProvider
+    {
         private readonly string[] _args;
         private TextWriter _output;
         private TextReader _input;
 
-        public CommandHostContextProvider(string[] args) {
+        public CommandHostContextProvider(string[] args)
+        {
             _input = Console.In;
             _output = Console.Out;
             _args = args;
         }
 
         [SecurityCritical]
-        public CommandHostContext CreateContext() {
+        public CommandHostContext CreateContext()
+        {
             var context = new CommandHostContext { RetryResult = CommandReturnCodes.Retry };
             Initialize(context);
             return context;
         }
 
         [SecurityCritical]
-        public void Shutdown(CommandHostContext context) {
-            try {
-                if (context.CommandHost != null) {
+        public void Shutdown(CommandHostContext context)
+        {
+            try
+            {
+                if (context.CommandHost != null)
+                {
                     LogInfo(context, "Shutting down Orchard session...");
                     context.CommandHost.StopSession(_input, _output);
                 }
             }
-            catch (AppDomainUnloadedException) {
+            catch (AppDomainUnloadedException)
+            {
                 LogInfo(context, "   (AppDomain already unloaded)");
             }
 
-            if (context.CommandHost != null) {
+            if (context.CommandHost != null)
+            {
                 LogInfo(context, "Shutting down ASP.NET AppDomain...");
                 ApplicationManager.GetApplicationManager().ShutdownAll();
             }
         }
 
-        private void Initialize(CommandHostContext context) {
+        private void Initialize(CommandHostContext context)
+        {
             context.Arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
             context.Logger = new Logger(context.Arguments.Verbose, _output);
 
@@ -55,7 +64,8 @@ namespace Orchard.HostContext {
                 return;
 
             context.DisplayUsageHelp = (context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any());
-            if (context.DisplayUsageHelp) {
+            if (context.DisplayUsageHelp)
+            {
                 _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
                 return;
             }
@@ -80,14 +90,18 @@ namespace Orchard.HostContext {
             context.StartSessionResult = context.CommandHost.StartSession(_input, _output);
         }
 
-        private void LogInfo(CommandHostContext context, string format, params object[] args) {
+        private void LogInfo(CommandHostContext context, string format, params object[] args)
+        {
             if (context.Logger != null)
                 context.Logger.LogInfo(format, args);
         }
 
-        private DirectoryInfo GetOrchardDirectory(string directory) {
-            for (var directoryInfo = new DirectoryInfo(directory); directoryInfo != null; directoryInfo = directoryInfo.Parent) {
-                if (!directoryInfo.Exists) {
+        private DirectoryInfo GetOrchardDirectory(string directory)
+        {
+            for (var directoryInfo = new DirectoryInfo(directory); directoryInfo != null; directoryInfo = directoryInfo.Parent)
+            {
+                if (!directoryInfo.Exists)
+                {
                     throw new ApplicationException(string.Format("Directory \"{0}\" does not exist", directoryInfo.FullName));
                 }
 
@@ -113,7 +127,8 @@ namespace Orchard.HostContext {
                 string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", new DirectoryInfo(directory).FullName));
         }
 
-        private static CommandHost CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
+        private static CommandHost CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType)
+        {
             var clientBuildManager = new ClientBuildManager(virtualPath, physicalPath);
             // Fix for https://github.com/OrchardCMS/Orchard/issues/1749
             // By forcing the CBM to build App_Code, etc, we ensure that the ASP.NET BuildManager

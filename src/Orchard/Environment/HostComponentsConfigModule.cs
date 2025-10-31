@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,12 +8,15 @@ using Autofac;
 using Autofac.Core;
 using Module = Autofac.Module;
 
-namespace Orchard.Environment {
+namespace Orchard.Environment
+{
     /// <summary>
     /// Alter components instantiations by setting property values defined in a configuration file
     /// </summary>
-    public class HostComponentsConfigModule : Module {
-        public static class XNames {
+    public class HostComponentsConfigModule : Module
+    {
+        public static class XNames
+        {
             public const string Xmlns = "";
             public static readonly XName HostComponents = XName.Get("HostComponents", Xmlns);
             public static readonly XName Components = XName.Get("Components", Xmlns);
@@ -26,7 +29,8 @@ namespace Orchard.Environment {
         }
 
         // component type name => list of [property name, property value]
-        public class PropertyEntry {
+        public class PropertyEntry
+        {
             public string Name { get; set; }
             public string Value { get; set; }
         }
@@ -36,13 +40,16 @@ namespace Orchard.Environment {
         // (also see "Thread Safety": http://msdn.microsoft.com/en-us/library/xfhwa508.aspx)
         public static readonly IDictionary<string, IEnumerable<PropertyEntry>> _config = new Dictionary<string, IEnumerable<PropertyEntry>>();
 
-        public HostComponentsConfigModule() {
+        public HostComponentsConfigModule()
+        {
             // Called by the framework, as this class is a "Module"
         }
 
-        public HostComponentsConfigModule(string fileName) {
+        public HostComponentsConfigModule(string fileName)
+        {
             var doc = XDocument.Load(fileName);
-            foreach (var component in doc.Elements(XNames.HostComponents).Elements(XNames.Components).Elements(XNames.Component)) {
+            foreach (var component in doc.Elements(XNames.HostComponents).Elements(XNames.Components).Elements(XNames.Component))
+            {
                 var componentType = Attr(component, XNames.Type);
                 if (componentType == null)
                     continue;
@@ -61,21 +68,23 @@ namespace Orchard.Environment {
             }
         }
 
-        private string Attr(XElement component, XName name) {
+        private string Attr(XElement component, XName name)
+        {
             var attr = component.Attribute(name);
             if (attr == null)
                 return null;
             return attr.Value;
         }
 
-        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+        {
             var implementationType = registration.Activator.LimitType;
 
             IEnumerable<PropertyEntry> properties;
             if (!_config.TryGetValue(implementationType.FullName, out properties))
                 return;
 
-            
+
             // build an array of actions on this type to assign configurations to member properties
             var injectors = BuildPropertiesInjectors(implementationType, properties).ToArray();
 
@@ -84,17 +93,20 @@ namespace Orchard.Environment {
                 return;
 
             // otherwise, when an instance of this component is activated, inject the loggers on the instance
-            registration.Activated += (s, e) => {
+            registration.Activated += (s, e) =>
+            {
                 foreach (var injector in injectors)
                     injector(e.Context, e.Instance);
             };
         }
 
-        private IEnumerable<Action<IComponentContext, object>> BuildPropertiesInjectors(Type componentType, IEnumerable<PropertyEntry> properties) {
+        private IEnumerable<Action<IComponentContext, object>> BuildPropertiesInjectors(Type componentType, IEnumerable<PropertyEntry> properties)
+        {
             // Look for settable properties with name in "properties"
             var settableProperties = componentType
                 .GetProperties(BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance)
-                .Select(p => new {
+                .Select(p => new
+                {
                     PropertyInfo = p,
                     IndexParameters = p.GetIndexParameters(),
                     Accessors = p.GetAccessors(false),
@@ -105,34 +117,41 @@ namespace Orchard.Environment {
                 .Where(x => x.Accessors.Length != 1 || x.Accessors[0].ReturnType == typeof(void)); //must have get/set, or only set
 
             // Return an array of actions that assign the property value
-            foreach (var entry in settableProperties) {
+            foreach (var entry in settableProperties)
+            {
                 var propertyInfo = entry.PropertyInfo;
                 var propertyEntry = entry.PropertyEntry;
 
-                yield return (ctx, instance) => {
-                                 object value;
-                                 if (ChangeToCompatibleType(propertyEntry.Value, propertyInfo.PropertyType, out value))
-                                     propertyInfo.SetValue(instance, value, null);
-                             };
+                yield return (ctx, instance) =>
+                {
+                    object value;
+                    if (ChangeToCompatibleType(propertyEntry.Value, propertyInfo.PropertyType, out value))
+                        propertyInfo.SetValue(instance, value, null);
+                };
             }
         }
 
-        public static bool ChangeToCompatibleType(string value, Type destinationType, out object result) {
-            if (string.IsNullOrEmpty(value)) {
+        public static bool ChangeToCompatibleType(string value, Type destinationType, out object result)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
                 result = null;
                 return false;
             }
 
-            if (destinationType.IsInstanceOfType(value)) {
+            if (destinationType.IsInstanceOfType(value))
+            {
                 result = value;
                 return true;
             }
 
-            try {
+            try
+            {
                 result = TypeDescriptor.GetConverter(destinationType).ConvertFrom(value);
                 return true;
             }
-            catch {
+            catch
+            {
                 result = null;
                 return false;
             }

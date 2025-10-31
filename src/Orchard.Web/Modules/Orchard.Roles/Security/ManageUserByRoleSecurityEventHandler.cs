@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -8,8 +8,10 @@ using Orchard.Roles.Services;
 using Orchard.Security;
 using UserPermissions = Orchard.Users.Permissions;
 
-namespace Orchard.Roles.Security {
-    public class ManageUserByRoleSecurityEventHandler : IAuthorizationServiceEventHandler {
+namespace Orchard.Roles.Security
+{
+    public class ManageUserByRoleSecurityEventHandler : IAuthorizationServiceEventHandler
+    {
 
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRoleService _roleService;
@@ -19,7 +21,8 @@ namespace Orchard.Roles.Security {
         private string _superUserName;
         public ManageUserByRoleSecurityEventHandler(
             IWorkContextAccessor workContextAccessor,
-            IRoleService roleService) {
+            IRoleService roleService)
+        {
 
             _workContextAccessor = workContextAccessor;
             _roleService = roleService;
@@ -36,27 +39,35 @@ namespace Orchard.Roles.Security {
         // memorize this to avoid fetching this information potentially several times per request
         private IEnumerable<string> _allRoleNames;
 
-        public void Adjust(CheckAccessContext context) {
+        public void Adjust(CheckAccessContext context)
+        {
             if (!context.Granted
-                && context.Permission == UserPermissions.ManageUsers) {
+                && context.Permission == UserPermissions.ManageUsers)
+            {
                 // check that the user that is being managed is in the roles that
                 // the current user is allowed to manage.
                 var manager = context.User;
                 var managed = context.Content.As<IUser>();
-                if (manager != null) {
+                if (manager != null)
+                {
 
-                    if (managed == null) {
+                    if (managed == null)
+                    {
                         // Not checking permission to manage a specific user
                         // Any "manage" permission is probably fine?
                         var rolesToCheck = _allRoleNames;
-                        if (GrantPermission(rolesToCheck, manager, null)) {
+                        if (GrantPermission(rolesToCheck, manager, null))
+                        {
                             context.Granted = true;
                             context.Adjusted = true;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         // We prevent Manage permissions on specific roles to affect the SuperUser. Only users
                         // that actually have the full ManageUsers permissions will be able to manage them.
-                        if(!IsSuperUser(managed)) {
+                        if (!IsSuperUser(managed))
+                        {
                             // Checking permission to manage a specific user
                             // The user we are attempting to manage must belong to to a subset of
                             // all those roles.
@@ -65,7 +76,8 @@ namespace Orchard.Roles.Security {
                                 // Never have to manage explicitly Anonymous or Authenticated roles
                                 .Except(SystemRoles.GetSystemRoles());
 
-                            if (GrantPermission(theirRoleNames, manager, managed)) {
+                            if (GrantPermission(theirRoleNames, manager, managed))
+                            {
                                 context.Granted = true;
                                 context.Adjusted = true;
                             }
@@ -77,24 +89,32 @@ namespace Orchard.Roles.Security {
 
         private bool GrantPermission(
             IEnumerable<string> roleNamesToCheck,
-            IUser manager, IUser managed) {
+            IUser manager, IUser managed)
+        {
 
-            if (_authorizationService.Value != null) {
-                if (managed == null) {
+            if (_authorizationService.Value != null)
+            {
+                if (managed == null)
+                {
                     // not checking on a specific user, so permission on any role is fine
                     return roleNamesToCheck.Any(rn =>
                         _authorizationService.Value.TryCheckAccess(
                             ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
                             manager, managed));
-                } else {
+                }
+                else
+                {
                     // checking permissions on a specific user, so we need to have permissions
                     // to manage all their roles
-                    if (roleNamesToCheck.Any()) {
+                    if (roleNamesToCheck.Any())
+                    {
                         return roleNamesToCheck.All(rn =>
                             _authorizationService.Value.TryCheckAccess(
                                 ManageUserByRolePermissions.CreatePermissionForManageUsersInRole(rn),
                                 manager, managed));
-                    } else {
+                    }
+                    else
+                    {
                         // if the specific user has no assigned role, they are just an "Authenticated" user.
                         // Enumerable.All applied to that would return true, which may not be correct. We
                         // only wish to return true if the user has any of the ManageUserByRole Permission.
@@ -111,7 +131,8 @@ namespace Orchard.Roles.Security {
             return false;
         }
 
-        private bool IsSuperUser(IUser user) {
+        private bool IsSuperUser(IUser user)
+        {
 
             var isSuperUser = string.Equals(user.UserName, _superUserName);
             // We could be testing the SiteOwner permission as well but:

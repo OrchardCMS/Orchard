@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -17,6 +17,8 @@ using Orchard.Data.Conventions;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
+using Orchard.Data.Providers;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
@@ -27,18 +29,18 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.ContentManagement;
-using Orchard.Data.Providers;
 using Orchard.Tests.DataMigration.Utilities;
+using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
-using Path = Bleroy.FluentPath.Path;
 using Orchard.Tests.Stubs;
-using Orchard.Tests.Environment;
-using Orchard.Environment;
+using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Tests.Modules.Migrations {
+namespace Orchard.Tests.Modules.Migrations
+{
     [TestFixture]
-    public class SchemaCommandGeneratorTests {
+    public class SchemaCommandGeneratorTests
+    {
         private IContainer _container;
         private StubFolders _folders;
         private ISchemaCommandGenerator _generator;
@@ -48,7 +50,8 @@ namespace Orchard.Tests.Modules.Migrations {
         private Path _tempFolderName;
 
         [OneTimeSetUp]
-        public void CreateDb() {
+        public void CreateDb()
+        {
             var types = new[] {
                 typeof(BlogRecord),
                 typeof(BodyRecord),
@@ -58,9 +61,11 @@ namespace Orchard.Tests.Modules.Migrations {
                 typeof(ContentTypeRecord)};
 
             _tempFolderName = _tempFixtureFolderName.Combine(System.IO.Path.GetRandomFileName());
-            try {
+            try
+            {
                 _tempFixtureFolderName.Delete(true);
-            } catch {}
+            }
+            catch { }
             _tempFixtureFolderName.CreateDirectory();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 _tempFolderName, types);
@@ -112,89 +117,105 @@ Features:
         }
 
         [OneTimeTearDown]
-        public void Term() {
+        public void Term()
+        {
             try { _tempFixtureFolderName.Delete(true); }
             catch { }
         }
 
-        public class StubFolders : IExtensionFolders {
-            public StubFolders() {
+        public class StubFolders : IExtensionFolders
+        {
+            public StubFolders()
+            {
                 Manifests = new Dictionary<string, string>();
             }
 
             public IDictionary<string, string> Manifests { get; set; }
 
-            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach (var e in Manifests) {
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions()
+            {
+                foreach (var e in Manifests)
+                {
                     string name = e.Key;
                     yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }
 
-        public class StubLoaders : IExtensionLoader {
+        public class StubLoaders : IExtensionLoader
+        {
             #region Implementation of IExtensionLoader
 
-            public int Order {
-                get { return 1; }
-            }
+            public int Order => 1;
 
-            public string Name {
-                get { return this.GetType().Name; }
-            }
+            public string Name => this.GetType().Name;
 
-            public Assembly LoadReference(DependencyReferenceDescriptor reference) {
+            public Assembly LoadReference(DependencyReferenceDescriptor reference)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry)
+            {
                 throw new NotImplementedException();
             }
 
-            public bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+            public bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references)
+            {
                 throw new NotImplementedException();
             }
 
-            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor)
+            {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }
 
-            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
+            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor)
+            {
                 throw new NotImplementedException();
             }
 
-            public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            public ExtensionEntry Load(ExtensionDescriptor descriptor)
+            {
                 return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(BlogRecord), typeof(BodyRecord), typeof(BlogArchiveRecord) } };
             }
 
-            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
+            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor)
+            {
             }
 
-            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
+            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            public bool LoaderIsSuitable(ExtensionDescriptor descriptor)
+            {
                 throw new NotImplementedException();
             }
 
@@ -202,7 +223,8 @@ Features:
         }
 
         [Test]
-        public void ShouldCreateCreateTableCommands() {
+        public void ShouldCreateCreateTableCommands()
+        {
             var commands = _generator.GetCreateFeatureCommands("Feature1", false).ToList();
             Assert.That(commands, Is.Not.Null);
             Assert.That(commands.Count(), Is.EqualTo(3));
@@ -228,7 +250,8 @@ Features:
         }
 
         [Test]
-        public void ScaffoldingCommandInterpreterShouldDetectContentParts() {
+        public void ScaffoldingCommandInterpreterShouldDetectContentParts()
+        {
 
             var commands = _generator.GetCreateFeatureCommands("Feature1", false).ToList();
             Assert.That(commands, Is.Not.Null);
@@ -269,20 +292,24 @@ Features:
 
 
     // namespace is needed as the shell composition strategy will filter records using it also
-    namespace Orchard.Tests.DataMigration.Records {
-        public class BlogRecord : ContentPartRecord {
+    namespace Orchard.Tests.DataMigration.Records
+    {
+        public class BlogRecord : ContentPartRecord
+        {
             public virtual string Description { get; set; }
             public virtual int PostCount { get; set; }
         }
 
-        public class BodyRecord : ContentPartVersionRecord {
+        public class BodyRecord : ContentPartVersionRecord
+        {
             [StringLengthMax]
             public virtual string Text { get; set; }
             [StringLength(42)]
             public virtual string Format { get; set; }
         }
 
-        public class BlogArchiveRecord {
+        public class BlogArchiveRecord
+        {
             public virtual int Id { get; set; }
             public virtual BlogRecord Blog { get; set; }
             public virtual int Year { get; set; }

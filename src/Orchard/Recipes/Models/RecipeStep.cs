@@ -1,8 +1,11 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
-namespace Orchard.Recipes.Models {
-    public class RecipeStep {
-        public RecipeStep(string id, string recipeName, string name, XElement step) {
+namespace Orchard.Recipes.Models
+{
+    public class RecipeStep
+    {
+        public RecipeStep(string id, string recipeName, string name, XElement step)
+        {
             Id = id;
             RecipeName = recipeName;
             Name = name;

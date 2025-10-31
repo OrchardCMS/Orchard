@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Core.Settings.Controllers;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Core.Settings {
-    public class Routes : IRouteProvider {
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            var routeDescriptor = new RouteDescriptor {
+namespace Orchard.Core.Settings
+{
+    public class Routes : IRouteProvider
+    {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            var routeDescriptor = new RouteDescriptor
+            {
                 Route = new Route(
                         "Admin/Settings/{groupInfoId}",
                         new RouteValueDictionary {
@@ -31,8 +34,10 @@ namespace Orchard.Core.Settings {
         }
     }
 
-    public class SettingsActionConstraint : IRouteConstraint {
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
+    public class SettingsActionConstraint : IRouteConstraint
+    {
+        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+        {
             if (routeDirection == RouteDirection.UrlGeneration)
                 return true;
 

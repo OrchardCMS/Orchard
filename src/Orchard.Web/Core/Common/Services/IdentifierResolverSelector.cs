@@ -1,19 +1,25 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 
-namespace Orchard.Core.Common.Services {
-    public class IdentifierResolverSelector : IIdentityResolverSelector {
+namespace Orchard.Core.Common.Services
+{
+    public class IdentifierResolverSelector : IIdentityResolverSelector
+    {
         private readonly IContentManager _contentManager;
 
-        public IdentifierResolverSelector(IContentManager contentManager) {
+        public IdentifierResolverSelector(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity) {
-            if (contentIdentity.Has("Identifier")) {
-                return new IdentityResolverSelectorResult {
+        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity)
+        {
+            if (contentIdentity.Has("Identifier"))
+            {
+                return new IdentityResolverSelectorResult
+                {
                     Priority = 5,
                     Resolve = ResolveIdentity
                 };
@@ -22,10 +28,12 @@ namespace Orchard.Core.Common.Services {
             return null;
         }
 
-        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity) {
+        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity)
+        {
             var identifier = identity.Get("Identifier");
 
-            if (identifier == null) {
+            if (identifier == null)
+            {
                 return null;
             }
 

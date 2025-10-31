@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 
-namespace Orchard.Environment.Extensions {
+namespace Orchard.Environment.Extensions
+{
     [AttributeUsage(AttributeTargets.Class)]
-    public class OrchardFeatureAttribute : Attribute {
-        public OrchardFeatureAttribute(string text) {
+    public class OrchardFeatureAttribute : Attribute
+    {
+        public OrchardFeatureAttribute(string text)
+        {
             FeatureName = text;
         }
 

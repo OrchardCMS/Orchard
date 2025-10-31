@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Automapping;
@@ -23,8 +23,10 @@ namespace Orchard.Data
         /// <summary>
         /// Returns the BlueprintDescriptors - translating from type to DB Table names
         /// </summary>
-        public Dictionary<Type, RecordBlueprint> BlueprintDescriptors {
-            get {
+        public Dictionary<Type, RecordBlueprint> BlueprintDescriptors
+        {
+            get
+            {
                 if (_descriptors == null)
                     _descriptors = Parameters.RecordDescriptors.ToDictionary(d => d.Type);
                 return _descriptors;

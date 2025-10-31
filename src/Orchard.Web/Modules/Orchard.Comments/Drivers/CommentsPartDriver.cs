@@ -1,30 +1,35 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Comments.Drivers {
-    public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
+namespace Orchard.Comments.Drivers
+{
+    public class CommentsPartDriver : ContentPartDriver<CommentsPart>
+    {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
 
         public CommentsPartDriver(
             ICommentService commentService,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _commentService = commentService;
             _contentManager = contentManager;
         }
 
-        protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper)
+        {
 
             return Combined(
                 ContentShape("Parts_ListOfComments",
-                    () => {
+                    () =>
+                    {
                         if (part.CommentsShown == false)
                             return null;
 
@@ -38,17 +43,21 @@ namespace Orchard.Comments.Drivers {
                             .List()
                             .ToList();
 
-                        foreach (var item in comments) {
+                        foreach (var item in comments)
+                        {
                             var shape = shapeHelper.Parts_Comment(ContentPart: item, ContentItem: item.ContentItem);
                             allShapes.Add(item.Id, shape);
                         }
 
-                        foreach (var item in comments) {
+                        foreach (var item in comments)
+                        {
                             var shape = allShapes[item.Id];
-                            if (item.RepliedOn.HasValue) {
+                            if (item.RepliedOn.HasValue)
+                            {
                                 allShapes[item.RepliedOn.Value].Add(shape);
                             }
-                            else {
+                            else
+                            {
                                 firstLevelShapes.Add(shape);
                             }
                         }
@@ -60,7 +69,8 @@ namespace Orchard.Comments.Drivers {
                             CommentCount: part.CommentsCount);
                     }),
                 ContentShape("Parts_CommentForm",
-                    () => {
+                    () =>
+                    {
                         if (part.CommentsShown == false)
                             return null;
 
@@ -75,7 +85,8 @@ namespace Orchard.Comments.Drivers {
                 ContentShape("Parts_Comments_Count_Summary", () =>
                     part.CommentsShown ? shapeHelper.Parts_Comments_Count_Summary(CommentCount: part.CommentsCount) : null),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => {
+                    () =>
+                    {
 
                         var comments = _commentService
                             .GetCommentsForCommentedContent(part.ContentItem.Id);
@@ -90,11 +101,14 @@ namespace Orchard.Comments.Drivers {
             );
         }
 
-        protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper)
+        {
             return ContentShape("Parts_Comments_Enable",
-                                () => {
+                                () =>
+                                {
                                     // if the part is new, then apply threaded comments defaults
-                                    if(!part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
+                                    if (!part.ContentItem.HasDraft() && !part.ContentItem.HasPublished())
+                                    {
                                         var settings = part.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
                                         part.ThreadedComments = settings.DefaultThreadedComments;
                                     }
@@ -102,14 +116,17 @@ namespace Orchard.Comments.Drivers {
                                 });
         }
 
-        protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(CommentsPart part, ImportContentContext context) {
+        protected override void Importing(CommentsPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -126,13 +143,15 @@ namespace Orchard.Comments.Drivers {
             );
         }
 
-        protected override void Exporting(CommentsPart part, ExportContentContext context) {
+        protected override void Exporting(CommentsPart part, ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ThreadedComments", part.ThreadedComments);
         }
 
-        protected override void Cloning(CommentsPart originalPart, CommentsPart clonePart, CloneContentContext context) {
+        protected override void Cloning(CommentsPart originalPart, CommentsPart clonePart, CloneContentContext context)
+        {
             clonePart.CommentsShown = originalPart.CommentsShown;
             clonePart.CommentsActive = originalPart.CommentsActive;
             // ThreadedComments will be overrided with settings default

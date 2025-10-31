@@ -1,7 +1,9 @@
-﻿using System.Web.Hosting;
+using System.Web.Hosting;
 
-namespace Orchard.FileSystems.VirtualPath {
-    public interface ICustomVirtualPathProvider {
+namespace Orchard.FileSystems.VirtualPath
+{
+    public interface ICustomVirtualPathProvider
+    {
         VirtualPathProvider Instance { get; }
     }
 }

@@ -1,5 +1,7 @@
-﻿namespace Orchard.Tasks {
-    public interface IBackgroundTask : IDependency {
+namespace Orchard.Tasks
+{
+    public interface IBackgroundTask : IDependency
+    {
         void Sweep();
     }
 }

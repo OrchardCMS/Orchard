@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Taxonomies.Models;
 
-namespace Orchard.Taxonomies.Services {
+namespace Orchard.Taxonomies.Services
+{
 
-    public interface ITaxonomyExtensionsService : IDependency {
+    public interface ITaxonomyExtensionsService : IDependency
+    {
 
         /// <summary>
         /// Returns all the <see cref="ContentTypeDefinition" /> data for content types containing a Term Part.

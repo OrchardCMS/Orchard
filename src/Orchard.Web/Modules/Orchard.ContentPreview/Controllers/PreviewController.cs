@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
@@ -9,9 +9,11 @@ using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 
-namespace Orchard.ContentPreview.Controllers {
+namespace Orchard.ContentPreview.Controllers
+{
     [Themed]
-    public class PreviewController : Controller, IUpdateModel {
+    public class PreviewController : Controller, IUpdateModel
+    {
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
         private readonly IClock _clock;
@@ -23,7 +25,8 @@ namespace Orchard.ContentPreview.Controllers {
             INotifier notifier,
             IClock clock,
             IAuthorizer authorizer,
-            IHttpContextAccessor hca) {
+            IHttpContextAccessor hca)
+        {
             _clock = clock;
             _notifier = notifier;
             _contentManager = contentManager;
@@ -39,8 +42,10 @@ namespace Orchard.ContentPreview.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Render() {
-            if (!_authorizer.Authorize(Permissions.ContentPreview)) {
+        public ActionResult Render()
+        {
+            if (!_authorizer.Authorize(Permissions.ContentPreview))
+            {
                 return new HttpUnauthorizedResult();
             }
 
@@ -51,13 +56,15 @@ namespace Orchard.ContentPreview.Controllers {
 
             var commonPart = contentItem.As<CommonPart>();
 
-            if (commonPart != null) {
+            if (commonPart != null)
+            {
                 commonPart.CreatedUtc = commonPart.ModifiedUtc = commonPart.PublishedUtc = _clock.UtcNow;
             }
 
             var model = _contentManager.UpdateEditor(contentItem, this);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View();
             }
 

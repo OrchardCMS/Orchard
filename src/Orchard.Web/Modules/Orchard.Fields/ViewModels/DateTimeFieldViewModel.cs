@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Core.Common.ViewModels;
 
-namespace Orchard.Fields.ViewModels {
-    public class DateTimeFieldViewModel {
+namespace Orchard.Fields.ViewModels
+{
+    public class DateTimeFieldViewModel
+    {
         public string Name { get; set; }
         public string Hint { get; set; }
         public DateTime? Value { get; set; }

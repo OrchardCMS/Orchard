@@ -1,9 +1,13 @@
-﻿namespace Orchard.ContentManagement.ViewModels {
-    public class TemplateViewModel {
+namespace Orchard.ContentManagement.ViewModels
+{
+    public class TemplateViewModel
+    {
         public TemplateViewModel(object model)
-            : this(model, string.Empty) {
+            : this(model, string.Empty)
+        {
         }
-        public TemplateViewModel(object model, string prefix) {
+        public TemplateViewModel(object model, string prefix)
+        {
             Model = model;
             Prefix = prefix;
         }

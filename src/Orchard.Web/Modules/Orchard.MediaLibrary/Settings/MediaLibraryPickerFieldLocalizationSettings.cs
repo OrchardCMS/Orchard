@@ -1,13 +1,16 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.MediaLibrary.Settings {
+namespace Orchard.MediaLibrary.Settings
+{
     [OrchardFeature("Orchard.MediaLibrary.LocalizationExtensions")]
-    public class MediaLibraryPickerFieldLocalizationSettings {
+    public class MediaLibraryPickerFieldLocalizationSettings
+    {
 
-        public MediaLibraryPickerFieldLocalizationSettings() {
+        public MediaLibraryPickerFieldLocalizationSettings()
+        {
             TryToLocalizeMedia = true;
             RemoveItemsWithoutLocalization = false;
-            RemoveItemsWithNoLocalizationPart = false; 
+            RemoveItemsWithNoLocalizationPart = false;
 
         }
         public bool TryToLocalizeMedia { get; set; }

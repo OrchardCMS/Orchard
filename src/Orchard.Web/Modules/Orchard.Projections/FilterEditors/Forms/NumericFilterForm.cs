@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -8,23 +8,28 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.UI.Resources;
 
-namespace Orchard.Projections.FilterEditors.Forms {
-    public class NumericFilterForm : IFormProvider {
+namespace Orchard.Projections.FilterEditors.Forms
+{
+    public class NumericFilterForm : IFormProvider
+    {
         public const string FormName = "NumericFilter";
 
         private readonly Work<IResourceManager> _resourceManager;
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public NumericFilterForm(IShapeFactory shapeFactory, Work<IResourceManager> resourceManager) {
+        public NumericFilterForm(IShapeFactory shapeFactory, Work<IResourceManager> resourceManager)
+        {
             _resourceManager = resourceManager;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "NumericFilter",
@@ -79,27 +84,32 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
         }
 
-        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property) {
+        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property)
+        {
 
             var op = (NumericOperator)Enum.Parse(typeof(NumericOperator), Convert.ToString(formState.Operator));
 
             decimal min, max;
 
-            if (op == NumericOperator.Between || op == NumericOperator.NotBetween) {
-                min = Decimal.Parse(Convert.ToString(formState.Min), CultureInfo.InvariantCulture);
-                max = Decimal.Parse(Convert.ToString(formState.Max), CultureInfo.InvariantCulture);
+            if (op == NumericOperator.Between || op == NumericOperator.NotBetween)
+            {
+                min = decimal.Parse(Convert.ToString(formState.Min), CultureInfo.InvariantCulture);
+                max = decimal.Parse(Convert.ToString(formState.Max), CultureInfo.InvariantCulture);
             }
-            else {
-                min = max = Decimal.Parse(Convert.ToString(formState.Value), CultureInfo.InvariantCulture);
+            else
+            {
+                min = max = decimal.Parse(Convert.ToString(formState.Value), CultureInfo.InvariantCulture);
             }
 
-            switch (op) {
+            switch (op)
+            {
                 case NumericOperator.LessThan:
                     return x => x.Lt(property, max);
                 case NumericOperator.LessThanEquals:
                     return x => x.Le(property, max);
                 case NumericOperator.Equals:
-                    if (min == max) {
+                    if (min == max)
+                    {
                         return x => x.Eq(property, min);
                     }
                     return y => y.And(x => x.Ge(property, min), x => x.Le(property, max));
@@ -118,13 +128,15 @@ namespace Orchard.Projections.FilterEditors.Forms {
             }
         }
 
-        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T) {
+        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T)
+        {
             var op = (NumericOperator)Enum.Parse(typeof(NumericOperator), Convert.ToString(formState.Operator));
             string value = Convert.ToString(formState.Value);
             string min = Convert.ToString(formState.Min);
             string max = Convert.ToString(formState.Max);
 
-            switch (op) {
+            switch (op)
+            {
                 case NumericOperator.LessThan:
                     return T("{0} is less than {1}", fieldName, value);
                 case NumericOperator.LessThanEquals:
@@ -148,7 +160,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
         }
     }
 
-    public enum NumericOperator {
+    public enum NumericOperator
+    {
         LessThan,
         LessThanEquals,
         Equals,

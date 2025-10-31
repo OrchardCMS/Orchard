@@ -1,5 +1,7 @@
-﻿namespace Orchard.Warmup.Services {
-    public interface IWarmupUpdater : IDependency {
+namespace Orchard.Warmup.Services
+{
+    public interface IWarmupUpdater : IDependency
+    {
         /// <summary>
         ///  Forces a regeneration of all static pages
         /// </summary>

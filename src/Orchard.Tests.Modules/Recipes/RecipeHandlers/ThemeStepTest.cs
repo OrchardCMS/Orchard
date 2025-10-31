@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -32,15 +32,19 @@ using Orchard.Tests.UI.Navigation;
 using Orchard.Themes.Recipes.Executors;
 using Orchard.Themes.Services;
 
-namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
+namespace Orchard.Tests.Modules.Recipes.RecipeHandlers
+{
     [TestFixture]
-    public class ThemeStepTest : DatabaseEnabledTestsBase {
+    public class ThemeStepTest : DatabaseEnabledTestsBase
+    {
         private ExtensionManagerTests.StubFolders _folders;
         private ModuleStepTest.StubPackagingSourceManager _packagesInRepository;
         private ModuleStepTest.StubPackageManager _packageManager;
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof (ShellDescriptorRecord),
                     typeof (ShellFeatureRecord),
@@ -49,7 +53,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             }
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             var testVirtualPathProvider = new StylesheetBindingStrategyTests.TestVirtualPathProvider();
 
             builder.RegisterInstance(new ShellSettings { Name = "Default" });
@@ -81,7 +86,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
         }
 
         [Test]
-        public void ExecuteRecipeStepTest() {
+        public void ExecuteRecipeStepTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -90,7 +96,8 @@ Features:
     SuperWiki: 
         Description: My super wiki theme for Orchard.
 ");
-            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage
+            {
                 Id = "Orchard.Theme.SuperWiki",
                 PackageType = DefaultExtensionTypes.Theme,
                 Title = "SuperWiki",
@@ -105,7 +112,7 @@ Features:
                                                          Enumerable.Empty<ShellParameter>());
 
             var themeStep = _container.Resolve<ThemeStep>();
-            var recipeExecutionContext = new RecipeExecutionContext {RecipeStep = new RecipeStep (id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
+            var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Theme.SuperWiki"));
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
@@ -129,7 +136,8 @@ Features:
         }
 
         [Test]
-        public void ExecuteRecipeStepNeedsNameTest() {
+        public void ExecuteRecipeStepNeedsNameTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -143,19 +151,22 @@ Features:
             var recipeExecutionContext = new RecipeExecutionContext { RecipeStep = new RecipeStep(id: "1", recipeName: "Test", name: "Theme", step: new XElement("SuperWiki")) };
 
             recipeExecutionContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
-            Assert.Throws(typeof (InvalidOperationException), () => themeStep.Execute(recipeExecutionContext));
+            Assert.Throws(typeof(InvalidOperationException), () => themeStep.Execute(recipeExecutionContext));
         }
 
         [Test]
-        public void ExecuteRecipeStepWithRepositoryAndVersionNotLatestTest() {
-            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+        public void ExecuteRecipeStepWithRepositoryAndVersionNotLatestTest()
+        {
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage
+            {
                 Id = "Orchard.Theme.SuperWiki",
                 PackageType = DefaultExtensionTypes.Theme,
                 Title = "SuperWiki",
                 Version = "1.0.3",
                 IsLatestVersion = true,
             });
-            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage
+            {
                 Id = "Orchard.Theme.SuperWiki",
                 PackageType = DefaultExtensionTypes.Theme,
                 Title = "SuperWiki",
@@ -177,16 +188,20 @@ Features:
             Assert.That(installedPackage.ExtensionVersion, Is.EqualTo("1.0.2"));
         }
 
-        internal class StubSiteThemeService : ISiteThemeService {
-            public ExtensionDescriptor GetSiteTheme() {
+        internal class StubSiteThemeService : ISiteThemeService
+        {
+            public ExtensionDescriptor GetSiteTheme()
+            {
                 throw new NotImplementedException();
             }
 
-            public void SetSiteTheme(string themeName) {
+            public void SetSiteTheme(string themeName)
+            {
                 throw new NotImplementedException();
             }
 
-            public string GetCurrentThemeName() {
+            public string GetCurrentThemeName()
+            {
                 throw new NotImplementedException();
             }
         }

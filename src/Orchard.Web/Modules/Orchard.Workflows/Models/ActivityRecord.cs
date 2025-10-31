@@ -1,12 +1,14 @@
-﻿using Orchard.Data.Conventions;
+using Orchard.Data.Conventions;
 
-namespace Orchard.Workflows.Models {
+namespace Orchard.Workflows.Models
+{
     /// <summary>
     /// Represents an activity in a <see cref="WorkflowDefinitionRecord"/>
     /// </summary>
-    public class ActivityRecord {
+    public class ActivityRecord
+    {
         public virtual int Id { get; set; }
-        
+
         /// <summary>
         /// The type of the activity.
         /// </summary>
@@ -44,7 +46,8 @@ namespace Orchard.Workflows.Models {
         /// Gets the Id which can be used on the client. 
         /// </summary>
         /// <returns>An unique Id to represent this activity on the client.</returns>
-        public string GetClientId() {
+        public string GetClientId()
+        {
             return Name + "_" + Id;
         }
     }

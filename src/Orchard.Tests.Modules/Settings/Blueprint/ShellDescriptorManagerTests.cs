@@ -1,25 +1,28 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Core.Settings.State;
+using Orchard.Caching;
 using Orchard.Core.Settings.Descriptor;
 using Orchard.Core.Settings.Descriptor.Records;
+using Orchard.Core.Settings.State;
+using Orchard.Core.Settings.State.Records;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.State;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.State;
 using Orchard.Events;
-using Orchard.Caching;
-using Orchard.Core.Settings.State.Records;
 using Orchard.Locking;
 
-namespace Orchard.Tests.Modules.Settings.Blueprint {
+namespace Orchard.Tests.Modules.Settings.Blueprint
+{
     [TestFixture]
-    public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase {
-        public override void Register(ContainerBuilder builder) {
+    public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase
+    {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterInstance(new ShellSettings { Name = "Default" });
             builder.RegisterModule(new CacheModule());
             builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
@@ -33,19 +36,23 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
             builder.RegisterSource(new EventsRegistrationSource());
         }
 
-        public class StubEventBus : IEventBus {
+        public class StubEventBus : IEventBus
+        {
             public string LastMessageName { get; set; }
             public IDictionary<string, object> LastEventData { get; set; }
 
-            public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
+            public IEnumerable Notify(string messageName, IDictionary<string, object> eventData)
+            {
                 LastMessageName = messageName;
                 LastEventData = eventData;
                 return new object[0];
             }
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                                 typeof (ShellStateRecord),
                                 typeof (ShellFeatureStateRecord),
@@ -57,14 +64,16 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         }
 
         [Test]
-        public void BlueprintShouldBeNullWhenItsNotInitialized() {
+        public void BlueprintShouldBeNullWhenItsNotInitialized()
+        {
             var manager = _container.Resolve<IShellDescriptorManager>();
             var descriptor = manager.GetShellDescriptor();
             Assert.That(descriptor, Is.Null);
         }
 
         [Test]
-        public void PriorSerialNumberOfZeroIsAcceptableForInitialUpdateAndSerialNumberIsNonzeroAfterwards() {
+        public void PriorSerialNumberOfZeroIsAcceptableForInitialUpdateAndSerialNumberIsNonzeroAfterwards()
+        {
             var manager = _container.Resolve<IShellDescriptorManager>();
             manager.UpdateShellDescriptor(
                 0,
@@ -77,7 +86,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         }
 
         [Test]
-        public void NonZeroInitialUpdateThrowsInvalidOperationException() {
+        public void NonZeroInitialUpdateThrowsInvalidOperationException()
+        {
             var manager = _container.Resolve<IShellDescriptorManager>();
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
                 1,
@@ -86,7 +96,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         }
 
         [Test]
-        public void OnlyCorrectSerialNumberOnLaterUpdatesDoesNotThrowException() {
+        public void OnlyCorrectSerialNumberOnLaterUpdatesDoesNotThrowException()
+        {
             var manager = _container.Resolve<IShellDescriptorManager>();
             manager.UpdateShellDescriptor(
                 0,
@@ -137,7 +148,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         }
 
         [Test]
-        public void SuccessfulUpdateRaisesAnEvent() {
+        public void SuccessfulUpdateRaisesAnEvent()
+        {
             var manager = _container.Resolve<IShellDescriptorManager>();
             var eventBus = _container.Resolve<IEventBus>() as StubEventBus;
 
@@ -159,14 +171,15 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
         }
 
         [Test]
-        public void ManagerReturnsStateForFeaturesInDescriptor() {
+        public void ManagerReturnsStateForFeaturesInDescriptor()
+        {
             var descriptorManager = _container.Resolve<IShellDescriptorManager>();
             var stateManager = _container.Resolve<IShellStateManager>();
             var state = stateManager.GetShellState();
             Assert.That(state.Features.Count(), Is.EqualTo(0));
             descriptorManager.UpdateShellDescriptor(
-                0, 
-                new[]{new ShellFeature{ Name="Foo"}},
+                0,
+                new[] { new ShellFeature { Name = "Foo" } },
                 Enumerable.Empty<ShellParameter>());
 
             var state2 = stateManager.GetShellState();

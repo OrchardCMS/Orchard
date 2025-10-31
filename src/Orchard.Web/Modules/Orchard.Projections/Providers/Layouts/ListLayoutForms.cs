@@ -1,23 +1,28 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Providers.Layouts {
+namespace Orchard.Projections.Providers.Layouts
+{
 
-    public class ListLayoutForms : IFormProvider {
+    public class ListLayoutForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public ListLayoutForms(
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "ListLayout",
@@ -34,8 +39,8 @@ namespace Orchard.Projections.Providers.Layouts {
                                 )
                             ),
                         _HtmlProperties: Shape.Fieldset(
-                            Classes: new []{"expando"},
-                            Title: T("Html properties"), 
+                            Classes: new[] { "expando" },
+                            Title: T("Html properties"),
                             _ListId: Shape.TextBox(
                                 Id: "list-id", Name: "ListId",
                                 Title: T("List id"),
@@ -65,12 +70,16 @@ namespace Orchard.Projections.Providers.Layouts {
         }
     }
 
-    public class ListLayoutFormsValidator : FormHandler {
+    public class ListLayoutFormsValidator : FormHandler
+    {
         public Localizer T { get; set; }
 
-        public override void Validating(ValidatingContext context) {
-            if (context.FormName == "ListLayout") {
-                if (context.ValueProvider.GetValue("Order") == null) {
+        public override void Validating(ValidatingContext context)
+        {
+            if (context.FormName == "ListLayout")
+            {
+                if (context.ValueProvider.GetValue("Order") == null)
+                {
                     context.ModelState.AddModelError("Order", T("You must provide an Order").Text);
                 }
             }

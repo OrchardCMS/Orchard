@@ -1,31 +1,39 @@
-﻿using System;
-using System.Web.Mvc;
-using System.Web.Caching;
+using System;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Hosting;
+using System.Web.Mvc;
 
-namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
-    public class ThemeViewLocationCache : IViewLocationCache {
+namespace Orchard.Mvc.ViewEngines.ThemeAwareness
+{
+    public class ThemeViewLocationCache : IViewLocationCache
+    {
         private readonly string _requestTheme;
 
-        public ThemeViewLocationCache(string requestTheme) {
+        public ThemeViewLocationCache(string requestTheme)
+        {
             _requestTheme = requestTheme;
         }
 
-        private string AlterKey(string key) {
+        private string AlterKey(string key)
+        {
             return key + ":" + _requestTheme;
         }
 
-        public string GetViewLocation(HttpContextBase httpContext, string key) {
-            if (httpContext == null) {
+        public string GetViewLocation(HttpContextBase httpContext, string key)
+        {
+            if (httpContext == null)
+            {
                 throw new ArgumentNullException("httpContext");
             }
 
             return (string)httpContext.Cache[AlterKey(key)];
         }
 
-        public void InsertViewLocation(HttpContextBase httpContext, string key, string virtualPath) {
-            if (httpContext == null) {
+        public void InsertViewLocation(HttpContextBase httpContext, string key, string virtualPath)
+        {
+            if (httpContext == null)
+            {
                 throw new ArgumentNullException("httpContext");
             }
 

@@ -1,17 +1,23 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 
-namespace Orchard.Core.Contents {
-    public class Shapes : IShapeTableProvider {
-        public void Discover(ShapeTableBuilder builder) {
+namespace Orchard.Core.Contents
+{
+    public class Shapes : IShapeTableProvider
+    {
+        public void Discover(ShapeTableBuilder builder)
+        {
             builder.Describe("Content")
-                .OnCreated(created => {
+                .OnCreated(created =>
+                {
                     var content = created.Shape;
                     content.Child.Add(created.New.PlaceChildContent(Source: content));
                 })
-                .OnDisplaying(displaying => {
+                .OnDisplaying(displaying =>
+                {
                     ContentItem contentItem = displaying.Shape.ContentItem;
-                    if (contentItem != null) {
+                    if (contentItem != null)
+                    {
                         // Alternates in order of specificity. 
                         // Display type > content type > specific content > display type for a content type > display type for specific content
                         // BasicShapeTemplateHarvester.Adjust will then adjust the template name
@@ -29,7 +35,7 @@ namespace Orchard.Core.Contents {
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + EncodeAlternateElement(contentItem.ContentType));
 
                         // Content_[DisplayType]__[Id] e.g. Content-42.Summary
-                        displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
+                        displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
                     }
                 });
         }
@@ -39,7 +45,8 @@ namespace Orchard.Core.Contents {
         /// </summary>
         /// <param name="alternateElement"></param>
         /// <returns></returns>
-        private string EncodeAlternateElement(string alternateElement) {
+        private string EncodeAlternateElement(string alternateElement)
+        {
             return alternateElement.Replace("-", "__").Replace(".", "_");
         }
 

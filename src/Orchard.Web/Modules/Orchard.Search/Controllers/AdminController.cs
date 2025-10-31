@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,9 +21,11 @@ using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Search.Controllers {
+namespace Orchard.Search.Controllers
+{
     [OrchardFeature("Orchard.Search.Content")]
-    public class AdminController : Controller {
+    public class AdminController : Controller
+    {
         private readonly ISearchService _searchService;
         private readonly ISiteService _siteService;
         private readonly IIndexManager _indexManager;
@@ -40,7 +42,8 @@ namespace Orchard.Search.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
             IAuthorizer authorizer,
-            ICultureManager cultureManager) {
+            ICultureManager cultureManager)
+        {
 
             _searchService = searchService;
             _siteService = siteService;
@@ -59,17 +62,20 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string searchText = "")
+        {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var adminSearchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
-            
+
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
-            try {
+            try
+            {
                 // replicate a logic similar to ContentPickerController, but here
                 // we want to filter results based on authorized types. This is also
                 // partially replicates the logic in SearchService.Search.
-                if (!string.IsNullOrWhiteSpace(searchText)) {
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
                     // select types
                     var contentTypeDefinitions = _contentDefinitionManager
                         .ListTypeDefinitions()
@@ -81,15 +87,18 @@ namespace Orchard.Search.Controllers {
                             .Listable);
                     ContentItem listableCi = null;
                     var searchableTypes = new List<string>();
-                    foreach (var contentTypeDefinition in listableContentTypes) {
+                    foreach (var contentTypeDefinition in listableContentTypes)
+                    {
                         listableCi = _contentManager.New(contentTypeDefinition.Name);
-                        if (_authorizer.Authorize(Permissions.EditContent, listableCi)) {
+                        if (_authorizer.Authorize(Permissions.EditContent, listableCi))
+                        {
                             // add the type to the list of types we will filter for
                             searchableTypes.Add(contentTypeDefinition.Name);
                         }
                     }
                     // we don't even search if no type is allowed
-                    if (searchableTypes.Any()) {
+                    if (searchableTypes.Any())
+                    {
                         var searchBuilder = _indexManager.HasIndexProvider()
                         ? _indexManager
                             .GetSearchIndexProvider()
@@ -101,7 +110,8 @@ namespace Orchard.Search.Controllers {
                                 .GetSearchFields(adminSearchSettingsPart.SearchIndex),
                                 searchText);
 
-                        foreach (var searchableType in searchableTypes) {
+                        foreach (var searchableType in searchableTypes)
+                        {
                             // filter by type
                             searchBuilder
                                 .WithField("type", searchableType)
@@ -109,7 +119,8 @@ namespace Orchard.Search.Controllers {
                                 .AsFilter();
                         }
                         // filter by culture?
-                        if (searchSettingsPart.FilterCulture) {
+                        if (searchSettingsPart.FilterCulture)
+                        {
                             var culture = _cultureManager.GetCurrentCulture(Services.WorkContext.HttpContext);
 
                             // use LCID as the text representation gets analyzed by the query parser
@@ -119,7 +130,8 @@ namespace Orchard.Search.Controllers {
                         }
                         // pagination
                         var totalCount = searchBuilder.Count();
-                        if (pager != null) {
+                        if (pager != null)
+                        {
                             searchBuilder = searchBuilder
                                 .Slice(
                                     (pager.Page > 0 ? pager.Page - 1 : 0) * pager.PageSize,
@@ -128,23 +140,27 @@ namespace Orchard.Search.Controllers {
                         // search
                         var searchResults = searchBuilder.Search();
                         // prepare the shape for the page
-                        searchHits = new PageOfItems<ISearchHit>(searchResults.Select(searchHit => searchHit)) {
+                        searchHits = new PageOfItems<ISearchHit>(searchResults.Select(searchHit => searchHit))
+                        {
                             PageNumber = pager != null ? pager.Page : 0,
                             PageSize = pager != null ? (pager.PageSize != 0 ? pager.PageSize : totalCount) : totalCount,
                             TotalItemCount = totalCount
                         };
                     }
-                } 
+                }
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
             }
 
             var list = Services.New.List();
-            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Latest, QueryHints.Empty)) {
+            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Latest, QueryHints.Empty))
+            {
                 // ignore search results which content item has been removed
-                if (contentItem == null) {
+                if (contentItem == null)
+                {
                     searchHits.TotalItemCount--;
                     continue;
                 }

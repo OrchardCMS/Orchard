@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -16,21 +16,25 @@ using Orchard.Projections.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
+namespace Orchard.DynamicForms.Drivers
+{
     [OrchardFeature("Orchard.DynamicForms.Projections")]
-    public class QueryElementDriver : FormsElementDriver<Query> {
+    public class QueryElementDriver : FormsElementDriver<Query>
+    {
         private readonly IProjectionManager _projectionManager;
         private readonly IContentManager _contentManager;
         private readonly ITokenizer _tokenizer;
 
         public QueryElementDriver(IFormsBasedElementServices formsServices, IProjectionManager projectionManager, IContentManager contentManager, ITokenizer tokenizer)
-            : base(formsServices) {
+            : base(formsServices)
+        {
             _projectionManager = projectionManager;
             _contentManager = contentManager;
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(Query element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(Query element, ElementEditorContext context)
+        {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
             var enumerationEditor = BuildForm(context, "QueryForm", "Properties:15");
             var checkBoxValidation = BuildForm(context, "QueryValidation", "Validation:10");
@@ -38,8 +42,10 @@ namespace Orchard.DynamicForms.Drivers {
             return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("QueryForm", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("QueryForm", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "QueryForm",
@@ -48,7 +54,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "OptionLabel",
                         Title: "Option Label",
                         Description: T("Optionally specify a label for the first option. If no label is specified, no empty option will be rendered."),
-                        Classes: new[]{"text", "large", "tokenized"}),
+                        Classes: new[] { "text", "large", "tokenized" }),
                     _Query: shape.SelectList(
                         Id: "QueryId",
                         Name: "QueryId",
@@ -60,14 +66,14 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Text Expression",
                         Value: "{Content.DisplayText}",
                         Description: T("Specify the expression to get the display text of each option."),
-                        Classes: new[]{"text", "large", "tokenized"}),
+                        Classes: new[] { "text", "large", "tokenized" }),
                     _ValueExpression: shape.Textbox(
                         Id: "ValueExpression",
                         Name: "ValueExpression",
                         Title: "Value Expression",
                         Value: "{Content.Id}",
                         Description: T("Specify the expression to get the value of each option."),
-                        Classes: new[]{"text", "large", "tokenized"}),
+                        Classes: new[] { "text", "large", "tokenized" }),
                     _DefaultValue: shape.Textbox(
                         Id: "DefaultValue",
                         Name: "DefaultValue",
@@ -82,8 +88,9 @@ namespace Orchard.DynamicForms.Drivers {
 
                 // Query
                 var queries = _contentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List().ToArray();
-                foreach (var query in queries) {
-                    form._Query.Items.Add(new SelectListItem {Text = query.Name, Value = query.Id.ToString(CultureInfo.InvariantCulture)});
+                foreach (var query in queries)
+                {
+                    form._Query.Items.Add(new SelectListItem { Text = query.Name, Value = query.Id.ToString(CultureInfo.InvariantCulture) });
                 }
 
                 // Input Type
@@ -95,7 +102,8 @@ namespace Orchard.DynamicForms.Drivers {
                 return form;
             });
 
-            context.Form("QueryValidation", factory => {
+            context.Form("QueryValidation", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "QueryValidation",
@@ -122,7 +130,8 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Query element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(Query element, ElementDisplayingContext context)
+        {
             var queryId = element.QueryId;
             var typeName = element.GetType().Name;
             var displayType = context.DisplayType;
@@ -130,7 +139,8 @@ namespace Orchard.DynamicForms.Drivers {
 
             // Allow the initially selected value to be tokenized.
             // If a value was posted, use that value instead (without tokenizing it).
-            if (element.PostedValue == null) {
+            if (element.PostedValue == null)
+            {
                 var defaultValue = _tokenizer.Replace(element.DefaultValue, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
                 element.RuntimeValue = defaultValue;
             }
@@ -138,15 +148,17 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData);
             context.ElementShape.Options = GetOptions(element, context.DisplayType, queryId, tokenData).ToArray();
-            context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
-            context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
+            context.ElementShape.Metadata.Alternates.Add(string.Format("Elements_{0}__{1}", typeName, element.InputType));
+            context.ElementShape.Metadata.Alternates.Add(string.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
-        private IEnumerable<SelectListItem> GetOptions(Query element, string displayType, int? queryId, IDictionary<string, object> tokenData) {
+        private IEnumerable<SelectListItem> GetOptions(Query element, string displayType, int? queryId, IDictionary<string, object> tokenData)
+        {
             var optionLabel = element.OptionLabel;
             var runtimeValues = GetRuntimeValues(element);
 
-            if (!String.IsNullOrWhiteSpace(optionLabel)) {
+            if (!string.IsNullOrWhiteSpace(optionLabel))
+            {
                 yield return new SelectListItem { Text = displayType != "Design" ? _tokenizer.Replace(optionLabel, tokenData) : optionLabel, Value = string.Empty };
             }
 
@@ -154,15 +166,17 @@ namespace Orchard.DynamicForms.Drivers {
                 yield break;
 
             var contentItems = _projectionManager.GetContentItems(queryId.Value).ToArray();
-            var valueExpression = !String.IsNullOrWhiteSpace(element.ValueExpression) ? element.ValueExpression : "{Content.Id}";
-            var textExpression = !String.IsNullOrWhiteSpace(element.TextExpression) ? element.TextExpression : "{Content.DisplayText}";
-            
-            foreach (var contentItem in contentItems) {
-                var data = new {Content = contentItem};
+            var valueExpression = !string.IsNullOrWhiteSpace(element.ValueExpression) ? element.ValueExpression : "{Content.Id}";
+            var textExpression = !string.IsNullOrWhiteSpace(element.TextExpression) ? element.TextExpression : "{Content.DisplayText}";
+
+            foreach (var contentItem in contentItems)
+            {
+                var data = new { Content = contentItem };
                 var value = _tokenizer.Replace(valueExpression, data);
                 var text = _tokenizer.Replace(textExpression, data, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
-                yield return new SelectListItem {
+                yield return new SelectListItem
+                {
                     Text = text,
                     Value = value,
                     Selected = runtimeValues.Contains(value, StringComparer.OrdinalIgnoreCase)
@@ -170,12 +184,14 @@ namespace Orchard.DynamicForms.Drivers {
             }
         }
 
-        private IEnumerable<string> GetRuntimeValues(Query element) {
+        private IEnumerable<string> GetRuntimeValues(Query element)
+        {
             var runtimeValue = element.RuntimeValue;
             return runtimeValue != null ? runtimeValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
         }
-        
-        protected override void OnExporting(Query element, ExportElementContext context) {
+
+        protected override void OnExporting(Query element, ExportElementContext context)
+        {
             base.OnExporting(element, context);
             if (element.QueryId == null)
                 return;
@@ -185,7 +201,8 @@ namespace Orchard.DynamicForms.Drivers {
             context.Element.Data.Add("QueryElementIdentity", _contentManager.GetItemMetadata(queryContentItem).Identity.ToString());
         }
 
-        protected override void OnImportCompleted(Query element, ImportElementContext context) {
+        protected override void OnImportCompleted(Query element, ImportElementContext context)
+        {
             base.OnImported(element, context);
             if (!context.Element.Data.Keys.Contains("QueryElementIdentity"))
                 return;

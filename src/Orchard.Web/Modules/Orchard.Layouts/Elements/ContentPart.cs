@@ -1,17 +1,13 @@
-﻿using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Elements {
-    public class ContentPart : Element {
-        public override string Category {
-            get { return "ContentParts"; }
-        }
+namespace Orchard.Layouts.Elements
+{
+    public class ContentPart : Element
+    {
+        public override string Category => "ContentParts";
 
-        public override bool IsSystemElement {
-            get { return true; }
-        }
+        public override bool IsSystemElement => true;
 
-        public override bool HasEditor {
-            get { return false; }
-        }
+        public override bool HasEditor => false;
     }
 }

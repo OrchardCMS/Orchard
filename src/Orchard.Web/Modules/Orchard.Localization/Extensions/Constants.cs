@@ -1,5 +1,7 @@
-﻿namespace Orchard.Localization {
-    public static class Constants {
+namespace Orchard.Localization
+{
+    public static class Constants
+    {
         public static string TransliterationDefaultValue = @"
 [Input]
 // Insert a several-word description of the module’s input.

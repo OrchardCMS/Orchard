@@ -1,50 +1,58 @@
-﻿using System;
 using System.Collections.Generic;
 using Mono.CSharp;
 using Delegate = System.Delegate;
 
-namespace Orchard.Scripting.CSharp.Services {
-    public class CSharpService : ICSharpService {
+namespace Orchard.Scripting.CSharp.Services
+{
+    public class CSharpService : ICSharpService
+    {
 
         public Evaluator Engine { get; private set; }
         public IDictionary<string, dynamic> Dictionary { get; private set; }
 
-        public void SetParameter(string name, object value) {
+        public void SetParameter(string name, object value)
+        {
             DemandCompiler();
 
             Dictionary[name] = value;
-            Engine.Run(String.Format("dynamic {0} = dictionary[\"{0}\"]", name));
+            Engine.Run(string.Format("dynamic {0} = dictionary[\"{0}\"]", name));
         }
 
-        public void SetFunction(string name, Delegate value) {
+        public void SetFunction(string name, Delegate value)
+        {
             DemandCompiler();
 
             Dictionary[name] = value;
-            Engine.Run(String.Format("dynamic {0} = dictionary[\"{0}\"]", name));
+            Engine.Run(string.Format("dynamic {0} = dictionary[\"{0}\"]", name));
         }
 
-        public void Run(string script) {
+        public void Run(string script)
+        {
             DemandCompiler();
 
             Engine.Run(script);
         }
 
-        public object Evaluate(string script) {
+        public object Evaluate(string script)
+        {
             DemandCompiler();
 
             object result;
             bool resultSet;
 
             Engine.Evaluate(script, out result, out resultSet);
-            if (resultSet) {
+            if (resultSet)
+            {
                 return result;
             }
 
             return null;
         }
 
-        private void DemandCompiler() {
-            if (Engine != null) {
+        private void DemandCompiler()
+        {
+            if (Engine != null)
+            {
                 return;
             }
 

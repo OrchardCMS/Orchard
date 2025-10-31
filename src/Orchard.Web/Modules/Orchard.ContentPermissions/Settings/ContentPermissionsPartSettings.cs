@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.ContentPermissions.ViewModels;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
-using Orchard.ContentPermissions.ViewModels;
 
-namespace Orchard.ContentPermissions.Settings {
-    public class ContentPermissionsPartSettings {
+namespace Orchard.ContentPermissions.Settings
+{
+    public class ContentPermissionsPartSettings
+    {
         public string View { get; set; }
         public string ViewOwn { get; set; }
         public string Publish { get; set; }
@@ -26,27 +28,31 @@ namespace Orchard.ContentPermissions.Settings {
         public string DisplayedRoles { get; set; }
     }
 
-    public class ViewPermissionsSettingsHooks : ContentDefinitionEditorEventsBase {
+    public class ViewPermissionsSettingsHooks : ContentDefinitionEditorEventsBase
+    {
         private readonly IAuthorizer _authorizer;
         private readonly IAuthorizationService _authorizationService;
         private readonly IRoleService _roleService;
 
         public ViewPermissionsSettingsHooks(
-            IAuthorizer authorizer, 
-            IAuthorizationService authorizationService, 
+            IAuthorizer authorizer,
+            IAuthorizationService authorizationService,
             IRoleService roleService
-            ) {
+            )
+        {
             _authorizer = authorizer;
             _authorizationService = authorizationService;
             _roleService = roleService;
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition)
+        {
             if (definition.PartDefinition.Name != "ContentPermissionsPart")
                 yield break;
 
             // ensure the current user is allowed to define permissions
-            if(!_authorizer.Authorize(Permissions.GrantPermission)) {
+            if (!_authorizer.Authorize(Permissions.GrantPermission))
+            {
                 yield break;
             }
 
@@ -55,8 +61,10 @@ namespace Orchard.ContentPermissions.Settings {
             var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 
             // copy defaults if new type
-            if(settings == null) {
-                settings = new ContentPermissionsPartSettings {
+            if (settings == null)
+            {
+                settings = new ContentPermissionsPartSettings
+                {
                     View = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null) })),
                     ViewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null) })),
                     Publish = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishContent, UserSimulation.Create(x), null) })),
@@ -66,12 +74,13 @@ namespace Orchard.ContentPermissions.Settings {
                     Delete = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null) })),
                     DeleteOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null) })),
                     Preview = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null) })),
-                    PreviewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role =x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) })),
+                    PreviewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) })),
                     DisplayedRoles = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = true })),
                 };
             }
 
-            var model = new ContentPermissionsPartViewModel {
+            var model = new ContentPermissionsPartViewModel
+            {
                 ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.View),
                 ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.ViewOwn),
                 PublishRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Publish),
@@ -112,11 +121,13 @@ namespace Orchard.ContentPermissions.Settings {
             yield return DefinitionTemplate(model);
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel)
+        {
             if (builder.Name != "ContentPermissionsPart")
                 yield break;
 
-            if (!_authorizer.Authorize(Permissions.GrantPermission)) {
+            if (!_authorizer.Authorize(Permissions.GrantPermission))
+            {
                 yield break;
             }
 
@@ -125,45 +136,55 @@ namespace Orchard.ContentPermissions.Settings {
             var model = new ContentPermissionsPartViewModel();
 
             updateModel.TryUpdateModel(model, "ContentPermissionsPartViewModel", null, null);
-            
+
             // update permissions only for those the current user is granted
-            if ( _authorizer.Authorize(Core.Contents.Permissions.ViewContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.ViewContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.View", ContentPermissionsPartViewModel.SerializePermissions(model.ViewRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.ViewOwnContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.ViewOwnContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.ViewOwn", ContentPermissionsPartViewModel.SerializePermissions(model.ViewOwnRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.PublishContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.PublishContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.Publish", ContentPermissionsPartViewModel.SerializePermissions(model.PublishRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.PublishOwn", ContentPermissionsPartViewModel.SerializePermissions(model.PublishOwnRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.EditContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.EditContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.Edit", ContentPermissionsPartViewModel.SerializePermissions(model.EditRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.EditOwnContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.EditOwnContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.EditOwn", ContentPermissionsPartViewModel.SerializePermissions(model.EditOwnRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.DeleteContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.DeleteContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.Delete", ContentPermissionsPartViewModel.SerializePermissions(model.DeleteRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.DeleteOwn", ContentPermissionsPartViewModel.SerializePermissions(model.DeleteOwnRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.Preview", ContentPermissionsPartViewModel.SerializePermissions(model.PreviewRoles));
             }
 
-            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent)) {
+            if (_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent))
+            {
                 builder.WithSetting("ContentPermissionsPartSettings.PreviewOwn", ContentPermissionsPartViewModel.SerializePermissions(model.PreviewOwnRoles));
             }
 

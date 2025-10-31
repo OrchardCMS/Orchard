@@ -1,12 +1,15 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class NilTests {
+    public class NilTests
+    {
 
         [Test]
-        public void NilShouldEqualToNull() {
+        public void NilShouldEqualToNull()
+        {
             var nil = Nil.Instance;
 
             Assert.That(nil == null, Is.True);
@@ -17,7 +20,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void NilShouldBeRecursive() {
+        public void NilShouldBeRecursive()
+        {
             dynamic nil = Nil.Instance;
 
             Assert.That(nil == null, Is.True);
@@ -27,19 +31,22 @@ namespace Orchard.Tests.DisplayManagement {
 
 
         [Test]
-        public void CallingToStringOnNilShouldReturnEmpty() {
+        public void CallingToStringOnNilShouldReturnEmpty()
+        {
             var nil = Nil.Instance;
             Assert.That(nil.ToString(), Is.EqualTo(""));
         }
 
         [Test]
-        public void CallingToStringOnDynamicNilShouldReturnEmpty() {
+        public void CallingToStringOnDynamicNilShouldReturnEmpty()
+        {
             dynamic nil = Nil.Instance;
             Assert.That(nil.Foo.Bar.ToString(), Is.EqualTo(""));
         }
 
         [Test]
-        public void ConvertingToStringShouldReturnNullString() {
+        public void ConvertingToStringShouldReturnNullString()
+        {
             dynamic nil = Nil.Instance;
             Assert.That((string)nil == null, Is.True);
         }

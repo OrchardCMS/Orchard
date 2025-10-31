@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -8,13 +8,16 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Admin;
 
-namespace Orchard.Email.Controllers {
+namespace Orchard.Email.Controllers
+{
     [Admin]
-    public class EmailAdminController : Controller {
+    public class EmailAdminController : Controller
+    {
         private readonly ISmtpChannel _smtpChannel;
         private readonly IOrchardServices _orchardServices;
 
-        public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices) {
+        public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices)
+        {
             _smtpChannel = smtpChannel;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
@@ -24,11 +27,14 @@ namespace Orchard.Email.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult TestSettings(TestSmtpSettings testSettings) {
+        public ActionResult TestSettings(TestSmtpSettings testSettings)
+        {
             ILogger logger = null;
-            try {
+            try
+            {
                 var fakeLogger = new FakeLogger();
-                if (_smtpChannel is Component smtpChannelComponent) {
+                if (_smtpChannel is Component smtpChannelComponent)
+                {
                     logger = smtpChannelComponent.Logger;
                     smtpChannelComponent.Logger = fakeLogger;
                 }
@@ -48,27 +54,33 @@ namespace Orchard.Email.Controllers {
                 smtpSettings.Password = testSettings.Password;
                 smtpSettings.ListUnsubscribe = testSettings.ListUnsubscribe;
 
-                if (!smtpSettings.IsValid()) {
+                if (!smtpSettings.IsValid())
+                {
                     fakeLogger.Error("Invalid settings.");
                 }
-                else {
+                else
+                {
                     _smtpChannel.Process(new Dictionary<string, object> {
                         {"Recipients", testSettings.To},
                         {"Subject", T("Orchard CMS - SMTP settings test email").Text}
                     });
                 }
 
-                if (!string.IsNullOrEmpty(fakeLogger.Message)) {
+                if (!string.IsNullOrEmpty(fakeLogger.Message))
+                {
                     return Json(new { error = fakeLogger.Message });
                 }
 
                 return Json(new { status = T("Message sent.").Text });
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return Json(new { error = e.Message });
             }
-            finally {
-                if (_smtpChannel is Component smtpChannelComponent) {
+            finally
+            {
+                if (_smtpChannel is Component smtpChannelComponent)
+                {
                     smtpChannelComponent.Logger = logger;
                 }
 
@@ -77,7 +89,8 @@ namespace Orchard.Email.Controllers {
             }
         }
 
-        private class FakeLogger : ILogger {
+        private class FakeLogger : ILogger
+        {
             public string Message { get; set; }
 
             public bool IsEnabled(LogLevel level) => true;
@@ -86,7 +99,8 @@ namespace Orchard.Email.Controllers {
                 Message = exception == null ? format : exception.Message;
         }
 
-        public class TestSmtpSettings {
+        public class TestSmtpSettings
+        {
             public string FromAddress { get; set; }
             public string FromName { get; set; }
             public string ReplyTo { get; set; }

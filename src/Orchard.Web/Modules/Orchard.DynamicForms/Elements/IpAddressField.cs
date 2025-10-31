@@ -1,11 +1,9 @@
-﻿namespace Orchard.DynamicForms.Elements {
-    public class IpAddressField : FormElement {
-        public override bool HasEditor {
-            get { return false; }
-        }
+namespace Orchard.DynamicForms.Elements
+{
+    public class IpAddressField : FormElement
+    {
+        public override bool HasEditor => false;
 
-        public override string Name {
-            get { return "IPAddress"; }
-        }
+        public override string Name => "IPAddress";
     }
 }

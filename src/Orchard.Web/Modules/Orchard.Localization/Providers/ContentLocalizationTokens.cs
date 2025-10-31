@@ -1,20 +1,24 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Services;
 using Orchard.Tokens;
 
-namespace Orchard.Localization.Providers {
-    public class ContentLocalizationTokens : ITokenProvider {
+namespace Orchard.Localization.Providers
+{
+    public class ContentLocalizationTokens : ITokenProvider
+    {
         private readonly ILocalizationService _localizationService;
 
-        public ContentLocalizationTokens(ILocalizationService localizationService) {
+        public ContentLocalizationTokens(ILocalizationService localizationService)
+        {
             _localizationService = localizationService;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.For("Content", T("Content Items"), T("Content Items"))
                 .Token("Culture", T("Culture"), T("The culture of the content item"), "Culture")
                 ;
@@ -25,7 +29,8 @@ namespace Orchard.Localization.Providers {
                 .Token("TwoLetterISOLanguageName", T("Two Letter ISO Language Name"), T("Gets the ISO 639-1 two-letter code for the language of the current CultureInfo."), "Text");
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
             context.For<IContent>("Content")
                 .Token("Culture", x => _localizationService.GetContentCulture(x))
                 .Chain("Culture", "Culture", x => CultureInfo.GetCultureInfo(_localizationService.GetContentCulture(x)))

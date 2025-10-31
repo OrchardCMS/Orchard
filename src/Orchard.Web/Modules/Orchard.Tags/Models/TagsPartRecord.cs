@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Tags.Models {
-    public class TagsPartRecord : ContentPartRecord {
-        public TagsPartRecord() {
+namespace Orchard.Tags.Models
+{
+    public class TagsPartRecord : ContentPartRecord
+    {
+        public TagsPartRecord()
+        {
             Tags = new List<ContentTagRecord>();
         }
 

@@ -1,18 +1,22 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using IFilterProvider = Orchard.Projections.Services.IFilterProvider;
 
-namespace Orchard.Projections.Providers.Filters {
-    public class EagerFectchFilter : IFilterProvider {
-        public EagerFectchFilter() {
+namespace Orchard.Projections.Providers.Filters
+{
+    public class EagerFectchFilter : IFilterProvider
+    {
+        public EagerFectchFilter()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeFilterContext describe) {
-            describe.For("Content", T("Content"),T("Content"))
+        public void Describe(DescribeFilterContext describe)
+        {
+            describe.For("Content", T("Content"), T("Content"))
                 .Element("EagerFetch", T("Eager fetch"), T("Eager fetch content part records"),
                     ApplyFilter,
                     DisplayFilter,
@@ -21,18 +25,22 @@ namespace Orchard.Projections.Providers.Filters {
 
         }
 
-        public void ApplyFilter(FilterContext context) {
+        public void ApplyFilter(FilterContext context)
+        {
             var contentPartRecords = (string)context.State.ContentPartRecords;
-            if (!String.IsNullOrEmpty(contentPartRecords)) {
+            if (!string.IsNullOrEmpty(contentPartRecords))
+            {
                 var contentParts = contentPartRecords.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 context.Query = context.Query.Include(contentParts);
             }
         }
 
-        public LocalizedString DisplayFilter(FilterContext context) {
+        public LocalizedString DisplayFilter(FilterContext context)
+        {
             string contentpartrecords = context.State.ContentPartRecords;
 
-            if (String.IsNullOrEmpty(contentpartrecords)) {
+            if (string.IsNullOrEmpty(contentpartrecords))
+            {
                 return T("No content part record");
             }
 

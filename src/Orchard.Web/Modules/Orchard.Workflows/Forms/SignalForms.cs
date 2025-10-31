@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -10,21 +10,26 @@ using Orchard.Localization;
 using Orchard.Workflows.Activities;
 using Orchard.Workflows.Models;
 
-namespace Orchard.Workflows.Forms {
-    public class SignalForms : IFormProvider {
+namespace Orchard.Workflows.Forms
+{
+    public class SignalForms : IFormProvider
+    {
         private readonly IRepository<ActivityRecord> _activityRecords;
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public SignalForms(IShapeFactory shapeFactory, IRepository<ActivityRecord> activityRecords) {
+        public SignalForms(IShapeFactory shapeFactory, IRepository<ActivityRecord> activityRecords)
+        {
             _activityRecords = activityRecords;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, dynamic> form =
-                shape => {
+                shape =>
+                {
                     return Shape.Form(
                         Id: "SignalEvent",
                         _Name: Shape.Textbox(
@@ -38,7 +43,8 @@ namespace Orchard.Workflows.Forms {
             context.Form("SignalEvent", form);
 
             form =
-                shape => {
+                shape =>
+                {
                     var f = Shape.Form(
                         Id: "OneOfSignals",
                         _Parts: Shape.SelectList(
@@ -57,7 +63,8 @@ namespace Orchard.Workflows.Forms {
                         .ToArray()
                         .Select(x => (string)x.Signal);
 
-                    foreach (var signal in allEvents) {
+                    foreach (var signal in allEvents)
+                    {
                         f._Parts.Add(new SelectListItem { Value = signal, Text = signal });
                     }
 
@@ -67,10 +74,12 @@ namespace Orchard.Workflows.Forms {
             context.Form("Trigger", form);
         }
 
-        private dynamic GetState(string state) {
-            if (!String.IsNullOrWhiteSpace(state)) {
+        private dynamic GetState(string state)
+        {
+            if (!string.IsNullOrWhiteSpace(state))
+            {
                 var formatted = JsonConvert.DeserializeXNode(state, "Root").ToString();
-                var serialized = String.IsNullOrEmpty(formatted) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(formatted));
+                var serialized = string.IsNullOrEmpty(formatted) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(formatted));
                 return FormParametersHelper.FromJsonString(serialized).Root;
             }
 

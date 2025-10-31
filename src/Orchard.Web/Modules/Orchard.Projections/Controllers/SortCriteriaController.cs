@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -10,13 +10,14 @@ using Orchard.Localization;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
-using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Projections.Controllers {
+namespace Orchard.Projections.Controllers
+{
     [ValidateInput(false), Admin]
-    public class SortCriterionController : Controller {
+    public class SortCriterionController : Controller
+    {
         public SortCriterionController(
             IOrchardServices services,
             IFormManager formManager,
@@ -24,7 +25,8 @@ namespace Orchard.Projections.Controllers {
             IProjectionManager projectionManager,
             IRepository<SortCriterionRecord> repository,
             IQueryService queryService,
-            ISortService sortService) {
+            ISortService sortService)
+        {
             Services = services;
             _formManager = formManager;
             _projectionManager = projectionManager;
@@ -43,7 +45,8 @@ namespace Orchard.Projections.Controllers {
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult Add(int id) {
+        public ActionResult Add(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
@@ -52,12 +55,14 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(int id, int sortCriterionId) {
+        public ActionResult Delete(int id, int sortCriterionId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var sortCriterion = _repository.Get(sortCriterionId);
-            if(sortCriterion == null) {
+            if (sortCriterion == null)
+            {
                 return HttpNotFound();
             }
 
@@ -69,22 +74,27 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Edit", "Admin", new { id });
         }
 
-        public ActionResult Edit(int id, string category, string type, int sortCriterionId = -1) {
+        public ActionResult Edit(int id, string category, string type, int sortCriterionId = -1)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var sortCriterion = _projectionManager.DescribeSortCriteria().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
 
-            if (sortCriterion == null) {
+            if (sortCriterion == null)
+            {
                 return HttpNotFound();
             }
 
             // if there is no form to edit, save the sort criteria and go back to the query
-            if (sortCriterion.Form == null) {
-                if (sortCriterionId == -1) {
+            if (sortCriterion.Form == null)
+            {
+                if (sortCriterionId == -1)
+                {
                     var query = _queryService.GetQuery(id);
-                    query.SortCriteria.Add(new SortCriterionRecord {
-                        Category = category, 
+                    query.SortCriteria.Add(new SortCriterionRecord
+                    {
+                        Category = category,
                         Type = type,
                         Position = query.SortCriteria.Count
                     });
@@ -96,13 +106,15 @@ namespace Orchard.Projections.Controllers {
             // build the form, and let external components alter it
             var form = _formManager.Build(sortCriterion.Form);
 
-            var description = String.Empty;
+            var description = string.Empty;
 
             // bind form with existing values).
-            if (sortCriterionId != -1) {
+            if (sortCriterionId != -1)
+            {
                 var query = _queryService.GetQuery(id);
                 var sortCriterionRecord = query.SortCriteria.FirstOrDefault(f => f.Id == sortCriterionId);
-                if (sortCriterionRecord != null) {
+                if (sortCriterionRecord != null)
+                {
                     description = sortCriterionRecord.Description;
                     var parameters = FormParametersHelper.FromString(sortCriterionRecord.State);
                     _formManager.Bind(form, new DictionaryValueProvider<string>(parameters, CultureInfo.InvariantCulture));
@@ -114,7 +126,8 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)]int sortCriterionId, FormCollection formCollection) {
+        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)] int sortCriterionId, FormCollection formCollection)
+        {
             var query = _queryService.GetQuery(id);
 
             var sortCriterion = _projectionManager.DescribeSortCriteria().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
@@ -125,14 +138,17 @@ namespace Orchard.Projections.Controllers {
             // validating form values
             _formManager.Validate(new ValidatingContext { FormName = sortCriterion.Form, ModelState = ModelState, ValueProvider = ValueProvider });
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var sortCriterionRecord = query.SortCriteria.FirstOrDefault(f => f.Id == sortCriterionId);
 
                 // add new sort criteria record if it's a newly created one
-                if (sortCriterionRecord == null) {
-                    sortCriterionRecord = new SortCriterionRecord {
-                        Category = category, 
-                        Type = type, 
+                if (sortCriterionRecord == null)
+                {
+                    sortCriterionRecord = new SortCriterionRecord
+                    {
+                        Category = category,
+                        Type = type,
                         Position = query.SortCriteria.Count
                     };
                     query.SortCriteria.Add(sortCriterionRecord);
@@ -157,14 +173,18 @@ namespace Orchard.Projections.Controllers {
         }
 
 
-        public ActionResult Move(string direction, int id, int queryId) {
+        public ActionResult Move(string direction, int id, int queryId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
-            switch (direction) {
-                case "up": _sortService.MoveUp(id);
+            switch (direction)
+            {
+                case "up":
+                    _sortService.MoveUp(id);
                     break;
-                case "down": _sortService.MoveDown(id);
+                case "down":
+                    _sortService.MoveDown(id);
                     break;
                 default:
                     throw new ArgumentException("direction");

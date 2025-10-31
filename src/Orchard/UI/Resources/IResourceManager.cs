@@ -1,14 +1,15 @@
-﻿using System;
 using System.Collections.Generic;
 
-namespace Orchard.UI.Resources {
-    public interface IResourceManager : IDependency {
+namespace Orchard.UI.Resources
+{
+    public interface IResourceManager : IDependency
+    {
         IEnumerable<RequireSettings> GetRequiredResources(string type);
         IList<ResourceRequiredContext> BuildRequiredResources(string resourceType);
         IList<LinkEntry> GetRegisteredLinks();
         IList<MetaEntry> GetRegisteredMetas();
-        IList<String> GetRegisteredHeadScripts();
-        IList<String> GetRegisteredFootScripts();
+        IList<string> GetRegisteredHeadScripts();
+        IList<string> GetRegisteredFootScripts();
         IEnumerable<IResourceManifest> ResourceProviders { get; }
         ResourceManifest DynamicResources { get; }
         ResourceDefinition FindResource(RequireSettings settings);

@@ -1,22 +1,21 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
-using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Upgrade.Services;
 
-namespace Upgrade.Controllers {
+namespace Upgrade.Controllers
+{
     [Admin]
-    public class TaxonomyController : Controller {
+    public class TaxonomyController : Controller
+    {
         private readonly IUpgradeService _upgradeService;
         private readonly IOrchardServices _orchardServices;
         private readonly ITaxonomyService _taxonomyService;
@@ -28,7 +27,8 @@ namespace Upgrade.Controllers {
             IUpgradeService upgradeService,
             IOrchardServices orchardServices,
             IFeatureManager featureManager,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService)
+        {
             _upgradeService = upgradeService;
             _orchardServices = orchardServices;
             _featureManager = featureManager;
@@ -38,19 +38,24 @@ namespace Upgrade.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             ViewBag.CanMigrate = false;
 
-            if(_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies"))
+            {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in order to migrate Contrib.Taxonomies to Orchard.Taxonomies."));
             }
-            else {
+            else
+            {
                 var flag = false;
-                _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Taxonomies_TermContentItem"), (reader, conn) => {
+                _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Taxonomies_TermContentItem"), (reader, conn) =>
+                {
                     flag = true;
                 });
 
-                if (flag) {
+                if (flag)
+                {
                     _orchardServices.Notifier.Warning(T("This migration step might have been done already."));
                 }
 
@@ -60,12 +65,16 @@ namespace Upgrade.Controllers {
             return View();
         }
 
-        public ActionResult Index110() {
+        public ActionResult Index110()
+        {
             ViewBag.CanMigrate = false;
 
-            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies")) {
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.Taxonomies"))
+            {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.Taxonomies in order to upgrade the terms' weights."));
-            } else {
+            }
+            else
+            {
                 ViewBag.CanMigrate = true;
             }
 
@@ -73,18 +82,21 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
+        public ActionResult IndexPOST()
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to migrate Contrib.Taxonomies.")))
                 return new HttpUnauthorizedResult();
-            try {
+            try
+            {
                 _upgradeService.CopyTable("Contrib_Taxonomies_TaxonomyPartRecord", "Orchard_Taxonomies_TaxonomyPartRecord", new string[0]);
-                _upgradeService.CopyTable("Contrib_Taxonomies_TermContentItem", "Orchard_Taxonomies_TermContentItem", new[] {"Id"});
+                _upgradeService.CopyTable("Contrib_Taxonomies_TermContentItem", "Orchard_Taxonomies_TermContentItem", new[] { "Id" });
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermPartRecord", "Orchard_Taxonomies_TermPartRecord", new string[0]);
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermsPartRecord", "Orchard_Taxonomies_TermsPartRecord", new string[0]);
 
                 _orchardServices.Notifier.Success(T("Taxonomies were migrated successfully."));
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "Unexpected error while migrating to Orchard.Taxonomies. Please check the log.");
                 _orchardServices.Notifier.Error(T("Unexpected error while migrating to Orchard.Taxonomies. Please check the log."));
 
@@ -94,7 +106,8 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateTerms(int id) {
+        public JsonResult MigrateTerms(int id)
+        {
             var lastCount = id;
 
             var thisBatch = _taxonomyService
@@ -102,10 +115,12 @@ namespace Upgrade.Controllers {
                 .OrderBy(x => x.TaxonomyId)
                 .OrderBy(tpr => tpr.Path)
                 .Slice(lastCount, BatchSize);
-            foreach (var term in thisBatch) {
+            foreach (var term in thisBatch)
+            {
                 term.FullWeight = _taxonomyService.ComputeFullWeight(term);
             }
-            if (thisBatch.Any()) {
+            if (thisBatch.Any())
+            {
                 // ajax stops calling once it is returned the same number it sent
                 lastCount += BatchSize;
             }

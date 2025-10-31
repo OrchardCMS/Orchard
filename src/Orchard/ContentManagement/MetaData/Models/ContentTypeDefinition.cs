@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.ContentManagement.MetaData.Models {
-    public class ContentTypeDefinition {
-        public ContentTypeDefinition(string name, string displayName, IEnumerable<ContentTypePartDefinition> parts, SettingsDictionary settings) {
+namespace Orchard.ContentManagement.MetaData.Models
+{
+    public class ContentTypeDefinition
+    {
+        public ContentTypeDefinition(string name, string displayName, IEnumerable<ContentTypePartDefinition> parts, SettingsDictionary settings)
+        {
             Name = name;
             DisplayName = displayName;
             Parts = parts.ToReadOnlyCollection();
             Settings = settings;
         }
 
-        public ContentTypeDefinition(string name, string displayName) {
+        public ContentTypeDefinition(string name, string displayName)
+        {
             Name = name;
             DisplayName = displayName;
             Parts = Enumerable.Empty<ContentTypePartDefinition>();

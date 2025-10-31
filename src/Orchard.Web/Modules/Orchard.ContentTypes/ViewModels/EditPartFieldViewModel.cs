@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.ContentTypes.ViewModels {
-    public class EditPartFieldViewModel {
+namespace Orchard.ContentTypes.ViewModels
+{
+    public class EditPartFieldViewModel
+    {
 
-        public EditPartFieldViewModel() {
+        public EditPartFieldViewModel()
+        {
             Settings = new SettingsDictionary();
         }
 
-        public EditPartFieldViewModel(int index, ContentPartFieldDefinition field) {
+        public EditPartFieldViewModel(int index, ContentPartFieldDefinition field)
+        {
             Index = index;
             Name = field.Name;
             DisplayName = field.DisplayName;
@@ -19,7 +23,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public int Index { get; set; }
-        public string Prefix { get { return "Fields[" + Name + "]"; } }
+        public string Prefix => "Fields[" + Name + "]";
         public EditPartViewModel Part { get; set; }
 
         public string Name { get; set; }

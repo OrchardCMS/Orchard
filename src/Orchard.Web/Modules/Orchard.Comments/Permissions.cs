@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Comments {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.Comments
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission AddComment = new Permission { Description = "Add comment", Name = "AddComment" };
         public static readonly Permission ManageComments = new Permission { Description = "Manage comments", Name = "ManageComments" };
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 AddComment,
                 ManageComments,
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",

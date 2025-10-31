@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Orchard.Localization.Services;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
 
     [TestFixture]
-    public class LocalizationStreamParserTests {
+    public class LocalizationStreamParserTests
+    {
 
         [Test]
-        public void ShouldTrimLeadingQuotes() {
+        public void ShouldTrimLeadingQuotes()
+        {
             var parser = new LocalizationStreamParser();
 
             var text = new StringBuilder();
@@ -25,7 +28,8 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        public void ShouldTrimTrailingQuotes() {
+        public void ShouldTrimTrailingQuotes()
+        {
             var parser = new LocalizationStreamParser();
 
             var text = new StringBuilder();
@@ -41,7 +45,8 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        public void ShouldHandleUnclosedQuote() {
+        public void ShouldHandleUnclosedQuote()
+        {
             var parser = new LocalizationStreamParser();
 
             var text = new StringBuilder();

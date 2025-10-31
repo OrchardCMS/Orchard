@@ -1,15 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Modules.Models {
-    public class DoghouseComparer : IComparer<string> {
+namespace Orchard.Modules.Models
+{
+    public class DoghouseComparer : IComparer<string>
+    {
         private readonly string _theDog;
 
-        public DoghouseComparer(string theDog) {
+        public DoghouseComparer(string theDog)
+        {
             _theDog = theDog;
         }
 
-        public int Compare(string x, string y) {
+        public int Compare(string x, string y)
+        {
             if (x == null || y == null)
                 return x == null && y == null ? 0 : (x == null ? -1 : 1);
 

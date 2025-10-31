@@ -1,6 +1,8 @@
 using Orchard.ContentManagement;
 
-namespace Orchard.Comments.Models {
-    public class CommentsContainerPart : ContentPart {
+namespace Orchard.Comments.Models
+{
+    public class CommentsContainerPart : ContentPart
+    {
     }
 }

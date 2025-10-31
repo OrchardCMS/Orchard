@@ -1,20 +1,24 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Security;
 
-namespace Orchard.Core.Navigation.Drivers {
-    public class MenuItemPartDriver : ContentPartDriver<MenuItemPart> {
+namespace Orchard.Core.Navigation.Drivers
+{
+    public class MenuItemPartDriver : ContentPartDriver<MenuItemPart>
+    {
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public MenuItemPartDriver(IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor) {
+        public MenuItemPartDriver(IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor)
+        {
             _authorizationService = authorizationService;
             _workContextAccessor = workContextAccessor;
         }
 
-        protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper)
+        {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
             var menu = ((dynamic)part.ContentItem).MenuPart.Menu;
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)) // tests if the current user has permissions to manage that specific menu
@@ -24,7 +28,8 @@ namespace Orchard.Core.Navigation.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.MenuItem.Edit", Model: part, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(MenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(MenuItemPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
             var menu = ((dynamic)part.ContentItem).MenuPart.Menu;
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)) // tests if the current user has permissions to manage that specific menu
@@ -35,9 +40,11 @@ namespace Orchard.Core.Navigation.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(MenuItemPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(MenuItemPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -46,11 +53,13 @@ namespace Orchard.Core.Navigation.Drivers {
             );
         }
 
-        protected override void Exporting(MenuItemPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(MenuItemPart part, ContentManagement.Handlers.ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Url", part.Url);
         }
 
-        protected override void Cloning(MenuItemPart originalPart, MenuItemPart clonePart, CloneContentContext context) {
+        protected override void Cloning(MenuItemPart originalPart, MenuItemPart clonePart, CloneContentContext context)
+        {
             clonePart.Url = originalPart.Url;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
@@ -9,9 +9,11 @@ using Orchard.Settings;
 using Orchard.Tasks;
 using Orchard.Tasks.Locking.Services;
 
-namespace Orchard.AuditTrail.Services {
+namespace Orchard.AuditTrail.Services
+{
     [OrchardFeature("Orchard.AuditTrail.Trimming")]
-    public class AuditTrailTrimmingBackgroundTask : Component, IBackgroundTask {
+    public class AuditTrailTrimmingBackgroundTask : Component, IBackgroundTask
+    {
         private readonly ISiteService _siteService;
         private readonly IClock _clock;
         private readonly IAuditTrailManager _auditTrailManager;
@@ -21,7 +23,8 @@ namespace Orchard.AuditTrail.Services {
             ISiteService siteService,
             IClock clock,
             IAuditTrailManager auditTrailManager,
-            IDistributedLockService distributedLockService) {
+            IDistributedLockService distributedLockService)
+        {
 
             _siteService = siteService;
             _clock = clock;
@@ -29,18 +32,20 @@ namespace Orchard.AuditTrail.Services {
             _distributedLockService = distributedLockService;
         }
 
-        public AuditTrailTrimmingSettingsPart Settings {
-            get { return _siteService.GetSiteSettings().As<AuditTrailTrimmingSettingsPart>(); }
-        }
+        public AuditTrailTrimmingSettingsPart Settings => _siteService.GetSiteSettings().As<AuditTrailTrimmingSettingsPart>();
 
-        public void Sweep() {
+        public void Sweep()
+        {
             Logger.Debug("Beginning sweep.");
 
-            try {
+            try
+            {
                 // Only allow this task to run on one farm node at a time.
                 IDistributedLock @lock;
-                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
-                    using (@lock) {
+                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock))
+                {
+                    using (@lock)
+                    {
 
                         // We don't need to check the audit trail for events to remove every minute. Let's stick with twice a day.
                         if (!GetIsTimeToTrim())
@@ -55,15 +60,18 @@ namespace Orchard.AuditTrail.Services {
                 else
                     Logger.Debug("Distributed lock could not be acquired; going back to sleep.");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Logger.Error(ex, "Error during sweep.");
             }
-            finally {
+            finally
+            {
                 Logger.Debug("Ending sweep.");
             }
         }
 
-        private bool GetIsTimeToTrim() {
+        private bool GetIsTimeToTrim()
+        {
             var lastRun = Settings.LastRunUtc ?? DateTime.MinValue;
             var now = _clock.UtcNow;
             var interval = TimeSpan.FromHours(Settings.MinimumRunInterval);

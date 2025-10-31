@@ -1,15 +1,20 @@
-﻿using Orchard.Data.Migration.Schema;
+using Orchard.Data.Migration.Schema;
 
-namespace Orchard.Data.Migration.Interpreters {
-    public abstract class AbstractDataMigrationInterpreter {
+namespace Orchard.Data.Migration.Interpreters
+{
+    public abstract class AbstractDataMigrationInterpreter
+    {
 
-        public void Visit(ISchemaBuilderCommand command) {
+        public void Visit(ISchemaBuilderCommand command)
+        {
             var schemaCommand = command as SchemaCommand;
-            if (schemaCommand == null) {
+            if (schemaCommand == null)
+            {
                 return;
             }
 
-            switch ( schemaCommand.Type ) {
+            switch (schemaCommand.Type)
+            {
                 case SchemaCommandType.CreateTable:
                     Visit((CreateTableCommand)schemaCommand);
                     break;

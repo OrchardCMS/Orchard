@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Orchard.Projections.ViewModels {
-    public class BindingEditViewModel {
+namespace Orchard.Projections.ViewModels
+{
+    public class BindingEditViewModel
+    {
         public int Id { get; set; }
 
         [StringLength(255), Required]

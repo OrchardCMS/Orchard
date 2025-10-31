@@ -1,15 +1,16 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DesignerTools.Models;
 using Orchard.Localization;
-using Orchard.Utility.Extensions;
 
-namespace Orchard.DesignerTools.Handlers {
-    public class ShapeTracingSiteSettingsPartHandler : ContentHandler {
+namespace Orchard.DesignerTools.Handlers
+{
+    public class ShapeTracingSiteSettingsPartHandler : ContentHandler
+    {
         public Localizer T { get; set; }
 
-        public ShapeTracingSiteSettingsPartHandler() {
+        public ShapeTracingSiteSettingsPartHandler()
+        {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<ShapeTracingSiteSettingsPart>("Site"));
             Filters.Add(new TemplateFilterForPart<ShapeTracingSiteSettingsPart>("ShapeTracingSiteSettings", "Parts/ShapeTracing.ShapeTracingSiteSettings", "ShapeTracing"));
@@ -17,11 +18,13 @@ namespace Orchard.DesignerTools.Handlers {
             OnInitializing<ShapeTracingSiteSettingsPart>(AssignDefaultValues);
         }
 
-        private void AssignDefaultValues(InitializingContentContext context, ShapeTracingSiteSettingsPart part) {
+        private void AssignDefaultValues(InitializingContentContext context, ShapeTracingSiteSettingsPart part)
+        {
             part.IsShapeTracingActive = true;
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             if (context.ContentItem.ContentType != "Site")
                 return;
 

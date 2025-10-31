@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Dashboards.Services;
 using Orchard.Data.Migration;
 
-namespace Orchard.Dashboards {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Dashboards
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Dashboard", type => type
                 .WithPart("CommonPart")
                 .WithIdentity()
@@ -13,6 +16,6 @@ namespace Orchard.Dashboards {
                     .WithSetting("LayoutTypePartSettings.DefaultLayoutData", DefaultDashboardSelector.DefaultLayout)));
 
             return 1;
-        } 
+        }
     }
 }

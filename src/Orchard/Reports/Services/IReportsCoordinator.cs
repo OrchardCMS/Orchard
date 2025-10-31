@@ -1,11 +1,13 @@
-﻿namespace Orchard.Reports.Services {
+namespace Orchard.Reports.Services
+{
     /// <summary>
     /// Exposes a simplified interface for creating reports. Reports provide user-accessible log-like functionality.
     /// </summary>
     /// <remarks>
     /// <see cref="Orchard.Reports.Services.IReportsManager"/> can be used too to create reports directly.
     /// </remarks>
-    public interface IReportsCoordinator : IDependency {
+    public interface IReportsCoordinator : IDependency
+    {
         /// <summary>
         /// Adds a new report entry to a report that was previously registered.
         /// </summary>

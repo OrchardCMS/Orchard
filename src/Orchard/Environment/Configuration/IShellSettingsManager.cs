@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 
-namespace Orchard.Environment.Configuration {
-    public interface IShellSettingsManager {
+namespace Orchard.Environment.Configuration
+{
+    public interface IShellSettingsManager
+    {
         /// <summary>
         /// Retrieves all shell settings stored.
         /// </summary>

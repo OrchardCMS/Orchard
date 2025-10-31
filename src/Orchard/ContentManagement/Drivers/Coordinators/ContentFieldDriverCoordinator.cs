@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Drivers.Coordinators {
-    public class ContentFieldDriverCoordinator : ContentHandlerBase {
+namespace Orchard.ContentManagement.Drivers.Coordinators
+{
+    public class ContentFieldDriverCoordinator : ContentHandlerBase
+    {
         private readonly IEnumerable<IContentFieldDriver> _drivers;
         private readonly IFieldStorageProviderSelector _fieldStorageProviderSelector;
         private readonly IEnumerable<IFieldStorageEvents> _fieldStorageEvents;
@@ -13,7 +15,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         public ContentFieldDriverCoordinator(
             IEnumerable<IContentFieldDriver> drivers,
             IFieldStorageProviderSelector fieldStorageProviderSelector,
-            IEnumerable<IFieldStorageEvents> fieldStorageEvents) {
+            IEnumerable<IFieldStorageEvents> fieldStorageEvents)
+        {
             _drivers = drivers;
             _fieldStorageProviderSelector = fieldStorageProviderSelector;
             _fieldStorageEvents = fieldStorageEvents;
@@ -22,14 +25,18 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
 
         public ILogger Logger { get; set; }
 
-        public override void Initializing(InitializingContentContext context) {
+        public override void Initializing(InitializingContentContext context)
+        {
             var fieldInfos = _drivers.SelectMany(x => x.GetFieldInfo()).ToArray();
             var parts = context.ContentItem.Parts;
-            foreach (var contentPart in parts) {
-                foreach (var partFieldDefinition in contentPart.PartDefinition.Fields) {
+            foreach (var contentPart in parts)
+            {
+                foreach (var partFieldDefinition in contentPart.PartDefinition.Fields)
+                {
                     var fieldTypeName = partFieldDefinition.FieldDefinition.Name;
                     var fieldInfo = fieldInfos.FirstOrDefault(x => x.FieldTypeName == fieldTypeName);
-                    if (fieldInfo != null) {
+                    if (fieldInfo != null)
+                    {
                         var storage = _fieldStorageProviderSelector
                             .GetProvider(partFieldDefinition)
                             .BindStorage(contentPart, partFieldDefinition);
@@ -43,13 +50,16 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
-        public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
+        public override void GetContentItemMetadata(GetContentItemMetadataContext context)
+        {
             context.Logger = Logger;
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
-        public override void BuildDisplay(BuildDisplayContext context) {
-            _drivers.Invoke(driver => {
+        public override void BuildDisplay(BuildDisplayContext context)
+        {
+            _drivers.Invoke(driver =>
+            {
                 context.Logger = Logger;
                 var result = driver.BuildDisplayShape(context);
                 if (result != null)
@@ -57,8 +67,10 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }, Logger);
         }
 
-        public override void BuildEditor(BuildEditorContext context) {
-            _drivers.Invoke(driver => {
+        public override void BuildEditor(BuildEditorContext context)
+        {
+            _drivers.Invoke(driver =>
+            {
                 context.Logger = Logger;
                 var result = driver.BuildEditorShape(context);
                 if (result != null)
@@ -66,8 +78,10 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }, Logger);
         }
 
-        public override void UpdateEditor(UpdateEditorContext context) {
-            _drivers.Invoke(driver => {
+        public override void UpdateEditor(UpdateEditorContext context)
+        {
+            _drivers.Invoke(driver =>
+            {
                 context.Logger = Logger;
                 var result = driver.UpdateEditorShape(context);
                 if (result != null)
@@ -75,51 +89,65 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }, Logger);
         }
 
-        public override void Importing(ImportContentContext context) {
+        public override void Importing(ImportContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers)
+            {
                 contentFieldDriver.Importing(context);
             }
         }
 
-        public override void Imported(ImportContentContext context) {
+        public override void Imported(ImportContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers)
+            {
                 contentFieldDriver.Imported(context);
             }
         }
 
-        public override void ImportCompleted(ImportContentContext context) {
+        public override void ImportCompleted(ImportContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers)
+            {
                 contentFieldDriver.ImportCompleted(context);
             }
         }
 
-        public override void Exporting(ExportContentContext context) {
+        public override void Exporting(ExportContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName))
+            {
                 contentFieldDriver.Exporting(context);
             }
         }
 
-        public override void Exported(ExportContentContext context) {
+        public override void Exported(ExportContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName)) {
+            foreach (var contentFieldDriver in _drivers.OrderBy(x => x.GetFieldInfo().First().FieldTypeName))
+            {
                 contentFieldDriver.Exported(context);
             }
         }
 
-        public override void Cloning(CloneContentContext context) {
+        public override void Cloning(CloneContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers)
+            {
                 contentFieldDriver.Cloning(context);
             }
         }
 
-        public override void Cloned(CloneContentContext context) {
+        public override void Cloned(CloneContentContext context)
+        {
             context.Logger = Logger;
-            foreach (var contentFieldDriver in _drivers) {
+            foreach (var contentFieldDriver in _drivers)
+            {
                 contentFieldDriver.Cloned(context);
             }
         }

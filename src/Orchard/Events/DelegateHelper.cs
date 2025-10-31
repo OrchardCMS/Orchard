@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Orchard.Events {
-    public static class DelegateHelper {
-        public static Func<T, object[], object> CreateDelegate<T>(MethodInfo method) {
+namespace Orchard.Events
+{
+    public static class DelegateHelper
+    {
+        public static Func<T, object[], object> CreateDelegate<T>(MethodInfo method)
+        {
             return CreateDelegate<T>(typeof(T), method);
         }
 
@@ -21,8 +24,9 @@ namespace Orchard.Events {
         /// First argument is the target of the delegate. 
         /// Second argument describes call arguments.
         ///  </returns>
-        public static Func<T, object[], object> CreateDelegate<T>(Type targetType, MethodInfo method) {
-            var parameters = method.ReturnType == typeof(void) 
+        public static Func<T, object[], object> CreateDelegate<T>(Type targetType, MethodInfo method)
+        {
+            var parameters = method.ReturnType == typeof(void)
                 ? new[] { targetType }.Concat(method.GetParameters().Select(p => p.ParameterType)).ToArray()
                 : new[] { targetType }.Concat(method.GetParameters().Select(p => p.ParameterType)).Concat(new[] { method.ReturnType }).ToArray();
 
@@ -30,7 +34,7 @@ namespace Orchard.Events {
             MethodInfo genericHelper = method.ReturnType == typeof(void)
                 ? typeof(DelegateHelper).GetMethods(BindingFlags.Static | BindingFlags.NonPublic).First(m => m.Name == "BuildAction" && m.GetGenericArguments().Count() == parameters.Length)
                 : typeof(DelegateHelper).GetMethods(BindingFlags.Static | BindingFlags.NonPublic).First(m => m.Name == "BuildFunc" && m.GetGenericArguments().Count() == parameters.Length);
-            
+
             // Now supply the type arguments
             MethodInfo constructedHelper = genericHelper.MakeGenericMethod(parameters);
 
@@ -39,133 +43,155 @@ namespace Orchard.Events {
             return (Func<T, object[], object>)ret;
         }
 
-        static Func<object, object[], object> BuildFunc<T, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, TRet>(MethodInfo method)
+        {
             var func = (Func<T, TRet>)Delegate.CreateDelegate(typeof(Func<T, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target);
             return ret;
         }
 
-        static Func<object, object[], object> BuildFunc<T, T1, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0]);
             return ret;
         }
 
-        static Func<object, object[], object> BuildFunc<T, T1, T2, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, T6, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, T7, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, T8, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, T7, T8, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7], (T9)p[8]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>(MethodInfo method) {
+        static Func<object, object[], object> BuildFunc<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>(MethodInfo method)
+        {
             var func = (Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>)Delegate.CreateDelegate(typeof(Func<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TRet>), method);
             Func<object, object[], object> ret = (target, p) => func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7], (T9)p[8], (T10)p[9]);
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T>(MethodInfo method)
+        {
             var func = (Action<T>)Delegate.CreateDelegate(typeof(Action<T>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1>(MethodInfo method)
+        {
             var func = (Action<T, T1>)Delegate.CreateDelegate(typeof(Action<T, T1>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2>)Delegate.CreateDelegate(typeof(Action<T, T1, T2>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4, T5>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5, T6>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4, T5, T6>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5, T6, T7>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4, T5, T6, T7>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5, T6, T7, T8>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4, T5, T6, T7, T8>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8, T9>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8, T9>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5, T6, T7, T8, T9>)Delegate.CreateDelegate(typeof(Action<T, T1, T2, T3, T4, T5, T6, T7, T8, T9>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7], (T9)p[8]); return null; };
             return ret;
         }
 
-         static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(MethodInfo method) {
+        static Func<object, object[], object> BuildAction<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(MethodInfo method)
+        {
             var func = (Action<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>)Delegate.CreateDelegate(typeof(Action<T>), method);
             Func<object, object[], object> ret = (target, p) => { func((T)target, (T1)p[0], (T2)p[1], (T3)p[2], (T4)p[3], (T5)p[4], (T6)p[5], (T7)p[6], (T8)p[7], (T9)p[8], (T10)p[9]); return null; };
             return ret;

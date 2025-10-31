@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.MediaLibrary {
-    public class MediaDataMigration : DataMigrationImpl {
+namespace Orchard.MediaLibrary
+{
+    public class MediaDataMigration : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
 
             SchemaBuilder.CreateTable("MediaPartRecord", t => t
                 .ContentPartRecord()
@@ -103,7 +106,8 @@ namespace Orchard.MediaLibrary {
             return 7;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Image", td => td
                 .WithIdentity()
             );
@@ -127,7 +131,8 @@ namespace Orchard.MediaLibrary {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterPartDefinition("MediaPart", part => part
                 .Attachable()
                 .WithDescription("Turns a content type into a Media. Note: you need to set the stereotype to \"Media\" as well.")
@@ -160,17 +165,19 @@ namespace Orchard.MediaLibrary {
 
             return 4;
         }
-        
-        public int UpdateFrom4() {
+
+        public int UpdateFrom4()
+        {
 
             SchemaBuilder.AlterTable("MediaPartRecord", t => t
                 .CreateIndex("IDX_MediaPartRecord_FolderPath", "FolderPath")
             );
-            
+
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Image", td => td
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
             );
@@ -190,7 +197,8 @@ namespace Orchard.MediaLibrary {
             return 6;
         }
 
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             ContentDefinitionManager.AlterPartDefinition("VectorImagePart", part => part
                 .Attachable()
                 .WithDescription("Provides common metadata for a Vector Image Media.")

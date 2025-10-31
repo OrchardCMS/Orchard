@@ -1,18 +1,20 @@
-﻿using System;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentPicker.Settings;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.ContentPicker.Services {
-    public class ContentPickerNavigationProvider : INavigationProvider {
+namespace Orchard.ContentPicker.Services
+{
+    public class ContentPickerNavigationProvider : INavigationProvider
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public ContentPickerNavigationProvider(
-            IContentDefinitionManager contentDefinitionManager, 
-            IWorkContextAccessor workContextAccessor) {
+            IContentDefinitionManager contentDefinitionManager,
+            IWorkContextAccessor workContextAccessor)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
@@ -20,15 +22,15 @@ namespace Orchard.ContentPicker.Services {
 
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "content-picker"; }
-        }
+        public string MenuName => "content-picker";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             var workContext = _workContextAccessor.GetContext();
             var httpContext = workContext.HttpContext;
 
-            if (httpContext == null) {
+            if (httpContext == null)
+            {
                 return;
             }
 
@@ -40,14 +42,17 @@ namespace Orchard.ContentPicker.Services {
             ContentPickerFieldSettings settings = null;
 
             // if the picker is loaded for a specific field, apply custom settings
-            if (!String.IsNullOrEmpty(part) && !String.IsNullOrEmpty(field)) {
+            if (!string.IsNullOrEmpty(part) && !string.IsNullOrEmpty(field))
+            {
                 var definition = _contentDefinitionManager.GetPartDefinition(part).Fields.FirstOrDefault(x => x.Name == field);
-                if (definition != null) {
+                if (definition != null)
+                {
                     settings = definition.Settings.GetModel<ContentPickerFieldSettings>();
                 }
             }
 
-            if (settings != null && !settings.ShowContentTab) {
+            if (settings != null && !settings.ShowContentTab)
+            {
                 return;
             }
 

@@ -5,50 +5,61 @@ using System.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
 
-namespace Orchard.Tests.Stubs {
-    public class StubWebSiteFolder : IWebSiteFolder {
-        public IEnumerable<string> ListDirectories(string path) {
+namespace Orchard.Tests.Stubs
+{
+    public class StubWebSiteFolder : IWebSiteFolder
+    {
+        public IEnumerable<string> ListDirectories(string path)
+        {
             if (!Directory.Exists(path))
                 return Enumerable.Empty<string>();
 
             return Directory.GetDirectories(path);
         }
 
-        public IEnumerable<string> ListFiles(string path, bool recursive) {
+        public IEnumerable<string> ListFiles(string path, bool recursive)
+        {
             if (!Directory.Exists(path))
                 return Enumerable.Empty<string>();
 
             return Directory.GetFiles(path);
         }
 
-        public bool FileExists(string virtualPath) {
+        public bool FileExists(string virtualPath)
+        {
             throw new NotImplementedException();
         }
 
-        public string ReadFile(string path) {
+        public string ReadFile(string path)
+        {
             return ReadFile(path, false);
         }
 
-        public string ReadFile(string path, bool actualContent) {
+        public string ReadFile(string path, bool actualContent)
+        {
             if (!File.Exists(path))
                 return null;
 
             return File.ReadAllText(path);
         }
 
-        public void CopyFileTo(string virtualPath, Stream destination) {
+        public void CopyFileTo(string virtualPath, Stream destination)
+        {
             throw new NotImplementedException();
         }
 
-        public void CopyFileTo(string virtualPath, Stream destination, bool actualContent) {
+        public void CopyFileTo(string virtualPath, Stream destination, bool actualContent)
+        {
             throw new NotImplementedException();
         }
 
-        public IVolatileToken WhenPathChanges(string path) {
-            return new Token {IsCurrent = true};
+        public IVolatileToken WhenPathChanges(string path)
+        {
+            return new Token { IsCurrent = true };
         }
 
-        public class Token : IVolatileToken {
+        public class Token : IVolatileToken
+        {
             public bool IsCurrent { get; set; }
         }
     }

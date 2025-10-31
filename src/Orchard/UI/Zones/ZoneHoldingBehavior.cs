@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Linq.Expressions;
 using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.UI.Zones {
+namespace Orchard.UI.Zones
+{
     /// <summary>
     /// Provides the behavior of shapes that have a Zones property.
     /// Examples include Layout and Item
@@ -17,17 +17,22 @@ namespace Orchard.UI.Zones {
     /// Foo.Alpha :same
     /// 
     /// </summary>
-    public class ZoneHolding : Shape {
+    public class ZoneHolding : Shape
+    {
         private readonly Func<dynamic> _zoneFactory;
 
-        public ZoneHolding(Func<dynamic> zoneFactory) {
+        public ZoneHolding(Func<dynamic> zoneFactory)
+        {
             _zoneFactory = zoneFactory;
         }
 
         private Zones _zones;
-        public Zones Zones {
-            get {
-                if (_zones == null) {
+        public Zones Zones
+        {
+            get
+            {
+                if (_zones == null)
+                {
                     return _zones = new Zones(_zoneFactory, this);
                 }
 
@@ -35,10 +40,12 @@ namespace Orchard.UI.Zones {
             }
         }
 
-        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result)
+        {
             var name = binder.Name;
 
-            if (!base.TryGetMember(binder, out result) || (null == result)) {
+            if (!base.TryGetMember(binder, out result) || (null == result))
+            {
                 // substitute nil results with a robot that turns adds a zone on
                 // the parent when .Add is invoked
                 result = new ZoneOnDemand(_zoneFactory, this, name);
@@ -54,23 +61,28 @@ namespace Orchard.UI.Zones {
     /// InterfaceProxyBehavior()
     /// ZonesBehavior(_zoneFactory, self, _layoutShape) => Create ZoneOnDemand if member access
     /// </remarks>
-    public class Zones : Composite {
+    public class Zones : Composite
+    {
         private readonly Func<dynamic> _zoneFactory;
         private readonly object _parent;
 
-        public Zones(Func<dynamic> zoneFactory, object parent) {
+        public Zones(Func<dynamic> zoneFactory, object parent)
+        {
             _zoneFactory = zoneFactory;
             _parent = parent;
         }
 
-        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result)
+        {
             return TryGetMemberImpl(binder.Name, out result);
         }
 
-        protected override bool TryGetMemberImpl(string name, out object result) {
+        protected override bool TryGetMemberImpl(string name, out object result)
+        {
 
             var parentMember = ((dynamic)_parent)[name];
-            if (parentMember == null) {
+            if (parentMember == null)
+            {
                 result = new ZoneOnDemand(_zoneFactory, _parent, name);
                 return true;
             }
@@ -80,9 +92,11 @@ namespace Orchard.UI.Zones {
         }
 
 
-        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result) {
+        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result)
+        {
 
-            if (indexes.Count() == 1) {
+            if (indexes.Count() == 1)
+            {
                 var key = Convert.ToString(indexes.Single());
 
                 return TryGetMemberImpl(key, out result);
@@ -98,107 +112,124 @@ namespace Orchard.UI.Zones {
     /// ZoneOnDemandBehavior(_zoneFactory, _parent, name)  => when a zone (Shape) is 
     /// created, replace itself with the zone so that Layout.ZoneName is no more equal to Nil
     /// </remarks>
-    public class ZoneOnDemand : Shape {
+    public class ZoneOnDemand : Shape
+    {
 
         private readonly Func<dynamic> _zoneFactory;
         private readonly object _parent;
         private readonly string _potentialZoneName;
 
-        public ZoneOnDemand(Func<dynamic> zoneFactory, object parent, string potentialZoneName) {
+        public ZoneOnDemand(Func<dynamic> zoneFactory, object parent, string potentialZoneName)
+        {
             _zoneFactory = zoneFactory;
             _parent = parent;
             _potentialZoneName = potentialZoneName;
         }
 
-        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result)
+        {
             // NilBehavior
             result = Nil.Instance;
             return true;
         }
 
-        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result) {
+        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result)
+        {
             // NilBehavior
             result = Nil.Instance;
             return true;
         }
 
-        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result) {
+        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result)
+        {
             var name = binder.Name;
 
             // NilBehavior
-            if (!args.Any() && name != "ToString") {
-                result = Nil.Instance;    
+            if (!args.Any() && name != "ToString")
+            {
+                result = Nil.Instance;
                 return true;
             }
-            
+
             return base.TryInvokeMember(binder, args, out result);
         }
 
-        public override string ToString() {
-            return String.Empty;
+        public override string ToString()
+        {
+            return string.Empty;
         }
 
-        public override bool TryConvert(System.Dynamic.ConvertBinder binder, out object result) {
-            if (binder.ReturnType == typeof (string)) {
+        public override bool TryConvert(System.Dynamic.ConvertBinder binder, out object result)
+        {
+            if (binder.ReturnType == typeof(string))
+            {
                 result = null;
             }
-            else if (binder.ReturnType.IsValueType) {
+            else if (binder.ReturnType.IsValueType)
+            {
                 result = Activator.CreateInstance(binder.ReturnType);
             }
-            else {
+            else
+            {
                 result = null;
             }
 
             return true;
         }
 
-        public static bool operator ==(ZoneOnDemand a, object b) {
+        public static bool operator ==(ZoneOnDemand a, object b) =>
             // if ZoneOnDemand is compared to null it must return true
-            return b == null || ReferenceEquals(b, Nil.Instance);
-        }
+            b == null || ReferenceEquals(b, Nil.Instance);
 
-        public static bool operator !=(ZoneOnDemand a, object b) {
+        public static bool operator !=(ZoneOnDemand a, object b) =>
             // if ZoneOnDemand is compared to null it must return true
-            return !(a == b);
-        }
+            !(a == b);
 
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) {
+        public override bool Equals(object obj)
+        {
+            if (obj is null)
+            {
                 return true;
             }
-            
-            if (ReferenceEquals(this, obj)) {
+
+            if (ReferenceEquals(this, obj))
+            {
                 return true;
             }
-            
+
             return false;
         }
 
-        public override int GetHashCode() {
-            unchecked {
+        public override int GetHashCode()
+        {
+            unchecked
+            {
                 int hashCode = (_parent != null ? _parent.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (_potentialZoneName != null ? _potentialZoneName.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        public override Shape Add(object item, string position = null) {
-                if (item == null) {
-                    return (Shape)_parent;
-                }
+        public override Shape Add(object item, string position = null)
+        {
+            if (item == null)
+            {
+                return (Shape)_parent;
+            }
 
-                dynamic parent = _parent;
+            dynamic parent = _parent;
 
-                dynamic zone = _zoneFactory();
-                zone.Parent = _parent;
-                zone.ZoneName = _potentialZoneName;
-                parent[_potentialZoneName] = zone;
+            dynamic zone = _zoneFactory();
+            zone.Parent = _parent;
+            zone.ZoneName = _potentialZoneName;
+            parent[_potentialZoneName] = zone;
 
-                if (position == null) {
-                    return zone.Add(item);
-                }
+            if (position == null)
+            {
+                return zone.Add(item);
+            }
 
-                return zone.Add(item, position);
+            return zone.Add(item, position);
         }
     }
 }

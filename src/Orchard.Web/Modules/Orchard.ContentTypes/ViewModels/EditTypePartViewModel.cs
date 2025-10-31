@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.ContentTypes.ViewModels {
-    public class EditTypePartViewModel {
-        public EditTypePartViewModel() {
+namespace Orchard.ContentTypes.ViewModels
+{
+    public class EditTypePartViewModel
+    {
+        public EditTypePartViewModel()
+        {
             Settings = new SettingsDictionary();
         }
 
-        public EditTypePartViewModel(int index, ContentTypePartDefinition part) {
+        public EditTypePartViewModel(int index, ContentTypePartDefinition part)
+        {
             Index = index;
             PartDefinition = new EditPartViewModel(part.PartDefinition);
             Settings = part.Settings;
@@ -17,7 +21,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public int Index { get; set; }
-        public string Prefix { get { return "Parts[" + PartDefinition.Name + "]"; } }
+        public string Prefix => "Parts[" + PartDefinition.Name + "]";
         public EditPartViewModel PartDefinition { get; set; }
         public SettingsDictionary PartSettings { get; set; }
         public SettingsDictionary Settings { get; set; }
@@ -25,8 +29,6 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public ContentTypePartDefinition _Definition { get; private set; }
 
-        public string Description {
-            get { return PartSettings.ContainsKey("ContentPartSettings.Description") ? PartSettings["ContentPartSettings.Description"] : null; }
-        }
+        public string Description => PartSettings.ContainsKey("ContentPartSettings.Description") ? PartSettings["ContentPartSettings.Description"] : null;
     }
 }

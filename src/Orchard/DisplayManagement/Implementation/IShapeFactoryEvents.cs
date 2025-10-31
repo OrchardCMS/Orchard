@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.DisplayManagement.Implementation {
-    public interface IShapeFactoryEvents : IDependency {
+namespace Orchard.DisplayManagement.Implementation
+{
+    public interface IShapeFactoryEvents : IDependency
+    {
         void Creating(ShapeCreatingContext context);
         void Created(ShapeCreatedContext context);
     }
 
-    public class ShapeCreatingContext {
+    public class ShapeCreatingContext
+    {
         public IShapeFactory ShapeFactory { get; set; }
         public dynamic New { get; set; }
         public string ShapeType { get; set; }
@@ -15,14 +18,16 @@ namespace Orchard.DisplayManagement.Implementation {
         public IList<Action<ShapeCreatedContext>> OnCreated { get; set; }
     }
 
-    public class ShapeCreatedContext {
+    public class ShapeCreatedContext
+    {
         public IShapeFactory ShapeFactory { get; set; }
         public dynamic New { get; set; }
         public string ShapeType { get; set; }
         public dynamic Shape { get; set; }
     }
 
-    public abstract class ShapeFactoryEvents : IShapeFactoryEvents {
+    public abstract class ShapeFactoryEvents : IShapeFactoryEvents
+    {
         public virtual void Creating(ShapeCreatingContext context) { }
         public virtual void Created(ShapeCreatedContext context) { }
     }

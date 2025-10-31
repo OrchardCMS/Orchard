@@ -1,34 +1,42 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Orchard.Logging;
 using Orchard.Exceptions;
+using Orchard.Logging;
 
 
-namespace Orchard.Environment {
-    public interface IAssemblyLoader {
+namespace Orchard.Environment
+{
+    public interface IAssemblyLoader
+    {
         Assembly Load(string assemblyName);
     }
 
-    public class DefaultAssemblyLoader : IAssemblyLoader {
+    public class DefaultAssemblyLoader : IAssemblyLoader
+    {
         private readonly IEnumerable<IAssemblyNameResolver> _assemblyNameResolvers;
         private readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies = new ConcurrentDictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
 
-        public DefaultAssemblyLoader(IEnumerable<IAssemblyNameResolver> assemblyNameResolvers) {
+        public DefaultAssemblyLoader(IEnumerable<IAssemblyNameResolver> assemblyNameResolvers)
+        {
             _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order);
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public Assembly Load(string assemblyName) {
-            try {
+        public Assembly Load(string assemblyName)
+        {
+            try
+            {
                 return _loadedAssemblies.GetOrAdd(this.ExtractAssemblyShortName(assemblyName), shortName => LoadWorker(shortName, assemblyName));
             }
-            catch (Exception ex) {
-                if (ex.IsFatal()) {
+            catch (Exception ex)
+            {
+                if (ex.IsFatal())
+                {
                     throw;
                 }
                 Logger.Error(ex, "Error loading assembly '{0}'", assemblyName);
@@ -36,11 +44,13 @@ namespace Orchard.Environment {
             }
         }
 
-        private Assembly LoadWorker(string shortName, string fullName) {
+        private Assembly LoadWorker(string shortName, string fullName)
+        {
             Assembly result;
 
             // Try loading with full name first (if there is a full name)
-            if (fullName != shortName) {
+            if (fullName != shortName)
+            {
                 result = TryAssemblyLoad(fullName);
                 if (result != null)
                     return result;
@@ -53,7 +63,8 @@ namespace Orchard.Environment {
 
             // Try resolving the short name to a full name
             var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).FirstOrDefault(f => f != null);
-            if (resolvedName != null) {
+            if (resolvedName != null)
+            {
                 return Assembly.Load(resolvedName);
             }
 
@@ -61,22 +72,28 @@ namespace Orchard.Environment {
             return Assembly.Load(fullName);
         }
 
-        private static Assembly TryAssemblyLoad(string name) {
-            try {
+        private static Assembly TryAssemblyLoad(string name)
+        {
+            try
+            {
                 return Assembly.Load(name);
             }
-            catch {
+            catch
+            {
                 return null;
             }
         }
     }
 
-    public static class AssemblyLoaderExtensions {
-        public static string ExtractAssemblyShortName(this IAssemblyLoader assemblyLoader, string fullName) {
+    public static class AssemblyLoaderExtensions
+    {
+        public static string ExtractAssemblyShortName(this IAssemblyLoader assemblyLoader, string fullName)
+        {
             return ExtractAssemblyShortName(fullName);
         }
 
-        public static string ExtractAssemblyShortName(string fullName) {
+        public static string ExtractAssemblyShortName(string fullName)
+        {
             int index = fullName.IndexOf(',');
             if (index < 0)
                 return fullName;

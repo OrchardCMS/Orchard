@@ -1,7 +1,9 @@
 using System.Web.Security;
 
-namespace Orchard.Security {
-    public interface IMembershipSettings {
+namespace Orchard.Security
+{
+    public interface IMembershipSettings
+    {
         bool UsersCanRegister { get; set; }
         bool UsersMustValidateEmail { get; set; }
         string ValidateEmailRegisteredWebsite { get; set; }
@@ -25,7 +27,7 @@ namespace Orchard.Security {
         int MinimumUsernameLength { get; set; }
         int MaximumUsernameLength { get; set; }
         bool ForbidUsernameSpecialChars { get; set; }
-        bool AllowEmailAsUsername {get; set;}
+        bool AllowEmailAsUsername { get; set; }
         bool ForbidUsernameWhitespace { get; set; }
         bool BypassPoliciesFromBackoffice { get; set; }
 

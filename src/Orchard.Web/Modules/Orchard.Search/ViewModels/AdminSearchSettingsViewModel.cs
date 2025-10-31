@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Search.ViewModels {
-    public class AdminSearchSettingsViewModel {
-        public AdminSearchSettingsViewModel() {
+namespace Orchard.Search.ViewModels
+{
+    public class AdminSearchSettingsViewModel
+    {
+        public AdminSearchSettingsViewModel()
+        {
             AvailableIndexes = new List<string>();
         }
 

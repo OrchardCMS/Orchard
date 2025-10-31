@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Services {
+namespace Orchard.Layouts.Services
+{
     /// <summary>
     /// Maps element data to an editor compatible object model.
     /// </summary>
-    public interface ILayoutModelMapper : IDependency {
+    public interface ILayoutModelMapper : IDependency
+    {
         /// <summary>
         /// Maps the specified layout data to a JSON representation of a layout editor compatible object model.
         /// </summary>

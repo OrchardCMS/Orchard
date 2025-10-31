@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Tasks.Locking.Services {
-    public class DistributedLockSchemaBuilder {
+namespace Orchard.Tasks.Locking.Services
+{
+    public class DistributedLockSchemaBuilder
+    {
         private readonly ShellSettings _shellSettings;
         private readonly SchemaBuilder _schemaBuilder;
         private const string TableName = "Orchard_Framework_DistributedLockRecord";
 
-        public DistributedLockSchemaBuilder(ShellSettings shellSettings, SchemaBuilder schemaBuilder) {
+        public DistributedLockSchemaBuilder(ShellSettings shellSettings, SchemaBuilder schemaBuilder)
+        {
             _shellSettings = shellSettings;
             _schemaBuilder = schemaBuilder;
         }
 
-        public void CreateSchema() {
+        public void CreateSchema()
+        {
             _schemaBuilder.CreateTable(TableName, table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 // Keep 512 chars but avoid inline .Unique() to prevent MySQL TEXT/BLOB key-length errors.
@@ -23,26 +27,31 @@ namespace Orchard.Tasks.Locking.Services {
                 .Column<DateTime>("ValidUntilUtc", column => column.Nullable()));
 
             // MySQL-specific adjustment to avoid error when adding the unique constraint.
-            if (string.Equals(_shellSettings.DataProvider, "MySql", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(_shellSettings.DataProvider, "MySql", StringComparison.OrdinalIgnoreCase))
+            {
                 // Force VARCHAR(512) on MySQL (some interpreters map >255 to TEXT).
                 _schemaBuilder.ExecuteSql(
                     $"ALTER TABLE {_schemaBuilder.TableDbName(TableName)} MODIFY COLUMN Name VARCHAR(512) NOT NULL;",
                     cmd => cmd.ForProvider("MySql"));
             }
 
-            _schemaBuilder.AlterTable(TableName, table => {
+            _schemaBuilder.AlterTable(TableName, table =>
+            {
                 table.AddUniqueConstraint("UQ_DistributedLockRecord_Name", "Name");
                 table.CreateIndex("IDX_DistributedLockRecord_Name", "Name");
             });
         }
 
-        public bool SchemaExists() {
-            try {
+        public bool SchemaExists()
+        {
+            try
+            {
                 _schemaBuilder.ExecuteSql($"select 1 from {_schemaBuilder.TableDbName(TableName)}");
 
                 return true;
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }

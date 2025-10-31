@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -12,8 +12,10 @@ using Orchard.Projections.FieldTypeEditors;
 using Orchard.Projections.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Projections.Providers.Filters {
-    public class ContentFieldsFilter : IFilterProvider {
+namespace Orchard.Projections.Providers.Filters
+{
+    public class ContentFieldsFilter : IFilterProvider
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IEnumerable<IFieldTypeEditor> _fieldTypeEditors;
@@ -21,7 +23,8 @@ namespace Orchard.Projections.Providers.Filters {
         public ContentFieldsFilter(
             IContentDefinitionManager contentDefinitionManager,
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
-            IEnumerable<IFieldTypeEditor> fieldTypeEditors) {
+            IEnumerable<IFieldTypeEditor> fieldTypeEditors)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _contentFieldDrivers = contentFieldDrivers;
             _fieldTypeEditors = fieldTypeEditors;
@@ -30,25 +33,31 @@ namespace Orchard.Projections.Providers.Filters {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeFilterContext describe) {
-            foreach(var part in _contentDefinitionManager.ListPartDefinitions()) {
-                if(!part.Fields.Any()) {
+        public void Describe(DescribeFilterContext describe)
+        {
+            foreach (var part in _contentDefinitionManager.ListPartDefinitions())
+            {
+                if (!part.Fields.Any())
+                {
                     continue;
                 }
 
                 var descriptor = describe.For(part.Name + "ContentFields", T("{0} Content Fields", part.Name.CamelFriendly()), T("Content Fields for {0}", part.Name.CamelFriendly()));
 
-                foreach(var field in part.Fields) {
+                foreach (var field in part.Fields)
+                {
                     var localField = field;
                     var localPart = part;
                     var drivers = _contentFieldDrivers.Where(x => x.GetFieldInfo().Any(fi => fi.FieldTypeName == localField.FieldDefinition.Name)).ToList();
 
                     var membersContext = new DescribeMembersContext(
-                        (storageName, storageType, displayName, description) => {
+                        (storageName, storageType, displayName, description) =>
+                        {
                             // look for a compatible field type editor
                             IFieldTypeEditor fieldTypeEditor = _fieldTypeEditors.FirstOrDefault(x => x.CanHandle(storageType));
 
-                            if(fieldTypeEditor == null) {
+                            if (fieldTypeEditor == null)
+                            {
                                 return;
                             }
 
@@ -60,16 +69,18 @@ namespace Orchard.Projections.Providers.Filters {
                                 display: context => fieldTypeEditor.DisplayFilter(localPart.Name.CamelFriendly() + "." + localField.DisplayName, storageName, context.State),
                                 form: fieldTypeEditor.FormName);
                         });
-                    
-                    foreach(var driver in drivers) {
+
+                    foreach (var driver in drivers)
+                    {
                         driver.Describe(membersContext);
                     }
                 }
             }
         }
 
-        public void ApplyFilter(FilterContext context, IFieldTypeEditor fieldTypeEditor, string storageName, Type storageType, ContentPartDefinition part, ContentPartFieldDefinition field) {
-            var propertyName = String.Join(".", part.Name, field.Name, storageName ?? "");
+        public void ApplyFilter(FilterContext context, IFieldTypeEditor fieldTypeEditor, string storageName, Type storageType, ContentPartDefinition part, ContentPartFieldDefinition field)
+        {
+            var propertyName = string.Join(".", part.Name, field.Name, storageName ?? "");
 
             // use an alias with the join so that two filters on the same Field Type wont collide
             var relationship = fieldTypeEditor.GetFilterRelationship(propertyName.ToSafeName());
@@ -86,7 +97,8 @@ namespace Orchard.Projections.Providers.Filters {
             context.Query = context.Query.Where(relationship, andPredicate);
         }
 
-        public LocalizedString DisplayFilter(FilterContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition) {
+        public LocalizedString DisplayFilter(FilterContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition)
+        {
             string op = context.State.Operator;
             string value = context.State.Value;
 

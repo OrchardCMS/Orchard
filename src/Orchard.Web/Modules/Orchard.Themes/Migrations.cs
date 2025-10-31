@@ -1,15 +1,19 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Themes {
-    public class ThemesDataMigration : DataMigrationImpl {
+namespace Orchard.Themes
+{
+    public class ThemesDataMigration : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             return 1;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
 
             ContentDefinitionManager.AlterPartDefinition("DisableThemePart", builder => builder
                 .Attachable()

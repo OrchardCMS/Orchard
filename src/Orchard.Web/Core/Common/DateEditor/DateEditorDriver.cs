@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
@@ -7,46 +7,53 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 
-namespace Orchard.Core.Common.DateEditor {
-    public class DateEditorDriver : ContentPartDriver<CommonPart> {
+namespace Orchard.Core.Common.DateEditor
+{
+    public class DateEditorDriver : ContentPartDriver<CommonPart>
+    {
         private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public DateEditorDriver(
             IOrchardServices services,
-            IDateLocalizationServices dateLocalizationServices) {
-                _dateLocalizationServices = dateLocalizationServices;
-                T = NullLocalizer.Instance;
-                Services = services;
+            IDateLocalizationServices dateLocalizationServices)
+        {
+            _dateLocalizationServices = dateLocalizationServices;
+            T = NullLocalizer.Instance;
+            Services = services;
         }
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override string Prefix {
-            get { return ""; }
-        }
+        protected override string Prefix => "";
 
-        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper)
+        {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var settings = part.TypePartDefinition.Settings.GetModel<DateEditorSettings>();
-            if (!settings.ShowDateEditor) {
+            if (!settings.ShowDateEditor)
+            {
                 return null;
             }
 
             return ContentShape(
                 "Parts_Common_Date_Edit",
-                () => {
+                () =>
+                {
                     DateEditorViewModel model = shapeHelper.Parts_Common_Date_Edit(typeof(DateEditorViewModel));
-                    
-                    model.Editor = new DateTimeEditor() {
+
+                    model.Editor = new DateTimeEditor()
+                    {
                         ShowDate = true,
                         ShowTime = true
                     };
 
-                    if (part.CreatedUtc != null) {
+                    if (part.CreatedUtc != null)
+                    {
                         // show CreatedUtc only if is has been "touched", 
                         // i.e. it has been published once, or CreatedUtc has been set
 
@@ -63,25 +70,31 @@ namespace Orchard.Core.Common.DateEditor {
                             thisIsTheInitialVersionRecord &&
                             theDatesHaveNotBeenModified;
 
-                        if (!theEditorShouldBeBlank) {
+                        if (!theEditorShouldBeBlank)
+                        {
                             model.Editor.Date = _dateLocalizationServices.ConvertToLocalizedDateString(part.CreatedUtc);
                             model.Editor.Time = _dateLocalizationServices.ConvertToLocalizedTimeString(part.CreatedUtc);
                         }
                     }
 
-                    if (updater != null) {
+                    if (updater != null)
+                    {
                         updater.TryUpdateModel(model, Prefix, null, null);
 
-                        if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
-                            try {
+                        if (!string.IsNullOrWhiteSpace(model.Editor.Date) && !string.IsNullOrWhiteSpace(model.Editor.Time))
+                        {
+                            try
+                            {
                                 var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                                 part.CreatedUtc = utcDateTime;
                             }
-                            catch (FormatException) {
+                            catch (FormatException)
+                            {
                                 updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));
                             }
                         }
-                        else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
+                        else if (!string.IsNullOrWhiteSpace(model.Editor.Date) || !string.IsNullOrWhiteSpace(model.Editor.Time))
+                        {
                             updater.AddModelError(Prefix, T("Both the date and time need to be specified."));
                         }
 

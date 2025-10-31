@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Orchard.Data.Providers {
-    public class DefaultNoLockTableProvider : INoLockTableProvider {
+namespace Orchard.Data.Providers
+{
+    public class DefaultNoLockTableProvider : INoLockTableProvider
+    {
 
-        public DefaultNoLockTableProvider() {
+        public DefaultNoLockTableProvider()
+        {
 
             // We may use AutoFac to override the default tables:
             /*
@@ -26,8 +26,10 @@ namespace Orchard.Data.Providers {
 
         private IEnumerable<string> _tableNames;
 
-        public IEnumerable<string> GetTableNames() {
-            if (_tableNames == null) {
+        public IEnumerable<string> GetTableNames()
+        {
+            if (_tableNames == null)
+            {
                 _tableNames = new List<string>(TableNames
                     .Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }

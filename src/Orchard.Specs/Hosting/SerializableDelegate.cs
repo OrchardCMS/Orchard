@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Orchard.Specs.Hosting {
+namespace Orchard.Specs.Hosting
+{
     /// <summary>
     /// Makes delegates serializable where possible
     /// Adapted from http://www.codeproject.com/KB/cs/AnonymousSerialization.aspx
@@ -19,15 +20,16 @@ namespace Orchard.Specs.Hosting {
 
         internal SerializableDelegate(SerializationInfo info, StreamingContext context)
         {
-            var delegateType = (Type) info.GetValue("delegateType", typeof (Type));
+            var delegateType = (Type)info.GetValue("delegateType", typeof(Type));
 
             if (info.GetBoolean("isSerializable"))
                 //If it's a "simple" delegate we just read it straight off
-                Delegate = (TDelegate) info.GetValue("delegate", delegateType);                
-            else {
+                Delegate = (TDelegate)info.GetValue("delegate", delegateType);
+            else
+            {
                 //otherwise, we need to read its anonymous class
-                var methodInfo = (MethodInfo) info.GetValue("method", typeof (MethodInfo));
-                var anonymousClassWrapper = (AnonymousClassWrapper) info.GetValue("class", typeof (AnonymousClassWrapper));
+                var methodInfo = (MethodInfo)info.GetValue("method", typeof(MethodInfo));
+                var anonymousClassWrapper = (AnonymousClassWrapper)info.GetValue("class", typeof(AnonymousClassWrapper));
                 Delegate = (TDelegate)(object)System.Delegate.CreateDelegate(delegateType, anonymousClassWrapper.TargetInstance, methodInfo);
             }
         }
@@ -35,20 +37,21 @@ namespace Orchard.Specs.Hosting {
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("delegateType", Delegate.GetType());
-            var untypedDelegate = (Delegate) (object) Delegate;
+            var untypedDelegate = (Delegate)(object)Delegate;
             //If it's an "simple" delegate we can serialize it directly
             if ((untypedDelegate.Target == null || untypedDelegate.Method.DeclaringType.GetCustomAttributes(typeof(SerializableAttribute), false).Length > 0) && Delegate != null)
             {
                 info.AddValue("isSerializable", true);
                 info.AddValue("delegate", Delegate);
-            }                
-            else {
+            }
+            else
+            {
                 //otherwise, serialize anonymous class
                 info.AddValue("isSerializable", false);
                 info.AddValue("method", untypedDelegate.Method);
                 info.AddValue("class", new AnonymousClassWrapper(untypedDelegate.Method.DeclaringType, untypedDelegate.Target));
             }
-        }        
+        }
 
         [Serializable]
         private class AnonymousClassWrapper : ISerializable
@@ -64,16 +67,17 @@ namespace Orchard.Specs.Hosting {
 
             internal AnonymousClassWrapper(SerializationInfo info, StreamingContext context)
             {
-                var classType = (Type) info.GetValue("classType", typeof (Type));
+                var classType = (Type)info.GetValue("classType", typeof(Type));
                 TargetInstance = Activator.CreateInstance(classType);
 
-                foreach (FieldInfo field in classType.GetFields()) {
-                    if (typeof (TDelegate).IsAssignableFrom(field.FieldType))
+                foreach (FieldInfo field in classType.GetFields())
+                {
+                    if (typeof(TDelegate).IsAssignableFrom(field.FieldType))
                         //If the field is a delegate
                         field.SetValue(TargetInstance, ((SerializableDelegate<TDelegate>)info.GetValue(field.Name, typeof(SerializableDelegate<TDelegate>))).Delegate);
                     else if (!field.FieldType.IsSerializable)
                         //If the field is an anonymous class
-                        field.SetValue(TargetInstance, ((AnonymousClassWrapper) info.GetValue(field.Name, typeof (AnonymousClassWrapper))).TargetInstance);
+                        field.SetValue(TargetInstance, ((AnonymousClassWrapper)info.GetValue(field.Name, typeof(AnonymousClassWrapper))).TargetInstance);
                     else
                         //otherwise
                         field.SetValue(TargetInstance, info.GetValue(field.Name, field.FieldType));
@@ -84,11 +88,14 @@ namespace Orchard.Specs.Hosting {
             {
                 info.AddValue("classType", targetType);
 
-                foreach (FieldInfo field in targetType.GetFields()) {
+                foreach (FieldInfo field in targetType.GetFields())
+                {
                     //See corresponding comments above
-                    if (typeof (TDelegate).IsAssignableFrom(field.FieldType)) {
+                    if (typeof(TDelegate).IsAssignableFrom(field.FieldType))
+                    {
                         var value = (TDelegate)field.GetValue(TargetInstance);
-                        if (value != null) {
+                        if (value != null)
+                        {
                             info.AddValue(field.Name, new SerializableDelegate<TDelegate>(value));
                         }
                     }

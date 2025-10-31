@@ -1,26 +1,28 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Activities {
-    public abstract class ContentActivity : Event {
+namespace Orchard.Workflows.Activities
+{
+    public abstract class ContentActivity : Event
+    {
 
         public Localizer T { get; set; }
 
-        public override bool CanStartWorkflow {
-            get { return true; }
-        }
+        public override bool CanStartWorkflow => true;
 
-        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            try {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
+            try
+            {
 
                 var contentTypesState = activityContext.GetState<string>("ContentTypes");
 
                 // "" means 'any'
-                if (String.IsNullOrEmpty(contentTypesState)) {
+                if (string.IsNullOrEmpty(contentTypesState))
+                {
                     return true;
                 }
 
@@ -28,105 +30,82 @@ namespace Orchard.Workflows.Activities {
 
                 var content = workflowContext.Content;
 
-                if (content == null) {
+                if (content == null)
+                {
                     return false;
                 }
 
                 return contentTypes.Any(contentType => content.ContentItem.TypeDefinition.Name == contentType);
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return new[] { T("Done") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             yield return T("Done");
         }
 
-        public override string Form {
-            get {
-                return "SelectContentTypes";
-            }
-        }
+        public override string Form => "SelectContentTypes";
 
-        public override LocalizedString Category {
-            get { return T("Content Items"); }
-        }
+        public override LocalizedString Category => T("Content Items");
     }
 
-    public class ContentCreatedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentCreated"; }
-        }
+    public class ContentCreatedActivity : ContentActivity
+    {
+        public override string Name => "ContentCreated";
 
-        public override LocalizedString Description {
-            get { return T("Content is created."); }
-        }
+        public override LocalizedString Description => T("Content is created.");
     }
 
-    public class ContentUpdatedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentUpdated"; }
-        }
+    public class ContentUpdatedActivity : ContentActivity
+    {
+        public override string Name => "ContentUpdated";
 
-        public override LocalizedString Description {
-            get { return T("Content is updated."); }
-        }
+        public override LocalizedString Description => T("Content is updated.");
     }
 
-    public class ContentFirstUpdatedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentFirstUpdated"; }
-        }
+    public class ContentFirstUpdatedActivity : ContentActivity
+    {
+        public override string Name => "ContentFirstUpdated";
 
-        public override LocalizedString Description {
-            get { return T("Content is updated for the first time."); }
-        }
+        public override LocalizedString Description => T("Content is updated for the first time.");
     }
 
-    public class ContentPublishedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentPublished"; }
-        }
+    public class ContentPublishedActivity : ContentActivity
+    {
+        public override string Name => "ContentPublished";
 
 
-        public override LocalizedString Description {
-            get { return T("Content is published."); }
-        }
+        public override LocalizedString Description => T("Content is published.");
     }
 
-    public class ContentUnpublishedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentUnpublished"; }
-        }
+    public class ContentUnpublishedActivity : ContentActivity
+    {
+        public override string Name => "ContentUnpublished";
 
 
-        public override LocalizedString Description {
-            get { return T("Content is unpublished."); }
-        }
+        public override LocalizedString Description => T("Content is unpublished.");
     }
-    public class ContentVersionedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentVersioned"; }
-        }
+    public class ContentVersionedActivity : ContentActivity
+    {
+        public override string Name => "ContentVersioned";
 
 
-        public override LocalizedString Description {
-            get { return T("Content is versioned."); }
-        }
+        public override LocalizedString Description => T("Content is versioned.");
     }
 
-    public class ContentRemovedActivity : ContentActivity {
-        public override string Name {
-            get { return "ContentRemoved"; }
-        }
+    public class ContentRemovedActivity : ContentActivity
+    {
+        public override string Name => "ContentRemoved";
 
-        public override LocalizedString Description {
-            get { return T("Content is removed."); }
-        }
+        public override LocalizedString Description => T("Content is removed.");
     }
 }

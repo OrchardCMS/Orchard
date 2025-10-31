@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
@@ -7,8 +7,10 @@ using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Core.Containers {
-    public class AdminMenu : INavigationProvider {
+namespace Orchard.Core.Containers
+{
+    public class AdminMenu : INavigationProvider
+    {
         private readonly IContainerService _containerService;
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationService _authorizationService;
@@ -18,7 +20,8 @@ namespace Orchard.Core.Containers {
             IContainerService containerService,
             IContentManager contentManager,
             IAuthorizationService authorizationService,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
             _containerService = containerService;
             _contentManager = contentManager;
             _authorizationService = authorizationService;
@@ -26,9 +29,10 @@ namespace Orchard.Core.Containers {
         }
 
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder.AddImageSet("container");
 
             var containers = _containerService
@@ -41,29 +45,36 @@ namespace Orchard.Core.Containers {
                     content))
                 .ToList();
 
-            foreach (var container in containers) {
+            foreach (var container in containers)
+            {
                 var closureContainer = container;
 
-                if (!string.IsNullOrWhiteSpace(container.AdminMenuImageSet)) {
+                if (!string.IsNullOrWhiteSpace(container.AdminMenuImageSet))
+                {
                     builder.AddImageSet(container.AdminMenuImageSet.Trim());
                 }
 
-                builder.Add(T(container.AdminMenuText), container.AdminMenuPosition, item => {
+                builder.Add(T(container.AdminMenuText), container.AdminMenuPosition, item =>
+                {
                     var containedItems = _containerService.GetContentItems(closureContainer.Id, VersionOptions.Latest).ToList();
                     var actualContainer = closureContainer;
                     var position = 0;
 
                     // If the list has just a single item that happens to be a container itself,
                     // we will treat that one as the actual container to provide a nice & quick way to manage that list.
-                    if (containedItems.Count == 1) {
+                    if (containedItems.Count == 1)
+                    {
                         var containedItem = containedItems.First().As<ContainerPart>();
 
-                        if (containedItem != null) {
+                        if (containedItem != null)
+                        {
                             actualContainer = containedItem;
-                            foreach (var itemContentType in containedItem.ItemContentTypes) {
+                            foreach (var itemContentType in containedItem.ItemContentTypes)
+                            {
                                 var closureItemContentType = itemContentType;
                                 item.Add(T("New {0}", itemContentType.DisplayName), string.Format("1.{0}", position++), subItem => subItem
-                                    .Action("Create", "Admin", new {
+                                    .Action("Create", "Admin", new
+                                    {
                                         id = closureItemContentType.Name,
                                         containerid = containedItem.Id,
                                         area = "Contents"
@@ -77,10 +88,12 @@ namespace Orchard.Core.Containers {
                         .AddClass(closureContainer.AdminMenuText.HtmlClassify())
                         .LinkToFirstChild(false);
 
-                    foreach (var itemContentType in closureContainer.ItemContentTypes) {
+                    foreach (var itemContentType in closureContainer.ItemContentTypes)
+                    {
                         var closureItemContentType = itemContentType;
                         item.Add(T("New {0}", itemContentType.DisplayName), string.Format("1.{0}", position++), subItem => subItem
-                            .Action("Create", "Admin", new {
+                            .Action("Create", "Admin", new
+                            {
                                 id = closureItemContentType.Name,
                                 containerid = container.Id,
                                 area = "Contents"

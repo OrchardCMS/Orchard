@@ -1,25 +1,30 @@
-﻿using System;
+using System;
 using System.Globalization;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.PropertyEditors.Forms {
-    public class NumericPropertyForm : IFormProvider {
+namespace Orchard.Projections.PropertyEditors.Forms
+{
+    public class NumericPropertyForm : IFormProvider
+    {
 
         public const string FormName = "NumericProperty";
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public NumericPropertyForm(IShapeFactory shapeFactory) {
+        public NumericPropertyForm(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         _Options: Shape.Fieldset(
@@ -42,18 +47,21 @@ namespace Orchard.Projections.PropertyEditors.Forms {
 
         }
 
-        public static string FormatNumber(decimal number, dynamic state, string culture) {
+        public static string FormatNumber(decimal number, dynamic state, string culture)
+        {
             var cultureInfo = CultureInfo.CreateSpecificCulture(culture);
 
             string prefix = state.Prefix;
             string result = number.ToString(cultureInfo);
-            
-            if(!String.IsNullOrEmpty(prefix)) {
+
+            if (!string.IsNullOrEmpty(prefix))
+            {
                 result = prefix + result;
             }
 
             string suffix = state.Suffix;
-            if (!String.IsNullOrEmpty(suffix)) {
+            if (!string.IsNullOrEmpty(suffix))
+            {
                 result = result + suffix;
             }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
@@ -7,19 +7,25 @@ using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class HiddenFieldElementDriver : FormsElementDriver<HiddenField> {
+namespace Orchard.DynamicForms.Drivers
+{
+    public class HiddenFieldElementDriver : FormsElementDriver<HiddenField>
+    {
         private readonly ITokenizer _tokenizer;
-        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public HiddenFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices)
+        {
             _tokenizer = tokenizer;
         }
 
-        protected override IEnumerable<string> FormNames {
+        protected override IEnumerable<string> FormNames
+        {
             get { yield return "HiddenField"; }
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("HiddenField", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("HiddenField", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "HiddenField",
@@ -34,7 +40,8 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(HiddenField element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(HiddenField element, ElementDisplayingContext context)
+        {
             var tokenData = context.GetTokenData();
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
 

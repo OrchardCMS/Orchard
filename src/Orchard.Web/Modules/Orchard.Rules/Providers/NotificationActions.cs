@@ -1,16 +1,19 @@
-﻿using System;
+using System;
+using Orchard.Localization;
 using Orchard.Rules.Models;
 using Orchard.Rules.Services;
-using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
 
-namespace Orchard.Rules.Providers {
-    public class NotificationActions : IActionProvider {
+namespace Orchard.Rules.Providers
+{
+    public class NotificationActions : IActionProvider
+    {
         private readonly INotifier _notifier;
         private readonly ITokenizer _tokenizer;
 
-        public NotificationActions(INotifier notifier, ITokenizer tokenizer) {
+        public NotificationActions(INotifier notifier, ITokenizer tokenizer)
+        {
             _notifier = notifier;
             _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
@@ -18,13 +21,15 @@ namespace Orchard.Rules.Providers {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeActionContext describe) {
+        public void Describe(DescribeActionContext describe)
+        {
             describe.For("Notification", T("Notification"), T("Notifications"))
                 .Element(
                     "Notify",
                     T("Notify"),
                     T("Display a message."),
-                    context => {
+                    context =>
+                    {
                         var notification = context.Properties["notification"];
                         var message = context.Properties["message"];
 

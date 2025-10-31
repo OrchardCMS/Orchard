@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Environment.Extensions.Models {
-    public class ExtensionDescriptor {
-        public ExtensionDescriptor() {
+namespace Orchard.Environment.Extensions.Models
+{
+    public class ExtensionDescriptor
+    {
+        public ExtensionDescriptor()
+        {
             LifecycleStatus = LifecycleStatus.Production;
         }
 
@@ -16,13 +19,13 @@ namespace Orchard.Environment.Extensions.Models {
         /// </summary>
         public string Id { get; set; }
 
-        public string VirtualPath { get { return Location + "/" + Id; } }
+        public string VirtualPath => Location + "/" + Id;
 
         /// <summary>
         /// The extension type.
         /// </summary>
         public string ExtensionType { get; set; }
-        
+
         // extension metadata
         public string Name { get; set; }
         public string Path { get; set; }

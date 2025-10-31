@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Orchard.Caching;
 
-namespace Orchard.Environment {
-    public interface IAssemblyNameResolver {
+namespace Orchard.Environment
+{
+    public interface IAssemblyNameResolver
+    {
         int Order { get; }
 
         /// <summary>
@@ -13,10 +15,12 @@ namespace Orchard.Environment {
         string Resolve(string shortName);
     }
 
-    public class AppDomainAssemblyNameResolver : IAssemblyNameResolver {
-        public int Order { get { return 10; } }
+    public class AppDomainAssemblyNameResolver : IAssemblyNameResolver
+    {
+        public int Order => 10;
 
-        public string Resolve(string shortName) {
+        public string Resolve(string shortName)
+        {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, AssemblyLoaderExtensions.ExtractAssemblyShortName(a.FullName)))
@@ -25,16 +29,19 @@ namespace Orchard.Environment {
         }
     }
 
-    public class OrchardFrameworkAssemblyNameResolver : IAssemblyNameResolver {
+    public class OrchardFrameworkAssemblyNameResolver : IAssemblyNameResolver
+    {
         private readonly ICacheManager _cacheManager;
 
-        public OrchardFrameworkAssemblyNameResolver(ICacheManager cacheManager) {
+        public OrchardFrameworkAssemblyNameResolver(ICacheManager cacheManager)
+        {
             _cacheManager = cacheManager;
         }
 
-        public int Order { get { return 20; } }
+        public int Order => 20;
 
-        public string Resolve(string shortName) {
+        public string Resolve(string shortName)
+        {
             // A few common .net framework assemblies are referenced by the Orchard.Framework assembly.
             // Look into those to see if we can find the assembly we are looking for.
             var orchardFrameworkReferences = _cacheManager.Get(typeof(IAssemblyLoader), true, ctx =>
@@ -44,7 +51,8 @@ namespace Orchard.Environment {
                             .ToDictionary(n => n.Key /*short assembly name*/, g => g.OrderBy(n => n.Version).Last() /* highest assembly version */, StringComparer.OrdinalIgnoreCase));
 
             AssemblyName assemblyName;
-            if (orchardFrameworkReferences.TryGetValue(shortName, out assemblyName)) {
+            if (orchardFrameworkReferences.TryGetValue(shortName, out assemblyName))
+            {
                 return assemblyName.FullName;
             }
 
@@ -52,16 +60,19 @@ namespace Orchard.Environment {
         }
     }
 
-    public class GacAssemblyNameResolver : IAssemblyNameResolver {
+    public class GacAssemblyNameResolver : IAssemblyNameResolver
+    {
         private readonly ICacheManager _cacheManager;
 
-        public GacAssemblyNameResolver(ICacheManager cacheManager) {
+        public GacAssemblyNameResolver(ICacheManager cacheManager)
+        {
             _cacheManager = cacheManager;
         }
 
-        public int Order { get { return 30; } }
+        public int Order => 30;
 
-        public string Resolve(string shortName) {
+        public string Resolve(string shortName)
+        {
             // Look in the GAC for commonly known .net frx assemblies
             // Note: We trim processor architecture to make things easier.
             // see http://msdn.microsoft.com/en-us/library/k8xx4k69.aspx:
@@ -76,28 +87,33 @@ namespace Orchard.Environment {
                 .ToDictionary(s => AssemblyLoaderExtensions.ExtractAssemblyShortName(s), StringComparer.OrdinalIgnoreCase));
 
             string fullName;
-            if (lookup.TryGetValue(shortName, out fullName)) {
+            if (lookup.TryGetValue(shortName, out fullName))
+            {
                 return fullName;
             }
 
             return null;
         }
 
-        private static string TrimProcessorArchitecture(string value) {
+        private static string TrimProcessorArchitecture(string value)
+        {
             value = RemoveOptionalSuffix(value, ", processorArchitecture=MSIL");
             value = RemoveOptionalSuffix(value, ", processorArchitecture=AMD64");
             value = RemoveOptionalSuffix(value, ", processorArchitecture=x86");
             return value;
         }
 
-        private static string RemoveOptionalSuffix(string value, string suffix) {
-            if (value.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) {
+        private static string RemoveOptionalSuffix(string value, string suffix)
+        {
+            if (value.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+            {
                 return value.Substring(0, value.Length - suffix.Length);
             }
             return value;
         }
 
-        private static string GetGacListForDotNet40() {
+        private static string GetGacListForDotNet40()
+        {
             // Note: this is the result of running "gacutil -l  | findstr /i /c:"version=4.0.0" | sort" in a command prompt
             return @"
   Accessibility, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL

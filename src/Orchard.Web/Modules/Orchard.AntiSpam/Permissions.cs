@@ -1,20 +1,24 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.AntiSpam {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.AntiSpam
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission ManageAntiSpam = new Permission { Description = "Manage anti-spam", Name = "ManageAntiSpam" };
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 ManageAntiSpam,
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
@@ -34,7 +38,7 @@ namespace Orchard.AntiSpam {
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new Permission[0] 
+                    Permissions = new Permission[0]
                 },
             };
         }

@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Projections.Models {
-    public class QueryPartRecord : ContentPartRecord {
-        public QueryPartRecord() {
+namespace Orchard.Projections.Models
+{
+    public class QueryPartRecord : ContentPartRecord
+    {
+        public QueryPartRecord()
+        {
             VersionScope = QueryVersionScopeOptions.Published;
             FilterGroups = new List<FilterGroupRecord>();
             SortCriteria = new List<SortCriterionRecord>();

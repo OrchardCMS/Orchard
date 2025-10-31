@@ -1,9 +1,12 @@
-﻿using Orchard.Data.Migration;
+using Orchard.Data.Migration;
 
-namespace Orchard.Packaging {
-    public class Migrations: DataMigrationImpl {
-        public int Create() {
-            SchemaBuilder.CreateTable("PackagingSource", 
+namespace Orchard.Packaging
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
+            SchemaBuilder.CreateTable("PackagingSource",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("FeedTitle", c => c.WithLength(255))

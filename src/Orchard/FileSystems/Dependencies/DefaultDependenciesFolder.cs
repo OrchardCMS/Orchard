@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -7,15 +7,18 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.FileSystems.Dependencies {
-    public class DefaultDependenciesFolder : IDependenciesFolder {
+namespace Orchard.FileSystems.Dependencies
+{
+    public class DefaultDependenciesFolder : IDependenciesFolder
+    {
         private const string BasePath = "Dependencies";
         private const string FileName = "dependencies.xml";
         private readonly ICacheManager _cacheManager;
         private readonly IAppDataFolder _appDataFolder;
         private readonly InvalidationToken _writeThroughToken;
 
-        public DefaultDependenciesFolder(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
+        public DefaultDependenciesFolder(ICacheManager cacheManager, IAppDataFolder appDataFolder)
+        {
             _cacheManager = cacheManager;
             _appDataFolder = appDataFolder;
             _writeThroughToken = new InvalidationToken();
@@ -25,20 +28,22 @@ namespace Orchard.FileSystems.Dependencies {
         public Localizer T { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        private string PersistencePath {
-            get { return _appDataFolder.Combine(BasePath, FileName); }
-        }
+        private string PersistencePath => _appDataFolder.Combine(BasePath, FileName);
 
-        public DependencyDescriptor GetDescriptor(string moduleName) {
+        public DependencyDescriptor GetDescriptor(string moduleName)
+        {
             return LoadDescriptors().SingleOrDefault(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, moduleName));
         }
 
-        public IEnumerable<DependencyDescriptor> LoadDescriptors() {
+        public IEnumerable<DependencyDescriptor> LoadDescriptors()
+        {
             return _cacheManager.Get(PersistencePath, true,
-                                     ctx => {
+                                     ctx =>
+                                     {
                                          _appDataFolder.CreateDirectory(BasePath);
 
-                                         if (!DisableMonitoring) {
+                                         if (!DisableMonitoring)
+                                         {
                                              ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
                                          }
 
@@ -49,40 +54,48 @@ namespace Orchard.FileSystems.Dependencies {
                                      });
         }
 
-        public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
+        public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors)
+        {
             var existingDescriptors = LoadDescriptors().OrderBy(d => d.Name);
             var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
 
-            if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
+            if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer()))
+            {
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }
         }
 
-        private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {
+        private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath)
+        {
             Func<string, XName> ns = (name => XName.Get(name));
             Func<XElement, string, string> elem = (e, name) => e.Element(ns(name)).Value;
 
             if (!_appDataFolder.FileExists(persistancePath))
                 return Enumerable.Empty<DependencyDescriptor>();
 
-            using (var stream = _appDataFolder.OpenFile(persistancePath)) {
+            using (var stream = _appDataFolder.OpenFile(persistancePath))
+            {
                 XDocument document = XDocument.Load(stream);
                 return document
                     .Elements(ns("Dependencies"))
                     .Elements(ns("Dependency"))
-                    .Select(e => new DependencyDescriptor {
+                    .Select(e => new DependencyDescriptor
+                    {
                         Name = elem(e, "ModuleName"),
                         VirtualPath = elem(e, "VirtualPath"),
                         LoaderName = elem(e, "LoaderName"),
-                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
+                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor
+                        {
                             Name = elem(r, "Name"),
                             LoaderName = elem(r, "LoaderName"),
                             VirtualPath = elem(r, "VirtualPath")
-                    })}).ToList();
+                        })
+                    }).ToList();
             }
         }
 
-        private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies) {
+        private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies)
+        {
             Func<string, XName> ns = (name => XName.Get(name));
 
             var document = new XDocument();
@@ -99,7 +112,8 @@ namespace Orchard.FileSystems.Dependencies {
 
             document.Root.Add(elements);
 
-            using (var stream = _appDataFolder.CreateFile(persistancePath)) {
+            using (var stream = _appDataFolder.CreateFile(persistancePath))
+            {
                 document.Save(stream, SaveOptions.None);
             }
 
@@ -107,14 +121,17 @@ namespace Orchard.FileSystems.Dependencies {
             _writeThroughToken.IsCurrent = false;
         }
 
-        private class InvalidationToken : IVolatileToken {
+        private class InvalidationToken : IVolatileToken
+        {
             public bool IsCurrent { get; set; }
         }
 
-        private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor> {
+        private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor>
+        {
             private readonly ReferenceDescriptorComparer _referenceDescriptorComparer = new ReferenceDescriptorComparer();
 
-            public override bool Equals(DependencyDescriptor x, DependencyDescriptor y) {
+            public override bool Equals(DependencyDescriptor x, DependencyDescriptor y)
+            {
                 return
                     StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
@@ -122,7 +139,8 @@ namespace Orchard.FileSystems.Dependencies {
                     x.References.SequenceEqual(y.References, _referenceDescriptorComparer);
             }
 
-            public override int GetHashCode(DependencyDescriptor obj) {
+            public override int GetHashCode(DependencyDescriptor obj)
+            {
                 return
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^
@@ -131,8 +149,10 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        private class ReferenceDescriptorComparer : EqualityComparer<DependencyReferenceDescriptor> {
-            public override bool Equals(DependencyReferenceDescriptor x, DependencyReferenceDescriptor y) {
+        private class ReferenceDescriptorComparer : EqualityComparer<DependencyReferenceDescriptor>
+        {
+            public override bool Equals(DependencyReferenceDescriptor x, DependencyReferenceDescriptor y)
+            {
                 return
                     StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
@@ -140,7 +160,8 @@ namespace Orchard.FileSystems.Dependencies {
 
             }
 
-            public override int GetHashCode(DependencyReferenceDescriptor obj) {
+            public override int GetHashCode(DependencyReferenceDescriptor obj)
+            {
                 return
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^

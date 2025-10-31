@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Web.Mvc;
 using ImageResizer;
@@ -8,15 +8,19 @@ using Orchard.Localization;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Services;
 
-namespace Orchard.MediaProcessing.Providers.Filters {
-    public class FormatFilter : IImageFilterProvider {
-        public FormatFilter() {
+namespace Orchard.MediaProcessing.Providers.Filters
+{
+    public class FormatFilter : IImageFilterProvider
+    {
+        public FormatFilter()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeFilterContext describe) {
+        public void Describe(DescribeFilterContext describe)
+        {
             describe.For("Transform", T("Transform"), T("Transform"))
                 .Element("Format", T("Format"), T("Change the format of the image."),
                          ApplyFilter,
@@ -25,44 +29,52 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                 );
         }
 
-        public void ApplyFilter(FilterContext context) {
+        public void ApplyFilter(FilterContext context)
+        {
             string format = context.State.Format;
             int quality = context.State.Quality;
 
-            var settings = new ResizeSettings {
+            var settings = new ResizeSettings
+            {
                 Quality = quality,
                 Format = format
             };
 
             var result = new MemoryStream();
-            if (context.Media.CanSeek) {
+            if (context.Media.CanSeek)
+            {
                 context.Media.Seek(0, SeekOrigin.Begin);
             }
-            
+
             ImageBuilder.Current.Build(context.Media, result, settings);
 
             context.FilePath = Path.ChangeExtension(context.FilePath, format);
             context.Media = result;
         }
 
-        public LocalizedString DisplayFilter(FilterContext context) {
+        public LocalizedString DisplayFilter(FilterContext context)
+        {
             return T("Format the image to {0}", (string)context.State.Format);
         }
     }
 
-    public class FormatFilterForms : IFormProvider {
+    public class FormatFilterForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public FormatFilterForms(
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
                     var f = Shape.Form(
                         Id: "FormatFilter",
                         _Format: Shape.SelectList(

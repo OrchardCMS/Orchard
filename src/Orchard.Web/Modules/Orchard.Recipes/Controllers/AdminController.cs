@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Configuration;
@@ -12,9 +12,11 @@ using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Recipes.Controllers {
+namespace Orchard.Recipes.Controllers
+{
     [Admin]
-    public class AdminController : Controller {
+    public class AdminController : Controller
+    {
         private readonly IExtensionManager _extensionManager;
         private readonly IRecipeHarvester _recipeHarvester;
         private readonly IRecipeManager _recipeManager;
@@ -28,7 +30,8 @@ namespace Orchard.Recipes.Controllers {
             IRecipeManager recipeManager,
             IRecipeResultAccessor recipeResultAccessor,
             ShellSettings shellSettings,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Services = services;
             _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
@@ -44,7 +47,8 @@ namespace Orchard.Recipes.Controllers {
         public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to execute recipe files.")))
                 return new HttpUnauthorizedResult();
 
@@ -52,9 +56,11 @@ namespace Orchard.Recipes.Controllers {
                 .Where(extensionDescriptor => ExtensionIsAllowed(extensionDescriptor))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name);
 
-            var viewModel = new RecipesViewModel {
+            var viewModel = new RecipesViewModel
+            {
                 Modules = modules
-                    .Select(x => new ModuleRecipesViewModel {
+                    .Select(x => new ModuleRecipesViewModel
+                    {
                         Descriptor = x,
                         Recipes = _recipeHarvester.HarvestRecipes(x.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
                     })
@@ -67,7 +73,8 @@ namespace Orchard.Recipes.Controllers {
         }
 
         [HttpPost, ActionName("Recipes")]
-        public ActionResult RecipesPOST(string moduleId, string name) {
+        public ActionResult RecipesPOST(string moduleId, string name)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to execute recipe files.")))
                 return new HttpUnauthorizedResult();
 
@@ -75,38 +82,44 @@ namespace Orchard.Recipes.Controllers {
                 .Where(extensionDescriptor => extensionDescriptor.Id == moduleId && ExtensionIsAllowed(extensionDescriptor))
                 .FirstOrDefault();
 
-            if (module == null) {
+            if (module == null)
+            {
                 return HttpNotFound();
             }
 
             var recipe = _recipeHarvester.HarvestRecipes(module.Id).FirstOrDefault(x => !x.IsSetupRecipe && x.Name == name);
 
-            if (recipe == null) {
+            if (recipe == null)
+            {
                 return HttpNotFound();
             }
 
             var executionId = _recipeManager.Execute(recipe);
 
-            if (string.IsNullOrEmpty(executionId)) {
+            if (string.IsNullOrEmpty(executionId))
+            {
                 Logger.Error("Error while executing recipe {0} in {1}.", name, moduleId);
 
                 Services.Notifier.Error(T("Error while executing recipe {0} in {1}.", name, moduleId));
 
                 return RedirectToAction("Index");
             }
-            else {
+            else
+            {
                 return RedirectToAction("RecipeResult", new { executionId });
             }
 
         }
 
-        public ActionResult RecipeResult(string executionId) {
+        public ActionResult RecipeResult(string executionId)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to view recipe file execution results.")))
                 return new HttpUnauthorizedResult();
 
             var result = _recipeResultAccessor.GetResult(executionId);
 
-            var viewModel = new RecipeResultViewModel() {
+            var viewModel = new RecipeResultViewModel()
+            {
                 Result = result
             };
 
@@ -117,7 +130,8 @@ namespace Orchard.Recipes.Controllers {
         /// <summary>
         /// Checks whether the given Extension is allowed for the current Tenant.
         /// </summary>
-        private bool ExtensionIsAllowed(ExtensionDescriptor extensionDescriptor) {
+        private bool ExtensionIsAllowed(ExtensionDescriptor extensionDescriptor)
+        {
             return _shellSettings.Modules.Length == 0 || _shellSettings.Modules.Contains(extensionDescriptor.Id);
         }
     }

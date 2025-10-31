@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard {
-    public class OrchardParameters : MarshalByRefObject {
+namespace Orchard
+{
+    public class OrchardParameters : MarshalByRefObject
+    {
         public bool Verbose { get; set; }
         public string VirtualPath { get; set; }
         public string WorkingDirectory { get; set; }
@@ -11,7 +13,8 @@ namespace Orchard {
         public IList<string> ResponseFiles { get; set; }
         public IDictionary<string, string> Switches { get; set; }
 
-        public override object InitializeLifetimeService() {
+        public override object InitializeLifetimeService()
+        {
             // never expire the cross-AppDomain lease on this object
             return null;
         }

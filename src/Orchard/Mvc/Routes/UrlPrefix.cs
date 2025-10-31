@@ -1,17 +1,21 @@
-﻿using System;
+using System;
 
-namespace Orchard.Mvc.Routes {
+namespace Orchard.Mvc.Routes
+{
     /// <summary>
     /// Small worker class to perform path prefix adjustments
     /// </summary>
-    public class UrlPrefix {
+    public class UrlPrefix
+    {
         private readonly string _prefix;
 
-        public UrlPrefix(string prefix) {
+        public UrlPrefix(string prefix)
+        {
             _prefix = prefix.TrimStart('~').Trim('/');
         }
 
-        public string RemoveLeadingSegments(string path) {
+        public string RemoveLeadingSegments(string path)
+        {
             var beginIndex = 0;
             if (path.Length > beginIndex && path[beginIndex] == '~')
                 ++beginIndex;
@@ -19,27 +23,33 @@ namespace Orchard.Mvc.Routes {
                 ++beginIndex;
 
             var endIndex = beginIndex + _prefix.Length;
-            if (path.Length == endIndex) {
+            if (path.Length == endIndex)
+            {
                 // no-op
             }
-            else if (path.Length > endIndex && path[endIndex] == '/') {
+            else if (path.Length > endIndex && path[endIndex] == '/')
+            {
                 // don't include slash after segment in result
                 ++endIndex;
             }
-            else {
+            else
+            {
                 // too short to compare - return unmodified
                 return path;
             }
 
-            if (string.Compare(path, beginIndex, _prefix, 0, _prefix.Length, StringComparison.OrdinalIgnoreCase) == 0) {
+            if (string.Compare(path, beginIndex, _prefix, 0, _prefix.Length, StringComparison.OrdinalIgnoreCase) == 0)
+            {
                 return path.Substring(0, beginIndex) + path.Substring(endIndex);
             }
 
             return path;
         }
 
-        public string PrependLeadingSegments(string path) {
-            if (path == "~") {
+        public string PrependLeadingSegments(string path)
+        {
+            if (path == "~")
+            {
                 // special case for peculiar situation
                 return "~/" + _prefix + "/";
             }

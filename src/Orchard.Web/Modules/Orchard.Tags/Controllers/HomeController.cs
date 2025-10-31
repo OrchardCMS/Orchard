@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -11,9 +10,11 @@ using Orchard.Tags.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Tags.Controllers {
+namespace Orchard.Tags.Controllers
+{
     [ValidateInput(false), Themed]
-    public class HomeController : Controller {
+    public class HomeController : Controller
+    {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
@@ -22,30 +23,34 @@ namespace Orchard.Tags.Controllers {
             ITagService tagService,
             IContentManager contentManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             _tagService = tagService;
             _contentManager = contentManager;
             _siteService = siteService;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
-        
+
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             var tags = _tagService.GetTags();
             var model = new TagsIndexViewModel { Tags = tags.ToList() };
             return View(model);
         }
 
-        public ActionResult Search(string tagName, PagerParameters pagerParameters) {
+        public ActionResult Search(string tagName, PagerParameters pagerParameters)
+        {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var tag = _tagService.GetTagByName(tagName);
 
-            if (tag == null) {
+            if (tag == null)
+            {
                 return RedirectToAction("Index");
             }
 
@@ -56,7 +61,8 @@ namespace Orchard.Tags.Controllers {
             list.AddRange(tagShapes);
 
             var totalItemCount = _tagService.GetTaggedContentItemCount(tag.Id);
-            var viewModel = new TagsSearchViewModel {
+            var viewModel = new TagsSearchViewModel
+            {
                 TagName = tag.TagName,
                 List = list,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)

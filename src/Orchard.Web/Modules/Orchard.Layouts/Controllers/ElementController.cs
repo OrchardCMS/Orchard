@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Data;
@@ -13,9 +13,11 @@ using Orchard.Layouts.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 
-namespace Orchard.Layouts.Controllers {
+namespace Orchard.Layouts.Controllers
+{
     [Admin]
-    public class ElementController : Controller, IUpdateModel {
+    public class ElementController : Controller, IUpdateModel
+    {
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
         private readonly IShapeFactory _shapeFactory;
@@ -33,7 +35,8 @@ namespace Orchard.Layouts.Controllers {
             IContentManager contentManager,
             IObjectStore objectStore,
             IShapeDisplay shapeDisplay,
-            ILayoutModelMapper mapper) {
+            ILayoutModelMapper mapper)
+        {
 
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
@@ -47,8 +50,10 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public RedirectToRouteResult Edit(string session, string typeName, string elementData, string elementEditorData, int? contentId = null, string contentType = null) {
-            var state = new ElementSessionState {
+        public RedirectToRouteResult Edit(string session, string typeName, string elementData, string elementEditorData, int? contentId = null, string contentType = null)
+        {
+            var state = new ElementSessionState
+            {
                 TypeName = typeName,
                 ElementData = elementData,
                 ElementEditorData = elementEditorData,
@@ -61,7 +66,8 @@ namespace Orchard.Layouts.Controllers {
             return RedirectToAction("Edit", new { session });
         }
 
-        public ViewResult Edit(string session) {
+        public ViewResult Edit(string session)
+        {
             var sessionState = _objectStore.Get<ElementSessionState>(session);
             var contentId = sessionState.ContentId;
             var contentType = sessionState.ContentType;
@@ -74,7 +80,8 @@ namespace Orchard.Layouts.Controllers {
             var context = CreateEditorContext(session, describeContext.Content, element, elementData);
             var editorResult = _elementManager.BuildEditor(context);
 
-            var viewModel = new EditElementViewModel {
+            var viewModel = new EditElementViewModel
+            {
                 Layout = describeContext.Content.As<ILayoutAspect>(),
                 EditorResult = editorResult,
                 TypeName = typeName,
@@ -90,7 +97,8 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public ViewResult Update(string session) {
+        public ViewResult Update(string session)
+        {
             var sessionState = _objectStore.Get<ElementSessionState>(session);
             var contentId = sessionState.ContentId;
             var contentType = sessionState.ContentType;
@@ -103,7 +111,8 @@ namespace Orchard.Layouts.Controllers {
             var context = CreateEditorContext(session, describeContext.Content, element, elementData, this);
             var editorResult = _elementManager.UpdateEditor(context);
 
-            var viewModel = new EditElementViewModel {
+            var viewModel = new EditElementViewModel
+            {
                 Layout = describeContext.Content.As<ILayoutAspect>(),
                 EditorResult = editorResult,
                 TypeName = typeName,
@@ -113,10 +122,12 @@ namespace Orchard.Layouts.Controllers {
                 SessionKey = session
             };
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _transactionManager.Cancel();
             }
-            else {
+            else
+            {
                 viewModel.ElementHtml = RenderElement(element, describeContext);
                 viewModel.Submitted = true;
                 viewModel.ElementEditorModel = _mapper.ToEditorModel(element, describeContext);
@@ -124,7 +135,8 @@ namespace Orchard.Layouts.Controllers {
             return View("Edit", viewModel);
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext) {
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
             var workContext = filterContext.GetWorkContext();
             workContext.Layout.Metadata.Alternates.Add("Layout__Dialog");
         }
@@ -134,9 +146,11 @@ namespace Orchard.Layouts.Controllers {
             IContent content,
             Element element,
             ElementDataDictionary elementData = null,
-            IUpdateModel updater = null) {
+            IUpdateModel updater = null)
+        {
 
-            var context = new ElementEditorContext {
+            var context = new ElementEditorContext
+            {
                 Session = session,
                 Content = content,
                 Element = element,
@@ -148,26 +162,31 @@ namespace Orchard.Layouts.Controllers {
             return context;
         }
 
-        private DescribeElementsContext CreateDescribeContext(int? contentId = null, string contentType = null) {
+        private DescribeElementsContext CreateDescribeContext(int? contentId = null, string contentType = null)
+        {
             if (contentId == null && contentType == null)
                 return DescribeElementsContext.Empty;
 
             var part = _contentManager.Get<ILayoutAspect>(contentId.Value, VersionOptions.Latest) ?? _contentManager.New<ILayoutAspect>(contentType);
 
-            return new DescribeElementsContext {
+            return new DescribeElementsContext
+            {
                 Content = part
             };
         }
 
-        private string RenderElement(Element element, DescribeElementsContext describeContext, string displayType = "Design") {
+        private string RenderElement(Element element, DescribeElementsContext describeContext, string displayType = "Design")
+        {
             return _shapeDisplay.Display(_elementDisplay.DisplayElement(element, describeContext.Content, displayType));
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.Text);
         }
     }

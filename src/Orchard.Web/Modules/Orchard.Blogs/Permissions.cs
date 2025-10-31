@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Blogs {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.Blogs
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission ManageBlogs = new Permission { Description = "Manage blogs for others", Name = "ManageBlogs" };
         public static readonly Permission ManageOwnBlogs = new Permission { Description = "Manage own blogs", Name = "ManageOwnBlogs", ImpliedBy = new[] { ManageBlogs } };
 
@@ -14,12 +16,13 @@ namespace Orchard.Blogs {
         public static readonly Permission DeleteBlogPost = new Permission { Description = "Delete blog post for others", Name = "DeleteBlogPost", ImpliedBy = new[] { ManageBlogs } };
         public static readonly Permission DeleteOwnBlogPost = new Permission { Description = "Delete own blog post", Name = "DeleteOwnBlogPost", ImpliedBy = new[] { DeleteBlogPost, ManageOwnBlogs } };
 
-        public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost }, Name = "MetaListBlogs"};
+        public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost }, Name = "MetaListBlogs" };
         public static readonly Permission MetaListOwnBlogs = new Permission { ImpliedBy = new[] { EditOwnBlogPost, PublishOwnBlogPost, DeleteOwnBlogPost }, Name = "MetaListOwnBlogs" };
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 ManageOwnBlogs,
                 ManageBlogs,
@@ -32,7 +35,8 @@ namespace Orchard.Blogs {
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",

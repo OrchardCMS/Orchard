@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.MetaData;
 using System.Data;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 
-namespace Orchard.Taxonomies {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Taxonomies
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("TaxonomyPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("TermTypeName", column => column.WithLength(255))
@@ -20,7 +23,8 @@ namespace Orchard.Taxonomies {
                 .Column<int>("Weight")
                 .Column<bool>("Selectable")
                 .Column<string>("FullWeight", column => column.WithLength(1023))
-            ).AlterTable("TermPartRecord", table => {
+            ).AlterTable("TermPartRecord", table =>
+            {
                 table.CreateIndex("IDX_Path", "Path");
                 table.CreateIndex("IDX_FullWeight", "FullWeight");
             });
@@ -30,7 +34,8 @@ namespace Orchard.Taxonomies {
                 .Column<string>("Field", column => column.WithLength(50))
                 .Column<int>("TermRecord_id")
                 .Column<int>("TermsPartRecord_id")
-            ).AlterTable("TermContentItem", table => {
+            ).AlterTable("TermContentItem", table =>
+            {
                 table.CreateIndex("IDX_TermsPartRecord_id", "TermsPartRecord_id");
                 table.CreateIndex("IDX_TermsPartRecord_id_Field", "TermsPartRecord_id", "Field");
             });
@@ -63,7 +68,8 @@ namespace Orchard.Taxonomies {
             return 10;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
                cfg => cfg
                    .WithPart("TaxonomyNavigationPart")
@@ -77,7 +83,8 @@ namespace Orchard.Taxonomies {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             SchemaBuilder.AlterTable("TermPartRecord", table => table
                 .CreateIndex("IDX_Path", "Path")
             );
@@ -85,7 +92,8 @@ namespace Orchard.Taxonomies {
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
                cfg => cfg
                    .WithIdentity()
@@ -94,20 +102,24 @@ namespace Orchard.Taxonomies {
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             SchemaBuilder.AlterTable("TermContentItem", table => table
                 .CreateIndex("IDX_TermsPartRecord_id", "TermsPartRecord_id")
             );
             return 6;
         }
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             SchemaBuilder.AlterTable("TermContentItem", table => table
                 .CreateIndex("IDX_TermsPartRecord_id_Field", "TermsPartRecord_id", "Field")
             );
             return 7;
         }
-        public int UpdateFrom7() {
-            SchemaBuilder.AlterTable("TermPartRecord", table => {
+        public int UpdateFrom7()
+        {
+            SchemaBuilder.AlterTable("TermPartRecord", table =>
+            {
                 table.AddColumn("FullWeight", DbType.String);
                 table.CreateIndex("IDX_FullWeight", "FullWeight");
             });
@@ -116,15 +128,20 @@ namespace Orchard.Taxonomies {
 
         // These two updates are done separate here because we cannot alter
         // the FullWeight column as long as there is an index defined over it.
-        public int UpdateFrom8() {
-            SchemaBuilder.AlterTable("TermPartRecord", table => {
+        public int UpdateFrom8()
+        {
+            SchemaBuilder.AlterTable("TermPartRecord", table =>
+            {
                 table.DropIndex("IDX_FullWeight");
             });
             return 9;
         }
-        public int UpdateFrom9() {
-            SchemaBuilder.AlterTable("TermPartRecord", table => {
-                table.AlterColumn("FullWeight", column => {
+        public int UpdateFrom9()
+        {
+            SchemaBuilder.AlterTable("TermPartRecord", table =>
+            {
+                table.AlterColumn("FullWeight", column =>
+                {
                     column.WithType(DbType.String);
                     column.WithLength(1023);
                 });

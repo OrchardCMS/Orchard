@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -6,33 +6,36 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
 using Orchard.Data.Providers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
-using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
-using Orchard.DisplayManagement.Implementation;
+using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement
+{
     [TestFixture]
-    public class HqlExpressionTests {
+    public class HqlExpressionTests
+    {
         private IContainer _container;
         private IContentManager _manager;
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -46,7 +49,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new ContentModule());
@@ -76,7 +80,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
@@ -86,7 +90,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Delete(string.Format("from {0}", typeof(DeltaRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(EpsilonRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(LambdaRecord).FullName));
-            
+
             _session.Delete(string.Format("from {0}", typeof(ContentItemVersionRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(ContentItemRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(ContentTypeRecord).FullName));
@@ -99,19 +103,22 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [TearDown]
-        public void Cleanup() {
+        public void Cleanup()
+        {
             if (_container != null)
                 _container.Dispose();
         }
 
         [Test]
-        public void AllDataTypesCanBeQueried() {
+        public void AllDataTypesCanBeQueried()
+        {
             var now = DateTime.Now;
             // NHibernate stores DateTime values with seconds-precision, so everything below that needs to be truncated
             // so that the query works correctly. Thanks to https://stackoverflow.com/a/1005222 for elegant solution.
             now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond));
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = true;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -152,8 +159,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorLike() {
-            _manager.Create<LambdaPart>("lambda", init => {
+        public void ShouldQueryUsingOperatorLike()
+        {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.StringStuff = "abcdef";
             });
             _session.Flush();
@@ -196,8 +205,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorInsensitiveLike() {
-            _manager.Create<LambdaPart>("lambda", init => {
+        public void ShouldQueryUsingOperatorInsensitiveLike()
+        {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.StringStuff = "abcdef";
             });
             _session.Flush();
@@ -236,10 +247,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorGt() {
-            var dt = new DateTime(1980,1,1);
+        public void ShouldQueryUsingOperatorGt()
+        {
+            var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = true;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -307,10 +320,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorLt() {
+        public void ShouldQueryUsingOperatorLt()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -379,10 +394,12 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void ShouldQueryUsingOperatorLe() {
+        public void ShouldQueryUsingOperatorLe()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -474,10 +491,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorGe() {
+        public void ShouldQueryUsingOperatorGe()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -569,10 +588,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorBetween() {
+        public void ShouldQueryUsingOperatorBetween()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -636,10 +657,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorIn() {
+        public void ShouldQueryUsingOperatorIn()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -659,7 +682,7 @@ namespace Orchard.Tests.ContentManagement {
             // include
             result = queryWhere(x => x.In("BooleanStuff", new[] { false }));
             Assert.That(result.Count(), Is.EqualTo(1));
-            
+
             result = queryWhere(x => x.In("DecimalStuff", new[] { 0, 1 }));
             Assert.That(result.Count(), Is.EqualTo(1));
 
@@ -678,7 +701,7 @@ namespace Orchard.Tests.ContentManagement {
             result = queryWhere(x => x.In("StringStuff", new[] { "0", "1" }));
             Assert.That(result.Count(), Is.EqualTo(1));
 
-            result = queryWhere(x => x.In("DateTimeStuff", new [] {dt, dt.AddDays(1)}));
+            result = queryWhere(x => x.In("DateTimeStuff", new[] { dt, dt.AddDays(1) }));
             Assert.That(result.Count(), Is.EqualTo(1));
 
             // exclude
@@ -703,14 +726,16 @@ namespace Orchard.Tests.ContentManagement {
             result = queryWhere(x => x.In("StringStuff", new[] { "1", "2" }));
             Assert.That(result.Count(), Is.EqualTo(0));
 
-            result = queryWhere(x => x.In("DateTimeStuff", new [] {dt.AddDays(1), dt.AddDays(2)}));
+            result = queryWhere(x => x.In("DateTimeStuff", new[] { dt.AddDays(1), dt.AddDays(2) }));
             Assert.That(result.Count(), Is.EqualTo(0));
 
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorIsNull() {
-            _manager.Create<LambdaPart>("lambda", init => {
+        public void ShouldQueryUsingOperatorIsNull()
+        {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.StringStuff = null;
             });
@@ -729,8 +754,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorIsNotNull() {
-            _manager.Create<LambdaPart>("lambda", init => {
+        public void ShouldQueryUsingOperatorIsNotNull()
+        {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.StringStuff = null;
             });
@@ -749,10 +776,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorEqProperty() {
+        public void ShouldQueryUsingOperatorEqProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -777,10 +806,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorNotEqProperty() {
+        public void ShouldQueryUsingOperatorNotEqProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -805,10 +836,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorGtProperty() {
+        public void ShouldQueryUsingOperatorGtProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -840,10 +873,12 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void ShouldQueryUsingOperatorGeProperty() {
+        public void ShouldQueryUsingOperatorGeProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -874,10 +909,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorLeProperty() {
+        public void ShouldQueryUsingOperatorLeProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -909,10 +946,12 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void ShouldQueryUsingOperatorLtProperty() {
+        public void ShouldQueryUsingOperatorLtProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;
@@ -944,10 +983,13 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         // This is a potentially flaky test, but failure due to randomness is extremely unlikely.
-        public void ShouldSortRandomly() {
+        public void ShouldSortRandomly()
+        {
             var itemCount = 10;
-            for (int i = 0; i < itemCount; i++) {
-                _manager.Create<LambdaPart>("lambda", init => {
+            for (int i = 0; i < itemCount; i++)
+            {
+                _manager.Create<LambdaPart>("lambda", init =>
+                {
                     init.Record.IntegerStuff = i;
                 });
             }
@@ -959,7 +1001,8 @@ namespace Orchard.Tests.ContentManagement {
 
             var results = new List<string>();
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++)
+            {
                 items = _manager.HqlQuery().Join(alias =>
                     alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.Named("civ"), order => order.Random()).List();
                 results.Add(string.Join("", items.Select(item => item.As<LambdaPart>().Record.IntegerStuff)));
@@ -969,43 +1012,51 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldPageResults() {
-            _manager.Create<LambdaPart>("lambda", init => {
+        public void ShouldPageResults()
+        {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 1;
             });
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 2;
             });
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 3;
             });
             _session.Flush();
 
-            var results = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).Slice(1,1);
+            var results = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).Slice(1, 1);
             Assert.That(results.Count(), Is.EqualTo(1));
             Assert.That(results.Single().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(2));
         }
 
         [Test]
-        public void ShouldSortByProperty() {
+        public void ShouldSortByProperty()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 1;
             });
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 2;
             });
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.IntegerStuff = 3;
             });
             _session.Flush();
 
-            var results =_manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).List();
+            var results = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).List();
             Assert.That(results.Count(), Is.EqualTo(3));
 
             Assert.That(results.Skip(0).First().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(1));
@@ -1014,10 +1065,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ShouldQueryUsingOperatorNot() {
+        public void ShouldQueryUsingOperatorNot()
+        {
             var dt = new DateTime(1980, 1, 1);
 
-            _manager.Create<LambdaPart>("lambda", init => {
+            _manager.Create<LambdaPart>("lambda", init =>
+            {
                 init.Record.BooleanStuff = false;
                 init.Record.DecimalStuff = 0;
                 init.Record.DoubleStuff = 0;

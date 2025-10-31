@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
@@ -19,9 +19,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Upgrade.ViewModels;
 
-namespace Upgrade.Controllers {
+namespace Upgrade.Controllers
+{
     [Admin]
-    public class RouteController : Controller {
+    public class RouteController : Controller
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
@@ -33,7 +35,8 @@ namespace Upgrade.Controllers {
             IOrchardServices orchardServices,
             ISessionFactoryHolder sessionFactoryHolder,
             ShellSettings shellSettings,
-            IAutorouteService autorouteService) {
+            IAutorouteService autorouteService)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _sessionFactoryHolder = sessionFactoryHolder;
@@ -46,16 +49,20 @@ namespace Upgrade.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             var viewModel = new MigrateViewModel { ContentTypes = new List<ContentTypeEntry>() };
-            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
+            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name))
+            {
                 // only display routeparts
-                if (contentType.Parts.Any(x => x.PartDefinition.Name == "RoutePart")) {
-                    viewModel.ContentTypes.Add(new ContentTypeEntry {ContentTypeName = contentType.Name});
+                if (contentType.Parts.Any(x => x.PartDefinition.Name == "RoutePart"))
+                {
+                    viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
                 }
             }
 
-            if(!viewModel.ContentTypes.Any()) {
+            if (!viewModel.ContentTypes.Any())
+            {
                 _orchardServices.Notifier.Warning(T("There are no content types with RoutePart"));
             }
 
@@ -63,15 +70,17 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
+        public ActionResult IndexPOST()
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to migrate routes.")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MigrateViewModel { ContentTypes = new List<ContentTypeEntry>() };
 
-            if(TryUpdateModel(viewModel)) {
+            if (TryUpdateModel(viewModel))
+            {
 
-                var contentTypeNames = String.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray());
+                var contentTypeNames = string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray());
                 Logger.Information("Migrating content types: {0}", contentTypeNames);
 
                 var contentTypesToMigrate = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
@@ -79,7 +88,8 @@ namespace Upgrade.Controllers {
                 var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
                 var session = sessionFactory.OpenSession();
 
-                foreach (var contentType in contentTypesToMigrate) {
+                foreach (var contentType in contentTypesToMigrate)
+                {
 
                     Logger.Information("Adding parts to content type '{0}'.", contentType);
 
@@ -97,19 +107,23 @@ namespace Upgrade.Controllers {
                     IEnumerable<ContentItem> contents;
                     bool errors = false;
 
-                    do {
+                    do
+                    {
                         contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).ForVersion(VersionOptions.Latest).Slice(count, 100).ToList();
 
-                        foreach (dynamic content in contents) {
+                        foreach (dynamic content in contents)
+                        {
                             var autoroutePart = ((ContentItem)content).As<AutoroutePart>();
-                            var titlePart = ((ContentItem) content).As<TitlePart>();
-                            var commonPart = ((ContentItem) content).As<CommonPart>();
-                            
-                            if(commonPart != null && commonPart.Container != null) {
+                            var titlePart = ((ContentItem)content).As<TitlePart>();
+                            var commonPart = ((ContentItem)content).As<CommonPart>();
+
+                            if (commonPart != null && commonPart.Container != null)
+                            {
                                 isContainable = true;
                             }
 
-                            using (new TransactionScope(TransactionScopeOption.RequiresNew)) {
+                            using (new TransactionScope(TransactionScopeOption.RequiresNew))
+                            {
                                 var command = session.Connection.CreateCommand();
                                 command.CommandText = string.Format(@"
                                     SELECT Title, Path FROM {0} 
@@ -118,19 +132,22 @@ namespace Upgrade.Controllers {
                                 var reader = command.ExecuteReader();
                                 reader.Read();
 
-                                try {
+                                try
+                                {
                                     var title = reader.GetString(0);
                                     var path = reader.GetString(1);
 
                                     reader.Close();
 
-                                    autoroutePart.DisplayAlias = path ?? String.Empty;
+                                    autoroutePart.DisplayAlias = path ?? string.Empty;
                                     titlePart.Title = title;
 
                                     _autorouteService.PublishAlias(autoroutePart);
                                 }
-                                catch(Exception e) {
-                                    if (!reader.IsClosed) {
+                                catch (Exception e)
+                                {
+                                    if (!reader.IsClosed)
+                                    {
                                         reader.Close();
                                     }
 
@@ -145,21 +162,25 @@ namespace Upgrade.Controllers {
                         _orchardServices.ContentManager.Clear();
 
                     } while (contents.Any());
- 
+
                     _contentDefinitionManager.AlterTypeDefinition(contentType, builder => builder.RemovePart("RoutePart"));
-                    
+
                     var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-                    if (isContainable || typeDefinition.Parts.Any(x => x.PartDefinition.Name == "ContainablePart")) {
+                    if (isContainable || typeDefinition.Parts.Any(x => x.PartDefinition.Name == "ContainablePart"))
+                    {
                         _autorouteService.CreatePattern(contentType, "Container and Title", "{Content.Container.Path}/{Content.Slug}", "my-container/a-sample-title", true);
                     }
-                    else {
-                        _autorouteService.CreatePattern(contentType, "Title", "{Content.Slug}", "my-sample-title", true);    
+                    else
+                    {
+                        _autorouteService.CreatePattern(contentType, "Title", "{Content.Slug}", "my-sample-title", true);
                     }
 
-                    if (errors) {
+                    if (errors)
+                    {
                         _orchardServices.Notifier.Warning(T("Some content items could not be imported. Please refer to the corresponding Report."));
                     }
-                    else {
+                    else
+                    {
                         _orchardServices.Notifier.Success(T("{0} was migrated successfully", contentType));
                     }
                 }
@@ -168,8 +189,10 @@ namespace Upgrade.Controllers {
             return RedirectToAction("Index");
         }
 
-        private string GetPrefixedTableName(string tableName) {
-            if (string.IsNullOrWhiteSpace(_shellSettings.DataTablePrefix)) {
+        private string GetPrefixedTableName(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(_shellSettings.DataTablePrefix))
+            {
                 return tableName;
             }
 

@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using Orchard.Data.Conventions;
 
-namespace Orchard.AuditTrail.Models {
+namespace Orchard.AuditTrail.Models
+{
 
     /// <summary>
     /// Audit Trail Event Record in the database.
     /// </summary>
-    public class AuditTrailEventRecord {
+    public class AuditTrailEventRecord
+    {
         public virtual int Id { get; set; }
 
         /// <summary>

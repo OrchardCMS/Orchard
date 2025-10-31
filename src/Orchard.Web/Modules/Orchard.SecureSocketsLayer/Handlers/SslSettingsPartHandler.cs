@@ -1,15 +1,17 @@
-﻿using Orchard.ContentManagement;
-using Orchard.Data;
+using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.SecureSocketsLayer.Models;
-using Orchard.Caching;
 
-namespace Orchard.SecureSocketsLayer.Handlers {
-    public class SslSettingsPartHandler : ContentHandler {
+namespace Orchard.SecureSocketsLayer.Handlers
+{
+    public class SslSettingsPartHandler : ContentHandler
+    {
         private readonly ISignals _signals;
 
-        public SslSettingsPartHandler(ISignals signals) {
+        public SslSettingsPartHandler(ISignals signals)
+        {
 
             _signals = signals;
 
@@ -26,17 +28,20 @@ namespace Orchard.SecureSocketsLayer.Handlers {
 
         public Localizer T { get; set; }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("SSL")) {
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("SSL"))
+            {
                 Id = "Ssl",
                 Position = "2"
             });
         }
 
-        private void Invalidate(SslSettingsPart content) {
+        private void Invalidate(SslSettingsPart content)
+        {
             _signals.Trigger($"SslSettingsPart_{content.Id}");
             _signals.Trigger("SslSettingsPart_EvictAll");
         }

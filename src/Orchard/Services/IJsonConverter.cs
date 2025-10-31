@@ -1,9 +1,11 @@
-﻿namespace Orchard.Services {
+namespace Orchard.Services
+{
     /// <summary>
     /// Provides services to serialize and deserialize objects to and from
     /// Json documents.
     /// </summary>
-    public interface IJsonConverter : IDependency {
+    public interface IJsonConverter : IDependency
+    {
         /// <summary>
         /// Serializes an object to Json.
         /// </summary>
@@ -35,7 +37,8 @@
         T Deserialize<T>(string json);
     }
 
-    public enum JsonFormat {
+    public enum JsonFormat
+    {
         None,
         Indented
     }

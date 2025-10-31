@@ -1,24 +1,29 @@
-﻿using System;
+using System;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.MediaPicker.Fields;
 
-namespace Orchard.MediaPicker.Tokens {
-    public interface ITokenProvider : IEventHandler {
+namespace Orchard.MediaPicker.Tokens
+{
+    public interface ITokenProvider : IEventHandler
+    {
         void Describe(dynamic context);
         void Evaluate(dynamic context);
     }
 
-    public class FieldTokens : ITokenProvider {
+    public class FieldTokens : ITokenProvider
+    {
 
 
-        public FieldTokens() {
+        public FieldTokens()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
             context.For("MediaPickerField", T("Media Picker Field"), T("Tokens for Media Picker Fields"))
                 .Token("Url", T("Url"), T("The url of the media."), "Url")
                 .Token("AlternateText", T("Alternate Text"), T("The alternate text of the media."), "Text")
@@ -30,7 +35,8 @@ namespace Orchard.MediaPicker.Tokens {
                 ;
         }
 
-        public void Evaluate(dynamic context) {
+        public void Evaluate(dynamic context)
+        {
             context.For<MediaPickerField>("MediaPickerField")
                 .Token("Url", (Func<MediaPickerField, object>)(field => field.Url))
                 .Chain("Url", "Url", (Func<MediaPickerField, object>)(field => field.Url))

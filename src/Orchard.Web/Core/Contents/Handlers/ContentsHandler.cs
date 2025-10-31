@@ -1,13 +1,17 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Core.Contents.Handlers {
-    public class ContentsHandler : ContentHandlerBase {
-        public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
+namespace Orchard.Core.Contents.Handlers
+{
+    public class ContentsHandler : ContentHandlerBase
+    {
+        public override void GetContentItemMetadata(GetContentItemMetadataContext context)
+        {
             if (string.IsNullOrWhiteSpace(context.Metadata.DisplayText))
                 context.Metadata.DisplayText = context.ContentItem.ContentType;
 
-            if (context.Metadata.CreateRouteValues == null) {
+            if (context.Metadata.CreateRouteValues == null)
+            {
                 context.Metadata.CreateRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
                     {"Controller", "Admin"},
@@ -16,7 +20,8 @@ namespace Orchard.Core.Contents.Handlers {
                 };
             }
 
-            if (context.Metadata.EditorRouteValues == null) {
+            if (context.Metadata.EditorRouteValues == null)
+            {
                 context.Metadata.EditorRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
                     {"Controller", "Admin"},
@@ -25,7 +30,8 @@ namespace Orchard.Core.Contents.Handlers {
                 };
             }
 
-            if (context.Metadata.DisplayRouteValues == null) {
+            if (context.Metadata.DisplayRouteValues == null)
+            {
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
                     {"Controller", "Item"},
@@ -34,7 +40,8 @@ namespace Orchard.Core.Contents.Handlers {
                 };
             }
 
-            if (context.Metadata.RemoveRouteValues == null) {
+            if (context.Metadata.RemoveRouteValues == null)
+            {
                 context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
                     {"Controller", "Admin"},

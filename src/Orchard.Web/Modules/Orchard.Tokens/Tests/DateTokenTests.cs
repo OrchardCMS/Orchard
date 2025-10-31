@@ -1,16 +1,17 @@
-﻿using System;
-using System.Globalization;
+using System;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Services;
 using Orchard.Tokens.Implementation;
 using Orchard.Tokens.Providers;
-using Orchard.Localization.Models;
 
-namespace Orchard.Tokens.Tests {
+namespace Orchard.Tokens.Tests
+{
     [TestFixture]
-    public class DateTokenTests {
+    public class DateTokenTests
+    {
         private IContainer _container;
         private ITokenizer _tokenizer;
         private IClock _clock;
@@ -19,7 +20,8 @@ namespace Orchard.Tokens.Tests {
         private IDateFormatter _dateFormatter;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TokenManager>().As<ITokenManager>();
@@ -32,7 +34,7 @@ namespace Orchard.Tokens.Tests {
             builder.RegisterType<CultureDateTimeFormatProvider>().As<IDateTimeFormatProvider>();
             builder.RegisterType<DefaultDateFormatter>().As<IDateFormatter>();
             builder.RegisterType<DefaultDateLocalizationServices>().As<IDateLocalizationServices>();
- 
+
             _container = builder.Build();
             _tokenizer = _container.Resolve<ITokenizer>();
             _clock = _container.Resolve<IClock>();
@@ -42,90 +44,107 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestDate() {
+        public void TestDate()
+        {
             Assert.That(_tokenizer.Replace("{Date}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
             Assert.That(_tokenizer.Replace("{Date}", new { Date = new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc) }), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc), new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateSince() {
+        public void TestDateSince()
+        {
             var date = _clock.UtcNow.AddHours(-25);
             Assert.That(_tokenizer.Replace("{Date.Since}", new { Date = date }), Is.EqualTo("1 day ago"));
         }
 
         [Test]
-        public void TestDateShort() {
+        public void TestDateShort()
+        {
             Assert.That(_tokenizer.Replace("{Date.Short}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortDateTimeFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateShortDate() {
+        public void TestDateShortDate()
+        {
             Assert.That(_tokenizer.Replace("{Date.ShortDate}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortDateFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateShortTime() {
+        public void TestDateShortTime()
+        {
             Assert.That(_tokenizer.Replace("{Date.ShortTime}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortTimeFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateLong() {
+        public void TestDateLong()
+        {
             Assert.That(_tokenizer.Replace("{Date.Long}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongDateTimeFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateLongDate() {
+        public void TestDateLongDate()
+        {
             Assert.That(_tokenizer.Replace("{Date.LongDate}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongDateFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateLongTime() {
+        public void TestDateLongTime()
+        {
             Assert.That(_tokenizer.Replace("{Date.LongTime}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongTimeFormat, new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateFormat() {
+        public void TestDateFormat()
+        {
             Assert.That(_tokenizer.Replace("{Date.Format:yyyyMMdd}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, "yyyyMMdd", new DateLocalizationOptions() { EnableTimeZoneConversion = false })));
         }
 
         [Test]
-        public void TestDateLocal() {
+        public void TestDateLocal()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow)));
             Assert.That(_tokenizer.Replace("{Date.Local}", new { Date = new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc) }), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc))));
         }
 
         [Test]
-        public void TestDateLocalShort() {
+        public void TestDateLocalShort()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.Short}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortDateTimeFormat)));
         }
 
         [Test]
-        public void TestDateLocalShortDate() {
+        public void TestDateLocalShortDate()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.ShortDate}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortDateFormat)));
         }
 
         [Test]
-        public void TestDateLocalShortTime() {
+        public void TestDateLocalShortTime()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.ShortTime}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.ShortTimeFormat)));
         }
 
         [Test]
-        public void TestDateLocalLong() {
+        public void TestDateLocalLong()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.Long}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongDateTimeFormat)));
         }
 
         [Test]
-        public void TestDateLocalLongDate() {
+        public void TestDateLocalLongDate()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.LongDate}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongDateFormat)));
         }
 
         [Test]
-        public void TestDateLocalLongTime() {
+        public void TestDateLocalLongTime()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.LongTime}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, _dateTimeFormats.LongTimeFormat)));
         }
 
         [Test]
-        public void TestDateLocalFormat() {
+        public void TestDateLocalFormat()
+        {
             Assert.That(_tokenizer.Replace("{Date.Local.Format:yyyyMMdd}", null), Is.EqualTo(_dateLocalizationServices.ConvertToLocalizedString(_clock.UtcNow, "yyyyMMdd")));
         }
     }

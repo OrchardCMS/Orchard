@@ -1,16 +1,17 @@
-﻿using System.Collections;
 using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Modules.Models {
+namespace Orchard.Modules.Models
+{
     /// <summary>
     /// Represents a module's feature.
     /// </summary>
-    public class ModuleFeature {
+    public class ModuleFeature
+    {
         /// <summary>
         /// The feature descriptor.
         /// </summary>
-        public FeatureDescriptor Descriptor  { get; set; }
+        public FeatureDescriptor Descriptor { get; set; }
 
         /// <summary>
         /// Boolean value indicating if the feature is enabled.

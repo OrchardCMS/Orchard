@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Search {
-    public class Routes : IRouteProvider {
+namespace Orchard.Search
+{
+    public class Routes : IRouteProvider
+    {
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
             var routeDescriptors = new[] {
                 new RouteDescriptor {
                     Priority = 5,

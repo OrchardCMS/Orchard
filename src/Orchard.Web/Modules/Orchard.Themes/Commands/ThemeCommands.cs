@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Data.Migration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Themes.Services;
 using Orchard.Themes.Models;
+using Orchard.Themes.Services;
 
-namespace Orchard.Themes.Commands {
-    public class ThemeCommands : DefaultOrchardCommandHandler     {
+namespace Orchard.Themes.Commands
+{
+    public class ThemeCommands : DefaultOrchardCommandHandler
+    {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IExtensionManager _extensionManager;
@@ -20,7 +22,8 @@ namespace Orchard.Themes.Commands {
                              ISiteThemeService siteThemeService,
                              IExtensionManager extensionManager,
                              ShellDescriptor shellDescriptor,
-                             IThemeService themeService) {
+                             IThemeService themeService)
+        {
             _dataMigrationManager = dataMigrationManager;
             _siteThemeService = siteThemeService;
             _extensionManager = extensionManager;
@@ -34,29 +37,35 @@ namespace Orchard.Themes.Commands {
         [CommandName("theme list")]
         [CommandHelp("theme list [/Summary:true|false]" + "\r\n\tDisplay list of available themes")]
         [OrchardSwitches("Summary")]
-        public void List() {
+        public void List()
+        {
             var currentTheme = _siteThemeService.GetSiteTheme();
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             var themes = _extensionManager.AvailableExtensions()
                 .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
-                .Where(d => d.Tags!= null && d.Tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase)) == false)
-                .Select(d => new ThemeEntry {
+                .Where(d => d.Tags != null && d.Tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase)) == false)
+                .Select(d => new ThemeEntry
+                {
                     Descriptor = d,
                     NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),
                     Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Id)
                 })
                 .ToArray();
 
-            if (Summary) {
-                foreach (var theme in themes) {
+            if (Summary)
+            {
+                foreach (var theme in themes)
+                {
                     Context.Output.WriteLine(T("{0}", theme.Name));
                 }
             }
-            else {
+            else
+            {
                 Context.Output.WriteLine(T("Current theme"));
                 Context.Output.WriteLine(T("--------------------------"));
-                WriteThemeLines(new ThemeEntry {
+                WriteThemeLines(new ThemeEntry
+                {
                     Descriptor = currentTheme,
                     NeedsUpdate = featuresThatNeedUpdate.Contains(currentTheme.Id),
                     Enabled = _shellDescriptor.Features.Any(sf => sf.Name == currentTheme.Id)
@@ -70,7 +79,8 @@ namespace Orchard.Themes.Commands {
             }
         }
 
-        private void WriteThemeLines(ThemeEntry theme) {
+        private void WriteThemeLines(ThemeEntry theme)
+        {
             Context.Output.WriteLine(T("  Name: {0}", theme.Name));
             Context.Output.WriteLine(T("    State:         {0}", theme.Enabled ? T("Enabled") : T("Disabled")));
             Context.Output.WriteLine(T("    NeedsUpdate:   {0}", theme.NeedsUpdate ? T("Yes") : T("No")));
@@ -84,14 +94,17 @@ namespace Orchard.Themes.Commands {
 
         [CommandName("theme activate")]
         [CommandHelp("theme activate <theme-name>" + "\r\n\tEnable and activates a theme")]
-        public void Activate(string themeName) {
+        public void Activate(string themeName)
+        {
             var theme = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Name.Trim().Equals(themeName, StringComparison.OrdinalIgnoreCase));
-            if (theme == null) {
+            if (theme == null)
+            {
                 Context.Output.WriteLine(T("Could not find theme {0}", themeName));
                 return;
             }
 
-            if (!_shellDescriptor.Features.Any(sf => sf.Name == theme.Id)) {
+            if (!_shellDescriptor.Features.Any(sf => sf.Name == theme.Id))
+            {
                 Context.Output.WriteLine(T("Enabling theme \"{0}\"...", themeName));
                 _themeService.EnableThemeFeatures(theme.Id);
             }

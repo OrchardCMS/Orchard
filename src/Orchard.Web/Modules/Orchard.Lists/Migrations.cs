@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Lists {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Lists
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             ContentDefinitionManager.AlterTypeDefinition("List", type => type
                     .WithPart("CommonPart")
                     .WithPart("TitlePart")
@@ -17,17 +20,20 @@ namespace Orchard.Lists {
             return 4;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("List", type => type.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterTypeDefinition("List", type => type.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterTypeDefinition("List", type => type
                 .RemovePart("AdminMenuPart")
                 .Creatable(false));

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -13,8 +13,10 @@ using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
 
-namespace Orchard.Roles.Drivers {
-    public class UserRolesPartDriver : ContentPartDriver<UserRolesPart> {
+namespace Orchard.Roles.Drivers
+{
+    public class UserRolesPartDriver : ContentPartDriver<UserRolesPart>
+    {
         private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
@@ -29,7 +31,8 @@ namespace Orchard.Roles.Drivers {
             INotifier notifier,
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
-            IRoleEventHandler roleEventHandlers) {
+            IRoleEventHandler roleEventHandlers)
+        {
 
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
@@ -42,18 +45,15 @@ namespace Orchard.Roles.Drivers {
             _allRoles = new Lazy<IEnumerable<RoleRecord>>(() => _roleService.GetRoles());
         }
 
-        protected override string Prefix {
-            get {
-                return "UserRoles";
-            }
-        }
+        protected override string Prefix => "UserRoles";
 
         public Localizer T { get; set; }
 
         private readonly Lazy<IEnumerable<RoleRecord>> _allRoles;
 
         protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) =>
-            ContentShape("Parts_Roles_UserRoles_Edit", () => {
+            ContentShape("Parts_Roles_UserRoles_Edit", () =>
+            {
                 var currentUser = _authenticationService.GetAuthenticatedUser();
                 // Get the roles we are authorized to assign
                 var authorizedRoleIds = _allRoles.Value
@@ -63,16 +63,19 @@ namespace Orchard.Roles.Drivers {
                         userRolesPart))
                     .Select(rr => rr.Id).ToList();
                 // If the user has no roles they can assign, we will show nothing
-                if (!authorizedRoleIds.Any()) {
+                if (!authorizedRoleIds.Any())
+                {
                     return null;
                 }
                 var allRoles = _allRoles.Value
-                    .Select(x => new UserRoleEntry {
+                    .Select(x => new UserRoleEntry
+                    {
                         RoleId = x.Id,
                         Name = x.Name,
                         Granted = userRolesPart.Roles.Contains(x.Name)
                     });
-                var model = new UserRolesViewModel {
+                var model = new UserRolesViewModel
+                {
                     User = userRolesPart.As<IUser>(),
                     UserRoles = userRolesPart,
                     Roles = allRoles.ToList(),
@@ -81,7 +84,8 @@ namespace Orchard.Roles.Drivers {
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
             });
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper)
+        {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             // Get the roles we are authorized to assign
             var authorizedRoleIds = _allRoles.Value
@@ -91,11 +95,13 @@ namespace Orchard.Roles.Drivers {
                     userRolesPart))
                 .Select(rr => rr.Id).ToList();
             var model = BuildEditorViewModel(userRolesPart);
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null))
+            {
                 // We only have something to do for the roles the user is allowed to assign. We do this check
                 // after the TryUpdateModel so that even if we do nothing, we'll display things as the user
                 // changed them.
-                if (authorizedRoleIds.Any()) {
+                if (authorizedRoleIds.Any())
+                {
                     // Find all RoleRecord objects for the user: these are roles that are already
                     // assigned to them.
                     var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == model.User.Id).ToArray();
@@ -108,7 +114,8 @@ namespace Orchard.Roles.Drivers {
                             // user doesn't have the role yet
                             !currentRoleRecords.Contains(x)
                             // && we are authorized to assign this role
-                            && authorizedRoleIds.Contains(x.Id))) {
+                            && authorizedRoleIds.Contains(x.Id)))
+                    {
 
                         _notifier.Warning(T("Adding role {0} to user {1}", addingRole.Name, userRolesPart.As<IUser>().UserName));
                         _userRolesRepository.Create(new UserRolesPartRecord { UserId = model.User.Id, Role = addingRole });
@@ -119,7 +126,8 @@ namespace Orchard.Roles.Drivers {
                             // user has this role that they shouldn't
                             !targetRoleRecords.Contains(x.Role)
                             // && we are authorized to assign this role
-                            && authorizedRoleIds.Contains(x.Role.Id))) {
+                            && authorizedRoleIds.Contains(x.Role.Id)))
+                    {
 
                         _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRolesPart.As<IUser>().UserName));
                         _userRolesRepository.Delete(removingRole);
@@ -135,22 +143,27 @@ namespace Orchard.Roles.Drivers {
         private static UserRolesViewModel BuildEditorViewModel(UserRolesPart userRolesPart) =>
             new UserRolesViewModel { User = userRolesPart.As<IUser>(), UserRoles = userRolesPart };
 
-        protected override void Importing(UserRolesPart part, ImportContentContext context) {
+        protected override void Importing(UserRolesPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "Roles", roles => {
+            context.ImportAttribute(part.PartDefinition.Name, "Roles", roles =>
+            {
 
                 var userRoles = roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 // create new roles
-                foreach (var role in userRoles) {
+                foreach (var role in userRoles)
+                {
                     var roleRecord = _roleService.GetRoleByName(role);
 
                     // create the role if it doesn't already exist
-                    if (roleRecord == null) {
+                    if (roleRecord == null)
+                    {
                         _roleService.CreateRole(role);
                     }
                 }
@@ -158,13 +171,15 @@ namespace Orchard.Roles.Drivers {
                 var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == part.ContentItem.Id).ToList();
                 var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role).ToList();
                 var targetRoleRecords = userRoles.Select(x => _roleService.GetRoleByName(x)).ToList();
-                foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
+                foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x)))
+                {
                     _userRolesRepository.Create(new UserRolesPartRecord { UserId = part.ContentItem.Id, Role = addingRole });
                 }
             });
         }
 
-        protected override void Exporting(UserRolesPart part, ExportContentContext context) {
+        protected override void Exporting(UserRolesPart part, ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", string.Join(",", part.Roles));
         }
     }

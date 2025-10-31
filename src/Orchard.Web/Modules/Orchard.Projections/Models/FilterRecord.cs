@@ -1,7 +1,9 @@
-﻿namespace Orchard.Projections.Models {
-    public class FilterRecord {
+namespace Orchard.Projections.Models
+{
+    public class FilterRecord
+    {
         public virtual int Id { get; set; }
-        
+
         public virtual string Description { get; set; }
         public virtual string Category { get; set; }
         public virtual string Type { get; set; }

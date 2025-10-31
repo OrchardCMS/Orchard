@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
@@ -7,29 +6,36 @@ using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Services;
 
-namespace Orchard.Layouts.Drivers {
-    public class ShapeElementDriver : FormsElementDriver<Shape> {
+namespace Orchard.Layouts.Drivers
+{
+    public class ShapeElementDriver : FormsElementDriver<Shape>
+    {
         private readonly IShapeFactory _shapeFactory;
 
         public ShapeElementDriver(IFormsBasedElementServices formsServices, IShapeFactory shapeFactory)
-            : base(formsServices) {
+            : base(formsServices)
+        {
             _shapeFactory = shapeFactory;
         }
 
-        protected override IEnumerable<string> FormNames {
+        protected override IEnumerable<string> FormNames
+        {
             get { yield return "ShapeElement"; }
         }
 
-        protected override void OnDisplaying(Shape element, ElementDisplayingContext context) {
-            if (String.IsNullOrWhiteSpace(element.ShapeType))
+        protected override void OnDisplaying(Shape element, ElementDisplayingContext context)
+        {
+            if (string.IsNullOrWhiteSpace(element.ShapeType))
                 return;
 
             var shape = _shapeFactory.Create(element.ShapeType);
             context.ElementShape.Shape = shape;
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("ShapeElement", shapeFactory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("ShapeElement", shapeFactory =>
+            {
                 var factory = (dynamic)shapeFactory;
                 var form = factory.Fieldset(
                     Id: "ShapeElement",

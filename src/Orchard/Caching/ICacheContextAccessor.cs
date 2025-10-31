@@ -1,5 +1,7 @@
-﻿namespace Orchard.Caching {
-    public interface ICacheContextAccessor {
+namespace Orchard.Caching
+{
+    public interface ICacheContextAccessor
+    {
         IAcquireContext Current { get; set; }
     }
 }

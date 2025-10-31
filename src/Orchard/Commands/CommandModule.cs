@@ -1,10 +1,13 @@
-﻿using System.Linq;
+using System.Linq;
 using Autofac;
 using Autofac.Core;
 
-namespace Orchard.Commands {
-    public class CommandModule : Module {
-        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+namespace Orchard.Commands
+{
+    public class CommandModule : Module
+    {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+        {
 
             if (!registration.Services.Contains(new TypedService(typeof(ICommandHandler))))
                 return;

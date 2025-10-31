@@ -1,31 +1,28 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Exceptions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
-using Orchard.Exceptions;
-using System.Diagnostics;
-using NHibernate.Cfg;
-using NHibernate.Linq.Functions;
-using System.Web.Http.Results;
-using System.Threading;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Orchard.Environment.Extensions {
-    public class ExtensionManager : IExtensionManager {
+namespace Orchard.Environment.Extensions
+{
+    public class ExtensionManager : IExtensionManager
+    {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IAsyncTokenProvider _asyncTokenProvider;
         private readonly ICacheManager _cacheManager;
         private readonly IParallelCacheContext _parallelCacheContext;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-       
+
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
@@ -39,7 +36,8 @@ namespace Orchard.Environment.Extensions {
             IEnumerable<IExtensionLoader> loaders,
             ICacheManager cacheManager,
             IParallelCacheContext parallelCacheContext,
-            IAsyncTokenProvider asyncTokenProvider) {
+            IAsyncTokenProvider asyncTokenProvider)
+        {
 
             _folders = folders;
             _asyncTokenProvider = asyncTokenProvider;
@@ -55,11 +53,13 @@ namespace Orchard.Environment.Extensions {
         private MD5 _md5;
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
-        public ExtensionDescriptor GetExtension(string id) {
+        public ExtensionDescriptor GetExtension(string id)
+        {
             return AvailableExtensions().FirstOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
+        public IEnumerable<ExtensionDescriptor> AvailableExtensions()
+        {
             return _cacheManager.Get("AvailableExtensions", true, ctx =>
                 _parallelCacheContext
                     .RunInParallel(_folders, folder => folder.AvailableExtensions().ToList())
@@ -67,7 +67,8 @@ namespace Orchard.Environment.Extensions {
                     .ToReadOnlyCollection());
         }
 
-        public IEnumerable<FeatureDescriptor> AvailableFeatures() {
+        public IEnumerable<FeatureDescriptor> AvailableFeatures()
+        {
             return _cacheManager.Get("AvailableFeatures", true, ctx =>
                 AvailableExtensions()
                     .SelectMany(ext => ext.Features)
@@ -75,7 +76,8 @@ namespace Orchard.Environment.Extensions {
                     .ToReadOnlyCollection());
         }
 
-        internal static int GetPriority(FeatureDescriptor featureDescriptor) {
+        internal static int GetPriority(FeatureDescriptor featureDescriptor)
+        {
             return featureDescriptor.Priority;
         }
 
@@ -85,14 +87,18 @@ namespace Orchard.Environment.Extensions {
         /// <param name="item"></param>
         /// <param name="subject"></param>
         /// <returns></returns>
-        internal static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
-            if (DefaultExtensionTypes.IsTheme(item.Extension.ExtensionType)) {
-                if (DefaultExtensionTypes.IsModule(subject.Extension.ExtensionType)) {
+        internal static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject)
+        {
+            if (DefaultExtensionTypes.IsTheme(item.Extension.ExtensionType))
+            {
+                if (DefaultExtensionTypes.IsModule(subject.Extension.ExtensionType))
+                {
                     // Themes implicitly depend on modules to ensure build and override ordering
                     return true;
                 }
 
-                if (DefaultExtensionTypes.IsTheme(subject.Extension.ExtensionType)) {
+                if (DefaultExtensionTypes.IsTheme(subject.Extension.ExtensionType))
+                {
                     // Theme depends on another if it is its base theme
                     return item.Extension.BaseTheme == subject.Id;
                 }
@@ -103,12 +109,14 @@ namespace Orchard.Environment.Extensions {
                    item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Id));
         }
 
-        public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
+        public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors)
+        {
             Logger.Information("Loading features");
 
             // generate a cachekey by hashing the ids of all feature descriptors
             string cacheKey;
-            lock (_md5) {
+            lock (_md5)
+            {
                 cacheKey = BitConverter.ToString(
                     _md5.ComputeHash(
                         Encoding.UTF8.GetBytes(
@@ -120,13 +128,16 @@ namespace Orchard.Environment.Extensions {
 
             var result = _cacheManager.Get(cacheKey,
                 true,
-                ctk => {
-                    if (ParallelizationDisabled) {
+                ctk =>
+                {
+                    if (ParallelizationDisabled)
+                    {
                         return featureDescriptors.Select(descriptor => _cacheManager
                             .Get(descriptor.Id, true, ctx => LoadFeature(descriptor)))
                             .ToArray();
                     }
-                    else {
+                    else
+                    {
                         return _parallelCacheContext
                             .RunInParallel(featureDescriptors,
                                 descriptor => _cacheManager
@@ -139,18 +150,24 @@ namespace Orchard.Environment.Extensions {
             return result;
         }
 
-        private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+        private Feature LoadFeature(FeatureDescriptor featureDescriptor)
+        {
             var extensionDescriptor = featureDescriptor.Extension;
             var featureId = featureDescriptor.Id;
             var extensionId = extensionDescriptor.Id;
 
             ExtensionEntry extensionEntry;
-            try {
-                extensionEntry = _cacheManager.Get(extensionId, true, ctx => {
+            try
+            {
+                extensionEntry = _cacheManager.Get(extensionId, true, ctx =>
+                {
                     var entry = BuildEntry(extensionDescriptor);
-                    if (entry != null) {
-                        ctx.Monitor(_asyncTokenProvider.GetToken(monitor => {
-                            foreach (var loader in _loaders) {
+                    if (entry != null)
+                    {
+                        ctx.Monitor(_asyncTokenProvider.GetToken(monitor =>
+                        {
+                            foreach (var loader in _loaders)
+                            {
                                 loader.Monitor(entry.Descriptor, token => monitor(token));
                             }
                         }));
@@ -158,18 +175,22 @@ namespace Orchard.Environment.Extensions {
                     return entry;
                 });
             }
-            catch (Exception ex) {
-                if (ex.IsFatal()) {
+            catch (Exception ex)
+            {
+                if (ex.IsFatal())
+                {
                     throw;
-                } 
+                }
                 Logger.Error(ex, "Error loading extension '{0}'", extensionId);
                 throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
             }
 
-            if (extensionEntry == null) {
+            if (extensionEntry == null)
+            {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.
-                return new Feature {
+                return new Feature
+                {
                     Descriptor = featureDescriptor,
                     ExportedTypes = Enumerable.Empty<Type>()
                 };
@@ -178,28 +199,35 @@ namespace Orchard.Environment.Extensions {
             var extensionTypes = extensionEntry.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
             var featureTypes = new List<Type>();
 
-            foreach (var type in extensionTypes) {
+            foreach (var type in extensionTypes)
+            {
                 string sourceFeature = GetSourceFeatureNameForType(type, extensionId);
-                if (String.Equals(sourceFeature, featureId, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(sourceFeature, featureId, StringComparison.OrdinalIgnoreCase))
+                {
                     featureTypes.Add(type);
                 }
             }
 
-            return new Feature {
+            return new Feature
+            {
                 Descriptor = featureDescriptor,
                 ExportedTypes = featureTypes
             };
         }
 
-        private static string GetSourceFeatureNameForType(Type type, string extensionId) {
-            foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+        private static string GetSourceFeatureNameForType(Type type, string extensionId)
+        {
+            foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false))
+            {
                 return featureAttribute.FeatureName;
             }
             return extensionId;
         }
 
-        private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
-            foreach (var loader in _loaders) {
+        private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor)
+        {
+            foreach (var loader in _loaders)
+            {
                 ExtensionEntry entry = loader.Load(descriptor);
                 if (entry != null)
                     return entry;

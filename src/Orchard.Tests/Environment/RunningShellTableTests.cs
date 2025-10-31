@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment {
+namespace Orchard.Tests.Environment
+{
     [TestFixture]
-    public class RunningShellTableTests {
+    public class RunningShellTableTests
+    {
         [Test]
-        public void NoShellsGiveNoMatch() {
+        public void NoShellsGiveNoMatch()
+        {
             var table = new RunningShellTable();
             var match = table.Match(new StubHttpContext());
             Assert.That(match, Is.Null);
         }
 
         [Test]
-        public void DefaultShellMatchesByDefault() {
+        public void DefaultShellMatchesByDefault()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             table.Add(settings);
@@ -24,7 +28,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void AnotherShellMatchesByHostHeader() {
+        public void AnotherShellMatchesByHostHeader()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
@@ -35,7 +40,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DefaultStillCatchesWhenOtherShellsMiss() {
+        public void DefaultStillCatchesWhenOtherShellsMiss()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
@@ -46,7 +52,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DefaultWontFallbackIfItHasCriteria() {
+        public void DefaultWontFallbackIfItHasCriteria()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
@@ -57,7 +64,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DefaultWillCatchRequestsIfItMatchesCriteria() {
+        public void DefaultWillCatchRequestsIfItMatchesCriteria()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
@@ -68,7 +76,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void NonDefaultCatchallWillFallbackIfNothingElseMatches() {
+        public void NonDefaultCatchallWillFallbackIfNothingElseMatches()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha" };
@@ -79,7 +88,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DefaultCatchallIsFallbackEvenWhenOthersAreUnqualified() {
+        public void DefaultCatchallIsFallbackEvenWhenOthersAreUnqualified()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha" };
@@ -94,7 +104,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void ThereIsNoFallbackIfMultipleSitesAreUnqualifiedButDefaultIsNotOneOfThem() {
+        public void ThereIsNoFallbackIfMultipleSitesAreUnqualifiedButDefaultIsNotOneOfThem()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha" };
@@ -109,7 +120,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void PathAlsoCausesMatch() {
+        public void PathAlsoCausesMatch()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "foo" };
@@ -120,7 +132,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void PathAndHostMustBothMatch() {
+        public void PathAndHostMustBothMatch()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com", };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "foo" };
@@ -152,7 +165,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void PathAndHostMustMatchOnFullUrl() {
+        public void PathAndHostMustMatchOnFullUrl()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com", };
             var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "bar" };
@@ -167,7 +181,8 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/barbaz", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
         }
         [Test]
-        public void PathAloneWillMatch() {
+        public void PathAloneWillMatch()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "foo" };
             table.Add(settingsA);
@@ -177,8 +192,9 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void HostNameMatchesRightmostIfRequestIsLonger() {
-            var table = (IRunningShellTable) new RunningShellTable();
+        public void HostNameMatchesRightmostIfRequestIsLonger()
+        {
+            var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "example.com" };
             table.Add(settings);
@@ -190,7 +206,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void HostNameMatchesRightmostIfStar() {
+        public void HostNameMatchesRightmostIfStar()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "*.example.com" };
@@ -203,8 +220,9 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void LongestMatchingHostHasPriority() {
-            var table = (IRunningShellTable) new RunningShellTable();
+        public void LongestMatchingHostHasPriority()
+        {
+            var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "www.example.com" };
             var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "*.example.com" };
@@ -221,7 +239,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void ShellNameUsedToDistinctThingsAsTheyAreAdded() {
+        public void ShellNameUsedToDistinctThingsAsTheyAreAdded()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "removed.example.com" };
@@ -236,7 +255,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void MultipleHostsOnShellAreAdded() {
+        public void MultipleHostsOnShellAreAdded()
+        {
             var table = (IRunningShellTable)new RunningShellTable();
             var settingsAlpha = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com,b.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
@@ -255,8 +275,10 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "e.example.com")), Is.EqualTo(settingsE).Using(new ShellComparer()));
         }
 
-        public class ShellComparer : IEqualityComparer<ShellSettings> {
-            public bool Equals(ShellSettings x, ShellSettings y) {
+        public class ShellComparer : IEqualityComparer<ShellSettings>
+        {
+            public bool Equals(ShellSettings x, ShellSettings y)
+            {
                 return x == y || (
                     x != null && y != null &&
                     x.DataConnectionString == y.DataConnectionString &&
@@ -273,7 +295,8 @@ namespace Orchard.Tests.Environment {
                     );
             }
 
-            public int GetHashCode(ShellSettings obj) {
+            public int GetHashCode(ShellSettings obj)
+            {
                 return obj.DataConnectionString.GetHashCode() ^
                        obj.DataProvider.GetHashCode() ^
                        obj.DataTablePrefix.GetHashCode() ^

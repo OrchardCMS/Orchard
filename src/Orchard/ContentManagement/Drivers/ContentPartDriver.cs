@@ -1,60 +1,71 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
-using System.Linq;
 
-namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
-        protected virtual string Prefix { get { return typeof(TContent).Name; } }
+namespace Orchard.ContentManagement.Drivers
+{
+    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new()
+    {
+        protected virtual string Prefix => typeof(TContent).Name;
 
-        void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+        void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context)
+        {
             var part = context.ContentItem.As<TContent>();
             if (part != null)
                 GetContentItemMetadata(part, context.Metadata);
         }
 
-        DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
+        DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context)
+        {
             var part = context.ContentItem.As<TContent>();
 
-            if (part == null) {
+            if (part == null)
+            {
                 return null;
             }
 
             DriverResult result = Display(part, context.DisplayType, context.New);
 
-            if (result != null) {
+            if (result != null)
+            {
                 result.ContentPart = part;
             }
 
             return result;
         }
 
-        DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
+        DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context)
+        {
             var part = context.ContentItem.As<TContent>();
 
-            if (part == null) {
+            if (part == null)
+            {
                 return null;
             }
 
             DriverResult result = Editor(part, context.New);
 
-            if (result != null) {
+            if (result != null)
+            {
                 result.ContentPart = part;
             }
 
             return result;
         }
 
-        DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
+        DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context)
+        {
             var part = context.ContentItem.As<TContent>();
 
-            if (part == null) {
+            if (part == null)
+            {
                 return null;
             }
 
@@ -63,10 +74,12 @@ namespace Orchard.ContentManagement.Drivers {
             IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
 
             if (contentShapeResults.Any(contentShapeResult =>
-                contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
+                contentShapeResult == null || contentShapeResult.WasDisplayed(context)))
+            {
                 DriverResult result = Editor(part, context.Updater, context.New);
 
-                if (result != null) {
+                if (result != null)
+                {
                     result.ContentPart = part;
                 }
 
@@ -76,54 +89,66 @@ namespace Orchard.ContentManagement.Drivers {
             return editor;
         }
 
-        void IContentPartDriver.Importing(ImportContentContext context) {
+        void IContentPartDriver.Importing(ImportContentContext context)
+        {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
+            if (part != null)
+            {
                 context.Prefix = string.Empty;
                 Importing(part, context);
             }
         }
 
-        void IContentPartDriver.Imported(ImportContentContext context) {
+        void IContentPartDriver.Imported(ImportContentContext context)
+        {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
+            if (part != null)
+            {
                 context.Prefix = string.Empty;
                 Imported(part, context);
             }
         }
 
-        void IContentPartDriver.ImportCompleted(ImportContentContext context) {
+        void IContentPartDriver.ImportCompleted(ImportContentContext context)
+        {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
+            if (part != null)
+            {
                 context.Prefix = string.Empty;
                 ImportCompleted(part, context);
             }
         }
 
-        void IContentPartDriver.Exporting(ExportContentContext context) {
+        void IContentPartDriver.Exporting(ExportContentContext context)
+        {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
+            if (part != null)
+            {
                 context.Prefix = string.Empty;
                 Exporting(part, context);
             }
         }
 
-        void IContentPartDriver.Exported(ExportContentContext context) {
+        void IContentPartDriver.Exported(ExportContentContext context)
+        {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
+            if (part != null)
+            {
                 context.Prefix = string.Empty;
                 Exported(part, context);
             }
         }
 
-        void IContentPartDriver.Cloning(CloneContentContext context) {
+        void IContentPartDriver.Cloning(CloneContentContext context)
+        {
             var originalPart = context.ContentItem.As<TContent>();
             var clonePart = context.CloneContentItem.As<TContent>();
             if (originalPart != null && clonePart != null)
                 Cloning(originalPart, clonePart, context);
         }
 
-        void IContentPartDriver.Cloned(CloneContentContext context) {
+        void IContentPartDriver.Cloned(CloneContentContext context)
+        {
             var originalPart = context.ContentItem.As<TContent>();
             var clonePart = context.CloneContentItem.As<TContent>();
             if (originalPart != null && clonePart != null)
@@ -148,17 +173,22 @@ namespace Orchard.ContentManagement.Drivers {
         /// </summary>
         /// <param name="part">The content part used for import.</param>
         /// <param name="context">The context object of the import operation.</param>
-        protected static void ImportInfoset(TContent part, ImportContentContext context) {
-            if (!part.Has<InfosetPart>()) {
+        protected static void ImportInfoset(TContent part, ImportContentContext context)
+        {
+            if (!part.Has<InfosetPart>())
+            {
                 return;
             }
 
-            Action<XElement, bool> importInfoset = (element, versioned) => {
-                if (element == null) {
+            Action<XElement, bool> importInfoset = (element, versioned) =>
+            {
+                if (element == null)
+                {
                     return;
                 }
 
-                foreach (var attribute in element.Attributes()) {
+                foreach (var attribute in element.Attributes())
+                {
                     part.Store(attribute.Name.ToString(), attribute.Value, versioned);
                 }
             };
@@ -172,20 +202,25 @@ namespace Orchard.ContentManagement.Drivers {
         /// </summary>
         /// <param name="part">The content part used for export.</param>
         /// <param name="context">The context object of the export operation.</param>
-        protected static void ExportInfoset(TContent part, ExportContentContext context) {
+        protected static void ExportInfoset(TContent part, ExportContentContext context)
+        {
             var infosetPart = part.As<InfosetPart>();
 
-            if (infosetPart == null) {
+            if (infosetPart == null)
+            {
                 return;
             }
 
-            Action<XElement, bool> exportInfoset = (element, versioned) => {
-                if (element == null) {
+            Action<XElement, bool> exportInfoset = (element, versioned) =>
+            {
+                if (element == null)
+                {
                     return;
                 }
 
                 var elementName = GetInfosetXmlElementName(part, versioned);
-                foreach (var attribute in element.Attributes()) {
+                foreach (var attribute in element.Attributes())
+                {
                     context.Element(elementName).SetAttributeValue(attribute.Name, attribute.Value);
                 }
             };
@@ -194,7 +229,8 @@ namespace Orchard.ContentManagement.Drivers {
             exportInfoset(infosetPart.Infoset.Element.Element(part.PartDefinition.Name), false);
         }
 
-        private static string GetInfosetXmlElementName(TContent part, bool versioned) {
+        private static string GetInfosetXmlElementName(TContent part, bool versioned)
+        {
             return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
         }
 
@@ -203,23 +239,29 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void Cloned(TContent originalPart, TContent clonePart, CloneContentContext context) { }
 
         [Obsolete("Provided while transitioning to factory variations")]
-        public ContentShapeResult ContentShape(IShape shape) {
+        public ContentShapeResult ContentShape(IShape shape)
+        {
             return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
         }
 
-        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, ctx => factory());
         }
 
-        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => {
+        private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder)
+        {
+            return new ContentShapeResult(shapeType, Prefix, ctx =>
+            {
                 var shape = shapeBuilder(ctx);
 
-                if (shape == null) {
+                if (shape == null)
+                {
                     return null;
                 }
 
@@ -227,11 +269,13 @@ namespace Orchard.ContentManagement.Drivers {
             });
         }
 
-        private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx) {
+        private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx)
+        {
             ShapeMetadata metadata = shape.Metadata;
 
             // if no ContentItem property has been set, assign it
-            if (shape.ContentItem == null) {
+            if (shape.ContentItem == null)
+            {
                 shape.ContentItem = ctx.ContentItem;
             }
 
@@ -246,16 +290,19 @@ namespace Orchard.ContentManagement.Drivers {
             return shape;
         }
 
-        private static object CreateShape(BuildShapeContext context, string shapeType) {
+        private static object CreateShape(BuildShapeContext context, string shapeType)
+        {
             IShapeFactory shapeFactory = context.New;
             return shapeFactory.Create(shapeType);
         }
 
-        public CombinedResult Combined(params DriverResult[] results) {
+        public CombinedResult Combined(params DriverResult[] results)
+        {
             return new CombinedResult(results);
         }
 
-        public IEnumerable<ContentPartInfo> GetPartInfo() {
+        public IEnumerable<ContentPartInfo> GetPartInfo()
+        {
             var contentPartInfo = new[] {
                 new ContentPartInfo {
                     PartName = typeof (TContent).Name,

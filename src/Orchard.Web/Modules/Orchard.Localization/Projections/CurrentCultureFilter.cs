@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
-namespace Orchard.Localization.Projections {
-    public interface IFilterProvider : IEventHandler {
+namespace Orchard.Localization.Projections
+{
+    public interface IFilterProvider : IEventHandler
+    {
         void Describe(dynamic describe);
     }
 
-    public class CurrentCultureFilter : IFilterProvider {
+    public class CurrentCultureFilter : IFilterProvider
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICultureManager _cultureManager;
 
-        public CurrentCultureFilter(IWorkContextAccessor workContextAccessor, ICultureManager cultureManager) {
+        public CurrentCultureFilter(IWorkContextAccessor workContextAccessor, ICultureManager cultureManager)
+        {
             _workContextAccessor = workContextAccessor;
             _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
@@ -21,7 +25,8 @@ namespace Orchard.Localization.Projections {
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic describe) {
+        public void Describe(dynamic describe)
+        {
             describe.For("Localization", T("Localization"), T("Localization"))
                 .Element("ForCurrentCulture", T("For current culture"), T("Localized content items for current culture"),
                     (Action<dynamic>)ApplyFilter,
@@ -30,7 +35,8 @@ namespace Orchard.Localization.Projections {
                 );
         }
 
-        public void ApplyFilter(dynamic context) {
+        public void ApplyFilter(dynamic context)
+        {
             string currentCulture = _workContextAccessor.GetContext().CurrentCulture;
             var currentCultureId = _cultureManager.GetCultureByName(currentCulture).Id;
 
@@ -38,7 +44,8 @@ namespace Orchard.Localization.Projections {
             context.Query = query.Where(x => x.ContentPartRecord<LocalizationPartRecord>(), x => x.Eq("CultureId", currentCultureId));
         }
 
-        public LocalizedString DisplayFilter(dynamic context) {
+        public LocalizedString DisplayFilter(dynamic context)
+        {
             return T("For current culture");
         }
     }

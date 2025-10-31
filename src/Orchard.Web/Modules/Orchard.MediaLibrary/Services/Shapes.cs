@@ -1,15 +1,19 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.MediaLibrary.Models;
 
-namespace Orchard.MediaLibrary.Services {
-    public class Shapes : IShapeTableProvider {
-        public void Discover(ShapeTableBuilder builder) {
+namespace Orchard.MediaLibrary.Services
+{
+    public class Shapes : IShapeTableProvider
+    {
+        public void Discover(ShapeTableBuilder builder)
+        {
             builder.Describe("Media")
-                .OnDisplaying(displaying => {
+                .OnDisplaying(displaying =>
+                {
                     ContentItem contentItem = displaying.Shape.ContentItem;
-                    if (contentItem != null) {
+                    if (contentItem != null)
+                    {
                         // Alternates in order of specificity. 
                         // Display type > content type > specific content > display type for a content type > display type for specific content
                         // BasicShapeTemplateHarvester.Adjust will then adjust the template name
@@ -19,7 +23,8 @@ namespace Orchard.MediaLibrary.Services {
                         // Media__[DisplayType] e.g. Media-Summary
                         displaying.ShapeMetadata.Alternates.Add("Media_" + EncodeAlternateElement(displaying.ShapeMetadata.DisplayType));
 
-                        if (!String.IsNullOrEmpty(mediaPart.LogicalType)) {
+                        if (!string.IsNullOrEmpty(mediaPart.LogicalType))
+                        {
 
                             // Media__[LogicalType] e.g. Media-Image,
                             displaying.ShapeMetadata.Alternates.Add("Media__" + EncodeAlternateElement(mediaPart.LogicalType));
@@ -51,7 +56,8 @@ namespace Orchard.MediaLibrary.Services {
         /// </summary>
         /// <param name="alternateElement"></param>
         /// <returns></returns>
-        private string EncodeAlternateElement(string alternateElement) {
+        private string EncodeAlternateElement(string alternateElement)
+        {
             return alternateElement.Replace("-", "__").Replace(".", "_");
         }
 

@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 
-namespace Orchard.FileSystems.Media {
-    public interface IStorageFile {
+namespace Orchard.FileSystems.Media
+{
+    public interface IStorageFile
+    {
         string GetPath();
         string GetName();
         long GetSize();
         DateTime GetLastUpdated();
         string GetFileType();
-        
+
         /// <summary>
         /// Creates a stream for reading from the file.
         /// </summary>

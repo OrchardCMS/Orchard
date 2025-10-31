@@ -1,4 +1,6 @@
-﻿namespace Orchard.Recipes.ViewModels {
-    public class ImportViewModel {
+namespace Orchard.Recipes.ViewModels
+{
+    public class ImportViewModel
+    {
     }
 }

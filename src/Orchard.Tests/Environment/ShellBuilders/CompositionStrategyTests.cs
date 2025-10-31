@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -13,16 +13,19 @@ using Orchard.Logging;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Tests.Environment.ShellBuilders {
+namespace Orchard.Tests.Environment.ShellBuilders
+{
     [TestFixture]
-    public class CompositionStrategyTests : ContainerTestBase {
+    public class CompositionStrategyTests : ContainerTestBase
+    {
         private CompositionStrategy _compositionStrategy;
         private Mock<IExtensionManager> _extensionManager;
         private IEnumerable<ExtensionDescriptor> _availableExtensions;
         private IEnumerable<Feature> _installedFeatures;
         private Mock<ILogger> _loggerMock;
 
-        protected override void Register(ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder)
+        {
             _extensionManager = new Mock<IExtensionManager>();
             _loggerMock = new Mock<ILogger>();
 
@@ -31,23 +34,27 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             builder.RegisterInstance(_loggerMock.Object);
         }
 
-        protected override void Resolve(ILifetimeScope container) {
+        protected override void Resolve(ILifetimeScope container)
+        {
             _compositionStrategy = container.Resolve<CompositionStrategy>();
             _compositionStrategy.Logger = container.Resolve<ILogger>();
 
-            var alphaExtension = new ExtensionDescriptor {
+            var alphaExtension = new ExtensionDescriptor
+            {
                 Id = "Alpha",
                 Name = "Alpha",
                 ExtensionType = "Module"
             };
 
-            var alphaFeatureDescriptor = new FeatureDescriptor {
+            var alphaFeatureDescriptor = new FeatureDescriptor
+            {
                 Id = "Alpha",
                 Name = "Alpha",
                 Extension = alphaExtension
             };
 
-            var betaFeatureDescriptor = new FeatureDescriptor {
+            var betaFeatureDescriptor = new FeatureDescriptor
+            {
                 Id = "Beta",
                 Name = "Beta",
                 Extension = alphaExtension,
@@ -93,7 +100,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void ComposeReturnsBlueprintWithExpectedDependencies() {
+        public void ComposeReturnsBlueprintWithExpectedDependencies()
+        {
             var shellSettings = CreateShell();
             var shellDescriptor = CreateShellDescriptor("Alpha", "Beta");
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
@@ -103,7 +111,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void ComposeReturnsBlueprintWithAutoEnabledDependencyFeatures() {
+        public void ComposeReturnsBlueprintWithAutoEnabledDependencyFeatures()
+        {
             var shellSettings = CreateShell();
             var shellDescriptor = CreateShellDescriptor("Beta"); // Beta has a dependency on Alpha, but is not enabled initially.
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
@@ -113,7 +122,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void ComposeDoesNotThrowWhenFeatureStateRecordDoesNotExist() {
+        public void ComposeDoesNotThrowWhenFeatureStateRecordDoesNotExist()
+        {
             var shellSettings = CreateShell();
             var shellDescriptor = CreateShellDescriptor("MyFeature");
 
@@ -122,7 +132,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void ComposeThrowsWhenAutoEnabledDependencyDoesNotExist() {
+        public void ComposeThrowsWhenAutoEnabledDependencyDoesNotExist()
+        {
             var myModule = _availableExtensions.First();
 
             myModule.Features = myModule.Features.Concat(new[] {
@@ -133,20 +144,24 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                     Dependencies = new[] { "NonExistingFeature" }
                 }
             });
-            
+
             var shellSettings = CreateShell();
             var shellDescriptor = CreateShellDescriptor("MyFeature");
 
             Assert.Throws<OrchardException>(() => _compositionStrategy.Compose(shellSettings, shellDescriptor));
         }
 
-        private ShellSettings CreateShell() {
+        private ShellSettings CreateShell()
+        {
             return new ShellSettings();
         }
 
-        private ShellDescriptor CreateShellDescriptor(params string[] enabledFeatures) {
-            var shellDescriptor = new ShellDescriptor {
-                Features = enabledFeatures.Select(x => new ShellFeature {
+        private ShellDescriptor CreateShellDescriptor(params string[] enabledFeatures)
+        {
+            var shellDescriptor = new ShellDescriptor
+            {
+                Features = enabledFeatures.Select(x => new ShellFeature
+                {
                     Name = x
                 })
             };

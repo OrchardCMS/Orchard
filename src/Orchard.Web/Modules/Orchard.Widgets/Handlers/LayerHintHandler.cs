@@ -1,21 +1,24 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
+using Orchard.Events;
 using Orchard.Localization;
 using Orchard.UI.Notify;
-using Orchard.Events;
-using Orchard.ContentManagement;
-using System;
 
-namespace Orchard.Widgets.Handlers {
+namespace Orchard.Widgets.Handlers
+{
 
-    public interface IRouteEvents : IEventHandler {
-        void Routed(IContent content, String path);
+    public interface IRouteEvents : IEventHandler
+    {
+        void Routed(IContent content, string path);
     }
 
     [OrchardFeature("Orchard.Widgets.PageLayerHinting")]
-    public class LayerHintHandler : IRouteEvents {
-        public LayerHintHandler(IOrchardServices services, RequestContext requestContext) {
+    public class LayerHintHandler : IRouteEvents
+    {
+        public LayerHintHandler(IOrchardServices services, RequestContext requestContext)
+        {
             T = NullLocalizer.Instance;
             _requestContext = requestContext;
             Services = services;
@@ -24,7 +27,8 @@ namespace Orchard.Widgets.Handlers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public void Routed(IContent content, String path) {
+        public void Routed(IContent content, string path)
+        {
             // Only going to help in creating a layer if the content is a page
             // TODO: (PH) Any reason not to enable the hint for *all* routed content?
             // TODO: (PH:Autoroute) Previously this only ran when the item was first published. Now it's running any time item is published. We want to catch
@@ -40,7 +44,8 @@ namespace Orchard.Widgets.Handlers {
             var title = content.ContentItem.ContentManager.GetItemMetadata(content).DisplayText;
 
             Services.Notifier.Information(T("Would you like to <a href=\"{0}\">add a widget layer</a> for \"{1}\"?",
-                urlHelper.Action("AddLayer", "Admin", new {
+                urlHelper.Action("AddLayer", "Admin", new
+                {
                     area = "Orchard.Widgets",
                     name = title,
                     layerRule = string.Format("url \"{0}\"", pathForLayer),

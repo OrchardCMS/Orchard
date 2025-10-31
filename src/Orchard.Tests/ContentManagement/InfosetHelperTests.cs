@@ -1,17 +1,20 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Tests.ContentManagement {
-    public class InfosetHelperTests {
+namespace Orchard.Tests.ContentManagement
+{
+    public class InfosetHelperTests
+    {
         [Test]
-        public void StoreByNameSavesIntoInfoset() {
+        public void StoreByNameSavesIntoInfoset()
+        {
             var part = new TestPart();
             ContentHelpers.PreparePart(part, "Test");
             part.Foo = 42;
             var infosetXml = part.As<InfosetPart>().Infoset.Element;
-            var testPartElement = infosetXml.Element(typeof (TestPart).Name);
+            var testPartElement = infosetXml.Element(typeof(TestPart).Name);
             Assert.That(testPartElement, Is.Not.Null);
             var fooAttribute = testPartElement.Attr<int>("Foo");
 
@@ -20,12 +23,13 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void RetrieveSavesIntoInfoset() {
+        public void RetrieveSavesIntoInfoset()
+        {
             var part = new TestPartWithRecord();
             ContentHelpers.PreparePart<TestPartWithRecord, TestPartWithRecordRecord>(part, "Test");
             part.Record.Foo = 42;
             var infosetXml = part.As<InfosetPart>().Infoset.Element;
-            var testPartElement = infosetXml.Element(typeof (TestPartWithRecord).Name);
+            var testPartElement = infosetXml.Element(typeof(TestPartWithRecord).Name);
             Assert.That(testPartElement, Is.Null);
 
             var foo = part.Foo;
@@ -37,19 +41,24 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(fooAttribute, Is.EqualTo(42));
         }
 
-        public class TestPart : ContentPart {
-            public int Foo {
+        public class TestPart : ContentPart
+        {
+            public int Foo
+            {
                 get { return this.Retrieve<int>("Foo"); }
                 set { this.Store("Foo", value); }
             }
         }
 
-        public class TestPartWithRecordRecord : ContentPartRecord {
+        public class TestPartWithRecordRecord : ContentPartRecord
+        {
             public virtual int Foo { get; set; }
         }
 
-        public class TestPartWithRecord : ContentPart<TestPartWithRecordRecord> {
-            public int Foo {
+        public class TestPartWithRecord : ContentPart<TestPartWithRecordRecord>
+        {
+            public int Foo
+            {
                 get { return Retrieve(r => r.Foo); }
                 set { Store(r => r.Foo, value); }
             }

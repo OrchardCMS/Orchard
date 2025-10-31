@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
@@ -11,8 +11,10 @@ using Orchard.Logging;
 using Orchard.Mvc.Routes;
 using Orchard.UI.Zones;
 
-namespace Orchard.ContentManagement {
-    public class DefaultContentDisplay : IContentDisplay {
+namespace Orchard.ContentManagement
+{
+    public class DefaultContentDisplay : IContentDisplay
+    {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
@@ -30,7 +32,8 @@ namespace Orchard.ContentManagement {
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings)
+        {
             _handlers = handlers;
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
@@ -46,7 +49,8 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
+        public dynamic BuildDisplay(IContent content, string displayType, string groupId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -69,7 +73,8 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content, string groupId) {
+        public dynamic BuildEditor(IContent content, string groupId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -94,7 +99,8 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -122,12 +128,15 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        private dynamic CreateItemShape(string actualShapeType) {
+        private dynamic CreateItemShape(string actualShapeType)
+        {
             return _shapeFactory.Create(actualShapeType, Arguments.Empty(), () => new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty())));
         }
 
-        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
-            context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
+        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype)
+        {
+            context.FindPlacement = (partShapeType, differentiator, defaultLocation) =>
+            {
 
                 var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
 
@@ -135,8 +144,10 @@ namespace Orchard.ContentManagement {
                 var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
 
                 ShapeDescriptor descriptor;
-                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
+                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor))
+                {
+                    var placementContext = new ShapePlacementContext
+                    {
                         Content = context.ContentItem,
                         ContentType = context.ContentItem.ContentType,
                         Stereotype = stereotype,
@@ -149,15 +160,17 @@ namespace Orchard.ContentManagement {
                     descriptor.DefaultPlacement = defaultLocation;
 
                     var placement = descriptor.Placement(placementContext);
-                    if (placement != null) {
+                    if (placement != null)
+                    {
                         placement.Source = placementContext.Source;
                         return placement;
                     }
                 }
 
-                return new PlacementInfo {
+                return new PlacementInfo
+                {
                     Location = defaultLocation,
-                    Source = String.Empty
+                    Source = string.Empty
                 };
             };
         }
@@ -165,7 +178,8 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Gets the current app-relative path, i.e. ~/my-blog/foo.
         /// </summary>
-        private string GetPath() {
+        private string GetPath()
+        {
             var appRelativePath = _virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path);
             // If the tenant has a prefix, we strip the tenant prefix away.
             if (_urlPrefix != null)

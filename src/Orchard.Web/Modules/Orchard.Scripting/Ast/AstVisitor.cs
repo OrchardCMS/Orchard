@@ -1,32 +1,41 @@
-﻿using System.Linq;
+using System.Linq;
 
-namespace Orchard.Scripting.Ast {
-    public class AstVisitor {
-        public virtual object Visit(AstNode node) {
+namespace Orchard.Scripting.Ast
+{
+    public class AstVisitor
+    {
+        public virtual object Visit(AstNode node)
+        {
             return node.Accept(this);
         }
 
-        public virtual object VisitChildren(AstNode node) {
+        public virtual object VisitChildren(AstNode node)
+        {
             return node.Children.Aggregate<AstNode, object>(null, (prev, child) => Visit(child));
         }
 
-        public virtual object VisitBinary(BinaryAstNode node) {
+        public virtual object VisitBinary(BinaryAstNode node)
+        {
             return null;
         }
 
-        public virtual object VisitConstant(ConstantAstNode node) {
+        public virtual object VisitConstant(ConstantAstNode node)
+        {
             return null;
         }
 
-        public virtual object VisitError(ErrorAstNode node) {
+        public virtual object VisitError(ErrorAstNode node)
+        {
             return null;
         }
 
-        public virtual object VisitUnary(UnaryAstNode node) {
+        public virtual object VisitUnary(UnaryAstNode node)
+        {
             return null;
         }
 
-        public virtual object VisitMethodCall(MethodCallAstNode node) {
+        public virtual object VisitMethodCall(MethodCallAstNode node)
+        {
             return null;
         }
     }

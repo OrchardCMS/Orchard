@@ -20,25 +20,30 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Logging;
 using Configuration = NHibernate.Cfg.Configuration;
 
-namespace Orchard.Data.Providers {
+namespace Orchard.Data.Providers
+{
     [Serializable]
-    public abstract class AbstractDataServicesProvider : IDataServicesProvider {
+    public abstract class AbstractDataServicesProvider : IDataServicesProvider
+    {
 
         public abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
 
-        protected AbstractDataServicesProvider() {
+        protected AbstractDataServicesProvider()
+        {
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public Configuration BuildConfiguration(SessionFactoryParameters parameters) {
+        public Configuration BuildConfiguration(SessionFactoryParameters parameters)
+        {
             var database = GetPersistenceConfigurer(parameters.CreateDatabase);
             var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors.ToList());
 
             var config = Fluently.Configure();
 
-            foreach (var c in parameters.Configurers.OfType<ISessionConfigurationEventsWithParameters>()) {
+            foreach (var c in parameters.Configurers.OfType<ISessionConfigurationEventsWithParameters>())
+            {
                 c.Parameters = parameters;
             }
 
@@ -46,18 +51,19 @@ namespace Orchard.Data.Providers {
 
             config = config.Database(database)
                            .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                           .ExposeConfiguration(cfg => {
+                           .ExposeConfiguration(cfg =>
+                           {
                                cfg
-                                    .SetProperty(NHibernate.Cfg.Environment.FormatSql, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.GenerateStatistics, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.FormatSql, bool.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.GenerateStatistics, bool.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.Hbm2ddlKeyWords, Hbm2DDLKeyWords.None.ToString())
                                     .SetProperty(NHibernate.Cfg.Environment.PropertyBytecodeProvider, "lcg")
-                                    .SetProperty(NHibernate.Cfg.Environment.PropertyUseReflectionOptimizer, Boolean.TrueString)
-                                    .SetProperty(NHibernate.Cfg.Environment.QueryStartupChecking, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.ShowSql, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.UseProxyValidator, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.UseSqlComments, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, Boolean.TrueString)
+                                    .SetProperty(NHibernate.Cfg.Environment.PropertyUseReflectionOptimizer, bool.TrueString)
+                                    .SetProperty(NHibernate.Cfg.Environment.QueryStartupChecking, bool.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.ShowSql, bool.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.UseProxyValidator, bool.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.UseSqlComments, bool.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, bool.TrueString)
                                     .SetProperty(NHibernate.Cfg.Environment.BatchSize, "256")
                                     ;
 
@@ -79,12 +85,15 @@ namespace Orchard.Data.Providers {
             return config.BuildConfiguration();
         }
 
-        protected virtual void AlterConfiguration(Configuration config) {
+        protected virtual void AlterConfiguration(Configuration config)
+        {
 
         }
 
-        public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {
-            if (recordDescriptors == null) {
+        public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors)
+        {
+            if (recordDescriptors == null)
+            {
                 throw new ArgumentNullException("recordDescriptors");
             }
 
@@ -95,8 +104,10 @@ namespace Orchard.Data.Providers {
                 .Conventions.Add(new RecordTableNameConvention(recordDescriptors))
                 .Conventions.Add(new CacheConventions(recordDescriptors))
                 .Conventions.Add(new UtcDateTimeConvention())
-                .Alterations(alt => {
-                    foreach (var recordAssembly in recordDescriptors.Select(x => x.Type.Assembly).Distinct()) {
+                .Alterations(alt =>
+                {
+                    foreach (var recordAssembly in recordDescriptors.Select(x => x.Type.Assembly).Distinct())
+                    {
                         alt.Add(new AutoMappingOverrideAlteration(recordAssembly));
                     }
                     alt.AddFromAssemblyOf<DataModule>();
@@ -106,32 +117,39 @@ namespace Orchard.Data.Providers {
         }
 
         [Serializable]
-        class TypeSource : ITypeSource {
+        class TypeSource : ITypeSource
+        {
             private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
             public TypeSource(IEnumerable<RecordBlueprint> recordDescriptors) { _recordDescriptors = recordDescriptors; }
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
 
-            public void LogSource(IDiagnosticLogger logger) {
+            public void LogSource(IDiagnosticLogger logger)
+            {
                 throw new NotImplementedException();
             }
 
-            public string GetIdentifier() {
+            public string GetIdentifier()
+            {
                 throw new NotImplementedException();
             }
         }
 
         [Serializable]
-        class OrchardLoadEventListener : DefaultLoadEventListener, ILoadEventListener {
+        class OrchardLoadEventListener : DefaultLoadEventListener, ILoadEventListener
+        {
 
-            public new void OnLoad(LoadEvent @event, LoadType loadType) {
+            public new void OnLoad(LoadEvent @event, LoadType loadType)
+            {
                 var source = (ISessionImplementor)@event.Session;
                 IEntityPersister entityPersister;
-                if (@event.InstanceToLoad != null) {
+                if (@event.InstanceToLoad != null)
+                {
                     entityPersister = source.GetEntityPersister(null, @event.InstanceToLoad);
                     @event.EntityClassName = @event.InstanceToLoad.GetType().FullName;
-                } else
+                }
+                else
                     entityPersister = source.Factory.GetEntityPersister(@event.EntityClassName);
                 if (entityPersister == null)
                     throw new HibernateException("Unable to locate persister: " + @event.EntityClassName);
@@ -154,11 +172,16 @@ namespace Orchard.Data.Providers {
 
                 var keyToLoad = new EntityKey(@event.EntityId, entityPersister);
 
-                if (loadType.IsNakedEntityReturned) {
+                if (loadType.IsNakedEntityReturned)
+                {
                     @event.Result = Load(@event, entityPersister, keyToLoad, loadType);
-                } else if (@event.LockMode == LockMode.None) {
+                }
+                else if (@event.LockMode == LockMode.None)
+                {
                     @event.Result = ProxyOrLoad(@event, entityPersister, keyToLoad, loadType);
-                } else {
+                }
+                else
+                {
                     @event.Result = LockAndLoad(@event, entityPersister, keyToLoad, loadType, source);
                 }
             }

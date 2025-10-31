@@ -1,13 +1,16 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
-namespace Orchard.Tests.UI.Notify {
+namespace Orchard.Tests.UI.Notify
+{
     [TestFixture]
-    public class NotifierTests {
+    public class NotifierTests
+    {
 
         [Test]
-        public void MessageServiceCanAccumulateWarningsAndErrorsToReturn() {
+        public void MessageServiceCanAccumulateWarningsAndErrorsToReturn()
+        {
             INotifier notifier = new Notifier();
             Localizer T = NullLocalizer.Instance;
 

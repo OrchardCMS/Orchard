@@ -1,21 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 
-namespace Orchard.Core.Navigation.Models {
-    public class AdminMenuPart : ContentPart<AdminMenuPartRecord> {
+namespace Orchard.Core.Navigation.Models
+{
+    public class AdminMenuPart : ContentPart<AdminMenuPartRecord>
+    {
 
-        public bool OnAdminMenu {
+        public bool OnAdminMenu
+        {
             get { return Record.OnAdminMenu; }
             set { Record.OnAdminMenu = value; }
         }
 
         [StringLength(AdminMenuPartRecord.DefaultMenuTextLength)]
-        public string AdminMenuText {
+        public string AdminMenuText
+        {
             get { return Record.AdminMenuText; }
             set { Record.AdminMenuText = value; }
         }
 
-        public string AdminMenuPosition {
+        public string AdminMenuPosition
+        {
             get { return Record.AdminMenuPosition; }
             set { Record.AdminMenuPosition = value; }
         }

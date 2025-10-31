@@ -1,9 +1,13 @@
-﻿namespace Orchard.Glimpse.Interceptors {
-    public abstract class GlimpseMessageInterceptor<T> : IGlimpseMessageInterceptor where T : class {
-        public void MessageReceived<TMessage>(TMessage message) where TMessage : class {
+namespace Orchard.Glimpse.Interceptors
+{
+    public abstract class GlimpseMessageInterceptor<T> : IGlimpseMessageInterceptor where T : class
+    {
+        public void MessageReceived<TMessage>(TMessage message) where TMessage : class
+        {
             var typedMessage = message as T;
 
-            if (typedMessage != null) {
+            if (typedMessage != null)
+            {
                 ProcessMessage(typedMessage);
             }
         }

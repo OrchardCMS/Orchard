@@ -1,11 +1,13 @@
-﻿using Moq;
+using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement
+{
     [TestFixture]
-    public class ImportContentSessionTests {
+    public class ImportContentSessionTests
+    {
         private ContentIdentity _testItemIdentity1;
         private ContentIdentity _testItemIdentity2;
         private ContentIdentity _testItemIdentity3;
@@ -15,7 +17,8 @@ namespace Orchard.Tests.ContentManagement {
 
         #region Init
         [OneTimeSetUp]
-        public void TestInit() {
+        public void TestInit()
+        {
             _testItemIdentity1 = new ContentIdentity("/ItemId=1");
             _testItemIdentity2 = new ContentIdentity("/ItemId=2");
             _testItemIdentity3 = new ContentIdentity("/ItemId=3");
@@ -44,21 +47,24 @@ namespace Orchard.Tests.ContentManagement {
         #endregion
 
         [Test]
-        public void GetNextInBatchReturnsNullWhenNoItemsSet() {
+        public void GetNextInBatchReturnsNullWhenNoItemsSet()
+        {
             var importContentSession = new ImportContentSession(_contentManager.Object);
 
             Assert.That(importContentSession.GetNextInBatch(), Is.Null);
         }
 
         [Test]
-        public void GetNextInBatchReturnsNullWhenInitializedButNoItemsSet() {
+        public void GetNextInBatchReturnsNullWhenInitializedButNoItemsSet()
+        {
             var importContentSession = new ImportContentSession(_contentManager.Object);
             importContentSession.InitializeBatch(0, 20);
             Assert.That(importContentSession.GetNextInBatch(), Is.Null);
         }
 
         [Test]
-        public void ItemsSetAndUninitializedReturnsAllItems() {
+        public void ItemsSetAndUninitializedReturnsAllItems()
+        {
             var importContentSession = new ImportContentSession(_contentManager.Object);
 
             importContentSession.Set("/Id=One", "TestType");
@@ -73,7 +79,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ItemsSetAndBatchInitialisedReturnsBatchedItems() {
+        public void ItemsSetAndBatchInitialisedReturnsBatchedItems()
+        {
             var importContentSession = new ImportContentSession(_contentManager.Object);
 
             importContentSession.Set("/Id=One", "TestType");
@@ -99,7 +106,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GetItemExistsAndNoVersionOptionsReturnsPublishedItem() {
+        public void GetItemExistsAndNoVersionOptionsReturnsPublishedItem()
+        {
             var session = new ImportContentSession(_contentManager.Object);
             session.Set(_testItemIdentity1.ToString(), "TestContentType");
             var sessionItem = session.Get(_testItemIdentity1.ToString());
@@ -109,7 +117,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GetItemExistsAndLatestVersionOptionReturnsPublishedItem() {
+        public void GetItemExistsAndLatestVersionOptionReturnsPublishedItem()
+        {
             var session = new ImportContentSession(_contentManager.Object);
             session.Set(_testItemIdentity1.ToString(), "TestContentType");
             var sessionItem = session.Get(_testItemIdentity1.ToString());
@@ -119,7 +128,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GetItemExistsAndDraftRequiredVersionOptionReturnsDraft() {
+        public void GetItemExistsAndDraftRequiredVersionOptionReturnsDraft()
+        {
             var session = new ImportContentSession(_contentManager.Object);
             session.Set(_testItemIdentity1.ToString(), "TestContentType");
             var sessionItem = session.Get(_testItemIdentity1.ToString(), VersionOptions.DraftRequired);
@@ -129,7 +139,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GetNextInBatchInitialisedWithOneItemReturnsOneItemThenNull() {
+        public void GetNextInBatchInitialisedWithOneItemReturnsOneItemThenNull()
+        {
             var session = new ImportContentSession(_contentManager.Object);
             session.Set(_testItemIdentity1.ToString(), "TestContentType");
             session.InitializeBatch(0, 1);
@@ -143,7 +154,8 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void GetNextInBatchInitialisedTwoBatchesReturnsItemsOnceEach() {
+        public void GetNextInBatchInitialisedTwoBatchesReturnsItemsOnceEach()
+        {
             var session = new ImportContentSession(_contentManager.Object);
             session.Set(_testItemIdentity1.ToString(), "TestContentType");
             session.Set(_testItemIdentity2.ToString(), "TestContentType");

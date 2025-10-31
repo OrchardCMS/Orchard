@@ -1,8 +1,8 @@
-﻿using System.Configuration;
-using System;
+using System.Configuration;
 using Microsoft.Azure;
 
-namespace Orchard.Azure.Services.Environment.Configuration {
+namespace Orchard.Azure.Services.Environment.Configuration
+{
 
     /// <summary>
     /// Provides a default <c>IPlatformConfigurationAccessor</c> implementation that reads configuration settings
@@ -16,14 +16,16 @@ namespace Orchard.Azure.Services.Environment.Configuration {
     /// checked. Both the tenant-specific name and the tenant-neutral name are checked within each configuration source
     /// before proceeding to the next one.
     /// </remarks>
-    public class DefaultPlatformConfigurationAccessor : IPlatformConfigurationAccessor {
+    public class DefaultPlatformConfigurationAccessor : IPlatformConfigurationAccessor
+    {
 
-        public string GetSetting(string name, string tenant, string namePrefix = null) {
-            var tenantName = String.Format("{0}:{1}{2}", tenant, namePrefix, name);
-            var fallbackName = String.Format("{0}{1}", namePrefix, name);
+        public string GetSetting(string name, string tenant, string namePrefix = null)
+        {
+            var tenantName = string.Format("{0}:{1}{2}", tenant, namePrefix, name);
+            var fallbackName = string.Format("{0}{1}", namePrefix, name);
 
             var cloudConfigurationValue = CloudConfigurationManager.GetSetting(tenantName) ?? CloudConfigurationManager.GetSetting(fallbackName);
-            if (!String.IsNullOrEmpty(cloudConfigurationValue))
+            if (!string.IsNullOrEmpty(cloudConfigurationValue))
                 return cloudConfigurationValue;
 
             var connectionStringValue = ConfigurationManager.ConnectionStrings[tenantName] ?? ConfigurationManager.ConnectionStrings[fallbackName];

@@ -1,26 +1,31 @@
-﻿using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Core.Navigation.Services {
-    public class AdminMenuNavigationProvider : INavigationProvider {
+namespace Orchard.Core.Navigation.Services
+{
+    public class AdminMenuNavigationProvider : INavigationProvider
+    {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public AdminMenuNavigationProvider(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager) {
+        public AdminMenuNavigationProvider(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager)
+        {
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
 
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             var menuParts = _contentManager.Query<AdminMenuPart, AdminMenuPartRecord>().Where(x => x.OnAdminMenu).List();
-            foreach (var menuPart in menuParts) {
-                if (menuPart != null) {
+            foreach (var menuPart in menuParts)
+            {
+                if (menuPart != null)
+                {
                     var part = menuPart;
 
                     builder.Add(new LocalizedString(part.AdminMenuText),

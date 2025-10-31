@@ -1,19 +1,23 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class CompositeTests {
+    public class CompositeTests
+    {
 
         [Test]
-        public void CompositesShouldNotOverrideExistingMembers() {
-            var composite = new Animal {Color = "Pink"};
+        public void CompositesShouldNotOverrideExistingMembers()
+        {
+            var composite = new Animal { Color = "Pink" };
 
             Assert.That(composite.Color, Is.EqualTo("Pink"));
         }
 
         [Test]
-        public void CompositesShouldNotOverrideExistingMembersWhenUsedAsDynamic() {
+        public void CompositesShouldNotOverrideExistingMembersWhenUsedAsDynamic()
+        {
             dynamic composite = new Animal();
 
             composite.Color = "Pink";
@@ -21,7 +25,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CompositesShouldAccessUnknownProperties() {
+        public void CompositesShouldAccessUnknownProperties()
+        {
             dynamic composite = new Animal();
 
             composite.Fake = 42;
@@ -29,7 +34,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CompositesShouldAccessUnknownPropertiesByIndex() {
+        public void CompositesShouldAccessUnknownPropertiesByIndex()
+        {
             dynamic composite = new Animal();
 
             composite["Fake"] = 42;
@@ -37,7 +43,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CompositesShouldAccessKnownPropertiesByIndex() {
+        public void CompositesShouldAccessKnownPropertiesByIndex()
+        {
             dynamic composite = new Animal();
 
             composite["Pink"] = "Pink";
@@ -45,7 +52,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void ChainProperties() {
+        public void ChainProperties()
+        {
             dynamic foo = new Animal();
             foo.Bar("bar");
 
@@ -55,22 +63,25 @@ namespace Orchard.Tests.DisplayManagement {
 
 
         [Test]
-        public void DuckTyping() {
+        public void DuckTyping()
+        {
             dynamic foo = new Animal();
             foo.Size(42);
 
             ISized sized = foo;
-            
+
             Assert.That(sized.Size, Is.EqualTo(42));
         }
     }
 
-    public class Animal : Composite {
+    public class Animal : Composite
+    {
         public string Kind { get; set; }
         public string Color { get; set; }
     }
 
-    public interface ISized {
+    public interface ISized
+    {
         int Size { get; set; }
     }
 }

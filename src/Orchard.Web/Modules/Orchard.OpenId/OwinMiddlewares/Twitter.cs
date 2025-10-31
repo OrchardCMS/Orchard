@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Twitter;
@@ -8,23 +8,29 @@ using Orchard.OpenId.Models;
 using Orchard.Owin;
 using Owin;
 
-namespace Orchard.OpenId.OwinMiddlewares {
+namespace Orchard.OpenId.OwinMiddlewares
+{
     [OrchardFeature("Orchard.OpenId.Twitter")]
-    public class Twitter : IOwinMiddlewareProvider {
+    public class Twitter : IOwinMiddlewareProvider
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public Twitter(IWorkContextAccessor workContextAccessor) {
+        public Twitter(IWorkContextAccessor workContextAccessor)
+        {
             _workContextAccessor = workContextAccessor;
         }
 
-        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
+        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares()
+        {
             var settings = _workContextAccessor.GetContext().CurrentSite.As<TwitterSettingsPart>();
 
-            if (settings == null || !settings.IsValid()) {
+            if (settings == null || !settings.IsValid())
+            {
                 return Enumerable.Empty<OwinMiddlewareRegistration>();
             }
 
-            var twitterOptions = new TwitterAuthenticationOptions {
+            var twitterOptions = new TwitterAuthenticationOptions
+            {
                 ConsumerKey = settings.ConsumerKey,
                 ConsumerSecret = settings.ConsumerSecret,
                 BackchannelCertificateValidator = new CertificateSubjectKeyIdentifierValidator(new[]
@@ -34,7 +40,7 @@ namespace Orchard.OpenId.OwinMiddlewares {
                     settings.VeriSignClass3PublicPrimaryCA_G5,
                     settings.SymantecClass3SecureServerCA_G4,
                     settings.DigiCertSHA2HighAssuranceServerCA,
-                    settings.DigiCertHighAssuranceEVRootCA 
+                    settings.DigiCertHighAssuranceEVRootCA
                 })
             };
 

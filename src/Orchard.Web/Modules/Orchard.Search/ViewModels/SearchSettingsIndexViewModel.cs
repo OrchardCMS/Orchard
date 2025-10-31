@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Search.ViewModels {
-    public class SearchSettingsIndexViewModel {
-        public SearchSettingsIndexViewModel() {
+namespace Orchard.Search.ViewModels
+{
+    public class SearchSettingsIndexViewModel
+    {
+        public SearchSettingsIndexViewModel()
+        {
             AvailableIndexes = new List<string>();
         }
         public string SelectedIndex { get; set; }
         public IList<string> AvailableIndexes { get; set; }
     }
 
-    public class SearchSettingsFieldsViewModel {
-        public SearchSettingsFieldsViewModel() {
+    public class SearchSettingsFieldsViewModel
+    {
+        public SearchSettingsFieldsViewModel()
+        {
             Entries = new List<IndexSettingsEntry>();
         }
 
@@ -19,8 +24,10 @@ namespace Orchard.Search.ViewModels {
         public string DisplayType { get; set; }
     }
 
-    public class IndexSettingsEntry {
-        public IndexSettingsEntry() {
+    public class IndexSettingsEntry
+    {
+        public IndexSettingsEntry()
+        {
             Fields = new List<SearchSettingsEntry>();
         }
 
@@ -28,7 +35,8 @@ namespace Orchard.Search.ViewModels {
         public IList<SearchSettingsEntry> Fields { get; set; }
     }
 
-    public class SearchSettingsEntry {
+    public class SearchSettingsEntry
+    {
         public string Field { get; set; }
         public bool Selected { get; set; }
         public int Weight { get; set; }

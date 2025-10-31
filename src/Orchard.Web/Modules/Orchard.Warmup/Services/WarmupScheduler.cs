@@ -1,16 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
 using Orchard.Events;
 
-namespace Orchard.Warmup.Services {
-    public interface IWarmupEventHandler : IEventHandler {
+namespace Orchard.Warmup.Services
+{
+    public interface IWarmupEventHandler : IEventHandler
+    {
         void Generate(bool force);
     }
 
-    public class WarmupScheduler : IWarmupScheduler, IWarmupEventHandler {
+    public class WarmupScheduler : IWarmupScheduler, IWarmupEventHandler
+    {
         private readonly IProcessingEngine _processingEngine;
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
@@ -20,14 +23,16 @@ namespace Orchard.Warmup.Services {
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
-            Lazy<IWarmupUpdater> warmupUpdater ) {
+            Lazy<IWarmupUpdater> warmupUpdater)
+        {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _warmupUpdater = warmupUpdater;
         }
 
-        public void Schedule(bool force) {
+        public void Schedule(bool force)
+        {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
 
             _processingEngine.AddTask(
@@ -38,11 +43,14 @@ namespace Orchard.Warmup.Services {
                 );
         }
 
-        public void Generate(bool force) {
-            if(force) {
+        public void Generate(bool force)
+        {
+            if (force)
+            {
                 _warmupUpdater.Value.Generate();
             }
-            else {
+            else
+            {
                 _warmupUpdater.Value.EnsureGenerate();
             }
         }

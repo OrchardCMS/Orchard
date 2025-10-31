@@ -1,5 +1,7 @@
-﻿namespace Orchard.AuditTrail.ViewModels {
-    public enum RecycleBinCommand {
+namespace Orchard.AuditTrail.ViewModels
+{
+    public enum RecycleBinCommand
+    {
         Restore,
         Destroy,
     }

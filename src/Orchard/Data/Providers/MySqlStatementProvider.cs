@@ -1,11 +1,13 @@
-﻿namespace Orchard.Data.Providers {
-    public class MySqlStatementProvider : ISqlStatementProvider {
-        public string DataProvider {
-            get { return "MySql"; }
-        }
+namespace Orchard.Data.Providers
+{
+    public class MySqlStatementProvider : ISqlStatementProvider
+    {
+        public string DataProvider => "MySql";
 
-        public string GetStatement(string command) {
-            switch (command) {
+        public string GetStatement(string command)
+        {
+            switch (command)
+            {
                 case "random":
                     return "rand()";
                 case "table_names":

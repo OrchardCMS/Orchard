@@ -1,9 +1,11 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 
-namespace Orchard.Autoroute.Services {
-    
-    public interface IHomeAliasService : IDependency {
+namespace Orchard.Autoroute.Services
+{
+
+    public interface IHomeAliasService : IDependency
+    {
         RouteValueDictionary GetHomeRoute();
         int? GetHomePageId(VersionOptions version = null);
         IContent GetHomePage(VersionOptions version = null);

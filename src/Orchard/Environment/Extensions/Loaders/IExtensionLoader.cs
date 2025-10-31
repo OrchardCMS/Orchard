@@ -5,8 +5,10 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions.Loaders {
-    public class ExtensionProbeEntry {
+namespace Orchard.Environment.Extensions.Loaders
+{
+    public class ExtensionProbeEntry
+    {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }
         public int Priority { get; set; }
@@ -14,19 +16,22 @@ namespace Orchard.Environment.Extensions.Loaders {
         public IEnumerable<string> VirtualPathDependencies { get; set; }
     }
 
-    public class ExtensionReferenceProbeEntry {
+    public class ExtensionReferenceProbeEntry
+    {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }
         public string Name { get; set; }
         public string VirtualPath { get; set; }
     }
 
-    public class ExtensionCompilationReference {
+    public class ExtensionCompilationReference
+    {
         public string AssemblyName { get; set; }
         public string BuildProviderTarget { get; set; }
     }
 
-    public interface IExtensionLoader {
+    public interface IExtensionLoader
+    {
         int Order { get; }
         string Name { get; }
 

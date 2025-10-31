@@ -1,5 +1,7 @@
-﻿namespace Orchard.MediaPicker.Settings {
-    public class MediaPickerFieldSettings {
+namespace Orchard.MediaPicker.Settings
+{
+    public class MediaPickerFieldSettings
+    {
         public string Hint { get; set; }
         public string AllowedExtensions { get; set; }
         public bool Required { get; set; }

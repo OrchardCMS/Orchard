@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Threading;
 using NUnit.Framework;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Services {
+namespace Orchard.Tests.Services
+{
 
     [TestFixture]
-    public class ClockTests {
+    public class ClockTests
+    {
         [Test]
-        public void StubClockShouldComeFromSystemUtcAndDoesNotComeFromSystemTime() {
+        public void StubClockShouldComeFromSystemUtcAndDoesNotComeFromSystemTime()
+        {
             var clock = new StubClock();
             var before = DateTime.UtcNow;
             Thread.Sleep(2);
@@ -21,7 +24,8 @@ namespace Orchard.Tests.Services {
         }
 
         [Test]
-        public void StubClockCanBeManuallyAdvanced() {
+        public void StubClockCanBeManuallyAdvanced()
+        {
             var clock = new StubClock();
             var before = clock.UtcNow;
             clock.Advance(TimeSpan.FromMilliseconds(2));

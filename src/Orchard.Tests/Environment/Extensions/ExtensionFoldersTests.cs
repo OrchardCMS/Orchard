@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
@@ -6,21 +6,27 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Extensions {
+namespace Orchard.Tests.Environment.Extensions
+{
     [TestFixture]
-    public class ExtensionFoldersTests {
+    public class ExtensionFoldersTests
+    {
         private const string DataPrefix = "Orchard.Tests.Environment.Extensions.FoldersData.";
         private string _tempFolderName;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _tempFolderName = Path.GetTempFileName();
             File.Delete(_tempFolderName);
             var assembly = GetType().Assembly;
-            foreach (var name in assembly.GetManifestResourceNames()) {
-                if (name.StartsWith(DataPrefix)) {
+            foreach (var name in assembly.GetManifestResourceNames())
+            {
+                if (name.StartsWith(DataPrefix))
+                {
                     var text = "";
-                    using (var stream = assembly.GetManifestResourceStream(name)) {
+                    using (var stream = assembly.GetManifestResourceStream(name))
+                    {
                         using (var reader = new StreamReader(stream))
                             text = reader.ReadToEnd();
 
@@ -35,8 +41,10 @@ namespace Orchard.Tests.Environment.Extensions {
                     var targetPath = Path.Combine(_tempFolderName, relativePath);
 
                     Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                    using (var stream = new FileStream(targetPath, FileMode.Create)) {
-                        using (var writer = new StreamWriter(stream)) {
+                    using (var stream = new FileStream(targetPath, FileMode.Create))
+                    {
+                        using (var writer = new StreamWriter(stream))
+                        {
                             writer.Write(text);
                         }
                     }
@@ -45,12 +53,14 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             Directory.Delete(_tempFolderName, true);
         }
 
         [Test]
-        public void IdsFromFoldersWithModuleTxtShouldBeListed() {
+        public void IdsFromFoldersWithModuleTxtShouldBeListed()
+        {
             var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var ids = folders.AvailableExtensions().Select(d => d.Id);
@@ -63,7 +73,8 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
-        public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
+        public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument()
+        {
             var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var sample1 = folders.AvailableExtensions().Single(d => d.Id == "Sample1");
@@ -72,7 +83,8 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
-        public void NamesFromFoldersWithModuleTxtShouldFallBackToIdIfNotGiven() {
+        public void NamesFromFoldersWithModuleTxtShouldFallBackToIdIfNotGiven()
+        {
             var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var names = folders.AvailableExtensions().Select(d => d.Name);
@@ -85,7 +97,8 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
-        public void PathsFromFoldersWithModuleTxtShouldFallBackAppropriatelyIfNotGiven() {
+        public void PathsFromFoldersWithModuleTxtShouldFallBackAppropriatelyIfNotGiven()
+        {
             var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var paths = folders.AvailableExtensions().Select(d => d.Path);

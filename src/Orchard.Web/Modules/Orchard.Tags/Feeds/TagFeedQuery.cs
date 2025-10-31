@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -9,12 +9,15 @@ using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.Tags.Services;
 
-namespace Orchard.Tags.Feeds {
+namespace Orchard.Tags.Feeds
+{
     [OrchardFeature("Orchard.Tags.Feeds")]
-    public class TagFeedQuery : IFeedQueryProvider, IFeedQuery {
+    public class TagFeedQuery : IFeedQueryProvider, IFeedQuery
+    {
         private readonly ITagService _tagService;
 
-        public TagFeedQuery(ITagService tagService) {
+        public TagFeedQuery(ITagService tagService)
+        {
             _tagService = tagService;
 
             T = NullLocalizer.Instance;
@@ -22,7 +25,8 @@ namespace Orchard.Tags.Feeds {
 
         public Localizer T { get; set; }
 
-        public FeedQueryMatch Match(FeedContext context) {
+        public FeedQueryMatch Match(FeedContext context)
+        {
             var tagIdValue = context.ValueProvider.GetValue("tag");
             if (tagIdValue == null)
                 return null;
@@ -30,22 +34,25 @@ namespace Orchard.Tags.Feeds {
             var tagName = (string)tagIdValue.ConvertTo(typeof(string));
             var tag = _tagService.GetTagByName(tagName);
 
-            if (tag == null) {
+            if (tag == null)
+            {
                 return null;
             }
 
             return new FeedQueryMatch { FeedQuery = this, Priority = -5 };
         }
 
-        public void Execute(FeedContext context) {
+        public void Execute(FeedContext context)
+        {
             var tagIdValue = context.ValueProvider.GetValue("tag");
             if (tagIdValue == null)
                 return;
 
             var limitValue = context.ValueProvider.GetValue("limit");
             var limit = 20;
-            if (limitValue != null) {
-                Int32.TryParse(Convert.ToString(limitValue), out limit);
+            if (limitValue != null)
+            {
+                int.TryParse(Convert.ToString(limitValue), out limit);
             }
 
             limit = Math.Min(limit, 100);
@@ -53,7 +60,8 @@ namespace Orchard.Tags.Feeds {
             var tagName = (string)tagIdValue.ConvertTo(typeof(string));
             var tag = _tagService.GetTagByName(tagName);
 
-            if (tag == null) {
+            if (tag == null)
+            {
                 return;
             }
 
@@ -64,22 +72,26 @@ namespace Orchard.Tags.Feeds {
                 {"tagName", tag.TagName}
             };
 
-            if (context.Format == "rss") {
+            if (context.Format == "rss")
+            {
                 var link = new XElement("link");
                 context.Response.Element.SetElementValue("title", tag.TagName);
                 context.Response.Element.Add(link);
                 context.Response.Element.SetElementValue("description", T("Content tagged with {0}", tag.TagName).ToString());
 
-                context.Response.Contextualize(requestContext => {
+                context.Response.Contextualize(requestContext =>
+                {
                     var urlHelper = new UrlHelper(requestContext);
                     var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(displayRouteValues) };
                     link.Add(uriBuilder.Uri.OriginalString);
                 });
             }
-            else {
+            else
+            {
                 context.Builder.AddProperty(context, null, "title", tag.TagName);
                 context.Builder.AddProperty(context, null, "description", T("Content tagged with {0}", tag.TagName).ToString());
-                context.Response.Contextualize(requestContext => {
+                context.Response.Contextualize(requestContext =>
+                {
                     var urlHelper = new UrlHelper(requestContext);
                     context.Builder.AddProperty(context, null, "link", urlHelper.MakeAbsolute(urlHelper.RouteUrl(displayRouteValues)));
                 });
@@ -87,7 +99,8 @@ namespace Orchard.Tags.Feeds {
 
             var items = _tagService.GetTaggedContentItems(tag.Id, 0, limit);
 
-            foreach (var item in items) {
+            foreach (var item in items)
+            {
                 context.Builder.AddItem(context, item.ContentItem);
             }
         }

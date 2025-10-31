@@ -14,15 +14,18 @@ using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Extensions.ExtensionTypes;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Extensions {
+namespace Orchard.Tests.Environment.Extensions
+{
     [TestFixture]
-    public class ExtensionManagerTests {
+    public class ExtensionManagerTests
+    {
         private IContainer _container;
         private IExtensionManager _manager;
         private StubFolders _folders;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
@@ -35,91 +38,107 @@ namespace Orchard.Tests.Environment.Extensions {
             _manager = _container.Resolve<IExtensionManager>();
         }
 
-        public class StubFolders : IExtensionFolders {
+        public class StubFolders : IExtensionFolders
+        {
             private readonly string _extensionType;
 
-            public StubFolders(string extensionType) {
+            public StubFolders(string extensionType)
+            {
                 Manifests = new Dictionary<string, string>();
                 _extensionType = extensionType;
             }
 
             public StubFolders()
-                : this(DefaultExtensionTypes.Module) {
+                : this(DefaultExtensionTypes.Module)
+            {
             }
 
             public IDictionary<string, string> Manifests { get; set; }
 
-            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach (var e in Manifests) {
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions()
+            {
+                foreach (var e in Manifests)
+                {
                     string name = e.Key;
                     yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
                 }
             }
         }
 
-        public class StubLoaders : IExtensionLoader {
+        public class StubLoaders : IExtensionLoader
+        {
             #region Implementation of IExtensionLoader
 
-            public int Order {
-                get { return 1; }
-            }
+            public int Order => 1;
 
-            public string Name {
-                get { throw new NotImplementedException(); }
-            }
+            public string Name => throw new NotImplementedException();
 
-            public Assembly LoadReference(DependencyReferenceDescriptor reference) {
+            public Assembly LoadReference(DependencyReferenceDescriptor reference)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry)
+            {
                 throw new NotImplementedException();
             }
 
-            public bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+            public bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references)
+            {
                 throw new NotImplementedException();
             }
 
-            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor)
+            {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }
 
-            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
+            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor)
+            {
                 throw new NotImplementedException();
             }
 
-            public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            public ExtensionEntry Load(ExtensionDescriptor descriptor)
+            {
                 return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
             }
 
-            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension)
+            {
                 throw new NotImplementedException();
             }
 
-            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
+            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor)
+            {
             }
 
-            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
+            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency)
+            {
                 throw new NotImplementedException();
             }
 
-            public bool LoaderIsSuitable(ExtensionDescriptor descriptor) {
+            public bool LoaderIsSuitable(ExtensionDescriptor descriptor)
+            {
                 throw new NotImplementedException();
             }
 
@@ -128,7 +147,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
 
         [Test]
-        public void AvailableExtensionsShouldFollowCatalogLocations() {
+        public void AvailableExtensionsShouldFollowCatalogLocations()
+        {
             _folders.Manifests.Add("foo", "Name: Foo");
             _folders.Manifests.Add("bar", "Name: Bar");
             _folders.Manifests.Add("frap", "Name: Frap");
@@ -141,7 +161,8 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
-        public void ExtensionDescriptorKeywordsAreCaseInsensitive() {
+        public void ExtensionDescriptorKeywordsAreCaseInsensitive()
+        {
 
             _folders.Manifests.Add("Sample", @"
 NaMe: Sample Extension
@@ -159,7 +180,8 @@ DESCRIPTION: HELLO
         }
 
         [Test]
-        public void ExtensionDescriptorsShouldHaveNameAndVersion() {
+        public void ExtensionDescriptorsShouldHaveNameAndVersion()
+        {
 
             _folders.Manifests.Add("Sample", @"
 Name: Sample Extension
@@ -173,7 +195,8 @@ Version: 2.x
         }
 
         [Test]
-        public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxt() {
+        public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxt()
+        {
 
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
@@ -195,7 +218,8 @@ Features:
         }
 
         [Test]
-        public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxt() {
+        public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxt()
+        {
 
             _folders.Manifests.Add("MyCompany.AnotherWiki", @"
 Name: AnotherWiki
@@ -232,8 +256,10 @@ Features:
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(5));
             Assert.That(descriptor.SessionState, Is.EqualTo("required"));
-            foreach (var featureDescriptor in descriptor.Features) {
-                switch (featureDescriptor.Id) {
+            foreach (var featureDescriptor in descriptor.Features)
+            {
+                switch (featureDescriptor.Id)
+                {
                     case "AnotherWiki":
                         Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("My super wiki module for Orchard."));
@@ -278,7 +304,8 @@ Features:
         }
 
         [Test]
-        public void ExtensionManagerShouldLoadFeatures() {
+        public void ExtensionManagerShouldLoadFeatures()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -304,7 +331,8 @@ Features:
         }
 
         [Test]
-        public void ExtensionManagerFeaturesContainNonAbstractClasses() {
+        public void ExtensionManagerFeaturesContainNonAbstractClasses()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -326,22 +354,26 @@ Features:
             var features = extensionManager.LoadFeatures(testFeature);
             var types = features.SelectMany(x => x.ExportedTypes);
 
-            foreach (var type in types) {
+            foreach (var type in types)
+            {
                 Assert.That(type.IsClass);
                 Assert.That(!type.IsAbstract);
             }
         }
 
-        private static ExtensionManager CreateExtensionManager(StubFolders extensionFolder, StubLoaders extensionLoader) {
+        private static ExtensionManager CreateExtensionManager(StubFolders extensionFolder, StubLoaders extensionLoader)
+        {
             return CreateExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
         }
 
-        private static ExtensionManager CreateExtensionManager(IEnumerable<StubFolders> extensionFolder, IEnumerable<StubLoaders> extensionLoader) {
+        private static ExtensionManager CreateExtensionManager(IEnumerable<StubFolders> extensionFolder, IEnumerable<StubLoaders> extensionLoader)
+        {
             return new ExtensionManager(extensionFolder, extensionLoader, new StubCacheManager(), new StubParallelCacheContext(), new StubAsyncTokenProvider());
         }
 
         [Test]
-        public void ExtensionManagerShouldReturnEmptyFeatureIfFeatureDoesNotExist() {
+        public void ExtensionManagerShouldReturnEmptyFeatureIfFeatureDoesNotExist()
+        {
             var featureDescriptor = new FeatureDescriptor { Id = "NoSuchFeature", Extension = new ExtensionDescriptor { Id = "NoSuchFeature" } };
             Feature feature = _manager.LoadFeatures(new[] { featureDescriptor }).First();
             Assert.AreEqual(featureDescriptor, feature.Descriptor);
@@ -349,7 +381,8 @@ Features:
         }
 
         [Test]
-        public void ExtensionManagerTestFeatureAttribute() {
+        public void ExtensionManagerTestFeatureAttribute()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -369,9 +402,12 @@ Features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
 
-            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
-                foreach (var type in feature.ExportedTypes) {
-                    foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature }))
+            {
+                foreach (var type in feature.ExportedTypes)
+                {
+                    foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false))
+                    {
                         Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
                     }
                 }
@@ -379,7 +415,8 @@ Features:
         }
 
         [Test]
-        public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute() {
+        public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -399,15 +436,18 @@ Features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
 
-            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
-                foreach (var type in feature.ExportedTypes) {
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature }))
+            {
+                foreach (var type in feature.ExportedTypes)
+                {
                     Assert.That(type == typeof(Phi));
                 }
             }
         }
 
         [Test]
-        public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures() {
+        public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -427,8 +467,10 @@ Features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestModule");
 
-            foreach (var feature in extensionManager.LoadFeatures(new[] { testModule })) {
-                foreach (var type in feature.ExportedTypes) {
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testModule }))
+            {
+                foreach (var type in feature.ExportedTypes)
+                {
                     Assert.That(type != typeof(Phi));
                     Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
                 }
@@ -436,7 +478,8 @@ Features:
         }
 
         [Test]
-        public void ModuleNameIsIntroducedAsFeatureImplicitly() {
+        public void ModuleNameIsIntroducedAsFeatureImplicitly()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -455,7 +498,8 @@ OrchardVersion: 1
 
 
         [Test]
-        public void FeatureDescriptorsAreInDependencyOrder() {
+        public void FeatureDescriptorsAreInDependencyOrder()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -488,7 +532,8 @@ Features:
         }
 
         [Test]
-        public void FeatureDescriptorsShouldBeLoadedInThemes() {
+        public void FeatureDescriptorsShouldBeLoadedInThemes()
+        {
             var extensionLoader = new StubLoaders();
             var moduleExtensionFolder = new StubFolders();
             var themeExtensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
@@ -528,7 +573,8 @@ OrchardVersion: 1
         }
 
         [Test]
-        public void ThemeFeatureDescriptorsShouldBeAbleToDependOnModules() {
+        public void ThemeFeatureDescriptorsShouldBeAbleToDependOnModules()
+        {
             var extensionLoader = new StubLoaders();
             var moduleExtensionFolder = new StubFolders();
             var themeExtensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
@@ -541,7 +587,8 @@ OrchardVersion: 1
             AssertFeaturesAreInOrder(new[] { moduleExtensionFolder, themeExtensionFolder }, extensionLoader, "<Beta<Gamma<Alpha<Classic<");
         }
 
-        private static string CreateManifest(string name, string priority = null, string dependencies = null) {
+        private static string CreateManifest(string name, string priority = null, string dependencies = null)
+        {
             return string.Format(CultureInfo.InvariantCulture, @"
 Name: {0}
 Version: 1.0.3
@@ -551,18 +598,21 @@ OrchardVersion: 1{1}{2}",
              (priority == null ? null : "\nPriority:" + priority));
         }
 
-        private static void AssertFeaturesAreInOrder(StubFolders folder, StubLoaders loader, string expectedOrder) {
+        private static void AssertFeaturesAreInOrder(StubFolders folder, StubLoaders loader, string expectedOrder)
+        {
             AssertFeaturesAreInOrder(new StubFolders[] { folder }, loader, expectedOrder);
         }
 
-        private static void AssertFeaturesAreInOrder(IEnumerable<StubFolders> folders, StubLoaders loader, string expectedOrder) {
+        private static void AssertFeaturesAreInOrder(IEnumerable<StubFolders> folders, StubLoaders loader, string expectedOrder)
+        {
             var extensionManager = CreateExtensionManager(folders, new[] { loader });
             var features = extensionManager.AvailableFeatures();
             Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo(expectedOrder));
         }
 
         [Test]
-        public void FeatureDescriptorsAreInDependencyAndPriorityOrder() {
+        public void FeatureDescriptorsAreInDependencyAndPriorityOrder()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -592,7 +642,8 @@ OrchardVersion: 1{1}{2}",
         }
 
         [Test]
-        public void FeatureDescriptorsAreInPriorityOrder() {
+        public void FeatureDescriptorsAreInPriorityOrder()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 
@@ -606,7 +657,8 @@ OrchardVersion: 1{1}{2}",
         }
 
         [Test]
-        public void FeatureDescriptorsAreInManifestOrderWhenTheyHaveEqualPriority() {
+        public void FeatureDescriptorsAreInManifestOrderWhenTheyHaveEqualPriority()
+        {
             var extensionLoader = new StubLoaders();
             var extensionFolder = new StubFolders();
 

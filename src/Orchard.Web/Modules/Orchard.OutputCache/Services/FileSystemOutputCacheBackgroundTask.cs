@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -7,12 +7,14 @@ using Orchard.FileSystems.AppData;
 using Orchard.Services;
 using Orchard.Tasks;
 
-namespace Orchard.OutputCache.Services {
+namespace Orchard.OutputCache.Services
+{
     [OrchardFeature("Orchard.OutputCache.FileSystem")]
     /// <summary>
     /// A background task deleting all App_Data output cache content.
     /// </summary>
-    public class FileSystemOutputCacheBackgroundTask : IBackgroundTask {
+    public class FileSystemOutputCacheBackgroundTask : IBackgroundTask
+    {
         private readonly IAppDataFolder _appDataFolder;
         private readonly ShellSettings _shellSettings;
         private readonly ICacheManager _cacheManager;
@@ -23,11 +25,12 @@ namespace Orchard.OutputCache.Services {
         private string _metadata;
 
         public FileSystemOutputCacheBackgroundTask(
-            IAppDataFolder appDataFolder, 
+            IAppDataFolder appDataFolder,
             ShellSettings shellSettings,
             ICacheManager cacheManager,
             IClock clock,
-            ISignals signals) {
+            ISignals signals)
+        {
             _appDataFolder = appDataFolder;
             _shellSettings = shellSettings;
             _cacheManager = cacheManager;
@@ -38,20 +41,25 @@ namespace Orchard.OutputCache.Services {
             _content = FileSystemOutputCacheStorageProvider.GetContentPath(appDataFolder, _shellSettings.Name);
         }
 
-        public void Sweep() {
-            foreach(var filename in _appDataFolder.ListFiles(_metadata).ToArray()) {
+        public void Sweep()
+        {
+            foreach (var filename in _appDataFolder.ListFiles(_metadata).ToArray())
+            {
                 var hash = Path.GetFileName(filename);
 
-                var validUntilUtc = _cacheManager.Get(hash, context => {
+                var validUntilUtc = _cacheManager.Get(hash, context =>
+                {
                     _signals.When(hash);
 
-                    using (var stream = _appDataFolder.OpenFile(filename)) {
+                    using (var stream = _appDataFolder.OpenFile(filename))
+                    {
                         var cacheItem = FileSystemOutputCacheStorageProvider.DeserializeMetadata(stream);
                         return cacheItem.ValidUntilUtc;
                     }
                 });
 
-                if (_clock.UtcNow > validUntilUtc) {
+                if (_clock.UtcNow > validUntilUtc)
+                {
                     _appDataFolder.DeleteFile(_appDataFolder.Combine(_metadata, hash));
                     _appDataFolder.DeleteFile(_appDataFolder.Combine(_content, hash));
                     _signals.Trigger(filename);

@@ -1,13 +1,15 @@
-﻿using Orchard.Localization;
-using Orchard.Security;
+using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.CustomForms {
-    public class AdminMenu : INavigationProvider {
+namespace Orchard.CustomForms
+{
+    public class AdminMenu : INavigationProvider
+    {
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder
                 .AddImageSet("customforms")
                 .Add(T("Custom Forms"), "4",

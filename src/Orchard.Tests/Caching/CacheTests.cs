@@ -1,19 +1,21 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
 
-namespace Orchard.Tests.Caching {
+namespace Orchard.Tests.Caching
+{
     [TestFixture]
-    public class CacheTests {
+    public class CacheTests
+    {
         private IContainer _container;
         private ICacheManager _cacheManager;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new CacheModule());
             builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
@@ -24,21 +26,25 @@ namespace Orchard.Tests.Caching {
         }
 
         [Test]
-        public void CacheManagerShouldReturnCacheItem() {
+        public void CacheManagerShouldReturnCacheItem()
+        {
             var result = _cacheManager.Get("testItem", ctx => "testResult");
             Assert.That(result, Is.EqualTo("testResult"));
         }
 
         [Test]
-        public void CacheManagerShouldReturnExistingCacheItem() {
+        public void CacheManagerShouldReturnExistingCacheItem()
+        {
             _cacheManager.Get("testItem", ctx => "testResult");
             var result = _cacheManager.Get("testItem", ctx => "");
             Assert.That(result, Is.EqualTo("testResult"));
         }
 
         [Test]
-        public void CacheModuleProvidesTypeSpecificManager() {
-            var scope = _container.BeginLifetimeScope(builder => {
+        public void CacheModuleProvidesTypeSpecificManager()
+        {
+            var scope = _container.BeginLifetimeScope(builder =>
+            {
                 builder.RegisterModule(new CacheModule());
                 builder.RegisterType<ComponentOne>();
                 builder.RegisterType<ComponentTwo>();
@@ -82,7 +88,8 @@ namespace Orchard.Tests.Caching {
         }
 
         [Test]
-        public void CacheManagerIsNotBlocking() {
+        public void CacheManagerIsNotBlocking()
+        {
             var hits = 0;
             string result = "";
             string key = "key";
@@ -93,8 +100,10 @@ namespace Orchard.Tests.Caching {
 
             // task1 is started first, when inside the lambda, we are waiting 
             // for the test to give the green light. Then we unblock the task2
-            var task1 = Task.Run(() => {
-                result = _cacheManager.Get(key, ctx => {
+            var task1 = Task.Run(() =>
+            {
+                result = _cacheManager.Get(key, ctx =>
+                {
                     e1.WaitOne(TimeSpan.FromSeconds(5));
                     hits++;
                     e2.Set();
@@ -105,9 +114,11 @@ namespace Orchard.Tests.Caching {
             });
 
             // task2 is called once task1 is inside the lambda, ensuring it's not blocking.
-            var task2 = Task.Run(() => {
+            var task2 = Task.Run(() =>
+            {
                 e2.WaitOne(TimeSpan.FromSeconds(5));
-                result = _cacheManager.Get(key, ctx => {
+                result = _cacheManager.Get(key, ctx =>
+                {
                     hits++;
                     e3.Set();
                     return "testResult";
@@ -122,7 +133,8 @@ namespace Orchard.Tests.Caching {
         }
 
         [Test]
-        public void CacheManagerIsBlocking() {
+        public void CacheManagerIsBlocking()
+        {
             var hits = 0;
             string result = "";
             string key = "key";
@@ -132,8 +144,10 @@ namespace Orchard.Tests.Caching {
 
             // task1 is started first, when inside the lambda, we are waiting 
             // for the test to give the green light. Then we unblock the task2
-            var task1 = Task.Run(() => {
-                result = _cacheManager.Get(key, true, ctx => {
+            var task1 = Task.Run(() =>
+            {
+                result = _cacheManager.Get(key, true, ctx =>
+                {
                     e1.WaitOne(TimeSpan.FromSeconds(5));
                     hits++;
                     e2.Set();
@@ -142,9 +156,11 @@ namespace Orchard.Tests.Caching {
             });
 
             // task2 is called once task1 is inside the lambda. Here we expect the lamda not to be called.
-            var task2 = Task.Run(() => {
+            var task2 = Task.Run(() =>
+            {
                 e2.WaitOne(TimeSpan.FromSeconds(5));
-                result = _cacheManager.Get(key, true, ctx => {
+                result = _cacheManager.Get(key, true, ctx =>
+                {
                     hits++;
                     return "testResult";
                 });
@@ -157,18 +173,22 @@ namespace Orchard.Tests.Caching {
             Assert.That(hits, Is.EqualTo(1));
         }
 
-        class ComponentOne {
+        class ComponentOne
+        {
             public ICacheManager CacheManager { get; set; }
 
-            public ComponentOne(ICacheManager cacheManager) {
+            public ComponentOne(ICacheManager cacheManager)
+            {
                 CacheManager = cacheManager;
             }
         }
 
-        class ComponentTwo {
+        class ComponentTwo
+        {
             public ICacheManager CacheManager { get; set; }
 
-            public ComponentTwo(ICacheManager cacheManager) {
+            public ComponentTwo(ICacheManager cacheManager)
+            {
                 CacheManager = cacheManager;
             }
         }

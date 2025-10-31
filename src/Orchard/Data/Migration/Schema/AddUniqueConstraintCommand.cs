@@ -1,9 +1,12 @@
-﻿namespace Orchard.Data.Migration.Schema {
-    public class AddUniqueConstraintCommand : TableCommand {
+namespace Orchard.Data.Migration.Schema
+{
+    public class AddUniqueConstraintCommand : TableCommand
+    {
         public string ConstraintName { get; set; }
 
         public AddUniqueConstraintCommand(string tableName, string constraintName, params string[] columnNames)
-            : base(tableName) {
+            : base(tableName)
+        {
             ColumnNames = columnNames;
             ConstraintName = constraintName;
         }

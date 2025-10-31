@@ -1,3 +1,4 @@
-﻿namespace Orchard.AuditTrail.Services.Models {
-    public class AuditTrailSettingsContext {}
+namespace Orchard.AuditTrail.Services.Models
+{
+    public class AuditTrailSettingsContext { }
 }

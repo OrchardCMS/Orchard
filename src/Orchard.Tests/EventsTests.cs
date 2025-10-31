@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 using Orchard.Logging;
 
-namespace Orchard.Tests {
+namespace Orchard.Tests
+{
     [TestFixture]
-    public class EventsTests {
+    public class EventsTests
+    {
         [Test]
-        public void AllEventsAreCalled() {
+        public void AllEventsAreCalled()
+        {
             var events = new ITestEvents[] { new FooSink(), new BarSink() };
 
             events.Invoke(x => x.Hello("world"), NullLogger.Instance);
@@ -17,7 +20,8 @@ namespace Orchard.Tests {
         }
 
         [Test]
-        public void AnExceptionShouldBeLoggedAndOtherEventsWillBeFired() {
+        public void AnExceptionShouldBeLoggedAndOtherEventsWillBeFired()
+        {
             var events = new ITestEvents[] { new FooSink(), new CrashSink(), new BarSink() };
 
             var logger = new TestLogger();
@@ -30,12 +34,15 @@ namespace Orchard.Tests {
             Assert.That(logger.LogException, Has.Property("Message").EqualTo("Illegal name 'world'"));
         }
 
-        private class TestLogger : ILogger {
-            public bool IsEnabled(LogLevel level) {
+        private class TestLogger : ILogger
+        {
+            public bool IsEnabled(LogLevel level)
+            {
                 return true;
             }
 
-            public void Log(LogLevel level, Exception exception, string format, params object[] args) {
+            public void Log(LogLevel level, Exception exception, string format, params object[] args)
+            {
                 LogException = exception;
                 LogFormat = format;
                 LogArgs = args;
@@ -46,28 +53,35 @@ namespace Orchard.Tests {
             public object[] LogArgs { get; set; }
         }
 
-        private interface ITestEvents : IDependency {
+        private interface ITestEvents : IDependency
+        {
             void Hello(string name);
         }
 
-        private class FooSink : ITestEvents {
-            void ITestEvents.Hello(string name) {
+        private class FooSink : ITestEvents
+        {
+            void ITestEvents.Hello(string name)
+            {
                 Name = name;
             }
 
             public string Name { get; set; }
         }
 
-        private class BarSink : ITestEvents {
-            void ITestEvents.Hello(string name) {
+        private class BarSink : ITestEvents
+        {
+            void ITestEvents.Hello(string name)
+            {
                 Name = name;
             }
             public string Name { get; set; }
         }
 
 
-        private class CrashSink : ITestEvents {
-            void ITestEvents.Hello(string name) {
+        private class CrashSink : ITestEvents
+        {
+            void ITestEvents.Hello(string name)
+            {
                 throw new ApplicationException("Illegal name '" + name + "'");
             }
         }

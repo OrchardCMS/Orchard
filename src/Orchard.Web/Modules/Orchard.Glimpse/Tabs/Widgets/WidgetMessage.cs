@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using Glimpse.Core.Message;
 using Orchard.Glimpse.Models;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Glimpse.Tabs.Widgets {
-    public class WidgetMessage : MessageBase, IDurationMessage {
+namespace Orchard.Glimpse.Tabs.Widgets
+{
+    public class WidgetMessage : MessageBase, IDurationMessage
+    {
         public int ContentId { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }

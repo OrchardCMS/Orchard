@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -6,7 +6,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Contents;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -16,8 +15,10 @@ using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Templates.Controllers {
-    public class AdminController : Controller {
+namespace Orchard.Templates.Controllers
+{
+    public class AdminController : Controller
+    {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
@@ -29,7 +30,8 @@ namespace Orchard.Templates.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
@@ -43,15 +45,18 @@ namespace Orchard.Templates.Controllers {
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
-        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates"))) {
+        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var query = _contentManager.Query(VersionOptions.Latest, GetShapeTypes().Select(ctd => ctd.Name).ToArray());
 
-            if (!string.IsNullOrEmpty(model.TypeName)) {
+            if (!string.IsNullOrEmpty(model.TypeName))
+            {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
                     return HttpNotFound();
@@ -62,7 +67,8 @@ namespace Orchard.Templates.Controllers {
                 query = query.ForType(model.TypeName);
             }
 
-            switch (model.Options.OrderBy) {
+            switch (model.Options.OrderBy)
+            {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
@@ -96,18 +102,23 @@ namespace Orchard.Templates.Controllers {
 
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.Filter")]
-        public ActionResult ListFilterPOST(ContentOptions options) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates"))) {
+        public ActionResult ListFilterPOST(ContentOptions options)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
             var routeValues = ControllerContext.RouteData.Values;
-            if (options != null) {
+            if (options != null)
+            {
                 routeValues["Options.OrderBy"] = options.OrderBy;
-                if (GetShapeTypes().Any(x => String.Equals(x.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetShapeTypes().Any(x => string.Equals(x.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase)))
+                {
                     routeValues["id"] = options.SelectedFilter;
                 }
-                else {
+                else
+                {
                     routeValues.Remove("id");
                 }
             }
@@ -117,19 +128,25 @@ namespace Orchard.Templates.Controllers {
 
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.BulkEdit")]
-        public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates"))) {
+        public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
-            if (itemIds != null) {
+            if (itemIds != null)
+            {
                 var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest, QueryHints.Empty);
-                switch (options.BulkAction) {
+                switch (options.BulkAction)
+                {
                     case ContentsBulkAction.None:
                         break;
                     case ContentsBulkAction.PublishNow:
-                        foreach (var item in checkedContentItems) {
-                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
+                        foreach (var item in checkedContentItems)
+                        {
+                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                            {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -139,8 +156,10 @@ namespace Orchard.Templates.Controllers {
                         Services.Notifier.Success(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
-                        foreach (var item in checkedContentItems) {
-                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
+                        foreach (var item in checkedContentItems)
+                        {
+                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
+                            {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -150,8 +169,10 @@ namespace Orchard.Templates.Controllers {
                         Services.Notifier.Success(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
-                        foreach (var item in checkedContentItems) {
-                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
+                        foreach (var item in checkedContentItems)
+                        {
+                            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
+                            {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -168,22 +189,26 @@ namespace Orchard.Templates.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
-        public ActionResult Create(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates"))) {
+        public ActionResult Create(string id)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
             var types = GetShapeTypes();
-            var typeName = String.IsNullOrWhiteSpace(id) ? types.Count() == 1 ? types.First().Name : null : id;
-            return String.IsNullOrEmpty(typeName) ? CreatableTypeList() : RedirectToAction("Create", "Admin", new { area = "Contents", id = typeName });
+            var typeName = string.IsNullOrWhiteSpace(id) ? types.Count() == 1 ? types.First().Name : null : id;
+            return string.IsNullOrEmpty(typeName) ? CreatableTypeList() : RedirectToAction("Create", "Admin", new { area = "Contents", id = typeName });
         }
 
-        private ActionResult CreatableTypeList() {
+        private ActionResult CreatableTypeList()
+        {
             var viewModel = Shape.ViewModel(ContentTypes: GetShapeTypes());
             return View("CreatableTypeList", viewModel);
         }
 
-        private IEnumerable<ContentTypeDefinition> GetShapeTypes() {
+        private IEnumerable<ContentTypeDefinition> GetShapeTypes()
+        {
             return _contentDefinitionManager.ListTypeDefinitions().Where(x => x.Parts.Any(p => p.PartDefinition.Name == "ShapePart")).ToList();
         }
     }

@@ -1,7 +1,8 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Services
+{
     /// <summary>
     /// Background task responsible for fetching feeds from the Gallery into the
     /// BackgroundPackageUpdateStatus singleton dependency.
@@ -12,21 +13,24 @@ namespace Orchard.Packaging.Services {
     /// task sweep.
     /// </summary>
     [OrchardFeature("Gallery.Updates")]
-    public class BackgroundPackageUpdateTask : IBackgroundTask {
+    public class BackgroundPackageUpdateTask : IBackgroundTask
+    {
         private readonly IPackageUpdateService _packageUpdateService;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IBackgroundPackageUpdateStatus _backgroundPackageUpdateStatus;
 
-        public BackgroundPackageUpdateTask(IPackageUpdateService packageUpdateService, 
-            IPackagingSourceManager packagingSourceManager, 
-            IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus) {
+        public BackgroundPackageUpdateTask(IPackageUpdateService packageUpdateService,
+            IPackagingSourceManager packagingSourceManager,
+            IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus)
+        {
 
             _packageUpdateService = packageUpdateService;
             _packagingSourceManager = packagingSourceManager;
             _backgroundPackageUpdateStatus = backgroundPackageUpdateStatus;
         }
 
-        public void Sweep() {
+        public void Sweep()
+        {
             _backgroundPackageUpdateStatus.Value = _packageUpdateService.GetPackagesStatus(_packagingSourceManager.GetSources());
         }
     }

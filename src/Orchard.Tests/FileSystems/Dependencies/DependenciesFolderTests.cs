@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -9,10 +9,13 @@ using Orchard.FileSystems.Dependencies;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.FileSystems.Dependencies {
+namespace Orchard.Tests.FileSystems.Dependencies
+{
     [TestFixture]
-    public class DependenciesFolderTests {
-        public IContainer BuildContainer() {
+    public class DependenciesFolderTests
+    {
+        public IContainer BuildContainer()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<StubClock>().As<IClock>().SingleInstance();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>().SingleInstance();
@@ -23,7 +26,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void LoadDescriptorsShouldReturnEmptyList() {
+        public void LoadDescriptorsShouldReturnEmptyList()
+        {
             var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
 
             var e = dependenciesFolder.LoadDescriptors();
@@ -31,10 +35,12 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void StoreDescriptorsShouldWork() {
+        public void StoreDescriptorsShouldWork()
+        {
             var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
 
-            var d = new DependencyDescriptor {
+            var d = new DependencyDescriptor
+            {
                 Name = "name",
                 LoaderName = "test",
                 VirtualPath = "~/bin"
@@ -49,19 +55,22 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void StoreDescriptorsShouldNoOpIfNoChanges() {
+        public void StoreDescriptorsShouldNoOpIfNoChanges()
+        {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
             var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
-            var d1 = new DependencyDescriptor {
+            var d1 = new DependencyDescriptor
+            {
                 Name = "name1",
                 LoaderName = "test1",
                 VirtualPath = "~/bin1"
             };
 
-            var d2 = new DependencyDescriptor {
+            var d2 = new DependencyDescriptor
+            {
                 Name = "name2",
                 LoaderName = "test2",
                 VirtualPath = "~/bin2"
@@ -77,19 +86,22 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void StoreDescriptorsShouldStoreIfChanges() {
+        public void StoreDescriptorsShouldStoreIfChanges()
+        {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
             var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
-            var d1 = new DependencyDescriptor {
+            var d1 = new DependencyDescriptor
+            {
                 Name = "name1",
                 LoaderName = "test1",
                 VirtualPath = "~/bin1"
             };
 
-            var d2 = new DependencyDescriptor {
+            var d2 = new DependencyDescriptor
+            {
                 Name = "name2",
                 LoaderName = "test2",
                 VirtualPath = "~/bin2"
@@ -107,19 +119,22 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void LoadDescriptorsShouldWorkAcrossInstances() {
+        public void LoadDescriptorsShouldWorkAcrossInstances()
+        {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
             var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
-            var d1 = new DependencyDescriptor {
+            var d1 = new DependencyDescriptor
+            {
                 Name = "name1",
                 LoaderName = "test1",
                 VirtualPath = "~/bin1"
             };
 
-            var d2 = new DependencyDescriptor {
+            var d2 = new DependencyDescriptor
+            {
                 Name = "name2",
                 LoaderName = "test2",
                 VirtualPath = "~/bin2"

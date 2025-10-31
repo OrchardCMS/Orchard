@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -20,15 +20,18 @@ using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Core.Tests.Scheduling {
+namespace Orchard.Core.Tests.Scheduling
+{
     [TestFixture]
-    public class ScheduledTaskManagerTests : DatabaseEnabledTestsBase {
+    public class ScheduledTaskManagerTests : DatabaseEnabledTestsBase
+    {
         private IRepository<ScheduledTaskRecord> _repository;
         private IScheduledTaskManager _scheduledTaskManager;
         private IContentManager _contentManager;
         private Mock<IOrchardServices> _mockServices;
 
-        public override void Init() {
+        public override void Init()
+        {
             _mockServices = new Mock<IOrchardServices>();
             base.Init();
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
@@ -37,7 +40,8 @@ namespace Orchard.Core.Tests.Scheduling {
             _mockServices.SetupGet(x => x.ContentManager).Returns(_contentManager);
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterInstance(_mockServices.Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<Signals>().As<ISignals>();
@@ -52,23 +56,26 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
-                                 typeof(ContentTypeRecord), 
-                                 typeof(ContentItemRecord), 
-                                 typeof(ContentItemVersionRecord), 
+                                 typeof(ContentTypeRecord),
+                                 typeof(ContentItemRecord),
+                                 typeof(ContentItemVersionRecord),
                                  typeof(ScheduledTaskRecord),
                              };
             }
         }
 
         [Test]
-        public void TestFixtureShouldBeAbleToCreateContentItem() {
+        public void TestFixtureShouldBeAbleToCreateContentItem()
+        {
             var hello = _contentManager.New("hello");
             _contentManager.Create(hello);
             _session.Flush();
@@ -81,7 +88,8 @@ namespace Orchard.Core.Tests.Scheduling {
         }
 
         [Test]
-        public void TaskManagerShouldCreateTaskRecordsWithOrWithoutContentItem() {
+        public void TaskManagerShouldCreateTaskRecordsWithOrWithoutContentItem()
+        {
             var hello = _contentManager.New("hello");
             _contentManager.Create(hello);
 
@@ -104,7 +112,8 @@ namespace Orchard.Core.Tests.Scheduling {
         }
 
         [Test]
-        public void TasksForAllVersionsOfContenItemShouldBeReturned() {
+        public void TasksForAllVersionsOfContenItemShouldBeReturned()
+        {
             var hello1 = _contentManager.New("hello");
             _contentManager.Create(hello1);
 
@@ -132,7 +141,8 @@ namespace Orchard.Core.Tests.Scheduling {
         }
 
         [Test]
-        public void ShouldGetTasksByType() {
+        public void ShouldGetTasksByType()
+        {
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
@@ -150,7 +160,8 @@ namespace Orchard.Core.Tests.Scheduling {
         }
 
         [Test]
-        public void ShouldGetTasksByTypeAndScheduledDate() {
+        public void ShouldGetTasksByTypeAndScheduledDate()
+        {
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow.AddHours(1), null);
             _scheduledTaskManager.CreateTask("First", _clock.UtcNow.AddHours(2), null);

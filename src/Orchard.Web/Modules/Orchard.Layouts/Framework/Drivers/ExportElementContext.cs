@@ -1,9 +1,12 @@
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 
-namespace Orchard.Layouts.Framework.Drivers {
-    public class ExportElementContext {
-        public ExportElementContext(Element element, ILayoutAspect layout, ElementDataDictionary exportableData) {
+namespace Orchard.Layouts.Framework.Drivers
+{
+    public class ExportElementContext
+    {
+        public ExportElementContext(Element element, ILayoutAspect layout, ElementDataDictionary exportableData)
+        {
             Element = element;
             Layout = layout;
             ExportableData = exportableData;

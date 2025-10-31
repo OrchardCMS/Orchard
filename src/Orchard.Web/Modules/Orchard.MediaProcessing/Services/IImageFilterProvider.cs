@@ -1,7 +1,9 @@
-﻿using Orchard.MediaProcessing.Descriptors.Filter;
+using Orchard.MediaProcessing.Descriptors.Filter;
 
-namespace Orchard.MediaProcessing.Services {
-    public interface IImageFilterProvider : IDependency {
+namespace Orchard.MediaProcessing.Services
+{
+    public interface IImageFilterProvider : IDependency
+    {
         void Describe(DescribeFilterContext describe);
     }
 }

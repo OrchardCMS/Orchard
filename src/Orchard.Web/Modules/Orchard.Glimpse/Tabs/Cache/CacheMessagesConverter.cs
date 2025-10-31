@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Tab.Assist;
 using Orchard.Glimpse.Extensions;
 
-namespace Orchard.Glimpse.Tabs.Cache {
-    public class CacheMessagesConverter : SerializationConverter<IEnumerable<CacheMessage>> {
-        public override object Convert(IEnumerable<CacheMessage> messages) {
+namespace Orchard.Glimpse.Tabs.Cache
+{
+    public class CacheMessagesConverter : SerializationConverter<IEnumerable<CacheMessage>>
+    {
+        public override object Convert(IEnumerable<CacheMessage> messages)
+        {
             var root = new TabSection("Action", "Valid For", "Key", "Result", "Value", "Time Taken");
-            foreach (var message in messages) {
+            foreach (var message in messages)
+            {
                 root.AddRow()
                     .Column(message.Action)
                     .Column(message.ValidFor?.ToReadableString())

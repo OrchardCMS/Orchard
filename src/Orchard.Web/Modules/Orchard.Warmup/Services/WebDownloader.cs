@@ -1,30 +1,42 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using Orchard.Logging;
 
-namespace Orchard.Warmup.Services {
-    public class WebDownloader : IWebDownloader {
-        public WebDownloader() {
+namespace Orchard.Warmup.Services
+{
+    public class WebDownloader : IWebDownloader
+    {
+        public WebDownloader()
+        {
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public DownloadResult Download(string url) {
-            if(String.IsNullOrWhiteSpace(url)) {
+        public DownloadResult Download(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
                 return null;
             }
 
-            try {
+            try
+            {
                 var request = WebRequest.Create(url) as HttpWebRequest;
-                if (request != null) {
-                    using (var response = request.GetResponse() as HttpWebResponse) {
-                        if (response != null) {
-                            using (var stream = response.GetResponseStream()) {
-                                if (stream != null) {
-                                    using (var sr = new StreamReader(stream)) {
-                                        return new DownloadResult {Content = sr.ReadToEnd(), StatusCode = response.StatusCode};
+                if (request != null)
+                {
+                    using (var response = request.GetResponse() as HttpWebResponse)
+                    {
+                        if (response != null)
+                        {
+                            using (var stream = response.GetResponseStream())
+                            {
+                                if (stream != null)
+                                {
+                                    using (var sr = new StreamReader(stream))
+                                    {
+                                        return new DownloadResult { Content = sr.ReadToEnd(), StatusCode = response.StatusCode };
                                     }
                                 }
                             }
@@ -33,14 +45,17 @@ namespace Orchard.Warmup.Services {
                 }
                 return null;
             }
-            catch (WebException e) {
-                if(e.Response as HttpWebResponse != null) {
+            catch (WebException e)
+            {
+                if (e.Response as HttpWebResponse != null)
+                {
                     return new DownloadResult { StatusCode = ((HttpWebResponse)e.Response).StatusCode };
                 }
 
                 return null;
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "An error occurred while downloading url: {0}", url);
                 return null;
             }

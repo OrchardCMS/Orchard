@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -9,17 +9,21 @@ using Orchard.Data;
 using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Records;
 
-namespace Orchard.Tests.Data {
+namespace Orchard.Tests.Data
+{
     [TestFixture]
-    public class RepositoryTests {
+    public class RepositoryTests
+    {
         #region Setup/Teardown
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, typeof(FooRecord));
             _session = _sessionFactory.OpenSession();
@@ -27,12 +31,14 @@ namespace Orchard.Tests.Data {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             _session.Close();
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
             File.Delete(_databaseFilePath);
         }
 
@@ -43,21 +49,24 @@ namespace Orchard.Tests.Data {
         private string _databaseFilePath;
         private ISessionFactory _sessionFactory;
 
-        private void CreateThreeFoos() {
+        private void CreateThreeFoos()
+        {
             _fooRepos.Create(new FooRecord { Name = "one" });
             _fooRepos.Create(new FooRecord { Name = "two" });
             _fooRepos.Create(new FooRecord { Name = "three" });
         }
 
         [Test]
-        public void GetByIdShouldReturnNullIfValueNotFound() {
+        public void GetByIdShouldReturnNullIfValueNotFound()
+        {
             CreateThreeFoos();
             var nofoo = _fooRepos.Get(6655321);
             Assert.That(nofoo, Is.Null);
         }
 
         [Test]
-        public void GetCanSelectSingleBasedOnFields() {
+        public void GetCanSelectSingleBasedOnFields()
+        {
             CreateThreeFoos();
 
             var two = _fooRepos.Get(f => f.Name == "two");
@@ -65,20 +74,23 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void GetThatReturnsTwoOrMoreShouldThrowException() {
+        public void GetThatReturnsTwoOrMoreShouldThrowException()
+        {
             CreateThreeFoos();
             Assert.Throws<InvalidOperationException>(() => _fooRepos.Get(f => f.Name == "one" || f.Name == "three"));
         }
 
         [Test]
-        public void GetWithZeroMatchesShouldReturnNull() {
+        public void GetWithZeroMatchesShouldReturnNull()
+        {
             CreateThreeFoos();
             var nofoo = _fooRepos.Get(f => f.Name == "four");
             Assert.That(nofoo, Is.Null);
         }
 
         [Test]
-        public void LinqCanBeUsedToSelectObjects() {
+        public void LinqCanBeUsedToSelectObjects()
+        {
             CreateThreeFoos();
 
             var foos = from f in _fooRepos.Table
@@ -91,7 +103,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void LinqExtensionMethodsCanAlsoBeUsedToSelectObjects() {
+        public void LinqExtensionMethodsCanAlsoBeUsedToSelectObjects()
+        {
             CreateThreeFoos();
 
             var foos = _fooRepos.Table
@@ -103,7 +116,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void OrderShouldControlResults() {
+        public void OrderShouldControlResults()
+        {
             CreateThreeFoos();
 
             var foos = _fooRepos.Fetch(
@@ -116,7 +130,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void LinqOrderByCanBeUsedToControlResults() {
+        public void LinqOrderByCanBeUsedToControlResults()
+        {
             CreateThreeFoos();
 
             IEnumerable<FooRecord> foos =
@@ -131,8 +146,10 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void RangeShouldSliceResults() {
-            for (var x = 0; x != 40; ++x) {
+        public void RangeShouldSliceResults()
+        {
+            for (var x = 0; x != 40; ++x)
+            {
                 _fooRepos.Create(new FooRecord { Name = x.ToString().PadLeft(8, '0') });
             }
 
@@ -147,7 +164,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void RepositoryCanCreateFetchAndDelete() {
+        public void RepositoryCanCreateFetchAndDelete()
+        {
             var foo1 = new FooRecord { Name = "yadda" };
             _fooRepos.Create(foo1);
 
@@ -160,7 +178,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void RepositoryFetchTakesCompoundLambdaPredicate() {
+        public void RepositoryFetchTakesCompoundLambdaPredicate()
+        {
             CreateThreeFoos();
 
             var foos = _fooRepos.Fetch(f => f.Name == "three" || f.Name == "two");
@@ -171,7 +190,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void RepositoryFetchTakesSimpleLambdaPredicate() {
+        public void RepositoryFetchTakesSimpleLambdaPredicate()
+        {
             CreateThreeFoos();
 
             var one = _fooRepos.Fetch(f => f.Name == "one").Single();
@@ -182,7 +202,8 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void StoringDateTimeDoesntRemovePrecision() {
+        public void StoringDateTimeDoesntRemovePrecision()
+        {
             _fooRepos.Create(new FooRecord { Name = "one", Timespan = DateTime.Parse("2001-01-01 16:28:21.489", CultureInfo.InvariantCulture) });
 
             var one = _fooRepos.Fetch(f => f.Name == "one").Single();
@@ -193,7 +214,8 @@ namespace Orchard.Tests.Data {
 
 
         [Test]
-        public void RepositoryFetchTakesExistsPredicate() {
+        public void RepositoryFetchTakesExistsPredicate()
+        {
             CreateThreeFoos();
 
             var array = new[] { "one", "two" };

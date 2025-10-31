@@ -7,8 +7,10 @@ using Orchard.Localization.Services;
 using Orchard.Mvc.Html;
 using Orchard.Services;
 
-namespace Orchard.Core.Shapes {
-    public class DateTimeShapes : IDependency {
+namespace Orchard.Core.Shapes
+{
+    public class DateTimeShapes : IDependency
+    {
         private readonly IClock _clock;
         private readonly IDateLocalizationServices _dateLocalizationServices;
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
@@ -17,7 +19,8 @@ namespace Orchard.Core.Shapes {
             IClock clock,
             IDateLocalizationServices dateLocalizationServices,
             IDateTimeFormatProvider dateTimeLocalization
-            ) {
+            )
+        {
             _clock = clock;
             _dateLocalizationServices = dateLocalizationServices;
             _dateTimeLocalization = dateTimeLocalization;
@@ -27,7 +30,8 @@ namespace Orchard.Core.Shapes {
         public Localizer T { get; set; }
 
         [Shape]
-        public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc, DateTime dateTimeUtc) {
+        public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc, DateTime dateTimeUtc)
+        {
             DateTimeUtc = DateTimeUtc != System.DateTime.MinValue ? DateTimeUtc : dateTimeUtc; // Both capitalizations retained for compatibility.
             var time = _clock.UtcNow - DateTimeUtc;
 
@@ -72,10 +76,12 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat) {
+        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat)
+        {
             //using a LocalizedString forces the caller to use a localizable format
 
-            if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
+            if (CustomFormat == null || string.IsNullOrWhiteSpace(CustomFormat.Text))
+            {
                 return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat));
             }
 
@@ -83,16 +89,20 @@ namespace Orchard.Core.Shapes {
         }
     }
 
-    public static class TimespanExtensions {
-        public static int TotalWeeks(this TimeSpan time) {
+    public static class TimespanExtensions
+    {
+        public static int TotalWeeks(this TimeSpan time)
+        {
             return (int)time.TotalDays / 7;
         }
 
-        public static int TotalMonths(this TimeSpan time) {
+        public static int TotalMonths(this TimeSpan time)
+        {
             return (int)time.TotalDays / 31;
         }
 
-        public static int TotalYears(this TimeSpan time) {
+        public static int TotalYears(this TimeSpan time)
+        {
             return (int)time.TotalDays / 365;
         }
     }

@@ -1,18 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.Users.Models;
 
-namespace Orchard.Users.ViewModels {
+namespace Orchard.Users.ViewModels
+{
 
-    public class UsersIndexViewModel  {
+    public class UsersIndexViewModel
+    {
         public IList<UserEntry> Users { get; set; }
         public UserIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }
 
-    public class UserEntry {
-        public UserEntry() {
+    public class UserEntry
+    {
+        public UserEntry()
+        {
             AdditionalActionLinks = new List<Func<HtmlHelper, MvcHtmlString>>();
         }
 
@@ -22,28 +26,32 @@ namespace Orchard.Users.ViewModels {
         public List<Func<HtmlHelper, MvcHtmlString>> AdditionalActionLinks { get; set; }
     }
 
-    public class UserIndexOptions {
+    public class UserIndexOptions
+    {
         public string Search { get; set; }
         public UsersOrder Order { get; set; }
         public UsersFilter Filter { get; set; }
         public UsersBulkAction BulkAction { get; set; }
     }
 
-    public enum UsersOrder {
+    public enum UsersOrder
+    {
         Name,
         Email,
         CreatedUtc,
         LastLoginUtc
     }
 
-    public enum UsersFilter {
+    public enum UsersFilter
+    {
         All,
         Approved,
         Pending,
         EmailPending
     }
 
-    public enum UsersBulkAction {
+    public enum UsersBulkAction
+    {
         None,
         Delete,
         Disable,

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Localization;
 
-namespace Orchard.Environment.Extensions {
-    public interface ICriticalErrorProvider {
+namespace Orchard.Environment.Extensions
+{
+    public interface ICriticalErrorProvider
+    {
         IEnumerable<LocalizedString> GetErrors();
 
         /// <summary>

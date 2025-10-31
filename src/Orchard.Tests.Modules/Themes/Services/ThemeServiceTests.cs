@@ -1,49 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Xml.Linq;
-using Autofac;
-using Moq;
-using NHibernate;
-using NUnit.Framework;
-using Orchard.Caching;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentManagement.MetaData.Services;
-using Orchard.ContentManagement.Records;
-using Orchard.Core.Settings.Descriptor.Records;
-using Orchard.Core.Settings.Metadata;
-using Orchard.Core.Settings.Models;
-using Orchard.Core.Settings.Services;
-using Orchard.Data;
-using Orchard.DisplayManagement;
-using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment;
-using Orchard.Environment.AutofacUtil.DynamicProxy2;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
-using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Features;
-using Orchard.Localization;
-using Orchard.Modules;
-using Orchard.Modules.Services;
-using Orchard.Security;
-using Orchard.Security.Permissions;
-using Orchard.Settings;
-using Orchard.Tests.Stubs;
-using Orchard.Tests.Utility;
-using Orchard.Themes;
-using Orchard.Themes.Handlers;
-using Orchard.Themes.Models;
-using Orchard.Themes.Services;
-using Orchard.UI.Notify;
-
-namespace Orchard.Tests.Modules.Themes.Services {
+namespace Orchard.Tests.Modules.Themes.Services
+{
 #if REFACTORING
     [TestFixture, Ignore]
     public class ThemeServiceTests {

@@ -1,34 +1,38 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Providers.RecipeHandlers;
 using Orchard.Recipes.Services;
-using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
+namespace Orchard.Tests.Modules.Recipes.RecipeHandlers
+{
     [TestFixture]
-    public class RecipeExecutionStepHandlerTest {
+    public class RecipeExecutionStepHandlerTest
+    {
         protected IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<RecipeExecutionLogger>().AsSelf();
             builder.RegisterType<StubRecipeExecutionStep>().As<IRecipeExecutionStep>().AsSelf().SingleInstance();
             builder.RegisterType<RecipeExecutionStepHandler>().SingleInstance();
             builder.RegisterType<RecipeExecutionStepResolver>().As<IRecipeExecutionStepResolver>().SingleInstance();
 
-           _container = builder.Build();
+            _container = builder.Build();
         }
 
         [Test]
-        public void ExecuteRecipeExecutionStepHandlerTest() {
+        public void ExecuteRecipeExecutionStepHandlerTest()
+        {
             var handlerUnderTest = _container.Resolve<RecipeExecutionStepHandler>();
             var fakeRecipeStep = _container.Resolve<StubRecipeExecutionStep>();
 
-            var context = new RecipeContext {
-                RecipeStep = new RecipeStep (id: "1", recipeName: "FakeRecipe",  name: "FakeRecipeStep", step: new XElement("FakeRecipeStep")),
+            var context = new RecipeContext
+            {
+                RecipeStep = new RecipeStep(id: "1", recipeName: "FakeRecipe", name: "FakeRecipeStep", step: new XElement("FakeRecipeStep")),
                 ExecutionId = "12345"
             };
 
@@ -39,19 +43,20 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
         }
     }
 
-    public class StubRecipeExecutionStep : RecipeExecutionStep {
+    public class StubRecipeExecutionStep : RecipeExecutionStep
+    {
 
         public StubRecipeExecutionStep(
-            RecipeExecutionLogger logger) : base(logger) {
+            RecipeExecutionLogger logger) : base(logger)
+        {
         }
 
-        public override string Name {
-            get { return "FakeRecipeStep"; }
-        }
+        public override string Name => "FakeRecipeStep";
 
         public bool IsExecuted { get; set; }
 
-        public override void Execute(RecipeExecutionContext context) {
+        public override void Execute(RecipeExecutionContext context)
+        {
             IsExecuted = true;
         }
     }

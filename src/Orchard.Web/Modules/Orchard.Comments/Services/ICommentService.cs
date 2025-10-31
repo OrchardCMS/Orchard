@@ -2,8 +2,10 @@ using System;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.Comments.Services {
-    public interface ICommentService : IDependency {
+namespace Orchard.Comments.Services
+{
+    public interface ICommentService : IDependency
+    {
         IContentQuery<CommentPart, CommentPartRecord> GetComments();
         IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status);
         IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Shapes;
@@ -7,22 +7,24 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Logging;
 
-namespace Orchard.AuditTrail.Providers.AuditTrail {
-    public class AuditTrailSettingsEventShape : AuditTrailEventShapeAlteration<AuditTrailSettingsEventProvider> {
+namespace Orchard.AuditTrail.Providers.AuditTrail
+{
+    public class AuditTrailSettingsEventShape : AuditTrailEventShapeAlteration<AuditTrailSettingsEventProvider>
+    {
         private readonly Work<IAuditTrailManager> _auditTrailManager;
 
-        public AuditTrailSettingsEventShape(Work<IAuditTrailManager> auditTrailManager) {
+        public AuditTrailSettingsEventShape(Work<IAuditTrailManager> auditTrailManager)
+        {
             _auditTrailManager = auditTrailManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        protected override string EventName {
-            get { return AuditTrailSettingsEventProvider.EventsChanged; }
-        }
+        protected override string EventName => AuditTrailSettingsEventProvider.EventsChanged;
 
-        protected override void OnAlterShape(ShapeDisplayingContext context) {
+        protected override void OnAlterShape(ShapeDisplayingContext context)
+        {
             var eventData = (IDictionary<string, object>)context.Shape.EventData;
             var oldSettings = AuditTrailManagerExtensions.DeserializeEventData((string)eventData["OldSettings"], Logger);
             var newSettings = AuditTrailManagerExtensions.DeserializeEventData((string)eventData["NewSettings"], Logger);
@@ -33,7 +35,8 @@ namespace Orchard.AuditTrail.Providers.AuditTrail {
             context.Shape.Diff = diff;
         }
 
-        private IEnumerable<AuditTrailEventDescriptorSettingViewModel> GetDiffQuery(IEnumerable<AuditTrailEventSettingEventData> oldSettings, IEnumerable<AuditTrailEventSettingEventData> newSettings) {
+        private IEnumerable<AuditTrailEventDescriptorSettingViewModel> GetDiffQuery(IEnumerable<AuditTrailEventSettingEventData> oldSettings, IEnumerable<AuditTrailEventSettingEventData> newSettings)
+        {
             var oldDictionary = oldSettings.ToDictionary(x => x.EventName);
 
             return
@@ -41,7 +44,8 @@ namespace Orchard.AuditTrail.Providers.AuditTrail {
                 let oldSetting = oldDictionary.ContainsKey(newSetting.EventName) ? oldDictionary[newSetting.EventName] : default(AuditTrailEventSettingEventData)
                 where oldSetting == null || oldSetting.IsEnabled != newSetting.IsEnabled
                 let descriptor = _auditTrailManager.Value.DescribeEvent(newSetting.EventName)
-                select new AuditTrailEventDescriptorSettingViewModel {
+                select new AuditTrailEventDescriptorSettingViewModel
+                {
                     Setting = newSetting,
                     Descriptor = descriptor
                 };

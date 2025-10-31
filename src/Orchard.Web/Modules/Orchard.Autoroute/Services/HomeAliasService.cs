@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
@@ -7,8 +7,10 @@ using Orchard.Alias.Implementation.Holder;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.Autoroute.Services {
-    public class HomeAliasService : IHomeAliasService {
+namespace Orchard.Autoroute.Services
+{
+    public class HomeAliasService : IHomeAliasService
+    {
         private readonly IAliasService _aliasService;
         private readonly IContentManager _contentManager;
         private readonly IAliasHolder _aliasHolder;
@@ -17,31 +19,36 @@ namespace Orchard.Autoroute.Services {
 
         private RouteValueDictionary _homeAliasRoute;
 
-        public HomeAliasService(IAliasService aliasService, IAliasHolder aliasHolder, IContentManager contentManager) {
+        public HomeAliasService(IAliasService aliasService, IAliasHolder aliasHolder, IContentManager contentManager)
+        {
             _aliasService = aliasService;
             _aliasHolder = aliasHolder;
             _contentManager = contentManager;
         }
 
-        public RouteValueDictionary GetHomeRoute() {
-            if(_homeAliasRoute == null) {
+        public RouteValueDictionary GetHomeRoute()
+        {
+            if (_homeAliasRoute == null)
+            {
                 _homeAliasRoute = _aliasService.Get(HomeAlias);
             }
 
             return _homeAliasRoute;
         }
 
-        public int? GetHomePageId(VersionOptions version = null) {
+        public int? GetHomePageId(VersionOptions version = null)
+        {
             var homePage = GetHomePage(version);
             return homePage != null ? homePage.Id : default(int?);
         }
 
-        public IContent GetHomePage(VersionOptions version = null) {
+        public IContent GetHomePage(VersionOptions version = null)
+        {
             var homePageRoute = GetHomeRoute();
-            
+
             if (homePageRoute == null)
                 return null;
-            
+
             var alias = LookupAlias(homePageRoute);
 
             if (alias == null)
@@ -51,28 +58,33 @@ namespace Orchard.Autoroute.Services {
             return homePage;
         }
 
-        public bool IsHomePage(IContent content, VersionOptions homePageVersion = null) {
+        public bool IsHomePage(IContent content, VersionOptions homePageVersion = null)
+        {
             var homePageId = GetHomePageId(homePageVersion);
             return content.Id == homePageId;
         }
 
-        public void PublishHomeAlias(IContent content) {
+        public void PublishHomeAlias(IContent content)
+        {
             var routeValues = _contentManager.GetItemMetadata(content).DisplayRouteValues;
             PublishHomeAlias(routeValues);
         }
 
-        public void PublishHomeAlias(string route) {
+        public void PublishHomeAlias(string route)
+        {
             _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
         }
 
-        public void PublishHomeAlias(RouteValueDictionary route) {
+        public void PublishHomeAlias(RouteValueDictionary route)
+        {
             _homeAliasRoute = route;
             _aliasService.DeleteBySource(AliasSource);
             _aliasService.Set(HomeAlias, route, AliasSource);
         }
 
-        private string LookupAlias(RouteValueDictionary routeValues) {
+        private string LookupAlias(RouteValueDictionary routeValues)
+        {
             object area;
 
             if (!routeValues.TryGetValue("area", out area))
@@ -82,16 +94,18 @@ namespace Orchard.Autoroute.Services {
             if (map == null)
                 return null;
 
-            var alias = map.GetAliases().FirstOrDefault(x => IsSameRoute(x.RouteValues, routeValues) && !String.IsNullOrWhiteSpace(x.Path));
+            var alias = map.GetAliases().FirstOrDefault(x => IsSameRoute(x.RouteValues, routeValues) && !string.IsNullOrWhiteSpace(x.Path));
             return alias != null ? alias.Path : null;
         }
 
-        private bool IsSameRoute(IDictionary<string,string> a, RouteValueDictionary b) {
-            if(a.Count != b.Count) {
+        private bool IsSameRoute(IDictionary<string, string> a, RouteValueDictionary b)
+        {
+            if (a.Count != b.Count)
+            {
                 return false;
             }
 
-            return a.Keys.All(x => String.Equals(a[x], Convert.ToString(b[x]), StringComparison.OrdinalIgnoreCase));
+            return a.Keys.All(x => string.Equals(a[x], Convert.ToString(b[x]), StringComparison.OrdinalIgnoreCase));
         }
     }
 }

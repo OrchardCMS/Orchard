@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
@@ -7,11 +7,14 @@ using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;
 
-namespace Orchard.Tests.UI.Admin {
+namespace Orchard.Tests.UI.Admin
+{
     [TestFixture]
-    public class AdminAuthorizationFilterTests {
+    public class AdminAuthorizationFilterTests
+    {
 
-        private static AuthorizationContext GetAuthorizationContext<TController>() where TController : ControllerBase, new() {
+        private static AuthorizationContext GetAuthorizationContext<TController>() where TController : ControllerBase, new()
+        {
             var controllerDescriptor = new ReflectedControllerDescriptor(typeof(TController));
             var controllerContext = new ControllerContext(new StubHttpContext(), new RouteData(), new TController());
             return new AuthorizationContext(
@@ -19,7 +22,8 @@ namespace Orchard.Tests.UI.Admin {
                 controllerDescriptor.FindAction(controllerContext, "Index"));
         }
 
-        private static IAuthorizer GetAuthorizer(bool result) {
+        private static IAuthorizer GetAuthorizer(bool result)
+        {
             var authorizer = new Mock<IAuthorizer>();
             authorizer
                 .Setup(x => x.Authorize(StandardPermissions.AccessAdminPanel, It.IsAny<LocalizedString>())).
@@ -28,7 +32,8 @@ namespace Orchard.Tests.UI.Admin {
         }
 
         [Test]
-        public void NormalRequestShouldNotBeAffected() {
+        public void NormalRequestShouldNotBeAffected()
+        {
             var authorizationContext = GetAuthorizationContext<NormalController>();
 
             var filter = new AdminFilter(GetAuthorizer(false));
@@ -37,7 +42,8 @@ namespace Orchard.Tests.UI.Admin {
             Assert.That(authorizationContext.Result, Is.Null);
         }
 
-        private static void TestActionThatShouldRequirePermission<TController>() where TController : ControllerBase, new() {
+        private static void TestActionThatShouldRequirePermission<TController>() where TController : ControllerBase, new()
+        {
             var authorizationContext = GetAuthorizationContext<TController>();
             var filter = new AdminFilter(GetAuthorizer(false));
             filter.OnAuthorization(authorizationContext);
@@ -53,61 +59,77 @@ namespace Orchard.Tests.UI.Admin {
 
 
         [Test]
-        public void AdminRequestShouldRequirePermission() {
+        public void AdminRequestShouldRequirePermission()
+        {
             TestActionThatShouldRequirePermission<AdminController>();
         }
 
         [Test]
-        public void NormalWithAttribRequestShouldRequirePermission() {
+        public void NormalWithAttribRequestShouldRequirePermission()
+        {
             TestActionThatShouldRequirePermission<NormalWithAttribController>();
         }
 
         [Test]
-        public void NormalWithActionAttribRequestShouldRequirePermission() {
+        public void NormalWithActionAttribRequestShouldRequirePermission()
+        {
             TestActionThatShouldRequirePermission<NormalWithActionAttribController>();
         }
 
         [Test]
-        public void InheritedAttribRequestShouldRequirePermission() {
+        public void InheritedAttribRequestShouldRequirePermission()
+        {
             TestActionThatShouldRequirePermission<InheritedAttribController>();
         }
     }
 
-    public class NormalController : Controller {
-        public ActionResult Index() {
+    public class NormalController : Controller
+    {
+        public ActionResult Index()
+        {
             return View();
         }
     }
 
-    public class AdminController : Controller {
-        public ActionResult Index() {
+    public class AdminController : Controller
+    {
+        public ActionResult Index()
+        {
             return View();
         }
     }
 
     [Admin]
-    public class NormalWithAttribController : Controller {
-        public ActionResult Index() {
+    public class NormalWithAttribController : Controller
+    {
+        public ActionResult Index()
+        {
             return View();
         }
     }
 
-    public class NormalWithActionAttribController : Controller {
+    public class NormalWithActionAttribController : Controller
+    {
         [Admin]
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             return View();
         }
     }
 
     [Admin]
-    public class BaseWithAttribController : Controller {
-        public ActionResult Something() {
+    public class BaseWithAttribController : Controller
+    {
+        public ActionResult Something()
+        {
             return View();
         }
     }
 
-    public class InheritedAttribController : BaseWithAttribController {
-        public ActionResult Index() {
+    public class InheritedAttribController : BaseWithAttribController
+    {
+        public ActionResult Index()
+        {
             return View();
         }
     }

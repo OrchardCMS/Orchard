@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Tokens.Implementation;
 
-namespace Orchard.Tokens.Tests {
+namespace Orchard.Tokens.Tests
+{
     [TestFixture]
-    public class TokenManagerTests {
+    public class TokenManagerTests
+    {
         private IContainer _container;
         private ITokenManager _tokenManager;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<TokenManager>().As<ITokenManager>();
             builder.RegisterType<TestTokenProvider>().As<ITokenProvider>();
@@ -20,14 +23,16 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestEvaluate() {
+        public void TestEvaluate()
+        {
             var tokens = _tokenManager.Evaluate("Site", new Dictionary<string, string> { { "Global1", "Site.Global1" }, { "Global2", "Site.Global2" } }, null);
             Assert.That(tokens["Site.Global1"], Is.EqualTo("[global1]"));
             Assert.That(tokens["Site.Global2"], Is.EqualTo("[global2]"));
         }
 
         [Test]
-        public void TestDescribe() {
+        public void TestDescribe()
+        {
             var allTokens = _tokenManager.Describe(null);
             Assert.That(allTokens.Count(), Is.EqualTo(4));
             Assert.That(allTokens.Any(d => d.Target == "Site"));
@@ -58,7 +63,8 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestDescribeFilter() {
+        public void TestDescribeFilter()
+        {
             var tokenDescriptors = _tokenManager.Describe(null);
             Assert.That(tokenDescriptors.Count(), Is.EqualTo(4));
             tokenDescriptors = _tokenManager.Describe(new[] { "Site" });

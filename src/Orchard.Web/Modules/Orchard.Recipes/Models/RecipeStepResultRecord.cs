@@ -1,5 +1,7 @@
-﻿namespace Orchard.Recipes.Models {
-    public class RecipeStepResultRecord {
+namespace Orchard.Recipes.Models
+{
+    public class RecipeStepResultRecord
+    {
         public virtual int Id { get; set; }
         public virtual string ExecutionId { get; set; }
         public virtual string RecipeName { get; set; }

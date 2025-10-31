@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Services {
-    public interface ILayoutModelMap : IDependency {
+namespace Orchard.Layouts.Services
+{
+    public interface ILayoutModelMap : IDependency
+    {
         int Priority { get; }
         string LayoutElementType { get; }
         bool CanMap(Element element);

@@ -8,19 +8,23 @@ using Orchard.Localization;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Services
+{
     /// <summary>
     /// Responsible for managing package sources and getting the list of packages from it.
     /// </summary>
     [OrchardFeature("PackagingServices")]
-    public class PackagingSourceManager : IPackagingSourceManager {
-        public static string GetExtensionPrefix(string extensionType) {
+    public class PackagingSourceManager : IPackagingSourceManager
+    {
+        public static string GetExtensionPrefix(string extensionType)
+        {
             return string.Format("Orchard.{0}.", extensionType);
         }
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
-        public PackagingSourceManager(IRepository<PackagingSource> packagingSourceRecordRepository) {
+        public PackagingSourceManager(IRepository<PackagingSource> packagingSourceRecordRepository)
+        {
             _packagingSourceRecordRepository = packagingSourceRecordRepository;
             T = NullLocalizer.Instance;
         }
@@ -33,7 +37,8 @@ namespace Orchard.Packaging.Services {
         /// Gets the different feed sources.
         /// </summary>
         /// <returns>The feeds.</returns>
-        public IEnumerable<PackagingSource> GetSources() {
+        public IEnumerable<PackagingSource> GetSources()
+        {
             return _packagingSourceRecordRepository.Table.ToList();
         }
 
@@ -43,7 +48,8 @@ namespace Orchard.Packaging.Services {
         /// <param name="feedTitle">The feed title.</param>
         /// <param name="feedUrl">The feed url.</param>
         /// <returns>The feed identifier.</returns>
-        public int AddSource(string feedTitle, string feedUrl) {
+        public int AddSource(string feedTitle, string feedUrl)
+        {
             var packagingSource = new PackagingSource { FeedTitle = feedTitle, FeedUrl = feedUrl };
 
             _packagingSourceRecordRepository.Create(packagingSource);
@@ -55,9 +61,11 @@ namespace Orchard.Packaging.Services {
         /// Removes a feed source.
         /// </summary>
         /// <param name="id">The feed identifier.</param>
-        public void RemoveSource(int id) {
+        public void RemoveSource(int id)
+        {
             var packagingSource = _packagingSourceRecordRepository.Get(id);
-            if(packagingSource != null) {
+            if (packagingSource != null)
+            {
                 _packagingSourceRecordRepository.Delete(packagingSource);
             }
         }
@@ -69,17 +77,21 @@ namespace Orchard.Packaging.Services {
         /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
         /// <param name="query">The optional query to retrieve the extensions.</param>
         /// <returns>The list of extensions.</returns>
-        public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
-            return (packagingSource == null ? GetSources() : new[] {packagingSource})
+        public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null)
+        {
+            return (packagingSource == null ? GetSources() : new[] { packagingSource })
                 .SelectMany(source => GetExtensionListFromSource(includeScreenshots, packagingSource, query, source));
         }
 
-        private static IEnumerable<PackagingEntry> GetExtensionListFromSource(bool includeScreenshots, PackagingSource packagingSource, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query, PackagingSource source) {
+        private static IEnumerable<PackagingEntry> GetExtensionListFromSource(bool includeScreenshots, PackagingSource packagingSource, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query, PackagingSource source)
+        {
             var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
 
             // Setup compression
-            galleryFeedContext.SendingRequest += (o, e) => {
-                if (e.Request is HttpWebRequest) {
+            galleryFeedContext.SendingRequest += (o, e) =>
+            {
+                if (e.Request is HttpWebRequest)
+                {
                     (e.Request as HttpWebRequest).AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 }
             };
@@ -88,8 +100,9 @@ namespace Orchard.Packaging.Services {
             IQueryable<PublishedPackage> packages = includeScreenshots
                 ? galleryFeedContext.Packages.Expand("Screenshots")
                 : galleryFeedContext.Packages;
-                        
-            if (query != null) {
+
+            if (query != null)
+            {
                 packages = query(packages);
             }
 
@@ -102,24 +115,28 @@ namespace Orchard.Packaging.Services {
         /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
         /// <param name="query">The optional query to retrieve the extensions.</param>
         /// <returns>The number of extensions from a feed source.</returns>
-        public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+        public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null)
+        {
             return (packagingSource == null ? GetSources() : new[] { packagingSource })
-                .Sum( source => {
-                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
-                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
+                .Sum(source =>
+                {
+                    var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
+                    IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
 
-                        if (query != null) {
-                            packages = query(packages);
-                        }
-
-                        return packages.Count();
+                    if (query != null)
+                    {
+                        packages = query(packages);
                     }
+
+                    return packages.Count();
+                }
                 );
         }
 
         #endregion
 
-        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri)
+        {
             var baseUri = new Uri(string.Format("{0}://{1}:{2}/",
                                                 downloadUri.Scheme,
                                                 downloadUri.Host,
@@ -130,7 +147,8 @@ namespace Orchard.Packaging.Services {
             string iconUrl = GetAbsoluteUri(package.IconUrl, baseUri);
             string firstScreenshot = screenshot != null ? GetAbsoluteUri(screenshot.ScreenshotUri, baseUri) : string.Empty;
 
-            return new PackagingEntry {
+            return new PackagingEntry
+            {
                 Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
                 PackageStreamUri = downloadUri.ToString(),
@@ -149,10 +167,13 @@ namespace Orchard.Packaging.Services {
             };
         }
 
-        protected static string GetAbsoluteUri(string url, Uri baseUri) {
+        protected static string GetAbsoluteUri(string url, Uri baseUri)
+        {
             Uri uri = null;
-            if (!string.IsNullOrEmpty(url)) {
-                if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+                {
                     Uri.TryCreate(baseUri,
                         url,
                         out uri);

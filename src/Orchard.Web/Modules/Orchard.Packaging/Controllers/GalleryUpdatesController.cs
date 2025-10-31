@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
@@ -19,9 +19,10 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Controllers
 {
-	[OrchardFeature("Gallery.Updates")]
+    [OrchardFeature("Gallery.Updates")]
     [Themed, Admin]
-    public class GalleryUpdatesController : Controller {
+    public class GalleryUpdatesController : Controller
+    {
         private readonly ShellSettings _shellSettings;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageUpdateService _packageUpdateService;
@@ -33,7 +34,8 @@ namespace Orchard.Packaging.Controllers
             IPackagingSourceManager packagingSourceManager,
             IPackageUpdateService packageUpdateService,
             IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
 
             _shellSettings = shellSettings;
             _packagingSourceManager = packagingSourceManager;
@@ -52,15 +54,18 @@ namespace Orchard.Packaging.Controllers
         public ILogger Logger { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult ThemesUpdates(int? reportId, PagerParameters pagerParameters) {
+        public ActionResult ThemesUpdates(int? reportId, PagerParameters pagerParameters)
+        {
             return PackageUpdate("ThemesUpdates", DefaultExtensionTypes.Theme, reportId, pagerParameters);
         }
 
-        public ActionResult ModulesUpdates(int? reportId, PagerParameters pagerParameters) {
+        public ActionResult ModulesUpdates(int? reportId, PagerParameters pagerParameters)
+        {
             return PackageUpdate("ModulesUpdates", DefaultExtensionTypes.Module, reportId, pagerParameters);
         }
 
-        public ActionResult ReloadUpdates(string returnUrl) {
+        public ActionResult ReloadUpdates(string returnUrl)
+        {
             _packageUpdateService.TriggerRefresh();
             _backgroundPackageUpdateStatus.Value = null;
 
@@ -69,13 +74,15 @@ namespace Orchard.Packaging.Controllers
             return this.RedirectLocal(returnUrl);
         }
 
-        private ActionResult PackageUpdate(string view, string extensionType, int? reportId, PagerParameters pagerParameters) {
+        private ActionResult PackageUpdate(string view, string extensionType, int? reportId, PagerParameters pagerParameters)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
             Pager pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
 
-            if (!_packagingSourceManager.GetSources().Any()) {
+            if (!_packagingSourceManager.GetSources().Any())
+            {
                 Services.Notifier.Error(T("No Gallery feed configured"));
                 return View(view, new PackagingListViewModel { Entries = new List<UpdatePackageEntry>() });
             }
@@ -85,8 +92,10 @@ namespace Orchard.Packaging.Controllers
                 _backgroundPackageUpdateStatus.Value ??
                 _packageUpdateService.GetPackagesStatus(_packagingSourceManager.GetSources());
 
-            foreach (var error in _backgroundPackageUpdateStatus.Value.Errors) {
-                for (var scan = error; scan != null; scan = scan.InnerException) {
+            foreach (var error in _backgroundPackageUpdateStatus.Value.Errors)
+            {
+                for (var scan = error; scan != null; scan = scan.InnerException)
+                {
                     Services.Notifier.Warning(T("Package retrieve error: {0}", scan.Message));
                 }
             }
@@ -99,11 +108,13 @@ namespace Orchard.Packaging.Controllers
 
             int totalItemCount = updatedPackages.Count();
 
-            if (pager.PageSize != 0) {
+            if (pager.PageSize != 0)
+            {
                 updatedPackages = updatedPackages.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
             }
 
-            return View(view, new PackagingListViewModel {
+            return View(view, new PackagingListViewModel
+            {
                 LastUpdateCheckUtc = _backgroundPackageUpdateStatus.Value.DateTimeUtc,
                 Entries = updatedPackages,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)

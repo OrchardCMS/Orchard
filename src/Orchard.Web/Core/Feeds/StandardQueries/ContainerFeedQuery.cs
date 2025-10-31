@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -10,69 +10,80 @@ using Orchard.Services;
 
 namespace Orchard.Core.Feeds.StandardQueries
 {
-    public class ContainerFeedQuery : IFeedQueryProvider, IFeedQuery {
+    public class ContainerFeedQuery : IFeedQueryProvider, IFeedQuery
+    {
         private readonly IContentManager _contentManager;
         private readonly IHtmlFilterProcessor _htmlFilterProcessor;
 
-        public ContainerFeedQuery(IContentManager contentManager, IHtmlFilterProcessor htmlFilterProcessor) {
+        public ContainerFeedQuery(IContentManager contentManager, IHtmlFilterProcessor htmlFilterProcessor)
+        {
             _contentManager = contentManager;
             _htmlFilterProcessor = htmlFilterProcessor;
         }
 
-        public FeedQueryMatch Match(FeedContext context) {
+        public FeedQueryMatch Match(FeedContext context)
+        {
             var containerIdValue = context.ValueProvider.GetValue("containerid");
             if (containerIdValue == null)
                 return null;
 
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);
-            
-            if (container == null) {
+
+            if (container == null)
+            {
                 return null;
             }
-            
+
             return new FeedQueryMatch { FeedQuery = this, Priority = -5 };
         }
 
-        public void Execute(FeedContext context) {
+        public void Execute(FeedContext context)
+        {
             var containerIdValue = context.ValueProvider.GetValue("containerid");
             if (containerIdValue == null)
                 return;
 
             var limitValue = context.ValueProvider.GetValue("limit");
             var limit = 20;
-            if (limitValue != null) {
-                Int32.TryParse(Convert.ToString(limitValue), out limit);
+            if (limitValue != null)
+            {
+                int.TryParse(Convert.ToString(limitValue), out limit);
             }
-            
+
             limit = Math.Min(limit, 100);
 
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);
 
-            if (container == null) {
+            if (container == null)
+            {
                 return;
             }
-            
+
             var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilterProcessor);
-            if (context.Format == "rss") {
+            if (context.Format == "rss")
+            {
                 var link = new XElement("link");
                 context.Response.Element.SetElementValue("title", inspector.Title);
                 context.Response.Element.Add(link);
                 context.Response.Element.SetElementValue("description", inspector.Description);
 
-                context.Response.Contextualize(requestContext => {
+                context.Response.Contextualize(requestContext =>
+                {
                     var urlHelper = new UrlHelper(requestContext);
                     var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                     link.Add(uriBuilder.Uri.OriginalString);
                 });
             }
-            else {
+            else
+            {
                 context.Builder.AddProperty(context, null, "title", inspector.Title);
                 context.Builder.AddProperty(context, null, "description", inspector.Description);
-                context.Response.Contextualize(requestContext => {
+                context.Response.Contextualize(requestContext =>
+                {
                     var urlHelper = new UrlHelper(requestContext);
-                    context.Builder.AddProperty(context, null, "link",urlHelper.MakeAbsolute(urlHelper.RouteUrl(inspector.Link)));
+                    context.Builder.AddProperty(context, null, "link", urlHelper.MakeAbsolute(urlHelper.RouteUrl(inspector.Link)));
                 });
             }
 
@@ -81,7 +92,8 @@ namespace Orchard.Core.Feeds.StandardQueries
                 .OrderByDescending(x => x.CreatedUtc)
                 .Slice(0, limit);
 
-            foreach (var item in items) {
+            foreach (var item in items)
+            {
                 context.Builder.AddItem(context, item);
             }
         }

@@ -1,3 +1,4 @@
-﻿namespace Orchard.Roles.Events {
-    public class RoleCreatedContext : RoleContext {}
+namespace Orchard.Roles.Events
+{
+    public class RoleCreatedContext : RoleContext { }
 }

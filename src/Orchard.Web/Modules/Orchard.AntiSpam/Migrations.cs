@@ -1,13 +1,16 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.AntiSpam {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.AntiSpam
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
-            
+        public int Create()
+        {
+
             ContentDefinitionManager.AlterPartDefinition("SubmissionLimitPart", cfg => cfg
                 .Attachable()
                 .WithDescription("Allows to filter content items based on submissions frequency.")
@@ -36,7 +39,8 @@ namespace Orchard.AntiSpam {
             return 4;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
 
             SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
                 table => table.ContentPartVersionRecord()
@@ -48,7 +52,8 @@ namespace Orchard.AntiSpam {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", builder => builder
                 .WithDescription("Allows to filter submitted content items based on spam filters."));
 
@@ -61,7 +66,8 @@ namespace Orchard.AntiSpam {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterPartDefinition("JavaScriptAntiSpamPart",
                 builder => builder
                     .Attachable()
@@ -73,18 +79,22 @@ namespace Orchard.AntiSpam {
 
 
     [OrchardFeature("Akismet.Filter")]
-    public class AkismetMigrations : DataMigrationImpl {
+    public class AkismetMigrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             return 1;
         }
     }
 
 
     [OrchardFeature("TypePad.Filter")]
-    public class TypePadMigrations : DataMigrationImpl {
+    public class TypePadMigrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             return 1;
         }
     }

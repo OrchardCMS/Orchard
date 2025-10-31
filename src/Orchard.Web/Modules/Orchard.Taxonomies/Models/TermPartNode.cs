@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Taxonomies.Models {
-    public class TermPartNode {
-        public TermPartNode() {
+namespace Orchard.Taxonomies.Models
+{
+    public class TermPartNode
+    {
+        public TermPartNode()
+        {
             Items = new List<TermPartNode>();
         }
 

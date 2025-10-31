@@ -1,22 +1,25 @@
-﻿using System;
+using System;
 
-namespace Orchard.Commands {
+namespace Orchard.Commands
+{
     [AttributeUsage(AttributeTargets.Method)]
-    public class CommandNameAttribute : Attribute {
+    public class CommandNameAttribute : Attribute
+    {
         private readonly string _commandAlias;
 
-        public CommandNameAttribute(string commandAlias) {
+        public CommandNameAttribute(string commandAlias)
+        {
             _commandAlias = commandAlias;
         }
 
-        public string Command {
-            get { return _commandAlias; }
-        }
+        public string Command => _commandAlias;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class CommandHelpAttribute : Attribute {
-        public CommandHelpAttribute(string text) {
+    public class CommandHelpAttribute : Attribute
+    {
+        public CommandHelpAttribute(string text)
+        {
             this.HelpText = text;
         }
 

@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Tokens;
 
-namespace Orchard.DynamicForms.Tokens {
-    public class FormTokens : Component, ITokenProvider {
+namespace Orchard.DynamicForms.Tokens
+{
+    public class FormTokens : Component, ITokenProvider
+    {
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.For("FormSubmission", T("Dynamic Form submission"), T("Dynamic Form Submission tokens for use in workflows handling the Dynamic Form Submitted event."))
                 .Token("Field:*", T("Field:<field name>"), T("The posted field value to access."), "Text")
                 .Token("IsValid:*", T("IsValid:<field name>"), T("The posted field validation status."))
@@ -13,7 +16,8 @@ namespace Orchard.DynamicForms.Tokens {
                 .Token("FormName", T("FormName"), T("The name of the form posted."));
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
             context.For<FormSubmissionTokenContext>("FormSubmission")
                 .Token(token => token.StartsWith("Field:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Field:".Length) : null, GetFieldValue)
                 .Chain(FilterChainParam, "Text", GetFieldValue)
@@ -23,7 +27,8 @@ namespace Orchard.DynamicForms.Tokens {
                 .Token("FormName", GetFormName);
         }
 
-        private static Tuple<string, string> FilterChainParam(string token) {
+        private static Tuple<string, string> FilterChainParam(string token)
+        {
             int tokenLength = "Field:".Length;
             int chainIndex = token.IndexOf('.');
             if (token.StartsWith("Field:", StringComparison.OrdinalIgnoreCase) && chainIndex > tokenLength)
@@ -32,19 +37,23 @@ namespace Orchard.DynamicForms.Tokens {
                 return null;
         }
 
-        private string GetFieldValue(string fieldName, FormSubmissionTokenContext context) {
+        private string GetFieldValue(string fieldName, FormSubmissionTokenContext context)
+        {
             return context.PostedValues[fieldName];
         }
 
-        private object GetFieldValidationStatus(string fieldName, FormSubmissionTokenContext context) {
+        private object GetFieldValidationStatus(string fieldName, FormSubmissionTokenContext context)
+        {
             return context.ModelState.IsValidField(fieldName);
         }
 
-        private object GetCreatedContent(FormSubmissionTokenContext context) {
+        private object GetCreatedContent(FormSubmissionTokenContext context)
+        {
             return context.CreatedContent;
         }
 
-        private string GetFormName(FormSubmissionTokenContext context) {
+        private string GetFormName(FormSubmissionTokenContext context)
+        {
             return context.Form.Name;
         }
     }

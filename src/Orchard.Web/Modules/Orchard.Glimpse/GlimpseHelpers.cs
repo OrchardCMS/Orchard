@@ -1,13 +1,17 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Orchard.Glimpse {
-    public static class GlimpseHelpers {
-        public static string AppendReturnUrl(string path, UrlHelper urlHelper) {
+namespace Orchard.Glimpse
+{
+    public static class GlimpseHelpers
+    {
+        public static string AppendReturnUrl(string path, UrlHelper urlHelper)
+        {
             var requestUrl = urlHelper.RequestContext.HttpContext.Request.Url;
 
-            if (requestUrl == null) {
+            if (requestUrl == null)
+            {
                 return path;
             }
 
@@ -17,7 +21,7 @@ namespace Orchard.Glimpse {
             query["returnUrl"] = requestUrl.AbsolutePath;
             uriBuilder.Query = query.ToString();
             path = uriBuilder.ToString();
-            
+
             return path;
         }
     }

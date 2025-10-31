@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Web;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
@@ -8,28 +7,34 @@ using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Core.Contents {
-    public class AdminMenu : INavigationProvider {
+namespace Orchard.Core.Contents
+{
+    public class AdminMenu : INavigationProvider
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
 
-        public AdminMenu(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IAuthorizer authorizer) {
+        public AdminMenu(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager, IAuthorizer authorizer)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _authorizer = authorizer;
         }
 
         public Localizer T { get; set; }
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
             var listableContentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Listable);
             ContentItem listableCi = null;
-            foreach(var contentTypeDefinition in listableContentTypes) {
+            foreach (var contentTypeDefinition in listableContentTypes)
+            {
                 listableCi = _contentManager.New(contentTypeDefinition.Name);
-                if(_authorizer.Authorize(Permissions.EditContent, listableCi)) {
+                if (_authorizer.Authorize(Permissions.EditContent, listableCi))
+                {
                     builder.AddImageSet("content")
                         .Add(T("Content"), "1.4", menu => menu
                         .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav()));
@@ -37,10 +42,13 @@ namespace Orchard.Core.Contents {
                 }
             }
             var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
-            if (contentTypes.Any()) {
-                builder.Add(T("New"), "-1", menu => {
+            if (contentTypes.Any())
+            {
+                builder.Add(T("New"), "-1", menu =>
+                {
                     menu.LinkToFirstChild(false);
-                    foreach (var contentTypeDefinition in contentTypes) {
+                    foreach (var contentTypeDefinition in contentTypes)
+                    {
                         var ci = _contentManager.New(contentTypeDefinition.Name);
                         var cim = _contentManager.GetItemMetadata(ci);
                         var createRouteValues = cim.CreateRouteValues;

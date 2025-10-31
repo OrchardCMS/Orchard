@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
-namespace Orchard.Taxonomies.ViewModels {
-    public class TaxonomyNavigationViewModel {
+namespace Orchard.Taxonomies.ViewModels
+{
+    public class TaxonomyNavigationViewModel
+    {
         public SelectList AvailableTaxonomies { get; set; }
 
         [Required, Range(1, int.MaxValue, ErrorMessage = "You must select a taxonomy")]

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Core.Settings.State.Records {
-    public class ShellStateRecord {
-        public ShellStateRecord() {
+namespace Orchard.Core.Settings.State.Records
+{
+    public class ShellStateRecord
+    {
+        public ShellStateRecord()
+        {
             Features = new List<ShellFeatureStateRecord>();
         }
 

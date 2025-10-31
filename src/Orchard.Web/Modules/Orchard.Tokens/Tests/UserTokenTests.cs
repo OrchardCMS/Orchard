@@ -1,16 +1,19 @@
-﻿using Autofac;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Tokens.Implementation;
 using Orchard.Tokens.Providers;
 
-namespace Orchard.Tokens.Tests {
+namespace Orchard.Tokens.Tests
+{
     [TestFixture]
-    public class UserTokenTests {
+    public class UserTokenTests
+    {
         private IContainer _container;
         private ITokenizer _tokenizer;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TokenManager>().As<ITokenManager>();
@@ -21,7 +24,8 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void TestUserTokens() {
+        public void TestUserTokens()
+        {
             var str = _tokenizer.Replace("{User.Name},{User.Email},{User.Id}", new { User = new TestUser { UserName = "Joe", Email = "test@test.com", Id = 88 } });
             Assert.That(str, Is.EqualTo("Joe,test@test.com,88"));
             str = _tokenizer.Replace("{User.Name},{User.Email},{User.Id}", null);
@@ -29,7 +33,8 @@ namespace Orchard.Tokens.Tests {
         }
 
         [Test]
-        public void AnonymousUserShouldReturnEmpty() {
+        public void AnonymousUserShouldReturnEmpty()
+        {
             var result = _tokenizer.Replace("{User.Name}", new { User = default(TestUser) });
             Assert.That(result, Is.Empty);
 

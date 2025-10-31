@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
@@ -17,9 +17,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Upgrade.ViewModels;
 
-namespace Upgrade.Controllers {
+namespace Upgrade.Controllers
+{
     [Admin]
-    public class ProjectionsController : Controller {
+    public class ProjectionsController : Controller
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IFeatureManager _featureManager;
@@ -33,7 +35,8 @@ namespace Upgrade.Controllers {
             IOrchardServices orchardServices,
             ITransactionManager transactionManager,
             IFeatureManager featureManager,
-            Lazy<IEnumerable<IContentHandler>> handlers) {
+            Lazy<IEnumerable<IContentHandler>> handlers)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
@@ -45,20 +48,25 @@ namespace Upgrade.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             var viewModel = new MigrateViewModel { ContentTypes = new List<ContentTypeEntry>() };
-            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
+            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name))
+            {
                 // only display parts with fields
-                if (contentType.Parts.Any(x => x.PartDefinition.Fields.Any())) {
+                if (contentType.Parts.Any(x => x.PartDefinition.Fields.Any()))
+                {
                     viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
                 }
             }
 
-            if (!viewModel.ContentTypes.Any()) {
+            if (!viewModel.ContentTypes.Any())
+            {
                 _orchardServices.Notifier.Warning(T("There are no content types with custom fields"));
             }
 
-            if (!_featureManager.GetEnabledFeatures().Any(x => x.Id == "Orchard.Fields")) {
+            if (!_featureManager.GetEnabledFeatures().Any(x => x.Id == "Orchard.Fields"))
+            {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.Fields in order to migrate current fields."));
             }
 
@@ -85,7 +93,8 @@ namespace Upgrade.Controllers {
         //}
 
         [HttpPost]
-        public JsonResult MigrateLatestValue(int id) {
+        public JsonResult MigrateLatestValue(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
             var contentTypeNamesWithFields = _contentDefinitionManager.ListTypeDefinitions()
@@ -99,8 +108,10 @@ namespace Upgrade.Controllers {
                 .Slice(0, BATCH).ToList();
             var lastContentItemId = id;
 
-            foreach (var content in contents) {
-                if (contentTypeNamesWithFields.Contains(content.ContentType)) {
+            foreach (var content in contents)
+            {
+                if (contentTypeNamesWithFields.Contains(content.ContentType))
+                {
                     _handlers.Value.Where(x => x.GetType() == typeof(FieldIndexPartHandler)).Invoke(handler => handler.Updated(new UpdateContentContext(content)), Logger);
                 }
                 lastContentItemId = content.Id;

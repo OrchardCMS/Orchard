@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Web.Helpers;
 using Microsoft.Owin.Security;
@@ -7,7 +7,8 @@ using Orchard.Environment.Extensions;
 using Orchard.Owin;
 using Owin;
 
-namespace Orchard.OpenId.OwinMiddlewares {
+namespace Orchard.OpenId.OwinMiddlewares
+{
     [OrchardFeature("Orchard.OpenId")]
     public class OpenId : IOwinMiddlewareProvider
     {

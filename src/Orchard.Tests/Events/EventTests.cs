@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Events;
-using System;
 using Orchard.Exceptions;
 
-namespace Orchard.Tests.Events {
+namespace Orchard.Tests.Events
+{
     [TestFixture]
-    public class EventTests {
+    public class EventTests
+    {
         private IContainer _container;
         private IEventBus _eventBus;
         private StubEventHandler _eventHandler;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _eventHandler = new StubEventHandler();
 
             var builder = new ContainerBuilder();
@@ -36,14 +38,16 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventsAreCorrectlyDispatchedToEventHandlers() {
+        public void EventsAreCorrectlyDispatchedToEventHandlers()
+        {
             Assert.That(_eventHandler.Count, Is.EqualTo(0));
             _eventBus.Notify("ITestEventHandler.Increment", new Dictionary<string, object>());
             Assert.That(_eventHandler.Count, Is.EqualTo(1));
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToEventHandlers() {
+        public void EventParametersAreCorrectlyPassedToEventHandlers()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 5200;
@@ -53,7 +57,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersArePassedInCorrectOrderToEventHandlers() {
+        public void EventParametersArePassedInCorrectOrderToEventHandlers()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 2600;
@@ -63,7 +68,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod() {
+        public void EventParametersAreCorrectlyPassedToMatchingMethod()
+        {
             Assert.That(_eventHandler.Summary, Is.Null);
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = "a";
@@ -74,7 +80,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethod() {
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethod()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -85,7 +92,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored() {
+        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -97,7 +105,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored2() {
+        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored2()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -107,7 +116,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne() {
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -117,7 +127,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne2() {
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne2()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -126,7 +137,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventHandlerWontBeCalledWhenNoParameterMatchExists() {
+        public void EventHandlerWontBeCalledWhenNoParameterMatchExists()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["e"] = 1;
@@ -135,7 +147,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventHandlerWontBeCalledWhenNoParameterMatchExists2() {
+        public void EventHandlerWontBeCalledWhenNoParameterMatchExists2()
+        {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             _eventBus.Notify("ITestEventHandler.Sum", arguments);
@@ -143,19 +156,22 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventHandlerWontThrowIfMethodDoesNotExists() {
+        public void EventHandlerWontThrowIfMethodDoesNotExists()
+        {
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             Assert.DoesNotThrow(() => _eventBus.Notify("ITestEventHandler.NotExisting", arguments));
         }
 
         [Test]
-        public void EventBusThrowsIfMessageNameIsNotCorrectlyFormatted() {
+        public void EventBusThrowsIfMessageNameIsNotCorrectlyFormatted()
+        {
             Assert.Throws<ArgumentException>(() => _eventBus.Notify("StubEventHandlerIncrement", new Dictionary<string, object>()));
         }
 
         [Test]
-        public void InterceptorCanCoerceResultingCollection() {
-            var data = new object[]{"5","18","2"};
+        public void InterceptorCanCoerceResultingCollection()
+        {
+            var data = new object[] { "5", "18", "2" };
             var adjusted = EventsInterceptor.Adjust(data, typeof(IEnumerable<string>));
             Assert.That(data, Is.InstanceOf<IEnumerable<object>>());
             Assert.That(data, Is.Not.InstanceOf<IEnumerable<string>>());
@@ -163,7 +179,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EnumerableResultsAreTreatedLikeSelectMany() {
+        public void EnumerableResultsAreTreatedLikeSelectMany()
+        {
             var results = _eventBus.Notify("ITestEventHandler.Gather", new Dictionary<string, object> { { "a", 42 }, { "b", "alpha" } }).Cast<string>();
             Assert.That(results.Count(), Is.EqualTo(3));
             Assert.That(results, Has.Some.EqualTo("42"));
@@ -172,7 +189,8 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void StringResultsAreTreatedLikeSelect() {
+        public void StringResultsAreTreatedLikeSelect()
+        {
             var results = _eventBus.Notify("ITestEventHandler.GetString", new Dictionary<string, object>()).Cast<string>();
             Assert.That(results.Count(), Is.EqualTo(2));
             Assert.That(results, Has.Some.EqualTo("Foo"));
@@ -180,14 +198,16 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void NonStringNonEnumerableResultsAreTreatedLikeSelect() {
+        public void NonStringNonEnumerableResultsAreTreatedLikeSelect()
+        {
             var results = _eventBus.Notify("ITestEventHandler.GetInt", new Dictionary<string, object>()).Cast<int>();
             Assert.That(results.Count(), Is.EqualTo(2));
             Assert.That(results, Has.Some.EqualTo(1));
             Assert.That(results, Has.Some.EqualTo(2));
         }
-        
-        public interface ITestEventHandler : IEventHandler {
+
+        public interface ITestEventHandler : IEventHandler
+        {
             void Increment();
             void Sum(int a);
             void Sum(int a, int b);
@@ -199,82 +219,104 @@ namespace Orchard.Tests.Events {
             int GetInt();
         }
 
-        public class StubEventHandler : ITestEventHandler {
+        public class StubEventHandler : ITestEventHandler
+        {
             public int Count { get; set; }
             public int Result { get; set; }
             public string Summary { get; set; }
 
-            public void Increment() {
+            public void Increment()
+            {
                 Count++;
             }
 
-            public void Sum(int a) {
+            public void Sum(int a)
+            {
                 Result = 3 * a;
             }
 
-            public void Sum(int a, int b) {
+            public void Sum(int a, int b)
+            {
                 Result = 2 * (a + b);
             }
 
-            public void Sum(int a, int b, int c) {
+            public void Sum(int a, int b, int c)
+            {
                 Result = a + b + c;
             }
 
-            public void Substract(int a, int b) {
+            public void Substract(int a, int b)
+            {
                 Result = a - b;
             }
 
-            public void Concat(string a, string b, string c) {
+            public void Concat(string a, string b, string c)
+            {
                 Summary = a + b + c;
             }
 
-            public IEnumerable<string> Gather(int a, string b) {
-                yield return String.Format("[{0},{1}]", a, b);
+            public IEnumerable<string> Gather(int a, string b)
+            {
+                yield return string.Format("[{0},{1}]", a, b);
             }
 
-            public string GetString() {
+            public string GetString()
+            {
                 return "Foo";
             }
 
-            public int GetInt() {
+            public int GetInt()
+            {
                 return 1;
             }
         }
-        public class StubEventHandler2 : ITestEventHandler {
-            public void Increment() {
+        public class StubEventHandler2 : ITestEventHandler
+        {
+            public void Increment()
+            {
             }
 
-            public void Sum(int a) {
+            public void Sum(int a)
+            {
             }
 
-            public void Sum(int a, int b) {
+            public void Sum(int a, int b)
+            {
             }
 
-            public void Sum(int a, int b, int c) {
+            public void Sum(int a, int b, int c)
+            {
             }
 
-            public void Substract(int a, int b) {
+            public void Substract(int a, int b)
+            {
             }
 
-            public void Concat(string a, string b, string c) {
+            public void Concat(string a, string b, string c)
+            {
             }
 
-            public IEnumerable<string> Gather(int a, string b) {
+            public IEnumerable<string> Gather(int a, string b)
+            {
                 return new[] { a.ToString(), b };
             }
 
-            public string GetString() {
+            public string GetString()
+            {
                 return "Bar";
             }
 
-            public int GetInt() {
+            public int GetInt()
+            {
                 return 2;
             }
         }
     }
 
-    class StubExceptionPolicy : IExceptionPolicy {
-        public bool HandleException(object sender, Exception exception) {
+    class StubExceptionPolicy : IExceptionPolicy
+    {
+        public bool HandleException(object sender, Exception exception)
+        {
             return true;
         }
     }

@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.Collections;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.Services {
+namespace Orchard.AuditTrail.Services
+{
 
     /// <summary>
     /// Manage the audit trail.
     /// </summary>
-    public interface IAuditTrailManager : IDependency {
+    public interface IAuditTrailManager : IDependency
+    {
 
         /// <summary>
         /// Gets a page of event records from the audit trail.
@@ -35,7 +37,7 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="filters">Input for each filter builder.</param>
         /// <returns>A tree of shapes.</returns>
         dynamic BuildFilterDisplay(Filters filters);
-        
+
         /// <summary>
         /// Records an audit trail event.
         /// </summary>

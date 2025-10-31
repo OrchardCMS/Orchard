@@ -1,23 +1,29 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Localization.Services;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 
-namespace Orchard.Specs.Bindings {
+namespace Orchard.Specs.Bindings
+{
     [Binding]
-    public class Settings : BindingBase {
+    public class Settings : BindingBase
+    {
 
         [When(@"I have ""(.*)"" as the default culture")]
-        public void DefineDefaultCulture(string cultureName) {
+        public void DefineDefaultCulture(string cultureName)
+        {
 
             var webApp = Binding<WebAppHosting>();
-            webApp.Host.Execute(() => {
-                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+            webApp.Host.Execute(() =>
+            {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default"))
+                {
                     var orchardServices = environment.Resolve<IOrchardServices>();
                     var cultureManager = environment.Resolve<ICultureManager>();
 
                     var currentCultures = cultureManager.ListCultures();
-                    if (!currentCultures.Contains(cultureName)) {
+                    if (!currentCultures.Contains(cultureName))
+                    {
                         cultureManager.AddCulture(cultureName);
                     }
 

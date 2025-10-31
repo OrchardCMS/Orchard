@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Packaging.Models;
 
-namespace Orchard.Packaging.ViewModels {
-    public class PackagingHarvestViewModel {
+namespace Orchard.Packaging.ViewModels
+{
+    public class PackagingHarvestViewModel
+    {
         public IEnumerable<PackagingSource> Sources { get; set; }
         public IEnumerable<ExtensionDescriptor> Extensions { get; set; }
 

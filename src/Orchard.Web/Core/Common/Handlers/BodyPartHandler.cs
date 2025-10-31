@@ -1,10 +1,13 @@
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
-using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Core.Common.Handlers {
-    public class BodyPartHandler : ContentHandler {       
-        public BodyPartHandler(IRepository<BodyPartRecord> bodyRepository) {
+namespace Orchard.Core.Common.Handlers
+{
+    public class BodyPartHandler : ContentHandler
+    {
+        public BodyPartHandler(IRepository<BodyPartRecord> bodyRepository)
+        {
             Filters.Add(StorageFilter.For(bodyRepository));
 
             OnIndexing<BodyPart>((context, bodyPart) => context.DocumentIndex

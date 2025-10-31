@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
@@ -10,8 +10,10 @@ using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Projections
+{
+    public class Migrations : DataMigrationImpl
+    {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
         private readonly IRepository<PropertyRecord> _propertyRecordRepository;
@@ -30,7 +32,8 @@ namespace Orchard.Projections {
             IRepository<MemberBindingRecord> memberBindingRepository,
             IRepository<LayoutRecord> layoutRepository,
             IRepository<PropertyRecord> propertyRecordRepository,
-            IRepository<FilterRecord> filterRepository) {
+            IRepository<FilterRecord> filterRepository)
+        {
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
             _propertyRecordRepository = propertyRecordRepository;
@@ -41,7 +44,8 @@ namespace Orchard.Projections {
 
         public Localizer T { get; set; }
 
-        public int Create() {
+        public int Create()
+        {
 
             // Properties index
 
@@ -251,21 +255,24 @@ namespace Orchard.Projections {
 
             // Default Model Bindings - CommonPartRecord
 
-            _memberBindingRepository.Create(new MemberBindingRecord {
+            _memberBindingRepository.Create(new MemberBindingRecord
+            {
                 Type = typeof(CommonPartRecord).FullName,
                 Member = "CreatedUtc",
                 DisplayName = T("Creation date").Text,
                 Description = T("When the content item was created").Text
             });
 
-            _memberBindingRepository.Create(new MemberBindingRecord {
+            _memberBindingRepository.Create(new MemberBindingRecord
+            {
                 Type = typeof(CommonPartRecord).FullName,
                 Member = "ModifiedUtc",
                 DisplayName = T("Modification date").Text,
                 Description = T("When the content item was modified").Text
             });
 
-            _memberBindingRepository.Create(new MemberBindingRecord {
+            _memberBindingRepository.Create(new MemberBindingRecord
+            {
                 Type = typeof(CommonPartRecord).FullName,
                 Member = "PublishedUtc",
                 DisplayName = T("Publication date").Text,
@@ -274,7 +281,8 @@ namespace Orchard.Projections {
 
             // Default Model Bindings - TitlePartRecord
 
-            _memberBindingRepository.Create(new MemberBindingRecord {
+            _memberBindingRepository.Create(new MemberBindingRecord
+            {
                 Type = typeof(TitlePartRecord).FullName,
                 Member = "Title",
                 DisplayName = T("Title Part Title").Text,
@@ -283,7 +291,8 @@ namespace Orchard.Projections {
 
             // Default Model Bindings - BodyPartRecord
 
-            _memberBindingRepository.Create(new MemberBindingRecord {
+            _memberBindingRepository.Create(new MemberBindingRecord
+            {
                 Type = typeof(BodyPartRecord).FullName,
                 Member = "Text",
                 DisplayName = T("Body Part Text").Text,
@@ -293,7 +302,8 @@ namespace Orchard.Projections {
             return 8;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.CreateTable("NavigationQueryPartRecord",
                 table => table.ContentPartRecord()
                     .Column<int>("Items")
@@ -316,7 +326,8 @@ namespace Orchard.Projections {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             SchemaBuilder.AlterTable("ProjectionPartRecord", table => table
                 .AlterColumn("PagerSuffix", c => c.WithType(DbType.String).WithLength(255))
             );
@@ -324,7 +335,8 @@ namespace Orchard.Projections {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterTypeDefinition("NavigationQueryMenuItem",
                 cfg => cfg
                     .WithIdentity()
@@ -333,7 +345,8 @@ namespace Orchard.Projections {
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             SchemaBuilder.AlterTable("StringFieldIndexRecord", table => table
                 .AddColumn<string>("LatestValue", c => c.WithLength(4000)));
 
@@ -355,35 +368,41 @@ namespace Orchard.Projections {
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             MigratePropertyRecordToRewriteOutputCondition();
 
             return 6;
         }
 
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             // This change was originally UpdateFrom6 on 1.10.x and UpdateFrom6 on dev: Casting a somewhat wide net, but
             // filters can't be queried by the form they are using and different types of filters can (and do) use
             // StringFilterForm. However, the "Operator" parameter's value being "ContainsAnyIfProvided" is very
             // specific.
             var formStateToReplace = "<Operator>ContainsAnyIfProvided</Operator>";
             var filterRecordsToUpdate = _filterRepository.Table.Where(f => f.State.Contains(formStateToReplace)).ToList();
-            foreach (var filter in filterRecordsToUpdate) {
+            foreach (var filter in filterRecordsToUpdate)
+            {
                 filter.State = filter.State.Replace(
                     formStateToReplace,
                     "<Operator>ContainsAny</Operator><IgnoreFilterIfValueIsEmpty>true</IgnoreFilterIfValueIsEmpty>");
             }
 
-            if (IsUpgradingFromOrchard_1_10_x_Version_6) {
+            if (IsUpgradingFromOrchard_1_10_x_Version_6)
+            {
                 MigratePropertyRecordToRewriteOutputCondition();
             }
-            else {
+            else
+            {
                 // This change was originally UpdateFrom5 on 1.10.x and UpdateFrom6 on dev.
                 SchemaBuilder.AlterTable("LayoutRecord", table =>
                     table.AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
 
                 var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
-                foreach (var layout in layoutRecords) {
+                foreach (var layout in layoutRecords)
+                {
                     layout.GUIdentifier = Guid.NewGuid().ToString();
                 }
             }
@@ -391,20 +410,25 @@ namespace Orchard.Projections {
             return 7;
         }
 
-        public int UpdateFrom7() {
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+        public int UpdateFrom7()
+        {
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table =>
+            {
                 table.DropIndex("IX_PropertyName");
                 table.DropIndex("IX_FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table =>
+            {
                 table.DropIndex("IX_PropertyName");
                 table.DropIndex("IX_FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table =>
+            {
                 table.DropIndex("IX_PropertyName");
                 table.DropIndex("IX_FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table =>
+            {
                 table.DropIndex("IX_PropertyName");
                 table.DropIndex("IX_FieldIndexPartRecord_Id");
             });
@@ -415,7 +439,8 @@ namespace Orchard.Projections {
         }
 
         // This change was originally in UpdateFrom5 on dev, but didn't exist on 1.10.x.
-        private void MigratePropertyRecordToRewriteOutputCondition() {
+        private void MigratePropertyRecordToRewriteOutputCondition()
+        {
             SchemaBuilder.AlterTable("PropertyRecord", table => table
                 .AddColumn<string>("RewriteOutputCondition", c => c.Unlimited())
             );
@@ -427,20 +452,25 @@ namespace Orchard.Projections {
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
-        private void AddPropertyNameAndFieldIndexPartRecordIdIndexes() {
-            SchemaBuilder.AlterTable("StringFieldIndexRecord", table => {
+        private void AddPropertyNameAndFieldIndexPartRecordIdIndexes()
+        {
+            SchemaBuilder.AlterTable("StringFieldIndexRecord", table =>
+            {
                 table.CreateIndex("IDX_StringFieldIndexRecord_PropertyName", "PropertyName");
                 table.CreateIndex("IDX_StringFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("IntegerFieldIndexRecord", table =>
+            {
                 table.CreateIndex("IDX_IntegerFieldIndexRecord_PropertyName", "PropertyName");
                 table.CreateIndex("IDX_IntegerFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("DoubleFieldIndexRecord", table =>
+            {
                 table.CreateIndex("IDX_DoubleFieldIndexRecord_PropertyName", "PropertyName");
                 table.CreateIndex("IDX_DoubleFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
             });
-            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table => {
+            SchemaBuilder.AlterTable("DecimalFieldIndexRecord", table =>
+            {
                 table.CreateIndex("IDX_DecimalFieldIndexRecord_PropertyName", "PropertyName");
                 table.CreateIndex("IDX_DecimalFieldIndexRecord_FieldIndexPartRecord_Id", "FieldIndexPartRecord_Id");
             });

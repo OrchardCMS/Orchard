@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using Orchard.Caching;
 
-namespace Orchard.Services {
+namespace Orchard.Services
+{
     /// <summary>
     /// Provides the current Utc <see cref="DateTime"/>, and time related method for cache management.
     /// This service should be used whenever the current date and time are needed, instead of <seealso cref="DateTime"/> directly.
     /// It also makes implementations more testable, as time can be mocked.
     /// </summary>
-    public interface IClock : IVolatileProvider {
+    public interface IClock : IVolatileProvider
+    {
         /// <summary>
         /// Gets the current <see cref="DateTime"/> of the system, expressed in Utc
         /// </summary>

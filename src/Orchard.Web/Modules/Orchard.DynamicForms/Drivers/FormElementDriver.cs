@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -14,8 +13,10 @@ using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class FormElementDriver : FormsElementDriver<Form> {
+namespace Orchard.DynamicForms.Drivers
+{
+    public class FormElementDriver : FormsElementDriver<Form>
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IFormService _formService;
         private readonly ICurrentControllerAccessor _currentControllerAccessor;
@@ -23,14 +24,15 @@ namespace Orchard.DynamicForms.Drivers {
         private readonly ITokenizer _tokenizer;
 
         public FormElementDriver(
-            IFormsBasedElementServices formsServices, 
-            IContentDefinitionManager contentDefinitionManager, 
-            IFormService formService, 
-            ICurrentControllerAccessor currentControllerAccessor, 
-            ICultureAccessor cultureAccessor, 
+            IFormsBasedElementServices formsServices,
+            IContentDefinitionManager contentDefinitionManager,
+            IFormService formService,
+            ICurrentControllerAccessor currentControllerAccessor,
+            ICultureAccessor cultureAccessor,
             ITokenizer tokenizer)
 
-            : base(formsServices) {
+            : base(formsServices)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _formService = formService;
             _currentControllerAccessor = currentControllerAccessor;
@@ -38,12 +40,15 @@ namespace Orchard.DynamicForms.Drivers {
             _tokenizer = tokenizer;
         }
 
-        protected override IEnumerable<string> FormNames {
+        protected override IEnumerable<string> FormNames
+        {
             get { yield return "Form"; }
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("Form", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("Form", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "Form",
@@ -129,7 +134,8 @@ namespace Orchard.DynamicForms.Drivers {
 
                 // ContentType
                 var contentTypes = _contentDefinitionManager.ListTypeDefinitions().Where(IsFormBindingContentType).ToArray();
-                foreach (var contentType in contentTypes.OrderBy(x => x.DisplayName)) {
+                foreach (var contentType in contentTypes.OrderBy(x => x.DisplayName))
+                {
                     form._ContentType.Items.Add(new SelectListItem { Text = contentType.DisplayName, Value = contentType.Name });
                 }
 
@@ -137,11 +143,13 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(Form element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(Form element, ElementDisplayingContext context)
+        {
             var controller = _currentControllerAccessor.CurrentController;
             var modelState = controller != null ? controller.FetchModelState(element) : default(ModelStateDictionary);
 
-            if (modelState != null && !modelState.IsValid) {
+            if (modelState != null && !modelState.IsValid)
+            {
                 // Read any posted values from the previous request.
                 var values = controller.FetchPostedValues(element);
                 _formService.ReadElementValues(element, new NameValueCollectionValueProvider(values, _cultureAccessor.CurrentCulture));
@@ -151,7 +159,8 @@ namespace Orchard.DynamicForms.Drivers {
             }
 
             // Assign the binding content type to each element within the form element.
-            foreach (var child in element.Elements.Flatten().Where(x => x is FormElement).Cast<FormElement>()) {
+            foreach (var child in element.Elements.Flatten().Where(x => x is FormElement).Cast<FormElement>())
+            {
                 child.FormBindingContentType = element.CreateContent == true ? element.FormBindingContentType : default(string);
             }
 
@@ -160,10 +169,11 @@ namespace Orchard.DynamicForms.Drivers {
             context.ElementShape.ProcessedAction = _tokenizer.Replace(element.Action, tokenData);
         }
 
-        private static bool IsFormBindingContentType(ContentTypeDefinition contentTypeDefinition) {
-            var blacklist = new[] {"Site", "Layer"};
+        private static bool IsFormBindingContentType(ContentTypeDefinition contentTypeDefinition)
+        {
+            var blacklist = new[] { "Site", "Layer" };
 
-            return !blacklist.Any(x => contentTypeDefinition.Name == x) && String.IsNullOrEmpty(contentTypeDefinition.Stereotype());
+            return !blacklist.Any(x => contentTypeDefinition.Name == x) && string.IsNullOrEmpty(contentTypeDefinition.Stereotype());
         }
     }
 }

@@ -1,14 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace Orchard.Data.Bags.Serialization {
-    public class XmlSettingsSerializer : IBagSerializer {
+namespace Orchard.Data.Bags.Serialization
+{
+    public class XmlSettingsSerializer : IBagSerializer
+    {
         private const string Root = "Bag";
 
-        public void Serialize(TextWriter tw, Bag o) {
-            using (var writer = new XmlTextWriter(tw)) {
+        public void Serialize(TextWriter tw, Bag o)
+        {
+            using (var writer = new XmlTextWriter(tw))
+            {
                 writer.WriteStartDocument();
                 writer.WriteStartElement(Root);
                 WriteGrappe(writer, o);
@@ -17,44 +21,53 @@ namespace Orchard.Data.Bags.Serialization {
             }
         }
 
-        public Bag Deserialize(TextReader tr) {
+        public Bag Deserialize(TextReader tr)
+        {
             var reader = new XmlTextReader(tr);
             var result = new Bag();
 
             // ignore root element
-            while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == Root) {
+            while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == Root)
+            {
                 reader.Read();
             }
 
-            while (reader.MoveToContent() == XmlNodeType.Element) {
+            while (reader.MoveToContent() == XmlNodeType.Element)
+            {
                 ReadElement(reader, result);
             }
 
             return result;
         }
 
-        private void ReadElement(XmlReader reader, Bag parent) {
+        private void ReadElement(XmlReader reader, Bag parent)
+        {
             var name = XmlConvert.DecodeName(reader.LocalName);
             var type = reader["type"];
 
             // is it a value node ? i.e. type=""
-            if (type != null) {
-                if (type == "Array") {
+            if (type != null)
+            {
+                if (type == "Array")
+                {
                     // go to first item
                     parent.SetMember(name, ReadArray(reader));
                     reader.Read();
                 }
-                else {
+                else
+                {
                     var typeCode = (TypeCode)Enum.Parse(typeof(TypeCode), type);
                     var value = SConvert.XmlDecode(typeCode, reader.ReadElementString());
                     parent.SetMember(name, value);
                 }
             }
-            else {
+            else
+            {
                 var grappe = new Bag();
                 reader.Read();
                 parent.SetMember(name, grappe);
-                while (reader.MoveToContent() == XmlNodeType.Element) {
+                while (reader.MoveToContent() == XmlNodeType.Element)
+                {
                     ReadElement(reader, grappe);
                 }
 
@@ -62,10 +75,12 @@ namespace Orchard.Data.Bags.Serialization {
             }
         }
 
-        public SArray ReadArray(XmlReader reader) {
+        public SArray ReadArray(XmlReader reader)
+        {
             var list = new List<object>();
             reader.Read();
-            while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Item") {
+            while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Item")
+            {
                 dynamic o = new Bag();
                 ReadElement(reader, o);
                 list.Add(o.Item);
@@ -74,27 +89,34 @@ namespace Orchard.Data.Bags.Serialization {
             return new SArray(list.ToArray());
         }
 
-        private void WriteGrappe(XmlWriter writer, Bag grappe) {
-            foreach (var pair in grappe._properties) {
+        private void WriteGrappe(XmlWriter writer, Bag grappe)
+        {
+            foreach (var pair in grappe._properties)
+            {
                 WriteAny(writer, pair.Key, pair.Value);
             }
         }
 
-        private void WriteAny(XmlWriter writer, string name, object value) {
-            if (value is Bag) {
+        private void WriteAny(XmlWriter writer, string name, object value)
+        {
+            if (value is Bag)
+            {
                 writer.WriteStartElement(XmlConvert.EncodeLocalName(name));
                 WriteGrappe(writer, (Bag)value);
                 writer.WriteEndElement();
             }
-            if (value is SArray) {
+            if (value is SArray)
+            {
                 writer.WriteStartElement(XmlConvert.EncodeLocalName(name));
                 writer.WriteAttributeString("type", "Array");
-                foreach (var v in ((SArray)value).Values) {
+                foreach (var v in ((SArray)value).Values)
+                {
                     WriteAny(writer, "Item", v);
                 }
                 writer.WriteEndElement();
             }
-            else if (value is SValue) {
+            else if (value is SValue)
+            {
                 var sValue = (SValue)value;
                 writer.WriteStartElement(XmlConvert.EncodeLocalName(name));
                 writer.WriteAttributeString("type", Type.GetTypeCode(sValue.Value.GetType()).ToString());

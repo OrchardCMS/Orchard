@@ -19,9 +19,11 @@ using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Projections.Controllers {
+namespace Orchard.Projections.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly IOrchardServices _services;
         private readonly ISiteService _siteService;
         private readonly IQueryService _queryService;
@@ -32,7 +34,8 @@ namespace Orchard.Projections.Controllers {
             IShapeFactory shapeFactory,
             ISiteService siteService,
             IQueryService queryService,
-            IProjectionManager projectionManager) {
+            IProjectionManager projectionManager)
+        {
             _services = services;
             _siteService = siteService;
             _queryService = queryService;
@@ -47,7 +50,8 @@ namespace Orchard.Projections.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters) {
+        public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to list queries")))
                 return new HttpUnauthorizedResult();
 
@@ -59,20 +63,23 @@ namespace Orchard.Projections.Controllers {
 
             var queries = Services.ContentManager.Query("Query");
 
-            switch (options.Filter) {
+            switch (options.Filter)
+            {
                 case QueriesFilter.All:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (!String.IsNullOrWhiteSpace(options.Search)) {
+            if (!string.IsNullOrWhiteSpace(options.Search))
+            {
                 queries = queries.Join<TitlePartRecord>().Where(r => r.Title.Contains(options.Search));
             }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(queries.Count());
 
-            switch (options.Order) {
+            switch (options.Order)
+            {
                 case QueriesOrder.Name:
                     queries = queries.Join<TitlePartRecord>().OrderBy(u => u.Title);
                     break;
@@ -82,8 +89,10 @@ namespace Orchard.Projections.Controllers {
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList();
 
-            var model = new AdminIndexViewModel {
-                Queries = results.Select(x => new QueryEntry {
+            var model = new AdminIndexViewModel
+            {
+                Queries = results.Select(x => new QueryEntry
+                {
                     Query = x.As<QueryPart>().Record,
                     QueryId = x.Id,
                     Name = x.As<QueryPart>().Name
@@ -105,7 +114,8 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult Index(FormCollection input)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
@@ -114,11 +124,13 @@ namespace Orchard.Projections.Controllers {
 
             var checkedItems = viewModel.Queries.Where(c => c.IsChecked);
 
-            switch (viewModel.Options.BulkAction) {
+            switch (viewModel.Options.BulkAction)
+            {
                 case QueriesBulkAction.None:
                     break;
                 case QueriesBulkAction.Delete:
-                    foreach (var checkedItem in checkedItems) {
+                    foreach (var checkedItem in checkedItems)
+                    {
                         _queryService.DeleteQuery(checkedItem.QueryId);
                     }
 
@@ -130,12 +142,14 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to edit queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
-            var viewModel = new AdminEditViewModel {
+            var viewModel = new AdminEditViewModel
+            {
                 Id = query.Id,
                 Name = query.Name
             };
@@ -144,21 +158,25 @@ namespace Orchard.Projections.Controllers {
             var filterGroupEntries = new List<FilterGroupEntry>();
             var allFilters = _projectionManager.DescribeFilters().SelectMany(x => x.Descriptors).ToList();
 
-            foreach (var group in query.FilterGroups) {
+            foreach (var group in query.FilterGroups)
+            {
                 var filterEntries = new List<FilterEntry>();
 
-                foreach (var filter in group.Filters) {
+                foreach (var filter in group.Filters)
+                {
                     var category = filter.Category;
                     var type = filter.Type;
 
                     var f = allFilters.FirstOrDefault(x => category == x.Category && type == x.Type);
-                    if (f != null) {
+                    if (f != null)
+                    {
                         filterEntries.Add(
-                            new FilterEntry {
+                            new FilterEntry
+                            {
                                 Category = f.Category,
                                 Type = f.Type,
                                 FilterRecordId = filter.Id,
-                                DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
+                                DisplayText = string.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
                             });
                     }
                 }
@@ -168,7 +186,8 @@ namespace Orchard.Projections.Controllers {
 
             viewModel.FilterGroups = filterGroupEntries;
 
-            if (viewModel.FilterGroups.Any(group => group.Filters.Count() == 0)) {
+            if (viewModel.FilterGroups.Any(group => group.Filters.Count() == 0))
+            {
                 _services.Notifier.Warning(
                     T("This Query has at least one empty filter group, which will cause all content items to be returned, unless the Projection using this Query limits the number of content items displayed."));
             }
@@ -179,18 +198,21 @@ namespace Orchard.Projections.Controllers {
             var sortCriterionEntries = new List<SortCriterionEntry>();
             var allSortCriteria = _projectionManager.DescribeSortCriteria().SelectMany(x => x.Descriptors).ToList();
 
-            foreach (var sortCriterion in query.SortCriteria.OrderBy(s => s.Position)) {
+            foreach (var sortCriterion in query.SortCriteria.OrderBy(s => s.Position))
+            {
                 var category = sortCriterion.Category;
                 var type = sortCriterion.Type;
 
                 var f = allSortCriteria.FirstOrDefault(x => category == x.Category && type == x.Type);
-                if (f != null) {
+                if (f != null)
+                {
                     sortCriterionEntries.Add(
-                        new SortCriterionEntry {
+                        new SortCriterionEntry
+                        {
                             Category = f.Category,
                             Type = f.Type,
                             SortCriterionRecordId = sortCriterion.Id,
-                            DisplayText = String.IsNullOrWhiteSpace(sortCriterion.Description) ? f.Display(new SortCriterionContext { State = FormParametersHelper.ToDynamic(sortCriterion.State) }).Text : sortCriterion.Description
+                            DisplayText = string.IsNullOrWhiteSpace(sortCriterion.Description) ? f.Display(new SortCriterionContext { State = FormParametersHelper.ToDynamic(sortCriterion.State) }).Text : sortCriterion.Description
                         });
                 }
             }
@@ -203,18 +225,21 @@ namespace Orchard.Projections.Controllers {
             var layoutEntries = new List<LayoutEntry>();
             var allLayouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
 
-            foreach (var layout in query.Layouts) {
+            foreach (var layout in query.Layouts)
+            {
                 var category = layout.Category;
                 var type = layout.Type;
 
                 var f = allLayouts.FirstOrDefault(x => category == x.Category && type == x.Type);
-                if (f != null) {
+                if (f != null)
+                {
                     layoutEntries.Add(
-                        new LayoutEntry {
+                        new LayoutEntry
+                        {
                             Category = f.Category,
                             Type = f.Type,
                             LayoutRecordId = layout.Id,
-                            DisplayText = String.IsNullOrWhiteSpace(layout.Description) ? f.Display(new LayoutContext { State = FormParametersHelper.ToDynamic(layout.State) }).Text : layout.Description
+                            DisplayText = string.IsNullOrWhiteSpace(layout.Description) ? f.Display(new LayoutContext { State = FormParametersHelper.ToDynamic(layout.State) }).Text : layout.Description
                         });
                 }
             }
@@ -227,13 +252,15 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
 
-            if (query == null) {
+            if (query == null)
+            {
                 return HttpNotFound();
             }
 
@@ -243,7 +270,8 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Preview(int id) {
+        public ActionResult Preview(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
@@ -256,11 +284,13 @@ namespace Orchard.Projections.Controllers {
             return View(list);
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        public void AddModelError(string key, LocalizedString errorMessage) {
+        public void AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

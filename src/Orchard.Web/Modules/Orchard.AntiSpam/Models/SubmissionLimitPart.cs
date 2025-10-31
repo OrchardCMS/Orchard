@@ -1,6 +1,8 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.AntiSpam.Models {
-    public class SubmissionLimitPart : ContentPart {
+namespace Orchard.AntiSpam.Models
+{
+    public class SubmissionLimitPart : ContentPart
+    {
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +6,10 @@ using System.Threading;
 using System.Web;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Environment {
-    public interface IRunningShellTable {
+namespace Orchard.Environment
+{
+    public interface IRunningShellTable
+    {
         void Add(ShellSettings settings);
         void Remove(ShellSettings settings);
         void Update(ShellSettings settings);
@@ -15,7 +17,8 @@ namespace Orchard.Environment {
         ShellSettings Match(string host, string appRelativeCurrentExecutionFilePath);
     }
 
-    public class RunningShellTable : IRunningShellTable {
+    public class RunningShellTable : IRunningShellTable
+    {
         private IEnumerable<ShellSettings> _shells = Enumerable.Empty<ShellSettings>();
         private IDictionary<string, IEnumerable<ShellSettings>> _shellsByHost;
         private readonly ConcurrentDictionary<string, ShellSettings> _shellsByHostAndPrefix = new ConcurrentDictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
@@ -23,54 +26,64 @@ namespace Orchard.Environment {
         private ShellSettings _fallback;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        public void Add(ShellSettings settings) {
+        public void Add(ShellSettings settings)
+        {
             _lock.EnterWriteLock();
-            try {
+            try
+            {
                 _shells = _shells
                     .Where(s => s.Name != settings.Name)
-                    .Concat(new[] {settings})
+                    .Concat(new[] { settings })
                     .ToArray();
 
                 Organize();
             }
-            finally {
+            finally
+            {
                 _lock.ExitWriteLock();
             }
         }
 
-        public void Remove(ShellSettings settings) {
+        public void Remove(ShellSettings settings)
+        {
             _lock.EnterWriteLock();
-            try {
+            try
+            {
                 _shells = _shells
                     .Where(s => s.Name != settings.Name)
                     .ToArray();
 
                 Organize();
             }
-            finally {
+            finally
+            {
                 _lock.ExitWriteLock();
             }
         }
 
-        public void Update(ShellSettings settings) {
+        public void Update(ShellSettings settings)
+        {
             _lock.EnterWriteLock();
-            try {
+            try
+            {
                 _shells = _shells
                     .Where(s => s.Name != settings.Name)
                     .ToArray();
 
                 _shells = _shells
-                    .Concat(new[] {settings})
+                    .Concat(new[] { settings })
                     .ToArray();
 
                 Organize();
             }
-            finally {
+            finally
+            {
                 _lock.ExitWriteLock();
             }
         }
 
-        private void Organize() {
+        private void Organize()
+        {
             var qualified =
                 _shells.Where(x => !string.IsNullOrEmpty(x.RequestUrlHost) || !string.IsNullOrEmpty(x.RequestUrlPrefix));
 
@@ -79,9 +92,9 @@ namespace Orchard.Environment {
                 .ToList();
 
             _shellsByHost = qualified
-                .SelectMany(s => s.RequestUrlHost == null || s.RequestUrlHost.IndexOf(',') == -1 ? new[] {s} : 
-                    s.RequestUrlHost.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
-                     .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
+                .SelectMany(s => s.RequestUrlHost == null || s.RequestUrlHost.IndexOf(',') == -1 ? new[] { s } :
+                    s.RequestUrlHost.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                     .Select(h => new ShellSettings(s) { RequestUrlHost = h }))
                 .GroupBy(s => s.RequestUrlHost ?? string.Empty)
                 .OrderByDescending(g => g.Key.Length)
                 .ToDictionary(
@@ -91,17 +104,20 @@ namespace Orchard.Environment {
                     x => x.OrderByDescending(ss => (ss.RequestUrlPrefix ?? "").Length).AsEnumerable(),
                     StringComparer.OrdinalIgnoreCase);
 
-            if (unqualified.Count() == 1) {
+            if (unqualified.Count() == 1)
+            {
                 // only one shell had no request url criteria
                 _fallback = unqualified.Single();
             }
-            else if (unqualified.Any()) {
+            else if (unqualified.Any())
+            {
                 // two or more shells had no request criteria. 
                 // this is technically a misconfiguration - so fallback to the default shell
                 // if it's one which will catch all requests
                 _fallback = unqualified.SingleOrDefault(x => x.Name == ShellSettings.DefaultName);
             }
-            else {
+            else
+            {
                 // no shells are unqualified - a request that does not match a shell's spec
                 // will not be mapped to routes coming from orchard
                 _fallback = null;
@@ -110,11 +126,14 @@ namespace Orchard.Environment {
             _shellsByHostAndPrefix.Clear();
         }
 
-        public ShellSettings Match(HttpContextBase httpContext) {
+        public ShellSettings Match(HttpContextBase httpContext)
+        {
             // use Host header to prevent proxy alteration of the orignal request
-            try {
+            try
+            {
                 var httpRequest = httpContext.Request;
-                if (httpRequest == null) {
+                if (httpRequest == null)
+                {
                     return null;
                 }
 
@@ -123,47 +142,57 @@ namespace Orchard.Environment {
 
                 return Match(host ?? string.Empty, appRelativeCurrentExecutionFilePath);
             }
-            catch(HttpException) {
+            catch (HttpException)
+            {
                 // can happen on cloud service for an unknown reason
                 return null;
             }
         }
 
-        public ShellSettings Match(string host, string appRelativePath) {
+        public ShellSettings Match(string host, string appRelativePath)
+        {
             _lock.EnterReadLock();
-            try {
-                if (_shellsByHost == null) {
+            try
+            {
+                if (_shellsByHost == null)
+                {
                     return null;
                 }
 
                 // optimized path when only one tenant (Default), configured with no custom host
-                if (!_shellsByHost.Any() && _fallback != null) {
+                if (!_shellsByHost.Any() && _fallback != null)
+                {
                     return _fallback;
                 }
 
                 // removing the port from the host
                 var hostLength = host.IndexOf(':');
-                if (hostLength != -1) {
+                if (hostLength != -1)
+                {
                     host = host.Substring(0, hostLength);
                 }
 
                 string hostAndPrefix = host + "/" + appRelativePath.Split('/')[1];
 
-                return _shellsByHostAndPrefix.GetOrAdd(hostAndPrefix, key => {
-                    
+                return _shellsByHostAndPrefix.GetOrAdd(hostAndPrefix, key =>
+                {
+
                     // filtering shells by host
                     IEnumerable<ShellSettings> shells;
 
-                    if (!_shellsByHost.TryGetValue(host, out shells)) {
-                        if (!_shellsByHost.TryGetValue("", out shells)) {
+                    if (!_shellsByHost.TryGetValue(host, out shells))
+                    {
+                        if (!_shellsByHost.TryGetValue("", out shells))
+                        {
 
                             // no specific match, then look for star mapping
                             var subHostKey = _shellsByHost.Keys.FirstOrDefault(x =>
                                 x.StartsWith("*.") && host.EndsWith(x.Substring(2))
                                 );
 
-                            if (subHostKey == null) {
-                                return _fallback; 
+                            if (subHostKey == null)
+                            {
+                                return _fallback;
                             }
 
                             shells = _shellsByHost[subHostKey];
@@ -171,23 +200,27 @@ namespace Orchard.Environment {
                     }
 
                     // looking for a request url prefix match
-                    var mostQualifiedMatch = shells.FirstOrDefault(settings => {
-                            if (settings.State == TenantState.Disabled) {
-                                return false;
-                            }
+                    var mostQualifiedMatch = shells.FirstOrDefault(settings =>
+                    {
+                        if (settings.State == TenantState.Disabled)
+                        {
+                            return false;
+                        }
 
-                            if (String.IsNullOrWhiteSpace(settings.RequestUrlPrefix)) {
-                                return true;
-                            }
+                        if (string.IsNullOrWhiteSpace(settings.RequestUrlPrefix))
+                        {
+                            return true;
+                        }
 
-                            return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
-                        });
-                    
+                        return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
+                    });
+
                     return mostQualifiedMatch ?? _fallback;
                 });
-                
+
             }
-            finally {
+            finally
+            {
                 _lock.ExitReadLock();
             }
         }

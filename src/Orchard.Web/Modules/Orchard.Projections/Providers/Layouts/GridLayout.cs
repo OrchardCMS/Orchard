@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -8,12 +8,15 @@ using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 
-namespace Orchard.Projections.Providers.Layouts {
-    public class GridLayout : ILayoutProvider {
+namespace Orchard.Projections.Providers.Layouts
+{
+    public class GridLayout : ILayoutProvider
+    {
         private readonly IContentManager _contentManager;
         protected dynamic Shape { get; set; }
 
-        public GridLayout(IShapeFactory shapeFactory, IContentManager contentManager) {
+        public GridLayout(IShapeFactory shapeFactory, IContentManager contentManager)
+        {
             _contentManager = contentManager;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
@@ -21,8 +24,9 @@ namespace Orchard.Projections.Providers.Layouts {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeLayoutContext describe) {
-            describe.For("Html", T("Html"),T("Html Layouts"))
+        public void Describe(DescribeLayoutContext describe)
+        {
+            describe.For("Html", T("Html"), T("Html Layouts"))
                 .Element("Grid", T("Grid"), T("Organizes content items in a grid."),
                     DisplayLayout,
                     RenderLayout,
@@ -30,7 +34,8 @@ namespace Orchard.Projections.Providers.Layouts {
                 );
         }
 
-        public LocalizedString DisplayLayout(LayoutContext context) {
+        public LocalizedString DisplayLayout(LayoutContext context)
+        {
             string columns = context.State.Columns;
             bool horizontal = Convert.ToString(context.State.Alignment) != "vertical";
 
@@ -39,13 +44,14 @@ namespace Orchard.Projections.Providers.Layouts {
                        : T("{0} lines grid", columns);
         }
 
-        public dynamic RenderLayout(LayoutContext context, IEnumerable<LayoutComponentResult> layoutComponentResults) {
+        public dynamic RenderLayout(LayoutContext context, IEnumerable<LayoutComponentResult> layoutComponentResults)
+        {
             int columns = Convert.ToInt32(context.State.Columns);
-            bool horizontal = Convert.ToString(context.State.Alignment) != "vertical"; 
-            
+            bool horizontal = Convert.ToString(context.State.Alignment) != "vertical";
+
             string gridTag = Convert.ToString(context.State.GridTag);
             string gridClass = Convert.ToString(context.State.GridClass);
-            if (!String.IsNullOrEmpty(gridClass)) gridClass += " ";
+            if (!string.IsNullOrEmpty(gridClass)) gridClass += " ";
             gridClass += "projector-layout projector-grid-layout";
             string gridId = Convert.ToString(context.State.GridId);
 

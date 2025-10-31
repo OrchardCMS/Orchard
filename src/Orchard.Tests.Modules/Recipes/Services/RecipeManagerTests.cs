@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,9 +21,11 @@ using Orchard.Services;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Recipes.Services {
+namespace Orchard.Tests.Modules.Recipes.Services
+{
     [TestFixture]
-    public class RecipeManagerTests : DatabaseEnabledTestsBase {
+    public class RecipeManagerTests : DatabaseEnabledTestsBase
+    {
         private IRecipeManager _recipeManager;
         private IRecipeHarvester _recipeHarvester;
         private IRecipeParser _recipeParser;
@@ -32,11 +34,13 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         private const string DataPrefix = "Orchard.Tests.Modules.Recipes.Services.FoldersData.";
         private string _tempFolderName;
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get { yield return typeof (RecipeStepResultRecord); }
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get { yield return typeof(RecipeStepResultRecord); }
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             _tempFolderName = Path.GetTempFileName();
             File.Delete(_tempFolderName);
             var assembly = GetType().Assembly;
@@ -96,7 +100,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             _recipeManager = _container.Resolve<IRecipeManager>();
@@ -104,26 +109,30 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             _recipeHarvester = _container.Resolve<IRecipeHarvester>();
         }
 
-        public override void Cleanup() {
+        public override void Cleanup()
+        {
             Directory.Delete(_tempFolderName, true);
             base.Cleanup();
         }
 
         [Test]
-        public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
+        public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension()
+        {
             var recipes = _recipeHarvester.HarvestRecipes("cantfindme");
 
             Assert.That(recipes.Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void HarvestRecipesShouldHarvestRecipeXmlFiles() {
+        public void HarvestRecipesShouldHarvestRecipeXmlFiles()
+        {
             var recipes = _recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
+        public void ParseRecipeLoadsRecipeMetaDataIntoModel()
+        {
             var recipes = _recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count(), Is.EqualTo(1));
 
@@ -138,7 +147,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         [Test]
-        public void ParseRecipeLoadsRecipeStepsIntoModel() {
+        public void ParseRecipeLoadsRecipeStepsIntoModel()
+        {
             var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
@@ -149,12 +159,14 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         [Test]
-        public void ParseRecipeThrowsOnInvalidXml() {
+        public void ParseRecipeThrowsOnInvalidXml()
+        {
             Assert.Throws(typeof(XmlException), () => _recipeParser.ParseRecipe("<reipe></recipe>"));
         }
 
         [Test]
-        public void ExecuteInvokesHandlersWithSteps() {
+        public void ExecuteInvokesHandlersWithSteps()
+        {
             var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
@@ -197,40 +209,51 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
     }
 
-    public class StubStepQueue : IRecipeStepQueue {
+    public class StubStepQueue : IRecipeStepQueue
+    {
         readonly Queue<RecipeStep> _queue = new Queue<RecipeStep>();
 
-        public void Enqueue(string executionId, RecipeStep step) {
+        public void Enqueue(string executionId, RecipeStep step)
+        {
             _queue.Enqueue(step);
         }
 
-        public RecipeStep Dequeue(string executionId) {
+        public RecipeStep Dequeue(string executionId)
+        {
             return _queue.Count == 0 ? null : _queue.Dequeue();
         }
     }
 
-    public class StubRecipeScheduler : IRecipeScheduler {
+    public class StubRecipeScheduler : IRecipeScheduler
+    {
         private readonly IRecipeStepExecutor _recipeStepExecutor;
 
-        public StubRecipeScheduler(IRecipeStepExecutor recipeStepExecutor) {
+        public StubRecipeScheduler(IRecipeStepExecutor recipeStepExecutor)
+        {
             _recipeStepExecutor = recipeStepExecutor;
         }
 
-        public void ScheduleWork(string executionId) {
+        public void ScheduleWork(string executionId)
+        {
             while (_recipeStepExecutor.ExecuteNextStep(executionId)) ;
         }
     }
 
-    public class CustomRecipeHandler : IRecipeHandler {
+    public class CustomRecipeHandler : IRecipeHandler
+    {
         public static string AttributeValue;
         public string[] _handles = { "Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings", "Recipes" };
 
-        public void ExecuteRecipeStep(RecipeContext recipeContext) {
-            if (_handles.Contains(recipeContext.RecipeStep.Name)) {
+        public void ExecuteRecipeStep(RecipeContext recipeContext)
+        {
+            if (_handles.Contains(recipeContext.RecipeStep.Name))
+            {
                 recipeContext.Executed = true;
             }
-            if (recipeContext.RecipeStep.Name == "Custom1") {
-                foreach (var attribute in recipeContext.RecipeStep.Step.Attributes().Where(attribute => attribute.Name == "attr1")) {
+            if (recipeContext.RecipeStep.Name == "Custom1")
+            {
+                foreach (var attribute in recipeContext.RecipeStep.Step.Attributes().Where(attribute => attribute.Name == "attr1"))
+                {
                     AttributeValue = attribute.Value;
                     recipeContext.Executed = true;
                 }

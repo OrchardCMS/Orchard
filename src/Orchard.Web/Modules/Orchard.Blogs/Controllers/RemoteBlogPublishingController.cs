@@ -9,18 +9,21 @@ using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 
-namespace Orchard.Blogs.Controllers {
+namespace Orchard.Blogs.Controllers
+{
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
-    public class RemoteBlogPublishingController : Controller {
+    public class RemoteBlogPublishingController : Controller
+    {
         private readonly IBlogService _blogService;
         private readonly IRsdConstraint _rsdConstraint;
         private readonly RouteCollection _routeCollection;
 
         public RemoteBlogPublishingController(
-            IOrchardServices services, 
-            IBlogService blogService, 
+            IOrchardServices services,
+            IBlogService blogService,
             IRsdConstraint rsdConstraint,
-            RouteCollection routeCollection) {
+            RouteCollection routeCollection)
+        {
             _blogService = blogService;
             _rsdConstraint = rsdConstraint;
             _routeCollection = routeCollection;
@@ -29,11 +32,12 @@ namespace Orchard.Blogs.Controllers {
 
         protected ILogger Logger { get; set; }
 
-        public ActionResult Rsd(string path) {
+        public ActionResult Rsd(string path)
+        {
             Logger.Debug("RSD requested");
 
             var blogPath = _rsdConstraint.FindPath(path);
-            
+
             if (blogPath == null)
                 return HttpNotFound();
 

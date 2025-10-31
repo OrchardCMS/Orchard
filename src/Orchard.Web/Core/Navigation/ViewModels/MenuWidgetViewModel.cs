@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 
-namespace Orchard.Core.Navigation.ViewModels {
-    public class MenuWidgetViewModel {
+namespace Orchard.Core.Navigation.ViewModels
+{
+    public class MenuWidgetViewModel
+    {
         public IEnumerable<ContentItem> Menus { get; set; }
         public int CurrentMenuId { get; set; }
 

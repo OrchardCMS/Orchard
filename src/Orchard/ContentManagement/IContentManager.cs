@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
-namespace Orchard.ContentManagement {
+namespace Orchard.ContentManagement
+{
     /// <summary>
     /// Content management functionality to deal with Orchard content items and their parts
     /// </summary>
-    public interface IContentManager : IDependency {
+    public interface IContentManager : IDependency
+    {
         IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions();
 
         /// <summary>
@@ -19,7 +20,7 @@ namespace Orchard.ContentManagement {
         /// </remarks>
         /// <param name="contentType">The name of the content type</param>
         ContentItem New(string contentType);
-        
+
 
         /// <summary>
         /// Creates (persists) a new content item
@@ -147,37 +148,39 @@ namespace Orchard.ContentManagement {
         dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
     }
 
-    public interface IContentDisplay : IDependency {
+    public interface IContentDisplay : IDependency
+    {
         dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
         dynamic BuildEditor(IContent content, string groupId = "");
         dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
     }
 
-    public class VersionOptions {
+    public class VersionOptions
+    {
         /// <summary>
         /// Gets the latest version.
         /// </summary>
-        public static VersionOptions Latest { get { return new VersionOptions { IsLatest = true }; } }
+        public static VersionOptions Latest => new VersionOptions { IsLatest = true };
 
         /// <summary>
         /// Gets the latest published version.
         /// </summary>
-        public static VersionOptions Published { get { return new VersionOptions { IsPublished = true }; } }
+        public static VersionOptions Published => new VersionOptions { IsPublished = true };
 
         /// <summary>
         /// Gets the latest draft version.
         /// </summary>
-        public static VersionOptions Draft { get { return new VersionOptions { IsDraft = true }; } }
+        public static VersionOptions Draft => new VersionOptions { IsDraft = true };
 
         /// <summary>
         /// Gets the latest version and creates a new version draft based on it.
         /// </summary>
-        public static VersionOptions DraftRequired { get { return new VersionOptions { IsDraft = true, IsDraftRequired = true }; } }
+        public static VersionOptions DraftRequired => new VersionOptions { IsDraft = true, IsDraftRequired = true };
 
         /// <summary>
         /// Gets all versions.
         /// </summary>
-        public static VersionOptions AllVersions { get { return new VersionOptions { IsAllVersions = true }; } }
+        public static VersionOptions AllVersions => new VersionOptions { IsAllVersions = true };
 
         /// <summary>
         /// Gets a specific version based on its number.
@@ -192,7 +195,7 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Creates a new version based on the specified version number.
         /// </summary>
-        public static VersionOptions Restore(int version, bool publish = false) { return new VersionOptions { VersionNumber = version, IsPublished = publish}; }
+        public static VersionOptions Restore(int version, bool publish = false) { return new VersionOptions { VersionNumber = version, IsPublished = publish }; }
 
         public bool IsLatest { get; private set; }
         public bool IsPublished { get; private set; }

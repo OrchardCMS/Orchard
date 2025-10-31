@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using Owin;
 
-namespace Orchard.Owin {
+namespace Orchard.Owin
+{
     /// <summary>
     /// An Owin middleware registration that can make changes to the Owin pipeline, like registering middlewares to be injected into the Orchard 
     /// Owin pipeline.
     /// </summary>
-    public class OwinMiddlewareRegistration {
+    public class OwinMiddlewareRegistration
+    {
         /// <summary>
         /// Gets or sets the delegate that you can use to make changes to the Owin pipeline, like registering middlewares to be injected into
         /// the Orchard Owin pipeline.

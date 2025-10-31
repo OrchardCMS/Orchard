@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
@@ -7,52 +7,65 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
-        protected virtual string Prefix { get { return ""; } }
-        protected virtual string Zone { get { return "Content"; } }
+namespace Orchard.ContentManagement.Drivers
+{
+    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new()
+    {
+        protected virtual string Prefix => "";
+        protected virtual string Zone => "Content";
 
-        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context)
+        {
             Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata), context.Logger);
         }
 
-        DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
-            return Process(context.ContentItem, (part, field) => {
+        DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context)
+        {
+            return Process(context.ContentItem, (part, field) =>
+            {
                 DriverResult result = Display(part, field, context.DisplayType, context.New);
-                
-                if (result != null) {
+
+                if (result != null)
+                {
                     result.ContentPart = part;
                     result.ContentField = field;
                 }
-                
+
                 return result;
             }, context.Logger);
         }
 
-        DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
-            return Process(context.ContentItem, (part, field) => {
-                DriverResult result =  Editor(part, field, context.New);
-                
-                if (result != null) {
+        DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context)
+        {
+            return Process(context.ContentItem, (part, field) =>
+            {
+                DriverResult result = Editor(part, field, context.New);
+
+                if (result != null)
+                {
                     result.ContentPart = part;
                     result.ContentField = field;
                 }
-                
+
                 return result;
             }, context.Logger);
         }
 
-        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
-            return Process(context.ContentItem, (part, field) => {
+        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context)
+        {
+            return Process(context.ContentItem, (part, field) =>
+            {
                 // Checking if the editor needs to be updated (e.g. if any of the shapes were not hidden).
                 DriverResult editor = Editor(part, field, context.New);
                 IEnumerable<ContentShapeResult> contentShapeResults = editor.GetShapeResults();
-                
+
                 if (contentShapeResults.Any(contentShapeResult =>
-                    contentShapeResult == null || contentShapeResult.WasDisplayed(context))) {
+                    contentShapeResult == null || contentShapeResult.WasDisplayed(context)))
+                {
                     DriverResult result = Editor(part, field, context.Updater, context.New);
 
-                    if (result != null) {
+                    if (result != null)
+                    {
                         result.ContentPart = part;
                         result.ContentField = field;
                     }
@@ -64,75 +77,91 @@ namespace Orchard.ContentManagement.Drivers {
             }, context.Logger);
         }
 
-        void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
+        void IContentFieldDriver.Importing(ImportContentContext context)
+        {
+            Process(context.ContentItem, (part, field) =>
+            {
                 context.Prefix = part.PartDefinition.Name;
                 Importing(part, field, context);
-                }, context.Logger);
+            }, context.Logger);
         }
 
-        void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
+        void IContentFieldDriver.Imported(ImportContentContext context)
+        {
+            Process(context.ContentItem, (part, field) =>
+            {
                 context.Prefix = part.PartDefinition.Name;
                 Imported(part, field, context);
-                }, context.Logger);
+            }, context.Logger);
         }
 
-        void IContentFieldDriver.ImportCompleted(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
+        void IContentFieldDriver.ImportCompleted(ImportContentContext context)
+        {
+            Process(context.ContentItem, (part, field) =>
+            {
                 context.Prefix = part.PartDefinition.Name;
                 ImportCompleted(part, field, context);
-                }, context.Logger);
+            }, context.Logger);
         }
 
-        void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
+        void IContentFieldDriver.Exporting(ExportContentContext context)
+        {
+            Process(context.ContentItem, (part, field) =>
+            {
                 context.Prefix = part.PartDefinition.Name;
                 Exporting(part, field, context);
-                }, context.Logger);
+            }, context.Logger);
         }
 
-        void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
+        void IContentFieldDriver.Exported(ExportContentContext context)
+        {
+            Process(context.ContentItem, (part, field) =>
+            {
                 context.Prefix = part.PartDefinition.Name;
                 Exported(part, field, context);
-                }, context.Logger);
+            }, context.Logger);
         }
 
-        void IContentFieldDriver.Cloning(CloneContentContext context) {
+        void IContentFieldDriver.Cloning(CloneContentContext context)
+        {
             ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloning(part, originalField, cloneField, context), context);
         }
 
-        void IContentFieldDriver.Cloned(CloneContentContext context) {
+        void IContentFieldDriver.Cloned(CloneContentContext context)
+        {
             ProcessClone(context.ContentItem, context.CloneContentItem, (part, originalField, cloneField) => Cloned(part, originalField, cloneField, context), context);
         }
 
-        void IContentFieldDriver.Describe(DescribeMembersContext context) {
+        void IContentFieldDriver.Describe(DescribeMembersContext context)
+        {
             Describe(context);
         }
 
-        void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
+        void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger)
+        {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
         }
 
-        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, CloneContentContext context) {
+        void ProcessClone(ContentItem originalItem, ContentItem cloneItem, Action<ContentPart, TField, TField> effort, CloneContentContext context)
+        {
             var occurences = originalItem
                 .Parts
                 .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
                 .Join(cloneItem
                     .Parts
-                    .SelectMany(part => 
+                    .SelectMany(part =>
                         part
                         .Fields
                         .OfType<TField>()
-                        .Where(fi => 
-                            string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name)), 
-                    original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField } );
+                        .Where(fi =>
+                            string.IsNullOrWhiteSpace(context.FieldName) || context.FieldName == fi.Name)),
+                    original => original.field.Name, cloneField => cloneField.Name, (original, cloneField) => new { original, cloneField });
             occurences.Invoke(pf => effort(pf.original.part, pf.original.field, pf.cloneField), context.Logger);
         }
 
-        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
+        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger)
+        {
             var results = item.Parts
                 .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
                 .Invoke(pf => effort(pf.part, pf.field), logger);
@@ -140,7 +169,8 @@ namespace Orchard.ContentManagement.Drivers {
             return Combined(results.ToArray());
         }
 
-        public IEnumerable<ContentFieldInfo> GetFieldInfo() {
+        public IEnumerable<ContentFieldInfo> GetFieldInfo()
+        {
             var contentFieldInfo = new[] {
                 new ContentFieldInfo {
                     FieldTypeName = typeof (TField).Name,
@@ -159,7 +189,7 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
-        
+
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void ImportCompleted(ContentPart part, TField field, ImportContentContext context) { }
@@ -170,110 +200,130 @@ namespace Orchard.ContentManagement.Drivers {
 
         protected virtual void Describe(DescribeMembersContext context) { }
 
-        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
         }
 
-        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, differentiator, ctx => factory());
         }
 
-        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, null, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic, dynamic> factory) {
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic, dynamic> factory)
+        {
             return ContentShapeImplementation(shapeType, differentiator, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            var result = new ContentShapeResult(shapeType, Prefix, ctx => {
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder)
+        {
+            var result = new ContentShapeResult(shapeType, Prefix, ctx =>
+            {
                 var shape = shapeBuilder(ctx);
 
-                if (shape == null) {
+                if (shape == null)
+                {
                     return null;
                 }
 
                 return AddAlternates(shape, ctx, differentiator);
             });
 
-            if (result == null) {
+            if (result == null)
+            {
                 return null;
             }
 
             return result.Differentiator(differentiator);
         }
 
-        private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator) {
+        private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator)
+        {
             // automatically add shape alternates for shapes added by fields
             // for fields on dynamic parts the part name is the same as the content type name
 
             ShapeMetadata metadata = shape.Metadata;
 
             // if no ContentItem property has been set, assign it
-            if (shape.ContentItem == null) {
+            if (shape.ContentItem == null)
+            {
                 shape.ContentItem = ctx.ContentItem;
             }
 
             var shapeType = metadata.Type;
-            var fieldName = differentiator ?? String.Empty;
+            var fieldName = differentiator ?? string.Empty;
             var partName = ctx.ContentPart.PartDefinition.Name;
             string contentType = shape.ContentItem.ContentType;
 
             // whether the content type has been created dynamically or not
-            var dynamicType = String.Equals(partName, contentType, StringComparison.Ordinal);
+            var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
-            if ( !String.IsNullOrEmpty(fieldName) )
+            if (!string.IsNullOrEmpty(fieldName))
                 metadata.Alternates.Add(shapeType + "__" + EncodeAlternateElement(fieldName));
 
             // [ShapeType__PartName] e.g. Fields/Common.Text-TeaserPart
-            if ( !String.IsNullOrEmpty(partName) ) {
+            if (!string.IsNullOrEmpty(partName))
+            {
                 metadata.Alternates.Add(shapeType + "__" + EncodeAlternateElement(partName));
             }
 
             // [ShapeType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart
-            if ( !String.IsNullOrEmpty(partName) && !String.IsNullOrEmpty(contentType) && !dynamicType ) {
+            if (!string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(contentType) && !dynamicType)
+            {
                 metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + partName));
             }
 
             // [ShapeType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser
-            if ( !String.IsNullOrEmpty(partName) && !String.IsNullOrEmpty(fieldName) ) {
+            if (!string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName))
+            {
                 metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + partName + "__" + fieldName));
             }
 
             // [ShapeType]__[ContentType]__[FieldName] e.g. Fields/Common.Text-Blog-Teaser
-            if ( !String.IsNullOrEmpty(contentType) && !String.IsNullOrEmpty(fieldName) ) {
+            if (!string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(fieldName))
+            {
                 metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + fieldName));
             }
 
             // [ShapeType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser
-            if ( !String.IsNullOrEmpty(contentType) && !String.IsNullOrEmpty(partName) && !String.IsNullOrEmpty(fieldName) && !dynamicType ) {
+            if (!string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType)
+            {
                 metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + partName + "__" + fieldName));
             }
-            
+
             return shape;
         }
 
-        private static object CreateShape(BuildShapeContext context, string shapeType) {
+        private static object CreateShape(BuildShapeContext context, string shapeType)
+        {
             IShapeFactory shapeFactory = context.New;
             return shapeFactory.Create(shapeType);
         }
 
         [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model) {
+        public ContentTemplateResult ContentFieldTemplate(object model)
+        {
             return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }
         [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model, string template) {
+        public ContentTemplateResult ContentFieldTemplate(object model, string template)
+        {
             return new ContentTemplateResult(model, template, Prefix).Location(Zone);
         }
         [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model, string template, string prefix) {
+        public ContentTemplateResult ContentFieldTemplate(object model, string template, string prefix)
+        {
             return new ContentTemplateResult(model, template, prefix).Location(Zone);
         }
 
-        public CombinedResult Combined(params DriverResult[] results) {
+        public CombinedResult Combined(params DriverResult[] results)
+        {
             return new CombinedResult(results);
         }
 
@@ -282,7 +332,8 @@ namespace Orchard.ContentManagement.Drivers {
         /// </summary>
         /// <param name="alternateElement"></param>
         /// <returns></returns>
-        private static string EncodeAlternateElement(string alternateElement) {
+        private static string EncodeAlternateElement(string alternateElement)
+        {
             return alternateElement.Replace("-", "__").Replace(".", "_");
         }
     }

@@ -1,5 +1,7 @@
-﻿namespace Orchard.Search.ViewModels {
-    public class SearchViewModel {
+namespace Orchard.Search.ViewModels
+{
+    public class SearchViewModel
+    {
         public string Query { get; set; }
         public int TotalItemCount { get; set; }
         public int StartPosition { get; set; }

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Rules.Models {
-    public class ActionContext {
-        public ActionContext() {
+namespace Orchard.Rules.Models
+{
+    public class ActionContext
+    {
+        public ActionContext()
+        {
             Tokens = new Dictionary<string, object>();
             Properties = new Dictionary<string, string>();
         }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Containers.ViewModels;
 
-namespace Orchard.Lists.ViewModels {
-    public class ListContentsViewModel  {
-        public ListContentsViewModel() {
+namespace Orchard.Lists.ViewModels
+{
+    public class ListContentsViewModel
+    {
+        public ListContentsViewModel()
+        {
             Options = new ContentOptions();
         }
 
@@ -16,14 +19,17 @@ namespace Orchard.Lists.ViewModels {
         public IList<Entry> Entries { get; set; }
         public ContentOptions Options { get; set; }
 
-        public class Entry {
+        public class Entry
+        {
             public ContentItem ContentItem { get; set; }
             public ContentItemMetadata ContentItemMetadata { get; set; }
         }
     }
 
-    public class ContentOptions {
-        public ContentOptions() {
+    public class ContentOptions
+    {
+        public ContentOptions()
+        {
             OrderBy = SortBy.Modified;
             BulkAction = ContentsBulkAction.None;
         }
@@ -31,8 +37,9 @@ namespace Orchard.Lists.ViewModels {
         public SortBy OrderBy { get; set; }
         public ContentsBulkAction BulkAction { get; set; }
     }
-    
-    public enum ContentsBulkAction {
+
+    public enum ContentsBulkAction
+    {
         None,
         PublishNow,
         Unpublish,
@@ -41,7 +48,8 @@ namespace Orchard.Lists.ViewModels {
         MoveToList
     }
 
-    public enum ListOperation {
+    public enum ListOperation
+    {
         None,
         Shuffle,
         Reverse,

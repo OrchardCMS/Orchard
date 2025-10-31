@@ -1,18 +1,25 @@
-﻿using Orchard.FileSystems.Media;
+using Orchard.FileSystems.Media;
 
-namespace Orchard.MediaProcessing.Media {
-    public static class StorageProviderExtensions {
-        public static void TryDeleteFolder(this IStorageProvider storageProvider, string path) {
-            try {
-                if (storageProvider.FolderExists(path)) {
+namespace Orchard.MediaProcessing.Media
+{
+    public static class StorageProviderExtensions
+    {
+        public static void TryDeleteFolder(this IStorageProvider storageProvider, string path)
+        {
+            try
+            {
+                if (storageProvider.FolderExists(path))
+                {
                     storageProvider.DeleteFolder(path);
                 }
             }
-            catch {}
+            catch { }
         }
 
-        public static IStorageFile OpenOrCreate(this IStorageProvider storageProvider, string path) {
-            if (!storageProvider.FileExists(path)) {
+        public static IStorageFile OpenOrCreate(this IStorageProvider storageProvider, string path)
+        {
+            if (!storageProvider.FileExists(path))
+            {
                 return storageProvider.CreateFile(path);
             }
 

@@ -1,12 +1,15 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.Scripting.Compiler;
 
-namespace Orchard.Tests.Modules.Scripting {
+namespace Orchard.Tests.Modules.Scripting
+{
     [TestFixture]
-    public class TokenizerTests {
+    public class TokenizerTests
+    {
 
         [Test]
-        public void LexerShouldProcessSingleQuotedStringLiteral() {
+        public void LexerShouldProcessSingleQuotedStringLiteral()
+        {
             TestStringLiteral(@"'toto'", @"toto", TokenKind.SingleQuotedStringLiteral);
             TestStringLiteral(@"'to\'to'", @"to'to", TokenKind.SingleQuotedStringLiteral);
             TestStringLiteral(@"'to\\to'", @"to\to", TokenKind.SingleQuotedStringLiteral);
@@ -14,14 +17,16 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void LexerShouldProcessStringLiteral() {
+        public void LexerShouldProcessStringLiteral()
+        {
             TestStringLiteral(@"""toto""", @"toto", TokenKind.StringLiteral);
             TestStringLiteral(@"""to\'to""", @"to'to", TokenKind.StringLiteral);
             TestStringLiteral(@"""to\\to""", @"to\to", TokenKind.StringLiteral);
             TestStringLiteral(@"""to\ato""", @"toato", TokenKind.StringLiteral);
         }
 
-        private void TestStringLiteral(string value, string expected, TokenKind expectedTokenKind) {
+        private void TestStringLiteral(string value, string expected, TokenKind expectedTokenKind)
+        {
             var lexer = new Tokenizer(value);
             var token1 = lexer.NextToken();
             Assert.That(token1.Kind, Is.EqualTo(expectedTokenKind));
@@ -32,7 +37,8 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void LexerShouldProcessReservedWords() {
+        public void LexerShouldProcessReservedWords()
+        {
             TestReservedWord("true", true, TokenKind.True);
             TestReservedWord("false", false, TokenKind.False);
             TestReservedWord("nil", null, TokenKind.NullLiteral);
@@ -42,7 +48,8 @@ namespace Orchard.Tests.Modules.Scripting {
             TestReservedWord("or", null, TokenKind.Or);
         }
 
-        private void TestReservedWord(string expression, object value, TokenKind expectedTokenKind) {
+        private void TestReservedWord(string expression, object value, TokenKind expectedTokenKind)
+        {
             var lexer = new Tokenizer(expression);
             var token1 = lexer.NextToken();
             Assert.That(token1.Kind, Is.EqualTo(expectedTokenKind));
@@ -53,26 +60,31 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
-        public void LexerShouldProcesSequenceOfTokens() {
+        public void LexerShouldProcesSequenceOfTokens()
+        {
             CheckTokenSequence("true false", TokenKind.True, TokenKind.False);
             CheckTokenSequence("true toto false", TokenKind.True, TokenKind.Identifier, TokenKind.False);
         }
 
         [Test]
-        public void LexerShouldProcesSequenceOfTokens2() {
+        public void LexerShouldProcesSequenceOfTokens2()
+        {
             CheckTokenSequence("1+2*3", TokenKind.Integer, TokenKind.Plus, TokenKind.Integer, TokenKind.Mul, TokenKind.Integer);
         }
 
         [Test]
-        public void LexerShouldProcesSequenceOfTokens3() {
-            CheckTokenSequence("= == < <= > >= ! !=", TokenKind.Equal, TokenKind.EqualEqual, 
-                TokenKind.LessThan, TokenKind.LessThanEqual, 
+        public void LexerShouldProcesSequenceOfTokens3()
+        {
+            CheckTokenSequence("= == < <= > >= ! !=", TokenKind.Equal, TokenKind.EqualEqual,
+                TokenKind.LessThan, TokenKind.LessThanEqual,
                 TokenKind.GreaterThan, TokenKind.GreaterThanEqual, TokenKind.NotSign, TokenKind.NotEqual);
         }
 
-        private void CheckTokenSequence(string expression, params TokenKind[] tokenKinds) {
+        private void CheckTokenSequence(string expression, params TokenKind[] tokenKinds)
+        {
             var lexer = new Tokenizer(expression);
-            foreach (var kind in tokenKinds) {
+            foreach (var kind in tokenKinds)
+            {
                 var token = lexer.NextToken();
                 Assert.That(token.Kind, Is.EqualTo(kind));
             }

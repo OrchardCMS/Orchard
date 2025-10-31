@@ -1,6 +1,8 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.Projections.Models {
-    public class ProjectionPart : ContentPart<ProjectionPartRecord> {
+namespace Orchard.Projections.Models
+{
+    public class ProjectionPart : ContentPart<ProjectionPartRecord>
+    {
     }
 }

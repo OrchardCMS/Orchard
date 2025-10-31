@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Indexing.Services;
@@ -9,15 +9,18 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 using static Orchard.Indexing.Helpers.IndexingHelpers;
 
-namespace Orchard.Indexing.Controllers {
-    public class AdminController : Controller {
+namespace Orchard.Indexing.Controllers
+{
+    public class AdminController : Controller
+    {
         private readonly IIndexingService _indexingService;
         private readonly IIndexManager _indexManager;
 
         public AdminController(
             IIndexingService indexingService,
             IOrchardServices services,
-            IIndexManager indexManager) {
+            IIndexManager indexManager)
+        {
             _indexingService = indexingService;
             _indexManager = indexManager;
             Services = services;
@@ -29,20 +32,27 @@ namespace Orchard.Indexing.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
-            var viewModel = new IndexViewModel {
+        public ActionResult Index()
+        {
+            var viewModel = new IndexViewModel
+            {
                 IndexEntries = Enumerable.Empty<IndexEntry>(),
                 IndexProvider = _indexManager.GetSearchIndexProvider()
             };
 
-            if (_indexManager.HasIndexProvider()) {
-                viewModel.IndexEntries = _indexManager.GetSearchIndexProvider().List().Select(x => {
-                    try {
+            if (_indexManager.HasIndexProvider())
+            {
+                viewModel.IndexEntries = _indexManager.GetSearchIndexProvider().List().Select(x =>
+                {
+                    try
+                    {
                         return _indexingService.GetIndexEntry(x);
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         Logger.Error(e, "Index couldn't be read: " + x);
-                        return new IndexEntry {
+                        return new IndexEntry
+                        {
                             IndexName = x,
                             IndexingStatus = IndexingStatus.Unavailable
                         };
@@ -53,7 +63,8 @@ namespace Orchard.Indexing.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Create() {
+        public ActionResult Create()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
@@ -61,26 +72,31 @@ namespace Orchard.Indexing.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST(string id) {
+        public ActionResult CreatePOST(string id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
             var provider = _indexManager.GetSearchIndexProvider();
-            if (!IsValidIndexName(id)) {
+            if (!IsValidIndexName(id))
+            {
                 Services.Notifier.Error(T("Invalid index name."));
                 return View("Create", id);
             }
 
-            if (provider.Exists(id)) {
+            if (provider.Exists(id))
+            {
                 Services.Notifier.Error(T("An index with the same name already exists: {0}", id));
                 return View("Create", id);
             }
 
-            try {
+            try
+            {
                 provider.CreateIndex(id);
                 Services.Notifier.Success(T("Index named {0} created successfully", id));
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Services.Notifier.Error(T("An error occurred while creating the index: {0}", id));
                 Logger.Error("An error occurred while creating the index " + id, e);
                 return View("Create", id);
@@ -90,14 +106,17 @@ namespace Orchard.Indexing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Update(string id) {
+        public ActionResult Update(string id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            if (IsValidIndexName(id)) {
+            if (IsValidIndexName(id))
+            {
                 _indexingService.UpdateIndex(id);
             }
-            else {
+            else
+            {
                 Services.Notifier.Error(T("Invalid index name."));
             }
 
@@ -105,14 +124,17 @@ namespace Orchard.Indexing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Rebuild(string id) {
+        public ActionResult Rebuild(string id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            if (IsValidIndexName(id)) {
+            if (IsValidIndexName(id))
+            {
                 _indexingService.RebuildIndex(id);
             }
-            else {
+            else
+            {
                 Services.Notifier.Error(T("Invalid index name."));
             }
 
@@ -120,14 +142,17 @@ namespace Orchard.Indexing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(string id) {
+        public ActionResult Delete(string id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            if (IsValidIndexName(id)) {
+            if (IsValidIndexName(id))
+            {
                 _indexingService.DeleteIndex(id);
             }
-            else {
+            else
+            {
                 Services.Notifier.Error(T("Invalid index name."));
             }
 

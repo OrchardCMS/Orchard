@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Specs.Hosting {
+namespace Orchard.Specs.Hosting
+{
     [Serializable]
-    public class RequestDetails {
-        public RequestDetails() {
+    public class RequestDetails
+    {
+        public RequestDetails()
+        {
             RequestHeaders = new Dictionary<string, string>();
             ResponseHeaders = new Dictionary<string, string>();
         }

@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -6,9 +6,12 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.Models;
 
-namespace Orchard.MediaLibrary.Drivers {
-    public class OEmbedPartDriver : ContentPartDriver<OEmbedPart> {
-        protected override DriverResult Display(OEmbedPart part, string displayType, dynamic shapeHelper) {
+namespace Orchard.MediaLibrary.Drivers
+{
+    public class OEmbedPartDriver : ContentPartDriver<OEmbedPart>
+    {
+        protected override DriverResult Display(OEmbedPart part, string displayType, dynamic shapeHelper)
+        {
             return Combined(
                 ContentShape("Parts_OEmbed_Metadata", () => shapeHelper.Parts_OEmbed_Metadata()),
                 ContentShape("Parts_OEmbed_Summary", () => shapeHelper.Parts_OEmbed_Summary()),
@@ -17,11 +20,13 @@ namespace Orchard.MediaLibrary.Drivers {
             );
         }
 
-        protected override void Exporting(OEmbedPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(OEmbedPart part, ContentManagement.Handlers.ExportContentContext context)
+        {
             var partName = XmlConvert.EncodeName(typeof(OEmbedPart).Name);
 
             var infosetPart = part.As<InfosetPart>();
-            if (infosetPart != null) {
+            if (infosetPart != null)
+            {
                 // OEmbedPart is not versionable thats why using Infoset.Element instead of VersionInfoset.Element
                 var element = infosetPart.Infoset.Element;
 
@@ -33,7 +38,8 @@ namespace Orchard.MediaLibrary.Drivers {
             }
         }
 
-        protected override void Importing(OEmbedPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(OEmbedPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             var partName = XmlConvert.EncodeName(typeof(OEmbedPart).Name);
 
             // Don't do anything if the tag is not specified.
@@ -42,7 +48,8 @@ namespace Orchard.MediaLibrary.Drivers {
                 return;
 
             var infosetPart = part.As<InfosetPart>();
-            if (infosetPart != null) {
+            if (infosetPart != null)
+            {
                 // OEmbedPart is not versionable thats why using Infoset.Element instead of VersionInfoset.Element
                 var element = infosetPart.Infoset.Element;
 
@@ -56,12 +63,14 @@ namespace Orchard.MediaLibrary.Drivers {
             }
         }
 
-        protected override void Cloning(OEmbedPart originalPart, OEmbedPart clonePart, CloneContentContext context) {
+        protected override void Cloning(OEmbedPart originalPart, OEmbedPart clonePart, CloneContentContext context)
+        {
             var partName = XmlConvert.EncodeName(typeof(OEmbedPart).Name);
 
             var infosetOriginalPart = originalPart.As<InfosetPart>();
             var infosetClonePart = clonePart.As<InfosetPart>();
-            if (infosetOriginalPart != null && infosetClonePart != null) {
+            if (infosetOriginalPart != null && infosetClonePart != null)
+            {
                 // OEmbedPart is not versionable thats why using Infoset.Element instead of VersionInfoset.Element
                 var originalElement = infosetOriginalPart.Infoset.Element;
                 var partOriginalElement = originalElement.Element(partName);

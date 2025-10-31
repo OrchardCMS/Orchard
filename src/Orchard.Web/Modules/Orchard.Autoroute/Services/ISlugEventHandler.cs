@@ -1,14 +1,18 @@
-﻿using Orchard.Events;
 using Orchard.ContentManagement;
+using Orchard.Events;
 
-namespace Orchard.Autoroute.Services {
-    public interface ISlugEventHandler : IEventHandler {
+namespace Orchard.Autoroute.Services
+{
+    public interface ISlugEventHandler : IEventHandler
+    {
         void FillingSlugFromTitle(FillSlugContext context);
         void FilledSlugFromTitle(FillSlugContext context);
     }
 
-    public class FillSlugContext {
-        public FillSlugContext(IContent content, string title) {
+    public class FillSlugContext
+    {
+        public FillSlugContext(IContent content, string title)
+        {
             Content = content;
             Title = title;
         }

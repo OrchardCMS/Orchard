@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Rules.Models;
 using Orchard.Rules.Services;
 
-namespace Orchard.Rules.Providers {
-    public class ContentEvents : IEventProvider {
-        public ContentEvents() {
+namespace Orchard.Rules.Providers
+{
+    public class ContentEvents : IEventProvider
+    {
+        public ContentEvents()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeEventContext describe) {
+        public void Describe(DescribeEventContext describe)
+        {
             Func<dynamic, bool> contentHasPart = ContentHasPart;
 
             describe.For("Content", T("Content Items"), T("Content Items"))
@@ -23,26 +27,31 @@ namespace Orchard.Rules.Providers {
                 .Element("Removed", T("Content Removed"), T("Content is actually removed."), contentHasPart, context => T("When content with types ({0}) is removed.", FormatPartsList(context)), "SelectContentTypes");
         }
 
-        private string FormatPartsList(EventContext context) {
+        private string FormatPartsList(EventContext context)
+        {
             var contenttypes = context.Properties.ContainsKey("ContentTypes") ? context.Properties["ContentTypes"] : context.Properties["contenttypes"];
 
-            if (String.IsNullOrEmpty(contenttypes)) {
+            if (string.IsNullOrEmpty(contenttypes))
+            {
                 return T("Any").Text;
             }
 
             return contenttypes;
         }
 
-        private static bool ContentHasPart(dynamic context) {
+        private static bool ContentHasPart(dynamic context)
+        {
             string contenttypes = context.Properties["ContentTypes"];
             var content = context.Tokens["Content"] as IContent;
 
             // "" means 'any'
-            if (String.IsNullOrEmpty(contenttypes)) {
+            if (string.IsNullOrEmpty(contenttypes))
+            {
                 return true;
             }
 
-            if (content == null) {
+            if (content == null)
+            {
                 return false;
             }
 

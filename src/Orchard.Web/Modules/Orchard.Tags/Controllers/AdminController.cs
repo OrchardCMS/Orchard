@@ -1,33 +1,37 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Tags.Drivers;
 using Orchard.Tags.Models;
-using Orchard.Tags.ViewModels;
 using Orchard.Tags.Services;
+using Orchard.Tags.ViewModels;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Tags.Controllers {
+namespace Orchard.Tags.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller {
+    public class AdminController : Controller
+    {
         private readonly ITagService _tagService;
 
-        public AdminController(IOrchardServices services, ITagService tagService) {
+        public AdminController(IOrchardServices services, ITagService tagService)
+        {
             Services = services;
             _tagService = tagService;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
-        
+
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters) {
+        public ActionResult Index(PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Can't manage tags")))
                 return new HttpUnauthorizedResult();
 
@@ -35,7 +39,8 @@ namespace Orchard.Tags.Controllers {
 
             var pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
             var pagerShape = Services.New.Pager(pager).TotalItemCount(tags.Count());
-            if (pager.PageSize != 0) {
+            if (pager.PageSize != 0)
+            {
                 tags = tags.Skip(pager.GetStartIndex()).Take(pager.PageSize);
             }
 
@@ -47,22 +52,26 @@ namespace Orchard.Tags.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
-            var viewModel = new TagsAdminIndexViewModel {Tags = new List<TagEntry>(), BulkAction = new TagAdminIndexBulkAction()};
-            
-            if ( !TryUpdateModel(viewModel) ) {
+        public ActionResult Index(FormCollection input)
+        {
+            var viewModel = new TagsAdminIndexViewModel { Tags = new List<TagEntry>(), BulkAction = new TagAdminIndexBulkAction() };
+
+            if (!TryUpdateModel(viewModel))
+            {
                 return View(viewModel);
             }
 
             IEnumerable<TagEntry> checkedEntries = viewModel.Tags.Where(t => t.IsChecked);
-            switch (viewModel.BulkAction) {
+            switch (viewModel.BulkAction)
+            {
                 case TagAdminIndexBulkAction.None:
                     break;
                 case TagAdminIndexBulkAction.Delete:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't delete tag")))
                         return new HttpUnauthorizedResult();
 
-                    foreach (TagEntry entry in checkedEntries) {
+                    foreach (TagEntry entry in checkedEntries)
+                    {
                         _tagService.DeleteTag(entry.Tag.Id);
                     }
                     break;
@@ -76,36 +85,43 @@ namespace Orchard.Tags.Controllers {
 
         [HttpPost, ActionName("Index")]
         [FormValueRequired("submit.Create")]
-        public ActionResult IndexCreatePOST() {
+        public ActionResult IndexCreatePOST()
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't create tag")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new TagsAdminCreateViewModel();
 
-            if (TryUpdateModel(viewModel)) {
-                if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
-                    ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be added because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+            if (TryUpdateModel(viewModel))
+            {
+                if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any())
+                {
+                    ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be added because it contains forbidden chars: {1}", viewModel.TagName, string.Join(", ", TagsPartDriver.DisalowedChars)));
                 }
             }
 
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 ViewData["CreateTag"] = viewModel;
                 return RedirectToAction("Index");
             }
 
             _tagService.CreateTag(viewModel.TagName);
-            
+
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             TagRecord tagRecord = _tagService.GetTag(id);
 
-            if(tagRecord == null) {
+            if (tagRecord == null)
+            {
                 return RedirectToAction("Index");
             }
 
-            var viewModel = new TagsAdminEditViewModel {
+            var viewModel = new TagsAdminEditViewModel
+            {
                 Id = tagRecord.Id,
                 TagName = tagRecord.TagName,
             };
@@ -116,18 +132,21 @@ namespace Orchard.Tags.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Edit(FormCollection input) {
+        public ActionResult Edit(FormCollection input)
+        {
             var viewModel = new TagsAdminEditViewModel();
 
-            if ( !TryUpdateModel(viewModel) ) {
+            if (!TryUpdateModel(viewModel))
+            {
                 return View(viewModel);
             }
-            
+
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't edit tag")))
                 return new HttpUnauthorizedResult();
 
-            if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
-                ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be modified because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+            if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any())
+            {
+                ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be modified because it contains forbidden chars: {1}", viewModel.TagName, string.Join(", ", TagsPartDriver.DisalowedChars)));
                 return View(viewModel);
             }
 
@@ -136,7 +155,8 @@ namespace Orchard.Tags.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Remove(int id, string returnUrl) {
+        public ActionResult Remove(int id, string returnUrl)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't remove tag")))
                 return new HttpUnauthorizedResult();
 
@@ -150,15 +170,18 @@ namespace Orchard.Tags.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
-        public JsonResult FetchSimilarTags(string snippet) {
+        public JsonResult FetchSimilarTags(string snippet)
+        {
             return Json(
                 _tagService.GetTagsByNameSnippet(snippet).Select(tag => tag.TagName).ToList(),
                 JsonRequestBehavior.AllowGet
             );
         }
 
-        private static TagEntry CreateTagEntry(TagRecord tagRecord) {
-            return new TagEntry {
+        private static TagEntry CreateTagEntry(TagRecord tagRecord)
+        {
+            return new TagEntry
+            {
                 Tag = tagRecord,
                 IsChecked = false,
             };

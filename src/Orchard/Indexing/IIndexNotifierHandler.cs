@@ -1,7 +1,9 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 
-namespace Orchard.Indexing {
-    public interface IIndexNotifierHandler : IEventHandler {
+namespace Orchard.Indexing
+{
+    public interface IIndexNotifierHandler : IEventHandler
+    {
         void UpdateIndex(string indexName);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,13 +8,15 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Descriptor {
+namespace Orchard.Environment.Descriptor
+{
     /// <summary>
     /// Single service instance registered at the host level. Provides storage
     /// and recall of shell descriptor information. Default implementation uses
     /// app_data, but configured replacements could use other per-host writable location.
     /// </summary>
-    public interface IShellDescriptorCache {
+    public interface IShellDescriptorCache
+    {
         /// <summary>
         /// Recreate the named configuration information. Used at startup. 
         /// Returns null on cache-miss.
@@ -29,11 +31,13 @@ namespace Orchard.Environment.Descriptor {
         void Store(string shellName, ShellDescriptor descriptor);
     }
 
-    public class ShellDescriptorCache : IShellDescriptorCache {
+    public class ShellDescriptorCache : IShellDescriptorCache
+    {
         private readonly IAppDataFolder _appDataFolder;
         private const string DescriptorCacheFileName = "cache.dat";
         private static readonly object _synLock = new object();
-        public ShellDescriptorCache(IAppDataFolder appDataFolder) {
+        public ShellDescriptorCache(IAppDataFolder appDataFolder)
+        {
             _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -44,20 +48,26 @@ namespace Orchard.Environment.Descriptor {
         public Localizer T { get; set; }
         public bool Disabled { get; set; }
 
-        public ShellDescriptor Fetch(string name) {
-            if (Disabled) {
+        public ShellDescriptor Fetch(string name)
+        {
+            if (Disabled)
+            {
                 return null;
             }
 
-            lock (_synLock) {
+            lock (_synLock)
+            {
                 VerifyCacheFile();
                 var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
                 var xmlDocument = new XmlDocument();
                 xmlDocument.LoadXml(text);
                 XmlNode rootNode = xmlDocument.DocumentElement;
-                if (rootNode != null) {
-                    foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                        if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                if (rootNode != null)
+                {
+                    foreach (XmlNode tenantNode in rootNode.ChildNodes)
+                    {
+                        if (string.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase))
+                        {
                             return GetShellDecriptorForCacheText(tenantNode.InnerText);
                         }
                     }
@@ -69,12 +79,15 @@ namespace Orchard.Environment.Descriptor {
 
         }
 
-        public void Store(string name, ShellDescriptor descriptor) {
-            if (Disabled) {
+        public void Store(string name, ShellDescriptor descriptor)
+        {
+            if (Disabled)
+            {
                 return;
             }
 
-            lock (_synLock) {
+            lock (_synLock)
+            {
                 VerifyCacheFile();
                 var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
                 bool tenantCacheUpdated = false;
@@ -82,15 +95,19 @@ namespace Orchard.Environment.Descriptor {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.LoadXml(text);
                 XmlNode rootNode = xmlDocument.DocumentElement;
-                if (rootNode != null) {
-                    foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                        if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                if (rootNode != null)
+                {
+                    foreach (XmlNode tenantNode in rootNode.ChildNodes)
+                    {
+                        if (string.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase))
+                        {
                             tenantNode.InnerText = GetCacheTextForShellDescriptor(descriptor);
                             tenantCacheUpdated = true;
                             break;
                         }
                     }
-                    if (!tenantCacheUpdated) {
+                    if (!tenantCacheUpdated)
+                    {
                         XmlElement newTenant = xmlDocument.CreateElement(name);
                         newTenant.InnerText = GetCacheTextForShellDescriptor(descriptor);
                         rootNode.AppendChild(newTenant);
@@ -102,14 +119,17 @@ namespace Orchard.Environment.Descriptor {
             }
         }
 
-        private static string GetCacheTextForShellDescriptor(ShellDescriptor descriptor) {
+        private static string GetCacheTextForShellDescriptor(ShellDescriptor descriptor)
+        {
             var sb = new StringBuilder();
             sb.Append(descriptor.SerialNumber + "|");
-            foreach (var feature in descriptor.Features) {
+            foreach (var feature in descriptor.Features)
+            {
                 sb.Append(feature.Name + ";");
             }
             sb.Append("|");
-            foreach (var parameter in descriptor.Parameters) {
+            foreach (var parameter in descriptor.Parameters)
+            {
                 sb.Append(parameter.Component + "," + parameter.Name + "," + parameter.Value);
                 sb.Append(";");
             }
@@ -117,9 +137,10 @@ namespace Orchard.Environment.Descriptor {
             return sb.ToString();
         }
 
-        private static ShellDescriptor GetShellDecriptorForCacheText(string p) {
+        private static ShellDescriptor GetShellDecriptorForCacheText(string p)
+        {
             string[] fields = p.Trim().Split(new[] { "|" }, StringSplitOptions.None);
-            var shellDescriptor = new ShellDescriptor {SerialNumber = Convert.ToInt32(fields[0])};
+            var shellDescriptor = new ShellDescriptor { SerialNumber = Convert.ToInt32(fields[0]) };
             string[] features = fields[1].Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             shellDescriptor.Features = features.Select(feature => new ShellFeature { Name = feature }).ToList();
             string[] parameters = fields[2].Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
@@ -131,16 +152,19 @@ namespace Orchard.Environment.Descriptor {
         /// <summary>
         /// Creates an empty cache file if it doesn't exist already
         /// </summary>
-        private void VerifyCacheFile() {
-            if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
+        private void VerifyCacheFile()
+        {
+            if (!_appDataFolder.FileExists(DescriptorCacheFileName))
+            {
                 var writer = new StringWriter();
-                using (var xmlWriter = XmlWriter.Create(writer)) {
+                using (var xmlWriter = XmlWriter.Create(writer))
+                {
                     xmlWriter.WriteStartDocument();
                     xmlWriter.WriteStartElement("Tenants");
                     xmlWriter.WriteEndElement();
                     xmlWriter.WriteEndDocument();
                 }
-                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());                
+                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,15 +7,18 @@ using NHibernate.SqlCommand;
 using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Data {
-    public class NoLockInterceptor : EmptyInterceptor, ISessionInterceptor {
+namespace Orchard.Data
+{
+    public class NoLockInterceptor : EmptyInterceptor, ISessionInterceptor
+    {
         private readonly ShellSettings _shellSettings;
         private readonly IEnumerable<INoLockTableProvider> _noLockTableProviders;
         private readonly bool _supportsNoLock;
 
         public NoLockInterceptor(
             ShellSettings shellSettings,
-            IEnumerable<INoLockTableProvider> noLockTableProviders) {
+            IEnumerable<INoLockTableProvider> noLockTableProviders)
+        {
 
             _shellSettings = shellSettings;
             _noLockTableProviders = noLockTableProviders;
@@ -26,9 +29,12 @@ namespace Orchard.Data {
         }
 
         private List<string> _tableNames;
-        public List<string> TableNames {
-            get {
-                if (_tableNames == null) {
+        public List<string> TableNames
+        {
+            get
+            {
+                if (_tableNames == null)
+                {
                     _tableNames = new List<string>(
                         _noLockTableProviders
                             .SelectMany(providers => providers.GetTableNames())
@@ -39,8 +45,10 @@ namespace Orchard.Data {
             }
         }
 
-        private string GetPrefixedTableName(string tableName) {
-            if (string.IsNullOrWhiteSpace(_shellSettings.DataTablePrefix)) {
+        private string GetPrefixedTableName(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(_shellSettings.DataTablePrefix))
+            {
                 return tableName;
             }
 
@@ -48,18 +56,22 @@ namespace Orchard.Data {
         }
 
         // based on https://stackoverflow.com/a/39518098/2669614
-        public override SqlString OnPrepareStatement(SqlString sql) {
+        public override SqlString OnPrepareStatement(SqlString sql)
+        {
             // Skip entirely for providers that do not support NOLOCK
-            if (!_supportsNoLock) {
+            if (!_supportsNoLock)
+            {
                 return sql;
             }
 
             // only work on select queries
-            if (sql.StartsWithCaseInsensitive("select")) {
+            if (sql.StartsWithCaseInsensitive("select"))
+            {
                 // see whether we have anything to add the NOLOCK hint to
                 var tableNamesForQuery =
                     TableNames.Where(tn => sql.IndexOfCaseInsensitive(tn) >= 0);
-                if (tableNamesForQuery.Any()) {
+                if (tableNamesForQuery.Any())
+                {
                     // Modify the sql to add hints
                     // the sql may contain substrings, and we want to also process them
                     var sqlString = sql.ToString();
@@ -121,14 +133,17 @@ namespace Orchard.Data {
                     // isn't in the query
                     int tag = 0;
                     const string tagBase = @"@sub{0}bus@";
-                    for (int i = 0; i < matches.Groups["Close"].Captures.Count; i++) {
+                    for (int i = 0; i < matches.Groups["Close"].Captures.Count; i++)
+                    {
                         // for loop because CaptureCollection does not play nice with iterators
                         var cap = matches.Groups["Close"].Captures[i];
                         var tablesHere = tableNamesForQuery
                             .Where(tn => cap.Value.IndexOf(tn, StringComparison.InvariantCultureIgnoreCase) >= 0);
-                        if (tablesHere.Any()) {
+                        if (tablesHere.Any())
+                        {
                             var currentTag = string.Format(tagBase, tag++);
-                            while (sqlString.IndexOf(currentTag) >= 0) {
+                            while (sqlString.IndexOf(currentTag) >= 0)
+                            {
                                 currentTag = string.Format(tagBase, tag++);
                             }
                             affectedCaptures.Add(new CaptureWrapper(cap, tablesHere) { Tag = currentTag });
@@ -137,28 +152,34 @@ namespace Orchard.Data {
                     // matches.Groups[0].Captures[0] is the original string
                     affectedCaptures.Add(new CaptureWrapper(matches.Groups[0].Captures[0], tableNamesForQuery));
                     // start processing the substrings. Use for-loops to nest them
-                    for (int i = 0; i < affectedCaptures.Count; i++) {
+                    for (int i = 0; i < affectedCaptures.Count; i++)
+                    {
                         var inner = affectedCaptures[i];
                         inner.AddNoLockHints();
-                        if (inner.IsAltered) {
+                        if (inner.IsAltered)
+                        {
                             // replace the newly altered substring in the first string that contains it
-                            for (int j = i + 1; j < affectedCaptures.Count; j++) {
+                            for (int j = i + 1; j < affectedCaptures.Count; j++)
+                            {
                                 // since we are processing the left-most substring first, we will have to
                                 // find where we are replacing a string starting from the end of the one
                                 // we will write into.
                                 var outer = affectedCaptures[j];
                                 if (inner.OriginalIndex >= outer.OriginalIndex
-                                    && inner.OriginalIndex <= outer.OriginalEnd) {
+                                    && inner.OriginalIndex <= outer.OriginalEnd)
+                                {
                                     // inner is inside outer
                                     var insertionIndex = inner.OriginalIndex - outer.OriginalIndex;
-                                    if (outer.IsAltered) {
+                                    if (outer.IsAltered)
+                                    {
                                         // outer has already been changed by previous changes to subqueries
                                         // so we should compute the start index for the current substring
                                         // starting from the end.
                                         var oFromEnd = outer.OriginalEnd - inner.OriginalIndex;
                                         insertionIndex = outer.Value.Length - oFromEnd;
                                     }
-                                    else {
+                                    else
+                                    {
                                         // outer is still the same as what we captured originally
                                         // we are changing it here for the first time.
                                         // This means the index of our substring within it has not changed
@@ -177,9 +198,11 @@ namespace Orchard.Data {
                         }
                     }
                     // rebuild query
-                    for (int i = 0; i < affectedCaptures.Count; i++) {
+                    for (int i = 0; i < affectedCaptures.Count; i++)
+                    {
                         var inner = affectedCaptures[i];
-                        for (int j = i + 1; j < affectedCaptures.Count; j++) {
+                        for (int j = i + 1; j < affectedCaptures.Count; j++)
+                        {
                             var outer = affectedCaptures[j];
                             outer.Value = outer.Value
                                 .Replace(inner.Tag, inner.Value);
@@ -192,18 +215,20 @@ namespace Orchard.Data {
             return sql;
         }
 
-        class CaptureWrapper {
+        class CaptureWrapper
+        {
             private Capture Source { get; set; }
-            public CaptureWrapper(Capture source, IEnumerable<string> tableNames) {
+            public CaptureWrapper(Capture source, IEnumerable<string> tableNames)
+            {
                 Source = source;
                 Value = OriginalValue;
                 TableNames = tableNames;
             }
 
-            public int OriginalIndex { get { return Source.Index; } }
-            public int OriginalLength { get { return Source.Length; } }
-            public int OriginalEnd { get { return OriginalIndex + OriginalLength; } }
-            public string OriginalValue { get { return Source.Value; } }
+            public int OriginalIndex => Source.Index;
+            public int OriginalLength => Source.Length;
+            public int OriginalEnd => OriginalIndex + OriginalLength;
+            public string OriginalValue => Source.Value;
             public string Value { get; set; }
 
             public IEnumerable<string> TableNames { get; set; }
@@ -212,15 +237,18 @@ namespace Orchard.Data {
 
             public bool IsAltered { get; set; }
 
-            public void AddNoLockHints() {
+            public void AddNoLockHints()
+            {
                 Value = AddNoLockHints(Value, TableNames);
             }
 
-            private string AddNoLockHints(string query, IEnumerable<string> tableNames) {
+            private string AddNoLockHints(string query, IEnumerable<string> tableNames)
+            {
                 var trimmed = query.Trim();
                 if (trimmed.StartsWith("SELECT", StringComparison.InvariantCultureIgnoreCase)
                     && trimmed.Length > 6
-                    && Char.IsWhiteSpace(trimmed, 6)) {
+                    && char.IsWhiteSpace(trimmed, 6))
+                {
                     // this fails to parse subqueries, meaning it will not apply the NOLOCK
                     // hint to the tables within them
                     var parts = query.ToString().Split().ToList();
@@ -233,41 +261,51 @@ namespace Orchard.Data {
                     var whereItem = parts.FirstOrDefault(p => p.Trim().Equals("where", StringComparison.OrdinalIgnoreCase));
                     int whereIndex = whereItem != null ? parts.IndexOf(whereItem) : parts.Count;
 
-                    foreach (var tableName in tableNames) {
+                    foreach (var tableName in tableNames)
+                    {
                         // set NOLOCK for each one of these tables
                         var tableItem = parts
                             .FirstOrDefault(p => p.Trim()
                                 .Equals(tableName, StringComparison.OrdinalIgnoreCase));
-                        if (tableItem != null) {
+                        if (tableItem != null)
+                        {
                             // the table is involved in this statement
                             var tableIndex = parts.IndexOf(tableItem);
                             // re-compute whereIndex in case we added stuff to parts
                             whereIndex = whereItem != null ? parts.IndexOf(whereItem) : parts.Count;
-                            if (tableIndex > fromIndex && tableIndex < whereIndex) { // sanity check
-                                                                                     // if before the table name we have "," or "FROM", this is not a join, but rather
-                                                                                     // something like "FROM tableName alias ..."
-                                                                                     // we can insert "WITH(NOLOCK)" after that
+                            if (tableIndex > fromIndex && tableIndex < whereIndex)
+                            { // sanity check
+                              // if before the table name we have "," or "FROM", this is not a join, but rather
+                              // something like "FROM tableName alias ..."
+                              // we can insert "WITH(NOLOCK)" after that
                                 if (tableIndex == fromIndex + 1
-                                    || parts[tableIndex - 1].Equals(",")) {
+                                    || parts[tableIndex - 1].Equals(","))
+                                {
 
-                                    if (parts[tableIndex + 1].Equals("where", StringComparison.OrdinalIgnoreCase)) {
+                                    if (parts[tableIndex + 1].Equals("where", StringComparison.OrdinalIgnoreCase))
+                                    {
                                         // There is no alias in the query, so we add "WITH(NOLOCK)" immediately after table name but before the "where" clause.
                                         parts.Insert(tableIndex + 1, "WITH(NOLOCK)");
                                     }
-                                    else {
+                                    else
+                                    {
                                         // We add "WITH(NOLOCK)" after the table alias.
                                         parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
                                     }
                                 }
-                                else {
+                                else
+                                {
                                     // probably doing a join, so edit the next "on" and make it
                                     // "WITH (NOLOCK) on"
-                                    for (int i = tableIndex + 1; i < whereIndex; i++) {
-                                        if (parts[i].Trim().Equals("WITH(NOLOCK)", StringComparison.OrdinalIgnoreCase)) {
+                                    for (int i = tableIndex + 1; i < whereIndex; i++)
+                                    {
+                                        if (parts[i].Trim().Equals("WITH(NOLOCK)", StringComparison.OrdinalIgnoreCase))
+                                        {
                                             // we processed this table name already.
                                             break;
                                         }
-                                        if (parts[i].Trim().Equals("on", StringComparison.OrdinalIgnoreCase)) {
+                                        if (parts[i].Trim().Equals("on", StringComparison.OrdinalIgnoreCase))
+                                        {
                                             parts[i] = "WITH(NOLOCK) on";
                                             break;
                                         }

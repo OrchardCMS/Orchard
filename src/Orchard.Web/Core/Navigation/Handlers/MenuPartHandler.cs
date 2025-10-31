@@ -1,35 +1,42 @@
-﻿using System;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 
-namespace Orchard.Core.Navigation.Handlers {
-    public class MenuPartHandler : ContentHandler {
+namespace Orchard.Core.Navigation.Handlers
+{
+    public class MenuPartHandler : ContentHandler
+    {
         private readonly IContentManager _contentManager;
 
         public MenuPartHandler(
             IRepository<MenuPartRecord> menuPartRepository,
             IContentManager contentManager
-            ) {
+            )
+        {
 
             _contentManager = contentManager;
             Filters.Add(StorageFilter.For(menuPartRepository));
 
-            OnInitializing<MenuPart>((ctx, x) => {
-                x.MenuText = String.Empty;
+            OnInitializing<MenuPart>((ctx, x) =>
+            {
+                x.MenuText = string.Empty;
             });
 
             OnActivated<MenuPart>(PropertySetHandlers);
         }
 
-        protected void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart) {
-            menuPart.MenuField.Setter(menu => {
-                if (menu == null || menu.ContentItem == null) {
+        protected void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart)
+        {
+            menuPart.MenuField.Setter(menu =>
+            {
+                if (menu == null || menu.ContentItem == null)
+                {
                     menuPart.Record.MenuId = 0;
                 }
-                else {
+                else
+                {
                     menuPart.Record.MenuId = menu.ContentItem.Id;
                 }
 
@@ -41,12 +48,15 @@ namespace Orchard.Core.Navigation.Handlers {
             );
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             var part = context.ContentItem.As<MenuPart>();
 
-            if (part != null) {
+            if (part != null)
+            {
                 string stereotype;
-                if (context.ContentItem.TypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "MenuItem") {
+                if (context.ContentItem.TypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "MenuItem")
+                {
                     context.Metadata.DisplayText = part.MenuText;
                     context.Metadata.EditorRouteValues = new RouteValueDictionary {
                         {"Area", "Navigation"},

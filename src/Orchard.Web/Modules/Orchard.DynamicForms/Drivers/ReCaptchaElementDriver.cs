@@ -1,4 +1,4 @@
-﻿using Orchard.AntiSpam.Models;
+using Orchard.AntiSpam.Models;
 using Orchard.ContentManagement;
 using Orchard.DynamicForms.Elements;
 using Orchard.Environment.Extensions;
@@ -9,24 +9,30 @@ using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
+namespace Orchard.DynamicForms.Drivers
+{
     [OrchardFeature("Orchard.DynamicForms.AntiSpam")]
-    public class ReCaptchaElementDriver : FormsElementDriver<ReCaptcha>{
+    public class ReCaptchaElementDriver : FormsElementDriver<ReCaptcha>
+    {
         private readonly IOrchardServices _services;
         private readonly ITokenizer _tokenizer;
 
-        public ReCaptchaElementDriver(IFormsBasedElementServices formsServices, IOrchardServices services, ITokenizer tokenizer) : base(formsServices) {
+        public ReCaptchaElementDriver(IFormsBasedElementServices formsServices, IOrchardServices services, ITokenizer tokenizer) : base(formsServices)
+        {
             _services = services;
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(ReCaptcha element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(ReCaptcha element, ElementEditorContext context)
+        {
             var reCaptchaValidation = BuildForm(context, "ReCaptchaValidation", "Validation:10");
             return Editor(context, reCaptchaValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("ReCaptchaValidation", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("ReCaptchaValidation", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "ReCaptchaValidation",
@@ -47,12 +53,14 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(ReCaptcha element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(ReCaptcha element, ElementDisplayingContext context)
+        {
             var workContext = _services.WorkContext;
             var currentSite = workContext.CurrentSite;
             var settings = currentSite.As<ReCaptchaSettingsPart>();
 
-            if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
+            if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null)
+            {
                 return;
             }
 

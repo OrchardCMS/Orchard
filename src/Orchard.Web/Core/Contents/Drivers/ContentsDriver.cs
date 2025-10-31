@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Contents.Settings;
 
-namespace Orchard.Core.Contents.Drivers {
-    public class ContentsDriver : ContentPartDriver<ContentPart> {
-        protected override DriverResult Display(ContentPart part, string displayType, dynamic shapeHelper) {
+namespace Orchard.Core.Contents.Drivers
+{
+    public class ContentsDriver : ContentPartDriver<ContentPart>
+    {
+        protected override DriverResult Display(ContentPart part, string displayType, dynamic shapeHelper)
+        {
             return Combined(
                 ContentShape("Parts_Contents_Publish",
                              () => shapeHelper.Parts_Contents_Publish()),
@@ -16,10 +19,12 @@ namespace Orchard.Core.Contents.Drivers {
                 );
         }
 
-        protected override DriverResult Editor(ContentPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, dynamic shapeHelper)
+        {
             var results = new List<DriverResult>();
 
-            if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
+            if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+            {
                 results.Add(ContentShape("Content_SaveButton", saveButton => saveButton));
             }
 
@@ -27,14 +32,16 @@ namespace Orchard.Core.Contents.Drivers {
             results.Add(ContentShape("Content_UnpublishButton", unpublishButton => unpublishButton));
             results.Add(ContentShape("Content_CancelButton", cancelButton => cancelButton));
 
-            if (part.Id > 0) {
+            if (part.Id > 0)
+            {
                 results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));
             }
 
             return Combined(results.ToArray());
         }
 
-        protected override DriverResult Editor(ContentPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             return Editor(part, updater);
         }
     }

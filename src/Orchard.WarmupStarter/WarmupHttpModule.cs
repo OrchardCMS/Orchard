@@ -1,24 +1,30 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Web;
 
-namespace Orchard.WarmupStarter {
-    public class WarmupHttpModule : IHttpModule {
+namespace Orchard.WarmupStarter
+{
+    public class WarmupHttpModule : IHttpModule
+    {
         private HttpApplication _context;
         private static object _synLock = new object();
         private static IList<Action> _awaiting = new List<Action>();
 
-        public void Init(HttpApplication context) {
+        public void Init(HttpApplication context)
+        {
             _context = context;
             context.AddOnBeginRequestAsync(BeginBeginRequest, EndBeginRequest, null);
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
         }
 
-        private static bool InWarmup() {
-            lock (_synLock) {
+        private static bool InWarmup()
+        {
+            lock (_synLock)
+            {
                 return _awaiting != null;
             }
         }
@@ -27,9 +33,12 @@ namespace Orchard.WarmupStarter {
         /// Warmup code is about to start: Any new incoming request is queued 
         /// until "SignalWarmupDone" is called.
         /// </summary>
-        public static void SignalWarmupStart() {
-            lock (_synLock) {
-                if (_awaiting == null) {
+        public static void SignalWarmupStart()
+        {
+            lock (_synLock)
+            {
+                if (_awaiting == null)
+                {
                     _awaiting = new List<Action>();
                 }
             }
@@ -39,16 +48,20 @@ namespace Orchard.WarmupStarter {
         /// Warmup code just completed: All pending requests in the "_await" queue are processed, 
         /// and any new incoming request is now processed immediately.
         /// </summary>
-        public static void SignalWarmupDone() {
+        public static void SignalWarmupDone()
+        {
             IList<Action> temp;
 
-            lock (_synLock) {
+            lock (_synLock)
+            {
                 temp = _awaiting;
                 _awaiting = null;
             }
 
-            if (temp != null) {
-                foreach (var action in temp) {
+            if (temp != null)
+            {
+                foreach (var action in temp)
+                {
                     action();
                 }
             }
@@ -57,29 +70,36 @@ namespace Orchard.WarmupStarter {
         /// <summary>
         /// Enqueue or directly process action depending on current mode.
         /// </summary>
-        private void Await(Action action) {
+        private void Await(Action action)
+        {
             Action temp = action;
 
-            lock (_synLock) {
-                if (_awaiting != null) {
+            lock (_synLock)
+            {
+                if (_awaiting != null)
+                {
                     temp = null;
                     _awaiting.Add(action);
                 }
             }
 
-            if (temp != null) {
+            if (temp != null)
+            {
                 temp();
             }
         }
 
-        private IAsyncResult BeginBeginRequest(object sender, EventArgs e, AsyncCallback cb, object extradata) {
+        private IAsyncResult BeginBeginRequest(object sender, EventArgs e, AsyncCallback cb, object extradata)
+        {
             // host is available, process every requests, or file is processed
-            if (!InWarmup() || WarmupUtility.DoBeginRequest(_context)) {
+            if (!InWarmup() || WarmupUtility.DoBeginRequest(_context))
+            {
                 var asyncResult = new DoneAsyncResult(extradata);
                 cb(asyncResult);
                 return asyncResult;
             }
-            else {
+            else
+            {
                 // this is the "on hold" execution path
                 var asyncResult = new WarmupAsyncResult(cb, extradata);
                 Await(asyncResult.Completed);
@@ -87,73 +107,63 @@ namespace Orchard.WarmupStarter {
             }
         }
 
-        private static void EndBeginRequest(IAsyncResult ar) {
+        private static void EndBeginRequest(IAsyncResult ar)
+        {
         }
 
         /// <summary>
         /// AsyncResult for "on hold" request (resumes when "Completed()" is called)
         /// </summary>
-        private class WarmupAsyncResult : IAsyncResult {
+        private class WarmupAsyncResult : IAsyncResult
+        {
             private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
             private readonly AsyncCallback _cb;
             private readonly object _asyncState;
             private bool _isCompleted;
 
-            public WarmupAsyncResult(AsyncCallback cb, object asyncState) {
+            public WarmupAsyncResult(AsyncCallback cb, object asyncState)
+            {
                 _cb = cb;
                 _asyncState = asyncState;
                 _isCompleted = false;
             }
 
-            public void Completed() {
+            public void Completed()
+            {
                 _isCompleted = true;
                 _eventWaitHandle.Set();
                 _cb(this);
             }
 
-            bool IAsyncResult.CompletedSynchronously {
-                get { return false; }
-            }
+            bool IAsyncResult.CompletedSynchronously => false;
 
-            bool IAsyncResult.IsCompleted {
-                get { return _isCompleted; }
-            }
+            bool IAsyncResult.IsCompleted => _isCompleted;
 
-            object IAsyncResult.AsyncState {
-                get { return _asyncState; }
-            }
+            object IAsyncResult.AsyncState => _asyncState;
 
-            WaitHandle IAsyncResult.AsyncWaitHandle {
-                get { return _eventWaitHandle; }
-            }
+            WaitHandle IAsyncResult.AsyncWaitHandle => _eventWaitHandle;
         }
 
         /// <summary>
         /// Async result for "ok to process now" requests
         /// </summary>
-        private class DoneAsyncResult : IAsyncResult {
+        private class DoneAsyncResult : IAsyncResult
+        {
             private readonly object _asyncState;
             private static readonly WaitHandle _waitHandle = new ManualResetEvent(true/*initialState*/);
 
-            public DoneAsyncResult(object asyncState) {
+            public DoneAsyncResult(object asyncState)
+            {
                 _asyncState = asyncState;
             }
 
-            bool IAsyncResult.CompletedSynchronously {
-                get { return true; }
-            }
+            bool IAsyncResult.CompletedSynchronously => true;
 
-            bool IAsyncResult.IsCompleted {
-                get { return true; }
-            }
+            bool IAsyncResult.IsCompleted => true;
 
-            WaitHandle IAsyncResult.AsyncWaitHandle {
-                get { return _waitHandle; }
-            }
+            WaitHandle IAsyncResult.AsyncWaitHandle => _waitHandle;
 
-            object IAsyncResult.AsyncState {
-                get { return _asyncState; }
-            }
+            object IAsyncResult.AsyncState => _asyncState;
         }
     }
 }

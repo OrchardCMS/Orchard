@@ -8,24 +8,30 @@ using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.Security;
 
-namespace Orchard.Mvc.AntiForgery {
-    public class AntiForgeryAuthorizationFilter : FilterProvider, IAuthorizationFilter {
+namespace Orchard.Mvc.AntiForgery
+{
+    public class AntiForgeryAuthorizationFilter : FilterProvider, IAuthorizationFilter
+    {
         private readonly IAuthenticationService _authenticationService;
         private readonly IExtensionManager _extensionManager;
 
-        public AntiForgeryAuthorizationFilter(IAuthenticationService authenticationService, IExtensionManager extensionManager) {
+        public AntiForgeryAuthorizationFilter(IAuthenticationService authenticationService, IExtensionManager extensionManager)
+        {
             _authenticationService = authenticationService;
             _extensionManager = extensionManager;
         }
 
-        public void OnAuthorization(AuthorizationContext filterContext) {
+        public void OnAuthorization(AuthorizationContext filterContext)
+        {
             // If the request is not a POST or is anonymous, and the request doesn't have validation forced, return.
             if ((filterContext.HttpContext.Request.HttpMethod != "POST" ||
-                 _authenticationService.GetAuthenticatedUser() == null) && !ShouldValidateGet(filterContext)) {
+                 _authenticationService.GetAuthenticatedUser() == null) && !ShouldValidateGet(filterContext))
+            {
                 return;
             }
 
-            if (!IsAntiForgeryProtectionEnabled(filterContext)) {
+            if (!IsAntiForgeryProtectionEnabled(filterContext))
+            {
                 return;
             }
 
@@ -36,40 +42,45 @@ namespace Orchard.Mvc.AntiForgery {
                 filterContext.HttpContext = ((HackHttpContext)filterContext.HttpContext).OriginalHttpContextBase;
         }
 
-        private bool IsAntiForgeryProtectionEnabled(AuthorizationContext context) {
+        private bool IsAntiForgeryProtectionEnabled(AuthorizationContext context)
+        {
             // POST is opt-out
             var attributes =
                 (ValidateAntiForgeryTokenOrchardAttribute[])
-                context.ActionDescriptor.GetCustomAttributes(typeof (ValidateAntiForgeryTokenOrchardAttribute), false);
+                context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
 
             if (attributes.Length > 0 && !attributes[0].Enabled) return false;
 
             var currentModule = GetArea(context.RouteData);
-            return !String.IsNullOrEmpty(currentModule)
+            return !string.IsNullOrEmpty(currentModule)
                    && (_extensionManager.AvailableExtensions()
-                       .First(descriptor => String.Equals(descriptor.Id, currentModule, StringComparison.OrdinalIgnoreCase))
+                       .First(descriptor => string.Equals(descriptor.Id, currentModule, StringComparison.OrdinalIgnoreCase))
                        .AntiForgery.Equals("enabled", StringComparison.OrdinalIgnoreCase));
         }
 
-        private static string GetArea(RouteData routeData) {
+        private static string GetArea(RouteData routeData)
+        {
             if (routeData.Values.ContainsKey("area"))
                 return routeData.Values["area"] as string;
 
             return routeData.DataTokens["area"] as string ?? "";
         }
 
-        private static bool ShouldValidateGet(AuthorizationContext context) {
+        private static bool ShouldValidateGet(AuthorizationContext context)
+        {
             const string tokenFieldName = "__RequestVerificationToken";
 
             var attributes =
                 (ValidateAntiForgeryTokenOrchardAttribute[])
-                context.ActionDescriptor.GetCustomAttributes(typeof (ValidateAntiForgeryTokenOrchardAttribute), false);
+                context.ActionDescriptor.GetCustomAttributes(typeof(ValidateAntiForgeryTokenOrchardAttribute), false);
 
-            if (attributes.Length > 0 && attributes[0].Enabled) {
+            if (attributes.Length > 0 && attributes[0].Enabled)
+            {
                 var request = context.HttpContext.Request;
 
                 //HAACK: (erikpo) If the token is in the querystring, put it in the form so MVC can validate it
-                if (!string.IsNullOrEmpty(request.QueryString[tokenFieldName])) {
+                if (!string.IsNullOrEmpty(request.QueryString[tokenFieldName]))
+                {
                     context.HttpContext = new HackHttpContext(context.HttpContext, (HttpContext)context.HttpContext.Items["originalHttpContext"]);
                     ((HackHttpRequest)context.HttpContext.Request).AddFormValue(tokenFieldName, context.HttpContext.Request.QueryString[tokenFieldName]);
                 }
@@ -82,20 +93,20 @@ namespace Orchard.Mvc.AntiForgery {
 
         #region HackHttpContext
 
-        private class HackHttpContext : HttpContextWrapper {
+        private class HackHttpContext : HttpContextWrapper
+        {
             private readonly HttpContextBase _originalHttpContextBase;
             private readonly HttpContext _originalHttpContext;
             private HttpRequestWrapper _request;
 
             public HackHttpContext(HttpContextBase httpContextBase, HttpContext httpContext)
-                : base(httpContext) {
+                : base(httpContext)
+            {
                 _originalHttpContextBase = httpContextBase;
                 _originalHttpContext = httpContext;
             }
 
-            public HttpContextBase OriginalHttpContextBase {
-                get { return _originalHttpContextBase; }
-            }
+            public HttpContextBase OriginalHttpContextBase => _originalHttpContextBase;
 
             public override HttpRequestBase Request
             {
@@ -113,12 +124,14 @@ namespace Orchard.Mvc.AntiForgery {
 
         #region HackHttpRequest
 
-        private class HackHttpRequest : HttpRequestWrapper {
+        private class HackHttpRequest : HttpRequestWrapper
+        {
             private readonly HttpRequest _originalHttpRequest;
             private NameValueCollection _form;
 
             public HackHttpRequest(HttpRequest httpRequest)
-                : base(httpRequest) {
+                : base(httpRequest)
+            {
                 _originalHttpRequest = httpRequest;
             }
 
@@ -133,7 +146,8 @@ namespace Orchard.Mvc.AntiForgery {
                 }
             }
 
-            public void AddFormValue(string key, string value) {
+            public void AddFormValue(string key, string value)
+            {
                 Form.Add(key, value);
             }
         }

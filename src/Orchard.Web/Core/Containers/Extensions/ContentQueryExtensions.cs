@@ -1,16 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Title.Models;
 
-namespace Orchard.Core.Containers.Extensions {
+namespace Orchard.Core.Containers.Extensions
+{
     [Obsolete]
-    public static class ContentQueryExtensions {
-        public static IContentQuery<T> OrderBy<T>(this IContentQuery<T> query, string partAndProperty, bool descendingOrder) where T : IContent {
+    public static class ContentQueryExtensions
+    {
+        public static IContentQuery<T> OrderBy<T>(this IContentQuery<T> query, string partAndProperty, bool descendingOrder) where T : IContent
+        {
             //todo: (heskew) order by custom part properties
-            switch (partAndProperty) {
+            switch (partAndProperty)
+            {
                 case "ContainablePart.Weight":
                     query = descendingOrder
                                 ? query.OrderByDescending<ContainablePartRecord>(record => record.Position)
@@ -51,7 +55,8 @@ namespace Orchard.Core.Containers.Extensions {
             return query;
         }
 
-        public static IContentQuery<ContentItem> Where(this IContentQuery<ContentItem> query, string partAndProperty, string comparisonOperator, string comparisonValue) {
+        public static IContentQuery<ContentItem> Where(this IContentQuery<ContentItem> query, string partAndProperty, string comparisonOperator, string comparisonValue)
+        {
             var filterKey = string.Format("{0}|{1}", partAndProperty, comparisonOperator);
             if (!_filters.ContainsKey(filterKey))
                 return query;

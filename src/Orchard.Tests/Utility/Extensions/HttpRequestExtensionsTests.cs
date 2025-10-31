@@ -1,14 +1,17 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 using System.Web;
 using NUnit.Framework;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Tests.Utility.Extensions {
+namespace Orchard.Tests.Utility.Extensions
+{
     [TestFixture]
-    public class HttpRequestExtensionsTests {
+    public class HttpRequestExtensionsTests
+    {
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseWhenUrlIsNullOrEmpty() {
+        public void IsLocalUrlShouldReturnFalseWhenUrlIsNullOrEmpty()
+        {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl(null), Is.False);
@@ -17,7 +20,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseWhenUrlStartsWithDoubleSlash() {
+        public void IsLocalUrlShouldReturnFalseWhenUrlStartsWithDoubleSlash()
+        {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("//"), Is.False);
@@ -25,7 +29,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseWhenUrlStartsWithForwardBackwardSlash() {
+        public void IsLocalUrlShouldReturnFalseWhenUrlStartsWithForwardBackwardSlash()
+        {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("/\\"), Is.False);
@@ -33,7 +38,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnTrueWhenUrlStartsWithSlashAndAnythingElse() {
+        public void IsLocalUrlShouldReturnTrueWhenUrlStartsWithSlashAndAnythingElse()
+        {
             var request = new StubHttpRequest();
 
             Assert.That(request.IsLocalUrl("/"), Is.True);
@@ -44,7 +50,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnTrueWhenAuthoritiesMatch() {
+        public void IsLocalUrlShouldReturnTrueWhenAuthoritiesMatch()
+        {
             var request = new StubHttpRequest();
             request.Headers.Add("Host", "localhost");
 
@@ -53,7 +60,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseForNonHttpSchemes() {
+        public void IsLocalUrlShouldReturnFalseForNonHttpSchemes()
+        {
             var request = new StubHttpRequest();
             request.Headers.Add("Host", "localhost");
 
@@ -64,7 +72,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseWhenAuthoritiesDiffer() {
+        public void IsLocalUrlShouldReturnFalseWhenAuthoritiesDiffer()
+        {
             var request = new StubHttpRequest();
             request.Headers.Add("Host", "localhost");
 
@@ -73,7 +82,8 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
-        public void IsLocalUrlShouldReturnFalseForEverythingElse() {
+        public void IsLocalUrlShouldReturnFalseForEverythingElse()
+        {
             var request = new StubHttpRequest();
             request.Headers.Add("Host", "localhost");
 
@@ -81,13 +91,10 @@ namespace Orchard.Tests.Utility.Extensions {
         }
     }
 
-    class StubHttpRequest : HttpRequestBase {
+    class StubHttpRequest : HttpRequestBase
+    {
         private readonly NameValueCollection _headers = new NameValueCollection();
 
-        public override NameValueCollection Headers {
-            get {
-                return _headers;
-            }
-        }
+        public override NameValueCollection Headers => _headers;
     }
 }

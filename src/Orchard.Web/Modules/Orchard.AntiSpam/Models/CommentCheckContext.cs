@@ -1,5 +1,7 @@
-﻿namespace Orchard.AntiSpam.Models {
-    public class CommentCheckContext {
+namespace Orchard.AntiSpam.Models
+{
+    public class CommentCheckContext
+    {
         /// <summary>
         /// The front page or home URL of the instance making the request. For a blog 
         /// or wiki this would be the front page. Note: Must be a full URI, including http://.
@@ -10,7 +12,7 @@
         /// IP address of the comment submitter.
         /// </summary>
         public string UserIp { get; set; }
-        
+
         /// <summary>
         /// User agent string of the web browser submitting the comment - typically 
         /// the HTTP_USER_AGENT cgi variable. Not to be confused with the user agent 

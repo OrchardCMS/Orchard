@@ -1,8 +1,11 @@
-﻿namespace Orchard.Tests.Environment.TestDependencies {
+namespace Orchard.Tests.Environment.TestDependencies
+{
 
-    public interface IAlphaDependency : IDependency {
+    public interface IAlphaDependency : IDependency
+    {
     }
 
-    public class AlphaDependency : IAlphaDependency {
+    public class AlphaDependency : IAlphaDependency
+    {
     }
 }

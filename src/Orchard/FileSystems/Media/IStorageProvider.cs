@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Orchard.FileSystems.Media {
-    public interface IStorageProvider : IDependency {
+namespace Orchard.FileSystems.Media
+{
+    public interface IStorageProvider : IDependency
+    {
         /// <summary>
         /// Checks if the given file exists within the storage provider.
         /// </summary>

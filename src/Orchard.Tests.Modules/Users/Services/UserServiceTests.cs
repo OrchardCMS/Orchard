@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading;
 using Autofac;
@@ -40,7 +40,8 @@ using Orchard.Users.Services;
 namespace Orchard.Tests.Modules.Users.Services
 {
     [TestFixture]
-    public class UserServiceTests {
+    public class UserServiceTests
+    {
         private IMembershipService _membershipService;
         private IUserService _userService;
         private IClock _clock;
@@ -52,7 +53,8 @@ namespace Orchard.Tests.Modules.Users.Services
         private Mock<WorkContext> _workContext;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             _currentCulture = Thread.CurrentThread.CurrentCulture;
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -69,12 +71,14 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
             Thread.CurrentThread.CurrentCulture = _currentCulture;
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             _channel = new MessagingChannelStub();
 
@@ -93,7 +97,7 @@ namespace Orchard.Tests.Modules.Users.Services
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterAutoMocking(MockBehavior.Loose);
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterInstance(new MessageChannelSelectorStub(_channel)).As<IMessageChannelSelector>(); 
+            builder.RegisterInstance(new MessageChannelSelectorStub(_channel)).As<IMessageChannelSelector>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
@@ -123,13 +127,15 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [TearDown]
-        public void TearDown() {
+        public void TearDown()
+        {
             if (_container != null)
                 _container.Dispose();
         }
 
         [Test]
-        public void NonceShouldBeDecryptable() {
+        public void NonceShouldBeDecryptable()
+        {
             var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true, false));
             var nonce = _userService.CreateNonce(user, new TimeSpan(1, 0, 0));
 
@@ -146,7 +152,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void VerifyUserUnicityTurkishTest() {
+        public void VerifyUserUnicityTurkishTest()
+        {
             CultureInfo turkishCulture = new CultureInfo("tr-TR");
             Thread.CurrentThread.CurrentCulture = turkishCulture;
 

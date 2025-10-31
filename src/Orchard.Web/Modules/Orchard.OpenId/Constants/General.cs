@@ -1,5 +1,7 @@
-﻿namespace Orchard.OpenId.Constants {
-    public class General {
+namespace Orchard.OpenId.Constants
+{
+    public class General
+    {
         public const string AuthenticationErrorUrl = "/Authentication/Error";
         public const string LogonCallbackUrl = "/Users/Account/LogonCallback";
         public const string OpenIdOwinMiddlewarePriority = "10";

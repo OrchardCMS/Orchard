@@ -1,10 +1,12 @@
-﻿using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.AuditTrail.Providers.Roles {
+namespace Orchard.AuditTrail.Providers.Roles
+{
     [OrchardFeature("Orchard.AuditTrail.Roles")]
-    public class RoleAuditTrailEventProvider : AuditTrailEventProviderBase {
+    public class RoleAuditTrailEventProvider : AuditTrailEventProviderBase
+    {
         public const string Created = "Created";
         public const string Removed = "Removed";
         public const string Renamed = "Renamed";
@@ -13,7 +15,8 @@ namespace Orchard.AuditTrail.Providers.Roles {
         public const string UserAdded = "UserAdded";
         public const string UserRemoved = "UserRemoved";
 
-        public override void Describe(DescribeContext context) {
+        public override void Describe(DescribeContext context)
+        {
             context.For("Role", T("Roles"))
                 .Event(this, Created, T("Created"), T("A role was created."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A role was removed."), enableByDefault: true)

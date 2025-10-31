@@ -1,9 +1,9 @@
-﻿namespace NHibernate.Linq
+namespace NHibernate.Linq
 {
-	/// <summary>
-	/// Marker interface used to conditionally include database provider specific methods.
-	/// </summary>
-	public interface IDbMethods
-	{
-	}
+    /// <summary>
+    /// Marker interface used to conditionally include database provider specific methods.
+    /// </summary>
+    public interface IDbMethods
+    {
+    }
 }

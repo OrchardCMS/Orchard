@@ -1,4 +1,3 @@
-﻿using System;
 using System.Security.Cryptography;
 using System.Text;
 using Autofac;
@@ -8,18 +7,22 @@ using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Tests.Security {
+namespace Orchard.Tests.Security
+{
     [TestFixture]
-    public class DefaultEncryptionServiceTests {
+    public class DefaultEncryptionServiceTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
 
             const string encryptionAlgorithm = "AES";
             const string hashAlgorithm = "HMACSHA256";
 
-            var shellSettings = new ShellSettings {
+            var shellSettings = new ShellSettings
+            {
                 Name = "Foo",
                 DataProvider = "Bar",
                 DataConnectionString = "Quux",
@@ -36,7 +39,8 @@ namespace Orchard.Tests.Security {
         }
 
         [Test]
-        public void CanEncodeAndDecodeData() {
+        public void CanEncodeAndDecodeData()
+        {
             var encryptionService = _container.Resolve<IEncryptionService>();
 
             var secretData = Encoding.Unicode.GetBytes("this is secret data");
@@ -48,37 +52,43 @@ namespace Orchard.Tests.Security {
         }
 
         [Test]
-        public void ShouldDetectTamperedData() {
+        public void ShouldDetectTamperedData()
+        {
             var encryptionService = _container.Resolve<IEncryptionService>();
 
             var secretData = Encoding.Unicode.GetBytes("this is secret data");
             var encrypted = encryptionService.Encode(secretData);
 
-            try {
+            try
+            {
                 // tamper the data
                 encrypted[encrypted.Length - 1] ^= 66;
                 var decrypted = encryptionService.Decode(encrypted);
             }
-            catch {
+            catch
+            {
                 return;
             }
             Assert.Fail();
         }
 
         [Test]
-        public void SuccessiveEncodeCallsShouldNotReturnTheSameData() {
+        public void SuccessiveEncodeCallsShouldNotReturnTheSameData()
+        {
             var encryptionService = _container.Resolve<IEncryptionService>();
 
             var secretData = Encoding.Unicode.GetBytes("this is secret data");
             byte[] previousEncrypted = null;
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++)
+            {
                 var encrypted = encryptionService.Encode(secretData);
                 var decrypted = encryptionService.Decode(encrypted);
 
                 Assert.That(encrypted, Is.Not.EqualTo(decrypted));
                 Assert.That(decrypted, Is.EqualTo(secretData));
 
-                if(previousEncrypted != null) {
+                if (previousEncrypted != null)
+                {
                     Assert.That(encrypted, Is.Not.EqualTo(previousEncrypted));
                 }
                 previousEncrypted = encrypted;

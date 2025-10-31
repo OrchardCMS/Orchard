@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -14,9 +14,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.Projections.Controllers {
+namespace Orchard.Projections.Controllers
+{
     [ValidateInput(false), Admin]
-    public class BindingController : Controller {
+    public class BindingController : Controller
+    {
         private readonly IRepository<MemberBindingRecord> _repository;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
 
@@ -24,7 +26,8 @@ namespace Orchard.Projections.Controllers {
             IRepository<MemberBindingRecord> repository,
             IOrchardServices services,
             IShapeFactory shapeFactory,
-            ISessionFactoryHolder sessionFactoryHolder) {
+            ISessionFactoryHolder sessionFactoryHolder)
+        {
             _repository = repository;
             _sessionFactoryHolder = sessionFactoryHolder;
             Shape = shapeFactory;
@@ -37,7 +40,8 @@ namespace Orchard.Projections.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(BindingIndexOptions options, PagerParameters pagerParameters) {
+        public ActionResult Index(BindingIndexOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
 
@@ -49,20 +53,23 @@ namespace Orchard.Projections.Controllers {
 
             var bindings = _repository.Table;
 
-            switch (options.Filter) {
+            switch (options.Filter)
+            {
                 case BindingsFilter.All:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (!String.IsNullOrWhiteSpace(options.Search)) {
+            if (!string.IsNullOrWhiteSpace(options.Search))
+            {
                 bindings = bindings.Where(r => r.DisplayName.Contains(options.Search));
             }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(bindings.Count());
 
-            switch (options.Order) {
+            switch (options.Order)
+            {
                 case BindingsOrder.Name:
                     bindings = bindings.OrderBy(u => u.DisplayName);
                     break;
@@ -73,7 +80,8 @@ namespace Orchard.Projections.Controllers {
                 .Take(pager.PageSize)
                 .ToList();
 
-            var model = new BindingIndexViewModel {
+            var model = new BindingIndexViewModel
+            {
                 Bindings = results.Select(x => new BindingEntry { Binding = x }).ToList(),
                 Options = options,
                 Pager = pagerShape
@@ -90,18 +98,22 @@ namespace Orchard.Projections.Controllers {
             return View(model);
         }
 
-        public ActionResult Select() {
+        public ActionResult Select()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
 
             var recordBluePrints = _sessionFactoryHolder.GetSessionFactoryParameters().RecordDescriptors;
 
-            var model = new BindingSelectViewModel {
-                Records = recordBluePrints.Where(r => IsContentPartRecord(r.Type)).Select(r => new RecordEntry {
+            var model = new BindingSelectViewModel
+            {
+                Records = recordBluePrints.Where(r => IsContentPartRecord(r.Type)).Select(r => new RecordEntry
+                {
                     FullName = r.Type.FullName,
                     Members = r.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .Where(x => IsValidPropertyType(x.PropertyType)).Select(
-                        m => new MemberEntry {
+                        m => new MemberEntry
+                        {
                             Member = m.Name
                         }).ToList()
                 }).ToList()
@@ -110,7 +122,8 @@ namespace Orchard.Projections.Controllers {
             return View(model);
         }
 
-        public ActionResult Create(string fullName, string member) {
+        public ActionResult Create(string fullName, string member)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
 
@@ -118,17 +131,20 @@ namespace Orchard.Projections.Controllers {
 
             var record = recordBluePrints.FirstOrDefault(r => r.Type.FullName.Equals(fullName, StringComparison.OrdinalIgnoreCase));
 
-            if(record == null) {
+            if (record == null)
+            {
                 return HttpNotFound();
             }
 
             var property = record.Type.GetProperty(member, BindingFlags.Instance | BindingFlags.Public);
 
-            if (property == null) {
+            if (property == null)
+            {
                 return HttpNotFound();
             }
 
-            var model = new BindingEditViewModel {
+            var model = new BindingEditViewModel
+            {
                 Id = -1,
                 FullName = record.Type.FullName,
                 Member = property.Name
@@ -138,16 +154,19 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePost(BindingEditViewModel model) {
+        public ActionResult CreatePost(BindingEditViewModel model)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
-        
-            if(ModelState.IsValid) {
 
-                _repository.Create(new MemberBindingRecord {
+            if (ModelState.IsValid)
+            {
+
+                _repository.Create(new MemberBindingRecord
+                {
                     Type = model.FullName,
                     Member = model.Member,
-                    DisplayName =  model.Display,
+                    DisplayName = model.Display,
                     Description = model.Description
                 });
 
@@ -159,33 +178,38 @@ namespace Orchard.Projections.Controllers {
             return View("Edit", model);
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
 
             var binding = _repository.Get(id);
 
-            if (binding == null) {
+            if (binding == null)
+            {
                 return HttpNotFound();
             }
 
             var recordBluePrints = _sessionFactoryHolder.GetSessionFactoryParameters().RecordDescriptors;
 
-            var record = recordBluePrints.FirstOrDefault(r => String.Equals(r.Type.FullName, binding.Type, StringComparison.OrdinalIgnoreCase));
+            var record = recordBluePrints.FirstOrDefault(r => string.Equals(r.Type.FullName, binding.Type, StringComparison.OrdinalIgnoreCase));
 
-            if (record == null) {
+            if (record == null)
+            {
                 Services.Notifier.Warning(T("The record for this binding is no longer available, please remove it."));
                 return RedirectToAction("Index");
             }
 
             var property = record.Type.GetProperty(binding.Member, BindingFlags.Instance | BindingFlags.Public);
 
-            if (property == null) {
+            if (property == null)
+            {
                 Services.Notifier.Warning(T("The member for this binding is no longer available, please remove it."));
                 return RedirectToAction("Index");
             }
 
-            var model = new BindingEditViewModel {
+            var model = new BindingEditViewModel
+            {
                 Id = id,
                 FullName = record.Type.FullName,
                 Member = property.Name,
@@ -197,15 +221,18 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult Edit(BindingEditViewModel model) {
+        public ActionResult Edit(BindingEditViewModel model)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list bindings")))
                 return new HttpUnauthorizedResult();
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
 
                 var binding = _repository.Get(model.Id);
 
-                if (binding == null) {
+                if (binding == null)
+                {
                     return HttpNotFound();
                 }
 
@@ -221,13 +248,15 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to delete bindings")))
                 return new HttpUnauthorizedResult();
 
             var binding = _repository.Get(id);
-            
-            if (binding == null) {
+
+            if (binding == null)
+            {
                 return HttpNotFound();
             }
 
@@ -237,14 +266,16 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Index");
         }
 
-        private static bool IsContentPartRecord(Type type) {
+        private static bool IsContentPartRecord(Type type)
+        {
             return typeof(ContentPartRecord).IsAssignableFrom(type) && typeof(ContentPartRecord) != type;
         }
- 
-        private bool IsValidPropertyType(Type type) {
+
+        private bool IsValidPropertyType(Type type)
+        {
             return type.IsValueType
-                   || type == typeof (string)
-                   || (typeof (Nullable).IsAssignableFrom(type) && IsValidPropertyType(type.GetGenericArguments()[0]));
+                   || type == typeof(string)
+                   || (typeof(Nullable).IsAssignableFrom(type) && IsValidPropertyType(type.GetGenericArguments()[0]));
         }
     }
 }

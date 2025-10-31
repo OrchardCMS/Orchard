@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Tab.Assist;
 using Orchard.Glimpse.Extensions;
 
-namespace Orchard.Glimpse.Tabs.Shapes {
-    public class ShapesMessagesConverter : SerializationConverter<IEnumerable<ShapeMessage>> {
-        public override object Convert(IEnumerable<ShapeMessage> messages) {
+namespace Orchard.Glimpse.Tabs.Shapes
+{
+    public class ShapesMessagesConverter : SerializationConverter<IEnumerable<ShapeMessage>>
+    {
+        public override object Convert(IEnumerable<ShapeMessage> messages)
+        {
             var root = new TabSection("Type", "Display Type", "Position", "Placement Source", "Prefix", "Binding Source", "Available Binding Sources", "Wrappers", "Alternates", "Build Display Duration");
-            foreach (var message in messages) {
+            foreach (var message in messages)
+            {
                 root.AddRow()
                     .Column(message.Type)
                     .Column(message.DisplayType)

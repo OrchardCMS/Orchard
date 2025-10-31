@@ -1,7 +1,9 @@
-﻿using System.IO;
+using System.IO;
 
-namespace Orchard.MediaProcessing.Descriptors.Filter {
-    public class FilterContext {
+namespace Orchard.MediaProcessing.Descriptors.Filter
+{
+    public class FilterContext
+    {
         public dynamic State { get; set; }
         public Stream Media { get; set; }
         public string FilePath { get; set; }

@@ -3,18 +3,24 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
 
-namespace Orchard.UI.Resources {
-    public class ResourceRegister {
+namespace Orchard.UI.Resources
+{
+    public class ResourceRegister
+    {
         private readonly string _viewVirtualPath;
 
-        public ResourceRegister(IViewDataContainer container, IResourceManager resourceManager, string resourceType) {
+        public ResourceRegister(IViewDataContainer container, IResourceManager resourceManager, string resourceType)
+        {
             var templateControl = container as TemplateControl;
-            if (templateControl != null) {
+            if (templateControl != null)
+            {
                 _viewVirtualPath = templateControl.AppRelativeVirtualPath;
             }
-            else {
+            else
+            {
                 var webPage = container as WebPageBase;
-                if (webPage != null) {
+                if (webPage != null)
+                {
                     _viewVirtualPath = webPage.VirtualPath;
                 }
             }
@@ -29,8 +35,10 @@ namespace Orchard.UI.Resources {
         /// Includes a resource with the specified path
         /// </summary>
         /// <param name="resourcePath">The relative or absolute path of the resource</param>
-        public RequireSettings Include(string resourcePath) {
-            if (resourcePath == null) {
+        public RequireSettings Include(string resourcePath)
+        {
+            if (resourcePath == null)
+            {
                 throw new ArgumentNullException("resourcePath");
             }
             return ResourceManager.Include(ResourceType, resourcePath, null, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
@@ -41,8 +49,10 @@ namespace Orchard.UI.Resources {
         /// </summary>
         /// <param name="resourceDebugPath">The relative or absolute path of the resource to be used in debug mode</param>
         /// <param name="resourcePath">The relative or absolute path of the resource</param>
-        public RequireSettings Include(string resourceDebugPath, string resourcePath) {
-            if (resourcePath == null) {
+        public RequireSettings Include(string resourceDebugPath, string resourcePath)
+        {
+            if (resourcePath == null)
+            {
                 throw new ArgumentNullException("resourcePath");
             }
             return ResourceManager.Include(ResourceType, resourcePath, resourceDebugPath, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
@@ -57,20 +67,25 @@ namespace Orchard.UI.Resources {
         /// </remarks>
         /// <param name="resourceName"></param>
         /// <returns></returns>
-        public virtual RequireSettings Require(string resourceName) {
-            if (resourceName == null) {
+        public virtual RequireSettings Require(string resourceName)
+        {
+            if (resourceName == null)
+            {
                 throw new ArgumentNullException("resourceName");
             }
             var settings = ResourceManager.Require(ResourceType, resourceName);
-            if (_viewVirtualPath != null) {
+            if (_viewVirtualPath != null)
+            {
                 settings.WithBasePath(ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
             }
             return settings;
         }
     }
 
-    public abstract class ScriptRegister : ResourceRegister {
-        protected ScriptRegister(IViewDataContainer container, IResourceManager resourceManager) : base(container, resourceManager, "script") {
+    public abstract class ScriptRegister : ResourceRegister
+    {
+        protected ScriptRegister(IViewDataContainer container, IResourceManager resourceManager) : base(container, resourceManager, "script")
+        {
         }
 
         /// <summary>

@@ -1,15 +1,13 @@
-﻿using FluentNHibernate.Automapping;
-using FluentNHibernate.Cfg;
-using NHibernate.Cfg;
-using Orchard.Utility;
 using Orchard.Data.Providers;
 
-namespace Orchard.Data {
+namespace Orchard.Data
+{
     /// <summary>
     /// Add ability for the configuration event handler be aware of parameters
     /// </summary>
     /// <param name="parameters"></param>
-    public interface ISessionConfigurationEventsWithParameters : ISessionConfigurationEvents {
+    public interface ISessionConfigurationEventsWithParameters : ISessionConfigurationEvents
+    {
         SessionFactoryParameters Parameters { set; get; }
     }
 }

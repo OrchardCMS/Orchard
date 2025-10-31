@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Autoroute.Models;
@@ -7,13 +7,16 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Localization.Models;
 
-namespace Orchard.Localization.Services {
-    public class LocalizationService : ILocalizationService {
+namespace Orchard.Localization.Services
+{
+    public class LocalizationService : ILocalizationService
+    {
         private readonly IContentManager _contentManager;
         private readonly ICultureManager _cultureManager;
         private readonly IHomeAliasService _homeAliasService;
 
-        public LocalizationService(IContentManager contentManager, ICultureManager cultureManager, IHomeAliasService homeAliasService) {
+        public LocalizationService(IContentManager contentManager, ICultureManager cultureManager, IHomeAliasService homeAliasService)
+        {
             _contentManager = contentManager;
             _cultureManager = cultureManager;
             _homeAliasService = homeAliasService;
@@ -28,16 +31,19 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Warning: Returns only the first item of same culture localizations.
         /// </summary>
-        public LocalizationPart GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions) {
+        public LocalizationPart GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions)
+        {
             var cultureRecord = _cultureManager.GetCultureByName(culture);
 
-            if (cultureRecord == null) {
+            if (cultureRecord == null)
+            {
                 return null;
             }
 
             var localized = content.As<LocalizationPart>();
 
-            if (localized == null) {
+            if (localized == null)
+            {
                 return null;
             }
 
@@ -52,7 +58,8 @@ namespace Orchard.Localization.Services {
         public string GetContentCulture(IContent content) =>
             content.As<LocalizationPart>()?.Culture?.Culture ?? _cultureManager.GetSiteCulture();
 
-        public void SetContentCulture(IContent content, string culture) {
+        public void SetContentCulture(IContent content, string culture)
+        {
             var localized = content.As<LocalizationPart>();
 
             if (localized == null) return;
@@ -68,7 +75,8 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Warning: May contain more than one localization of the same culture.
         /// </summary>
-        public IEnumerable<LocalizationPart> GetLocalizations(IContent content, VersionOptions versionOptions) {
+        public IEnumerable<LocalizationPart> GetLocalizations(IContent content, VersionOptions versionOptions)
+        {
             if (content.ContentItem.Id == 0) return Enumerable.Empty<LocalizationPart>();
 
             var localized = content.As<LocalizationPart>();
@@ -78,7 +86,8 @@ namespace Orchard.Localization.Services {
                 .List();
         }
 
-        public bool TryGetRouteForUrl(string url, out AutoroutePart route) {
+        public bool TryGetRouteForUrl(string url, out AutoroutePart route)
+        {
             route = _contentManager.Query<AutoroutePart, AutoroutePartRecord>()
                 .ForVersion(VersionOptions.Published)
                 .Where(r => r.DisplayAlias == url)
@@ -90,8 +99,10 @@ namespace Orchard.Localization.Services {
             return route != null;
         }
 
-        public bool TryFindLocalizedRoute(ContentItem routableContent, string cultureName, out AutoroutePart localizedRoute) {
-            if (!routableContent.Parts.Any(p => p.Is<ILocalizableAspect>())) {
+        public bool TryFindLocalizedRoute(ContentItem routableContent, string cultureName, out AutoroutePart localizedRoute)
+        {
+            if (!routableContent.Parts.Any(p => p.Is<ILocalizableAspect>()))
+            {
                 localizedRoute = null;
 
                 return false;
@@ -100,19 +111,23 @@ namespace Orchard.Localization.Services {
             IEnumerable<LocalizationPart> localizations = GetLocalizations(routableContent, VersionOptions.Published);
 
             ILocalizableAspect localizationPart = null, siteCultureLocalizationPart = null;
-            foreach (var localization in localizations) {
-                if (localization.Culture.Culture.Equals(cultureName, StringComparison.InvariantCultureIgnoreCase)) {
+            foreach (var localization in localizations)
+            {
+                if (localization.Culture.Culture.Equals(cultureName, StringComparison.InvariantCultureIgnoreCase))
+                {
                     localizationPart = localization;
 
                     break;
                 }
 
-                if (localization.Culture == null && siteCultureLocalizationPart == null) {
+                if (localization.Culture == null && siteCultureLocalizationPart == null)
+                {
                     siteCultureLocalizationPart = localization;
                 }
             }
 
-            if (localizationPart == null) {
+            if (localizationPart == null)
+            {
                 localizationPart = siteCultureLocalizationPart;
             }
 
@@ -124,14 +139,16 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Warning: May contain more than one localization of the same culture.
         /// </summary>
-        private IContentQuery<LocalizationPart> GetLocalizationsQuery(LocalizationPart localizationPart, VersionOptions versionOptions) {
+        private IContentQuery<LocalizationPart> GetLocalizationsQuery(LocalizationPart localizationPart, VersionOptions versionOptions)
+        {
             var masterId = localizationPart.HasTranslationGroup
                 ? localizationPart.Record.MasterContentItemId
                 : localizationPart.Id;
 
             var query = _contentManager.Query<LocalizationPart>(localizationPart.ContentItem.ContentType);
 
-            if (versionOptions == null) {
+            if (versionOptions == null)
+            {
                 query = query.ForVersion(versionOptions);
             }
 

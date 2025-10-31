@@ -1,14 +1,19 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Orchard.Mvc.Extensions {
-    public static class RouteExtensions {
-        public static string GetAreaName(this RouteBase route) {
-            if (route is IRouteWithArea routeWithArea) {
+namespace Orchard.Mvc.Extensions
+{
+    public static class RouteExtensions
+    {
+        public static string GetAreaName(this RouteBase route)
+        {
+            if (route is IRouteWithArea routeWithArea)
+            {
                 return routeWithArea.Area;
             }
 
-            if (route is Route castRoute && castRoute.DataTokens != null) {
+            if (route is Route castRoute && castRoute.DataTokens != null)
+            {
                 return castRoute.DataTokens["area"] as string;
             }
 

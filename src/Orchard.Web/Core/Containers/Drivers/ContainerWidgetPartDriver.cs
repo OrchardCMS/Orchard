@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -10,21 +10,26 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
 
-namespace Orchard.Core.Containers.Drivers {
-    public class ContainerWidgetPartDriver : ContentPartDriver<ContainerWidgetPart> {
+namespace Orchard.Core.Containers.Drivers
+{
+    public class ContainerWidgetPartDriver : ContentPartDriver<ContainerWidgetPart>
+    {
         private readonly IContentManager _contentManager;
 
-        public ContainerWidgetPartDriver(IContentManager contentManager) {
+        public ContainerWidgetPartDriver(IContentManager contentManager)
+        {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        protected override DriverResult Display(ContainerWidgetPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(ContainerWidgetPart part, string displayType, dynamic shapeHelper)
+        {
             return ContentShape(
                 "Parts_ContainerWidget",
-                () => {
+                () =>
+                {
                     var container = part.Record.ContainerId != 0 ? _contentManager.Get(part.Record.ContainerId) : default(ContentItem);
 
                     if (container == null)
@@ -47,18 +52,22 @@ namespace Orchard.Core.Containers.Drivers {
                 });
         }
 
-        protected override DriverResult Editor(ContainerWidgetPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContainerWidgetPart part, dynamic shapeHelper)
+        {
             return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
-        protected override DriverResult Editor(ContainerWidgetPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContainerWidgetPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             return ContentShape(
                 "Parts_ContainerWidget_Edit",
-                () => {
+                () =>
+                {
                     var model = new ContainerWidgetViewModel { Part = part };
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List().ToArray();
 
-                    if (updater != null) {
+                    if (updater != null)
+                    {
                         updater.TryUpdateModel(model, "ContainerWidget", null, null);
 
                         if (model.Part.Record.ContainerId == 0)
@@ -69,7 +78,8 @@ namespace Orchard.Core.Containers.Drivers {
 
                     var listItems = !containers.Any()
                         ? new[] { new SelectListItem { Text = T("(None - create container enabled items first)").Text, Value = "0" } }
-                        : containers.Select(x => new SelectListItem {
+                        : containers.Select(x => new SelectListItem
+                        {
                             Value = Convert.ToString(x.Id),
                             Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
                             Selected = x.Id == model.Part.Record.ContainerId,
@@ -81,15 +91,19 @@ namespace Orchard.Core.Containers.Drivers {
                 });
         }
 
-        protected override void Importing(ContainerWidgetPart part, ImportContentContext context) {
+        protected override void Importing(ContainerWidgetPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "Container", containerIdentity => {
+            context.ImportAttribute(part.PartDefinition.Name, "Container", containerIdentity =>
+            {
                 var container = context.GetItemFromSession(containerIdentity);
-                if (container != null) {
+                if (container != null)
+                {
                     part.Record.ContainerId = container.Id;
                 }
             });
@@ -103,9 +117,11 @@ namespace Orchard.Core.Containers.Drivers {
             );
         }
 
-        protected override void Exporting(ContainerWidgetPart part, ExportContentContext context) {
+        protected override void Exporting(ContainerWidgetPart part, ExportContentContext context)
+        {
             var container = _contentManager.Get(part.Record.ContainerId);
-            if (container != null) {
+            if (container != null)
+            {
                 var containerIdentity = _contentManager.GetItemMetadata(container).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString());
             }

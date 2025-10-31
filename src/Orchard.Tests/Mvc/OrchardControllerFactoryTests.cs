@@ -1,24 +1,27 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc;
 using Orchard.Tests.DisplayManagement;
 using Orchard.Tests.Stubs;
-using Autofac;
 
-namespace Orchard.Tests.Mvc {
+namespace Orchard.Tests.Mvc
+{
     [TestFixture]
-    public class OrchardControllerFactoryTests {
+    public class OrchardControllerFactoryTests
+    {
         private OrchardControllerFactory _controllerFactory;
         private IWorkContextAccessor _workContextAccessor;
         private StubContainerProvider _containerProvider;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<FooController>()
                 .Keyed<IController>("/foo")
@@ -49,11 +52,12 @@ namespace Orchard.Tests.Mvc {
             _workContextAccessor = new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext);
 
             _controllerFactory = new OrchardControllerFactory();
-            InjectKnownControllerTypes(_controllerFactory, typeof(ReplacementFooController), typeof (FooController), typeof (BarController));
+            InjectKnownControllerTypes(_controllerFactory, typeof(ReplacementFooController), typeof(FooController), typeof(BarController));
         }
 
         [Test]
-        public void IContainerProvidersRequestContainerFromRouteDataShouldUseTokenWhenPresent() {
+        public void IContainerProvidersRequestContainerFromRouteDataShouldUseTokenWhenPresent()
+        {
             var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "foo");
 
@@ -61,7 +65,8 @@ namespace Orchard.Tests.Mvc {
         }
 
         [Test, Ignore("OrchardControllerFactory depends on metadata, calling base when no context is causing errors.")]
-        public void WhenNullOrMissingContainerNormalControllerFactoryRulesShouldBeUsedAsFallback() {
+        public void WhenNullOrMissingContainerNormalControllerFactoryRulesShouldBeUsedAsFallback()
+        {
             var requestContext = GetRequestContext(null);
             var controller = _controllerFactory.CreateController(requestContext, "foo");
 
@@ -69,7 +74,8 @@ namespace Orchard.Tests.Mvc {
         }
 
         [Test]
-        public void WhenContainerIsPresentButNamedControllerIsNotResolvedNormalControllerFactoryRulesShouldBeUsedAsFallback() {
+        public void WhenContainerIsPresentButNamedControllerIsNotResolvedNormalControllerFactoryRulesShouldBeUsedAsFallback()
+        {
             var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "bar");
 
@@ -77,7 +83,8 @@ namespace Orchard.Tests.Mvc {
         }
 
         [Test]
-        public void DisposingControllerThatCameFromContainerShouldNotCauseProblemWhenContainerIsDisposed() {
+        public void DisposingControllerThatCameFromContainerShouldNotCauseProblemWhenContainerIsDisposed()
+        {
             var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "foo");
 
@@ -87,14 +94,15 @@ namespace Orchard.Tests.Mvc {
             _containerProvider.EndRequestLifetime();
 
             // explicitly dispose a few more, just to make sure it's getting hit from all different directions
-            ((IDisposable) controller).Dispose();
-            ((ReplacementFooController) controller).Dispose();
+            ((IDisposable)controller).Dispose();
+            ((ReplacementFooController)controller).Dispose();
 
-            Assert.That(((ReplacementFooController) controller).Disposals, Is.EqualTo(4));
+            Assert.That(((ReplacementFooController)controller).Disposals, Is.EqualTo(4));
         }
 
         [Test]
-        public void NullServiceKeyReturnsDefault() {
+        public void NullServiceKeyReturnsDefault()
+        {
             OrchardControllerFactoryAccessor orchardControllerFactory = new OrchardControllerFactoryAccessor();
             ReplacementFooController fooController;
 
@@ -105,10 +113,11 @@ namespace Orchard.Tests.Mvc {
         private static RequestContext GetRequestContext(IWorkContextAccessor workContextAccessor)
         {
             var handler = new MvcRouteHandler();
-            var route = new Route("yadda", handler) {
-                                                        DataTokens =
+            var route = new Route("yadda", handler)
+            {
+                DataTokens =
                                                             new RouteValueDictionary { { "IWorkContextAccessor", workContextAccessor } }
-                                                    };
+            };
 
             var httpContext = new StubHttpContext();
             var routeData = route.GetRouteData(httpContext);
@@ -119,8 +128,10 @@ namespace Orchard.Tests.Mvc {
 
         public class BarController : Controller { }
 
-        public class ReplacementFooController : Controller {
-            protected override void Dispose(bool disposing) {
+        public class ReplacementFooController : Controller
+        {
+            protected override void Dispose(bool disposing)
+            {
                 ++Disposals;
 
                 base.Dispose(disposing);
@@ -129,14 +140,17 @@ namespace Orchard.Tests.Mvc {
             public int Disposals { get; set; }
         }
 
-        internal class OrchardControllerFactoryAccessor : OrchardControllerFactory {
-            public bool TryResolveAccessor<T>(WorkContext workContext, object serviceKey, out T instance) {
+        internal class OrchardControllerFactoryAccessor : OrchardControllerFactory
+        {
+            public bool TryResolveAccessor<T>(WorkContext workContext, object serviceKey, out T instance)
+            {
                 return TryResolve(workContext, serviceKey, out instance);
             }
         }
 
         private static void InjectKnownControllerTypes(DefaultControllerFactory controllerFactory,
-                                                       params Type[] controllerTypes) {
+                                                       params Type[] controllerTypes)
+        {
             // D'oh!!! Hey MVC people, how is this testable? ;)
 
             // locate the appropriate reflection member info
@@ -158,5 +172,5 @@ namespace Orchard.Tests.Mvc {
                 controllerTypeCacheProperty.GetValue(controllerFactory, null),
                 cache);
         }
-   }
+    }
 }

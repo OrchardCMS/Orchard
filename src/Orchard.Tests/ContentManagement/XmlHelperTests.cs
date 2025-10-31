@@ -1,16 +1,19 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement
+{
     [TestFixture]
-    public class XmlHelperTests {
+    public class XmlHelperTests
+    {
         private const string _testGuidString = "98f3dc0a-01c3-4975-bd52-1b4f5a678d73";
 
         [Test]
-        public void AddEl() {
+        public void AddEl()
+        {
             var el = new XElement("data");
             el
                 .AddEl(new XElement("node1"), new XElement("node2"))
@@ -23,7 +26,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void Val() {
+        public void Val()
+        {
             var el = new XElement("data");
             el = el.Val(123);
             var val = el.Val<int>();
@@ -34,7 +38,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void Infinities() {
+        public void Infinities()
+        {
             var el = new XElement("data")
                 .Attr("doubleplus", double.PositiveInfinity)
                 .Attr("doubleminus", double.NegativeInfinity)
@@ -53,7 +58,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void StringToAttribute() {
+        public void StringToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("foo", "bar");
 
@@ -61,7 +67,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void IntToAttribute() {
+        public void IntToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("foo", 42);
 
@@ -69,7 +76,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void BoolToAttribute() {
+        public void BoolToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("foo", true);
             el.Attr("bar", false);
@@ -79,7 +87,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DateTimeToAttribute() {
+        public void DateTimeToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("foo", new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc));
 
@@ -87,7 +96,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GuidToAttribute() {
+        public void GuidToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("guid", new Guid(_testGuidString));
 
@@ -95,7 +105,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DoubleFloatDecimalToAttribute() {
+        public void DoubleFloatDecimalToAttribute()
+        {
             var el = new XElement("data");
             el.Attr("double", 12.456D);
             el.Attr("float", 12.457F);
@@ -107,7 +118,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ReadAttribute() {
+        public void ReadAttribute()
+        {
             var el = XElement.Parse("<data foo=\"bar\"/>");
 
             Assert.That(el.Attr("foo"), Is.EqualTo("bar"));
@@ -115,7 +127,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void StringToElement() {
+        public void StringToElement()
+        {
             var el = new XElement("data");
             el.El("foo", "bar");
 
@@ -123,7 +136,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void IntToElement() {
+        public void IntToElement()
+        {
             var el = new XElement("data");
             el.El("foo", 42);
 
@@ -131,7 +145,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void BoolToElement() {
+        public void BoolToElement()
+        {
             var el = new XElement("data");
             el.El("foo", true);
             el.El("bar", false);
@@ -141,7 +156,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DateTimeToElement() {
+        public void DateTimeToElement()
+        {
             var el = new XElement("data");
             el.El("foo", new DateTime(1970, 5, 21, 13, 55, 21, 934, DateTimeKind.Utc));
 
@@ -149,7 +165,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DoubleFloatDecimalToElement() {
+        public void DoubleFloatDecimalToElement()
+        {
             var el = new XElement("data");
             el.El("double", 12.456D);
             el.El("float", 12.457F);
@@ -161,7 +178,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void GuidToElement() {
+        public void GuidToElement()
+        {
             var el = new XElement("data");
             el.El("guid", new Guid(_testGuidString));
 
@@ -169,7 +187,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ReadElement() {
+        public void ReadElement()
+        {
             var el = XElement.Parse("<data><foo>bar</foo></data>");
 
             Assert.That(el.El("foo"), Is.EqualTo("bar"));
@@ -177,8 +196,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void SerializeObject() {
-            var target = new Target {
+        public void SerializeObject()
+        {
+            var target = new Target
+            {
                 AString = "foo",
                 AnInt = 42,
                 ABoolean = true,
@@ -232,7 +253,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DeSerializeObject() {
+        public void DeSerializeObject()
+        {
             var target = new Target();
             var el =
                 XElement.Parse(
@@ -277,8 +299,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DeSerializeFromMissingAttributeLeavesValueIntact() {
-            var target = new Target {
+        public void DeSerializeFromMissingAttributeLeavesValueIntact()
+        {
+            var target = new Target
+            {
                 AString = "foo",
                 AnInt = 42,
                 ABoolean = true,
@@ -331,9 +355,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void AttrWithContext() {
+        public void AttrWithContext()
+        {
             var el = new XElement("data")
-                .With(new {foo = 123})
+                .With(new { foo = 123 })
                 .ToAttr(o => o.foo);
             var val = el.Attr(o => o.foo);
 
@@ -341,11 +366,12 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ContextSwitch() {
+        public void ContextSwitch()
+        {
             var el = new XElement("data");
-            el.With(new {foo = "bar"})
+            el.With(new { foo = "bar" })
                 .ToAttr(o => o.foo)
-                .With(new {bar = "baz"})
+                .With(new { bar = "baz" })
                 .ToAttr(o => o.bar);
 
             Assert.That(el.Attr<string>("foo"), Is.EqualTo("bar"));
@@ -353,9 +379,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImplicitConversion() {
+        public void ImplicitConversion()
+        {
             var el = new XElement("data")
-                .With(new {foo = "bar"})
+                .With(new { foo = "bar" })
                 .ToAttr(o => o.foo);
             Func<XElement, string> func = e => e.Attr<string>("foo");
 
@@ -363,7 +390,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void NullSerializes() {
+        public void NullSerializes()
+        {
             var target = new Target();
             var el = new XElement("data");
             el.With(target)
@@ -387,7 +415,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void DeSerializeNull() {
+        public void DeSerializeNull()
+        {
             var target = new Target();
             var el =
                 XElement.Parse(
@@ -414,7 +443,8 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(target.ANullableGuid, Is.Null);
         }
 
-        private class Target {
+        private class Target
+        {
             public string AString { get; set; }
             public int AnInt { get; set; }
             public bool ABoolean { get; set; }

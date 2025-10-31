@@ -1,7 +1,9 @@
 using Orchard.DynamicForms.Services.Models;
 
-namespace Orchard.DynamicForms.Validators.Settings {
-    public class PasswordFieldValidationSettings : ValidationSettingsBase {
+namespace Orchard.DynamicForms.Validators.Settings
+{
+    public class PasswordFieldValidationSettings : ValidationSettingsBase
+    {
         public bool? IsRequired { get; set; }
         public int? MinimumLength { get; set; }
         public int? MaximumLength { get; set; }

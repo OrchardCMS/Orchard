@@ -1,5 +1,7 @@
-﻿namespace Orchard.Layouts.Settings {
-    public class LayoutTypePartSettings {
+namespace Orchard.Layouts.Settings
+{
+    public class LayoutTypePartSettings
+    {
 
         public bool IsTemplate { get; set; }
 

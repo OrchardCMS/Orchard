@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Roles.Services {
-    public interface IRoleService : IDependency {
+namespace Orchard.Roles.Services
+{
+    public interface IRoleService : IDependency
+    {
         IEnumerable<RoleRecord> GetRoles();
         RoleRecord GetRole(int id);
         RoleRecord GetRoleByName(string name);

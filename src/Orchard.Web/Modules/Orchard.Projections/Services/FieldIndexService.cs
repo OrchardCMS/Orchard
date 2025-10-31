@@ -1,35 +1,42 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.Services {
-    public class FieldIndexService : IFieldIndexService {
+namespace Orchard.Projections.Services
+{
+    public class FieldIndexService : IFieldIndexService
+    {
 
         public void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType) =>
             Set(part, partName, fieldName, valueName, value, valueType, FieldIndexRecordVersionOptions.Value);
 
         public void Set(FieldIndexPart part, string partName, string fieldName, string valueName, object value, Type valueType,
-            FieldIndexRecordVersionOptions fieldIndexRecordVersionOption) {
+            FieldIndexRecordVersionOptions fieldIndexRecordVersionOption)
+        {
             var propertyName = string.Join(".", partName, fieldName, valueName ?? "");
 
             var typeCode = Type.GetTypeCode(valueType);
 
-            if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+            if (valueType.IsGenericType && valueType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
                 typeCode = Type.GetTypeCode(Nullable.GetUnderlyingType(valueType));
             }
 
-            switch (typeCode) {
+            switch (typeCode)
+            {
                 case TypeCode.Char:
                 case TypeCode.String:
                     var stringRecord = part.Record.StringFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (stringRecord == null) {
+                    if (stringRecord == null)
+                    {
                         stringRecord = new StringFieldIndexRecord { PropertyName = propertyName };
                         part.Record.StringFieldIndexRecords.Add(stringRecord);
                     }
 
                     // Take the first 4000 chars as it is the limit for the field.
                     var stringRecordValue = value?.ToString().Substring(0, Math.Min(value.ToString().Length, 4000));
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             stringRecord.Value = stringRecordValue;
 
@@ -50,13 +57,15 @@ namespace Orchard.Projections.Services {
                 case TypeCode.UInt32:
                 case TypeCode.UInt64:
                     var integerRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (integerRecord == null) {
+                    if (integerRecord == null)
+                    {
                         integerRecord = new IntegerFieldIndexRecord { PropertyName = propertyName };
                         part.Record.IntegerFieldIndexRecords.Add(integerRecord);
                     }
 
                     var integerRecordValue = value == null ? default(long?) : Convert.ToInt64(value);
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             integerRecord.Value = integerRecordValue;
 
@@ -70,13 +79,15 @@ namespace Orchard.Projections.Services {
                     break;
                 case TypeCode.DateTime:
                     var dateTimeRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (dateTimeRecord == null) {
+                    if (dateTimeRecord == null)
+                    {
                         dateTimeRecord = new IntegerFieldIndexRecord { PropertyName = propertyName };
                         part.Record.IntegerFieldIndexRecords.Add(dateTimeRecord);
                     }
 
                     var dateTimeRecordValue = value == null ? default(long?) : ((DateTime)value).Ticks;
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             dateTimeRecord.Value = dateTimeRecordValue;
 
@@ -90,13 +101,15 @@ namespace Orchard.Projections.Services {
                     break;
                 case TypeCode.Boolean:
                     var booleanRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (booleanRecord == null) {
+                    if (booleanRecord == null)
+                    {
                         booleanRecord = new IntegerFieldIndexRecord { PropertyName = propertyName };
                         part.Record.IntegerFieldIndexRecords.Add(booleanRecord);
                     }
 
                     var booleanRecordValue = value == null ? default(long?) : Convert.ToInt64((bool)value);
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             booleanRecord.Value = booleanRecordValue;
 
@@ -110,13 +123,15 @@ namespace Orchard.Projections.Services {
                     break;
                 case TypeCode.Decimal:
                     var decimalRecord = part.Record.DecimalFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (decimalRecord == null) {
+                    if (decimalRecord == null)
+                    {
                         decimalRecord = new DecimalFieldIndexRecord { PropertyName = propertyName };
                         part.Record.DecimalFieldIndexRecords.Add(decimalRecord);
                     }
 
                     var decimalRecordValue = value == null ? default(decimal?) : Convert.ToDecimal((decimal)value);
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             decimalRecord.Value = decimalRecordValue;
 
@@ -131,13 +146,15 @@ namespace Orchard.Projections.Services {
                 case TypeCode.Single:
                 case TypeCode.Double:
                     var doubleRecord = part.Record.DoubleFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
-                    if (doubleRecord == null) {
+                    if (doubleRecord == null)
+                    {
                         doubleRecord = new DoubleFieldIndexRecord { PropertyName = propertyName };
                         part.Record.DoubleFieldIndexRecords.Add(doubleRecord);
                     }
 
                     var doubleRecordValue = value == null ? default(double?) : Convert.ToDouble(value);
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             doubleRecord.Value = doubleRecordValue;
 
@@ -155,18 +172,21 @@ namespace Orchard.Projections.Services {
         public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName) =>
             Get<T>(part, partName, fieldName, valueName, FieldIndexRecordVersionOptions.Value);
 
-        public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName, FieldIndexRecordVersionOptions fieldIndexRecordVersionOption) {
+        public T Get<T>(FieldIndexPart part, string partName, string fieldName, string valueName, FieldIndexRecordVersionOptions fieldIndexRecordVersionOption)
+        {
             var propertyName = string.Join(".", partName, fieldName, valueName ?? "");
 
             var typeCode = Type.GetTypeCode(typeof(T));
 
-            switch (typeCode) {
+            switch (typeCode)
+            {
                 case TypeCode.Char:
                 case TypeCode.String:
                     var stringRecord = part.Record.StringFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var stringRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             stringRecordValue = (T)Convert.ChangeType(stringRecord.Value, typeof(T));
 
@@ -189,7 +209,8 @@ namespace Orchard.Projections.Services {
                     var integerRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var integerRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             integerRecordValue = (T)Convert.ChangeType(integerRecord.Value, typeof(T));
 
@@ -205,7 +226,8 @@ namespace Orchard.Projections.Services {
                     var decimalRecord = part.Record.DecimalFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var decimalRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             decimalRecordValue = (T)Convert.ChangeType(decimalRecord.Value, typeof(T));
 
@@ -222,7 +244,8 @@ namespace Orchard.Projections.Services {
                     var doubleRecord = part.Record.DoubleFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var doubleRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             doubleRecordValue = (T)Convert.ChangeType(doubleRecord.Value, typeof(T));
 
@@ -238,7 +261,8 @@ namespace Orchard.Projections.Services {
                     var dateTimeRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var dateTimeRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             dateTimeRecordValue = (T)Convert.ChangeType(new DateTime(Convert.ToInt64(dateTimeRecord.Value)), typeof(T));
 
@@ -254,7 +278,8 @@ namespace Orchard.Projections.Services {
                     var booleanRecord = part.Record.IntegerFieldIndexRecords.FirstOrDefault(r => r.PropertyName == propertyName);
                     var booleanRecordValue = default(T);
 
-                    switch (fieldIndexRecordVersionOption) {
+                    switch (fieldIndexRecordVersionOption)
+                    {
                         case FieldIndexRecordVersionOptions.Value:
                             booleanRecordValue = (T)Convert.ChangeType(booleanRecord.Value, typeof(T));
 

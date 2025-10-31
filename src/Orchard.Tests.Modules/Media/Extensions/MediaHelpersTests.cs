@@ -1,11 +1,14 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.Media.Helpers;
 
-namespace Orchard.Tests.Modules.Media.Extensions {
+namespace Orchard.Tests.Modules.Media.Extensions
+{
     [TestFixture]
-    public class MediaHelpersTests {
+    public class MediaHelpersTests
+    {
         [Test]
-        public void PicturesArePictures() {
+        public void PicturesArePictures()
+        {
             Assert.That(MediaHelpers.IsPicture(null, "image.gif"), Is.True);
             Assert.That(MediaHelpers.IsPicture(null, "image.jpg"), Is.True);
             Assert.That(MediaHelpers.IsPicture(null, "image.jpeg"), Is.True);
@@ -15,7 +18,8 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         }
 
         [Test]
-        public void PdfIsNotAPicture() {
+        public void PdfIsNotAPicture()
+        {
             Assert.That(MediaHelpers.IsPicture(null, "notanimage.pdf"), Is.False);
         }
     }

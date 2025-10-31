@@ -1,7 +1,9 @@
-﻿using Glimpse.Core.Message;
+using Glimpse.Core.Message;
 
-namespace Orchard.Glimpse {
-    public class TimelineCategories {
+namespace Orchard.Glimpse
+{
+    public class TimelineCategories
+    {
         public static TimelineCategoryItem Cache => new TimelineCategoryItem("Cache", "#154B87", "#154B87");
         public static TimelineCategoryItem Layers => new TimelineCategoryItem("Layers", "#E6261D", "#E6261D");
         public static TimelineCategoryItem Parts => new TimelineCategoryItem("Parts", "#169871", "#169871");

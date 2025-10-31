@@ -2,10 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace Orchard.Mvc.Filters {
-    public class OrchardFilterProvider : System.Web.Mvc.IFilterProvider {
+namespace Orchard.Mvc.Filters
+{
+    public class OrchardFilterProvider : System.Web.Mvc.IFilterProvider
+    {
 
-        public IEnumerable<Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor) {
+        public IEnumerable<Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
+        {
             var workContext = controllerContext.GetWorkContext();
 
             // Map IFilterProvider implementations to MVC Filter objects

@@ -1,8 +1,10 @@
 using Orchard.Environment.Extensions.Models;
 using Orchard.Events;
 
-namespace Orchard.Environment {
-    public interface IFeatureEventHandler : IEventHandler {
+namespace Orchard.Environment
+{
+    public interface IFeatureEventHandler : IEventHandler
+    {
         void Installing(Feature feature);
         void Installed(Feature feature);
         void Enabling(Feature feature);

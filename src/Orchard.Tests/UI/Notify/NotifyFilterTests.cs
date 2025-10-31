@@ -1,13 +1,16 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.UI.Notify {
+namespace Orchard.Tests.UI.Notify
+{
     [TestFixture]
-    public class NotifyFilterTests {
-        private static ActionExecutedContext BuildContext() {
+    public class NotifyFilterTests
+    {
+        private static ActionExecutedContext BuildContext()
+        {
             var httpContext = new StubHttpContext();
             var routeData = new RouteData();
 

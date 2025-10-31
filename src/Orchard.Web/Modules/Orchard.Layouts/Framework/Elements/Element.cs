@@ -1,10 +1,13 @@
-﻿using Orchard.Layouts.Elements;
+using Orchard.Layouts.Elements;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Layouts.Framework.Elements {
-    public abstract class Element : IElement {
-        protected Element() {
+namespace Orchard.Layouts.Framework.Elements
+{
+    public abstract class Element : IElement
+    {
+        protected Element()
+        {
             T = NullLocalizer.Instance;
             Data = new ElementDataDictionary();
             ExportableData = new ElementDataDictionary();
@@ -12,29 +15,17 @@ namespace Orchard.Layouts.Framework.Elements {
 
         public Container Container { get; set; }
 
-        public virtual bool IsSystemElement {
-            get { return false; }
-        }
+        public virtual bool IsSystemElement => false;
 
-        public virtual bool HasEditor {
-            get { return true; }
-        }
+        public virtual bool HasEditor => true;
 
-        public virtual string Type {
-            get { return GetType().FullName; }
-        }
+        public virtual string Type => GetType().FullName;
 
-        public virtual LocalizedString DisplayText {
-            get { return T(GetType().Name.CamelFriendly()); }
-        }
+        public virtual LocalizedString DisplayText => T(GetType().Name.CamelFriendly());
 
-        public virtual LocalizedString Description {
-            get { return T("{0} element.", DisplayText); }
-        }
+        public virtual LocalizedString Description => T("{0} element.", DisplayText);
 
-        public virtual string ToolboxIcon {
-            get { return "\uf1c9"; }
-        }
+        public virtual string ToolboxIcon => "\uf1c9";
 
         public abstract string Category { get; }
         public Localizer T { get; set; }

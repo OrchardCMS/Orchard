@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.Scripting.Hosting;
 
-namespace Orchard.Scripting.Dlr.Services {
-    public interface IScriptingManager : IDependency {
+namespace Orchard.Scripting.Dlr.Services
+{
+    public interface IScriptingManager : IDependency
+    {
         dynamic GetVariable(string name);
         void SetVariable(string name, object value);
         dynamic ExecuteExpression(string expression);

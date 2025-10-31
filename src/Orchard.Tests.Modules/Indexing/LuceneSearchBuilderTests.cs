@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -10,24 +10,30 @@ using Orchard.Indexing;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Indexing {
-    public class LuceneSearchBuilderTests {
+namespace Orchard.Tests.Modules.Indexing
+{
+    public class LuceneSearchBuilderTests
+    {
         private IContainer _container;
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
         private ShellSettings _shellSettings;
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        
+
         [OneTimeTearDown]
-        public void Clean() {
-            if (Directory.Exists(_basePath)) {
+        public void Clean()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
         }
 
         [SetUp]
-        public void Setup() {
-            if (Directory.Exists(_basePath)) {
+        public void Setup()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
             Directory.CreateDirectory(_basePath);
@@ -49,12 +55,13 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider = _container.Resolve<IIndexProvider>();
         }
 
-        private ISearchBuilder SearchBuilder { get { return _provider.CreateSearchBuilder("default"); } }
+        private ISearchBuilder SearchBuilder => _provider.CreateSearchBuilder("default");
 
         [Test]
-        public void SearchTermsShouldBeFoundInMultipleFields() {
+        public void SearchTermsShouldBeFoundInMultipleFields()
+        {
             _provider.CreateIndex("default");
-            _provider.Store("default", 
+            _provider.Store("default",
                 _provider.New(42)
                     .Add("title", "title1 title2 title3").Analyze()
                     .Add("date", new DateTime(2010, 05, 28, 14, 13, 56, 123))
@@ -70,7 +77,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchById() {
+        public void ShouldSearchById()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1));
             _provider.Store("default", _provider.New(2));
@@ -83,7 +91,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchWithField() {
+        public void ShouldSearchWithField()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("title", "cat"));
             _provider.Store("default", _provider.New(2).Add("title", "dog"));
@@ -95,7 +104,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchByBooleanWhateverIndexingScheme() {
+        public void ShouldSearchByBooleanWhateverIndexingScheme()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("foo", true));
             _provider.Store("default", _provider.New(2).Add("foo", true).Store());
@@ -111,7 +121,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchByStringWhateverIndexingScheme() {
+        public void ShouldSearchByStringWhateverIndexingScheme()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("foo", "abc"));
             _provider.Store("default", _provider.New(2).Add("foo", "abc").Store());
@@ -127,7 +138,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchByIntegerWhateverIndexingScheme() {
+        public void ShouldSearchByIntegerWhateverIndexingScheme()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("foo", 1));
             _provider.Store("default", _provider.New(2).Add("foo", 1).Store());
@@ -143,7 +155,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchByFloatWhateverIndexingScheme() {
+        public void ShouldSearchByFloatWhateverIndexingScheme()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("foo", 1.1));
             _provider.Store("default", _provider.New(2).Add("foo", 1.1).Store());
@@ -159,7 +172,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchByDateTimeWhateverIndexingScheme() {
+        public void ShouldSearchByDateTimeWhateverIndexingScheme()
+        {
             var date1 = DateTime.Today;
             var date2 = DateTime.Today.AddDays(1);
             _provider.CreateIndex("default");
@@ -178,7 +192,8 @@ namespace Orchard.Tests.Modules.Indexing {
 
 
         [Test]
-        public void ShouldCountResultsOnly() {
+        public void ShouldCountResultsOnly()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("title", "cat"));
             _provider.Store("default", _provider.New(2).Add("title", "dog"));
@@ -189,7 +204,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldFilterByDate() {
+        public void ShouldFilterByDate()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("date", new DateTime(2010, 05, 28, 12, 30, 15)));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -204,7 +220,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSliceResults() {
+        public void ShouldSliceResults()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1));
             _provider.Store("default", _provider.New(22));
@@ -212,7 +229,7 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(4444));
             _provider.Store("default", _provider.New(55555));
 
-            
+
             Assert.That(SearchBuilder.Count(), Is.EqualTo(5));
             Assert.That(SearchBuilder.Slice(0, 3).Count(), Is.EqualTo(3));
             Assert.That(SearchBuilder.Slice(1, 3).Count(), Is.EqualTo(3));
@@ -226,7 +243,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSortByRelevance() {
+        public void ShouldSortByRelevance()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "michael as a cousin named michel").Analyze());
@@ -245,7 +263,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSortByDate() {
+        public void ShouldSortByDate()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
             _provider.Store("default", _provider.New(2).Add("date", DateTime.MinValue));
@@ -264,7 +283,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSortByNumber() {
+        public void ShouldSortByNumber()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("downloads", 111));
             _provider.Store("default", _provider.New(2).Add("downloads", int.MaxValue));
@@ -284,7 +304,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSortByBoolean() {
+        public void ShouldSortByBoolean()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("active", true));
             _provider.Store("default", _provider.New(2).Add("active", false));
@@ -301,7 +322,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSortByDouble() {
+        public void ShouldSortByDouble()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("rating", 111.111));
             _provider.Store("default", _provider.New(2).Add("rating", double.MaxValue));
@@ -321,7 +343,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldEscapeSpecialChars() {
+        public void ShouldEscapeSpecialChars()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
@@ -335,7 +358,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldHandleMandatoryFields() {
+        public void ShouldHandleMandatoryFields()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
@@ -347,7 +371,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldHandleForbiddenFields() {
+        public void ShouldHandleForbiddenFields()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
@@ -359,7 +384,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldHandleWeight() {
+        public void ShouldHandleWeight()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
@@ -368,23 +394,25 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldParseLuceneQueries() {
+        public void ShouldParseLuceneQueries()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
             _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "kitchen", false).Count(), Is.EqualTo(2));
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "kitchen bertrand", false).Count(), Is.EqualTo(3));
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "kit*", false).Count(), Is.EqualTo(2));
-            Assert.That(SearchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
-            Assert.That(SearchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kitchen", false).Count(), Is.EqualTo(2));
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kitchen bertrand", false).Count(), Is.EqualTo(3));
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kit*", false).Count(), Is.EqualTo(2));
+            Assert.That(SearchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
+            Assert.That(SearchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
         }
 
         [Test]
-        public void ParseQueriesArePrefixedByDefault() {
+        public void ParseQueriesArePrefixedByDefault()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
@@ -398,7 +426,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldParseLuceneQueriesWithSpecificFields() {
+        public void ShouldParseLuceneQueriesWithSpecificFields()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
@@ -413,7 +442,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldFilterIntValues() {
+        public void ShouldFilterIntValues()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("field", 1));
             _provider.Store("default", _provider.New(2).Add("field", 22));
@@ -429,7 +459,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldFilterStoredIntValues() {
+        public void ShouldFilterStoredIntValues()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("field", 1).Store());
             _provider.Store("default", _provider.New(2).Add("field", 22).Store());
@@ -445,18 +476,20 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldProvideAvailableFields() {
+        public void ShouldProvideAvailableFields()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("a", "Home").Analyze());
             _provider.Store("default", _provider.New(2).Add("b", DateTime.Now).Store());
             _provider.Store("default", _provider.New(3).Add("c", 333));
 
             Assert.That(_provider.GetFields("default").Count(), Is.EqualTo(4));
-            Assert.That(_provider.GetFields("default").OrderBy(s => s).ToArray(), Is.EqualTo(new [] { "a", "b", "c", "id"}));
+            Assert.That(_provider.GetFields("default").OrderBy(s => s).ToArray(), Is.EqualTo(new[] { "a", "b", "c", "id" }));
         }
 
         [Test]
-        public void FiltersShouldNotAlterResults() {
+        public void FiltersShouldNotAlterResults()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Microsoft in C#").Analyze().Add("culture", 1033));
             _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Microsoft en C++").Analyze().Add("culture", 1036));
@@ -465,13 +498,13 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(SearchBuilder.WithField("body", "Microsoft").Count(), Is.EqualTo(2));
             Assert.That(SearchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
             Assert.That(SearchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
-            
+
             Assert.That(SearchBuilder.WithField("body", "Orchard").WithField("culture", 1036).Count(), Is.EqualTo(2));
             Assert.That(SearchBuilder.WithField("body", "Orchard").WithField("culture", 1036).AsFilter().Count(), Is.EqualTo(0));
 
             Assert.That(SearchBuilder.WithField("culture", 1033).Count(), Is.EqualTo(2));
             Assert.That(SearchBuilder.WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(2));
-            
+
             Assert.That(SearchBuilder.WithField("body", "blabla").WithField("culture", 1033).Count(), Is.EqualTo(2));
             Assert.That(SearchBuilder.WithField("body", "blabla").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(0));
 
@@ -480,7 +513,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ParsedTextShouldBeEscapedByDefault() {
+        public void ParsedTextShouldBeEscapedByDefault()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "foo.bar").Analyze());
 
@@ -488,7 +522,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldSearchFolderStructure() {
+        public void ShouldSearchFolderStructure()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("media-path", "images").Store());
             _provider.Store("default", _provider.New(2).Add("media-path", "images/pets/puppies").Store());
@@ -504,7 +539,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void FieldsCanContainMultipleValue() {
+        public void FieldsCanContainMultipleValue()
+        {
             _provider.CreateIndex("default");
             var documentIndex = _provider.New(1)
                 .Add("tag-id", 1)
@@ -530,7 +566,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void AnalyzedFieldsAreNotCaseSensitive() {
+        public void AnalyzedFieldsAreNotCaseSensitive()
+        {
             _provider.CreateIndex("default");
             var documentIndex = _provider.New(1)
                 .Add("tag-id", 1)
@@ -549,7 +586,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void NotAnalyzedFieldsAreSearchable() {
+        public void NotAnalyzedFieldsAreSearchable()
+        {
             _provider.CreateIndex("default");
             var documentIndex = _provider.New(1)
                 .Add("tag-id", 1)
@@ -568,9 +606,11 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldReturnAllDocuments() {
+        public void ShouldReturnAllDocuments()
+        {
             _provider.CreateIndex("default");
-            for(var i = 1; i<100;i++) {
+            for (var i = 1; i < 100; i++)
+            {
                 _provider.Store("default", _provider.New(i).Add("term-id", i).Store());
             }
 
@@ -578,9 +618,11 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void NoClauseButAFilter() {
+        public void NoClauseButAFilter()
+        {
             _provider.CreateIndex("default");
-            for (var i = 1; i < 50; i++) {
+            for (var i = 1; i < 50; i++)
+            {
                 _provider.Store("default", _provider.New(i).Add("term-id", i / 10).Store());
             }
 
@@ -593,7 +635,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void MandatoryCanBeUsedrMultipleTimes() {
+        public void MandatoryCanBeUsedrMultipleTimes()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default",
                 _provider.New(1)
@@ -624,7 +667,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void SearchQueryCanContainMultipleFilters() {
+        public void SearchQueryCanContainMultipleFilters()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default",
                 _provider.New(1)
@@ -662,7 +706,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldReturnFacetedResults() {
+        public void ShouldReturnFacetedResults()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "michael has a cousin named michel").Analyze());
@@ -681,7 +726,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldAcceptNoMin() {
+        public void ShouldAcceptNoMin()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("string", "foo"));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -695,7 +741,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldAcceptNoMax() {
+        public void ShouldAcceptNoMax()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("string", "foo"));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -709,7 +756,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldIncludeBoudaries() {
+        public void ShouldIncludeBoudaries()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("string", "foo"));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -723,7 +771,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldNotIncludeLowerBoudary() {
+        public void ShouldNotIncludeLowerBoudary()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("string", "foo"));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -737,7 +786,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldNotIncludeUpperBoudary() {
+        public void ShouldNotIncludeUpperBoudary()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("string", "foo"));
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
@@ -751,7 +801,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldAllowGroupedClauses() {
+        public void ShouldAllowGroupedClauses()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "michael has a cousin named michel").Analyze());

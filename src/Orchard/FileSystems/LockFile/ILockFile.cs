@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 
 namespace Orchard.FileSystems.LockFile
 {
-    public interface ILockFile : IDisposable {
+    public interface ILockFile : IDisposable
+    {
         void Release();
     }
 }

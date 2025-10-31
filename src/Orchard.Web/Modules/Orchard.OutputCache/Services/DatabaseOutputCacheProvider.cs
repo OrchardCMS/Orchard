@@ -1,34 +1,38 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.OutputCache.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
-using Orchard.OutputCache.Services;
+using Orchard.OutputCache.Models;
 using Orchard.Services;
 
-namespace Orchard.OutputCache.Services {
+namespace Orchard.OutputCache.Services
+{
     [OrchardFeature("Orchard.OutputCache.Database")]
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
-    public class DatabaseOutputCacheStorageProvider : IOutputCacheStorageProvider {
+    public class DatabaseOutputCacheStorageProvider : IOutputCacheStorageProvider
+    {
         private readonly IRepository<CacheItemRecord> _repository;
         private readonly IClock _clock;
 
-        public DatabaseOutputCacheStorageProvider(IRepository<CacheItemRecord> repository, IClock clock) {
+        public DatabaseOutputCacheStorageProvider(IRepository<CacheItemRecord> repository, IClock clock)
+        {
             _repository = repository;
             _clock = clock;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
- 
-        public void Set(string key, CacheItem cacheItem) {
-            lock (String.Intern(key)) {
+
+        public void Set(string key, CacheItem cacheItem)
+        {
+            lock (string.Intern(key))
+            {
                 var records = _repository.Table.Where(x => x.CacheKey == key).ToList();
                 var record = records.FirstOrDefault();
-                    
-                if (record == null) {
+
+                if (record == null)
+                {
                     record = new CacheItemRecord();
                     Convert(cacheItem, record);
                     _repository.Create(record);
@@ -39,7 +43,8 @@ namespace Orchard.OutputCache.Services {
             }
         }
 
-        private void Convert(CacheItem cacheItem, CacheItemRecord record) {
+        private void Convert(CacheItem cacheItem, CacheItemRecord record)
+        {
             record.CacheKey = cacheItem.CacheKey;
             record.CachedOnUtc = cacheItem.CachedOnUtc;
             record.Duration = cacheItem.Duration;
@@ -51,12 +56,13 @@ namespace Orchard.OutputCache.Services {
             record.Output = cacheItem.Output;
             record.QueryString = cacheItem.QueryString;
             record.StatusCode = cacheItem.StatusCode;
-            record.Tags = String.Join(";", cacheItem.Tags);
+            record.Tags = string.Join(";", cacheItem.Tags);
             record.Tenant = cacheItem.Tenant;
             record.Url = cacheItem.Url;
         }
 
-        private CacheItem Convert(CacheItemRecord record) {
+        private CacheItem Convert(CacheItemRecord record)
+        {
             var cacheItem = new CacheItem();
 
             cacheItem.CacheKey = record.CacheKey;
@@ -75,30 +81,38 @@ namespace Orchard.OutputCache.Services {
             return cacheItem;
         }
 
-        public void Remove(string key) {
-            lock (String.Intern(key)) {
+        public void Remove(string key)
+        {
+            lock (string.Intern(key))
+            {
                 var records = _repository.Table.Where(x => x.CacheKey == key).ToList();
                 var record = records.FirstOrDefault();
 
-                if (record != null) {
+                if (record != null)
+                {
                     _repository.Delete(record);
                 }
             }
         }
 
-        public void RemoveAll() {
-            foreach (var record in _repository.Table) {
+        public void RemoveAll()
+        {
+            foreach (var record in _repository.Table)
+            {
                 _repository.Delete(record);
             }
         }
 
-        public CacheItem GetCacheItem(string key) {
-            lock (String.Intern(key)) {
+        public CacheItem GetCacheItem(string key)
+        {
+            lock (string.Intern(key))
+            {
                 var records = _repository.Table.Where(x => x.CacheKey == key).ToList();
                 var record = records.FirstOrDefault();
 
                 CacheItem cacheItem = null;
-                if (record != null) {
+                if (record != null)
+                {
                     cacheItem = Convert(record);
                 }
 
@@ -106,7 +120,8 @@ namespace Orchard.OutputCache.Services {
             }
         }
 
-        public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
+        public IEnumerable<CacheItem> GetCacheItems(int skip, int count)
+        {
             return _repository.Table
                 .OrderByDescending(x => x.CachedOnUtc)
                 .Skip(skip)
@@ -115,12 +130,15 @@ namespace Orchard.OutputCache.Services {
                 .ToList();
         }
 
-        public int GetCacheItemsCount() {
+        public int GetCacheItemsCount()
+        {
             return _repository.Table.Count();
         }
 
-        public void RemoveExpiredEntries() {
-            foreach (var record in _repository.Table.Where( x => x.StoredUntilUtc < _clock.UtcNow)) {
+        public void RemoveExpiredEntries()
+        {
+            foreach (var record in _repository.Table.Where(x => x.StoredUntilUtc < _clock.UtcNow))
+            {
                 _repository.Delete(record);
             }
         }

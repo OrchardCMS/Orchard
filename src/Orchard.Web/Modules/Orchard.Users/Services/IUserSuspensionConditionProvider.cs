@@ -1,8 +1,10 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.Users.Models;
 
-namespace Orchard.Users.Services {
-    public interface IUserSuspensionConditionProvider : IDependency {
+namespace Orchard.Users.Services
+{
+    public interface IUserSuspensionConditionProvider : IDependency
+    {
         IContentQuery<UserPart> AlterQuery(
             IContentQuery<UserPart> query);
 

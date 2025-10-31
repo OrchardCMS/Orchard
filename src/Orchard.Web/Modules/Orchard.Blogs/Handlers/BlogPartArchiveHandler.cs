@@ -9,8 +9,10 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 
-namespace Orchard.Blogs.Handlers {
-    public class BlogPartArchiveHandler : ContentHandler {
+namespace Orchard.Blogs.Handlers
+{
+    public class BlogPartArchiveHandler : ContentHandler
+    {
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IContentManager _contentManager;
@@ -21,7 +23,8 @@ namespace Orchard.Blogs.Handlers {
             IRepository<BlogPartArchiveRecord> blogArchiveRepository,
             IBlogPostService blogPostService,
             IWorkContextAccessor workContextAccessor,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _blogArchiveRepository = blogArchiveRepository;
             _workContextAccessor = workContextAccessor;
             _contentManager = contentManager;
@@ -35,27 +38,33 @@ namespace Orchard.Blogs.Handlers {
             OnRemoved<BlogPostPart>((context, bp) => ReduceBlogArchive(bp));
         }
 
-        private void SavePreviousCreatedDate(int contentItemId) {
-            if (_previousCreatedUtc.ContainsKey(contentItemId)) {
+        private void SavePreviousCreatedDate(int contentItemId)
+        {
+            if (_previousCreatedUtc.ContainsKey(contentItemId))
+            {
                 return;
             }
 
             var previousPublishedVersion = _contentManager.Get(contentItemId, VersionOptions.Published);
 
             // retrieve the creation date when it was published
-            if (previousPublishedVersion != null) {
+            if (previousPublishedVersion != null)
+            {
                 var versionCommonPart = previousPublishedVersion.As<ICommonPart>();
-                if (versionCommonPart.CreatedUtc.HasValue) {
+                if (versionCommonPart.CreatedUtc.HasValue)
+                {
                     _previousCreatedUtc[contentItemId] = versionCommonPart.CreatedUtc.Value;
                 }
             }
         }
 
-        private void ReduceBlogArchive(BlogPostPart blogPostPart) {
+        private void ReduceBlogArchive(BlogPostPart blogPostPart)
+        {
             _blogArchiveRepository.Flush();
 
             // don't reduce archive count if the content item is not published
-            if (!_previousCreatedUtc.ContainsKey(blogPostPart.Id)) {
+            if (!_previousCreatedUtc.ContainsKey(blogPostPart.Id))
+            {
                 return;
             }
 
@@ -82,10 +91,12 @@ namespace Orchard.Blogs.Handlers {
             blogPostPart.ArchiveSync = null;
         }
 
-        private void ReduceBlogArchiveByDate(int BlogPartId, DateTime? dateBlogPost) {
+        private void ReduceBlogArchiveByDate(int BlogPartId, DateTime? dateBlogPost)
+        {
             _blogArchiveRepository.Flush();
 
-            if (BlogPartId!= 0 && dateBlogPost.HasValue) {
+            if (BlogPartId != 0 && dateBlogPost.HasValue)
+            {
                 var previousArchiveRecord = _blogArchiveRepository.Table
                     .FirstOrDefault(x => x.BlogPart.Id == BlogPartId
                                         && x.Month == dateBlogPost.Value.Month
@@ -99,13 +110,15 @@ namespace Orchard.Blogs.Handlers {
                 else
                     _blogArchiveRepository.Delete(previousArchiveRecord);
             }
-            else {
+            else
+            {
                 return;
             }
 
         }
-     
-        private void IncreaseBlogArchive(BlogPostPart blogPostPart) {
+
+        private void IncreaseBlogArchive(BlogPostPart blogPostPart)
+        {
             _blogArchiveRepository.Flush();
 
             var commonPart = blogPostPart.As<ICommonPart>();
@@ -129,7 +142,8 @@ namespace Orchard.Blogs.Handlers {
                                      && x.Year == newYear);
 
             // if record can't be found create it
-            if (newArchiveRecord == null) {
+            if (newArchiveRecord == null)
+            {
                 newArchiveRecord = new BlogPartArchiveRecord { BlogPart = blogPostPart.BlogPart.ContentItem.Record, Year = newYear, Month = newMonth, PostCount = 0 };
                 _blogArchiveRepository.Create(newArchiveRecord);
             }
@@ -137,7 +151,8 @@ namespace Orchard.Blogs.Handlers {
             newArchiveRecord.PostCount++;
         }
 
-        private void ManageBlogArchiveSync(BlogPostPart blogPostPart) {
+        private void ManageBlogArchiveSync(BlogPostPart blogPostPart)
+        {
             var commonPart = blogPostPart.As<ICommonPart>();
             if (commonPart == null || !commonPart.CreatedUtc.HasValue)
                 return;
@@ -145,15 +160,19 @@ namespace Orchard.Blogs.Handlers {
             var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
             var creationDate = TimeZoneInfo.ConvertTimeFromUtc(commonPart.CreatedUtc.Value, timeZone);
 
-            if (blogPostPart.ArchiveSync == null) {
+            if (blogPostPart.ArchiveSync == null)
+            {
                 IncreaseBlogArchive(blogPostPart);
                 blogPostPart.ArchiveSync = creationDate;
             }
-            else {
-                if (creationDate == blogPostPart.ArchiveSync) {
+            else
+            {
+                if (creationDate == blogPostPart.ArchiveSync)
+                {
                     return;
                 }
-                else {
+                else
+                {
                     ReduceBlogArchiveByDate(blogPostPart.BlogPart.Id, blogPostPart.ArchiveSync);
                     IncreaseBlogArchive(blogPostPart);
                     blogPostPart.ArchiveSync = creationDate;

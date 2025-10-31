@@ -1,8 +1,6 @@
-﻿using System;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -17,9 +15,11 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Core.Tests.Settings.Metadata {
+namespace Orchard.Core.Tests.Settings.Metadata
+{
     [TestFixture]
-    public class ContentDefinitionManagerTests {
+    public class ContentDefinitionManagerTests
+    {
         private string _databaseFileName;
         private ISessionFactory _sessionFactory;
         private ISession _session;
@@ -27,7 +27,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         private ITransactionManager _transactionManager;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 _databaseFileName,
@@ -40,10 +41,13 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _session = _sessionFactory.OpenSession();
-            foreach (var killType in new[] { typeof(ContentTypeDefinitionRecord), typeof(ContentPartDefinitionRecord), typeof(ContentFieldDefinitionRecord) }) {
-                foreach (var killRecord in _session.CreateCriteria(killType).List()) {
+            foreach (var killType in new[] { typeof(ContentTypeDefinitionRecord), typeof(ContentPartDefinitionRecord), typeof(ContentFieldDefinitionRecord) })
+            {
+                foreach (var killRecord in _session.CreateCriteria(killType).List())
+                {
                     _session.Delete(killRecord);
                 }
             }
@@ -68,28 +72,33 @@ namespace Orchard.Core.Tests.Settings.Metadata {
 
         }
 
-        void ResetSession() {
+        void ResetSession()
+        {
             _transactionManager.RequireNew();
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             _session.Dispose();
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
             File.Delete(_databaseFileName);
         }
 
         [Test]
-        public void NoTypesAreAvailableByDefault() {
+        public void NoTypesAreAvailableByDefault()
+        {
             var types = _container.Resolve<IContentDefinitionManager>().ListTypeDefinitions();
             Assert.That(types.Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void TypeRecordsAreReturned() {
+        public void TypeRecordsAreReturned()
+        {
             var repository = _container.Resolve<IRepository<ContentTypeDefinitionRecord>>();
             repository.Create(new ContentTypeDefinitionRecord { Name = "alpha" });
             repository.Create(new ContentTypeDefinitionRecord { Name = "beta" });
@@ -99,7 +108,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void TypeSettingsAreParsed() {
+        public void TypeSettingsAreParsed()
+        {
             var repository = _container.Resolve<IRepository<ContentTypeDefinitionRecord>>();
             repository.Create(new ContentTypeDefinitionRecord { Name = "alpha", Settings = "<settings a='1' b='2'/>" });
             ResetSession();
@@ -109,7 +119,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void ContentTypesWithSettingsCanBeCreatedAndModified() {
+        public void ContentTypesWithSettingsCanBeCreatedAndModified()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
                                   .Named("alpha")
@@ -140,7 +151,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void StubPartDefinitionsAreCreatedWhenContentTypesAreStored() {
+        public void StubPartDefinitionsAreCreatedWhenContentTypesAreStored()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
                                   .Named("alpha")
@@ -164,7 +176,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void GettingDefinitionsByNameCanReturnNullAndWillAcceptNullEmptyOrInvalidNames() {
+        public void GettingDefinitionsByNameCanReturnNullAndWillAcceptNullEmptyOrInvalidNames()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             Assert.That(manager.GetTypeDefinition("no such name"), Is.Null);
             Assert.That(manager.GetTypeDefinition(string.Empty), Is.Null);
@@ -175,7 +188,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void PartsAreRemovedWhenNotReferencedButPartDefinitionRemains() {
+        public void PartsAreRemovedWhenNotReferencedButPartDefinitionRemains()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StoreTypeDefinition(
                 new ContentTypeDefinitionBuilder()
@@ -184,10 +198,10 @@ namespace Orchard.Core.Tests.Settings.Metadata {
                     .WithPart("bar", pb => { })
                     .Build());
 
-            AssertThatTypeHasParts("alpha","foo","bar");
+            AssertThatTypeHasParts("alpha", "foo", "bar");
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(2));
             ResetSession();
-            AssertThatTypeHasParts("alpha","foo","bar");
+            AssertThatTypeHasParts("alpha", "foo", "bar");
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(2));
 
             manager.StoreTypeDefinition(
@@ -196,15 +210,16 @@ namespace Orchard.Core.Tests.Settings.Metadata {
                     .RemovePart("bar")
                     .Build());
 
-            AssertThatTypeHasParts("alpha","foo","frap");
+            AssertThatTypeHasParts("alpha", "foo", "frap");
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(3));
             ResetSession();
-            AssertThatTypeHasParts("alpha","foo","frap");
+            AssertThatTypeHasParts("alpha", "foo", "frap");
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(3));
         }
 
         [Test]
-        public void PartsCanBeDeleted() {
+        public void PartsCanBeDeleted()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StoreTypeDefinition(
                 new ContentTypeDefinitionBuilder()
@@ -224,7 +239,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void ContentTypesCanBeDeleted() {
+        public void ContentTypesCanBeDeleted()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StoreTypeDefinition(
                 new ContentTypeDefinitionBuilder()
@@ -241,7 +257,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void MultipleFieldsCanBeAddedToImplicitParts() {
+        public void MultipleFieldsCanBeAddedToImplicitParts()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
             manager.StorePartDefinition(
                 new ContentPartDefinitionBuilder()
@@ -273,7 +290,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             var part = manager.GetPartDefinition("alpha");
             Assert.That(part.Fields.Count(), Is.EqualTo(2));
 
-            manager.AlterPartDefinition("alpha", p=>p
+            manager.AlterPartDefinition("alpha", p => p
                     .WithField("field3", f => f.OfType("TextField"))
                     .WithField("field4", f => f.OfType("TextField"))
                 );
@@ -288,7 +305,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
         }
 
         [Test]
-        public void DontCreateMultiplePartsWhenAddingMultipleFields() {
+        public void DontCreateMultiplePartsWhenAddingMultipleFields()
+        {
             var manager = _container.Resolve<IContentDefinitionManager>();
 
             manager.AlterPartDefinition("alpha",
@@ -305,17 +323,19 @@ namespace Orchard.Core.Tests.Settings.Metadata {
 
 
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(1));
-            
+
             var p = manager.GetPartDefinition("alpha");
             Assert.That(p.Fields.Count(), Is.EqualTo(2));
         }
 
-        private void AssertThatTypeHasParts(string typeName, params string[] partNames) {
+        private void AssertThatTypeHasParts(string typeName, params string[] partNames)
+        {
             var type = _container.Resolve<IContentDefinitionManager>().GetTypeDefinition(typeName);
             Assert.That(type, Is.Not.Null);
             Assert.That(type.Parts.Count(), Is.EqualTo(partNames.Count()));
-            foreach(var partName in partNames) {
-                Assert.That(type.Parts.Select(p=>p.PartDefinition.Name), Has.Some.EqualTo(partName));
+            foreach (var partName in partNames)
+            {
+                Assert.That(type.Parts.Select(p => p.PartDefinition.Name), Has.Some.EqualTo(partName));
             }
         }
 

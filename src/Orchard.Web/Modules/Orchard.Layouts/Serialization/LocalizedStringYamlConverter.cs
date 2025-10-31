@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Orchard.Layouts.Serialization {
-    public class LocalizedStringYamlConverter : IYamlTypeConverter {
+namespace Orchard.Layouts.Serialization
+{
+    public class LocalizedStringYamlConverter : IYamlTypeConverter
+    {
         public bool Accepts(Type type) => type == typeof(LocalizedString);
 
         public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer) =>

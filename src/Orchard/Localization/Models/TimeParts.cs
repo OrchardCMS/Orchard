@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 
-namespace Orchard.Localization.Models {
-    public struct TimeParts {
+namespace Orchard.Localization.Models
+{
+    public struct TimeParts
+    {
 
-        public static TimeParts MinValue {
-            get {
-                return new TimeParts(DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, DateTime.MinValue.Millisecond, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
-            }
-        }
+        public static TimeParts MinValue => new TimeParts(DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, DateTime.MinValue.Millisecond, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
 
-        public TimeParts(int hour, int minute, int second, int millisecond, DateTimeKind kind, TimeSpan offset) {
-            if (kind == DateTimeKind.Utc && offset != TimeSpan.Zero) {
-                throw new ArgumentOutOfRangeException(String.Format("The specified offset {0} does not match the specified kind {1}.", offset, kind));
+        public TimeParts(int hour, int minute, int second, int millisecond, DateTimeKind kind, TimeSpan offset)
+        {
+            if (kind == DateTimeKind.Utc && offset != TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(string.Format("The specified offset {0} does not match the specified kind {1}.", offset, kind));
             }
             _hour = hour;
             _minute = minute;
@@ -30,43 +28,20 @@ namespace Orchard.Localization.Models {
         private readonly DateTimeKind _kind;
         private readonly TimeSpan _offset;
 
-        public int Hour {
-            get {
-                return _hour;
-            }
-        }
+        public int Hour => _hour;
 
-        public int Minute {
-            get {
-                return _minute;
-            }
-        }
+        public int Minute => _minute;
 
-        public int Second {
-            get {
-                return _second;
-            }
-        }
+        public int Second => _second;
 
-        public int Millisecond {
-            get {
-                return _millisecond;
-            }
-        }
+        public int Millisecond => _millisecond;
 
-        public DateTimeKind Kind {
-            get {
-                return _kind;
-            }
-        }
+        public DateTimeKind Kind => _kind;
 
-        public TimeSpan? Offset {
-            get {
-                return _offset;
-            }
-        }
+        public TimeSpan? Offset => _offset;
 
-        public DateTime ToDateTime() {
+        public DateTime ToDateTime()
+        {
             return new DateTime(
                 DateTime.MinValue.Year,
                 DateTime.MinValue.Month,
@@ -79,8 +54,9 @@ namespace Orchard.Localization.Models {
             );
         }
 
-        public override string ToString() {
-            return String.Format("{0}:{1}:{2}.{3}-{4}-{5}", _hour, _minute, _second, _millisecond, _kind, _offset);
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}:{2}.{3}-{4}-{5}", _hour, _minute, _second, _millisecond, _kind, _offset);
         }
     }
 }

@@ -1,12 +1,15 @@
-﻿using System.Linq;
+using System.Linq;
 using NUnit.Framework;
 using Orchard.ContentManagement.MetaData.Builders;
 
-namespace Orchard.Tests.ContentManagement.MetaData.Builders {
+namespace Orchard.Tests.ContentManagement.MetaData.Builders
+{
     [TestFixture]
-    public class ContentTypeDefinitionBuilderTests {
+    public class ContentTypeDefinitionBuilderTests
+    {
         [Test]
-        public void ContentTypeNameAndSettingsFromScratch() {
+        public void ContentTypeNameAndSettingsFromScratch()
+        {
             var contentTypeDefinition = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithSetting("a", "1")
@@ -19,7 +22,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test]
-        public void ContentRebuildWithoutModification() {
+        public void ContentRebuildWithoutModification()
+        {
             var contentTypeDefinition1 = new ContentTypeDefinitionBuilder()
                .Named("alpha")
                .WithSetting("a", "1")
@@ -35,7 +39,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test]
-        public void ContentRebuildWithModification() {
+        public void ContentRebuildWithModification()
+        {
             var contentTypeDefinition1 = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithSetting("a", "1")
@@ -59,7 +64,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test]
-        public void AddingPartWithSettings() {
+        public void AddingPartWithSettings()
+        {
             var contentTypeDefinition = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithSetting("a", "1")
@@ -76,7 +82,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test]
-        public void CanAlterPartSettingsByNameDuringBuild() {
+        public void CanAlterPartSettingsByNameDuringBuild()
+        {
             var contentTypeDefinition = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithSetting("a", "1")
@@ -94,7 +101,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test]
-        public void CanAlterPartSettingsByNameDuringRebuild() {
+        public void CanAlterPartSettingsByNameDuringRebuild()
+        {
             var contentTypeDefinition1 = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithPart("foo", pb => pb.WithSetting("x", "10").WithSetting("y", "11"))
@@ -120,7 +128,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Builders {
         }
 
         [Test, IgnoreAttribute("Merging not yet implemented")]
-        public void ContentMergeOverlaysSettings() {
+        public void ContentMergeOverlaysSettings()
+        {
             Assert.Fail();
         }
     }

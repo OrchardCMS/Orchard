@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using log4net.Appender;
@@ -11,11 +11,14 @@ using ILogger = Orchard.Logging.ILogger;
 using ILoggerFactory = Orchard.Logging.ILoggerFactory;
 using NullLogger = Orchard.Logging.NullLogger;
 
-namespace Orchard.Tests.Logging {
+namespace Orchard.Tests.Logging
+{
     [TestFixture]
-    public class LoggingModuleTests {
+    public class LoggingModuleTests
+    {
         [Test]
-        public void LoggingModuleWillSetLoggerProperty() {
+        public void LoggingModuleWillSetLoggerProperty()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterType<Thing>();
@@ -26,7 +29,8 @@ namespace Orchard.Tests.Logging {
         }
 
         [Test]
-        public void LoggerFactoryIsPassedTheTypeOfTheContainingInstance() {
+        public void LoggerFactoryIsPassedTheTypeOfTheContainingInstance()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterType<Thing>();
@@ -39,8 +43,10 @@ namespace Orchard.Tests.Logging {
             Assert.That(stubFactory.CalledType, Is.EqualTo(typeof(Thing)));
         }
 
-        public class StubFactory : ILoggerFactory {
-            public ILogger CreateLogger(Type type) {
+        public class StubFactory : ILoggerFactory
+        {
+            public ILogger CreateLogger(Type type)
+            {
                 CalledType = type;
                 return NullLogger.Instance;
             }
@@ -49,7 +55,8 @@ namespace Orchard.Tests.Logging {
         }
 
         [Test]
-        public void DefaultLoggerConfigurationUsesCastleLoggerFactoryOverTraceSource() {
+        public void DefaultLoggerConfigurationUsesCastleLoggerFactoryOverTraceSource()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterType<Thing>();
@@ -73,24 +80,30 @@ namespace Orchard.Tests.Logging {
         }
     }
 
-    public class Thing {
+    public class Thing
+    {
         public ILogger Logger { get; set; }
     }
 
-    public class MemoryAppender : IAppender {
-        static MemoryAppender() {
+    public class MemoryAppender : IAppender
+    {
+        static MemoryAppender()
+        {
             Messages = new List<string>();
         }
 
         public static List<string> Messages { get; set; }
 
-        public void DoAppend(LoggingEvent loggingEvent) {
-            if (loggingEvent.ExceptionObject != null) {
+        public void DoAppend(LoggingEvent loggingEvent)
+        {
+            if (loggingEvent.ExceptionObject != null)
+            {
                 lock (Messages) Messages.Add(string.Format("{0} {1} {2}",
                     loggingEvent.ExceptionObject.GetType().Name,
                     loggingEvent.ExceptionObject.Message,
                     loggingEvent.RenderedMessage));
-            } else lock (Messages) Messages.Add(loggingEvent.RenderedMessage); 
+            }
+            else lock (Messages) Messages.Add(loggingEvent.RenderedMessage);
         }
 
         public void Close() { }

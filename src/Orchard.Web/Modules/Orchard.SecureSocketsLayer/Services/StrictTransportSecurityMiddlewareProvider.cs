@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Logging;
@@ -6,8 +6,10 @@ using Orchard.Owin;
 using Orchard.SecureSocketsLayer.Models;
 using Owin;
 
-namespace Orchard.SecureSocketsLayer.Services {
-    public class StrictTransportSecurityMiddlewareProvider : IOwinMiddlewareProvider {
+namespace Orchard.SecureSocketsLayer.Services
+{
+    public class StrictTransportSecurityMiddlewareProvider : IOwinMiddlewareProvider
+    {
         private readonly IWorkContextAccessor _wca;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
@@ -17,7 +19,8 @@ namespace Orchard.SecureSocketsLayer.Services {
         public StrictTransportSecurityMiddlewareProvider(
             IWorkContextAccessor wca,
             ICacheManager cacheManager,
-            ISignals signals) {
+            ISignals signals)
+        {
 
             _wca = wca;
             _cacheManager = cacheManager;
@@ -26,7 +29,8 @@ namespace Orchard.SecureSocketsLayer.Services {
             Logger = NullLogger.Instance;
         }
 
-        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares() {
+        public IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares()
+        {
             return new[] {
                 new OwinMiddlewareRegistration {
                     Configure = app =>

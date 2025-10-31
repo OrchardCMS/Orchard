@@ -1,12 +1,15 @@
-﻿using System;
+using System;
 using System.Threading;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Locking {
-    public class LockingProvider : ILockingProvider {
+namespace Orchard.Locking
+{
+    public class LockingProvider : ILockingProvider
+    {
 
-        public LockingProvider() {
+        public LockingProvider()
+        {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -18,7 +21,8 @@ namespace Orchard.Locking {
             object lockOn,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             LockInternal(lockOn, criticalCode, innerHandler, outerHandler);
         }
@@ -27,16 +31,18 @@ namespace Orchard.Locking {
             string lockOn,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
-            LockInternal(String.Intern(lockOn), criticalCode, innerHandler, outerHandler);
+            LockInternal(string.Intern(lockOn), criticalCode, innerHandler, outerHandler);
         }
 
         public bool TryLock(
             object lockOn,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             return TryLockInternal(lockOn, TimeSpan.Zero, criticalCode, innerHandler, outerHandler);
         }
@@ -45,9 +51,10 @@ namespace Orchard.Locking {
             string lockOn,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
-            return TryLockInternal(String.Intern(lockOn), TimeSpan.Zero, criticalCode, innerHandler, outerHandler);
+            return TryLockInternal(string.Intern(lockOn), TimeSpan.Zero, criticalCode, innerHandler, outerHandler);
         }
 
         public bool TryLock(
@@ -55,7 +62,8 @@ namespace Orchard.Locking {
            TimeSpan timeout,
            Action criticalCode,
            Action<Exception> innerHandler = null,
-           Action<Exception> outerHandler = null) {
+           Action<Exception> outerHandler = null)
+        {
 
             return TryLockInternal(lockOn, timeout, criticalCode, innerHandler, outerHandler);
         }
@@ -65,9 +73,10 @@ namespace Orchard.Locking {
             TimeSpan timeout,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
-            return TryLockInternal(String.Intern(lockOn), timeout, criticalCode, innerHandler, outerHandler);
+            return TryLockInternal(string.Intern(lockOn), timeout, criticalCode, innerHandler, outerHandler);
         }
 
         public bool TryLock(
@@ -75,7 +84,8 @@ namespace Orchard.Locking {
             int millisecondsTimeout,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             return TryLockInternal(lockOn, millisecondsTimeout, criticalCode, innerHandler, outerHandler);
         }
@@ -85,32 +95,39 @@ namespace Orchard.Locking {
             int millisecondsTimeout,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
-            return TryLockInternal(String.Intern(lockOn), millisecondsTimeout, criticalCode, innerHandler, outerHandler);
+            return TryLockInternal(string.Intern(lockOn), millisecondsTimeout, criticalCode, innerHandler, outerHandler);
         }
 
         private void LockInternal(
             object lockOn,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             bool taken = false;
             var tmp = lockOn;
             Exception outerException = null;
-            try {
+            try
+            {
                 Monitor.Enter(tmp, ref taken);
                 criticalCode?.Invoke();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 outerException = ex;
                 CleanLog(ex);
-                if (innerHandler != null) {
+                if (innerHandler != null)
+                {
                     innerHandler.Invoke(ex);
                 }
-                else {
-                    if (outerHandler == null) {
+                else
+                {
+                    if (outerHandler == null)
+                    {
                         // if both the handlers are null, the methods should behave like lock(tmp){}
                         // and only bubble out the exception while holding the lock.
                         outerException = null;
@@ -118,8 +135,10 @@ namespace Orchard.Locking {
                     throw ex;
                 }
             }
-            finally {
-                if (taken) {
+            finally
+            {
+                if (taken)
+                {
                     Monitor.Exit(tmp);
                 }
             }
@@ -127,11 +146,14 @@ namespace Orchard.Locking {
             // Even if there was an handler for the exception to be used in the critical section
             // (i.e. innerHandler != null) we have further handling here. This may simply mean throwing
             // the exception out when outerHandler == null
-            if (outerException != null) {
-                if (outerHandler != null) {
+            if (outerException != null)
+            {
+                if (outerHandler != null)
+                {
                     outerHandler.Invoke(outerException);
                 }
-                else {
+                else
+                {
                     throw outerException;
                 }
             }
@@ -142,23 +164,30 @@ namespace Orchard.Locking {
             TimeSpan timeout,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             var tmp = lockOn;
             Exception outerException = null;
 
-            if (Monitor.TryEnter(tmp, timeout)) {
-                try {
+            if (Monitor.TryEnter(tmp, timeout))
+            {
+                try
+                {
                     criticalCode?.Invoke();
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     outerException = ex;
                     CleanLog(ex);
-                    if (innerHandler != null) {
+                    if (innerHandler != null)
+                    {
                         innerHandler.Invoke(ex);
                     }
-                    else {
-                        if (outerHandler == null) {
+                    else
+                    {
+                        if (outerHandler == null)
+                        {
                             // if both the handlers are null, the methods should behave like lock(tmp){}
                             // and only bubble out the exception while holding the lock.
                             outerException = null;
@@ -166,18 +195,22 @@ namespace Orchard.Locking {
                         throw ex;
                     }
                 }
-                finally {
+                finally
+                {
                     Monitor.Exit(tmp);
                 }
 
                 // Even if there was an handler for the exception to be used in the critical section
                 // (i.e. innerHandler != null) we have further handling here. This may simply mean throwing
                 // the exception out when outerHandler == null
-                if (outerException != null) {
-                    if (outerHandler != null) {
+                if (outerException != null)
+                {
+                    if (outerHandler != null)
+                    {
                         outerHandler.Invoke(outerException);
                     }
-                    else {
+                    else
+                    {
                         throw outerException;
                     }
                 }
@@ -193,23 +226,30 @@ namespace Orchard.Locking {
             int millisecondsTimeout,
             Action criticalCode,
             Action<Exception> innerHandler = null,
-            Action<Exception> outerHandler = null) {
+            Action<Exception> outerHandler = null)
+        {
 
             var tmp = lockOn;
             Exception outerException = null;
 
-            if (Monitor.TryEnter(tmp, millisecondsTimeout)) {
-                try {
+            if (Monitor.TryEnter(tmp, millisecondsTimeout))
+            {
+                try
+                {
                     criticalCode?.Invoke();
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     outerException = ex;
                     CleanLog(ex);
-                    if (innerHandler != null) {
+                    if (innerHandler != null)
+                    {
                         innerHandler.Invoke(ex);
                     }
-                    else {
-                        if (outerHandler == null) {
+                    else
+                    {
+                        if (outerHandler == null)
+                        {
                             // if both the handlers are null, the methods should behave like lock(tmp){}
                             // and only bubble out the exception while holding the lock.
                             outerException = null;
@@ -217,18 +257,22 @@ namespace Orchard.Locking {
                         throw ex;
                     }
                 }
-                finally {
+                finally
+                {
                     Monitor.Exit(tmp);
                 }
 
                 // Even if there was an handler for the exception to be used in the critical section
                 // (i.e. innerHandler != null) we have further handling here. This may simply mean throwing
                 // the exception out when outerHandler == null
-                if (outerException != null) {
-                    if (outerHandler != null) {
+                if (outerException != null)
+                {
+                    if (outerHandler != null)
+                    {
                         outerHandler.Invoke(outerException);
                     }
-                    else {
+                    else
+                    {
                         throw outerException;
                     }
                 }
@@ -239,11 +283,14 @@ namespace Orchard.Locking {
             return false;
         }
 
-        private void CleanLog(Exception ex) {
-            try {
+        private void CleanLog(Exception ex)
+        {
+            try
+            {
                 Logger.Log(Logging.LogLevel.Error, ex, T("Exception while running critical code").Text);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // prevent messing things up if the logger fails
             }
         }

@@ -1,23 +1,27 @@
-﻿using System;
+using System;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
 
     [TestFixture]
-    public class DefaultDateLocalizationServicesTests {
+    public class DefaultDateLocalizationServicesTests
+    {
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             //Regex.CacheSize = 1024;
         }
 
         [Test]
         [Description("Date component is decremented by one day when converting to time zone with negative offset greater than time component.")]
-        public void ConvertToSiteTimeZoneTest01() {
+        public void ConvertToSiteTimeZoneTest01()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Utc);
@@ -29,7 +33,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Date component is incremented by one day when converting to time zone with positive offset greater than 24 hours minus time component.")]
-        public void ConvertToSiteTimeZoneTest02() {
+        public void ConvertToSiteTimeZoneTest02()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
@@ -41,7 +46,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Utc is converted to DateTimeKind.Local with offset when target time zone is not UTC.")]
-        public void ConvertToSiteTimeZoneTest03() {
+        public void ConvertToSiteTimeZoneTest03()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Utc);
@@ -54,7 +60,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Utc is not converted when target time zone is UTC.")]
-        public void ConvertToSiteTimeZoneTest04() {
+        public void ConvertToSiteTimeZoneTest04()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("UTC");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Utc);
@@ -67,7 +74,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Unspecified is converted to DateTimeKind.Local with offset when target time zone is not UTC.")]
-        public void ConvertToSiteTimeZoneTest05() {
+        public void ConvertToSiteTimeZoneTest05()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Unspecified);
@@ -80,7 +88,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Unspecified is converted to DateTimeKind.Utc with no offset when target time zone is UTC.")]
-        public void ConvertToSiteTimeZoneTest06() {
+        public void ConvertToSiteTimeZoneTest06()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("UTC");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Unspecified);
@@ -93,7 +102,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is already DateTimeKind.Local is never converted.")]
-        public void ConvertToSiteTimeZoneTest07() {
+        public void ConvertToSiteTimeZoneTest07()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeUtc = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Local);
@@ -106,9 +116,11 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Resulting DateTime is DateTimeKind.Local even when target time zone is not configured time zone of local computer.")]
-        public void ConvertToSiteTimeZoneTest08() {
+        public void ConvertToSiteTimeZoneTest08()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-            if (timeZone == TimeZoneInfo.Local) {
+            if (timeZone == TimeZoneInfo.Local)
+            {
                 timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             }
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
@@ -121,7 +133,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Date component is incremented by one day when converting from time zone with negative offset greater than 24 hours minus time component.")]
-        public void ConvertFromSiteTimeZoneTest01() {
+        public void ConvertFromSiteTimeZoneTest01()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Local);
@@ -133,7 +146,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Date component is decremented by one day when converting from time zone with positive offset greater than time component.")]
-        public void ConvertFromSiteTimeZoneTest02() {
+        public void ConvertFromSiteTimeZoneTest02()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 3, 0, 0, DateTimeKind.Local);
@@ -145,7 +159,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Local is converted to DateTimeKind.Utc with offset when target time zone is not UTC.")]
-        public void ConvertFromSiteTimeZoneTest03() {
+        public void ConvertFromSiteTimeZoneTest03()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Local);
@@ -158,7 +173,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Local is converted to DateTimeKind.Utc with no offset when target time zone is UTC.")]
-        public void ConvertFromSiteTimeZoneTest04() {
+        public void ConvertFromSiteTimeZoneTest04()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("UTC");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Local);
@@ -172,7 +188,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Unspecified is converted to DateTimeKind.Utc with offset when target time zone is not UTC.")]
-        public void ConvertFromSiteTimeZoneTest05() {
+        public void ConvertFromSiteTimeZoneTest05()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Unspecified);
@@ -185,7 +202,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Unspecified is converted to DateTimeKind.Utc with no offset when target time zone is UTC.")]
-        public void ConvertFromSiteTimeZoneTest06() {
+        public void ConvertFromSiteTimeZoneTest06()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("UTC");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Unspecified);
@@ -199,7 +217,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is already DateTimeKind.Utc is never converted.")]
-        public void ConvertFromSiteTimeZoneTest07() {
+        public void ConvertFromSiteTimeZoneTest07()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             var container = TestHelpers.InitializeContainer(null, null, timeZone);
             var dateTimeLocal = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
@@ -212,7 +231,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DateTime which is DateTimeKind.Local is converted to DateTimeKind.Utc.")]
-        public void ConvertFromLocalizedDateStringTest01() {
+        public void ConvertFromLocalizedDateStringTest01()
+        {
             var container = TestHelpers.InitializeContainer("en-US", "GregorianCalendar", TimeZoneInfo.Utc);
             var target = container.Resolve<IDateLocalizationServices>();
             var dateTimeLocal = new DateTime(1998, 1, 15);
@@ -223,7 +243,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Converting to Gregorian calendar yields a DateTimeParts instance equivalent to the original DateTime.")]
-        public void ConvertToSiteCalendarTest01() {
+        public void ConvertToSiteCalendarTest01()
+        {
             var container = TestHelpers.InitializeContainer(null, "GregorianCalendar", TimeZoneInfo.Utc);
             var dateTimeGregorian = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -234,7 +255,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Converting to non-Gregorian calendar yields a DateTimeParts instance with correct values.")]
-        public void ConvertToSiteCalendarTest02() {
+        public void ConvertToSiteCalendarTest02()
+        {
             var container = TestHelpers.InitializeContainer(null, "PersianCalendar", TimeZoneInfo.Utc);
             var dateTimeGregorian = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -245,7 +267,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Converting from Gregorian calendar yields a DateTime equivalent to the original DateTimeParts instance.")]
-        public void ConvertFromSiteCalendarTest01() {
+        public void ConvertFromSiteCalendarTest01()
+        {
             var container = TestHelpers.InitializeContainer(null, "GregorianCalendar", TimeZoneInfo.Utc);
             var dateTimePartsGregorian = new DateTimeParts(1998, 1, 15, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -256,7 +279,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Converting from non-Gregorian calendar yields a DateTime with correct values.")]
-        public void ConvertFromSiteCalendarTest02() {
+        public void ConvertFromSiteCalendarTest02()
+        {
             var container = TestHelpers.InitializeContainer(null, "PersianCalendar", TimeZoneInfo.Utc);
             var dateTimePartsPersian = new DateTimeParts(1376, 10, 25, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -267,7 +291,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("Non-DST date and time are properly round-tripped.")]
-        public void ConvertToLocalizedTimeStringTest01() {
+        public void ConvertToLocalizedTimeStringTest01()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -286,7 +311,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DST date and time are properly round-tripped.")]
-        public void ConvertToLocalizedTimeStringTest02() {
+        public void ConvertToLocalizedTimeStringTest02()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
             var target = container.Resolve<IDateLocalizationServices>();
@@ -305,7 +331,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DST is ignored when date is ignored (non-DST date).")]
-        public void ConvertToLocalizedTimeStringTest03() {
+        public void ConvertToLocalizedTimeStringTest03()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var clock = new StubClock(new DateTime(2012, 1, 1, 12, 0, 0, DateTimeKind.Utc));
             var container = TestHelpers.InitializeContainer("en-US", null, timeZone, clock);
@@ -325,7 +352,8 @@ namespace Orchard.Tests.Localization {
 
         [Test]
         [Description("DST is ignored when date is ignored (DST date).")]
-        public void ConvertToLocalizedTimeStringTest04() {
+        public void ConvertToLocalizedTimeStringTest04()
+        {
             var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var clock = new StubClock(new DateTime(2012, 10, 3, 12, 0, 0, DateTimeKind.Utc));
             var container = TestHelpers.InitializeContainer("en-US", null, timeZone, clock);

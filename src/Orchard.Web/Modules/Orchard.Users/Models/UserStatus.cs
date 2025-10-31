@@ -1,5 +1,7 @@
-﻿namespace Orchard.Users.Models {
-    public enum UserStatus {
+namespace Orchard.Users.Models
+{
+    public enum UserStatus
+    {
         Pending,
         Approved
     }

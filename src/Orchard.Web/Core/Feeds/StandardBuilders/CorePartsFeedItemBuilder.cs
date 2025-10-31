@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -9,23 +8,28 @@ using Orchard.Core.Feeds.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Services;
 
-namespace Orchard.Core.Feeds.StandardBuilders {
-    public class CorePartsFeedItemBuilder : IFeedItemBuilder {
+namespace Orchard.Core.Feeds.StandardBuilders
+{
+    public class CorePartsFeedItemBuilder : IFeedItemBuilder
+    {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
         private readonly IHtmlFilterProcessor _htmlFilterProcessor;
 
         public CorePartsFeedItemBuilder(
-            IContentManager contentManager, 
+            IContentManager contentManager,
             RouteCollection routes,
-            IHtmlFilterProcessor htmlFilterProcessor) {
+            IHtmlFilterProcessor htmlFilterProcessor)
+        {
             _contentManager = contentManager;
             _routes = routes;
             _htmlFilterProcessor = htmlFilterProcessor;
         }
 
-        public void Populate(FeedContext context) {
-            foreach (var feedItem in context.Response.Items.OfType<FeedItem<ContentItem>>()) {
+        public void Populate(FeedContext context)
+        {
+            foreach (var feedItem in context.Response.Items.OfType<FeedItem<ContentItem>>())
+            {
 
                 var inspector = new ItemInspector(
                     feedItem.Item,
@@ -35,22 +39,25 @@ namespace Orchard.Core.Feeds.StandardBuilders {
                 // author is intentionally left empty as it could result in unwanted spam
 
                 // add to known formats
-                if (context.Format == "rss") {
+                if (context.Format == "rss")
+                {
                     var link = new XElement("link");
                     var guid = new XElement("guid", new XAttribute("isPermaLink", "true"));
 
-                    context.Response.Contextualize(requestContext => {
-                                                        var urlHelper = new UrlHelper(requestContext, _routes);
-                                                        var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
-                                                        link.Add(uriBuilder.Uri.OriginalString);
-                                                        guid.Add(uriBuilder.Uri.OriginalString);
-                                                   });
+                    context.Response.Contextualize(requestContext =>
+                    {
+                        var urlHelper = new UrlHelper(requestContext, _routes);
+                        var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
+                        link.Add(uriBuilder.Uri.OriginalString);
+                        guid.Add(uriBuilder.Uri.OriginalString);
+                    });
 
                     feedItem.Element.SetElementValue("title", inspector.Title);
                     feedItem.Element.Add(link);
                     feedItem.Element.SetElementValue("description", inspector.Description);
 
-                    if ( inspector.PublishedUtc != null ) {
+                    if (inspector.PublishedUtc != null)
+                    {
                         // RFC833 
                         // The "R" or "r" standard format specifier represents a custom date and time format string that is defined by 
                         // the DateTimeFormatInfo.RFC1123Pattern property. The pattern reflects a defined standard, and the property  
@@ -62,12 +69,14 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
                     feedItem.Element.Add(guid);
                 }
-                else {
+                else
+                {
                     var feedItem1 = feedItem;
-                    context.Response.Contextualize(requestContext => {
-                                                       var urlHelper = new UrlHelper(requestContext, _routes);
-                                                       context.Builder.AddProperty(context, feedItem1, "link", urlHelper.RouteUrl(inspector.Link));
-                                                   });
+                    context.Response.Contextualize(requestContext =>
+                    {
+                        var urlHelper = new UrlHelper(requestContext, _routes);
+                        context.Builder.AddProperty(context, feedItem1, "link", urlHelper.RouteUrl(inspector.Link));
+                    });
                     context.Builder.AddProperty(context, feedItem, "title", inspector.Title);
                     context.Builder.AddProperty(context, feedItem, "description", inspector.Description);
 

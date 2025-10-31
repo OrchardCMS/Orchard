@@ -17,9 +17,11 @@ using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.MediaProcessing.Controllers {
+namespace Orchard.MediaProcessing.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly ISiteService _siteService;
         private readonly IImageProfileService _profileService;
         private readonly IImageProcessingManager _imageProcessingManager;
@@ -29,7 +31,8 @@ namespace Orchard.MediaProcessing.Controllers {
             IShapeFactory shapeFactory,
             ISiteService siteService,
             IImageProfileService profileService,
-            IImageProcessingManager imageProcessingManager) {
+            IImageProcessingManager imageProcessingManager)
+        {
             _siteService = siteService;
             _profileService = profileService;
             _imageProcessingManager = imageProcessingManager;
@@ -43,7 +46,8 @@ namespace Orchard.MediaProcessing.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters) {
+        public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list media profiles")))
                 return new HttpUnauthorizedResult();
 
@@ -63,8 +67,10 @@ namespace Orchard.MediaProcessing.Controllers {
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList();
 
-            var model = new AdminIndexViewModel {
-                ImageProfiles = results.Select(x => new ImageProfileEntry {
+            var model = new AdminIndexViewModel
+            {
+                ImageProfiles = results.Select(x => new ImageProfileEntry
+                {
                     ImageProfile = x.As<ImageProfilePart>().Record,
                     ImageProfileId = x.Id,
                     Name = x.As<ImageProfilePart>().Name
@@ -84,7 +90,8 @@ namespace Orchard.MediaProcessing.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult Index(FormCollection input)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
@@ -93,11 +100,13 @@ namespace Orchard.MediaProcessing.Controllers {
 
             var checkedItems = viewModel.ImageProfiles.Where(c => c.IsChecked);
 
-            switch (viewModel.Options.BulkAction) {
+            switch (viewModel.Options.BulkAction)
+            {
                 case ImageProfilesBulkAction.None:
                     break;
                 case ImageProfilesBulkAction.Delete:
-                    foreach (var checkedItem in checkedItems) {
+                    foreach (var checkedItem in checkedItems)
+                    {
                         _profileService.DeleteImageProfile(checkedItem.ImageProfileId);
                     }
 
@@ -109,12 +118,14 @@ namespace Orchard.MediaProcessing.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit media profiles")))
                 return new HttpUnauthorizedResult();
 
             var profile = _profileService.GetImageProfile(id);
-            var viewModel = new AdminEditViewModel {
+            var viewModel = new AdminEditViewModel
+            {
                 Id = profile.Id,
                 Name = profile.Name
             };
@@ -122,18 +133,21 @@ namespace Orchard.MediaProcessing.Controllers {
             var filterEntries = new List<FilterEntry>();
             var allFilters = _imageProcessingManager.DescribeFilters().SelectMany(x => x.Descriptors).ToList();
 
-            foreach (var filter in profile.Filters.OrderBy(f => f.Position)) {
+            foreach (var filter in profile.Filters.OrderBy(f => f.Position))
+            {
                 var category = filter.Category;
                 var type = filter.Type;
 
                 var f = allFilters.FirstOrDefault(x => category == x.Category && type == x.Type);
-                if (f != null) {
+                if (f != null)
+                {
                     filterEntries.Add(
-                        new FilterEntry {
+                        new FilterEntry
+                        {
                             Category = f.Category,
                             Type = f.Type,
                             FilterRecordId = filter.Id,
-                            DisplayText = String.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
+                            DisplayText = string.IsNullOrWhiteSpace(filter.Description) ? f.Display(new FilterContext { State = FormParametersHelper.ToDynamic(filter.State) }).Text : filter.Description
                         });
                 }
             }
@@ -144,13 +158,15 @@ namespace Orchard.MediaProcessing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
             var profile = _profileService.GetImageProfile(id);
 
-            if (profile == null) {
+            if (profile == null)
+            {
                 return HttpNotFound();
             }
 
@@ -160,11 +176,13 @@ namespace Orchard.MediaProcessing.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Move(string direction, int id, int filterId) {
+        public ActionResult Move(string direction, int id, int filterId)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
-            switch (direction) {
+            switch (direction)
+            {
                 case "up":
                     _profileService.MoveUp(filterId);
                     break;
@@ -178,7 +196,8 @@ namespace Orchard.MediaProcessing.Controllers {
             return RedirectToAction("Edit", new { id });
         }
 
-        public ActionResult Preview(int id) {
+        public ActionResult Preview(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
@@ -186,14 +205,17 @@ namespace Orchard.MediaProcessing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Purge(int id) {
+        public ActionResult Purge(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
-            if (_profileService.PurgeImageProfile(id)) {
+            if (_profileService.PurgeImageProfile(id))
+            {
                 Services.Notifier.Information(T("The Image Profile has been purged"));
             }
-            else {
+            else
+            {
                 Services.Notifier.Warning(T("Unable to purge the Image Profile, it may already have been purged"));
             }
 
@@ -201,25 +223,30 @@ namespace Orchard.MediaProcessing.Controllers {
         }
 
         [HttpPost]
-        public ActionResult PurgeObsolete() {
+        public ActionResult PurgeObsolete()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage media profiles")))
                 return new HttpUnauthorizedResult();
 
-            if (_profileService.PurgeObsoleteImageProfiles()) {
+            if (_profileService.PurgeObsoleteImageProfiles())
+            {
                 Services.Notifier.Information(T("The obsolete Image Profiles have been purged"));
             }
-            else {
+            else
+            {
                 Services.Notifier.Warning(T("Unable to purge the obsolete Image Profiles"));
             }
 
             return RedirectToAction("Index");
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        public void AddModelError(string key, LocalizedString errorMessage) {
+        public void AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Rules.Services;
 
-namespace Orchard.Rules.Handlers {
+namespace Orchard.Rules.Handlers
+{
 
-    public class RulePartHandler : ContentHandler {
-        public RulePartHandler(IRulesManager rulesManager) {
+    public class RulePartHandler : ContentHandler
+    {
+        public RulePartHandler(IRulesManager rulesManager)
+        {
 
             OnPublished<ContentPart>(
                 (context, part) =>

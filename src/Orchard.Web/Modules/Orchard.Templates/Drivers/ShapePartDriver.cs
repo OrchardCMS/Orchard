@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -13,8 +13,10 @@ using Orchard.Templates.Services;
 using Orchard.Templates.ViewModels;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Templates.Drivers {
-    public class ShapePartDriver : ContentPartDriver<ShapePart> {
+namespace Orchard.Templates.Drivers
+{
+    public class ShapePartDriver : ContentPartDriver<ShapePart>
+    {
         private readonly IEnumerable<ITemplateProcessor> _processors;
         private readonly ITransactionManager _transactions;
         private readonly IContentManager _contentManager;
@@ -22,7 +24,8 @@ namespace Orchard.Templates.Drivers {
         public ShapePartDriver(
             IEnumerable<ITemplateProcessor> processors,
             ITransactionManager transactions,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _processors = processors;
             _transactions = transactions;
             _contentManager = contentManager;
@@ -37,23 +40,28 @@ namespace Orchard.Templates.Drivers {
         protected override DriverResult Editor(ShapePart part, dynamic shapeHelper) =>
             Editor(part, null, shapeHelper);
 
-        protected override DriverResult Editor(ShapePart part, IUpdateModel updater, dynamic shapeHelper) {
-            var viewModel = new ShapePartViewModel {
+        protected override DriverResult Editor(ShapePart part, IUpdateModel updater, dynamic shapeHelper)
+        {
+            var viewModel = new ShapePartViewModel
+            {
                 Template = part.Template,
                 RenderingMode = part.RenderingMode
             };
 
             if (updater != null
                 && updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableLanguages" })
-                && ValidateShapeName(part, updater)) {
+                && ValidateShapeName(part, updater))
+            {
                 part.Template = viewModel.Template;
                 part.RenderingMode = viewModel.RenderingMode;
 
-                try {
-                    var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.ProcessorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
+                try
+                {
+                    var processor = _processors.FirstOrDefault(x => string.Equals(x.Type, part.ProcessorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
                     processor.Verify(part.Template);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     updater.AddModelError("", T("Template processing error: {0}", ex.Message));
                     _transactions.Cancel();
                 }
@@ -72,47 +80,55 @@ namespace Orchard.Templates.Drivers {
                     .Query(VersionOptions.Latest, contentTypesWithShapePart.ToArray())
                     .Where<TitlePartRecord>(record => record.Title == part.As<TitlePart>().Title && record.ContentItemRecord.Id != part.ContentItem.Id);
 
-                if (existingShapes.List().Any(x => x.As<ShapePart>().RenderingMode == part.RenderingMode)) {
+                if (existingShapes.List().Any(x => x.As<ShapePart>().RenderingMode == part.RenderingMode))
+                {
                     updater.AddModelError("ShapeNameAlreadyExists", T("A template with the given name and rendering mode already exists."));
                 }
             }
             return ContentShape("Parts_Shape_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts.Shape", Model: viewModel, Prefix: Prefix));
         }
 
-        protected override void Exporting(ShapePart part, ExportContentContext context) {
+        protected override void Exporting(ShapePart part, ExportContentContext context)
+        {
             var element = context.Element(part.PartDefinition.Name);
             element.Add(new XCData(part.Template));
             element.SetAttributeValue("RenderingMode", part.RenderingMode.ToString());
         }
 
-        protected override void Importing(ShapePart part, ImportContentContext context) {
+        protected override void Importing(ShapePart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
-            if (shapeElement != null) {
+            if (shapeElement != null)
+            {
                 part.Template = shapeElement.Value;
                 context.ImportAttribute(part.PartDefinition.Name, "RenderingMode", value => part.RenderingMode = (RenderingMode)Enum.Parse(typeof(RenderingMode), value));
             }
         }
 
-        protected override void Cloning(ShapePart originalPart, ShapePart clonePart, CloneContentContext context) {
+        protected override void Cloning(ShapePart originalPart, ShapePart clonePart, CloneContentContext context)
+        {
             clonePart.Template = originalPart.Template;
             clonePart.RenderingMode = originalPart.RenderingMode;
         }
 
-        private bool ValidateShapeName(ShapePart part, IUpdateModel updater) {
+        private bool ValidateShapeName(ShapePart part, IUpdateModel updater)
+        {
             var titleViewModel = new TitleViewModel();
             if (!updater.TryUpdateModel(titleViewModel, "Title", null, null))
                 return false;
 
             var name = titleViewModel.Title;
-            if (!String.IsNullOrWhiteSpace(name) &&
+            if (!string.IsNullOrWhiteSpace(name) &&
                 name[0].IsLetter() &&
-                name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '_')) {
+                name.All(c => c.IsLetter() || char.IsDigit(c) || c == '_'))
+            {
                 return true;
             }
 
@@ -120,7 +136,8 @@ namespace Orchard.Templates.Drivers {
             return false;
         }
 
-        private class TitleViewModel {
+        private class TitleViewModel
+        {
             public string Title { get; set; }
         }
     }

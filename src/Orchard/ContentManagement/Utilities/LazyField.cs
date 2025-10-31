@@ -1,43 +1,54 @@
-﻿using System;
+using System;
 
-namespace Orchard.ContentManagement.Utilities {
-    public class LazyField<T> {
+namespace Orchard.ContentManagement.Utilities
+{
+    public class LazyField<T>
+    {
         private T _value;
         private Func<T> _loader;
         private Func<T, T> _setter;
 
-        public T Value {
+        public T Value
+        {
             get { return GetValue(); }
             set { SetValue(value); }
         }
 
-        public void Loader(Func<T> loader) {
+        public void Loader(Func<T> loader)
+        {
             _loader = loader;
         }
 
         [Obsolete]
-        public void Loader(Func<T, T> loader) {
+        public void Loader(Func<T, T> loader)
+        {
             _loader = () => loader(_value);
         }
 
-        public void Setter(Func<T, T> setter) {
+        public void Setter(Func<T, T> setter)
+        {
             _setter = setter;
         }
 
-        private T GetValue() {
-            if (_loader != null) {
+        private T GetValue()
+        {
+            if (_loader != null)
+            {
                 _value = _loader();
                 _loader = null;
             }
             return _value;
         }
 
-        private void SetValue(T value) {
+        private void SetValue(T value)
+        {
             _loader = null;
-            if (_setter != null) {
+            if (_setter != null)
+            {
                 _value = _setter(value);
             }
-            else {
+            else
+            {
                 _value = value;
             }
         }

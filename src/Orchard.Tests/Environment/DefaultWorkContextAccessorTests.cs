@@ -1,41 +1,46 @@
-﻿using System.Web;
+using System.Web;
 using Autofac;
-using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Environment {
+namespace Orchard.Tests.Environment
+{
     [TestFixture]
-    public class DefaultWorkContextAccessorTests : ContainerTestBase {
+    public class DefaultWorkContextAccessorTests : ContainerTestBase
+    {
 
         HttpContextBase _httpContextCurrent;
 
-        public override void Init() {
+        public override void Init()
+        {
             _httpContextCurrent = null;
             base.Init();
         }
 
-        protected override void Register(ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder)
+        {
             builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
         }
 
-        protected override void Resolve(ILifetimeScope container) {
+        protected override void Resolve(ILifetimeScope container)
+        {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => _httpContextCurrent);
         }
 
         [Test]
-        public void ScopeIsCreatedAndCanBeRetrievedFromHttpContextBase() {
+        public void ScopeIsCreatedAndCanBeRetrievedFromHttpContextBase()
+        {
             var accessor = _container.Resolve<IWorkContextAccessor>();
             var httpContext = new StubHttpContext();
-            
+
             var workContextScope = accessor.CreateWorkContextScope(httpContext);
             Assert.That(workContextScope.WorkContext, Is.Not.Null);
 
@@ -44,7 +49,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DifferentHttpContextWillHoldDifferentWorkContext() {
+        public void DifferentHttpContextWillHoldDifferentWorkContext()
+        {
             var accessor = _container.Resolve<IWorkContextAccessor>();
             var httpContext1 = new StubHttpContext();
             var workContextScope1 = accessor.CreateWorkContextScope(httpContext1);
@@ -62,7 +68,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void ContextIsNullAfterDisposingScope() {
+        public void ContextIsNullAfterDisposingScope()
+        {
             var accessor = _container.Resolve<IWorkContextAccessor>();
             var httpContext = new StubHttpContext();
 
@@ -70,13 +77,14 @@ namespace Orchard.Tests.Environment {
 
             var scope = accessor.CreateWorkContextScope(httpContext);
             Assert.That(accessor.GetContext(httpContext), Is.Not.Null);
-            
+
             scope.Dispose();
             Assert.That(accessor.GetContext(httpContext), Is.Null);
         }
 
         [Test]
-        public void DifferentChildScopesWillNotCollideInTheSameHttpContext() {
+        public void DifferentChildScopesWillNotCollideInTheSameHttpContext()
+        {
             var shell1 = _container.BeginLifetimeScope();
             var accessor1 = shell1.Resolve<IWorkContextAccessor>();
 
@@ -107,7 +115,8 @@ namespace Orchard.Tests.Environment {
 
 
         [Test]
-        public void FunctionsByDefaultAgainstAmbientHttpContext() {
+        public void FunctionsByDefaultAgainstAmbientHttpContext()
+        {
             var accessor = _container.Resolve<IWorkContextAccessor>();
 
             var explicitHttpContext = new StubHttpContext();
@@ -137,7 +146,8 @@ namespace Orchard.Tests.Environment {
 
 
         [Test]
-        public void StillFunctionsWithoutAmbientHttpContext() {
+        public void StillFunctionsWithoutAmbientHttpContext()
+        {
             var accessor = _container.Resolve<IWorkContextAccessor>();
 
             Assert.That(accessor.GetContext(), Is.Null);
@@ -150,7 +160,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DifferentChildScopesWillNotCollideWithoutAmbientHttpContext() {
+        public void DifferentChildScopesWillNotCollideWithoutAmbientHttpContext()
+        {
             var shell1 = _container.BeginLifetimeScope();
             var accessor1 = shell1.Resolve<IWorkContextAccessor>();
 

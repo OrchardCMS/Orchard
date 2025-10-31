@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 
-namespace Orchard.Widgets.Services {
+namespace Orchard.Widgets.Services
+{
     [Obsolete("Use Orchard.Conditions.Services.IConditionManager instead.")]
-    public interface IRuleManager : IDependency {
+    public interface IRuleManager : IDependency
+    {
         bool Matches(string expression);
     }
 }

@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.Migrations.Commands {
+namespace Orchard.Migrations.Commands
+{
     [OrchardFeature("DatabaseUpdate")]
-    public class DatabaseUpdateCommands : DefaultOrchardCommandHandler {
+    public class DatabaseUpdateCommands : DefaultOrchardCommandHandler
+    {
         private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
@@ -17,18 +19,22 @@ namespace Orchard.Migrations.Commands {
         public DatabaseUpdateCommands(
             IDataMigrationInterpreter dataMigrationInterpreter,
             ISchemaCommandGenerator schemaCommandGenerator
-            ) {
+            )
+        {
             _dataMigrationInterpreter = dataMigrationInterpreter;
             _schemaCommandGenerator = schemaCommandGenerator;
         }
 
         [CommandName("update database")]
         [CommandHelp("update database \r\n\t" + "Automatically updates the database schema according to the defintion of the \"Record\" types in code for the enabled features.")]
-        public void UpdateDatabase() {
-            try {
+        public void UpdateDatabase()
+        {
+            try
+            {
                 _schemaCommandGenerator.UpdateDatabase();
             }
-            catch ( Exception ex ) {
+            catch (Exception ex)
+            {
                 throw new OrchardException(T("An error occurred while updating the database."), ex);
             }
 
@@ -38,22 +44,28 @@ namespace Orchard.Migrations.Commands {
         [CommandName("create tables")]
         [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables according to the defintion of the \"Record\" types in code for the <feature-name> and optionally drops them before if specified.")]
         [OrchardSwitches("Drop")]
-        public void CreateTables(string featureName) {
+        public void CreateTables(string featureName)
+        {
             var stringInterpreter = new StringCommandInterpreter(Context.Output);
-            try {
+            try
+            {
                 var commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, Drop).ToList();
-                if ( commands.Any() ) {
-                    foreach (var command in commands) {
+                if (commands.Any())
+                {
+                    foreach (var command in commands)
+                    {
                         stringInterpreter.Visit(command);
                         _dataMigrationInterpreter.Visit(command);
                     }
                 }
-                else {
+                else
+                {
                     Context.Output.WriteLine(T("There are no tables to create for feature {0}.", featureName));
                     return;
                 }
             }
-            catch ( Exception ex ) {
+            catch (Exception ex)
+            {
                 throw new OrchardException(T("An error occurred while creating the tables."), ex);
             }
 

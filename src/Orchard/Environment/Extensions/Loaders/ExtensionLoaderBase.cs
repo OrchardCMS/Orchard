@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,34 +6,42 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions.Loaders {
-    public abstract class ExtensionLoaderBase : IExtensionLoader {
+namespace Orchard.Environment.Extensions.Loaders
+{
+    public abstract class ExtensionLoaderBase : IExtensionLoader
+    {
         private readonly IDependenciesFolder _dependenciesFolder;
 
-        protected ExtensionLoaderBase(IDependenciesFolder dependenciesFolder) {
+        protected ExtensionLoaderBase(IDependenciesFolder dependenciesFolder)
+        {
             _dependenciesFolder = dependenciesFolder;
         }
 
         public abstract int Order { get; }
-        public string Name { get { return this.GetType().Name; } }
+        public string Name => this.GetType().Name;
 
-        public virtual IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+        public virtual IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor)
+        {
             return Enumerable.Empty<ExtensionReferenceProbeEntry>();
         }
 
-        public virtual Assembly LoadReference(DependencyReferenceDescriptor reference) {
+        public virtual Assembly LoadReference(DependencyReferenceDescriptor reference)
+        {
             return null;
         }
 
-        public virtual bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+        public virtual bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references)
+        {
             return true;
         }
 
         public abstract ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionEntry Load(ExtensionDescriptor descriptor)
+        {
             var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+            if (dependency != null && dependency.LoaderName == this.Name)
+            {
                 return LoadWorker(descriptor);
             }
             return null;
@@ -50,11 +58,13 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         protected abstract ExtensionEntry LoadWorker(ExtensionDescriptor descriptor);
 
-        public virtual IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+        public virtual IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency)
+        {
             return Enumerable.Empty<ExtensionCompilationReference>();
         }
 
-        public virtual IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
+        public virtual IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency)
+        {
             return Enumerable.Empty<string>();
         }
 

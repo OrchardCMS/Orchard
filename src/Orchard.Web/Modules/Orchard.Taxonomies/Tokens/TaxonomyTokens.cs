@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using System.Linq;
-using Orchard.Taxonomies.Fields;
 using Orchard.Localization;
+using Orchard.Taxonomies.Fields;
 using Orchard.Tokens;
 
-namespace Orchard.Taxonomies.Tokens {
-    public class TaxonomyTokens : ITokenProvider {
+namespace Orchard.Taxonomies.Tokens
+{
+    public class TaxonomyTokens : ITokenProvider
+    {
 
-        public TaxonomyTokens() {
+        public TaxonomyTokens()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             // Usage:
             // Content.Fields.Article.Categories.Terms -> 'Science, Sports, Arts'
             // Content.Fields.Article.Categories.Terms:0 -> 'Science'
@@ -27,12 +31,14 @@ namespace Orchard.Taxonomies.Tokens {
                    ;
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
 
             context.For<TaxonomyField>("TaxonomyField")
-                   .Token("Terms", field => String.Join(", ", field.Terms.Select(t => t.Name).ToArray()))
+                   .Token("Terms", field => string.Join(", ", field.Terms.Select(t => t.Name).ToArray()))
                    .Token(FilterTokenParam,
-                       (index, field) => {
+                       (index, field) =>
+                       {
                            var term = field.Terms.ElementAtOrDefault(Convert.ToInt32(index));
                            return term != null ? term.Name : null;
                        })
@@ -40,22 +46,26 @@ namespace Orchard.Taxonomies.Tokens {
                    ;
         }
 
-        private static string FilterTokenParam(string token) {
+        private static string FilterTokenParam(string token)
+        {
             int index = 0;
             return (token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) && int.TryParse(token.Substring("Terms:".Length), out index)) ? index.ToString() : null;
         }
 
-        private static Tuple<string, string> FilterChainParam(string token) {
+        private static Tuple<string, string> FilterChainParam(string token)
+        {
             int tokenLength = "Terms:".Length;
             int index = 0;
             int chainIndex = token.IndexOf('.');
             if (!token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
                 return null;
 
-            if (int.TryParse(token.Substring(tokenLength, chainIndex - tokenLength), out index)) {
+            if (int.TryParse(token.Substring(tokenLength, chainIndex - tokenLength), out index))
+            {
                 return new Tuple<string, string>(index.ToString(), token.Substring(chainIndex + 1));
             }
-            else {
+            else
+            {
                 return null;
             }
         }

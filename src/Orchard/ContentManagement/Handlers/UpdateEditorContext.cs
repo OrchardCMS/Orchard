@@ -1,12 +1,15 @@
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 
-namespace Orchard.ContentManagement.Handlers {
-    public class UpdateEditorContext : BuildEditorContext {
+namespace Orchard.ContentManagement.Handlers
+{
+    public class UpdateEditorContext : BuildEditorContext
+    {
 
         public UpdateEditorContext(IShape model, IContent content, IUpdateModel updater, string groupInfoId, IShapeFactory shapeFactory, ShapeTable shapeTable, string path)
-            : base(model, content, groupInfoId, shapeFactory) {
-            
+            : base(model, content, groupInfoId, shapeFactory)
+        {
+
             ShapeTable = shapeTable;
             Updater = updater;
             Path = path;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -9,39 +9,43 @@ using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
 
-namespace Orchard.Projections.Drivers {
-    public class QueryPartDriver : ContentPartDriver<QueryPart> {
+namespace Orchard.Projections.Drivers
+{
+    public class QueryPartDriver : ContentPartDriver<QueryPart>
+    {
         private readonly IProjectionManager _projectionManager;
         private readonly IFormManager _formManager;
 
-        public QueryPartDriver(IProjectionManager projectionManager, IFormManager formManager) {
+        public QueryPartDriver(IProjectionManager projectionManager, IFormManager formManager)
+        {
             _projectionManager = projectionManager;
             _formManager = formManager;
         }
 
-        protected override string Prefix {
-            get {
-                return "Query_Part";
-            }
-        }
+        protected override string Prefix => "Query_Part";
 
         protected override DriverResult Editor(QueryPart part, dynamic shapeHelper) =>
             Editor(part, null, shapeHelper);
 
-        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(QueryPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var model = new QueryViewModel { VersionScope = part.VersionScope };
-            if (updater != null) {
-                if (updater.TryUpdateModel(model, Prefix, null, null)) {
+            if (updater != null)
+            {
+                if (updater.TryUpdateModel(model, Prefix, null, null))
+                {
                     part.VersionScope = model.VersionScope;
                 }
             }
 
-            return ContentShape("Parts_QueryPart_Edit", () => {
+            return ContentShape("Parts_QueryPart_Edit", () =>
+            {
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/QueryPart_Edit", Model: model, Prefix: Prefix);
             });
         }
 
-        protected override void Exporting(QueryPart part, ExportContentContext context) {
+        protected override void Exporting(QueryPart part, ExportContentContext context)
+        {
 
             var element = context.Element(part.PartDefinition.Name);
 
@@ -51,12 +55,14 @@ namespace Orchard.Projections.Drivers {
                 new XElement("FilterGroups",
                     part.FilterGroups.Select(filterGroup =>
                         new XElement("FilterGroup",
-                            filterGroup.Filters.Select(filter => {
+                            filterGroup.Filters.Select(filter =>
+                            {
 
                                 var descriptor = _projectionManager.GetFilter(filter.Category, filter.Type);
 
                                 var state = filter.State;
-                                if (descriptor != null) {
+                                if (descriptor != null)
+                                {
                                     state = _formManager.Export(descriptor.Form, filter.State, context);
                                 }
 
@@ -72,11 +78,13 @@ namespace Orchard.Projections.Drivers {
                     )
                 ),
                 new XElement("SortCriteria",
-                    part.SortCriteria.Select(sortCriterion => {
+                    part.SortCriteria.Select(sortCriterion =>
+                    {
                         var descriptor = _projectionManager.GetFilter(sortCriterion.Category, sortCriterion.Type);
 
                         var state = sortCriterion.State;
-                        if (descriptor != null) {
+                        if (descriptor != null)
+                        {
                             state = _formManager.Export(descriptor.Form, sortCriterion.State, context);
                         }
 
@@ -90,11 +98,13 @@ namespace Orchard.Projections.Drivers {
                     })
                 ),
                 new XElement("Layouts",
-                    part.Layouts.Select(layout => {
+                    part.Layouts.Select(layout =>
+                    {
                         var descriptor = _projectionManager.GetFilter(layout.Category, layout.Type);
 
                         var state = layout.State;
-                        if (descriptor != null) {
+                        if (descriptor != null)
+                        {
                             state = _formManager.Export(descriptor.Form, layout.State, context);
                         }
 
@@ -119,9 +129,11 @@ namespace Orchard.Projections.Drivers {
             );
         }
 
-        protected override void Importing(QueryPart part, ImportContentContext context) {
+        protected override void Importing(QueryPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -132,19 +144,23 @@ namespace Orchard.Projections.Drivers {
 
             part.Record.FilterGroups.Clear();
             foreach (var item in queryElement.Element("FilterGroups").Elements("FilterGroup").Select(filterGroup =>
-                new FilterGroupRecord {
-                    Filters = filterGroup.Elements("Filter").Select(filter => {
+                new FilterGroupRecord
+                {
+                    Filters = filterGroup.Elements("Filter").Select(filter =>
+                    {
 
                         var category = filter.Attribute("Category").Value;
                         var type = filter.Attribute("Type").Value;
                         var state = filter.Attribute("State").Value;
 
                         var descriptor = _projectionManager.GetFilter(category, type);
-                        if (descriptor != null) {
+                        if (descriptor != null)
+                        {
                             state = _formManager.Import(descriptor.Form, state, context);
                         }
 
-                        return new FilterRecord {
+                        return new FilterRecord
+                        {
                             Category = category,
                             Description = filter.Attribute("Description").Value,
                             Position = Convert.ToInt32(filter.Attribute("Position").Value),
@@ -152,22 +168,26 @@ namespace Orchard.Projections.Drivers {
                             Type = type
                         };
                     }).ToList()
-                })) {
+                }))
+            {
                 part.Record.FilterGroups.Add(item);
             }
 
             part.Record.SortCriteria.Clear();
-            foreach (var item in queryElement.Element("SortCriteria").Elements("SortCriterion").Select(sortCriterion => {
+            foreach (var item in queryElement.Element("SortCriteria").Elements("SortCriterion").Select(sortCriterion =>
+            {
                 var category = sortCriterion.Attribute("Category").Value;
                 var type = sortCriterion.Attribute("Type").Value;
                 var state = sortCriterion.Attribute("State").Value;
 
                 var descriptor = _projectionManager.GetFilter(category, type);
-                if (descriptor != null) {
+                if (descriptor != null)
+                {
                     state = _formManager.Import(descriptor.Form, state, context);
                 }
 
-                return new SortCriterionRecord {
+                return new SortCriterionRecord
+                {
                     Category = category,
                     Description = sortCriterion.Attribute("Description").Value,
                     Position = Convert.ToInt32(sortCriterion.Attribute("Position").Value),
@@ -175,22 +195,26 @@ namespace Orchard.Projections.Drivers {
                     Type = type
 
                 };
-            })) {
+            }))
+            {
                 part.Record.SortCriteria.Add(item);
             }
 
             part.Record.Layouts.Clear();
-            foreach (var item in queryElement.Element("Layouts").Elements("Layout").Select(layout => {
+            foreach (var item in queryElement.Element("Layouts").Elements("Layout").Select(layout =>
+            {
                 var category = layout.Attribute("Category").Value;
                 var type = layout.Attribute("Type").Value;
                 var state = layout.Attribute("State").Value;
 
                 var descriptor = _projectionManager.GetFilter(category, type);
-                if (descriptor != null) {
+                if (descriptor != null)
+                {
                     state = _formManager.Import(descriptor.Form, state, context);
                 }
 
-                return new LayoutRecord {
+                return new LayoutRecord
+                {
                     Category = category,
                     Description = layout.Attribute("Description").Value,
                     Display = int.Parse(layout.Attribute("Display").Value),
@@ -203,13 +227,16 @@ namespace Orchard.Projections.Drivers {
                     Properties = layout.Element("Properties").Elements("Property").Select(GetProperty).ToList(),
                     GroupProperty = GetProperty(layout.Element("Group").Element("Property"))
                 };
-            })) {
+            }))
+            {
                 part.Record.Layouts.Add(item);
             }
         }
 
-        private XElement GetPropertyXml(PropertyRecord property) {
-            if (property == null) {
+        private XElement GetPropertyXml(PropertyRecord property)
+        {
+            if (property == null)
+            {
                 return null;
             }
 
@@ -248,12 +275,15 @@ namespace Orchard.Projections.Drivers {
             );
         }
 
-        private PropertyRecord GetProperty(XElement property) {
-            if (property == null) {
+        private PropertyRecord GetProperty(XElement property)
+        {
+            if (property == null)
+            {
                 return null;
             }
 
-            return new PropertyRecord {
+            return new PropertyRecord
+            {
                 AddEllipsis = Convert.ToBoolean(property.Attribute("AddEllipsis").Value),
                 Category = property.Attribute("Category").Value,
                 CreateLabel = Convert.ToBoolean(property.Attribute("CreateLabel").Value),
@@ -290,15 +320,19 @@ namespace Orchard.Projections.Drivers {
             };
         }
 
-        protected override void Cloning(QueryPart originalPart, QueryPart clonePart, CloneContentContext context) {
+        protected override void Cloning(QueryPart originalPart, QueryPart clonePart, CloneContentContext context)
+        {
             clonePart.VersionScope = originalPart.VersionScope;
 
-            clonePart.Record.FilterGroups = originalPart.FilterGroups.Select(originalGroup => {
-                var cloneGroup = new FilterGroupRecord {
+            clonePart.Record.FilterGroups = originalPart.FilterGroups.Select(originalGroup =>
+            {
+                var cloneGroup = new FilterGroupRecord
+                {
                     QueryPartRecord = clonePart.Record
                 };
 
-                cloneGroup.Filters = originalGroup.Filters.Select(filter => new FilterRecord {
+                cloneGroup.Filters = originalGroup.Filters.Select(filter => new FilterRecord
+                {
                     Category = filter.Category,
                     Description = filter.Description,
                     Position = filter.Position,
@@ -310,7 +344,8 @@ namespace Orchard.Projections.Drivers {
                 return cloneGroup;
             }).ToList();
 
-            clonePart.Record.SortCriteria = originalPart.SortCriteria.Select(sortCriterion => new SortCriterionRecord {
+            clonePart.Record.SortCriteria = originalPart.SortCriteria.Select(sortCriterion => new SortCriterionRecord
+            {
                 Category = sortCriterion.Category,
                 Description = sortCriterion.Description,
                 Position = sortCriterion.Position,
@@ -319,8 +354,10 @@ namespace Orchard.Projections.Drivers {
                 QueryPartRecord = clonePart.Record
             }).ToList();
 
-            clonePart.Record.Layouts = originalPart.Layouts.Select(layout => {
-                var cloneLayout = new LayoutRecord {
+            clonePart.Record.Layouts = originalPart.Layouts.Select(layout =>
+            {
+                var cloneLayout = new LayoutRecord
+                {
                     Category = layout.Category,
                     Description = layout.Description,
                     Display = layout.Display,
@@ -331,8 +368,10 @@ namespace Orchard.Projections.Drivers {
                     QueryPartRecord = clonePart.Record
                 };
 
-                cloneLayout.Properties = layout.Properties.Select(property => {
-                    var cloneProperty = new PropertyRecord {
+                cloneLayout.Properties = layout.Properties.Select(property =>
+                {
+                    var cloneProperty = new PropertyRecord
+                    {
                         AddEllipsis = property.AddEllipsis,
                         Category = property.Category,
                         CreateLabel = property.CreateLabel,
@@ -366,7 +405,8 @@ namespace Orchard.Projections.Drivers {
                         LayoutRecord = cloneLayout
                     };
 
-                    if (cloneLayout.GroupProperty == null && layout.GroupProperty == property) {
+                    if (cloneLayout.GroupProperty == null && layout.GroupProperty == property)
+                    {
                         cloneLayout.GroupProperty = cloneProperty;
                     }
 

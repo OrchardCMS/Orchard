@@ -1,7 +1,8 @@
-﻿using Orchard.Forms.Services;
+using Orchard.Forms.Services;
 using Orchard.Localization.Services;
 
-namespace Orchard.DynamicForms.Services {
+namespace Orchard.DynamicForms.Services
+{
     public interface IFormElementServices : IDependency
     {
         IFormManager FormManager { get; }

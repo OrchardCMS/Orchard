@@ -5,17 +5,21 @@ using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
-namespace Orchard.Localization.Selectors {
+namespace Orchard.Localization.Selectors
+{
     [OrchardFeature("Orchard.Localization.CultureSelector")]
-    public class BrowserCultureSelector : ICultureSelector {
+    public class BrowserCultureSelector : ICultureSelector
+    {
         private readonly Lazy<ICultureManager> _cultureManager;
 
         public BrowserCultureSelector(
-            Lazy<ICultureManager> cultureManager) {
+            Lazy<ICultureManager> cultureManager)
+        {
             _cultureManager = cultureManager;
         }
 
-        public CultureSelectorResult GetCulture(HttpContextBase context) {
+        public CultureSelectorResult GetCulture(HttpContextBase context)
+        {
             if (context == null) return null;
 
             /* Fall back to Browser */
@@ -27,9 +31,11 @@ namespace Orchard.Localization.Selectors {
             var cultures = _cultureManager.Value.ListCultures().ToList();
 
             foreach (var userLanguage in userLanguages
-                .Select(ul => ul.Split(';')[0].Trim())) {
+                .Select(ul => ul.Split(';')[0].Trim()))
+            {
 
-                if (cultures.Contains(userLanguage, StringComparer.OrdinalIgnoreCase)) {
+                if (cultures.Contains(userLanguage, StringComparer.OrdinalIgnoreCase))
+                {
                     return new CultureSelectorResult { Priority = -4, CultureName = CultureInfo.CreateSpecificCulture(userLanguage).Name };
                 }
             }

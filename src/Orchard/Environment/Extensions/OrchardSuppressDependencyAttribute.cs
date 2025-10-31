@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 
-namespace Orchard.Environment.Extensions {
+namespace Orchard.Environment.Extensions
+{
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class OrchardSuppressDependencyAttribute : Attribute {
-        public OrchardSuppressDependencyAttribute(string fullName) {
+    public class OrchardSuppressDependencyAttribute : Attribute
+    {
+        public OrchardSuppressDependencyAttribute(string fullName)
+        {
             FullName = fullName;
         }
 

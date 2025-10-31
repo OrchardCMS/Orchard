@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.FieldTypeEditors {
+namespace Orchard.Projections.FieldTypeEditors
+{
     /// <summary>
     /// Defines a service to provide information on how a specific data type
     /// is stored in the content fields index.
     /// </summary>
-    public interface IFieldTypeEditor : IDependency {
+    public interface IFieldTypeEditor : IDependency
+    {
         /// <summary>
         /// Whether this instance can handle a given storage type
         /// </summary>
@@ -37,8 +39,10 @@ namespace Orchard.Projections.FieldTypeEditors {
     }
 
 
-    public static class FieldTypeEditorExtensions {
-        public static QueryVersionScopeOptions GetQueryVersionScope(this IFieldTypeEditor editor, string value) {
+    public static class FieldTypeEditorExtensions
+    {
+        public static QueryVersionScopeOptions GetQueryVersionScope(this IFieldTypeEditor editor, string value)
+        {
             if (!Enum.TryParse(value, out QueryVersionScopeOptions versionScope))
                 versionScope = QueryVersionScopeOptions.Published;
 

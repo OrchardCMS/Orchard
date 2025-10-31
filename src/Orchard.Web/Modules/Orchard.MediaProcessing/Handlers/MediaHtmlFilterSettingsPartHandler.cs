@@ -1,13 +1,16 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.MediaProcessing.Models;
 
-namespace Orchard.MediaProcessing.Handlers {
+namespace Orchard.MediaProcessing.Handlers
+{
     [OrchardFeature(Features.OrchardMediaProcessingHtmlFilter)]
-    public class MediaHtmlFilterSettingsPartHandler : ContentHandler {
-        public MediaHtmlFilterSettingsPartHandler() {
+    public class MediaHtmlFilterSettingsPartHandler : ContentHandler
+    {
+        public MediaHtmlFilterSettingsPartHandler()
+        {
             T = NullLocalizer.Instance;
 
             Filters.Add(new ActivatingFilter<MediaHtmlFilterSettingsPart>("Site"));
@@ -19,7 +22,8 @@ namespace Orchard.MediaProcessing.Handlers {
 
         public Localizer T { get; set; }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             if (context.ContentItem.ContentType != "Site") return;
 
             base.GetItemMetadata(context);

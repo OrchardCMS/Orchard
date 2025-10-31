@@ -3,11 +3,14 @@ using System.Data;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 
-namespace Contrib.Cache.Database {
+namespace Contrib.Cache.Database
+{
     [OrchardFeature("Orchard.OutputCache.Database")]
-    public class DatabaseOutputCacheMigrations : DataMigrationImpl {
+    public class DatabaseOutputCacheMigrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             // Creating table CacheItemRecord
             SchemaBuilder.CreateTable("CacheItemRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -34,9 +37,11 @@ namespace Contrib.Cache.Database {
             return 3;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.AlterTable("CacheItemRecord",
-                    table => {
+                    table =>
+                    {
                         table.DropColumn("ValidFor");
                         table.AddColumn<int>("Duration");
                         table.AddColumn<int>("GraceTime", c => c.Nullable());
@@ -46,9 +51,11 @@ namespace Contrib.Cache.Database {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             SchemaBuilder.AlterTable("CacheItemRecord",
-                    table => {
+                    table =>
+                    {
                         table.AlterColumn("Output", c => c.Unlimited().WithType(DbType.Binary));
                     });
 

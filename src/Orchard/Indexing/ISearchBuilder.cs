@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Indexing {
-    public interface ISearchBuilder {
+namespace Orchard.Indexing
+{
+    public interface ISearchBuilder
+    {
         ISearchBuilder Parse(string defaultField, string query, bool escape = true);
         ISearchBuilder Parse(string[] defaultFields, string query, bool escape = true);
 

@@ -1,22 +1,27 @@
-﻿using Orchard.Localization;
+using Orchard.Localization;
 
-namespace Orchard.Setup.Annotations {
-    public class SiteNameValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute {
+namespace Orchard.Setup.Annotations
+{
+    public class SiteNameValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute
+    {
         private string _value;
 
         public SiteNameValidAttribute(int maximumLength)
-            : base(1, maximumLength) {
+            : base(1, maximumLength)
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public override bool IsValid(object value) {
+        public override bool IsValid(object value)
+        {
             _value = (value as string) ?? "";
             return base.IsValid(_value.Trim().Length);
         }
 
-        public override string FormatErrorMessage(string name) {
+        public override string FormatErrorMessage(string name)
+        {
             if (string.IsNullOrWhiteSpace(_value))
                 return T("Site name is required.").Text;
 
@@ -24,22 +29,26 @@ namespace Orchard.Setup.Annotations {
         }
     }
 
-    public class UserNameValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute {
+    public class UserNameValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute
+    {
         private string _value;
 
         public UserNameValidAttribute(int minimumLength, int maximumLength)
-            : base(minimumLength, maximumLength) {
+            : base(minimumLength, maximumLength)
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public override bool IsValid(object value) {
+        public override bool IsValid(object value)
+        {
             _value = (value as string) ?? "";
             return base.IsValid(_value.Trim().Length);
         }
 
-        public override string FormatErrorMessage(string name) {
+        public override string FormatErrorMessage(string name)
+        {
             if (string.IsNullOrEmpty(_value))
                 return T("User name is required.").Text;
 
@@ -49,22 +58,26 @@ namespace Orchard.Setup.Annotations {
         }
     }
 
-    public class PasswordValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute {
+    public class PasswordValidAttribute : System.ComponentModel.DataAnnotations.RangeAttribute
+    {
         private string _value;
 
         public PasswordValidAttribute(int minimumLength, int maximumLength)
-            : base(minimumLength, maximumLength) {
+            : base(minimumLength, maximumLength)
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public override bool IsValid(object value) {
+        public override bool IsValid(object value)
+        {
             _value = (value as string) ?? "";
             return base.IsValid(_value.Trim().Length);
         }
 
-        public override string FormatErrorMessage(string name) {
+        public override string FormatErrorMessage(string name)
+        {
             if (string.IsNullOrEmpty(_value))
                 return T("Password is required.").Text;
 
@@ -74,14 +87,17 @@ namespace Orchard.Setup.Annotations {
         }
     }
 
-    public class PasswordConfirmationRequiredAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute {
-        public PasswordConfirmationRequiredAttribute() {
+    public class PasswordConfirmationRequiredAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute
+    {
+        public PasswordConfirmationRequiredAttribute()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public override string FormatErrorMessage(string name) {
+        public override string FormatErrorMessage(string name)
+        {
             return T("Password confirmation is required.").Text;
         }
     }

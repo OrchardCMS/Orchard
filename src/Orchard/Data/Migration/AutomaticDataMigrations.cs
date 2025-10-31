@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
@@ -9,11 +9,13 @@ using Orchard.Exceptions;
 using Orchard.Logging;
 using Orchard.Tasks.Locking.Services;
 
-namespace Orchard.Data.Migration {
+namespace Orchard.Data.Migration
+{
     /// <summary>
     /// Registers to OrchardShell.Activated in order to run migrations automatically 
     /// </summary>
-    public class AutomaticDataMigrations : IOrchardShellEvents {
+    public class AutomaticDataMigrations : IOrchardShellEvents
+    {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IFeatureManager _featureManager;
         private readonly IDistributedLockService _distributedLockService;
@@ -27,7 +29,8 @@ namespace Orchard.Data.Migration {
             IFeatureManager featureManager,
             IDistributedLockService distributedLockService,
             ITransactionManager transactionManager,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings)
+        {
 
             _dataMigrationManager = dataMigrationManager;
             _featureManager = featureManager;
@@ -41,15 +44,18 @@ namespace Orchard.Data.Migration {
 
         public ILogger Logger { get; set; }
 
-        public void Activated() {
+        public void Activated()
+        {
             EnsureDistributedLockSchemaExists();
 
             if (_distributedLockService.TryAcquireLock(
                 GetType().FullName,
                 TimeSpan.FromMinutes(30),
                 TimeSpan.FromMilliseconds(250),
-                out IDistributedLock @lock)) {
-                using (@lock) {
+                out IDistributedLock @lock))
+            {
+                using (@lock)
+                {
                     // Let's make sure that the basic set of features is enabled.
                     // If there are any that are not enabled, then let's enable them first.
                     var theseFeaturesShouldAlwaysBeActive = new[] {
@@ -59,16 +65,21 @@ namespace Orchard.Data.Migration {
                     var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
                     var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(
                         shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
-                    if (featuresToEnable.Any()) {
+                    if (featuresToEnable.Any())
+                    {
                         _featureManager.EnableFeatures(featuresToEnable, true);
                     }
 
-                    foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
-                        try {
+                    foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate())
+                    {
+                        try
+                        {
                             _dataMigrationManager.Update(feature);
                         }
-                        catch (Exception ex) {
-                            if (ex.IsFatal()) {
+                        catch (Exception ex)
+                        {
+                            if (ex.IsFatal())
+                            {
                                 throw;
                             }
                             Logger.Error("Could not run migrations automatically on " + feature, ex);
@@ -78,7 +89,8 @@ namespace Orchard.Data.Migration {
             }
         }
 
-        public void Terminating() {
+        public void Terminating()
+        {
             // No-op.
         }
 
@@ -86,14 +98,17 @@ namespace Orchard.Data.Migration {
         /// This ensures that the framework migrations have run for the distributed locking feature, as existing
         /// Orchard installations will not have the required tables when upgrading.
         /// </summary>
-        private void EnsureDistributedLockSchemaExists() {
+        private void EnsureDistributedLockSchemaExists()
+        {
             // Ensure the distributed lock record schema exists.
             var schemaBuilder = new SchemaBuilder(_dataMigrationInterpreter);
             var distributedLockSchemaBuilder = new DistributedLockSchemaBuilder(_shellSettings, schemaBuilder);
-            if (!distributedLockSchemaBuilder.SchemaExists()) {
+            if (!distributedLockSchemaBuilder.SchemaExists())
+            {
 
                 // Workaround to avoid some Transaction issue for PostgreSQL.
-                if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase)) {
+                if (_shellSettings.DataProvider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase))
+                {
                     _transactionManager.RequireNew();
                 }
 

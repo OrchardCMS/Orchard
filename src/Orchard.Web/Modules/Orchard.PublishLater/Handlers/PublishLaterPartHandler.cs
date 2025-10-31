@@ -1,15 +1,18 @@
-﻿using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using Orchard.Tasks.Scheduling;
 
-namespace Orchard.PublishLater.Handlers {
-    public class PublishLaterPartHandler : ContentHandler {
+namespace Orchard.PublishLater.Handlers
+{
+    public class PublishLaterPartHandler : ContentHandler
+    {
         private readonly IPublishLaterService _publishLaterService;
 
         public PublishLaterPartHandler(
             IPublishLaterService publishLaterService,
-            IPublishingTaskManager publishingTaskManager) {
+            IPublishingTaskManager publishingTaskManager)
+        {
             _publishLaterService = publishLaterService;
 
             OnLoading<PublishLaterPart>((context, part) => LazyLoadHandlers(part));
@@ -28,7 +31,8 @@ namespace Orchard.PublishLater.Handlers {
             });
         }
 
-        protected void LazyLoadHandlers(PublishLaterPart part) {
+        protected void LazyLoadHandlers(PublishLaterPart part)
+        {
             part.ScheduledPublishUtc.Loader(() => _publishLaterService.GetScheduledPublishUtc(part));
         }
     }

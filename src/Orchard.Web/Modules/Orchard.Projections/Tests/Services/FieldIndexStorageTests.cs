@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -26,8 +26,10 @@ using Orchard.Tests;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Projections.Tests.Services {
-    public class FieldIndexStorageTests : DatabaseEnabledTestsBase {
+namespace Orchard.Projections.Tests.Services
+{
+    public class FieldIndexStorageTests : DatabaseEnabledTestsBase
+    {
         private IFieldStorageProvider _provider;
         private IFieldIndexService _fieldIndexService;
         private IContentManager _contentManager;
@@ -36,7 +38,8 @@ namespace Orchard.Projections.Tests.Services {
         private ContentPart _part;
         private ContentItem _contentItem;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<FieldIndexPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
@@ -48,7 +51,7 @@ namespace Orchard.Projections.Tests.Services {
             // ContentDefinitionManager
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
@@ -60,7 +63,8 @@ namespace Orchard.Projections.Tests.Services {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             _fieldIndexService = _container.Resolve<IFieldIndexService>();
@@ -74,76 +78,91 @@ namespace Orchard.Projections.Tests.Services {
             _storage = new FieldStorageEventStorage(storage, partFieldDefinition, _part, _events);
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
-                    typeof(ContentItemRecord), 
-                    typeof(ContentItemVersionRecord), 
-                    typeof(ContentTypeRecord), 
-                    
-                    typeof(FieldIndexPartRecord), 
-                    
-                    typeof(StringFieldIndexRecord), 
-                    typeof(IntegerFieldIndexRecord), 
-                    typeof(DecimalFieldIndexRecord), 
+                    typeof(ContentItemRecord),
+                    typeof(ContentItemVersionRecord),
+                    typeof(ContentTypeRecord),
+
+                    typeof(FieldIndexPartRecord),
+
+                    typeof(StringFieldIndexRecord),
+                    typeof(IntegerFieldIndexRecord),
+                    typeof(DecimalFieldIndexRecord),
                     typeof(DoubleFieldIndexRecord)
                 };
             }
         }
 
-        public class ThingHandler : ContentHandler {
-            public ThingHandler() {
+        public class ThingHandler : ContentHandler
+        {
+            public ThingHandler()
+            {
                 Filters.Add(new ActivatingFilter<Thing>("thing"));
                 Filters.Add(new ActivatingFilter<FieldIndexPart>("thing"));
             }
         }
 
-        public class Thing : ContentPart {
+        public class Thing : ContentPart
+        {
         }
 
-        private ContentPartDefinition FooPartDefinition() {
+        private ContentPartDefinition FooPartDefinition()
+        {
             return new ContentPartDefinitionBuilder()
                 .Named("Foo")
                 .WithField("Bar", cfg => cfg.OfType("TextField"))
                 .Build();
         }
 
-        private ContentPart CreateContentItemPart() {
+        private ContentPart CreateContentItemPart()
+        {
             var partDefinition = FooPartDefinition();
             var typeDefinition = new ContentTypeDefinitionBuilder()
                 .WithPart(partDefinition, part => { })
                 .Build();
-            _contentItem = new ContentItem {
-                VersionRecord = new ContentItemVersionRecord {
+            _contentItem = new ContentItem
+            {
+                VersionRecord = new ContentItemVersionRecord
+                {
                     ContentItemRecord = new ContentItemRecord(),
                     Published = false
                 }
             };
-            
-            var contentPart = new ContentPart {
+
+            var contentPart = new ContentPart
+            {
                 TypePartDefinition = typeDefinition.Parts.Single()
             };
             _contentItem.Weld(contentPart);
-            _contentItem.Weld(new InfosetPart {
+            _contentItem.Weld(new InfosetPart
+            {
                 Infoset = _contentItem.Record.Infoset,
                 VersionInfoset = _contentItem.VersionRecord.Infoset
             });
-            _contentItem.Weld(new FieldIndexPart {
+            _contentItem.Weld(new FieldIndexPart
+            {
                 Record = new FieldIndexPartRecord()
             });
             return contentPart;
         }
 
-        private T Get<T>(string name) {
+        private T Get<T>(string name)
+        {
             return _fieldIndexService.Get<T>(_part.As<FieldIndexPart>(), "Foo", "Bar", name);
         }
 
-        private void Set<T>(string name, T value) {
+        private void Set<T>(string name, T value)
+        {
             _storage.Set(name, value);
         }
 
         [Test]
-        public void ValueThatIsSetIsIndexed() {
+        public void ValueThatIsSetIsIndexed()
+        {
             Set("alpha", "one");
             _contentManager.Publish(_contentItem);
 
@@ -152,7 +171,8 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void NullValueNamesShouldBeHandled() {
+        public void NullValueNamesShouldBeHandled()
+        {
             Set(null, "one");
             _contentManager.Publish(_contentItem);
 
@@ -161,7 +181,8 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void CommonDataTypesShouldBeSerialized() {
+        public void CommonDataTypesShouldBeSerialized()
+        {
             var datetime = new DateTime(1980, 1, 1, 12, 1, 1, 499);
 
             Set("string", "one");
@@ -194,18 +215,21 @@ namespace Orchard.Projections.Tests.Services {
         }
 
         [Test]
-        public void StringsShouldBeTruncated() {
+        public void StringsShouldBeTruncated()
+        {
 
             Set("string", new string('x', 8000));
 
             _contentManager.Publish(_contentItem);
 
-            Assert.That(Get<string>("string"), Is.EqualTo(new String('x', 4000)));
+            Assert.That(Get<string>("string"), Is.EqualTo(new string('x', 4000)));
         }
     }
 
-    public class FieldDriverStub : ContentFieldDriver<TextField> {
-        protected override void Describe(DescribeMembersContext context) {
+    public class FieldDriverStub : ContentFieldDriver<TextField>
+    {
+        protected override void Describe(DescribeMembersContext context)
+        {
             context
                 .Member(null, typeof(string), null, null)
                 .Member("alpha", typeof(string), null, null)
@@ -222,7 +246,7 @@ namespace Orchard.Projections.Tests.Services {
                 .Member("double1", typeof(double), null, null)
                 .Member("double2", typeof(double), null, null);
         }
-   
+
     }
 
 }

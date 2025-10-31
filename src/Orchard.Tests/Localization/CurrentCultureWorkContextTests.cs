@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
@@ -10,9 +10,11 @@ using Orchard.Mvc;
 using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
     [TestFixture]
-    public class CurrentCultureWorkContextTests {
+    public class CurrentCultureWorkContextTests
+    {
         private IContainer _container;
         private IWorkContextStateProvider _currentCultureStateProvider;
         private WorkContext _workContext;
@@ -22,7 +24,8 @@ namespace Orchard.Tests.Localization {
         private const string _testCulture = "fr-CA";
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 _databaseFileName,
@@ -30,7 +33,8 @@ namespace Orchard.Tests.Localization {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _session = _sessionFactory.OpenSession();
 
             var builder = new ContainerBuilder();
@@ -53,17 +57,20 @@ namespace Orchard.Tests.Localization {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             _session.Close();
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
             File.Delete(_databaseFileName);
         }
 
         [Test]
-        public void CultureManagerReturnsCultureFromSelectors() {
+        public void CultureManagerReturnsCultureFromSelectors()
+        {
             var actualCulture = _currentCultureStateProvider.Get<string>("CurrentCulture")(_workContext);
             Assert.That(actualCulture, Is.EqualTo(_testCulture));
         }

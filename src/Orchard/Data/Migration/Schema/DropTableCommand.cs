@@ -1,7 +1,10 @@
-﻿namespace Orchard.Data.Migration.Schema {
-    public class DropTableCommand : SchemaCommand {
+namespace Orchard.Data.Migration.Schema
+{
+    public class DropTableCommand : SchemaCommand
+    {
         public DropTableCommand(string name)
-            : base(name, SchemaCommandType.DropTable) {
+            : base(name, SchemaCommandType.DropTable)
+        {
         }
     }
 }

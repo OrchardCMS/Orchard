@@ -1,8 +1,11 @@
-﻿using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.Records;
 
-namespace Orchard.Blogs.Models {
-    public class RecentBlogPostsPartRecord : ContentPartRecord {
-        public RecentBlogPostsPartRecord() {
+namespace Orchard.Blogs.Models
+{
+    public class RecentBlogPostsPartRecord : ContentPartRecord
+    {
+        public RecentBlogPostsPartRecord()
+        {
             Count = 5;
         }
 

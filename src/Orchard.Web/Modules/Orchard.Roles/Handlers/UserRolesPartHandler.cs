@@ -1,13 +1,16 @@
-﻿using System.Linq;
-using Orchard.Data;
+using System.Linq;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Data;
 using Orchard.Roles.Models;
 
-namespace Orchard.Roles.Handlers {
-    public class UserRolesPartHandler : ContentHandler {
+namespace Orchard.Roles.Handlers
+{
+    public class UserRolesPartHandler : ContentHandler
+    {
         private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
 
-        public UserRolesPartHandler(IRepository<UserRolesPartRecord> userRolesRepository) {
+        public UserRolesPartHandler(IRepository<UserRolesPartRecord> userRolesRepository)
+        {
             _userRolesRepository = userRolesRepository;
 
             Filters.Add(new ActivatingFilter<UserRolesPart>("User"));

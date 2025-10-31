@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web.Security;
 using Autofac;
@@ -35,10 +35,11 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Users.Services 
+namespace Orchard.Tests.Modules.Users.Services
 {
     [TestFixture]
-    public class MembershipServiceTests {
+    public class MembershipServiceTests
+    {
         private IMembershipValidationService _membershipValidationService;
         private IMembershipService _membershipService;
         private ISessionFactory _sessionFactory;
@@ -48,7 +49,8 @@ namespace Orchard.Tests.Modules.Users.Services
         private Mock<WorkContext> _workContext;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -64,12 +66,14 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
 
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<MembershipValidationService>().As<IMembershipValidationService>();
@@ -115,20 +119,23 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [TearDown]
-        public void Cleanup() {
+        public void Cleanup()
+        {
             if (_container != null)
                 _container.Dispose();
         }
 
         [Test]
-        public void CreateUserShouldAllocateModelAndCreateRecords() {
+        public void CreateUserShouldAllocateModelAndCreateRecords()
+        {
             var user = _membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
             Assert.That(user.UserName, Is.EqualTo("a"));
             Assert.That(user.Email, Is.EqualTo("c"));
         }
 
         [Test]
-        public void DefaultPasswordFormatShouldBeHashedAndHaveSalt() {
+        public void DefaultPasswordFormatShouldBeHashedAndHaveSalt()
+        {
             var user = _membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             var userRepository = _container.Resolve<IRepository<UserPartRecord>>();
@@ -140,7 +147,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void SaltAndPasswordShouldBeDifferentEvenWithSameSourcePassword() {
+        public void SaltAndPasswordShouldBeDifferentEvenWithSameSourcePassword()
+        {
             var password = "Password1!";
             var user1 = _membershipService.CreateUser(new CreateUserParams("user1", password, "user1@email.com", null, null, true, false));
             _session.Flush();
@@ -162,7 +170,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void ValidateUserShouldReturnNullIfUserOrPasswordIsIncorrect() {
+        public void ValidateUserShouldReturnNullIfUserOrPasswordIsIncorrect()
+        {
             _membershipService.CreateUser(new CreateUserParams("test-user", "test-password", "c", null, null, true, false));
             _session.Flush();
             _session.Clear();
@@ -178,14 +187,16 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void UsersWhoHaveNeverLoggedInCanBeAuthenticated() {
+        public void UsersWhoHaveNeverLoggedInCanBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             Assert.That(_membershipValidationService.CanAuthenticateWithCookie(user), Is.True);
         }
 
         [Test]
-        public void UsersWhoHaveNeverLoggedOutCanBeAuthenticated() {
+        public void UsersWhoHaveNeverLoggedOutCanBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             user.LastLoginUtc = _clock.UtcNow;
@@ -195,7 +206,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void UsersWhoHaveLoggedOutCantBeAuthenticated() {
+        public void UsersWhoHaveLoggedOutCantBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             user.LastLoginUtc = _clock.UtcNow;
@@ -207,7 +219,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void UsersWhoHaveLoggedInCanBeAuthenticated() {
+        public void UsersWhoHaveLoggedInCanBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             user.LastLogoutUtc = _clock.UtcNow;
@@ -219,7 +232,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void PendingUsersCantBeAuthenticated() {
+        public void PendingUsersCantBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             user.RegistrationStatus = UserStatus.Pending;
@@ -228,7 +242,8 @@ namespace Orchard.Tests.Modules.Users.Services
         }
 
         [Test]
-        public void ApprovedUsersCanBeAuthenticated() {
+        public void ApprovedUsersCanBeAuthenticated()
+        {
             var user = (UserPart)_membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true, false));
 
             user.RegistrationStatus = UserStatus.Approved;

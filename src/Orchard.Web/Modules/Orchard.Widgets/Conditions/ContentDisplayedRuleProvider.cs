@@ -1,17 +1,22 @@
-﻿using System;
+using System;
 using Orchard.Conditions.Services;
 using Orchard.Widgets.Handlers;
 
-namespace Orchard.Widgets.Conditions {
-    public class ContentDisplayedRuleProvider : IConditionProvider {
+namespace Orchard.Widgets.Conditions
+{
+    public class ContentDisplayedRuleProvider : IConditionProvider
+    {
         private readonly IDisplayedContentItemHandler _displayedContentItemHandler;
 
-        public ContentDisplayedRuleProvider(IDisplayedContentItemHandler displayedContentItemHandler) {
+        public ContentDisplayedRuleProvider(IDisplayedContentItemHandler displayedContentItemHandler)
+        {
             _displayedContentItemHandler = displayedContentItemHandler;
         }
 
-        public void Evaluate(ConditionEvaluationContext evaluationContext) {
-            if (!String.Equals(evaluationContext.FunctionName, "contenttype", StringComparison.OrdinalIgnoreCase)) {
+        public void Evaluate(ConditionEvaluationContext evaluationContext)
+        {
+            if (!string.Equals(evaluationContext.FunctionName, "contenttype", StringComparison.OrdinalIgnoreCase))
+            {
                 return;
             }
 

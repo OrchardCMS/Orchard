@@ -1,17 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Roles.Events {
+namespace Orchard.Roles.Events
+{
     [OrchardFeature("Orchard.Roles.Workflows")]
-    public class RoleEventHandler : IRoleEventHandler {
+    public class RoleEventHandler : IRoleEventHandler
+    {
         private readonly IWorkflowManager _workflowManager;
 
-        public RoleEventHandler(IWorkflowManager workflowManager) {
+        public RoleEventHandler(IWorkflowManager workflowManager)
+        {
             _workflowManager = workflowManager;
         }
 
-        public void Created(RoleCreatedContext context) {
+        public void Created(RoleCreatedContext context)
+        {
             _workflowManager.TriggerEvent("OnRoleEvent",
                null,
                () => new Dictionary<string, object> {
@@ -19,7 +23,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "Created" } });
         }
 
-        public void PermissionAdded(PermissionAddedContext context) {
+        public void PermissionAdded(PermissionAddedContext context)
+        {
             _workflowManager.TriggerEvent("OnRoleEvent",
                null,
                () => new Dictionary<string, object> {
@@ -28,7 +33,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "PermissionAdded" } });
         }
 
-        public void PermissionRemoved(PermissionRemovedContext context) {
+        public void PermissionRemoved(PermissionRemovedContext context)
+        {
             _workflowManager.TriggerEvent("OnRoleEvent",
                null,
                () => new Dictionary<string, object> {
@@ -37,7 +43,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "PermissionRemoved" } });
         }
 
-        public void Removed(RoleRemovedContext context) {
+        public void Removed(RoleRemovedContext context)
+        {
             _workflowManager.TriggerEvent("OnRoleEvent",
                null,
                () => new Dictionary<string, object> {
@@ -45,7 +52,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "Removed" } });
         }
 
-        public void Renamed(RoleRenamedContext context) {
+        public void Renamed(RoleRenamedContext context)
+        {
             _workflowManager.TriggerEvent("OnRoleEvent",
                null,
                () => new Dictionary<string, object> {
@@ -54,7 +62,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "Renamed" } });
         }
 
-        public void UserAdded(UserAddedContext context) {
+        public void UserAdded(UserAddedContext context)
+        {
             // Content of workflow event is the user
             var content = context.User.ContentItem;
             _workflowManager.TriggerEvent("OnRoleEvent",
@@ -65,7 +74,8 @@ namespace Orchard.Roles.Events {
                     { "Action", "UserAdded" } });
         }
 
-        public void UserRemoved(UserRemovedContext context) {
+        public void UserRemoved(UserRemovedContext context)
+        {
             // Content of workflow event is the user
             var content = context.User.ContentItem;
             _workflowManager.TriggerEvent("OnRoleEvent",

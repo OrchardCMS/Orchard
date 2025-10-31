@@ -1,5 +1,7 @@
-namespace Orchard.JobsQueue.Models {
-    public enum JobsQueueStatus {
+namespace Orchard.JobsQueue.Models
+{
+    public enum JobsQueueStatus
+    {
         Idle,
         Paused
     }
