@@ -77,10 +77,12 @@ namespace Orchard.Search.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
-                    var searchableTypes = new List<string>();
-                    // add the type to the list of types we will filter for
-                    // BlogPost for now but we would add more types in the future (i.e. "Article")
-                    searchableTypes.Add("BlogPost");
+                    var searchableTypes = new List<string>
+                    {
+                        // add the type to the list of types we will filter for
+                        // BlogPost for now but we would add more types in the future (i.e. "Article")
+                        "BlogPost"
+                    };
                     var searchBuilder = _indexManager.HasIndexProvider()
                     ? _indexManager
                         .GetSearchIndexProvider()

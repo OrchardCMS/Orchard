@@ -210,8 +210,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy
             if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
                 routeData.Values.Add("controller", controller.GetType().Name.ToLower().Replace("controller", ""));
 
-            controller.ControllerContext = new ControllerContext(httpContext, routeData, controller);
-            controller.ControllerContext.RequestContext = requestContext;
+            controller.ControllerContext = new ControllerContext(httpContext, routeData, controller)
+            {
+                RequestContext = requestContext
+            };
             return controller.ControllerContext;
         }
 

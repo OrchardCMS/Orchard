@@ -375,8 +375,10 @@ namespace Orchard.Tests.Modules.Users.Controllers
             {
                 get
                 {
-                    var nv = new NameValueCollection();
-                    nv["Host"] = "orchardproject.net";
+                    var nv = new NameValueCollection
+                    {
+                        ["Host"] = "orchardproject.net"
+                    };
                     return nv;
                 }
             }

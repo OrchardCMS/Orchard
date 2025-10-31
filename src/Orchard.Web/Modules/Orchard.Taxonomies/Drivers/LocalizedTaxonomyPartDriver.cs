@@ -21,11 +21,13 @@ namespace Orchard.Taxonomies.Drivers
 
         protected override DriverResult Editor(TaxonomyPart part, dynamic shapeHelper)
         {
-            AssociateTermTypeViewModel model = new AssociateTermTypeViewModel();
-            model.TermTypes = _taxonomyExtensionsService.GetAllTermTypes();
-            model.TermCreationAction = TermCreationOptions.CreateLocalized;
-            model.SelectedTermTypeId = part.TermTypeName;
-            model.ContentItem = part;
+            AssociateTermTypeViewModel model = new AssociateTermTypeViewModel
+            {
+                TermTypes = _taxonomyExtensionsService.GetAllTermTypes(),
+                TermCreationAction = TermCreationOptions.CreateLocalized,
+                SelectedTermTypeId = part.TermTypeName,
+                ContentItem = part
+            };
 
             return ContentShape("Parts_TaxonomyTermSelector",
                                 () => shapeHelper.EditorTemplate(

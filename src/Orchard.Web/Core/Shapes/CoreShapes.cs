@@ -733,8 +733,10 @@ namespace Orchard.Core.Shapes
         [Shape]
         public IHtmlString Pager_CurrentPage(HtmlHelper Html, dynamic Display, object Value)
         {
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString();
+            var tagBuilder = new TagBuilder("span")
+            {
+                InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString()
+            };
 
             return MvcHtmlString.Create(tagBuilder.ToString());
         }
@@ -792,8 +794,10 @@ namespace Orchard.Core.Shapes
         [Shape]
         public IHtmlString Pager_Gap(HtmlHelper Html, dynamic Display, object Value)
         {
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString();
+            var tagBuilder = new TagBuilder("span")
+            {
+                InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString()
+            };
 
             return MvcHtmlString.Create(tagBuilder.ToString());
         }

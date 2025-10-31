@@ -52,9 +52,8 @@ namespace Orchard.MediaLibrary.Drivers
                         Field = field,
                         Part = part,
                         ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty).ToList(),
+                        SelectedIds = string.Join(",", field.Ids)
                     };
-
-                    model.SelectedIds = string.Join(",", field.Ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/MediaLibraryPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
@@ -68,14 +67,9 @@ namespace Orchard.MediaLibrary.Drivers
 
             var settings = field.PartFieldDefinition.Settings.GetModel<MediaLibraryPickerFieldSettings>();
 
-            if (string.IsNullOrEmpty(model.SelectedIds))
-            {
-                field.Ids = new int[0];
-            }
-            else
-            {
-                field.Ids = model.SelectedIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-            }
+            field.Ids = string.IsNullOrEmpty(model.SelectedIds)
+                ? (new int[0])
+                : model.SelectedIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
 
             if (settings.Required && field.Ids.Length == 0)
             {

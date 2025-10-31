@@ -76,8 +76,10 @@ namespace Orchard.ContentManagement
                     }
                     else
                     {
-                        Dictionary<int, string> TermsRecordFieldDictionary = new Dictionary<int, string>();
-                        TermsRecordFieldDictionary.Add(termRecordId, (string)keyValue[2]);
+                        Dictionary<int, string> TermsRecordFieldDictionary = new Dictionary<int, string>
+                        {
+                            { termRecordId, (string)keyValue[2] }
+                        };
                         termsTermRecordIdsDictionary.Add((int)keyValue[0], TermsRecordFieldDictionary);
                     }
                 }

@@ -92,8 +92,10 @@ namespace Orchard.Localization.Handlers
                 //use cloning
                 foreach (var target in lSet.Select(lp => lp.ContentItem))
                 {
-                    var context = new CloneContentContext(localizationPart.ContentItem, target);
-                    context.FieldName = field.Name;
+                    var context = new CloneContentContext(localizationPart.ContentItem, target)
+                    {
+                        FieldName = field.Name
+                    };
                     fieldDrivers.Invoke(driver => driver.Cloning(context), context.Logger);
                     fieldDrivers.Invoke(driver => driver.Cloned(context), context.Logger);
                 }

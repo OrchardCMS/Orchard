@@ -126,8 +126,11 @@ namespace Orchard.Tests.Environment.Configuration
         public void SettingsDontLoseTenantState()
         {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
-            var foo = new ShellSettings { Name = "Default" };
-            foo.State = TenantState.Disabled;
+            var foo = new ShellSettings
+            {
+                Name = "Default",
+                State = TenantState.Disabled
+            };
 
             loader.SaveSettings(foo);
             var settings = loader.LoadSettings().First();

@@ -160,10 +160,9 @@ namespace Orchard.Taxonomies.Controllers
         [HttpPost]
         public ActionResult SelectTerm(int taxonomyId, int selectedTermId)
         {
-            if (!Services.Authorizer.Authorize(Permissions.CreateTerm, T("Not allowed to select terms")))
-                return new HttpUnauthorizedResult();
-
-            return RedirectToAction("Create", new { taxonomyId, parentTermId = selectedTermId, ReturnUrl = Url.Action("Index", new { taxonomyId = taxonomyId }) });
+            return !Services.Authorizer.Authorize(Permissions.CreateTerm, T("Not allowed to select terms"))
+                ? new HttpUnauthorizedResult()
+                : (ActionResult)RedirectToAction("Create", new { taxonomyId, parentTermId = selectedTermId, ReturnUrl = Url.Action("Index", new { taxonomyId = taxonomyId }) });
         }
 
         public ActionResult MoveTerm(int taxonomyId, string termIds)
@@ -195,9 +194,11 @@ namespace Orchard.Taxonomies.Controllers
             if (!Services.Authorizer.Authorize(Permissions.EditTerm, T("Not allowed to move terms")))
                 return new HttpUnauthorizedResult();
 
-            MoveTermsContext context = new MoveTermsContext();
-            context.Terms = ResolveTermIds(termIds);
-            context.ParentTerm = _taxonomyService.GetTerm(selectedTermId);
+            MoveTermsContext context = new MoveTermsContext
+            {
+                Terms = ResolveTermIds(termIds),
+                ParentTerm = _taxonomyService.GetTerm(selectedTermId)
+            };
             _termLocalizationEventHandler.MovingTerms(context);
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);

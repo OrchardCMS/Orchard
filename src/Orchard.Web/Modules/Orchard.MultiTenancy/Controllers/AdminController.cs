@@ -48,11 +48,12 @@ namespace Orchard.MultiTenancy.Controllers
             if (!IsExecutingInDefaultTenant())
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new TenantAddViewModel();
-
-            // Fetches all available themes and modules.
-            viewModel.Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { ThemeId = x.Id, ThemeName = x.Name }).ToList();
-            viewModel.Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry { ModuleId = x.Id, ModuleName = x.Name }).ToList();
+            var viewModel = new TenantAddViewModel
+            {
+                // Fetches all available themes and modules.
+                Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { ThemeId = x.Id, ThemeName = x.Name }).ToList(),
+                Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry { ModuleId = x.Id, ModuleName = x.Name }).ToList()
+            };
 
             return View(viewModel);
         }
@@ -132,10 +133,9 @@ namespace Orchard.MultiTenancy.Controllers
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
-            if (tenant == null)
-                return HttpNotFound();
-
-            return View(new TenantEditViewModel
+            return tenant == null
+                ? HttpNotFound()
+                : (ActionResult)View(new TenantEditViewModel
             {
                 Name = tenant.Name,
                 RequestUrlHost = tenant.RequestUrlHost,
@@ -262,10 +262,9 @@ namespace Orchard.MultiTenancy.Controllers
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
-            if (tenant == null)
-                return HttpNotFound();
-
-            return View(new TenantResetViewModel()
+            return tenant == null
+                ? HttpNotFound()
+                : (ActionResult)View(new TenantResetViewModel()
             {
                 Name = name,
                 DatabaseTableNames = _tenantService.GetTenantDatabaseTableNames(tenant)

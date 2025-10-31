@@ -61,25 +61,21 @@ namespace Orchard.OutputCache.Services
             record.Url = cacheItem.Url;
         }
 
-        private CacheItem Convert(CacheItemRecord record)
+        private CacheItem Convert(CacheItemRecord record) => new CacheItem
         {
-            var cacheItem = new CacheItem();
-
-            cacheItem.CacheKey = record.CacheKey;
-            cacheItem.CachedOnUtc = record.CachedOnUtc;
-            cacheItem.Duration = record.Duration;
-            cacheItem.GraceTime = record.GraceTime;
-            cacheItem.ContentType = record.ContentType;
-            cacheItem.InvariantCacheKey = record.InvariantCacheKey;
-            cacheItem.Output = record.Output;
-            cacheItem.QueryString = record.QueryString;
-            cacheItem.StatusCode = record.StatusCode;
-            cacheItem.Tags = record.Tags.Split(';');
-            cacheItem.Tenant = record.Tenant;
-            cacheItem.Url = record.Url;
-
-            return cacheItem;
-        }
+            CacheKey = record.CacheKey,
+            CachedOnUtc = record.CachedOnUtc,
+            Duration = record.Duration,
+            GraceTime = record.GraceTime,
+            ContentType = record.ContentType,
+            InvariantCacheKey = record.InvariantCacheKey,
+            Output = record.Output,
+            QueryString = record.QueryString,
+            StatusCode = record.StatusCode,
+            Tags = record.Tags.Split(';'),
+            Tenant = record.Tenant,
+            Url = record.Url
+        };
 
         public void Remove(string key)
         {

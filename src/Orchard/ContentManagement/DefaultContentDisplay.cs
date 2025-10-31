@@ -119,8 +119,10 @@ namespace Orchard.ContentManagement
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
-            context.Layout = workContext.Layout;
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath())
+            {
+                Layout = workContext.Layout
+            };
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);

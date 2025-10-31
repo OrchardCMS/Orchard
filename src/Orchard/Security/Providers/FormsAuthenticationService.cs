@@ -295,8 +295,10 @@ namespace Orchard.Security.Providers
 
         private Dictionary<string, string> ComputeUserDataDictionary(IUser user)
         {
-            var userDataDictionary = new Dictionary<string, string>();
-            userDataDictionary.Add("UserName", user.UserName);
+            var userDataDictionary = new Dictionary<string, string>
+            {
+                { "UserName", user.UserName }
+            };
             foreach (var userDataProvider in _userDataProviders)
             {
                 var key = userDataProvider.Key;

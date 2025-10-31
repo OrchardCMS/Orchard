@@ -41,8 +41,10 @@ namespace Orchard.Autoroute.Settings
             List<RoutePattern> newPatterns = new List<RoutePattern>();
 
             // Adding a null culture for the culture neutral pattern
-            var cultures = new List<string>();
-            cultures.Add(null);
+            var cultures = new List<string>
+            {
+                null
+            };
             cultures.AddRange(settings.SiteCultures);
 
             foreach (string culture in cultures)
@@ -62,12 +64,9 @@ namespace Orchard.Autoroute.Settings
                 newPatterns.Add(new RoutePattern { Culture = culture, Name = null, Description = null, Pattern = null });
 
                 // If the content type has no defaultPattern for autoroute, assign one
-                var defaultPatternExists = false;
-                if (string.IsNullOrEmpty(culture))
-                    defaultPatternExists = settings.DefaultPatterns.Any(x => string.IsNullOrEmpty(x.Culture));
-                else
-                    defaultPatternExists = settings.DefaultPatterns.Any(x => string.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase));
-
+                var defaultPatternExists = string.IsNullOrEmpty(culture)
+                    ? settings.DefaultPatterns.Any(x => string.IsNullOrEmpty(x.Culture))
+                    : settings.DefaultPatterns.Any(x => string.Equals(x.Culture, culture, StringComparison.OrdinalIgnoreCase));
                 if (!defaultPatternExists)
                 {
                     // If in the default culture check the old setting
@@ -103,11 +102,10 @@ namespace Orchard.Autoroute.Settings
 
             var settings = new AutorouteSettings
             {
-                Patterns = new List<RoutePattern>()
+                Patterns = new List<RoutePattern>(),
+                // Get cultures
+                SiteCultures = _cultureManager.ListCultures().ToList()
             };
-
-            // Get cultures
-            settings.SiteCultures = _cultureManager.ListCultures().ToList();
 
             if (updateModel.TryUpdateModel(settings, "AutorouteSettings", null, null))
             {
@@ -118,13 +116,9 @@ namespace Orchard.Autoroute.Settings
 
                 foreach (var defaultPattern in settings.DefaultPatterns)
                 {
-                    RoutePattern correspondingPattern = null;
-
-                    if (string.IsNullOrEmpty(defaultPattern.Culture))
-                        correspondingPattern = settings.Patterns.Where(x => string.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPattern.PatternIndex));
-                    else
-                        correspondingPattern = settings.Patterns.Where(x => string.Equals(x.Culture, defaultPattern.Culture, StringComparison.OrdinalIgnoreCase)).ElementAt(Convert.ToInt32(defaultPattern.PatternIndex));
-
+                    var correspondingPattern = string.IsNullOrEmpty(defaultPattern.Culture)
+                        ? settings.Patterns.Where(x => string.IsNullOrEmpty(x.Culture)).ElementAt(Convert.ToInt32(defaultPattern.PatternIndex))
+                        : settings.Patterns.Where(x => string.Equals(x.Culture, defaultPattern.Culture, StringComparison.OrdinalIgnoreCase)).ElementAt(Convert.ToInt32(defaultPattern.PatternIndex));
                     if (string.IsNullOrWhiteSpace(correspondingPattern.Name) && string.IsNullOrWhiteSpace(correspondingPattern.Pattern) && string.IsNullOrWhiteSpace(correspondingPattern.Description))
                         newDefaultPatterns.Add(new DefaultPattern { Culture = defaultPattern.Culture, PatternIndex = "0" });
                     else
@@ -138,8 +132,10 @@ namespace Orchard.Autoroute.Settings
                 patterns.RemoveAll(p => string.IsNullOrWhiteSpace(p.Name) && string.IsNullOrWhiteSpace(p.Pattern) && string.IsNullOrWhiteSpace(p.Description));
 
                 // Adding a null culture for the culture neutral pattern
-                var cultures = new List<string>();
-                cultures.Add(null);
+                var cultures = new List<string>
+                {
+                    null
+                };
                 cultures.AddRange(settings.SiteCultures);
 
                 //If there is no pattern for some culture create a default one

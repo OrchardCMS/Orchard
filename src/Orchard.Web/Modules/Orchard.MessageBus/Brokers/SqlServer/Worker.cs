@@ -188,10 +188,12 @@ namespace Orchard.MessageBus.Brokers.SqlServer
         {
             SqlCommand command = new SqlCommand(commandText, connection);
 
-            SqlParameter param = new SqlParameter("@Id", SqlDbType.Int);
-            param.Direction = ParameterDirection.Input;
-            param.DbType = DbType.Int32;
-            param.Value = lastMessageId;
+            SqlParameter param = new SqlParameter("@Id", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Input,
+                DbType = DbType.Int32,
+                Value = lastMessageId
+            };
             command.Parameters.Add(param);
 
             return command;

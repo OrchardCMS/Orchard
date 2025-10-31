@@ -36,10 +36,9 @@ namespace Orchard.ContentPicker.Drivers
                     {
                         Field = field,
                         Part = part,
-                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty).ToList()
+                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty).ToList(),
+                        SelectedIds = string.Join(",", field.Ids)
                     };
-
-                    model.SelectedIds = string.Join(",", field.Ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/ContentPickerLocalization.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });

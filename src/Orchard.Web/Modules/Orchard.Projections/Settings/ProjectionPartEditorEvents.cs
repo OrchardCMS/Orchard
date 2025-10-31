@@ -65,8 +65,10 @@ namespace Orchard.Projections.Settings
                 yield break;
             }
 
-            var model = new ProjectionPartSettings();
-            model.QueryRecordEntries = GetQueriesRecordEntry();
+            var model = new ProjectionPartSettings
+            {
+                QueryRecordEntries = GetQueriesRecordEntry()
+            };
 
 
             if (updateModel.TryUpdateModel(model, "ProjectionPartSettings", null, null))
@@ -287,13 +289,15 @@ namespace Orchard.Projections.Settings
             // populating the list of queries and layouts
             var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
 
-            List<QueryRecordEntry> records = new List<QueryRecordEntry>();
-            records.Add(new QueryRecordEntry
+            List<QueryRecordEntry> records = new List<QueryRecordEntry>
             {
-                Id = -1,
-                Name = T("No default").Text,
-                LayoutRecordEntries = new List<LayoutRecordEntry>()
-            });
+                new QueryRecordEntry
+                {
+                    Id = -1,
+                    Name = T("No default").Text,
+                    LayoutRecordEntries = new List<LayoutRecordEntry>()
+                }
+            };
 
             records.AddRange(Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
                 .Select(x => new QueryRecordEntry

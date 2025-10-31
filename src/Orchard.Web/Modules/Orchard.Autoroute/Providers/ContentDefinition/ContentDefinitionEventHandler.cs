@@ -66,8 +66,10 @@ namespace Orchard.Autoroute.Providers.ContentDefinition
                 var SiteCultures = _cultureManager.ListCultures().ToList();
 
                 // Adding a null culture for the culture neutral pattern
-                List<string> cultures = new List<string>();
-                cultures.Add(null);
+                List<string> cultures = new List<string>
+                {
+                    null
+                };
                 cultures.AddRange(SiteCultures);
 
                 // Create Patterns and DefaultPatterns

@@ -361,8 +361,10 @@ namespace Orchard.Forms.Shapes
 
         private static string ListItemToOption(SelectListItem item)
         {
-            var option = new TagBuilder("option");
-            option.InnerHtml = HttpUtility.HtmlEncode(item.Text);
+            var option = new TagBuilder("option")
+            {
+                InnerHtml = HttpUtility.HtmlEncode(item.Text)
+            };
 
             if (item.Value != null)
             {

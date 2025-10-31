@@ -65,10 +65,9 @@ namespace Orchard.ContentPicker.Drivers
                         Field = field,
                         Part = part,
                         ContentItems = _contentManager
-                            .GetMany<ContentItem>(ids, VersionOptions.Latest, QueryHints.Empty).ToList()
+                            .GetMany<ContentItem>(ids, VersionOptions.Latest, QueryHints.Empty).ToList(),
+                        SelectedIds = string.Join(",", ids)
                     };
-
-                    model.SelectedIds = string.Join(",", ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/ContentPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
@@ -101,14 +100,9 @@ namespace Orchard.ContentPicker.Drivers
 
             var settings = field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldSettings>();
 
-            if (string.IsNullOrEmpty(model.SelectedIds))
-            {
-                field.Ids = new int[0];
-            }
-            else
-            {
-                field.Ids = model.SelectedIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-            }
+            field.Ids = string.IsNullOrEmpty(model.SelectedIds)
+                ? (new int[0])
+                : model.SelectedIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
 
             if (settings.Required && field.Ids.Length == 0)
             {
@@ -126,16 +120,11 @@ namespace Orchard.ContentPicker.Drivers
             if (element != null)
             {
                 var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
-                if (contentItemIds != null)
-                {
-                    field.Ids = contentItemIds.Split(',')
+                field.Ids = contentItemIds != null
+                    ? contentItemIds.Split(',')
                         .Select(context.GetItemFromSession)
-                        .Select(contentItem => contentItem.Id).ToArray();
-                }
-                else
-                {
-                    field.Ids = new int[0];
-                }
+                        .Select(contentItem => contentItem.Id).ToArray()
+                    : (new int[0]);
             }
         }
 
@@ -160,8 +149,7 @@ namespace Orchard.ContentPicker.Drivers
 
         protected override void Describe(DescribeMembersContext context)
         {
-            context
-                .Member(null, typeof(string), T("Ids"), T("A formatted list of the ids, e.g., {1},{42}"));
+            context.Member(null, typeof(string), T("Ids"), T("A formatted list of the ids, e.g., {1},{42}"));
         }
     }
 }
