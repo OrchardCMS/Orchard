@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
-namespace Orchard.Projections.FilterEditors {
+namespace Orchard.Projections.FilterEditors
+{
     /// <summary>
     /// Defines a service to provide filters.
     /// An implementation is responsible for returning a specific Form, and return a predicate.
     /// </summary>
-    public interface IFilterEditor : IDependency {
+    public interface IFilterEditor : IDependency
+    {
 
         /// <summary>
         /// Whether this instance can handle a given storage type

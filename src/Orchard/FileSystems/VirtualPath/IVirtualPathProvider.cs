@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 
-namespace Orchard.FileSystems.VirtualPath {
-    public interface IVirtualPathProvider : IVolatileProvider {
+namespace Orchard.FileSystems.VirtualPath
+{
+    public interface IVirtualPathProvider : IVolatileProvider
+    {
         string Combine(params string[] paths);
         string ToAppRelative(string virtualPath);
         string MapPath(string virtualPath);

@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
-using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
@@ -13,156 +12,170 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Resources;
 
-namespace Orchard.Mvc {
-    public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage {
+namespace Orchard.Mvc
+{
+    public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage
+    {
         private ScriptRegister _scriptRegister;
         private ResourceRegister _stylesheetRegister;
 
         private object _display;
-        private Localizer _localizer = NullLocalizer.Instance;
         private object _layout;
-        private WorkContext _workContext;
 
-        public Localizer T { get { return _localizer; } }
-        public dynamic Display { get { return _display; } }
-        public ScriptRegister Script {
-            get {
+        public Localizer T { get; private set; } = NullLocalizer.Instance;
+        public dynamic Display => _display;
+        public ScriptRegister Script
+        {
+            get
+            {
                 return _scriptRegister ??
                     (_scriptRegister = new ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.GetWorkContext().Resolve<IResourceManager>()));
             }
         }
 
-        public dynamic Layout { get { return _layout; } }
-        public WorkContext WorkContext { get { return _workContext; } }
+        public dynamic Layout => _layout;
+        public WorkContext WorkContext { get; private set; }
 
         private IDisplayHelperFactory _displayHelperFactory;
-        public IDisplayHelperFactory DisplayHelperFactory {
-            get {
-                return _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
-            }
-        }
+        public IDisplayHelperFactory DisplayHelperFactory => _displayHelperFactory ?? (_displayHelperFactory = WorkContext.Resolve<IDisplayHelperFactory>());
 
         private IShapeFactory _shapeFactory;
-        public IShapeFactory ShapeFactory {
-            get {
-                return _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
-            }
-        }
+        public IShapeFactory ShapeFactory => _shapeFactory ?? (_shapeFactory = WorkContext.Resolve<IShapeFactory>());
 
         private IAuthorizer _authorizer;
-        public IAuthorizer Authorizer {
-            get {
-                return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
-            }
-        }     
+        public IAuthorizer Authorizer => _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
 
-        public ResourceRegister Style {
-            get {
+        public ResourceRegister Style
+        {
+            get
+            {
                 return _stylesheetRegister ??
                     (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.GetWorkContext().Resolve<IResourceManager>(), "stylesheet"));
             }
         }
-        
-        public override void InitHelpers() {
+
+        public override void InitHelpers()
+        {
             base.InitHelpers();
 
-            _workContext = ViewContext.GetWorkContext();
+            WorkContext = ViewContext.GetWorkContext();
 
-            _localizer = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
+            T = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
-            _layout = _workContext.Layout;
+            _layout = WorkContext.Layout;
         }
 
-        public virtual void RegisterLink(LinkEntry link) {
+        public virtual void RegisterLink(LinkEntry link)
+        {
             Html.GetWorkContext().Resolve<IResourceManager>().RegisterLink(link);
         }
 
-        public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
+        public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null)
+        {
             var metaEntry = new MetaEntry(name, content, httpEquiv, charset);
             SetMeta(metaEntry);
         }
 
-        public virtual void SetMeta(MetaEntry meta) {
+        public virtual void SetMeta(MetaEntry meta)
+        {
             Html.GetWorkContext().Resolve<IResourceManager>().SetMeta(meta);
         }
-        
-        public void AppendMeta(string name, string content, string contentSeparator) {
-            AppendMeta(new MetaEntry { Name = name, Content = content }, contentSeparator);
-        }        
 
-        public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
+        public void AppendMeta(string name, string content, string contentSeparator)
+        {
+            AppendMeta(new MetaEntry { Name = name, Content = content }, contentSeparator);
+        }
+
+        public virtual void AppendMeta(MetaEntry meta, string contentSeparator)
+        {
             Html.GetWorkContext().Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
         }
-                
-        public MvcHtmlString H(string value) {
+
+        public MvcHtmlString H(string value)
+        {
             return MvcHtmlString.Create(Html.Encode(value));
         }
 
-        public bool AuthorizedFor(Permission permission) {
+        public bool AuthorizedFor(Permission permission)
+        {
             return Authorizer.Authorize(permission);
         }
 
-        public bool HasText(object thing) {
+        public bool HasText(object thing)
+        {
             return !string.IsNullOrWhiteSpace(Convert.ToString(thing));
         }
 
-        public OrchardTagBuilder Tag(dynamic shape, string tagName) {
+        public OrchardTagBuilder Tag(dynamic shape, string tagName)
+        {
             return Html.GetWorkContext().Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
-        public IHtmlString DisplayChildren(dynamic shape) {
+        public IHtmlString DisplayChildren(dynamic shape)
+        {
             var writer = new HtmlStringWriter();
-            foreach (var item in shape) {
+            foreach (var item in shape)
+            {
                 writer.Write(Display(item));
             }
             return writer;
         }
 
-        public IDisposable Capture(Action<IHtmlString> callback) {
+        public IDisposable Capture(Action<IHtmlString> callback)
+        {
             return new CaptureScope(Writer, callback);
         }
 
-        public IDisposable Capture(dynamic zone, string position = null) {
+        public IDisposable Capture(dynamic zone, string position = null)
+        {
             return new CaptureScope(Writer, html => zone.Add(html, position));
         }
 
-        public class CaptureScope : IDisposable {
+        public class CaptureScope : IDisposable
+        {
             private readonly HtmlTextWriter _context;
             private readonly Action<IHtmlString> _callback;
             private readonly TextWriter _oldWriter;
             private readonly HtmlStringWriter _writer;
 
-            public CaptureScope(HtmlTextWriter context, Action<IHtmlString> callback) {
+            public CaptureScope(HtmlTextWriter context, Action<IHtmlString> callback)
+            {
                 _context = context;
                 _oldWriter = _context.InnerWriter;
                 _callback = callback;
                 _context.InnerWriter = _writer = new HtmlStringWriter();
             }
 
-            public void Dispose() {
+            public void Dispose()
+            {
                 _callback(_writer);
                 _context.InnerWriter = _oldWriter;
             }
         }
 
-        internal class ViewPageScriptRegister : ScriptRegister {
+        internal class ViewPageScriptRegister : ScriptRegister
+        {
             private readonly HtmlTextWriter _context;
 
             public ViewPageScriptRegister(HtmlTextWriter context, IViewDataContainer container, IResourceManager resourceManager)
-                : base(container, resourceManager) {
+                : base(container, resourceManager)
+            {
                 _context = context;
             }
 
-            public override IDisposable Head() {
+            public override IDisposable Head()
+            {
                 return new CaptureScope(_context, s => ResourceManager.RegisterHeadScript(s.ToString()));
             }
 
-            public override IDisposable Foot() {
+            public override IDisposable Foot()
+            {
                 return new CaptureScope(_context, s => ResourceManager.RegisterFootScript(s.ToString()));
             }
         }
     }
 
-    public class ViewPage : ViewPage<dynamic> {
+    public class ViewPage : ViewPage<dynamic>
+    {
     }
 }

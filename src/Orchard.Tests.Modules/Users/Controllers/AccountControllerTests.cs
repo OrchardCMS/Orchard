@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
@@ -41,15 +41,18 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 
-namespace Orchard.Tests.Modules.Users.Controllers {
+namespace Orchard.Tests.Modules.Users.Controllers
+{
     [TestFixture]
-    public class AccountControllerTests : DatabaseEnabledTestsBase {
+    public class AccountControllerTests : DatabaseEnabledTestsBase
+    {
         private AccountController _controller;
         private Mock<IAuthorizer> _authorizer;
         private Mock<WorkContext> _workContext;
         private MessagingChannelStub _channel;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             _channel = new MessagingChannelStub();
 
             builder.RegisterType<AccountController>().SingleInstance();
@@ -103,11 +106,13 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             var _workContextAccessor = new Mock<IWorkContextAccessor>();
             _workContextAccessor.Setup(w => w.GetContext()).Returns(_workContext.Object);
             builder.RegisterInstance(_workContextAccessor.Object).As<IWorkContextAccessor>();
-            
+
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] { typeof(UserPartRecord),
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),
@@ -121,7 +126,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             }
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             var manager = _container.Resolve<IContentManager>();
@@ -145,7 +151,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void UsersShouldNotBeAbleToRegisterIfNotAllowed() {
+        public void UsersShouldNotBeAbleToRegisterIfNotAllowed()
+        {
 
             // enable user registration
             _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>().UsersCanRegister = false;
@@ -159,7 +166,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void UsersShouldBeAbleToRegisterIfAllowed() {
+        public void UsersShouldBeAbleToRegisterIfAllowed()
+        {
 
             // disable user registration
             _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>().UsersCanRegister = true;
@@ -173,7 +181,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         public void UsersShouldNotBeAbleToRegisterIfInvalidEmail(
             [Values(
-                @"NotAnEmail", 
+                @"NotAnEmail",
                 @"@NotAnEmail",
                 @"""test\blah""@example.com",
                 "\"test\rblah\"@example.com",
@@ -184,7 +192,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                 @".@example.com",
                 @"@example.com",
                 @"Ima Fool@example.com")]
-            string email) {
+            string email)
+        {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
@@ -195,8 +204,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
             _controller.ModelState.Clear();
             var result = _controller.Register("bar", email, "66554321", "66554321");
- 
-            Assert.That(((ViewResult)result).ViewData.ModelState.Count == 1,"Invalid email address.");
+
+            Assert.That(((ViewResult)result).ViewData.ModelState.Count == 1, "Invalid email address.");
         }
 
         [Test]
@@ -235,7 +244,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void RegisteredUserShouldBeRedirectedToHomePage() {
+        public void RegisteredUserShouldBeRedirectedToHomePage()
+        {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
@@ -244,15 +254,16 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
             _session.Flush();
 
-           var result = _controller.Register("bar", "bar@baz.com", "66554321", "66554321");
+            var result = _controller.Register("bar", "bar@baz.com", "66554321", "66554321");
 
-           Assert.That(result, Is.TypeOf<RedirectResult>());
-           Assert.That(((RedirectResult)result).Url, Is.EqualTo("~/"));
+            Assert.That(result, Is.TypeOf<RedirectResult>());
+            Assert.That(((RedirectResult)result).Url, Is.EqualTo("~/"));
         }
 
 
         [Test]
-        public void RegisteredUserShouldBeModerated() {
+        public void RegisteredUserShouldBeModerated()
+        {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
@@ -268,7 +279,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void SuperAdminShouldReceiveAMessageOnUserRegistration() {
+        public void SuperAdminShouldReceiveAMessageOnUserRegistration()
+        {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
@@ -295,7 +307,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void InvalidLostPasswordRequestShouldNotResultInAnError() {
+        public void InvalidLostPasswordRequestShouldNotResultInAnError()
+        {
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
             _session.Flush();
@@ -305,7 +318,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _controller.Url = new UrlHelper(new RequestContext(new HttpContextStub(), new RouteData()));
 
             var result = _controller.LostPassword("foo");
-            
+
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
             Assert.That(((RedirectToRouteResult)result).RouteValues["action"], Is.EqualTo("LogOn"));
             Assert.That(_channel.Messages.Count, Is.EqualTo(0));
@@ -313,7 +326,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         [Test]
 
-        public void ResetPasswordLinkShouldBeSent() {
+        public void ResetPasswordLinkShouldBeSent()
+        {
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
             registrationSettings.EnableLostPassword = true;
@@ -332,52 +346,44 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         [Test]
         [Ignore("To be implemented")]
-        public void ChallengeEmailShouldUnlockAccount() {
+        public void ChallengeEmailShouldUnlockAccount()
+        {
         }
 
         [Test]
         [Ignore("To be implemented")]
-        public void LostPasswordEmailShouldAuthenticateUser() {
+        public void LostPasswordEmailShouldAuthenticateUser()
+        {
         }
 
-        class HttpContextStub : HttpContextBase {
-            public override HttpRequestBase Request {
-                get { return new HttpRequestStub(); }
-            }
+        class HttpContextStub : HttpContextBase
+        {
+            public override HttpRequestBase Request => new HttpRequestStub();
 
             public override IHttpHandler Handler { get; set; }
         }
 
-        class HttpRequestStub : HttpRequestBase {
-            public override bool IsAuthenticated {
-                get { return false; }
-            }
+        class HttpRequestStub : HttpRequestBase
+        {
+            public override bool IsAuthenticated => false;
 
-            public override NameValueCollection Form {
-                get {
-                    return new NameValueCollection();
-                }
-            }
+            public override NameValueCollection Form => new NameValueCollection();
 
-            public override Uri Url {
-                get {
-                    return new Uri("http://orchardproject.net");
-                }
-            }
+            public override Uri Url => new Uri("http://orchardproject.net");
 
-            public override NameValueCollection Headers {
-                get {
-                    var nv = new NameValueCollection();
-                    nv["Host"] = "orchardproject.net";
+            public override NameValueCollection Headers
+            {
+                get
+                {
+                    var nv = new NameValueCollection
+                    {
+                        ["Host"] = "orchardproject.net"
+                    };
                     return nv;
                 }
             }
 
-            public override string ApplicationPath {
-                get {
-                    return "/";
-                }
-            }
+            public override string ApplicationPath => "/";
         }
     }
 }

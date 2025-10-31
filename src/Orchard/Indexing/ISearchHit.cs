@@ -1,6 +1,8 @@
-﻿using System;
-namespace Orchard.Indexing {
-    public interface ISearchHit {
+using System;
+namespace Orchard.Indexing
+{
+    public interface ISearchHit
+    {
         int ContentItemId { get; }
         float Score { get; }
 

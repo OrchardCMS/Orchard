@@ -1,13 +1,16 @@
-﻿using Autofac;
+using Autofac;
 using NUnit.Framework;
 
-namespace Orchard.Tests {
-    public class ContainerTestBase {
+namespace Orchard.Tests
+{
+    public class ContainerTestBase
+    {
 
         protected IContainer _container;
 
         [SetUp]
-        public virtual void Init() {
+        public virtual void Init()
+        {
             var builder = new ContainerBuilder();
             Register(builder);
             _container = builder.Build();
@@ -15,7 +18,8 @@ namespace Orchard.Tests {
         }
 
         [TearDown]
-        public void Cleanup() {
+        public void Cleanup()
+        {
             if (_container != null)
                 _container.Dispose();
         }

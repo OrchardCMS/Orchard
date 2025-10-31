@@ -1,23 +1,27 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Fields.Fields {
-    public class LinkField : ContentField {
+namespace Orchard.Fields.Fields
+{
+    public class LinkField : ContentField
+    {
 
-        public string Value {
+        public string Value
+        {
             get { return Storage.Get<string>(); }
-            set { Storage.Set(value ?? String.Empty); }
+            set { Storage.Set(value ?? string.Empty); }
         }
 
-        public string Text {
+        public string Text
+        {
             get { return Storage.Get<string>("Text"); }
-            set { Storage.Set("Text", value ?? String.Empty); }
+            set { Storage.Set("Text", value ?? string.Empty); }
         }
 
-        public string Target {
+        public string Target
+        {
             get { return Storage.Get<string>("Target"); }
-            set { Storage.Set("Target", value ?? String.Empty); }
+            set { Storage.Set("Target", value ?? string.Empty); }
         }
     }
 }

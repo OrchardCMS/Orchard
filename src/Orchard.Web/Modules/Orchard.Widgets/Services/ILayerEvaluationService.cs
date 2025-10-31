@@ -1,6 +1,7 @@
-﻿namespace Orchard.Widgets.Services
+namespace Orchard.Widgets.Services
 {
-    public interface ILayerEvaluationService : IDependency {
+    public interface ILayerEvaluationService : IDependency
+    {
         int[] GetActiveLayerIds();
     }
 }

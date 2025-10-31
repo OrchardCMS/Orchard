@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using Orchard.Localization.Models;
 
-namespace Orchard.Localization.Services {
-    public interface IDateFormatter : IDependency {
+namespace Orchard.Localization.Services
+{
+    public interface IDateFormatter : IDependency
+    {
 
         /// <summary>
         /// Parses a date/time string into a <c>DateTimeParts</c> instance.

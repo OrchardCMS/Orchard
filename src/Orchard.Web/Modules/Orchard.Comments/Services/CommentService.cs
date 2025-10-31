@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -19,8 +19,10 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.Comments.Services {
-    public class CommentService : ICommentService {
+namespace Orchard.Comments.Services
+{
+    public class CommentService : ICommentService
+    {
         private readonly IOrchardServices _orchardServices;
         private readonly IClock _clock;
         private readonly IEncryptionService _encryptionService;
@@ -33,8 +35,8 @@ namespace Orchard.Comments.Services {
         private readonly IMessageService _messageService;
 
         public CommentService(
-            IOrchardServices orchardServices, 
-            IClock clock, 
+            IOrchardServices orchardServices,
+            IClock clock,
             IEncryptionService encryptionService,
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
@@ -42,7 +44,8 @@ namespace Orchard.Comments.Services {
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
             IMessageService messageService
-            ) {
+            )
+        {
             _orchardServices = orchardServices;
             _clock = clock;
             _encryptionService = encryptionService;
@@ -57,98 +60,117 @@ namespace Orchard.Comments.Services {
             Logger = NullLogger.Instance;
         }
 
-        public Localizer T { get; set; } 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForContainer(int id) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForContainer(int id)
+        {
             return GetComments()
                 .Where(c => c.CommentedOnContainer == id);
         }
 
-        public CommentPart GetComment(int id) {
+        public CommentPart GetComment(int id)
+        {
             return _orchardServices.ContentManager.Get<CommentPart>(id);
         }
-        
-        public IContentQuery<CommentPart, CommentPartRecord> GetComments() {
+
+        public IContentQuery<CommentPart, CommentPartRecord> GetComments()
+        {
             return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>();
         }
 
-        public IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status)
+        {
             return GetComments()
                        .Where(c => c.Status == status);
         }
 
-        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id)
+        {
             return GetComments()
                        .Where(c => c.CommentedOn == id);
         }
 
-        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status)
+        {
             return GetCommentsForCommentedContent(id)
                        .Where(c => c.Status == status);
         }
 
-        public ContentItemMetadata GetDisplayForCommentedContent(int id) {
+        public ContentItemMetadata GetDisplayForCommentedContent(int id)
+        {
             var content = GetCommentedContent(id);
             if (content == null)
                 return null;
             return _orchardServices.ContentManager.GetItemMetadata(content);
         }
 
-        public ContentItem GetCommentedContent(int id) {
+        public ContentItem GetCommentedContent(int id)
+        {
             var result = _orchardServices.ContentManager.Get(id, VersionOptions.Published);
             if (result == null)
                 result = _orchardServices.ContentManager.Get(id, VersionOptions.Draft);
             return result;
         }
 
-        public void ProcessCommentsCount(int commentsPartId) {
-            if (!_processedCommentsParts.Contains(commentsPartId)) {
+        public void ProcessCommentsCount(int commentsPartId)
+        {
+            if (!_processedCommentsParts.Contains(commentsPartId))
+            {
                 _processedCommentsParts.Add(commentsPartId);
                 _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ICommentsCountProcessor.Process", new Dictionary<string, object> { { "commentsPartId", commentsPartId } });
             }
         }
 
-        public void ApproveComment(int commentId) {
+        public void ApproveComment(int commentId)
+        {
             var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Approved;
             ProcessCommentsCount(commentPart.CommentedOn);
         }
 
-        public void UnapproveComment(int commentId) {
+        public void UnapproveComment(int commentId)
+        {
             var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Pending;
             ProcessCommentsCount(commentPart.CommentedOn);
         }
 
-        public void DeleteComment(int commentId) {
+        public void DeleteComment(int commentId)
+        {
             // Get latest because the comment may be unpublished if the anti-spam module has caught it
             _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId, VersionOptions.Latest).ContentItem);
         }
 
-        public bool CommentsDisabledForCommentedContent(int id) {
+        public bool CommentsDisabledForCommentedContent(int id)
+        {
             return !_orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive;
         }
 
-        public void DisableCommentsForCommentedContent(int id) {
+        public void DisableCommentsForCommentedContent(int id)
+        {
             _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = false;
         }
 
-        public void EnableCommentsForCommentedContent(int id) {
+        public void EnableCommentsForCommentedContent(int id)
+        {
             _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = true;
         }
 
-        public string CreateNonce(CommentPart comment, TimeSpan delay) {
+        public string CreateNonce(CommentPart comment, TimeSpan delay)
+        {
             var challengeToken = new XElement("n", new XAttribute("c", comment.Id), new XAttribute("v", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
             var data = Encoding.UTF8.GetBytes(challengeToken);
             return Convert.ToBase64String(_encryptionService.Encode(data));
         }
 
-        public bool DecryptNonce(string nonce, out int id) {
+        public bool DecryptNonce(string nonce, out int id)
+        {
             id = 0;
 
-            try {
+            try
+            {
                 var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
                 var xml = Encoding.UTF8.GetString(data);
                 var element = XElement.Parse(xml);
@@ -156,61 +178,75 @@ namespace Orchard.Comments.Services {
                 var validateByUtc = DateTime.Parse(element.Attribute("v").Value, CultureInfo.InvariantCulture);
                 return _clock.UtcNow <= validateByUtc;
             }
-            catch {
+            catch
+            {
                 return false;
             }
 
         }
 
-        public bool CanCreateComment(CommentPart commentPart) {
-            if (commentPart == null) {
+        public bool CanCreateComment(CommentPart commentPart)
+        {
+            if (commentPart == null)
+            {
                 return false;
             }
 
             var container = _orchardServices.ContentManager.Get(commentPart.CommentedOn);
-            
-            if (container == null) {
+
+            if (container == null)
+            {
                 return false;
             }
 
             var commentsPart = container.As<CommentsPart>();
-            if (commentsPart == null) {
+            if (commentsPart == null)
+            {
                 return false;
             }
-            
+
             var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
-            if (!commentsPart.CommentsActive) {
+            if (!commentsPart.CommentsActive)
+            {
                 return false;
             }
 
-            if (settings.MustBeAuthenticated && _orchardServices.WorkContext.CurrentUser == null) {
+            if (settings.MustBeAuthenticated && _orchardServices.WorkContext.CurrentUser == null)
+            {
                 return false;
             }
-            
-            if (!CanStillCommentOn(commentsPart)) {
+
+            if (!CanStillCommentOn(commentsPart))
+            {
                 return false;
             }
 
             return true;
         }
 
-        public bool CanStillCommentOn(CommentsPart commentsPart) {
+        public bool CanStillCommentOn(CommentsPart commentsPart)
+        {
             var commentSettings = _orchardServices.WorkContext.CurrentSite.As<CommentSettingsPart>();
-            if (commentSettings == null) {
+            if (commentSettings == null)
+            {
                 return false;
             }
 
-            if (commentSettings.ClosedCommentsDelay > 0) {
+            if (commentSettings.ClosedCommentsDelay > 0)
+            {
                 var commonPart = commentsPart.As<CommonPart>();
-                if (commentsPart == null) {
+                if (commentsPart == null)
+                {
                     return false;
                 }
 
-                if (!commonPart.CreatedUtc.HasValue) {
+                if (!commonPart.CreatedUtc.HasValue)
+                {
                     return false;
                 }
 
-                if (commonPart.CreatedUtc.Value.AddDays(commentSettings.ClosedCommentsDelay) < _clock.UtcNow) {
+                if (commonPart.CreatedUtc.Value.AddDays(commentSettings.ClosedCommentsDelay) < _clock.UtcNow)
+                {
                     return false;
                 }
             }
@@ -218,19 +254,24 @@ namespace Orchard.Comments.Services {
             return true;
         }
 
-        public void SendNotificationEmail(CommentPart commentPart) {
-            try {
+        public void SendNotificationEmail(CommentPart commentPart)
+        {
+            try
+            {
                 var commentedOn = _orchardServices.ContentManager.Get(commentPart.CommentedOn);
-                if (commentedOn == null) {
+                if (commentedOn == null)
+                {
                     return;
                 }
 
                 var owner = commentedOn.As<CommonPart>().Owner;
-                if (owner == null) {
+                if (owner == null)
+                {
                     return;
                 }
 
-                var template = _shapeFactory.Create("Template_Comment_Notification", Arguments.From(new {
+                var template = _shapeFactory.Create("Template_Comment_Notification", Arguments.From(new
+                {
                     CommentPart = commentPart,
                     CommentApproveUrl = CreateProtectedUrl("Approve", commentPart),
                     CommentModerateUrl = CreateProtectedUrl("Moderate", commentPart),
@@ -245,14 +286,17 @@ namespace Orchard.Comments.Services {
 
                 _messageService.Send("Email", parameters);
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "An unexpected error occurred while sending a notification email");
             }
         }
 
-        public string CreateProtectedUrl(string action, CommentPart part) {
+        public string CreateProtectedUrl(string action, CommentPart part)
+        {
             var workContext = _orchardServices.WorkContext;
-            if (workContext.HttpContext != null) {
+            if (workContext.HttpContext != null)
+            {
                 var url = new UrlHelper(workContext.HttpContext.Request.RequestContext);
                 return url.AbsoluteAction(action, "Comment", new { area = "Orchard.Comments", nonce = CreateNonce(part, TimeSpan.FromDays(7)) });
             }
@@ -260,7 +304,8 @@ namespace Orchard.Comments.Services {
             return null;
         }
 
-        private CommentPart GetCommentWithQueryHints(int id) {
+        private CommentPart GetCommentWithQueryHints(int id)
+        {
             return _orchardServices.ContentManager.Get<CommentPart>(id, VersionOptions.Latest, new QueryHints().ExpandParts<CommentPart>());
         }
     }

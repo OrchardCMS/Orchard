@@ -8,8 +8,10 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.Core.Common.Handlers {
-    public class CommonPartHandler : ContentHandler {
+namespace Orchard.Core.Common.Handlers
+{
+    public class CommonPartHandler : ContentHandler
+    {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
@@ -21,7 +23,8 @@ namespace Orchard.Core.Common.Handlers {
             IClock clock,
             IAuthenticationService authenticationService,
             IContentManager contentManager,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager)
+        {
 
             _clock = clock;
             _authenticationService = authenticationService;
@@ -44,7 +47,8 @@ namespace Orchard.Core.Common.Handlers {
             OnPublishing<CommonPart>(AssignPublishingDates);
             OnRemoving<CommonPart>(AssignRemovingDates);
 
-            OnIndexing<CommonPart>((context, commonPart) => {
+            OnIndexing<CommonPart>((context, commonPart) =>
+            {
                 var utcNow = _clock.UtcNow;
 
                 context.DocumentIndex
@@ -53,11 +57,13 @@ namespace Orchard.Core.Common.Handlers {
                     .Add("published", commonPart.PublishedUtc ?? utcNow).Store()
                     .Add("modified", commonPart.ModifiedUtc ?? utcNow).Store();
 
-                if (commonPart.Container != null) {
+                if (commonPart.Container != null)
+                {
                     context.DocumentIndex.Add("container-id", commonPart.Container.Id).Store();
                 }
 
-                if (commonPart.Owner != null) {
+                if (commonPart.Owner != null)
+                {
                     context.DocumentIndex.Add("author", commonPart.Owner.UserName).Store();
                 }
             });
@@ -66,12 +72,14 @@ namespace Orchard.Core.Common.Handlers {
 
         public Localizer T { get; set; }
 
-        protected override void Activating(ActivatingContentContext context) {
+        protected override void Activating(ActivatingContentContext context)
+        {
             if (ContentTypeWithACommonPart(context.ContentType))
                 context.Builder.Weld<ContentPart<CommonPartVersionRecord>>();
         }
 
-        protected bool ContentTypeWithACommonPart(string typeName) {
+        protected bool ContentTypeWithACommonPart(string typeName)
+        {
             //Note: What about content type handlers which activate "CommonPart" in code?
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName);
 
@@ -81,14 +89,17 @@ namespace Orchard.Core.Common.Handlers {
             return false;
         }
 
-        protected void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
+        protected void AssignCreatingOwner(InitializingContentContext context, CommonPart part)
+        {
             // and use the current user as Owner
-            if (part.Record.OwnerId == 0) {
+            if (part.Record.OwnerId == 0)
+            {
                 part.Owner = _authenticationService.GetAuthenticatedUser();
             }
         }
 
-        protected void AssignCreatingDates(InitializingContentContext context, CommonPart part) {
+        protected void AssignCreatingDates(InitializingContentContext context, CommonPart part)
+        {
             // assign default create/modified dates
             var utcNow = _clock.UtcNow;
 
@@ -99,7 +110,8 @@ namespace Orchard.Core.Common.Handlers {
             part.VersionModifiedBy = GetUserName();
         }
 
-        private void AssignUpdatingDates(UpdateContentContext context, CommonPart part) {
+        private void AssignUpdatingDates(UpdateContentContext context, CommonPart part)
+        {
             var utcNow = _clock.UtcNow;
 
             part.ModifiedUtc = utcNow;
@@ -107,7 +119,8 @@ namespace Orchard.Core.Common.Handlers {
             part.VersionModifiedBy = GetUserName();
         }
 
-        private void AssignRemovingDates(RemoveContentContext context, CommonPart part) {
+        private void AssignRemovingDates(RemoveContentContext context, CommonPart part)
+        {
             var utcNow = _clock.UtcNow;
 
             part.ModifiedUtc = utcNow;
@@ -115,7 +128,8 @@ namespace Orchard.Core.Common.Handlers {
             part.VersionModifiedBy = GetUserName();
         }
 
-        protected void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building) {
+        protected void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building)
+        {
             var utcNow = _clock.UtcNow;
 
             // assign the created date
@@ -135,7 +149,8 @@ namespace Orchard.Core.Common.Handlers {
         }
 
 
-        protected void AssignPublishingDates(PublishContentContext context, CommonPart part) {
+        protected void AssignPublishingDates(PublishContentContext context, CommonPart part)
+        {
             var utcNow = _clock.UtcNow;
 
             part.PublishedUtc = utcNow;
@@ -143,7 +158,8 @@ namespace Orchard.Core.Common.Handlers {
         }
 
 
-        protected void LazyLoadHandlers(CommonPart part) {
+        protected void LazyLoadHandlers(CommonPart part)
+        {
             // add handlers that will load content for id's just-in-time
             part.OwnerField.Loader(() => _contentManager.Get<IUser>(part.Record.OwnerId));
             part.ContainerField.Loader(() => part.Record.Container == null ?
@@ -155,10 +171,12 @@ namespace Orchard.Core.Common.Handlers {
                                             _contentManager.Get(part.Record.Container.Id, VersionOptions.Latest));
         }
 
-        protected static void PropertySetHandlers(ActivatedContentContext context, CommonPart part) {
+        protected static void PropertySetHandlers(ActivatedContentContext context, CommonPart part)
+        {
             // add handlers that will update records when part properties are set
 
-            part.OwnerField.Setter(user => {
+            part.OwnerField.Setter(user =>
+            {
                 part.Record.OwnerId = user == null
                     ? 0
                     : user.ContentItem.Id;
@@ -169,7 +187,8 @@ namespace Orchard.Core.Common.Handlers {
             if (part.OwnerField.Value != null)
                 part.OwnerField.Value = part.OwnerField.Value;
 
-            part.ContainerField.Setter(container => {
+            part.ContainerField.Setter(container =>
+            {
                 part.Record.Container = container == null
                     ? null
                     : container.ContentItem.Record;
@@ -180,7 +199,8 @@ namespace Orchard.Core.Common.Handlers {
             if (part.ContainerField.Value != null)
                 part.ContainerField.Value = part.ContainerField.Value;
         }
-        private string GetUserName() {
+        private string GetUserName()
+        {
             var user = _authenticationService.GetAuthenticatedUser();
             return user == null ? string.Empty : user.UserName;
         }

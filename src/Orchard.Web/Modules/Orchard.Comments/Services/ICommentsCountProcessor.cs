@@ -1,7 +1,9 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 
-namespace Orchard.Comments.Services {
-    public interface ICommentsCountProcessor : IEventHandler {
+namespace Orchard.Comments.Services
+{
+    public interface ICommentsCountProcessor : IEventHandler
+    {
         void Process(int commentsPartId);
     }
 }

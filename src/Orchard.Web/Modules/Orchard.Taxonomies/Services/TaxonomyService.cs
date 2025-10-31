@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Autoroute.Models;
@@ -18,8 +18,10 @@ using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Taxonomies.Services {
-    public class TaxonomyService : ITaxonomyService {
+namespace Orchard.Taxonomies.Services
+{
+    public class TaxonomyService : ITaxonomyService
+    {
         private readonly IRepository<TermContentItem> _termContentItemRepository;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
@@ -44,7 +46,8 @@ namespace Orchard.Taxonomies.Services {
             IOrchardServices services,
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager)
+        {
             _termContentItemRepository = termContentItemRepository;
             _contentManager = contentManager;
             _notifier = notifier;
@@ -67,22 +70,28 @@ namespace Orchard.Taxonomies.Services {
         public Localizer T { get; set; }
 
         private IEnumerable<TaxonomyPart> _taxonomies;
-        public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            if (_taxonomies == null) {
+        public IEnumerable<TaxonomyPart> GetTaxonomies()
+        {
+            if (_taxonomies == null)
+            {
                 _taxonomies = GetTaxonomiesQuery().List();
             }
             return _taxonomies;
         }
 
-        public virtual TaxonomyPart GetTaxonomy(int id) {
+        public virtual TaxonomyPart GetTaxonomy(int id)
+        {
             return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
-        public TaxonomyPart GetTaxonomyByName(string name) {
-            if (string.IsNullOrWhiteSpace(name)) {
+        public TaxonomyPart GetTaxonomyByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new ArgumentNullException("name");
             }
-            if (!_taxonomiesByName.ContainsKey(name)) {
+            if (!_taxonomiesByName.ContainsKey(name))
+            {
                 // include the record in the query to optimize the query plan
                 var t = GetTaxonomiesQuery()
                     .Join<TitlePartRecord>()
@@ -94,11 +103,14 @@ namespace Orchard.Taxonomies.Services {
             return _taxonomiesByName[name];
         }
 
-        public TaxonomyPart GetTaxonomyBySlug(string slug) {
-            if (string.IsNullOrWhiteSpace(slug)) {
+        public TaxonomyPart GetTaxonomyBySlug(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+            {
                 throw new ArgumentNullException("slug");
             }
-            if (!_taxonomiesBySlug.ContainsKey(slug)) {
+            if (!_taxonomiesBySlug.ContainsKey(slug))
+            {
                 var t = GetTaxonomiesQuery()
                     .Join<TitlePartRecord>()
                     .Join<AutoroutePartRecord>()
@@ -110,7 +122,8 @@ namespace Orchard.Taxonomies.Services {
             return _taxonomiesBySlug[slug];
         }
 
-        public void CreateTermContentType(TaxonomyPart taxonomy) {
+        public void CreateTermContentType(TaxonomyPart taxonomy)
+        {
             // create the associated term's content type
             taxonomy.TermTypeName = GenerateTermTypeName(taxonomy.Name);
 
@@ -129,50 +142,61 @@ namespace Orchard.Taxonomies.Services {
 
         }
 
-        public void DeleteTaxonomy(TaxonomyPart taxonomy) {
+        public void DeleteTaxonomy(TaxonomyPart taxonomy)
+        {
             _contentManager.Remove(taxonomy.ContentItem);
             List<TermPart> allTerms = GetRootTerms(taxonomy.Id).ToList();
             // Removing terms
-            foreach (var term in allTerms) {
+            foreach (var term in allTerms)
+            {
                 DeleteTerm(term);
             }
 
             if (_contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>()
                 .Where(x => x.Id != taxonomy.Id && x.TermTypeName == taxonomy.TermTypeName)
-                .Count() == 0) {
+                .Count() == 0)
+            {
 
                 _contentDefinitionManager.DeleteTypeDefinition(taxonomy.TermTypeName);
             }
         }
 
-        public string GenerateTermTypeName(string taxonomyName) {
+        public string GenerateTermTypeName(string taxonomyName)
+        {
             var name = taxonomyName.ToSafeName() + "Term";
             int i = 2;
-            while (_contentDefinitionManager.GetTypeDefinition(name) != null) {
+            while (_contentDefinitionManager.GetTypeDefinition(name) != null)
+            {
                 name = taxonomyName.ToSafeName() + i++;
             }
 
             return name;
         }
 
-        public TermPart NewTerm(TaxonomyPart taxonomy) {
+        public TermPart NewTerm(TaxonomyPart taxonomy)
+        {
             return NewTerm(taxonomy, null);
         }
 
-        public TermPart NewTerm(TaxonomyPart taxonomy, IContent parent) {
-            if (taxonomy == null) {
+        public TermPart NewTerm(TaxonomyPart taxonomy, IContent parent)
+        {
+            if (taxonomy == null)
+            {
                 throw new ArgumentNullException("taxonomy");
             }
 
-            if (parent != null) {
+            if (parent != null)
+            {
                 var parentAsTaxonomy = parent.As<TaxonomyPart>();
-                if (parentAsTaxonomy != null && parentAsTaxonomy != taxonomy) {
+                if (parentAsTaxonomy != null && parentAsTaxonomy != taxonomy)
+                {
                     throw new ArgumentException("The parent of a term can't be a different taxonomy", "parent");
                 }
 
                 var parentAsTerm = parent.As<TermPart>();
-                if (parentAsTerm != null && parentAsTerm.TaxonomyId != taxonomy.Id) {
+                if (parentAsTerm != null && parentAsTerm.TaxonomyId != taxonomy.Id)
+                {
                     throw new ArgumentException("The parent of a term can't be a from a different taxonomy", "parent");
                 }
             }
@@ -185,9 +209,11 @@ namespace Orchard.Taxonomies.Services {
             return term;
         }
 
-        public IEnumerable<TermPart> GetTerms(int taxonomyId) {
+        public IEnumerable<TermPart> GetTerms(int taxonomyId)
+        {
             // If taxonomyId isn't valid, return a empty list without executing the query.
-            if (taxonomyId <= 0) {
+            if (taxonomyId <= 0)
+            {
                 return Array.Empty<TermPart>();
             }
             var result = GetTermsQuery(taxonomyId)
@@ -197,9 +223,11 @@ namespace Orchard.Taxonomies.Services {
             return result;
         }
 
-        public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
+        public IEnumerable<TermPart> GetRootTerms(int taxonomyId)
+        {
             // If taxonomyId isn't valid, return a empty list without executing the query.
-            if (taxonomyId <= 0) {
+            if (taxonomyId <= 0)
+            {
                 return Array.Empty<TermPart>();
             }
             var result = GetTermsQuery(taxonomyId)
@@ -210,7 +238,8 @@ namespace Orchard.Taxonomies.Services {
             return result;
         }
 
-        public TermPart GetTermByPath(string path) {
+        public TermPart GetTermByPath(string path)
+        {
             return GetTermsQuery()
                 .Join<AutoroutePartRecord>()
                 .Where(rr => rr.DisplayAlias == path)
@@ -218,7 +247,8 @@ namespace Orchard.Taxonomies.Services {
                 .FirstOrDefault();
         }
 
-        public IEnumerable<TermPart> GetAllTerms() {
+        public IEnumerable<TermPart> GetAllTerms()
+        {
             var result = GetTermsQuery()
                 .OrderBy(x => x.TaxonomyId)
                 .OrderBy(x => x.FullWeight)
@@ -226,26 +256,25 @@ namespace Orchard.Taxonomies.Services {
             return result;
         }
 
-        public int GetTermsCount(int taxonomyId) {
+        public int GetTermsCount(int taxonomyId)
+        {
             // If taxonomyId isn't valid, return 0 without executing the query.
-            if (taxonomyId <= 0) {
-                return 0;
-            }
-            return GetTermsQuery(taxonomyId)
-                .Count();
+            return taxonomyId <= 0
+                ? 0
+                : GetTermsQuery(taxonomyId).Count();
         }
 
-        public TermPart GetTerm(int id) {
+        public TermPart GetTerm(int id)
+        {
             // If term id isn't valid, return null without executing the query.
-            if (id <= 0) {
-                return null;
-            }
-            return GetTermsQuery()
-                .Where(x => x.Id == id).List().FirstOrDefault();
+            return id <= 0
+                ? null
+                : GetTermsQuery().Where(x => x.Id == id).List().FirstOrDefault();
         }
 
         public IEnumerable<TermPart> GetTermsForContentItem(
-            int contentItemId, string field = null, VersionOptions versionOptions = null) {
+            int contentItemId, string field = null, VersionOptions versionOptions = null)
+        {
 
             var termIds = string.IsNullOrEmpty(field)
                 ? _termContentItemRepository
@@ -263,33 +292,39 @@ namespace Orchard.Taxonomies.Services {
                 .GetMany<TermPart>(termIds, versionOptions ?? VersionOptions.Published, QueryHints.Empty);
         }
 
-        public TermPart GetTermByName(int taxonomyId, string name) {
+        public TermPart GetTermByName(int taxonomyId, string name)
+        {
             // If taxonomyId isn't valid, return null without executing the query.
-            if (taxonomyId <= 0) {
-                return null;
-            }
-            return GetTermsQuery(taxonomyId)
-                .Join<TitlePartRecord>()
-                .Where(r => r.Title == name)
-                .List()
-                .FirstOrDefault();
+            return taxonomyId <= 0
+                ? null
+                : GetTermsQuery(taxonomyId)
+		            .Join<TitlePartRecord>()
+		            .Where(r => r.Title == name)
+		            .List()
+		            .FirstOrDefault();
         }
 
-        public void CreateTerm(TermPart termPart) {
-            if (GetTermByName(termPart.TaxonomyId, termPart.Name) == null) {
+        public void CreateTerm(TermPart termPart)
+        {
+            if (GetTermByName(termPart.TaxonomyId, termPart.Name) == null)
+            {
                 _authorizationService.CheckAccess(Permissions.CreateTerm, _services.WorkContext.CurrentUser, null);
 
                 termPart.As<ICommonPart>().Container = GetTaxonomy(termPart.TaxonomyId).ContentItem;
                 _contentManager.Create(termPart);
-            } else {
+            }
+            else
+            {
                 _notifier.Warning(T("The term {0} already exists in this taxonomy", termPart.Name));
             }
         }
 
-        public void DeleteTerm(TermPart termPart) {
+        public void DeleteTerm(TermPart termPart)
+        {
             _contentManager.Remove(termPart.ContentItem);
 
-            foreach (var childTerm in GetChildren(termPart)) {
+            foreach (var childTerm in GetChildren(termPart))
+            {
                 _contentManager.Remove(childTerm.ContentItem);
             }
 
@@ -298,12 +333,14 @@ namespace Orchard.Taxonomies.Services {
                 .Fetch(t => t.TermRecord == termPart.Record)
                 .ToList();
 
-            foreach (var termContentItem in termContentItems) {
+            foreach (var termContentItem in termContentItems)
+            {
                 _termContentItemRepository.Delete(termContentItem);
             }
         }
 
-        public void UpdateTerms(ContentItem contentItem, IEnumerable<TermPart> terms, string field) {
+        public void UpdateTerms(ContentItem contentItem, IEnumerable<TermPart> terms, string field)
+        {
             var termsPart = contentItem.As<TermsPart>();
 
             // removing current terms for specific field
@@ -313,16 +350,19 @@ namespace Orchard.Taxonomies.Services {
                 .OrderByDescending(i => i.Index)
                 .ToList();
 
-            foreach (var x in termList) {
+            foreach (var x in termList)
+            {
                 termsPart.Terms.RemoveAt(x.Index);
             }
 
             // adding new terms list
-            foreach (var term in terms) {
+            foreach (var term in terms)
+            {
                 // Remove the newly added terms because they will get processed by the Published-Event
                 termList.RemoveAll(t => t.Term.TermRecord.Id == term.Id);
                 termsPart.Terms.Add(
-                    new TermContentItem {
+                    new TermContentItem
+                    {
                         TermsPartRecord = termsPart.Record,
                         TermRecord = term.Record,
                         Field = field
@@ -330,53 +370,59 @@ namespace Orchard.Taxonomies.Services {
             }
 
             var termPartRecordIds = termList.Select(t => t.Term.TermRecord.Id).ToArray();
-            if (termPartRecordIds.Any()) {
-                if (!_processedTermPartIds.Any()) {
+            if (termPartRecordIds.Any())
+            {
+                if (!_processedTermPartIds.Any())
+                {
                     _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", _processedTermPartIds } });
                 }
-                foreach (var termPartRecordId in termPartRecordIds) {
+                foreach (var termPartRecordId in termPartRecordIds)
+                {
                     _processedTermPartIds.Add(termPartRecordId);
                 }
             }
         }
 
-        public IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null) {
+        public IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null)
+        {
             var rootPath = term.FullPath + "/";
 
             var query = _contentManager
                 .Query<TermsPart, TermsPartRecord>();
 
-            if (String.IsNullOrWhiteSpace(fieldName)) {
-                query = query.Where(
+            query = string.IsNullOrWhiteSpace(fieldName)
+                ? query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.TermRecord.Id == term.Id
-                        || tr.TermRecord.Path.StartsWith(rootPath)));
-            } else {
-                query = query.Where(
+                        || tr.TermRecord.Path.StartsWith(rootPath)))
+                : query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.Field == fieldName
                          && (tr.TermRecord.Id == term.Id || tr.TermRecord.Path.StartsWith(rootPath))));
-            }
 
             return query;
         }
 
-        public long GetContentItemsCount(TermPart term, string fieldName = null) {
+        public long GetContentItemsCount(TermPart term, string fieldName = null)
+        {
             return GetContentItemsQuery(term, fieldName).Count();
         }
 
-        public IEnumerable<IContent> GetContentItems(TermPart term, int skip = 0, int count = 0, string fieldName = null) {
+        public IEnumerable<IContent> GetContentItems(TermPart term, int skip = 0, int count = 0, string fieldName = null)
+        {
             return GetContentItemsQuery(term, fieldName)
                 .Join<CommonPartRecord>()
                 .OrderByDescending(x => x.CreatedUtc)
                 .Slice(skip, count);
         }
 
-        public IEnumerable<TermPart> GetChildren(TermPart term) {
+        public IEnumerable<TermPart> GetChildren(TermPart term)
+        {
             return GetChildren(term, false);
         }
 
-        public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent) {
+        public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent)
+        {
             var rootPath = term.FullPath + "/";
 
             var result = GetTermsQuery()
@@ -384,31 +430,36 @@ namespace Orchard.Taxonomies.Services {
                 .OrderBy(x => x.FullWeight)
                 .List();
 
-            if (includeParent) {
+            if (includeParent)
+            {
                 result = result.Concat(new[] { term });
             }
 
             return result;
         }
 
-        public IEnumerable<TermPart> GetParents(TermPart term) {
+        public IEnumerable<TermPart> GetParents(TermPart term)
+        {
             return term.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Select(id => GetTerm(int.Parse(id)));
         }
 
-        public IEnumerable<string> GetSlugs() {
+        public IEnumerable<string> GetSlugs()
+        {
             return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>()
                 .List()
                 .Select(t => t.Slug);
         }
 
-        public IEnumerable<string> GetTermPaths() {
+        public IEnumerable<string> GetTermPaths()
+        {
             return GetTermsQuery()
                 .List()
                 .Select(t => t.Slug);
         }
 
-        public void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm) {
+        public void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm)
+        {
             // get the children before changing the path
             var children = GetChildren(term);
             // compute new path and publish. This also computes the new weight and
@@ -416,18 +467,25 @@ namespace Orchard.Taxonomies.Services {
             // that was moved.
             // In case we are changing the taxonomy, we will have to properly evict
             // caches
-            if (taxonomy.Id != term.TaxonomyId) {
-                if (_termFamilies == null) {
+            if (taxonomy.Id != term.TaxonomyId)
+            {
+                if (_termFamilies == null)
+                {
                     _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
-                } else {
+                }
+                else
+                {
                     // evict the old cache for the term and all children
                     var oldKey = term.TaxonomyId.ToString() + (term.Path ?? string.Empty);
-                    if (_termFamilies.ContainsKey(oldKey)) {
+                    if (_termFamilies.ContainsKey(oldKey))
+                    {
                         _termFamilies.Remove(oldKey);
                     }
-                    foreach (var child in children) {
+                    foreach (var child in children)
+                    {
                         oldKey = child.TaxonomyId.ToString() + (child.Path ?? string.Empty);
-                        if (_termFamilies.ContainsKey(oldKey)) {
+                        if (_termFamilies.ContainsKey(oldKey))
+                        {
                             _termFamilies.Remove(oldKey);
                         }
                     }
@@ -437,42 +495,52 @@ namespace Orchard.Taxonomies.Services {
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
             ProcessPath(term);
             // process the children
-            foreach (var child in children) {
+            foreach (var child in children)
+            {
                 child.TaxonomyId = taxonomy.Id;
                 ProcessPath(child);
             }
         }
 
-        public void ProcessPath(TermPart term) {
+        public void ProcessPath(TermPart term)
+        {
             // if term.Path changes, we should remove it from the Dictionary we are
             // using to cache siblings, otherwise we process wrong TermParts
             var parentTerm = term.Container.As<TermPart>();
             var oldPath = term.Path ?? string.Empty;
             term.Path = parentTerm != null ? parentTerm.FullPath + "/" : "/";
-            if (!oldPath.Equals(term.Path, StringComparison.InvariantCultureIgnoreCase)) {
+            if (!oldPath.Equals(term.Path, StringComparison.InvariantCultureIgnoreCase))
+            {
                 // path has changed. evict stale caches.
-                if (_termFamilies == null) {
+                if (_termFamilies == null)
+                {
                     _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
-                } else {
+                }
+                else
+                {
                     // We evict the cache for both the old and new values of the path.
                     // old: processing a former sibling we cause us to reprocess this term
                     //   when we don't need to.
-                    if (_termFamilies.ContainsKey(term.TaxonomyId + oldPath)) {
+                    if (_termFamilies.ContainsKey(term.TaxonomyId + oldPath))
+                    {
                         _termFamilies.Remove(term.TaxonomyId + oldPath);
                     }
                     // new: attempting to process the weight for this term would skip it.
-                    if (_termFamilies.ContainsKey(term.TaxonomyId + term.Path)) {
+                    if (_termFamilies.ContainsKey(term.TaxonomyId + term.Path))
+                    {
                         _termFamilies.Remove(term.TaxonomyId + term.Path);
                     }
                 }
             }
             // oldPath is empty when creating a new term, before doing all the updates
-            if (!string.IsNullOrWhiteSpace(oldPath)) {
+            if (!string.IsNullOrWhiteSpace(oldPath))
+            {
                 // Reprocess weights
                 ProcessFullWeight(term);
             }
         }
-        private void ProcessFullWeight(TermPart term) {
+        private void ProcessFullWeight(TermPart term)
+        {
             // Given part
             // - Update FullWeight for term
             // - Update FullWeight for term's siblings of the same weight
@@ -489,9 +557,11 @@ namespace Orchard.Taxonomies.Services {
             // in that case, update its children as well.
             // Note that term is included in that IEnumerable already, in its place among
             // its siblings, ordered by title alphabetically.
-            foreach (var tp in litter) {
+            foreach (var tp in litter)
+            {
                 var newWeight = ComputeFullWeight(tp);
-                if (!newWeight.Equals(tp.FullWeight, StringComparison.InvariantCultureIgnoreCase)) {
+                if (!newWeight.Equals(tp.FullWeight, StringComparison.InvariantCultureIgnoreCase))
+                {
                     tp.FullWeight = newWeight;
                     PublishTerm(tp);
                     UpdateChildren(tp);
@@ -503,29 +573,36 @@ namespace Orchard.Taxonomies.Services {
         /// Then it will recursively update the children of each child.
         /// </summary>
         /// <param name="part"></param>
-        private void UpdateChildren(TermPart part) {
-            foreach (var childTerm in GetChildren(part)) {
+        private void UpdateChildren(TermPart part)
+        {
+            foreach (var childTerm in GetChildren(part))
+            {
                 ProcessPath(childTerm);
             }
         }
-        protected virtual void PublishTerm(TermPart term) {
+        protected virtual void PublishTerm(TermPart term)
+        {
             var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
             _contentManager.Publish(contentItem);
         }
 
-        public void CreateHierarchy(IEnumerable<TermPart> terms, Action<TermPartNode, TermPartNode> append) {
+        public void CreateHierarchy(IEnumerable<TermPart> terms, Action<TermPartNode, TermPartNode> append)
+        {
             var root = new TermPartNode();
             var stack = new Stack<TermPartNode>(new[] { root });
 
-            foreach (var term in terms) {
+            foreach (var term in terms)
+            {
                 var current = CreateNode(term);
                 var previous = stack.Pop();
 
-                while (previous.Level + 1 != current.Level) {
+                while (previous.Level + 1 != current.Level)
+                {
                     previous = stack.Pop();
                 }
 
-                if (append != null) {
+                if (append != null)
+                {
                     append(previous, current);
                 }
 
@@ -537,30 +614,37 @@ namespace Orchard.Taxonomies.Services {
             }
         }
 
-        private static TermPartNode CreateNode(TermPart part) {
-            return new TermPartNode {
+        private static TermPartNode CreateNode(TermPart part)
+        {
+            return new TermPartNode
+            {
                 TermPart = part,
                 Level = part.Path.Count(x => x == '/')
             };
         }
 
-        public virtual IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+        public virtual IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery()
+        {
             return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>();
         }
 
-        public virtual IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        public virtual IContentQuery<TermPart, TermPartRecord> GetTermsQuery()
+        {
             return _contentManager
                 .Query<TermPart, TermPartRecord>();
         }
 
-        public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId) {
+        public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId)
+        {
             return GetTermsQuery()
                 .Where(x => x.TaxonomyId == taxonomyId);
         }
 
-        public string ComputeFullWeight(TermPart part) {
-            if (part == null) {
+        public string ComputeFullWeight(TermPart part)
+        {
+            if (part == null)
+            {
                 throw new ArgumentNullException("part");
             }
             // A TermPart's FullWeight property should be a string that univocally
@@ -609,9 +693,11 @@ namespace Orchard.Taxonomies.Services {
                 .Where(sib => sib.Weight == part.Weight)
                 .Select(tp => tp.Id)
                 .ToArray();
-            var siblingsWeight = (1048575).ToString("X5");
-            for (int i = 0; i < siblingsIds.Length; i++) {
-                if (siblingsIds[i] == part.Id) {
+            var siblingsWeight = 1048575.ToString("X5");
+            for (int i = 0; i < siblingsIds.Length; i++)
+            {
+                if (siblingsIds[i] == part.Id)
+                {
                     siblingsWeight = i.ToString("X5");
                     break;
                 }
@@ -626,12 +712,15 @@ namespace Orchard.Taxonomies.Services {
         }
 
         private Dictionary<string, IEnumerable<TermPart>> _termFamilies;
-        public IEnumerable<TermPart> OrderedSiblings(TermPart part) {
-            if (_termFamilies == null) {
+        public IEnumerable<TermPart> OrderedSiblings(TermPart part)
+        {
+            if (_termFamilies == null)
+            {
                 _termFamilies = new Dictionary<string, IEnumerable<TermPart>>();
             }
             var key = part.TaxonomyId + part.Path;
-            if (!_termFamilies.ContainsKey(key)) {
+            if (!_termFamilies.ContainsKey(key))
+            {
                 _termFamilies.Add(key, GetTermsQuery(part.TaxonomyId)
                     .Where(tpr => tpr.Path == part.Path)
                     .List()

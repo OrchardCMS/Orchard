@@ -1,5 +1,7 @@
-﻿namespace Orchard.UI.Navigation {
-    public class PagerParameters {
+namespace Orchard.UI.Navigation
+{
+    public class PagerParameters
+    {
         /// <summary>
         /// Gets or sets the current page number or null if none specified.
         /// </summary>

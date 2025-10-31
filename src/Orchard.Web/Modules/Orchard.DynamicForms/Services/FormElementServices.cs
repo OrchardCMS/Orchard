@@ -1,9 +1,12 @@
 using Orchard.Forms.Services;
 using Orchard.Localization.Services;
 
-namespace Orchard.DynamicForms.Services {
-    public class FormElementServices : IFormElementServices {
-        public FormElementServices(IFormManager formManager, ICultureManager cultureManager) {
+namespace Orchard.DynamicForms.Services
+{
+    public class FormElementServices : IFormElementServices
+    {
+        public FormElementServices(IFormManager formManager, ICultureManager cultureManager)
+        {
             FormManager = formManager;
             CultureManager = cultureManager;
         }

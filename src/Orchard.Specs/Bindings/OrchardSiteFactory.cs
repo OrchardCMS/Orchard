@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.Extensions;
@@ -8,16 +8,20 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 
-namespace Orchard.Specs.Bindings {
+namespace Orchard.Specs.Bindings
+{
     [Binding]
-    public class OrchardSiteFactory : BindingBase {
+    public class OrchardSiteFactory : BindingBase
+    {
         [Given(@"I have a clean site with standard extensions")]
-        public void GivenIHaveACleanSiteWithStandardExtensions() {
+        public void GivenIHaveACleanSiteWithStandardExtensions()
+        {
             GivenIHaveACleanSiteWithStandardExtensions("/");
         }
 
         [Given(@"I have a clean site with standard extensions at ""(.*)\""")]
-        public void GivenIHaveACleanSiteWithStandardExtensions(string virtualDirectory) {
+        public void GivenIHaveACleanSiteWithStandardExtensions(string virtualDirectory)
+        {
             Binding<WebAppHosting>().GivenIHaveACleanSiteWith(
                 virtualDirectory,
                 // This is the list of extensions which will be copied over into the temporary Orchard folder.
@@ -28,12 +32,14 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have installed Orchard")]
-        public void GivenIHaveInstalledOrchard() {
+        public void GivenIHaveInstalledOrchard()
+        {
             GivenIHaveInstalledOrchard("/");
         }
 
         [Given(@"I have installed Orchard at ""(.*)\""")]
-        public void GivenIHaveInstalledOrchard(string virtualDirectory) {
+        public void GivenIHaveInstalledOrchard(string virtualDirectory)
+        {
             var webApp = Binding<WebAppHosting>();
 
             GivenIHaveACleanSiteWithStandardExtensions(virtualDirectory);
@@ -49,7 +55,8 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have installed ""(.*)\""")]
-        public void GivenIHaveInstalled(string name) {
+        public void GivenIHaveInstalled(string name)
+        {
             var webApp = Binding<WebAppHosting>();
             webApp.GivenIHaveModule(name);
             webApp.Host.Execute(MvcApplication.ReloadExtensions);
@@ -58,10 +65,13 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have enabled ""(.*)\""")]
-        public void GivenIHaveEnabled(string name) {
+        public void GivenIHaveEnabled(string name)
+        {
             var webApp = Binding<WebAppHosting>();
-            webApp.Host.Execute(() => {
-                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+            webApp.Host.Execute(() =>
+            {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default"))
+                {
                     var descriptorManager = environment.Resolve<IShellDescriptorManager>();
                     var descriptor = descriptorManager.GetShellDescriptor();
                     descriptorManager.UpdateShellDescriptor(
@@ -79,10 +89,13 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have a containable content type ""(.*)\""")]
-        public void GivenIHaveAContainableContentType(string name) {
+        public void GivenIHaveAContainableContentType(string name)
+        {
             var webApp = Binding<WebAppHosting>();
-            webApp.Host.Execute(() => {
-                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+            webApp.Host.Execute(() =>
+            {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default"))
+                {
                     var cdm = environment.Resolve<IContentDefinitionManager>();
 
                     var contentTypeDefinition = new ContentTypeDefinition(name, name);
@@ -103,15 +116,19 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
-        public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName) {
+        public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName)
+        {
             var webApp = Binding<WebAppHosting>();
-            webApp.Host.Execute(() => {
-                var shellSettings = new ShellSettings {
+            webApp.Host.Execute(() =>
+            {
+                var shellSettings = new ShellSettings
+                {
                     Name = shellName,
                     RequestUrlHost = hostName,
                     State = TenantState.Uninitialized,
                 };
-                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default"))
+                {
                     environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
                 }
 

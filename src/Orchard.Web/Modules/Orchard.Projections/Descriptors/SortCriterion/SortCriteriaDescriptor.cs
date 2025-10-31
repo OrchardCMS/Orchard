@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Descriptors.SortCriterion {
-    public class SortCriterionDescriptor {
+namespace Orchard.Projections.Descriptors.SortCriterion
+{
+    public class SortCriterionDescriptor
+    {
         public string Category { get; set; }
         public string Type { get; set; }
         public LocalizedString Name { get; set; }

@@ -3,15 +3,19 @@ using System.Linq;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement;
 
-namespace Orchard.ContentManagement.Handlers {
-    public class BuildDisplayContext : BuildShapeContext {
+namespace Orchard.ContentManagement.Handlers
+{
+    public class BuildDisplayContext : BuildShapeContext
+    {
         public BuildDisplayContext(IShape model, IContent content, string displayType, string groupId, IShapeFactory shapeFactory)
-            : base(model, content, groupId, shapeFactory) {
+            : base(model, content, groupId, shapeFactory)
+        {
             DisplayType = displayType;
         }
 
         public string DisplayType { get; private set; }
-        public dynamic NewShapeWithTypeName(string shapeTypeName) {
+        public dynamic NewShapeWithTypeName(string shapeTypeName)
+        {
             return _shapeHelperCalls.Invoke(New, shapeTypeName);
         }
 
@@ -20,7 +24,7 @@ namespace Orchard.ContentManagement.Handlers {
             shapeTypeName,
             Enumerable.Empty<Type>(),
             null,
-            new[] {CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)}));
+            new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
 
     }
 }

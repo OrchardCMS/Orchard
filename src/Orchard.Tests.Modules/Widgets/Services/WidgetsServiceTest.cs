@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -26,10 +26,12 @@ using Orchard.UI.PageClass;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
-namespace Orchard.Tests.Modules.Widgets.Services {
+namespace Orchard.Tests.Modules.Widgets.Services
+{
 
     [TestFixture]
-    public class WidgetsServiceTest : DatabaseEnabledTestsBase {
+    public class WidgetsServiceTest : DatabaseEnabledTestsBase
+    {
 
         private const string ThemeZoneName1 = "sidebar";
         private const string ThemeZoneName2 = "alternative";
@@ -51,8 +53,10 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         private IWidgetsService _widgetService;
         private IContentManager _contentManager;
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof(LayerPartRecord),
                     typeof(WidgetPartRecord),
@@ -71,17 +75,19 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             }
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
 
             _widgetService = _container.Resolve<IWidgetsService>();
             _contentManager = _container.Resolve<IContentManager>();
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             var mockFeatureManager = new Mock<IFeatureManager>();
 
-            var theme1 = new FeatureDescriptor {Extension = new ExtensionDescriptor { Zones = ThemeZoneName1, ExtensionType = "Theme" }};
+            var theme1 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = ThemeZoneName1, ExtensionType = "Theme" } };
             var theme2 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = ThemeZoneName2, ExtensionType = "Theme" } };
             var theme3 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = DuplicateZoneNames, ExtensionType = "Theme" } };
             var module1 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = "DontSeeMeBecauseIAmNotATheme", ExtensionType = "Module" } };
@@ -106,13 +112,14 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
         }
 
         [Test]
-        public void GetLayersTest() {
+        public void GetLayersTest()
+        {
             IEnumerable<LayerPart> layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(0));
 
@@ -127,7 +134,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void GetLayerTest() {
+        public void GetLayerTest()
+        {
             IEnumerable<LayerPart> layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(0), "No layers yet");
 
@@ -138,7 +146,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void CreateLayerTest() {
+        public void CreateLayerTest()
+        {
             IEnumerable<LayerPart> layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(0), "No layers yet");
 
@@ -151,7 +160,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void GetWidgetTest() {
+        public void GetWidgetTest()
+        {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
 
             WidgetPart widgetResult = _widgetService.GetWidget(0);
@@ -168,7 +178,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void GetWidgetsTest() {
+        public void GetWidgetsTest()
+        {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
 
             IEnumerable<WidgetPart> widgetResults = _widgetService.GetWidgets();
@@ -188,7 +199,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void CreateWidgetTest() {
+        public void CreateWidgetTest()
+        {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
 
             WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
@@ -198,7 +210,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
         [Test]
         //[Ignore("Needs fixing")]
-        public void GetZonesTest() {
+        public void GetZonesTest()
+        {
             IEnumerable<string> zones = _widgetService.GetZones();
             Assert.That(zones.Count(), Is.EqualTo(2), "Two zones on the mock list");
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName1), Is.Not.Null);
@@ -206,7 +219,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test, Ignore("Fix when possible")]
-        public void MoveWidgetTest() {
+        public void MoveWidgetTest()
+        {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
 
             // same zone widgets
@@ -242,7 +256,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test, Ignore("Fix when possible")]
-        public void GetLayerWidgetsTest() {
+        public void GetLayerWidgetsTest()
+        {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
 
             // same zone widgets
@@ -259,16 +274,20 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(layerWidgets.Contains(widgetPart2));
         }
 
-        public class StubLayerPartHandler : ContentHandler {
-            public StubLayerPartHandler(IRepository<LayerPartRecord> layersRepository) {
+        public class StubLayerPartHandler : ContentHandler
+        {
+            public StubLayerPartHandler(IRepository<LayerPartRecord> layersRepository)
+            {
                 Filters.Add(new ActivatingFilter<LayerPart>("Layer"));
                 Filters.Add(new ActivatingFilter<CommonPart>("Layer"));
                 Filters.Add(StorageFilter.For(layersRepository));
             }
         }
 
-        public class StubWidgetPartHandler : ContentHandler {
-            public StubWidgetPartHandler(IRepository<WidgetPartRecord> widgetsRepository) {
+        public class StubWidgetPartHandler : ContentHandler
+        {
+            public StubWidgetPartHandler(IRepository<WidgetPartRecord> widgetsRepository)
+            {
                 Filters.Add(new ActivatingFilter<WidgetPart>("HtmlWidget"));
                 Filters.Add(new ActivatingFilter<CommonPart>("HtmlWidget"));
                 Filters.Add(new ActivatingFilter<BodyPart>("HtmlWidget"));

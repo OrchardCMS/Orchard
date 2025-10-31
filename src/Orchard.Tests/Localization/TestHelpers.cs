@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using Autofac;
 using Moq;
@@ -6,10 +6,13 @@ using Orchard.Localization.Services;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
 
-    internal class TestHelpers {
-        public static IContainer InitializeContainer(string cultureName, string calendarName, TimeZoneInfo timeZone, IClock clock = null) {
+    internal class TestHelpers
+    {
+        public static IContainer InitializeContainer(string cultureName, string calendarName, TimeZoneInfo timeZone, IClock clock = null)
+        {
             var builder = new ContainerBuilder();
             if (clock != null)
                 builder.RegisterInstance(clock);
@@ -26,12 +29,15 @@ namespace Orchard.Tests.Localization {
         }
     }
 
-    internal class StubWorkContext : WorkContext {
+    internal class StubWorkContext : WorkContext
+    {
 
-        public StubWorkContext() {
+        public StubWorkContext()
+        {
         }
 
-        public StubWorkContext(string cultureName, string calendarName, TimeZoneInfo timeZone) {
+        public StubWorkContext(string cultureName, string calendarName, TimeZoneInfo timeZone)
+        {
             CultureName = cultureName;
             CalendarName = calendarName;
             TimeZone = timeZone;
@@ -41,55 +47,67 @@ namespace Orchard.Tests.Localization {
         public string CalendarName { get; set; }
         public TimeZoneInfo TimeZone { get; set; }
 
-        public override T Resolve<T>() {
+        public override T Resolve<T>()
+        {
             throw new NotImplementedException();
         }
 
-        public override object Resolve(Type serviceType) {
+        public override object Resolve(Type serviceType)
+        {
             throw new NotImplementedException();
         }
 
-        public override bool TryResolve<T>(out T service) {
+        public override bool TryResolve<T>(out T service)
+        {
             throw new NotImplementedException();
         }
 
-        public override bool TryResolve(Type serviceType, out object service) {
+        public override bool TryResolve(Type serviceType, out object service)
+        {
             throw new NotImplementedException();
         }
 
-        public override T GetState<T>(string name) {
-            if (name == "CurrentCulture") return (T)((object)CultureName);
-            if (name == "CurrentCalendar") return (T)((object)CalendarName);
-            if (name == "CurrentTimeZone") return (T)((object)TimeZone);
-            throw new NotImplementedException(String.Format("Property '{0}' is not implemented.", name));
+        public override T GetState<T>(string name)
+        {
+            if (name == "CurrentCulture") return (T)(object)CultureName;
+            if (name == "CurrentCalendar") return (T)(object)CalendarName;
+            if (name == "CurrentTimeZone") return (T)(object)TimeZone;
+            throw new NotImplementedException(string.Format("Property '{0}' is not implemented.", name));
         }
 
-        public override void SetState<T>(string name, T value) {
+        public override void SetState<T>(string name, T value)
+        {
             throw new NotImplementedException();
         }
     }
 
-    internal class StubWorkContextAccessor : IWorkContextAccessor {
+    internal class StubWorkContextAccessor : IWorkContextAccessor
+    {
 
         private readonly WorkContext _workContext;
 
-        public StubWorkContextAccessor(WorkContext workContext) {
+        public StubWorkContextAccessor(WorkContext workContext)
+        {
             _workContext = workContext;
         }
 
-        public WorkContext GetContext(HttpContextBase httpContext) {
+        public WorkContext GetContext(HttpContextBase httpContext)
+        {
             throw new NotImplementedException();
         }
 
-        public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
+        public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext)
+        {
             throw new NotImplementedException();
         }
 
-        public WorkContext GetContext() {
+        public WorkContext GetContext()
+        {
             return _workContext;
         }
 
-        public IWorkContextScope CreateWorkContextScope() {
+        public IWorkContextScope CreateWorkContextScope()
+        {
             throw new NotImplementedException();
         }
     }

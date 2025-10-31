@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
@@ -7,18 +7,23 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment;
 
-namespace Orchard.AuditTrail.Providers.Content {
-    public class ContentAuditTrailEventShapes : IShapeTableProvider {
+namespace Orchard.AuditTrail.Providers.Content
+{
+    public class ContentAuditTrailEventShapes : IShapeTableProvider
+    {
         private readonly Work<IContentManager> _contentManager;
         private readonly IDiffGramAnalyzer _analyzer;
 
-        public ContentAuditTrailEventShapes(Work<IContentManager> contentManager, IDiffGramAnalyzer analyzer) {
+        public ContentAuditTrailEventShapes(Work<IContentManager> contentManager, IDiffGramAnalyzer analyzer)
+        {
             _contentManager = contentManager;
             _analyzer = analyzer;
         }
 
-        public void Discover(ShapeTableBuilder builder) {
-            builder.Describe("AuditTrailEvent").OnDisplaying(context => {
+        public void Discover(ShapeTableBuilder builder)
+        {
+            builder.Describe("AuditTrailEvent").OnDisplaying(context =>
+            {
                 var record = (AuditTrailEventRecord)context.Shape.Record;
 
                 if (record.Category != "Content")
@@ -32,7 +37,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.AllVersions);
                 var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
 
-                if (diffGram != null) {
+                if (diffGram != null)
+                {
                     var diffNodes = _analyzer.Analyze(previousVersionXml, diffGram).ToArray();
                     context.Shape.DiffNodes = diffNodes;
                 }
@@ -42,7 +48,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                 context.Shape.PreviousVersion = previousVersion;
             });
 
-            builder.Describe("AuditTrailEventActions").OnDisplaying(context => {
+            builder.Describe("AuditTrailEventActions").OnDisplaying(context =>
+            {
                 var record = (AuditTrailEventRecord)context.Shape.Record;
 
                 if (record.Category != "Content")

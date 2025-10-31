@@ -1,40 +1,46 @@
-﻿using Orchard.Data.Migration.Schema;
+using Orchard.Data.Migration.Schema;
 
-namespace Orchard.Data.Migration.Interpreters {
+namespace Orchard.Data.Migration.Interpreters
+{
     public class SQLiteCommandInterpreter :
         ICommandInterpreter<DropColumnCommand>,
         ICommandInterpreter<AlterColumnCommand>,
         ICommandInterpreter<CreateForeignKeyCommand>,
         ICommandInterpreter<DropForeignKeyCommand>,
         ICommandInterpreter<AddIndexCommand>,
-        ICommandInterpreter<DropIndexCommand> {
+        ICommandInterpreter<DropIndexCommand>
+    {
 
-        public string[] CreateStatements(DropColumnCommand command) {
+        public string[] CreateStatements(DropColumnCommand command)
+        {
             return new string[0];
         }
 
-        public string[] CreateStatements(AlterColumnCommand command) {
+        public string[] CreateStatements(AlterColumnCommand command)
+        {
             return new string[0];
         }
 
-        public string[] CreateStatements(CreateForeignKeyCommand command) {
+        public string[] CreateStatements(CreateForeignKeyCommand command)
+        {
             return new string[0];
         }
 
-        public string[] CreateStatements(DropForeignKeyCommand command) {
+        public string[] CreateStatements(DropForeignKeyCommand command)
+        {
             return new string[0];
         }
 
-        public string[] CreateStatements(AddIndexCommand command) {
+        public string[] CreateStatements(AddIndexCommand command)
+        {
             return new string[0];
         }
 
-        public string[] CreateStatements(DropIndexCommand command) {
+        public string[] CreateStatements(DropIndexCommand command)
+        {
             return new string[0];
         }
 
-        public string DataProvider {
-            get { return "SQLite"; }
-        }
+        public string DataProvider => "SQLite";
     }
 }

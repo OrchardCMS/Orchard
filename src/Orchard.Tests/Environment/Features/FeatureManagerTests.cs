@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +20,17 @@ using Orchard.Locking;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Features {
+namespace Orchard.Tests.Environment.Features
+{
     [TestFixture]
-    public class FeatureManagerTests : DatabaseEnabledTestsBase {
+    public class FeatureManagerTests : DatabaseEnabledTestsBase
+    {
         private ExtensionManagerTests.StubFolders _folders;
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof (ShellDescriptorRecord),
                     typeof (ShellFeatureRecord),
@@ -35,7 +39,8 @@ namespace Orchard.Tests.Environment.Features {
             }
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             _folders = new ExtensionManagerTests.StubFolders();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
@@ -54,7 +59,8 @@ namespace Orchard.Tests.Environment.Features {
         }
 
         [Test]
-        public void EnableFeaturesTest() {
+        public void EnableFeaturesTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -72,7 +78,7 @@ Features:
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            IEnumerable<string> featuresToEnable = new [] { "SuperWiki" };
+            IEnumerable<string> featuresToEnable = new[] { "SuperWiki" };
 
             // Enable all features
             IEnumerable<string> enabledFeatures = featureManager.EnableFeatures(featuresToEnable);
@@ -82,7 +88,8 @@ Features:
         }
 
         [Test]
-        public void EnableFeaturesWithDependenciesTest() {
+        public void EnableFeaturesWithDependenciesTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -118,7 +125,8 @@ Features:
         }
 
         [Test]
-        public void DisableFeaturesTest() {
+        public void DisableFeaturesTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -133,10 +141,10 @@ Features:
             IFeatureManager featureManager = _container.Resolve<IFeatureManager>();
 
             shellDescriptorManager.UpdateShellDescriptor(0,
-                new [] { new ShellFeature { Name = "SuperWiki" } },
+                new[] { new ShellFeature { Name = "SuperWiki" } },
                 Enumerable.Empty<ShellParameter>());
 
-            IEnumerable<string> featuresToDisable = new [] { "SuperWiki" };
+            IEnumerable<string> featuresToDisable = new[] { "SuperWiki" };
 
             // Disable the feature
             featureManager.DisableFeatures(featuresToDisable);
@@ -144,7 +152,8 @@ Features:
         }
 
         [Test]
-        public void DisableFeaturesWithDependenciesTest() {
+        public void DisableFeaturesWithDependenciesTest()
+        {
             _folders.Manifests.Add("SuperWiki", @"
 Name: SuperWiki
 Version: 1.0.3
@@ -166,7 +175,7 @@ Features:
                 Enumerable.Empty<ShellParameter>());
 
             // Enable both features by relying on the dependency
-            Assert.That(featureManager.EnableFeatures(new [] { "SuperWiki"}, true).Count(), Is.EqualTo(2));
+            Assert.That(featureManager.EnableFeatures(new[] { "SuperWiki" }, true).Count(), Is.EqualTo(2));
 
             IEnumerable<string> featuresToDisable = new[] { "SuperWikiDep" };
 
@@ -183,11 +192,13 @@ Features:
         }
     }
 
-    public class StubEventBus : IEventBus {
+    public class StubEventBus : IEventBus
+    {
         public string LastMessageName { get; set; }
         public IDictionary<string, object> LastEventData { get; set; }
 
-        public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
+        public IEnumerable Notify(string messageName, IDictionary<string, object> eventData)
+        {
             LastMessageName = messageName;
             LastEventData = eventData;
             return new object[0];

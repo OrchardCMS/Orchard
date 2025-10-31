@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Core.Common.Models;
@@ -8,7 +8,8 @@ namespace Orchard.ContentManagement
 
     public class EagerlyLoadQueryResult<T>
     {
-        public EagerlyLoadQueryResult(IEnumerable<T> items, IContentManager contentManager) {
+        public EagerlyLoadQueryResult(IEnumerable<T> items, IContentManager contentManager)
+        {
             Result = items;
             ContentManager = contentManager;
         }
@@ -18,18 +19,21 @@ namespace Orchard.ContentManagement
     public static class ContentItemExtensions
     {
         const int MaxPageSize = 2000;
-        public static EagerlyLoadQueryResult<T> LoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent {
+        public static EagerlyLoadQueryResult<T> LoadContainerContentItems<T>(this IList<T> items, IContentManager contentManager, int maximumLevel = 0) where T : class, IContent
+        {
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(items, contentManager);
             return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent{
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this IContentQuery<T> query, int maximumLevel = 0) where T : class, IContent
+        {
             var manager = query.ContentManager;
             var eagerlyLoadQueryResult = new EagerlyLoadQueryResult<T>(query.List(), manager);
             return eagerlyLoadQueryResult.IncludeContainerContentItems(maximumLevel);
         }
 
-        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent {
+        public static EagerlyLoadQueryResult<T> IncludeContainerContentItems<T>(this EagerlyLoadQueryResult<T> eagerlyLoadQueryResult, int maximumLevel = 0) where T : class, IContent
+        {
 
             var containerIds = new HashSet<int>();
             var objectsToLoad = eagerlyLoadQueryResult.Result.ToList();
@@ -59,7 +63,8 @@ namespace Orchard.ContentManagement
             return eagerlyLoadQueryResult;
         }
 
-        public static IEnumerable<T> GetTooMany<T>(this IContentManager contentManager, IEnumerable<int> ids, VersionOptions versionOptions, QueryHints queryHints) where T : class, IContent {
+        public static IEnumerable<T> GetTooMany<T>(this IContentManager contentManager, IEnumerable<int> ids, VersionOptions versionOptions, QueryHints queryHints) where T : class, IContent
+        {
             if (ids == null)
                 return null;
             var result = new List<T>();
@@ -67,11 +72,14 @@ namespace Orchard.ContentManagement
 
             var pageSize = MaxPageSize;
             var maxPageIndex = Math.Floor((double)ids.Count() / MaxPageSize);
-            for (var page = 0; page <= maxPageIndex; page++) {
-                if (maxPageIndex == page) {
+            for (var page = 0; page <= maxPageIndex; page++)
+            {
+                if (maxPageIndex == page)
+                {
                     pageSize = ids.Count() % MaxPageSize;
                 }
-                if (pageSize > 0) {
+                if (pageSize > 0)
+                {
                     result.AddRange(contentManager.GetMany<T>(ids.Skip(2000 * page).Take(pageSize), versionOptions, queryHints));
                 }
             }

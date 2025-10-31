@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -16,8 +16,10 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Data;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules {
-    public abstract class DatabaseEnabledTestsBase {
+namespace Orchard.Tests.Modules
+{
+    public abstract class DatabaseEnabledTestsBase
+    {
 
         protected IContainer _container;
         protected ITransaction _transaction;
@@ -29,16 +31,19 @@ namespace Orchard.Tests.Modules {
 
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
         }
 
         [OneTimeTearDown]
-        public void TearDownFixture() {
+        public void TearDownFixture()
+        {
             File.Delete(_databaseFilePath);
         }
 
         [SetUp]
-        public virtual void Init() {
+        public virtual void Init()
+        {
             _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, DatabaseTypes.ToArray());
             _session = _sessionFactory.OpenSession();
@@ -60,20 +65,18 @@ namespace Orchard.Tests.Modules {
         }
 
         [TearDown]
-        public virtual void Cleanup() {
-            if(_container != null)
+        public virtual void Cleanup()
+        {
+            if (_container != null)
                 _container.Dispose();
         }
 
         public abstract void Register(ContainerBuilder builder);
 
-        protected virtual IEnumerable<Type> DatabaseTypes {
-            get {
-                return Enumerable.Empty<Type>();
-            }
-        }
-        
-        protected void ClearSession() {
+        protected virtual IEnumerable<Type> DatabaseTypes => Enumerable.Empty<Type>();
+
+        protected void ClearSession()
+        {
             Trace.WriteLine("Flush and clear session");
             _transaction.Commit();
             _session.Clear();

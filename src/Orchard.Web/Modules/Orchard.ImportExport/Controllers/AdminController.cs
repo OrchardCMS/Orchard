@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,8 +8,10 @@ using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
 
-namespace Orchard.ImportExport.Controllers {
-    public class AdminController : Controller, IUpdateModel {
+namespace Orchard.ImportExport.Controllers
+{
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeResultAccessor _recipeResultAccessor;
         private readonly IEnumerable<IExportAction> _exportActions;
@@ -18,12 +19,13 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IRecipeParser _recipeParser;
 
         public AdminController(
-            IOrchardServices services, 
+            IOrchardServices services,
             IImportExportService importExportService,
             IRecipeResultAccessor recipeResultAccessor,
             IEnumerable<IExportAction> exportActions,
             IEnumerable<IImportAction> importActions,
-            IRecipeParser recipeParser) {
+            IRecipeParser recipeParser)
+        {
 
             _importExportService = importExportService;
             _recipeResultAccessor = recipeResultAccessor;
@@ -37,12 +39,15 @@ namespace Orchard.ImportExport.Controllers {
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
-        public ActionResult Import() {
-            var actions = _importActions.OrderByDescending(x => x.Priority).Select(x => new ImportActionViewModel {
+        public ActionResult Import()
+        {
+            var actions = _importActions.OrderByDescending(x => x.Priority).Select(x => new ImportActionViewModel
+            {
                 Editor = x.BuildEditor(Services.New)
             }).Where(x => x != null).ToList();
 
-            var viewModel = new ImportViewModel {
+            var viewModel = new ImportViewModel
+            {
                 Actions = actions
             };
 
@@ -50,45 +55,54 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         [HttpPost, ActionName("Import")]
-        public ActionResult ImportPOST() {
+        public ActionResult ImportPOST()
+        {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
             var actions = _importActions.OrderByDescending(x => x.Priority).ToList();
-            var viewModel = new ImportViewModel {
-                Actions = actions.Select(x => new ImportActionViewModel {
+            var viewModel = new ImportViewModel
+            {
+                Actions = actions.Select(x => new ImportActionViewModel
+                {
                     Editor = x.UpdateEditor(Services.New, this)
                 }).Where(x => x != null).ToList()
             };
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(viewModel);
             }
 
             var context = new ImportActionContext();
             var executionId = _importExportService.Import(context, actions);
 
-            return !String.IsNullOrEmpty(executionId)
+            return !string.IsNullOrEmpty(executionId)
                 ? RedirectToAction("ImportResult", new { executionId = context.ExecutionId })
                 : RedirectToAction("Import");
         }
 
-        public ActionResult ImportResult(string executionId) {
+        public ActionResult ImportResult(string executionId)
+        {
             var result = _recipeResultAccessor.GetResult(executionId);
 
-            var viewModel = new ImportResultViewModel() {
+            var viewModel = new ImportResultViewModel()
+            {
                 Result = result
             };
 
             return View(viewModel);
         }
 
-        public ActionResult Export() {
-            var actions = _exportActions.OrderByDescending(x => x.Priority).Select(x => new ExportActionViewModel {
+        public ActionResult Export()
+        {
+            var actions = _exportActions.OrderByDescending(x => x.Priority).Select(x => new ExportActionViewModel
+            {
                 Editor = x.BuildEditor(Services.New)
             }).Where(x => x != null).ToList();
 
-            var viewModel = new ExportViewModel {
+            var viewModel = new ExportViewModel
+            {
                 Actions = actions
             };
 
@@ -96,16 +110,18 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         [HttpPost, ActionName("Export")]
-        public ActionResult ExportPOST(ExportViewModel viewModel) {
+        public ActionResult ExportPOST(ExportViewModel viewModel)
+        {
             if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
 
             var actions = _exportActions.OrderByDescending(x => x.Priority).ToList();
 
-            foreach (var action in actions) {
+            foreach (var action in actions)
+            {
                 action.UpdateEditor(Services.New, this);
             }
-            
+
             var exportActionContext = new ExportActionContext();
             _importExportService.Export(exportActionContext, actions);
 
@@ -117,11 +133,13 @@ namespace Orchard.ImportExport.Controllers {
             return File(exportFilePath, "text/xml", exportFileName);
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

@@ -1,17 +1,21 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Parameters;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
 
-namespace Orchard.Specs.Bindings {
+namespace Orchard.Specs.Bindings
+{
     [Binding]
-    public class CommandLine : BindingBase {
+    public class CommandLine : BindingBase
+    {
         [When(@"I execute >(.*)")]
-        public void WhenIExecute(string commandLine) {
+        public void WhenIExecute(string commandLine)
+        {
             var details = new RequestDetails();
-            Binding<WebAppHosting>().Host.Execute(() => {
+            Binding<WebAppHosting>().Host.Execute(() =>
+            {
                 var args = new CommandLineParser().Parse(commandLine);
                 var parameters = new CommandParametersParser().Parse(args);
                 var agent = new CommandHostAgent();

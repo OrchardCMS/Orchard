@@ -1,5 +1,7 @@
-﻿namespace Orchard.Indexing {
-    public interface IIndexManager : IDependency {
+namespace Orchard.Indexing
+{
+    public interface IIndexManager : IDependency
+    {
 
         bool HasIndexProvider();
         IIndexProvider GetSearchIndexProvider();

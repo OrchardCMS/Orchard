@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.Descriptors.Filter {
-    public class FilterContext {
-        public FilterContext() {
+namespace Orchard.Projections.Descriptors.Filter
+{
+    public class FilterContext
+    {
+        public FilterContext()
+        {
             Tokens = new Dictionary<string, object>();
         }
 
@@ -13,7 +16,8 @@ namespace Orchard.Projections.Descriptors.Filter {
         public IHqlQuery Query { get; set; }
 
         public QueryPartRecord QueryPartRecord { get; set; }
-        public string GetFilterColumnName() {
+        public string GetFilterColumnName()
+        {
             return QueryPartRecord.GetVersionedFieldIndexColumnName();
         }
     }

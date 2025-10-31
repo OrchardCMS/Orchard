@@ -1,11 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using Orchard.Media.Models;
 
-namespace Orchard.Media.Services {
-    public interface IMediaService : IDependency {
+namespace Orchard.Media.Services
+{
+    public interface IMediaService : IDependency
+    {
         /// <summary>
         /// Retrieves the public path based on the relative path within the media directory.
         /// </summary>

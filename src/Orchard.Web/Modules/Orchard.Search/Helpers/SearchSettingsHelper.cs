@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Search.Models;
 
-namespace Orchard.Search.Helpers {
-    public static class SearchSettingsHelper {
-        public static IDictionary<string, string[]> DeserializeSearchFields(string value) {
+namespace Orchard.Search.Helpers
+{
+    public static class SearchSettingsHelper
+    {
+        public static IDictionary<string, string[]> DeserializeSearchFields(string value)
+        {
             // Format: "<Index1:Field1,Field2>[|<Index1:Field1,Field2>]".
             // Example: "Search:title,body|Documents:filename,title".
 
@@ -13,7 +16,8 @@ namespace Orchard.Search.Helpers {
             var items = data.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             var dictionary = new Dictionary<string, string[]>();
 
-            foreach (var item in items) {
+            foreach (var item in items)
+            {
                 var pair = item.Split(new[] { ':' }, StringSplitOptions.None);
                 var index = pair[0];
                 var fields = pair[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -23,12 +27,14 @@ namespace Orchard.Search.Helpers {
             return dictionary;
         }
 
-        public static string SerializeSearchFields(IDictionary<string, string[]> value) {
-            var data = String.Join("|", value.Select(x => String.Format("{0}:{1}", x.Key, String.Join(",", x.Value))));
+        public static string SerializeSearchFields(IDictionary<string, string[]> value)
+        {
+            var data = string.Join("|", value.Select(x => string.Format("{0}:{1}", x.Key, string.Join(",", x.Value))));
             return data;
         }
 
-        public static string[] GetSearchFields(this SearchSettingsPart part, string index) {
+        public static string[] GetSearchFields(this SearchSettingsPart part, string index)
+        {
             return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
         }
     }

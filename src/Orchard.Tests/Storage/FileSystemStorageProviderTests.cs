@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,20 +7,26 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 
-namespace Orchard.Tests.Storage {
+namespace Orchard.Tests.Storage
+{
     [TestFixture]
-    public class FileSystemStorageProviderTests {
+    public class FileSystemStorageProviderTests
+    {
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _folderPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media"), ShellSettings.DefaultName);
             _filePath = _folderPath + "\\testfile.txt";
 
-            if (Directory.Exists(_folderPath)) {
-                try {
+            if (Directory.Exists(_folderPath))
+            {
+                try
+                {
                     Directory.Delete(_folderPath, true);
                 }
-                catch {
+                catch
+                {
                     // happens sometimes
                 }
             }
@@ -40,11 +46,14 @@ namespace Orchard.Tests.Storage {
         }
 
         [TearDown]
-        public void Term() {
-            try {
+        public void Term()
+        {
+            try
+            {
                 Directory.Delete(_folderPath, true);
             }
-            catch (IOException) {
+            catch (IOException)
+            {
                 // if a system handle is still active give some time to release it
                 Thread.Sleep(0);
                 Directory.Delete(_folderPath, true);
@@ -57,28 +66,33 @@ namespace Orchard.Tests.Storage {
         private IStorageProvider _storageProvider;
 
         [Test]
-        public void ExistsShouldBeTrueForExtistingFile() {
+        public void ExistsShouldBeTrueForExtistingFile()
+        {
             Assert.That(_storageProvider.FileExists("testfile.txt"), Is.True);
         }
 
         [Test]
-        public void ExistsShouldBeFalseForNonExtistingFile() {
+        public void ExistsShouldBeFalseForNonExtistingFile()
+        {
             Assert.That(_storageProvider.FileExists("notexisting"), Is.False);
         }
 
         [Test]
-        public void GetFileThatDoesNotExistShouldThrow() {
-            Assert.Throws<ArgumentException>((() => _storageProvider.GetFile("notexisting")));
+        public void GetFileThatDoesNotExistShouldThrow()
+        {
+            Assert.Throws<ArgumentException>(() => _storageProvider.GetFile("notexisting"));
         }
 
         [Test]
-        public void ListFilesShouldReturnFilesFromFilesystem() {
+        public void ListFilesShouldReturnFilesFromFilesystem()
+        {
             IEnumerable<IStorageFile> files = _storageProvider.ListFiles(_folderPath);
             Assert.That(files.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void ExistingFileIsReturnedWithShortPath() {
+        public void ExistingFileIsReturnedWithShortPath()
+        {
             var file = _storageProvider.GetFile("testfile.txt");
             Assert.That(file, Is.Not.Null);
             Assert.That(file.GetPath(), Is.EqualTo("testfile.txt"));
@@ -87,7 +101,8 @@ namespace Orchard.Tests.Storage {
 
 
         [Test]
-        public void ListFilesReturnsItemsWithShortPathAndEnvironmentSlashes() {
+        public void ListFilesReturnsItemsWithShortPathAndEnvironmentSlashes()
+        {
             var files = _storageProvider.ListFiles("Subfolder1");
             Assert.That(files, Is.Not.Null);
             Assert.That(files.Count(), Is.EqualTo(2));
@@ -100,7 +115,8 @@ namespace Orchard.Tests.Storage {
 
 
         [Test]
-        public void AnySlashInGetFileBecomesEnvironmentAppropriate() {
+        public void AnySlashInGetFileBecomesEnvironmentAppropriate()
+        {
             var file1 = _storageProvider.GetFile(@"Subfolder1/one.txt");
             var file2 = _storageProvider.GetFile(@"Subfolder1\one.txt");
             Assert.That(file1.GetPath(), Is.EqualTo("Subfolder1" + Path.DirectorySeparatorChar + "one.txt"));
@@ -108,17 +124,20 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void ExistsShouldBeTrueForExtistingFolder() {
+        public void ExistsShouldBeTrueForExtistingFolder()
+        {
             Assert.That(_storageProvider.FolderExists("Subfolder1"), Is.True);
         }
 
         [Test]
-        public void ExistsShouldBeFalseForNonExtistingFolder() {
+        public void ExistsShouldBeFalseForNonExtistingFolder()
+        {
             Assert.That(_storageProvider.FolderExists("notexisting"), Is.False);
         }
 
         [Test]
-        public void ListFoldersReturnsItemsWithShortPathAndEnvironmentSlashes() {
+        public void ListFoldersReturnsItemsWithShortPathAndEnvironmentSlashes()
+        {
             var folders = _storageProvider.ListFolders(@"Subfolder1");
             Assert.That(folders, Is.Not.Null);
             Assert.That(folders.Count(), Is.EqualTo(1));
@@ -127,7 +146,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void ParentFolderPathIsStillShort() {
+        public void ParentFolderPathIsStillShort()
+        {
             var subsubfolder = _storageProvider.ListFolders(@"Subfolder1").Single();
             var subfolder = subsubfolder.GetParent();
             Assert.That(subsubfolder.GetName(), Is.EqualTo("SubSubfolder1"));
@@ -137,7 +157,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void CreateFolderAndDeleteFolderTakesAnySlash() {
+        public void CreateFolderAndDeleteFolderTakesAnySlash()
+        {
             Assert.That(_storageProvider.ListFolders(@"Subfolder1").Count(), Is.EqualTo(1));
             _storageProvider.CreateFolder(@"SubFolder1/SubSubFolder2");
             _storageProvider.CreateFolder(@"SubFolder1\SubSubFolder3");
@@ -147,21 +168,26 @@ namespace Orchard.Tests.Storage {
             Assert.That(_storageProvider.ListFolders(@"Subfolder1").Count(), Is.EqualTo(1));
         }
 
-        private IStorageFolder GetFolder(string path) {
+        private IStorageFolder GetFolder(string path)
+        {
             return _storageProvider.ListFolders(Path.GetDirectoryName(path))
                 .SingleOrDefault(x => string.Equals(x.GetName(), Path.GetFileName(path), StringComparison.OrdinalIgnoreCase));
         }
-        private IStorageFile GetFile(string path) {
-            try {
+        private IStorageFile GetFile(string path)
+        {
+            try
+            {
                 return _storageProvider.GetFile(path);
             }
-            catch (ArgumentException) {
+            catch (ArgumentException)
+            {
                 return null;
             }
         }
 
         [Test]
-        public void ShouldCreateFolders() {
+        public void ShouldCreateFolders()
+        {
             Directory.Delete(_folderPath, true);
             _storageProvider.CreateFolder("foo/bar/baz");
             Assert.That(_storageProvider.ListFolders("").Count(), Is.EqualTo(1));
@@ -170,7 +196,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void RenameFolderTakesShortPathWithAnyKindOfSlash() {
+        public void RenameFolderTakesShortPathWithAnyKindOfSlash()
+        {
             Assert.That(GetFolder(@"SubFolder1/SubSubFolder1"), Is.Not.Null);
             _storageProvider.RenameFolder(@"SubFolder1\SubSubFolder1", @"SubFolder1/SubSubFolder2");
             _storageProvider.RenameFolder(@"SubFolder1\SubSubFolder2", @"SubFolder1\SubSubFolder3");
@@ -185,7 +212,8 @@ namespace Orchard.Tests.Storage {
 
 
         [Test]
-        public void CreateFileAndDeleteFileTakesAnySlash() {
+        public void CreateFileAndDeleteFileTakesAnySlash()
+        {
             Assert.That(_storageProvider.ListFiles(@"Subfolder1").Count(), Is.EqualTo(2));
             var alpha = _storageProvider.CreateFile(@"SubFolder1/alpha.txt");
             var beta = _storageProvider.CreateFile(@"SubFolder1\beta.txt");
@@ -198,7 +226,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void RenameFileTakesShortPathWithAnyKindOfSlash() {
+        public void RenameFileTakesShortPathWithAnyKindOfSlash()
+        {
             Assert.That(GetFile(@"Subfolder1/one.txt"), Is.Not.Null);
             _storageProvider.RenameFile(@"SubFolder1\one.txt", @"SubFolder1/testfile2.txt");
             _storageProvider.RenameFile(@"SubFolder1\testfile2.txt", @"SubFolder1\testfile3.txt");
@@ -212,7 +241,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void GetFileFailsInInvalidPath() {
+        public void GetFileFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.GetFile(@"../InvalidFile.txt"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.GetFile(@"../../InvalidFile.txt"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -223,7 +253,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void ListFilesFailsInInvalidPath() {
+        public void ListFilesFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.ListFiles(@"../InvalidFolder"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.ListFiles(@"../../InvalidFolder"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -233,7 +264,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void ListFoldersFailsInInvalidPath() {
+        public void ListFoldersFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.ListFolders(@"../InvalidFolder"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.ListFolders(@"../../InvalidFolder"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -243,7 +275,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void TryCreateFolderFailsInInvalidPath() {
+        public void TryCreateFolderFailsInInvalidPath()
+        {
             Assert.That(_storageProvider.TryCreateFolder(@"../InvalidFolder1"), Is.False);
             Assert.That(_storageProvider.TryCreateFolder(@"../../InvalidFolder1"), Is.False);
 
@@ -252,7 +285,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void CreateFolderFailsInInvalidPath() {
+        public void CreateFolderFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.CreateFolder(@"../InvalidFolder1"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.CreateFolder(@"../../InvalidFolder1"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -262,7 +296,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void DeleteFolderFailsInInvalidPath() {
+        public void DeleteFolderFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.DeleteFolder(@"../InvalidFolder1"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.DeleteFolder(@"../../InvalidFolder1"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -273,7 +308,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void RenameFolderFailsInInvalidPath() {
+        public void RenameFolderFailsInInvalidPath()
+        {
             Assert.That(GetFolder(@"SubFolder1/SubSubFolder1"), Is.Not.Null);
             Assert.That(() => _storageProvider.RenameFolder(@"SubFolder1", @"../SubSubFolder1"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.RenameFolder(@"SubFolder1", @"../../SubSubFolder1"), Throws.InstanceOf(typeof(OrchardException)));
@@ -288,7 +324,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void DeleteFileFailsInInvalidPath() {
+        public void DeleteFileFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.DeleteFile(@"../test.txt"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.DeleteFile(@"../test.txt"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -305,7 +342,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void RenameFileFailsInInvalidPath() {
+        public void RenameFileFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.RenameFile(@"../test.txt", "invalid.txt"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.RenameFile(@"../test.txt", "invalid.txt"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -319,7 +357,8 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void CreateFileFailsInInvalidPath() {
+        public void CreateFileFailsInInvalidPath()
+        {
             Assert.That(() => _storageProvider.CreateFile(@"../InvalidFolder1.txt"), Throws.InstanceOf(typeof(OrchardException)));
             Assert.That(() => _storageProvider.CreateFile(@"../../InvalidFolder1.txt"), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -329,10 +368,12 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void SaveStreamFailsInInvalidPath() {
+        public void SaveStreamFailsInInvalidPath()
+        {
             _storageProvider.CreateFile(@"test.txt");
 
-            using (Stream stream = GetFile("test.txt").OpenRead()) {
+            using (Stream stream = GetFile("test.txt").OpenRead())
+            {
                 Assert.That(() => _storageProvider.SaveStream(@"../newTest.txt", stream), Throws.InstanceOf(typeof(OrchardException)));
                 Assert.That(() => _storageProvider.SaveStream(@"../../newTest.txt", stream), Throws.InstanceOf(typeof(OrchardException)));
 
@@ -343,10 +384,12 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
-        public void TrySaveStreamFailsInInvalidPath() {
+        public void TrySaveStreamFailsInInvalidPath()
+        {
             _storageProvider.CreateFile(@"test.txt");
 
-            using (Stream stream = GetFile("test.txt").OpenRead()) {
+            using (Stream stream = GetFile("test.txt").OpenRead())
+            {
                 Assert.That(_storageProvider.TrySaveStream(@"../newTest.txt", stream), Is.False);
                 Assert.That(_storageProvider.TrySaveStream(@"../../newTest.txt", stream), Is.False);
 

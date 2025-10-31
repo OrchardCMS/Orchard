@@ -1,25 +1,24 @@
-﻿using System;
-using System.Web;
-using System.Web.Routing;
+using System;
 using System.Linq;
-using Orchard.Alias;
+using System.Web.Routing;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-namespace Orchard.Alias.Recipes.Executors {
-    public class AliasStep : RecipeExecutionStep {
+namespace Orchard.Alias.Recipes.Executors
+{
+    public class AliasStep : RecipeExecutionStep
+    {
         private readonly IAliasService _aliasService;
 
         public AliasStep(
             IAliasService aliasService,
-            RecipeExecutionLogger logger) : base(logger) {
+            RecipeExecutionLogger logger) : base(logger)
+        {
             _aliasService = aliasService;
         }
 
-        public override string Name {
-            get { return "Aliases"; }
-        }
+        public override string Name => "Aliases";
 
         /*
         <Aliases>
@@ -31,20 +30,25 @@ namespace Orchard.Alias.Recipes.Executors {
         </RouteValues>
         </Alias>
         */
-        public override void Execute(RecipeExecutionContext context) {
+        public override void Execute(RecipeExecutionContext context)
+        {
 
-            foreach (var aliasElement in context.RecipeStep.Step.Elements()) {
+            foreach (var aliasElement in context.RecipeStep.Step.Elements())
+            {
                 var aliasPath = aliasElement.Attribute("Path").Value;
 
                 Logger.Information("Importing alias '{0}'.", aliasPath);
 
-                try {
+                try
+                {
                     var rvd = new RouteValueDictionary();
 
                     var routeValuesElement = aliasElement.Descendants("RouteValues").FirstOrDefault();
 
-                    if (routeValuesElement != null) {
-                        foreach (var routeValue in routeValuesElement.Descendants("Add")) {
+                    if (routeValuesElement != null)
+                    {
+                        foreach (var routeValue in routeValuesElement.Descendants("Add"))
+                        {
                             rvd.Add(routeValue.Attribute("Key").Value, routeValue.Attribute("Value").Value);
                         }
                     }
@@ -52,7 +56,8 @@ namespace Orchard.Alias.Recipes.Executors {
                     _aliasService.Set(aliasPath, rvd, "Custom", false);
                 }
 
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     Logger.Error(ex, "Error while processing alias '{0}'.", aliasPath);
                     throw;
                 }

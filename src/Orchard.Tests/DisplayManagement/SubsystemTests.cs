@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -16,13 +16,16 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class SubsystemTests {
+    public class SubsystemTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var testFeature = new Feature
             {
                 Descriptor = new FeatureDescriptor
@@ -63,20 +66,24 @@ namespace Orchard.Tests.DisplayManagement {
                 .Returns(_container);
         }
 
-        public class SimpleShapes {
+        public class SimpleShapes
+        {
             [Shape]
-            public IHtmlString Something() {
+            public IHtmlString Something()
+            {
                 return new HtmlString("<br/>");
             }
 
             [Shape]
-            public IHtmlString Pager() {
+            public IHtmlString Pager()
+            {
                 return new HtmlString("<div>hello</div>");
             }
         }
 
         [Test]
-        public void RenderingSomething() {
+        public void RenderingSomething()
+        {
             dynamic displayHelperFactory = _container.Resolve<IDisplayHelperFactory>().CreateHelper(new ViewContext(), null);
             dynamic shapeHelperFactory = _container.Resolve<IShapeFactory>();
 

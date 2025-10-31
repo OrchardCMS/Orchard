@@ -7,9 +7,11 @@ using Orchard.Localization.Providers;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Extensions;
 
-namespace Orchard.Localization.Controllers {
+namespace Orchard.Localization.Controllers
+{
     [OrchardFeature("Orchard.Localization.CultureSelector")]
-    public class UserCultureSelectorController : Controller {
+    public class UserCultureSelectorController : Controller
+    {
         private readonly ILocalizationService _localizationService;
         private readonly ICultureStorageProvider _cultureStorageProvider;
         public IOrchardServices Services { get; set; }
@@ -17,14 +19,17 @@ namespace Orchard.Localization.Controllers {
         public UserCultureSelectorController(
             IOrchardServices services,
             ILocalizationService localizationService,
-            ICultureStorageProvider cultureStorageProvider) {
+            ICultureStorageProvider cultureStorageProvider)
+        {
             Services = services;
             _localizationService = localizationService;
             _cultureStorageProvider = cultureStorageProvider;
         }
 
-        public ActionResult ChangeCulture(string culture) {
-            if (string.IsNullOrEmpty(culture)) {
+        public ActionResult ChangeCulture(string culture)
+        {
+            if (string.IsNullOrEmpty(culture))
+            {
                 throw new ArgumentNullException(culture);
             }
 
@@ -33,12 +38,14 @@ namespace Orchard.Localization.Controllers {
                 returnUrl = "";
 
             if (_localizationService.TryGetRouteForUrl(returnUrl, out AutoroutePart currentRoutePart)
-                && _localizationService.TryFindLocalizedRoute(currentRoutePart.ContentItem, culture, out AutoroutePart localizedRoutePart)) {
+                && _localizationService.TryFindLocalizedRoute(currentRoutePart.ContentItem, culture, out AutoroutePart localizedRoutePart))
+            {
                 returnUrl = localizedRoutePart.Path;
             }
 
             _cultureStorageProvider.SetCulture(culture);
-            if (!returnUrl.StartsWith("~/")) {
+            if (!returnUrl.StartsWith("~/"))
+            {
                 returnUrl = "~/" + returnUrl;
             }
 

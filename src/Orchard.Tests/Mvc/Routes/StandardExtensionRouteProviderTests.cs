@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using NUnit.Framework;
@@ -6,12 +6,16 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Tests.Mvc.Routes {
+namespace Orchard.Tests.Mvc.Routes
+{
     [TestFixture]
-    public class StandardExtensionRouteProviderTests {
+    public class StandardExtensionRouteProviderTests
+    {
         [Test]
-        public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes() {
-            var blueprint = new ShellBlueprint {
+        public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes()
+        {
+            var blueprint = new ShellBlueprint
+            {
                 Controllers = new[] {
                     new ControllerBlueprint {
                         AreaName ="Long.Name.Foo",

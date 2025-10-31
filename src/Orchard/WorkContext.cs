@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Web;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security;
 using Orchard.Settings;
 
-namespace Orchard {
+namespace Orchard
+{
     /// <summary>
     /// A work context for work context scope
     /// </summary>
-    public abstract class WorkContext {
+    public abstract class WorkContext
+    {
         /// <summary>
         /// Resolves a registered dependency type.
         /// </summary>
@@ -45,7 +47,8 @@ namespace Orchard {
         /// <summary>
         /// The http context corresponding to the work context
         /// </summary>
-        public HttpContextBase HttpContext {
+        public HttpContextBase HttpContext
+        {
             get { return GetState<HttpContextBase>("HttpContext"); }
             set { SetState("HttpContext", value); }
         }
@@ -53,7 +56,8 @@ namespace Orchard {
         /// <summary>
         /// The Layout shape corresponding to the work context
         /// </summary>
-        public dynamic Layout {
+        public dynamic Layout
+        {
             get { return GetState<dynamic>("Layout"); }
             set { SetState("Layout", value); }
         }
@@ -61,7 +65,8 @@ namespace Orchard {
         /// <summary>
         /// Settings of the site corresponding to the work context
         /// </summary>
-        public ISite CurrentSite {
+        public ISite CurrentSite
+        {
             get { return GetState<ISite>("CurrentSite"); }
             set { SetState("CurrentSite", value); }
         }
@@ -69,7 +74,8 @@ namespace Orchard {
         /// <summary>
         /// The user, if there is any corresponding to the work context
         /// </summary>
-        public IUser CurrentUser {
+        public IUser CurrentUser
+        {
             get { return GetState<IUser>("CurrentUser"); }
             set { SetState("CurrentUser", value); }
         }
@@ -77,7 +83,8 @@ namespace Orchard {
         /// <summary>
         /// The theme used in the work context
         /// </summary>
-        public ExtensionDescriptor CurrentTheme {
+        public ExtensionDescriptor CurrentTheme
+        {
             get { return GetState<ExtensionDescriptor>("CurrentTheme"); }
             set { SetState("CurrentTheme", value); }
         }
@@ -85,7 +92,8 @@ namespace Orchard {
         /// <summary>
         /// Active culture of the work context
         /// </summary>
-        public string CurrentCulture {
+        public string CurrentCulture
+        {
             get { return GetState<string>("CurrentCulture"); }
             set { SetState("CurrentCulture", value); }
         }
@@ -93,7 +101,8 @@ namespace Orchard {
         /// <summary>
         /// Active calendar of the work context
         /// </summary>
-        public string CurrentCalendar {
+        public string CurrentCalendar
+        {
             get { return GetState<string>("CurrentCalendar"); }
             set { SetState("CurrentCalendar", value); }
         }
@@ -101,7 +110,8 @@ namespace Orchard {
         /// <summary>
         /// Time zone of the work context
         /// </summary>
-        public TimeZoneInfo CurrentTimeZone {
+        public TimeZoneInfo CurrentTimeZone
+        {
             get { return GetState<TimeZoneInfo>("CurrentTimeZone"); }
             set { SetState("CurrentTimeZone", value); }
         }

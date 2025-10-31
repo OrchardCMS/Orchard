@@ -1,12 +1,14 @@
-﻿using Moq;
 using NUnit.Framework;
 using Orchard.FileSystems.VirtualPath;
 
-namespace Orchard.Tests.FileSystems.VirtualPath {
+namespace Orchard.Tests.FileSystems.VirtualPath
+{
     [TestFixture]
-    public class DefaultVirtualPathProviderTests {
+    public class DefaultVirtualPathProviderTests
+    {
         [Test]
-        public void TryFileExistsTest() {
+        public void TryFileExistsTest()
+        {
             StubDefaultVirtualPathProvider defaultVirtualPathProvider = new StubDefaultVirtualPathProvider();
 
             Assert.That(defaultVirtualPathProvider.TryFileExists("~/a.txt"), Is.True);
@@ -19,7 +21,8 @@ namespace Orchard.Tests.FileSystems.VirtualPath {
         }
 
         [Test]
-        public void RejectMalformedVirtualPathTests() {
+        public void RejectMalformedVirtualPathTests()
+        {
             StubDefaultVirtualPathProvider defaultVirtualPathProvider = new StubDefaultVirtualPathProvider();
 
             Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a.txt"), Is.False);
@@ -45,8 +48,10 @@ namespace Orchard.Tests.FileSystems.VirtualPath {
         }
     }
 
-    internal class StubDefaultVirtualPathProvider : DefaultVirtualPathProvider {
-        public override bool FileExists(string path) {
+    internal class StubDefaultVirtualPathProvider : DefaultVirtualPathProvider
+    {
+        public override bool FileExists(string path)
+        {
             return true;
         }
     }

@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.ViewModels {
-    public class ElementBlueprintPropertiesViewModel {
+namespace Orchard.Layouts.ViewModels
+{
+    public class ElementBlueprintPropertiesViewModel
+    {
         public string ElementTypeName { get; set; }
 
         [Required]

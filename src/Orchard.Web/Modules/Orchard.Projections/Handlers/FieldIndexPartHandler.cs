@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -11,8 +11,10 @@ using Orchard.Data;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 
-namespace Orchard.Projections.Handlers {
-    public class FieldIndexPartHandler : ContentHandler {
+namespace Orchard.Projections.Handlers
+{
+    public class FieldIndexPartHandler : ContentHandler
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IFieldIndexService _fieldIndexService;
         private readonly IFieldStorageProvider _fieldStorageProvider;
@@ -23,7 +25,8 @@ namespace Orchard.Projections.Handlers {
             IRepository<FieldIndexPartRecord> repository,
             IFieldIndexService fieldIndexService,
             IFieldStorageProvider fieldStorageProvider,
-            IEnumerable<IContentFieldDriver> contentFieldDrivers) {
+            IEnumerable<IContentFieldDriver> contentFieldDrivers)
+        {
             Filters.Add(StorageFilter.For(repository));
             _contentDefinitionManager = contentDefinitionManager;
             _fieldIndexService = fieldIndexService;
@@ -33,23 +36,28 @@ namespace Orchard.Projections.Handlers {
             OnPublishing<FieldIndexPart>(Publishing);
         }
 
-        protected override void Activating(ActivatingContentContext context) {
+        protected override void Activating(ActivatingContentContext context)
+        {
             base.Activating(context);
 
             // weld the FieldIndexPart dynamically, if a field has been assigned to one of its parts
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
             if (contentTypeDefinition == null)
                 return;
-            if (contentTypeDefinition.Parts.Any(p => p.PartDefinition.Fields.Any())) {
+            if (contentTypeDefinition.Parts.Any(p => p.PartDefinition.Fields.Any()))
+            {
                 context.Builder.Weld<FieldIndexPart>();
             }
         }
-        private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart) {
+        private void Updated(UpdateContentContext context, FieldIndexPart fieldIndexPart)
+        {
             // there are two different item types: saved in memory and saved to db
             // those saved in memory don't have correctly the populated record and this generate NullReferenceException
-            if (context.UpdatingItemVersionRecord != null && context.UpdatingItemVersionRecord.Latest) {
+            if (context.UpdatingItemVersionRecord != null && context.UpdatingItemVersionRecord.Latest)
+            {
                 // updates projection draft indexes only if it is the latest version
-                DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) => {
+                DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) =>
+                {
                     _fieldIndexService.Set(
                         fieldIndexPart,
                         indexServiceContext.LocalPart.PartDefinition.Name,
@@ -61,8 +69,10 @@ namespace Orchard.Projections.Handlers {
         }
 
 
-        public void Publishing(PublishContentContext context, FieldIndexPart fieldIndexPart) {
-            DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) => {
+        public void Publishing(PublishContentContext context, FieldIndexPart fieldIndexPart)
+        {
+            DescribeValuesToIndex(fieldIndexPart, (indexServiceContext) =>
+            {
                 _fieldIndexService.Set(
                     fieldIndexPart,
                     indexServiceContext.LocalPart.PartDefinition.Name,
@@ -76,9 +86,12 @@ namespace Orchard.Projections.Handlers {
         /// </summary>
         /// <param name="fieldIndexPart"></param>
         /// <param name="indexService"></param>
-        private void DescribeValuesToIndex(FieldIndexPart fieldIndexPart, Action<IndexServiceContext> indexService) {
-            foreach (var part in fieldIndexPart.ContentItem.Parts) {
-                foreach (var field in part.PartDefinition.Fields) {
+        private void DescribeValuesToIndex(FieldIndexPart fieldIndexPart, Action<IndexServiceContext> indexService)
+        {
+            foreach (var part in fieldIndexPart.ContentItem.Parts)
+            {
+                foreach (var field in part.PartDefinition.Fields)
+                {
 
                     // get all drivers for the current field type
                     // the driver will describe what values of the field should be indexed
@@ -87,13 +100,15 @@ namespace Orchard.Projections.Handlers {
                     ContentPart localPart = part;
                     ContentPartFieldDefinition localField = field;
                     var membersContext = new DescribeMembersContext(
-                        (storageName, storageType, displayName, description) => {
+                        (storageName, storageType, displayName, description) =>
+                        {
                             var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
 
                             // fieldStorage.Get<T>(storageName)
                             var getter = typeof(IFieldStorage).GetMethod("Get").MakeGenericMethod(storageType);
                             var fieldValue = getter.Invoke(fieldStorage, new[] { storageName });
-                            indexService(new IndexServiceContext {
+                            indexService(new IndexServiceContext
+                            {
                                 LocalPart = localPart,
                                 LocalField = localField,
                                 StorageName = storageName,
@@ -102,13 +117,15 @@ namespace Orchard.Projections.Handlers {
                             });
                         });
 
-                    foreach (var driver in drivers) {
+                    foreach (var driver in drivers)
+                    {
                         driver.Describe(membersContext);
                     }
                 }
             }
         }
-        private class IndexServiceContext {
+        private class IndexServiceContext
+        {
             public ContentPart LocalPart { get; set; }
             public ContentPartFieldDefinition LocalField { get; set; }
             public string StorageName { get; set; }

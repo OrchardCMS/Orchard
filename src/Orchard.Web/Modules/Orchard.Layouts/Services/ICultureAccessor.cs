@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+using System.Globalization;
 
-namespace Orchard.Layouts.Services {
-    public interface ICultureAccessor : IDependency {
+namespace Orchard.Layouts.Services
+{
+    public interface ICultureAccessor : IDependency
+    {
         CultureInfo CurrentCulture { get; }
     }
 }

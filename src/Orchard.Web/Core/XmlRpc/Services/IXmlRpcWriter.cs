@@ -1,11 +1,13 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.Core.XmlRpc.Services {
+namespace Orchard.Core.XmlRpc.Services
+{
     /// <summary>
     /// Abstraction to write XML based on rpc entities.
     /// </summary>
-    public interface IXmlRpcWriter : IDependency {
+    public interface IXmlRpcWriter : IDependency
+    {
         /// <summary>
         /// Maps a method response to XML.
         /// </summary>

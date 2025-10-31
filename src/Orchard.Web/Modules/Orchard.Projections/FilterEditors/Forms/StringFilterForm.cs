@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -6,20 +6,25 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.FilterEditors.Forms {
-    public class StringFilterForm : IFormProvider {
+namespace Orchard.Projections.FilterEditors.Forms
+{
+    public class StringFilterForm : IFormProvider
+    {
         public const string FormName = "StringFilter";
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public StringFilterForm(IShapeFactory shapeFactory) {
+        public StringFilterForm(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
-            object form(IShapeFactory shape) {
+        public void Describe(DescribeContext context)
+        {
+            object form(IShapeFactory shape)
+            {
                 var f = Shape.Form(
                     Id: "StringFilter",
                     _Operator: Shape.SelectList(
@@ -60,7 +65,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
         }
 
-        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property) {
+        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property)
+        {
             var op = (StringOperator)Enum.Parse(typeof(StringOperator), Convert.ToString(formState.Operator));
             object value = Convert.ToString(formState.Value);
 
@@ -69,7 +75,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 && string.IsNullOrWhiteSpace(value as string))
                 return (ex) => { };
 
-            switch (op) {
+            switch (op)
+            {
                 case StringOperator.Equals:
                     return x => x.Eq(property, value);
                 case StringOperator.NotEquals:
@@ -101,11 +108,13 @@ namespace Orchard.Projections.FilterEditors.Forms {
             }
         }
 
-        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T) {
+        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T)
+        {
             var op = (StringOperator)Enum.Parse(typeof(StringOperator), Convert.ToString(formState.Operator));
             string value = Convert.ToString(formState.Value);
 
-            switch (op) {
+            switch (op)
+            {
                 case StringOperator.Equals:
                     return T("{0} is equal to '{1}'", fieldName, value);
                 case StringOperator.NotEquals:
@@ -113,9 +122,9 @@ namespace Orchard.Projections.FilterEditors.Forms {
                 case StringOperator.Contains:
                     return T("{0} contains '{1}'", fieldName, value);
                 case StringOperator.ContainsAny:
-                    return T("{0} contains any of '{1}'", fieldName, new LocalizedString(String.Join("', '", value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                    return T("{0} contains any of '{1}'", fieldName, new LocalizedString(string.Join("', '", value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
                 case StringOperator.ContainsAll:
-                    return T("{0} contains all '{1}'", fieldName, new LocalizedString(String.Join("', '", value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                    return T("{0} contains all '{1}'", fieldName, new LocalizedString(string.Join("', '", value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
                 case StringOperator.Starts:
                     return T("{0} starts with '{1}'", fieldName, value);
                 case StringOperator.NotStarts:
@@ -132,7 +141,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
         }
     }
 
-    public enum StringOperator {
+    public enum StringOperator
+    {
         Equals,
         NotEquals,
         Contains,

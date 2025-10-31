@@ -1,8 +1,10 @@
-﻿namespace Orchard.Security {
+namespace Orchard.Security
+{
     /// <summary>
     /// Provides encryption services adapted to securing tenant level information
     /// </summary>
-    public interface IEncryptionService : ISingletonDependency {
+    public interface IEncryptionService : ISingletonDependency
+    {
         /// <summary>
         /// Decodes data that has been encrypted.
         /// </summary>

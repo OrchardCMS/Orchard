@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Orchard.Projections.Models {
-    public class MemberBindingRecord {
+namespace Orchard.Projections.Models
+{
+    public class MemberBindingRecord
+    {
         public virtual int Id { get; set; }
 
         [StringLength(255)]

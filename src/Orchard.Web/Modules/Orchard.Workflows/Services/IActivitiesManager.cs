@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Workflows.Services {
-    public interface IActivitiesManager : IDependency {
+namespace Orchard.Workflows.Services
+{
+    public interface IActivitiesManager : IDependency
+    {
         IEnumerable<IActivity> GetActivities();
         IActivity GetActivityByName(string name);
     }

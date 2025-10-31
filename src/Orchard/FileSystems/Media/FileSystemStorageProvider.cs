@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +9,10 @@ using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Validation;
 
-namespace Orchard.FileSystems.Media {
-    public class FileSystemStorageProvider : IStorageProvider {
+namespace Orchard.FileSystems.Media
+{
+    public class FileSystemStorageProvider : IStorageProvider
+    {
         private readonly string _storagePath; // c:\orchard\media\default
         private readonly string _virtualPath; // ~/Media/Default/
         private readonly string _publicPath; // /Orchard/Media/Default/
@@ -21,7 +23,8 @@ namespace Orchard.FileSystems.Media {
         public static readonly char[] InvalidFileNameCharacters =
             Path.GetInvalidFileNameChars().Union(HttpUnallowedCharacters).ToArray();
 
-        public FileSystemStorageProvider(ShellSettings settings) {
+        public FileSystemStorageProvider(ShellSettings settings)
+        {
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -30,7 +33,8 @@ namespace Orchard.FileSystems.Media {
             _virtualPath = "~/Media/" + settings.Name + "/";
 
             var appPath = "";
-            if (HostingEnvironment.IsHosted) {
+            if (HostingEnvironment.IsHosted)
+            {
                 appPath = HostingEnvironment.ApplicationVirtualPath;
             }
             if (!appPath.EndsWith("/"))
@@ -67,7 +71,8 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to be mapped.</param>
         /// <returns>The relative path combined with the storage path.</returns>
-        private string MapStorage(string path) {
+        private string MapStorage(string path)
+        {
             string mappedPath = string.IsNullOrEmpty(path) ? _storagePath : Path.Combine(_storagePath, path);
             return PathValidation.ValidatePath(_storagePath, mappedPath);
         }
@@ -77,11 +82,13 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to be mapped.</param>
         /// <returns>The relative path combined with the public path in an URL friendly format ('/' character for directory separator).</returns>
-        private string MapPublic(string path) {
+        private string MapPublic(string path)
+        {
             return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/').Replace(" ", "%20");
         }
 
-        private static string Fix(string path) {
+        private static string Fix(string path)
+        {
             return string.IsNullOrEmpty(path)
                        ? ""
                        : Path.DirectorySeparatorChar != '/'
@@ -96,7 +103,8 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path within the storage provider.</param>
         /// <returns>True if the file exists; False otherwise.</returns>
-        public bool FileExists(string path) {
+        public bool FileExists(string path)
+        {
             return File.Exists(MapStorage(path));
         }
 
@@ -105,7 +113,8 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path within the storage provider.</param>
         /// <returns>The public URL.</returns>
-        public string GetPublicUrl(string path) {
+        public string GetPublicUrl(string path)
+        {
             return MapPublic(path);
         }
 
@@ -114,12 +123,15 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="url">The virtual or public url of a media.</param>
         /// <returns>The storage path or <value>null</value> if the media is not in a correct format.</returns>
-        public string GetStoragePath(string url) {
-            if (url.StartsWith(_virtualPath)) {
+        public string GetStoragePath(string url)
+        {
+            if (url.StartsWith(_virtualPath))
+            {
                 return url.Substring(_virtualPath.Length).Replace('/', Path.DirectorySeparatorChar).Replace("%20", " ");
             }
 
-            if (url.StartsWith(_publicPath)) {
+            if (url.StartsWith(_publicPath))
+            {
                 return url.Substring(_publicPath.Length).Replace('/', Path.DirectorySeparatorChar).Replace("%20", " "); ;
             }
 
@@ -132,9 +144,11 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file within the storage provider.</param>
         /// <returns>The file.</returns>
         /// <exception cref="ArgumentException">If the file is not found.</exception>
-        public IStorageFile GetFile(string path) {
+        public IStorageFile GetFile(string path)
+        {
             FileInfo fileInfo = new FileInfo(MapStorage(path));
-            if (!fileInfo.Exists) {
+            if (!fileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
 
@@ -146,9 +160,11 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the folder which files to list.</param>
         /// <returns>The list of files in the folder.</returns>
-        public IEnumerable<IStorageFile> ListFiles(string path) {
+        public IEnumerable<IStorageFile> ListFiles(string path)
+        {
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
-            if (!directoryInfo.Exists) {
+            if (!directoryInfo.Exists)
+            {
                 throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
@@ -164,7 +180,8 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path within the storage provider.</param>
         /// <returns>True if the folder exists; False otherwise.</returns>
-        public bool FolderExists(string path) {
+        public bool FolderExists(string path)
+        {
             return new DirectoryInfo(MapStorage(path)).Exists;
         }
 
@@ -173,14 +190,19 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the folder which folders to list.</param>
         /// <returns>The list of folders in the folder.</returns>
-        public IEnumerable<IStorageFolder> ListFolders(string path) {
+        public IEnumerable<IStorageFolder> ListFolders(string path)
+        {
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
-            if (!directoryInfo.Exists) {
-                try {
+            if (!directoryInfo.Exists)
+            {
+                try
+                {
                     directoryInfo.Create();
                 }
-                catch (Exception ex) {
-                    if (ex.IsFatal()) {
+                catch (Exception ex)
+                {
+                    if (ex.IsFatal())
+                    {
                         throw;
                     }
                     throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
@@ -199,17 +221,21 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <returns>True if success; False otherwise.</returns>
-        public bool TryCreateFolder(string path) {
-            try {
+        public bool TryCreateFolder(string path)
+        {
+            try
+            {
                 // prevent unnecessary exception
                 DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
-                if (directoryInfo.Exists) {
+                if (directoryInfo.Exists)
+                {
                     return false;
                 }
 
                 CreateFolder(path);
             }
-            catch {
+            catch
+            {
                 return false;
             }
 
@@ -221,15 +247,18 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <exception cref="ArgumentException">If the folder already exists.</exception>
-        public void CreateFolder(string path) {
+        public void CreateFolder(string path)
+        {
             // We are dealing with a folder here, but GetFileName returns the last path segment, which in this case is
             // the folder name.
-            if (FolderNameContainsInvalidCharacters(Path.GetFileName(path))) {
+            if (FolderNameContainsInvalidCharacters(Path.GetFileName(path)))
+            {
                 throw new InvalidNameCharacterException(T("The directory name contains invalid character(s)").ToString());
             }
 
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
-            if (directoryInfo.Exists) {
+            if (directoryInfo.Exists)
+            {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
             }
 
@@ -241,9 +270,11 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the folder to be deleted.</param>
         /// <exception cref="ArgumentException">If the folder doesn't exist.</exception>
-        public void DeleteFolder(string path) {
+        public void DeleteFolder(string path)
+        {
             DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
-            if (!directoryInfo.Exists) {
+            if (!directoryInfo.Exists)
+            {
                 throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
@@ -255,20 +286,24 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="oldPath">The relative path to the folder to be renamed.</param>
         /// <param name="newPath">The relative path to the new folder.</param>
-        public void RenameFolder(string oldPath, string newPath) {
+        public void RenameFolder(string oldPath, string newPath)
+        {
             DirectoryInfo sourceDirectory = new DirectoryInfo(MapStorage(oldPath));
-            if (!sourceDirectory.Exists) {
+            if (!sourceDirectory.Exists)
+            {
                 throw new ArgumentException(T("Directory {0} does not exist", oldPath).ToString());
             }
 
             // We are dealing with a folder here, but GetFileName returns the last path segment, which in this case is
             // the folder name.
-            if (FolderNameContainsInvalidCharacters(Path.GetFileName(newPath))) {
+            if (FolderNameContainsInvalidCharacters(Path.GetFileName(newPath)))
+            {
                 throw new InvalidNameCharacterException(T("The new directory name contains invalid character(s)").ToString());
             }
 
             DirectoryInfo targetDirectory = new DirectoryInfo(MapStorage(newPath));
-            if (targetDirectory.Exists) {
+            if (targetDirectory.Exists)
+            {
                 throw new ArgumentException(T("Directory {0} already exists", newPath).ToString());
             }
 
@@ -280,21 +315,27 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the file to be deleted.</param>
         /// <exception cref="ArgumentException">If the file doesn't exist.</exception>
-        public void DeleteFile(string path) {
+        public void DeleteFile(string path)
+        {
             FileInfo fileInfo = new FileInfo(MapStorage(path));
-            if (!fileInfo.Exists) {
+            if (!fileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
 
             fileInfo.Delete();
 
-            lock (string.Intern(path)) {
+            lock (string.Intern(path))
+            {
                 var ListProfileFileInfo = ListProfiles(path);
-                foreach (var profileFileInfo in ListProfileFileInfo) {
-                    if (profileFileInfo.Exists) {
+                foreach (var profileFileInfo in ListProfileFileInfo)
+                {
+                    if (profileFileInfo.Exists)
+                    {
                         profileFileInfo.Delete();
                     }
-                    if (profileFileInfo.Directory.Exists && !(profileFileInfo.Directory.EnumerateFiles().Any() || profileFileInfo.Directory.EnumerateDirectories().Any())) {
+                    if (profileFileInfo.Directory.Exists && !(profileFileInfo.Directory.EnumerateFiles().Any() || profileFileInfo.Directory.EnumerateDirectories().Any()))
+                    {
                         profileFileInfo.Directory.Delete();
                     }
                 }
@@ -306,7 +347,8 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="path">The relative path to the file to be deleted.</param>
         /// <returns></returns>
-        private IEnumerable<FileInfo> ListProfiles(string path) {
+        private IEnumerable<FileInfo> ListProfiles(string path)
+        {
             var directoryInfo = new DirectoryInfo(MapStorage("_Profiles"));
 
             if (!directoryInfo.Exists) return Enumerable.Empty<FileInfo>();
@@ -326,32 +368,39 @@ namespace Orchard.FileSystems.Media {
         /// </summary>
         /// <param name="oldPath">The relative path to the file to be renamed.</param>
         /// <param name="newPath">The relative path to the new file.</param>
-        public void RenameFile(string oldPath, string newPath) {
+        public void RenameFile(string oldPath, string newPath)
+        {
             FileInfo sourceFileInfo = new FileInfo(MapStorage(oldPath));
-            if (!sourceFileInfo.Exists) {
+            if (!sourceFileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} does not exist", oldPath).ToString());
             }
 
-            if (FileNameContainsInvalidCharacters(Path.GetFileName(newPath))) {
+            if (FileNameContainsInvalidCharacters(Path.GetFileName(newPath)))
+            {
                 throw new InvalidNameCharacterException(T("The new file name contains invalid character(s)").ToString());
             }
 
             FileInfo targetFileInfo = new FileInfo(MapStorage(newPath));
-            if (targetFileInfo.Exists) {
+            if (targetFileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} already exists", newPath).ToString());
             }
 
             File.Move(sourceFileInfo.FullName, targetFileInfo.FullName);
         }
 
-        public void CopyFile(string originalPath, string duplicatePath) {
+        public void CopyFile(string originalPath, string duplicatePath)
+        {
             FileInfo sourceFileInfo = new FileInfo(MapStorage(originalPath));
-            if (!sourceFileInfo.Exists) {
+            if (!sourceFileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} does not exist", originalPath).ToString());
             }
 
             FileInfo targetFileInfo = new FileInfo(MapStorage(duplicatePath));
-            if (targetFileInfo.Exists) {
+            if (targetFileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} already exists", duplicatePath).ToString());
             }
 
@@ -364,24 +413,29 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be created.</param>
         /// <exception cref="ArgumentException">If the file already exists.</exception>
         /// <returns>The created file.</returns>
-        public IStorageFile CreateFile(string path) {
-            if (FileNameContainsInvalidCharacters(Path.GetFileName(path))) {
+        public IStorageFile CreateFile(string path)
+        {
+            if (FileNameContainsInvalidCharacters(Path.GetFileName(path)))
+            {
                 throw new InvalidNameCharacterException(T("The file name contains invalid character(s)").ToString());
             }
 
             FileInfo fileInfo = new FileInfo(MapStorage(path));
-            if (fileInfo.Exists) {
+            if (fileInfo.Exists)
+            {
                 throw new ArgumentException(T("File {0} already exists", fileInfo.Name).ToString());
             }
 
             // ensure the directory exists
             var dirName = Path.GetDirectoryName(fileInfo.FullName);
-            if (!Directory.Exists(dirName)) {
+            if (!Directory.Exists(dirName))
+            {
                 Directory.CreateDirectory(dirName);
             }
             //Path.GetFileNameWithoutExtension(fileInfo.Name)
             // If absolute path is longer than the maximum path length (260 characters), file cannot be saved.
-            if (fileInfo.FullName.Length > MaxPathLength) {
+            if (fileInfo.FullName.Length > MaxPathLength)
+            {
                 var fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
                 var extension = fileInfo.Extension;
                 // try to generate a shorter path for the file
@@ -401,15 +455,19 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the file to be created.</param>
         /// <param name="inputStream">The stream to be saved.</param>
         /// <returns>True if success; False otherwise.</returns>
-        public bool TrySaveStream(string path, Stream inputStream) {
-            try {
-                if (FileExists(path)) {
+        public bool TrySaveStream(string path, Stream inputStream)
+        {
+            try
+            {
+                if (FileExists(path))
+                {
                     return false;
                 }
 
                 SaveStream(path, inputStream);
             }
-            catch {
+            catch
+            {
                 return false;
             }
 
@@ -423,14 +481,17 @@ namespace Orchard.FileSystems.Media {
         /// <param name="inputStream">The stream to be saved.</param>
         /// <exception cref="ArgumentException">If the stream can't be saved due to access permissions.</exception>
         /// <exception cref="OrchardException">If the path is invalid.</exception>
-        public void SaveStream(string path, Stream inputStream) {
+        public void SaveStream(string path, Stream inputStream)
+        {
             // Create the file.
             // The CreateFile method will map the still relative path
             var file = CreateFile(path);
 
-            using (var outputStream = file.OpenWrite()) {
+            using (var outputStream = file.OpenWrite())
+            {
                 var buffer = new byte[8192];
-                for (; ; ) {
+                for (; ; )
+                {
 
                     var length = inputStream.Read(buffer, 0, buffer.Length);
                     if (length <= 0)
@@ -446,11 +507,13 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path1">The parent path.</param>
         /// <param name="path2">The child path.</param>
         /// <returns>The combined path.</returns>
-        public string Combine(string path1, string path2) {
+        public string Combine(string path1, string path2)
+        {
             return Path.Combine(path1, path2);
         }
 
-        private static bool IsHidden(FileSystemInfo di) {
+        private static bool IsHidden(FileSystemInfo di)
+        {
             return (di.Attributes & FileAttributes.Hidden) != 0;
         }
 
@@ -462,57 +525,69 @@ namespace Orchard.FileSystems.Media {
 
         #endregion
 
-        private class FileSystemStorageFile : IStorageFile {
+        private class FileSystemStorageFile : IStorageFile
+        {
             private readonly string _path;
             private readonly FileInfo _fileInfo;
 
-            public FileSystemStorageFile(string path, FileInfo fileInfo) {
+            public FileSystemStorageFile(string path, FileInfo fileInfo)
+            {
                 _path = path;
                 _fileInfo = fileInfo;
             }
 
             #region Implementation of IStorageFile
 
-            public string GetPath() {
+            public string GetPath()
+            {
                 return _path;
             }
 
-            public string GetName() {
+            public string GetName()
+            {
                 return _fileInfo.Name;
             }
 
-            public long GetSize() {
+            public long GetSize()
+            {
                 return _fileInfo.Length;
             }
 
-            public DateTime GetLastUpdated() {
+            public DateTime GetLastUpdated()
+            {
                 return _fileInfo.LastWriteTime;
             }
 
-            public string GetFileType() {
+            public string GetFileType()
+            {
                 return _fileInfo.Extension;
             }
 
-            public Stream OpenRead() {
+            public Stream OpenRead()
+            {
                 return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Read);
             }
 
-            public Stream OpenWrite() {
+            public Stream OpenWrite()
+            {
                 return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.ReadWrite);
             }
 
-            public Stream CreateFile() {
+            public Stream CreateFile()
+            {
                 return new FileStream(_fileInfo.FullName, FileMode.Truncate, FileAccess.ReadWrite);
             }
 
             #endregion
         }
 
-        private class FileSystemStorageFolder : IStorageFolder {
+        private class FileSystemStorageFolder : IStorageFolder
+        {
             private readonly string _path;
             private readonly DirectoryInfo _directoryInfo;
 
-            public FileSystemStorageFolder(string path, DirectoryInfo directoryInfo) {
+            public FileSystemStorageFolder(string path, DirectoryInfo directoryInfo)
+            {
                 _path = path;
                 _directoryInfo = directoryInfo;
 
@@ -523,24 +598,30 @@ namespace Orchard.FileSystems.Media {
 
             #region Implementation of IStorageFolder
 
-            public string GetPath() {
+            public string GetPath()
+            {
                 return _path;
             }
 
-            public string GetName() {
+            public string GetName()
+            {
                 return _directoryInfo.Name;
             }
 
-            public DateTime GetLastUpdated() {
+            public DateTime GetLastUpdated()
+            {
                 return _directoryInfo.LastWriteTime;
             }
 
-            public long GetSize() {
+            public long GetSize()
+            {
                 return GetDirectorySize(_directoryInfo);
             }
 
-            public IStorageFolder GetParent() {
-                if (_directoryInfo.Parent != null) {
+            public IStorageFolder GetParent()
+            {
+                if (_directoryInfo.Parent != null)
+                {
                     return new FileSystemStorageFolder(Path.GetDirectoryName(_path), _directoryInfo.Parent);
                 }
                 throw new ArgumentException(T("Directory {0} does not have a parent directory", _directoryInfo.Name).ToString());
@@ -548,18 +629,23 @@ namespace Orchard.FileSystems.Media {
 
             #endregion
 
-            private static long GetDirectorySize(DirectoryInfo directoryInfo) {
+            private static long GetDirectorySize(DirectoryInfo directoryInfo)
+            {
                 long size = 0;
 
                 FileInfo[] fileInfos = directoryInfo.GetFiles();
-                foreach (FileInfo fileInfo in fileInfos) {
-                    if (!IsHidden(fileInfo)) {
+                foreach (FileInfo fileInfo in fileInfos)
+                {
+                    if (!IsHidden(fileInfo))
+                    {
                         size += fileInfo.Length;
                     }
                 }
                 DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
-                foreach (DirectoryInfo dInfo in directoryInfos) {
-                    if (!IsHidden(dInfo)) {
+                foreach (DirectoryInfo dInfo in directoryInfos)
+                {
+                    if (!IsHidden(dInfo))
+                    {
                         size += GetDirectorySize(dInfo);
                     }
                 }

@@ -1,20 +1,24 @@
-﻿using System.IO;
+using System.IO;
 using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Packaging.Services;
 using Orchard.UI.Notify;
 
-namespace Orchard.Tests.Modules.Packaging.Services {
+namespace Orchard.Tests.Modules.Packaging.Services
+{
     [TestFixture]
-    public class FolderUpdaterTests {
+    public class FolderUpdaterTests
+    {
         protected IContainer _container;
 
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), "FolderUpdaterTests");
 
         [SetUp]
-        public virtual void Init() {
-            if (Directory.Exists(_basePath)) {
+        public virtual void Init()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
 
@@ -29,14 +33,17 @@ namespace Orchard.Tests.Modules.Packaging.Services {
         }
 
         [OneTimeTearDown]
-        public void Clean() {
-            if (Directory.Exists(_basePath)) {
+        public void Clean()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
         }
 
         [Test]
-        public void BackupTest() {
+        public void BackupTest()
+        {
             DirectoryInfo sourceDirectoryInfo = Directory.CreateDirectory(Path.Combine(_basePath, "Source"));
             File.CreateText(Path.Combine(sourceDirectoryInfo.FullName, "file1.txt")).Close();
             File.CreateText(Path.Combine(sourceDirectoryInfo.FullName, "file2.txt")).Close();

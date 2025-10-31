@@ -1,11 +1,13 @@
-﻿using System.Web.Hosting;
+using System.Web.Hosting;
 
-namespace Orchard.FileSystems.AppData {
+namespace Orchard.FileSystems.AppData
+{
     /// <summary>
     /// Abstraction over the root location of "~/App_Data", mainly to enable
     /// unit testing of AppDataFolder.
     /// </summary>
-    public interface IAppDataFolderRoot : ISingletonDependency {
+    public interface IAppDataFolderRoot : ISingletonDependency
+    {
         /// <summary>
         /// Virtual path of root ("~/App_Data")
         /// </summary>
@@ -16,13 +18,10 @@ namespace Orchard.FileSystems.AppData {
         string RootFolder { get; }
     }
 
-    public class AppDataFolderRoot : IAppDataFolderRoot {
-        public string RootPath {
-            get { return "~/App_Data"; }
-        }
+    public class AppDataFolderRoot : IAppDataFolderRoot
+    {
+        public string RootPath => "~/App_Data";
 
-        public string RootFolder {
-            get { return HostingEnvironment.MapPath(RootPath); }
-        }
+        public string RootFolder => HostingEnvironment.MapPath(RootPath);
     }
 }

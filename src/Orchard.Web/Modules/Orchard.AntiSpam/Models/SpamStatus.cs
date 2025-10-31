@@ -1,5 +1,7 @@
-﻿namespace Orchard.AntiSpam.Models {
-    public enum SpamStatus {
+namespace Orchard.AntiSpam.Models
+{
+    public enum SpamStatus
+    {
         Spam,
         Ham
     }

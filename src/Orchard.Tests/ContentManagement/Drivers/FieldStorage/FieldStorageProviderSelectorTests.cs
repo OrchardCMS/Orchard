@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
@@ -8,14 +8,17 @@ using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
+namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage
+{
     [TestFixture]
-    public class FieldStorageProviderSelectorTests {
+    public class FieldStorageProviderSelectorTests
+    {
         private IContainer _container;
         private IFieldStorageProviderSelector _selector;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<FieldStorageProviderSelector>().As<IFieldStorageProviderSelector>();
             builder.RegisterType<InfosetStorageProvider>().As<IFieldStorageProvider>();
@@ -25,19 +28,20 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             _selector = _container.Resolve<IFieldStorageProviderSelector>();
         }
 
-        class TestProvider : IFieldStorageProvider {
-            public string ProviderName {
-                get { return "TestProvName"; }
-            }
+        class TestProvider : IFieldStorageProvider
+        {
+            public string ProviderName => "TestProvName";
 
-            public IFieldStorage BindStorage(ContentPart contentPart, ContentPartFieldDefinition partFieldDefinition) {
+            public IFieldStorage BindStorage(ContentPart contentPart, ContentPartFieldDefinition partFieldDefinition)
+            {
                 throw new NotImplementedException();
             }
 
         }
 
         [Test]
-        public void ShouldReturnProviderByName() {
+        public void ShouldReturnProviderByName()
+        {
             var part1Definition = new ContentPartDefinitionBuilder()
                 .WithField("Hello", fb => fb.OfType("Text").WithSetting("Storage", "TestProvName"))
                 .Build();
@@ -51,9 +55,10 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             Assert.That(provider1.ProviderName, Is.EqualTo("TestProvName"));
             Assert.That(provider2.ProviderName, Is.EqualTo("Infoset"));
         }
-        
+
         [Test]
-        public void ShouldReturnInfosetWhenNullEmptyMissingOrInvalid() {
+        public void ShouldReturnInfosetWhenNullEmptyMissingOrInvalid()
+        {
             var part1Definition = new ContentPartDefinitionBuilder()
                 .WithField("Hello", fb => fb.OfType("Text").WithSetting("Storage", null))
                 .Build();

@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.AuditTrail.Settings {
-    public class AuditTrailPartSettingsEvents : ContentDefinitionEditorEventsBase {
+namespace Orchard.AuditTrail.Settings
+{
+    public class AuditTrailPartSettingsEvents : ContentDefinitionEditorEventsBase
+    {
 
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition)
+        {
             if (definition.PartDefinition.Name != "AuditTrailPart")
                 yield break;
 
@@ -16,7 +19,8 @@ namespace Orchard.AuditTrail.Settings {
             yield return DefinitionTemplate(settings);
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel)
+        {
             if (builder.Name != "AuditTrailPart")
                 yield break;
 

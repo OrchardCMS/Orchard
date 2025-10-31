@@ -11,15 +11,17 @@ using Orchard.Localization;
 using Orchard.Services;
 using Orchard.UI.Notify;
 
-namespace Orchard.Comments.Drivers {
-    public class CommentPartDriver : ContentPartDriver<CommentPart> {
+namespace Orchard.Comments.Drivers
+{
+    public class CommentPartDriver : ContentPartDriver<CommentPart>
+    {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
         private readonly ICommentService _commentService;
         private readonly IOrchardServices _orchardServices;
 
-        protected override string Prefix { get { return "Comments"; } }
+        protected override string Prefix => "Comments";
 
         public Localizer T { get; set; }
 
@@ -28,7 +30,8 @@ namespace Orchard.Comments.Drivers {
             IWorkContextAccessor workContextAccessor,
             IClock clock,
             ICommentService commentService,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices)
+        {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _clock = clock;
@@ -38,7 +41,8 @@ namespace Orchard.Comments.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        protected override DriverResult Display(CommentPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(CommentPart part, string displayType, dynamic shapeHelper)
+        {
             return Combined(
                 ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment()),
                 ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin())
@@ -46,19 +50,23 @@ namespace Orchard.Comments.Drivers {
         }
 
         // GET
-        protected override DriverResult Editor(CommentPart part, dynamic shapeHelper) {
-            if (UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
+        protected override DriverResult Editor(CommentPart part, dynamic shapeHelper)
+        {
+            if (UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext))
+            {
                 return ContentShape("Parts_Comment_AdminEdit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment.AdminEdit", Model: part, Prefix: Prefix));
             }
-            else {
+            else
+            {
                 return ContentShape("Parts_Comment_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
             }
         }
 
         // POST
-        protected override DriverResult Editor(CommentPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommentPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             updater.TryUpdateModel(part, Prefix, null, null);
             var workContext = _workContextAccessor.GetContext();
 
@@ -66,24 +74,30 @@ namespace Orchard.Comments.Drivers {
             // applying moderate/approve actions
             var httpContext = workContext.HttpContext;
             var name = httpContext.Request.Form["submit.Save"];
-            if (!string.IsNullOrEmpty(name) && String.Equals(name, "moderate", StringComparison.OrdinalIgnoreCase)) {
-                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment"))) {
+            if (!string.IsNullOrEmpty(name) && string.Equals(name, "moderate", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                {
                     _commentService.UnapproveComment(part.Id);
                     _orchardServices.Notifier.Success(T("Comment successfully moderated."));
                     return Editor(part, shapeHelper);
                 }
             }
 
-            if (!string.IsNullOrEmpty(name) && String.Equals(name, "approve", StringComparison.OrdinalIgnoreCase)) {
-                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't approve comment"))) {
+            if (!string.IsNullOrEmpty(name) && string.Equals(name, "approve", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't approve comment")))
+                {
                     _commentService.ApproveComment(part.Id);
                     _orchardServices.Notifier.Success(T("Comment approved."));
                     return Editor(part, shapeHelper);
                 }
             }
 
-            if (!string.IsNullOrEmpty(name) && String.Equals(name, "delete", StringComparison.OrdinalIgnoreCase)) {
-                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment"))) {
+            if (!string.IsNullOrEmpty(name) && string.Equals(name, "delete", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
+                {
                     _commentService.DeleteComment(part.Id);
                     _orchardServices.Notifier.Success(T("Comment successfully deleted."));
                     return Editor(part, shapeHelper);
@@ -91,14 +105,16 @@ namespace Orchard.Comments.Drivers {
             }
 
             // if editing from the admin, don't update the owner or the status
-            if (!string.IsNullOrEmpty(name) && String.Equals(name, "save", StringComparison.OrdinalIgnoreCase)) {
+            if (!string.IsNullOrEmpty(name) && string.Equals(name, "save", StringComparison.OrdinalIgnoreCase))
+            {
                 _orchardServices.Notifier.Success(T("Comment saved."));
                 return Editor(part, shapeHelper);
             }
 
             part.CommentDateUtc = _clock.UtcNow;
 
-            if (!String.IsNullOrEmpty(part.SiteName) && !part.SiteName.StartsWith("http://") && !part.SiteName.StartsWith("https://")) {
+            if (!string.IsNullOrEmpty(part.SiteName) && !part.SiteName.StartsWith("http://") && !part.SiteName.StartsWith("https://"))
+            {
                 part.SiteName = "http://" + part.SiteName;
             }
 
@@ -107,7 +123,8 @@ namespace Orchard.Comments.Drivers {
 
             if (currentUser != null)
                 part.Author = currentUser.UserName;
-            else if (string.IsNullOrWhiteSpace(part.Author)) {
+            else if (string.IsNullOrWhiteSpace(part.Author))
+            {
                 updater.AddModelError("Comments.Author", T("Name is mandatory"));
             }
 
@@ -118,12 +135,14 @@ namespace Orchard.Comments.Drivers {
 
             // prevent users from commenting on a closed thread by hijacking the commentedOn property
             var commentsPart = commentedOn.As<CommentsPart>();
-            if (commentsPart == null || !commentsPart.CommentsActive) {
+            if (commentsPart == null || !commentsPart.CommentsActive)
+            {
                 _orchardServices.TransactionManager.Cancel();
                 return Editor(part, shapeHelper);
             }
 
-            if (commentedOn != null && commentedOn.Container != null) {
+            if (commentedOn != null && commentedOn.Container != null)
+            {
                 part.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
             }
 
@@ -132,9 +151,11 @@ namespace Orchard.Comments.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(CommentPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(CommentPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -170,31 +191,38 @@ namespace Orchard.Comments.Drivers {
                 part.Record.CommentText = text
             );
 
-            context.ImportAttribute(part.PartDefinition.Name, "CommentedOn", commentedOn => {
+            context.ImportAttribute(part.PartDefinition.Name, "CommentedOn", commentedOn =>
+            {
                 var contentItem = context.GetItemFromSession(commentedOn);
-                if (contentItem != null) {
+                if (contentItem != null)
+                {
                     part.Record.CommentedOn = contentItem.Id;
                 }
 
                 contentItem.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
             });
 
-            context.ImportAttribute(part.PartDefinition.Name, "RepliedOn", repliedOn => {
+            context.ImportAttribute(part.PartDefinition.Name, "RepliedOn", repliedOn =>
+            {
                 var contentItem = context.GetItemFromSession(repliedOn);
-                if (contentItem != null) {
+                if (contentItem != null)
+                {
                     part.Record.RepliedOn = contentItem.Id;
                 }
             });
 
-            context.ImportAttribute(part.PartDefinition.Name, "CommentedOnContainer", commentedOnContainer => {
+            context.ImportAttribute(part.PartDefinition.Name, "CommentedOnContainer", commentedOnContainer =>
+            {
                 var container = context.GetItemFromSession(commentedOnContainer);
-                if (container != null) {
+                if (container != null)
+                {
                     part.Record.CommentedOnContainer = container.Id;
                 }
             });
         }
 
-        protected override void Exporting(CommentPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(CommentPart part, ContentManagement.Handlers.ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Author", part.Record.Author);
             context.Element(part.PartDefinition.Name).SetAttributeValue("SiteName", part.Record.SiteName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.Record.UserName);
@@ -202,34 +230,40 @@ namespace Orchard.Comments.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Record.Position.ToString(CultureInfo.InvariantCulture));
             context.Element(part.PartDefinition.Name).SetAttributeValue("Status", part.Record.Status.ToString());
 
-            if (part.Record.CommentDateUtc != null) {
+            if (part.Record.CommentDateUtc != null)
+            {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("CommentDateUtc", XmlConvert.ToString(part.Record.CommentDateUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentText", part.Record.CommentText);
 
             var commentedOn = _contentManager.Get(part.Record.CommentedOn);
-            if (commentedOn != null) {
+            if (commentedOn != null)
+            {
                 var commentedOnIdentity = _contentManager.GetItemMetadata(commentedOn).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("CommentedOn", commentedOnIdentity.ToString());
             }
 
             var commentedOnContainer = _contentManager.Get(part.Record.CommentedOnContainer);
-            if (commentedOnContainer != null) {
+            if (commentedOnContainer != null)
+            {
                 var commentedOnContainerIdentity = _contentManager.GetItemMetadata(commentedOnContainer).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("CommentedOnContainer", commentedOnContainerIdentity.ToString());
             }
 
-            if (part.Record.RepliedOn.HasValue) {
+            if (part.Record.RepliedOn.HasValue)
+            {
                 var repliedOn = _contentManager.Get(part.Record.RepliedOn.Value);
-                if (repliedOn != null) {
+                if (repliedOn != null)
+                {
                     var repliedOnIdentity = _contentManager.GetItemMetadata(repliedOn).Identity;
                     context.Element(part.PartDefinition.Name).SetAttributeValue("RepliedOn", repliedOnIdentity.ToString());
                 }
             }
         }
 
-        protected override void Cloning(CommentPart originalPart, CommentPart clonePart, CloneContentContext context) {
+        protected override void Cloning(CommentPart originalPart, CommentPart clonePart, CloneContentContext context)
+        {
             clonePart.Author = originalPart.Author;
             clonePart.SiteName = originalPart.SiteName;
             clonePart.UserName = originalPart.UserName;
@@ -239,20 +273,25 @@ namespace Orchard.Comments.Drivers {
             clonePart.CommentDateUtc = originalPart.CommentDateUtc;
             clonePart.CommentText = originalPart.CommentText;
             var commentedOn = _contentManager.Get(originalPart.CommentedOn);
-            if (commentedOn != null) {
+            if (commentedOn != null)
+            {
                 clonePart.CommentedOn = originalPart.CommentedOn;
             }
-            if (originalPart.RepliedOn.HasValue) {
+            if (originalPart.RepliedOn.HasValue)
+            {
                 var repliedOn = _contentManager.Get(originalPart.RepliedOn.Value);
-                if (repliedOn != null) {
+                if (repliedOn != null)
+                {
                     clonePart.RepliedOn = originalPart.RepliedOn;
                 }
             }
-            else {
+            else
+            {
                 clonePart.RepliedOn = null;
             }
             var commentedOnContainer = _contentManager.Get(originalPart.CommentedOnContainer);
-            if (commentedOnContainer != null) {
+            if (commentedOnContainer != null)
+            {
                 clonePart.CommentedOnContainer = originalPart.CommentedOnContainer;
             }
         }

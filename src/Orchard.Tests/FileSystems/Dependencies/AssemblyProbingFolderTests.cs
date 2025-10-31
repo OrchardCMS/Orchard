@@ -1,15 +1,18 @@
-﻿using System.Linq;
+using System.Linq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.FileSystems.Dependencies {
+namespace Orchard.Tests.FileSystems.Dependencies
+{
     [TestFixture]
-    public class AssemblyProbingFolderTests {
+    public class AssemblyProbingFolderTests
+    {
 
         [Test]
-        public void FolderShouldBeEmptyByDefault() {
+        public void FolderShouldBeEmptyByDefault()
+        {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
             var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(Enumerable.Empty<IAssemblyNameResolver>()));
@@ -18,7 +21,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void LoadAssemblyShouldNotThrowIfAssemblyNotFound() {
+        public void LoadAssemblyShouldNotThrowIfAssemblyNotFound()
+        {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
             var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(Enumerable.Empty<IAssemblyNameResolver>()));
@@ -27,7 +31,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void GetAssemblyDateTimeUtcShouldThrowIfAssemblyNotFound() {
+        public void GetAssemblyDateTimeUtcShouldThrowIfAssemblyNotFound()
+        {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
             var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(Enumerable.Empty<IAssemblyNameResolver>()));
@@ -36,7 +41,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void DeleteAssemblyShouldNotThrowIfAssemblyNotFound() {
+        public void DeleteAssemblyShouldNotThrowIfAssemblyNotFound()
+        {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
             var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(Enumerable.Empty<IAssemblyNameResolver>()));
@@ -45,7 +51,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         }
 
         [Test]
-        public void StoreAssemblyShouldCopyFile() {
+        public void StoreAssemblyShouldCopyFile()
+        {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
 

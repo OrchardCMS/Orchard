@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Moq;
@@ -20,19 +20,23 @@ using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Core.Tests.Scheduling {
+namespace Orchard.Core.Tests.Scheduling
+{
     [TestFixture]
-    public class ScheduledTaskExecutorTests : DatabaseEnabledTestsBase {
+    public class ScheduledTaskExecutorTests : DatabaseEnabledTestsBase
+    {
         private StubTaskHandler _handler;
         private IBackgroundTask _executor;
         private IRepository<ScheduledTaskRecord> _repository;
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
             _executor = _container.ResolveNamed<IBackgroundTask>("ScheduledTaskExecutor");
         }
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             _handler = new StubTaskHandler();
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -49,23 +53,27 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
-                                 typeof(ContentTypeRecord), 
-                                 typeof(ContentItemRecord), 
-                                 typeof(ContentItemVersionRecord), 
+                                 typeof(ContentTypeRecord),
+                                 typeof(ContentItemRecord),
+                                 typeof(ContentItemVersionRecord),
                                  typeof(ScheduledTaskRecord),
                              };
             }
         }
 
-        public class StubTaskHandler : IScheduledTaskHandler {
-            public void Process(ScheduledTaskContext context) {
+        public class StubTaskHandler : IScheduledTaskHandler
+        {
+            public void Process(ScheduledTaskContext context)
+            {
                 TaskContext = context;
             }
 
@@ -74,12 +82,14 @@ namespace Orchard.Core.Tests.Scheduling {
 
 
         [Test]
-        public void SweepShouldBeCallable() {
+        public void SweepShouldBeCallable()
+        {
             _executor.Sweep();
         }
 
         [Test]
-        public void RecordsForTheFutureShouldBeIgnored() {
+        public void RecordsForTheFutureShouldBeIgnored()
+        {
             _repository.Create(new ScheduledTaskRecord { ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) });
             _repository.Flush();
             _executor.Sweep();
@@ -89,7 +99,8 @@ namespace Orchard.Core.Tests.Scheduling {
 
 
         [Test]
-        public void RecordsWhenTheyAreExecutedShouldBeDeleted() {
+        public void RecordsWhenTheyAreExecutedShouldBeDeleted()
+        {
             var task = new ScheduledTaskRecord { TaskType = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
             _repository.Create(task);
 
@@ -109,7 +120,8 @@ namespace Orchard.Core.Tests.Scheduling {
         }
 
         [Test]
-        public void ScheduledTaskHandlersShouldBeCalledWhenTasksAreExecuted() {
+        public void ScheduledTaskHandlersShouldBeCalledWhenTasksAreExecuted()
+        {
             var task = new ScheduledTaskRecord { TaskType = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
             _repository.Create(task);
 

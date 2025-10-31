@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.ViewModels {
+namespace Orchard.Projections.ViewModels
+{
 
-    public class LayoutEditViewModel {
-        public LayoutEditViewModel() {
+    public class LayoutEditViewModel
+    {
+        public LayoutEditViewModel()
+        {
             Properties = new List<PropertyEntry>();
             Display = (int)LayoutRecord.Displays.Content;
             DisplayType = "Summary";
@@ -30,8 +33,9 @@ namespace Orchard.Projections.ViewModels {
 
         public int GroupPropertyId { get; set; }
     }
-    
-    public class PropertyEntry {
+
+    public class PropertyEntry
+    {
         public int PropertyRecordId { get; set; }
         public string Category { get; set; }
         public string Type { get; set; }

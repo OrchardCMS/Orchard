@@ -1,20 +1,24 @@
-﻿using Orchard.DynamicForms.Elements;
-using Orchard.Layouts.Framework.Drivers;
+using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class UrlFieldElementDriver : FormsElementDriver<UrlField> {
+namespace Orchard.DynamicForms.Drivers
+{
+    public class UrlFieldElementDriver : FormsElementDriver<UrlField>
+    {
         private readonly ITokenizer _tokenizer;
 
-        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public UrlFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices)
+        {
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(UrlField element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(UrlField element, ElementEditorContext context)
+        {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
             var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
             var webAddressFieldEditor = BuildForm(context, "UrlField", "Properties:15");
@@ -23,9 +27,11 @@ namespace Orchard.DynamicForms.Drivers {
             return Editor(context, autoLabelEditor, placeholderEditor, webAddressFieldEditor, webAddressFieldValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("UrlField", factory => {
-                var shape = (dynamic) factory;
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("UrlField", factory =>
+            {
+                var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "UrlField",
                     _Value: shape.Textbox(
@@ -38,8 +44,9 @@ namespace Orchard.DynamicForms.Drivers {
                 return form;
             });
 
-            context.Form("UrlFieldValidation", factory => {
-                var shape = (dynamic) factory;
+            context.Form("UrlFieldValidation", factory =>
+            {
+                var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "UrlFieldValidation",
                     _IsRequired: shape.Checkbox(
@@ -52,13 +59,13 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "MaximumLength",
                         Name: "MaximumLength",
                         Title: "Maximum Length",
-                        Classes: new[] {"text", "medium", "tokenized"},
+                        Classes: new[] { "text", "medium", "tokenized" },
                         Description: T("The maximum length allowed.")),
                     _CustomValidationMessage: shape.Textbox(
                         Id: "CustomValidationMessage",
                         Name: "CustomValidationMessage",
                         Title: "Custom Validation Message",
-                        Classes: new[] {"text", "large", "tokenized"},
+                        Classes: new[] { "text", "large", "tokenized" },
                         Description: T("Optionally provide a custom validation message.")),
                     _ShowValidationMessage: shape.Checkbox(
                         Id: "ShowValidationMessage",
@@ -71,7 +78,8 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(UrlField element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(UrlField element, ElementDisplayingContext context)
+        {
             var tokenData = context.GetTokenData();
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });

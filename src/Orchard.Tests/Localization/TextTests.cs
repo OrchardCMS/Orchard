@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web;
 using Autofac;
 using Moq;
@@ -7,14 +7,17 @@ using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
     [TestFixture]
-    public class TextTests {
+    public class TextTests
+    {
         private IContainer _container;
         private IText _text;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var mockLocalizedManager = new Mock<ILocalizedStringManager>();
             mockLocalizedManager
                 .Setup(x => x.GetLocalizedString(It.IsAny<IEnumerable<string>>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -31,13 +34,15 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        public void TextHtmlEncodeAllArguments() {
+        public void TextHtmlEncodeAllArguments()
+        {
             Assert.That(_text.Get("foo {0}", "bar").Text, Is.EqualTo("foo bar"));
             Assert.That(_text.Get("foo {0}", "<bar>").Text, Is.EqualTo("foo &lt;bar&gt;"));
         }
 
         [Test]
-        public void TextDoesEncodeHtmlEncodedArguments() {
+        public void TextDoesEncodeHtmlEncodedArguments()
+        {
             Assert.That(_text.Get("foo {0}", new HtmlString("bar")).Text, Is.EqualTo("foo bar"));
             Assert.That(_text.Get("foo {0}", new HtmlString("<bar>")).Text, Is.EqualTo("foo <bar>"));
         }

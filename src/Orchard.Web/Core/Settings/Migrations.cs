@@ -1,17 +1,20 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Settings {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Core.Settings
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
-            SchemaBuilder.CreateTable("ContentFieldDefinitionRecord", 
+        public int Create()
+        {
+            SchemaBuilder.CreateTable("ContentFieldDefinitionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
                 );
 
-            SchemaBuilder.CreateTable("ContentPartDefinitionRecord", 
+            SchemaBuilder.CreateTable("ContentPartDefinitionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
@@ -19,7 +22,7 @@ namespace Orchard.Core.Settings {
                     .Column<string>("Settings", column => column.Unlimited())
                 );
 
-            SchemaBuilder.CreateTable("ContentPartFieldDefinitionRecord", 
+            SchemaBuilder.CreateTable("ContentPartFieldDefinitionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
@@ -28,7 +31,7 @@ namespace Orchard.Core.Settings {
                     .Column<int>("ContentPartDefinitionRecord_Id")
                 );
 
-            SchemaBuilder.CreateTable("ContentTypeDefinitionRecord", 
+            SchemaBuilder.CreateTable("ContentTypeDefinitionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
@@ -37,7 +40,7 @@ namespace Orchard.Core.Settings {
                     .Column<string>("Settings", column => column.Unlimited())
                 );
 
-            SchemaBuilder.CreateTable("ContentTypePartDefinitionRecord", 
+            SchemaBuilder.CreateTable("ContentTypePartDefinitionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Settings", column => column.Unlimited())
@@ -45,19 +48,19 @@ namespace Orchard.Core.Settings {
                     .Column<int>("ContentTypeDefinitionRecord_Id")
                 );
 
-            SchemaBuilder.CreateTable("ShellDescriptorRecord", 
+            SchemaBuilder.CreateTable("ShellDescriptorRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<int>("SerialNumber")
                 );
 
-            SchemaBuilder.CreateTable("ShellFeatureRecord", 
+            SchemaBuilder.CreateTable("ShellFeatureRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
                     .Column<int>("ShellDescriptorRecord_id"));
 
-            SchemaBuilder.CreateTable("ShellFeatureStateRecord", 
+            SchemaBuilder.CreateTable("ShellFeatureStateRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
@@ -66,7 +69,7 @@ namespace Orchard.Core.Settings {
                     .Column<int>("ShellStateRecord_Id")
                 );
 
-            SchemaBuilder.CreateTable("ShellParameterRecord", 
+            SchemaBuilder.CreateTable("ShellParameterRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Component")
@@ -75,7 +78,7 @@ namespace Orchard.Core.Settings {
                     .Column<int>("ShellDescriptorRecord_id")
                 );
 
-            SchemaBuilder.CreateTable("ShellStateRecord", 
+            SchemaBuilder.CreateTable("ShellStateRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Unused")
@@ -87,7 +90,8 @@ namespace Orchard.Core.Settings {
             return 4;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.CreateTable("SiteSettings2PartRecord",
                 table => table
                     .ContentPartRecord()
@@ -97,7 +101,8 @@ namespace Orchard.Core.Settings {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             SchemaBuilder.AlterTable("SiteSettingsPartRecord",
                 table => table
                     .AddColumn<string>("SiteTimeZone")
@@ -106,13 +111,15 @@ namespace Orchard.Core.Settings {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Site", cfg => { });
 
-            return 4;            
+            return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             SchemaBuilder.AlterTable("ContentFieldDefinitionRecord",
                 table => table.AddUniqueConstraint("UC_CFDR_Name", "Name"));
             SchemaBuilder.AlterTable("ContentPartDefinitionRecord",

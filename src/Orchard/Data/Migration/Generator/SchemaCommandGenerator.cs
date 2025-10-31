@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,8 +15,10 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 
-namespace Orchard.Data.Migration.Generator {
-    public class SchemaCommandGenerator : ISchemaCommandGenerator {
+namespace Orchard.Data.Migration.Generator
+{
+    public class SchemaCommandGenerator : ISchemaCommandGenerator
+    {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IExtensionManager _extensionManager;
         private readonly ICompositionStrategy _compositionStrategy;
@@ -28,7 +30,8 @@ namespace Orchard.Data.Migration.Generator {
             IExtensionManager extensionManager,
             ICompositionStrategy compositionStrategy,
             ShellSettings shellSettings,
-            IDataServicesProviderFactory dataServicesProviderFactory) {
+            IDataServicesProviderFactory dataServicesProviderFactory)
+        {
             _sessionFactoryHolder = sessionFactoryHolder;
             _extensionManager = extensionManager;
             _compositionStrategy = compositionStrategy;
@@ -39,20 +42,23 @@ namespace Orchard.Data.Migration.Generator {
         /// <summary>
         /// Generates SchemaCommand instances in order to create the schema for a specific feature
         /// </summary>
-        public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
+        public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop)
+        {
             var dependencies = _extensionManager.AvailableFeatures()
-                .Where(f => String.Equals(f.Id, feature, StringComparison.OrdinalIgnoreCase))
+                .Where(f => string.Equals(f.Id, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany(f => f.Dependencies)
                 .ToList();
 
-            var shellDescriptor = new ShellDescriptor {
+            var shellDescriptor = new ShellDescriptor
+            {
                 Features = dependencies.Select(id => new ShellFeature { Name = id }).Union(new[] { new ShellFeature { Name = feature }, new ShellFeature { Name = "Orchard.Framework" } })
             };
 
             var shellBlueprint = _compositionStrategy.Compose(_shellSettings, shellDescriptor);
 
-            if ( !shellBlueprint.Records.Any() ) {
+            if (!shellBlueprint.Records.Any())
+            {
                 yield break;
             }
 
@@ -69,61 +75,73 @@ namespace Orchard.Data.Migration.Generator {
 
             // get the table mappings using reflection
             var tablesField = typeof(Configuration).GetField("tables", BindingFlags.Instance | BindingFlags.NonPublic);
-            var tables = ((IDictionary<string, Table>) tablesField.GetValue(configuration)).Values;
+            var tables = ((IDictionary<string, Table>)tablesField.GetValue(configuration)).Values;
 
             string prefix = feature.Replace(".", "_") + "_";
 
-            foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Id == feature && rd.TableName == t.Name))) {
+            foreach (var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Id == feature && rd.TableName == t.Name)))
+            {
                 string tableName = table.Name;
                 var recordType = parameters.RecordDescriptors.First(rd => rd.Feature.Descriptor.Id == feature && rd.TableName == tableName).Type;
                 var isContentPart = typeof(ContentPartRecord).IsAssignableFrom(recordType);
 
-                if ( tableName.StartsWith(prefix) ) {
+                if (tableName.StartsWith(prefix))
+                {
                     tableName = tableName.Substring(prefix.Length);
                 }
 
-                if(drop) {
+                if (drop)
+                {
                     yield return new DropTableCommand(tableName);
                 }
 
                 var command = new CreateTableCommand(tableName);
-                
-                foreach (var column in table.ColumnIterator) {
+
+                foreach (var column in table.ColumnIterator)
+                {
                     // create copies for local variables to be evaluated at the time the loop is called, and not lately when the la;bda is executed
                     var tableCopy = table;
                     var columnCopy = column;
 
                     var sqlType = columnCopy.GetSqlTypeCode(mapping);
                     command.Column(column.Name, sqlType.DbType,
-                        action => {
-                            if (tableCopy.PrimaryKey.Columns.Any(c => c.Name == columnCopy.Name)) {
+                        action =>
+                        {
+                            if (tableCopy.PrimaryKey.Columns.Any(c => c.Name == columnCopy.Name))
+                            {
                                 action.PrimaryKey();
 
-                                if ( !isContentPart ) {
+                                if (!isContentPart)
+                                {
                                     action.Identity();
                                 }
                             }
 
-                            
-                            if ( columnCopy.IsLengthDefined() 
+
+                            if (columnCopy.IsLengthDefined()
                                 && new[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType)
-                                && columnCopy.Length != Column.DefaultLength) {
+                                && columnCopy.Length != Column.DefaultLength)
+                            {
                                 action.WithLength(columnCopy.Length);
                             }
 
-                            if (columnCopy.IsPrecisionDefined()) {
-                                action.WithPrecision((byte) columnCopy.Precision);
-                                action.WithScale((byte) columnCopy.Scale);
+                            if (columnCopy.IsPrecisionDefined())
+                            {
+                                action.WithPrecision((byte)columnCopy.Precision);
+                                action.WithScale((byte)columnCopy.Scale);
                             }
-                            if (columnCopy.IsNullable) {
+                            if (columnCopy.IsNullable)
+                            {
                                 action.Nullable();
                             }
 
-                            if ( columnCopy.IsUnique ) {
+                            if (columnCopy.IsUnique)
+                            {
                                 action.Unique();
                             }
 
-                            if(columnCopy.DefaultValue != null) {
+                            if (columnCopy.DefaultValue != null)
+                            {
                                 action.WithDefault(columnCopy.DefaultValue);
                             }
                         });
@@ -136,7 +154,8 @@ namespace Orchard.Data.Migration.Generator {
         /// <summary>
         /// Automatically updates a db to a functionning schema
         /// </summary>
-        public void UpdateDatabase() {
+        public void UpdateDatabase()
+        {
             var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaUpdate(configuration).Execute(false, true);
         }
@@ -144,7 +163,8 @@ namespace Orchard.Data.Migration.Generator {
         /// <summary>
         /// Automatically creates a db with a functionning schema
         /// </summary>
-        public void CreateDatabase() {
+        public void CreateDatabase()
+        {
             var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaExport(configuration).Execute(false, true, false);
         }

@@ -1,3 +1,4 @@
-namespace Orchard.Layouts.Services {
-    public class ElementCreatingContext : ElementEventContext {}
+namespace Orchard.Layouts.Services
+{
+    public class ElementCreatingContext : ElementEventContext { }
 }

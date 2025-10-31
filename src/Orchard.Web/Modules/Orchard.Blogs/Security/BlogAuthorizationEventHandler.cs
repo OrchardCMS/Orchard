@@ -1,36 +1,44 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Blogs.Security {
-    public class BlogAuthorizationEventHandler : IAuthorizationServiceEventHandler {
+namespace Orchard.Blogs.Security
+{
+    public class BlogAuthorizationEventHandler : IAuthorizationServiceEventHandler
+    {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
 
-        public void Adjust(CheckAccessContext context) {
+        public void Adjust(CheckAccessContext context)
+        {
             if (!context.Granted &&
-                context.Content.Is<ICommonPart>()) {
+                context.Content.Is<ICommonPart>())
+            {
 
-                if (context.Content.ContentItem.ContentType == "BlogPost" && 
-                    BlogPostVariationExists(context.Permission)) {
+                if (context.Content.ContentItem.ContentType == "BlogPost" &&
+                    BlogPostVariationExists(context.Permission))
+                {
                     context.Adjusted = true;
                     context.Permission = GetBlogPostVariation(context.Permission);
                 }
 
                 if (OwnerVariationExists(context.Permission) &&
-                    HasOwnership(context.User, context.Content)) {
+                    HasOwnership(context.User, context.Content))
+                {
                     context.Adjusted = true;
                     context.Permission = GetOwnerVariation(context.Permission);
                 }
             }
         }
 
-        private static bool HasOwnership(IUser user, IContent content) {
+        private static bool HasOwnership(IUser user, IContent content)
+        {
             if (user == null || content == null)
                 return false;
 
-            if (HasOwnershipOnContainer(user, content)) {
+            if (HasOwnershipOnContainer(user, content))
+            {
                 return true;
             }
 
@@ -41,7 +49,8 @@ namespace Orchard.Blogs.Security {
             return user.Id == common.Owner.Id;
         }
 
-        private static bool HasOwnershipOnContainer(IUser user, IContent content) {
+        private static bool HasOwnershipOnContainer(IUser user, IContent content)
+        {
             if (user == null || content == null)
                 return false;
 
@@ -56,11 +65,13 @@ namespace Orchard.Blogs.Security {
             return user.Id == common.Owner.Id;
         }
 
-        private static bool OwnerVariationExists(Permission permission) {
+        private static bool OwnerVariationExists(Permission permission)
+        {
             return GetOwnerVariation(permission) != null;
         }
 
-        private static Permission GetOwnerVariation(Permission permission) {
+        private static Permission GetOwnerVariation(Permission permission)
+        {
             if (permission.Name == Permissions.PublishBlogPost.Name)
                 return Permissions.PublishOwnBlogPost;
             if (permission.Name == Permissions.EditBlogPost.Name)

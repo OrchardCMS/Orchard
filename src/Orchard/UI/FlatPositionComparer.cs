@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.UI {
-    public class FlatPositionComparer : IComparer<string> {
-        public int Compare(string x, string y) {
+namespace Orchard.UI
+{
+    public class FlatPositionComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
             if (x == y)
                 return 0;
 
@@ -18,8 +21,9 @@ namespace Orchard.UI {
 
             var xParts = x.Split(new[] { '.', ':' });
             var yParts = y.Split(new[] { '.', ':' });
-            for (var i = 0; i < xParts.Count(); i++) {
-                if (yParts.Length < i+1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
+            for (var i = 0; i < xParts.Count(); i++)
+            {
+                if (yParts.Length < i + 1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
                     return 1;
 
                 int xPos;
@@ -47,7 +51,8 @@ namespace Orchard.UI {
             return 0;
         }
 
-        private static string NormalizeKnownPartitions(string partition) {
+        private static string NormalizeKnownPartitions(string partition)
+        {
             if (partition.Length < 5) // known partitions are long
                 return partition;
 

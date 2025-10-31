@@ -1,64 +1,74 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 
-namespace Orchard.CustomForms.Models {
-    public class CustomFormPart : ContentPart<CustomFormPartRecord> {
+namespace Orchard.CustomForms.Models
+{
+    public class CustomFormPart : ContentPart<CustomFormPartRecord>
+    {
         [Required]
-        public string ContentType {
+        public string ContentType
+        {
             get { return Record.ContentType; }
             set { Record.ContentType = value; }
         }
 
-        public bool UseContentTypePermissions {
+        public bool UseContentTypePermissions
+        {
             get { return Record.UseContentTypePermissions; }
             set { Record.UseContentTypePermissions = value; }
         }
 
-        public bool SaveContentItem {
+        public bool SaveContentItem
+        {
             get { return Record.SaveContentItem; }
             set { Record.SaveContentItem = value; }
         }
 
-        public bool SavePublishContentItem {
+        public bool SavePublishContentItem
+        {
             get { return Record.SavePublishContentItem; }
             set { Record.SavePublishContentItem = value; }
         }
-        
-        public bool CustomMessage {
+
+        public bool CustomMessage
+        {
             get { return Record.CustomMessage; }
             set { Record.CustomMessage = value; }
         }
 
-        public string Message {
+        public string Message
+        {
             get { return Record.Message; }
             set { Record.Message = value; }
         }
 
-        public bool Redirect {
+        public bool Redirect
+        {
             get { return Record.Redirect; }
             set { Record.Redirect = value; }
         }
 
-        public string RedirectUrl {
+        public string RedirectUrl
+        {
             get { return Record.RedirectUrl; }
             set { Record.RedirectUrl = value; }
         }
 
         [Required]
-        public string SubmitButtonText {
+        public string SubmitButtonText
+        {
             get { return Record.SubmitButtonText; }
             set { Record.SubmitButtonText = value; }
         }
 
-        
-        public string PublishButtonText {
+
+        public string PublishButtonText
+        {
             get { return Record.PublishButtonText; }
             set { Record.PublishButtonText = value; }
         }
 
-        public string Title {
-            get { return this.As<ITitleAspect>().Title;  }
-        }
+        public string Title => this.As<ITitleAspect>().Title;
     }
 }

@@ -1,8 +1,11 @@
 using Orchard.UI.Resources;
 
-namespace Orchard.Resources.ResourceManifests {
-    public class jQueryColorbox : IResourceManifestProvider {
-        public void BuildManifests(ResourceManifestBuilder builder) {
+namespace Orchard.Resources.ResourceManifests
+{
+    public class jQueryColorbox : IResourceManifestProvider
+    {
+        public void BuildManifests(ResourceManifestBuilder builder)
+        {
             var manifest = builder.Add();
 
             manifest.DefineScript("jQueryColorBox")

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Autofac;
 using Autofac.Core;
 using Autofac.Features.Metadata;
@@ -6,11 +6,14 @@ using Castle.DynamicProxy;
 using NUnit.Framework;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 
-namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
+namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2
+{
     [TestFixture]
-    public class DynamicProxyTests {
+    public class DynamicProxyTests
+    {
         [Test]
-        public void ContextAddedToMetadataWhenRegistered() {
+        public void ContextAddedToMetadataWhenRegistered()
+        {
             var context = new DynamicProxyContext();
 
             var builder = new ContainerBuilder();
@@ -24,7 +27,8 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
 
         [Test]
-        public void ProxyContextReturnsTrueIfTypeHasBeenProxied() {
+        public void ProxyContextReturnsTrueIfTypeHasBeenProxied()
+        {
             var context = new DynamicProxyContext();
 
             Type proxyType;
@@ -39,7 +43,8 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
 
         [Test]
-        public void AddProxyCanBeCalledMoreThanOnce() {
+        public void AddProxyCanBeCalledMoreThanOnce()
+        {
             var context = new DynamicProxyContext();
             context.AddProxy(typeof(SimpleComponent));
 
@@ -55,7 +60,8 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
 
         [Test]
-        public void InterceptorAddedToContextFromModules() {
+        public void InterceptorAddedToContextFromModules()
+        {
             var context = new DynamicProxyContext();
 
             var builder = new ContainerBuilder();
@@ -70,7 +76,8 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
 
         [Test]
-        public void ResolvedObjectIsSubclass() {
+        public void ResolvedObjectIsSubclass()
+        {
             var context = new DynamicProxyContext();
 
             var builder = new ContainerBuilder();
@@ -85,7 +92,8 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
 
         [Test]
-        public void InterceptorCatchesMethodCallOnlyFromContainerWithInterceptor() {
+        public void InterceptorCatchesMethodCallOnlyFromContainerWithInterceptor()
+        {
             var context = new DynamicProxyContext();
 
             var builder1 = new ContainerBuilder();
@@ -106,14 +114,18 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
         }
     }
 
-    public class SimpleComponent {
-        public virtual string SimpleMethod() {
+    public class SimpleComponent
+    {
+        public virtual string SimpleMethod()
+        {
             return "default return value";
         }
     }
 
-    public class SimpleInterceptorModule : Module {
-        protected override void Load(ContainerBuilder builder) {
+    public class SimpleInterceptorModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
             builder.RegisterType<SimpleInterceptor>();
 
             base.Load(builder);
@@ -121,19 +133,24 @@ namespace Orchard.Tests.Environment.AutofacUtil.DynamicProxy2 {
 
         protected override void AttachToComponentRegistration(
             IComponentRegistry componentRegistry,
-            IComponentRegistration registration) {
+            IComponentRegistration registration)
+        {
 
             if (DynamicProxyContext.From(registration) != null)
                 registration.InterceptedBy<SimpleInterceptor>();
         }
     }
 
-    public class SimpleInterceptor : IInterceptor {
-        public void Intercept(IInvocation invocation) {
-            if (invocation.Method.Name == "SimpleMethod") {
+    public class SimpleInterceptor : IInterceptor
+    {
+        public void Intercept(IInvocation invocation)
+        {
+            if (invocation.Method.Name == "SimpleMethod")
+            {
                 invocation.ReturnValue = "different return value";
             }
-            else {
+            else
+            {
                 invocation.Proceed();
             }
         }

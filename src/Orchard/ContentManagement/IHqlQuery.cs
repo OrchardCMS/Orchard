@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.ContentManagement {
+namespace Orchard.ContentManagement
+{
 
     /// <summary>
     /// Reprensents dynamically created query on Content Items.
     /// </summary>
-    public interface IHqlQuery {
+    public interface IHqlQuery
+    {
 
         /// <summary>
         /// The underlying <see cref="ContentManager"/> instance used to execute the query.
@@ -23,7 +25,7 @@ namespace Orchard.ContentManagement {
         /// Eagerly fetches specific content parts.
         /// </summary>
         IHqlQuery Include(params string[] contentPartRecords);
-        
+
         /// <summary>
         /// Adds versioning options to the query.
         /// </summary>
@@ -79,7 +81,8 @@ namespace Orchard.ContentManagement {
     /// <summary>
     /// Reprensents dynamically created query on Content Items, having a specific Content Part.
     /// </summary>
-    public interface IHqlQuery<TPart> where TPart : IContent {
+    public interface IHqlQuery<TPart> where TPart : IContent
+    {
 
         /// <summary>
         /// Add content type constraints to the query.
@@ -127,7 +130,8 @@ namespace Orchard.ContentManagement {
         IHqlQuery<TPart> OrderBy(Action<IAliasFactory> alias, Action<IHqlSortFactory> order);
     }
 
-    public interface IAlias {
+    public interface IAlias
+    {
 
         /// <summary>
         /// The name of the alias.
@@ -135,14 +139,15 @@ namespace Orchard.ContentManagement {
         string Name { get; }
     }
 
-    public interface IAliasFactory {
+    public interface IAliasFactory
+    {
         /// <summary>
         /// Creates a join on a content part record or returns it if it already exists.
         /// <param name="type">The type of join, e.g. "left outer join"</param>
         /// <param name="withPredicate">An expression for an additional constraint on the join</param>
         /// </summary>
         IAliasFactory ContentPartRecord<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord;
-        
+
         /// <summary>
         /// Creates a join on a content part record or returns it if it already exists.
         /// <param name="contentPartRecord">The type of the part to join</param>
@@ -155,7 +160,7 @@ namespace Orchard.ContentManagement {
         /// Creates a join based on a property, or returns it if it already exists.
         /// </summary>
         IAliasFactory Property(string propertyName, string alias);
-        
+
         /// <summary>
         /// Returns an existing alias by its name.
         /// </summary>
@@ -177,7 +182,8 @@ namespace Orchard.ContentManagement {
         IAliasFactory ContentType();
     }
 
-    public interface IHqlSortFactory {
+    public interface IHqlSortFactory
+    {
         /// <summary>
         /// Sorts by ascending order
         /// </summary>

@@ -1,9 +1,11 @@
-﻿using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Rules.Models;
 
-namespace Orchard.Rules.Handlers {
-    public class ScheduledActionTaskPartHandler : ContentHandler {
+namespace Orchard.Rules.Handlers
+{
+    public class ScheduledActionTaskPartHandler : ContentHandler
+    {
         public ScheduledActionTaskPartHandler(IRepository<ScheduledActionTaskRecord> repository)
         {
             Filters.Add(StorageFilter.For(repository));

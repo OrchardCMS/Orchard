@@ -1,11 +1,13 @@
-﻿using Orchard.AntiSpam.Models;
+using Orchard.AntiSpam.Models;
 
-namespace Orchard.AntiSpam.Services {
+namespace Orchard.AntiSpam.Services
+{
     /// <summary>
     /// Implementations of <see cref="ISpamFilter"/> are used to filter some user submitted
     /// content using anti-spam services
     /// </summary>
-    public interface ISpamFilter : IDependency {
+    public interface ISpamFilter : IDependency
+    {
         /// <summary>
         /// Checks if some content is spam.
         /// </summary>

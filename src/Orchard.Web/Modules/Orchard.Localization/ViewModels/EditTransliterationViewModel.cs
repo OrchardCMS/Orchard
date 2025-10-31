@@ -1,5 +1,7 @@
-namespace Orchard.Localization.ViewModels {
-    public class EditTransliterationViewModel {
+namespace Orchard.Localization.ViewModels
+{
+    public class EditTransliterationViewModel
+    {
         public int Id { get; set; }
         public string CultureFrom { get; set; }
         public string CultureTo { get; set; }

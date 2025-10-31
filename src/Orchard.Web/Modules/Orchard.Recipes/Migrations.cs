@@ -1,8 +1,11 @@
-﻿using Orchard.Data.Migration;
+using Orchard.Data.Migration;
 
-namespace Orchard.Recipes {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Recipes
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("RecipeStepResultRecord", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("ExecutionId", c => c.WithLength(128).NotNull())
@@ -14,11 +17,12 @@ namespace Orchard.Recipes {
                 .Column<string>("ErrorMessage", c => c.Unlimited())
             );
 
-            SchemaBuilder.AlterTable("RecipeStepResultRecord", table => {
+            SchemaBuilder.AlterTable("RecipeStepResultRecord", table =>
+            {
                 table.CreateIndex("IDX_RecipeStepResultRecord_ExecutionId", "ExecutionId");
                 table.CreateIndex("IDX_RecipeStepResultRecord_ExecutionId_StepName", "ExecutionId", "StepName");
             });
-            
+
             return 1;
         }
     }

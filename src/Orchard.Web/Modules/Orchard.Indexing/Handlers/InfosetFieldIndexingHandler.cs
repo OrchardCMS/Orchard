@@ -1,39 +1,47 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Indexing.Settings;
-using System.Collections.Generic;
-using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentManagement.FieldStorage;
+using Orchard.Indexing.Settings;
 
-namespace Orchard.Indexing.Handlers {
-    public class InfosetFieldIndexingHandler : ContentHandler {
+namespace Orchard.Indexing.Handlers
+{
+    public class InfosetFieldIndexingHandler : ContentHandler
+    {
 
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IFieldStorageProvider _fieldStorageProvider;
 
         public InfosetFieldIndexingHandler(
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
-            IFieldStorageProvider fieldStorageProvider) {
-            
+            IFieldStorageProvider fieldStorageProvider)
+        {
+
             _contentFieldDrivers = contentFieldDrivers;
             _fieldStorageProvider = fieldStorageProvider;
 
             OnIndexing<InfosetPart>(
-                (context, cp) => {
+                (context, cp) =>
+                {
                     var infosetPart = context.ContentItem.As<InfosetPart>();
-                    if (infosetPart == null) {
+                    if (infosetPart == null)
+                    {
                         return;
                     }
 
                     // part fields
-                    foreach ( var part in infosetPart.ContentItem.Parts ) {
-                        foreach ( var field in part.PartDefinition.Fields ) {
+                    foreach (var part in infosetPart.ContentItem.Parts)
+                    {
+                        foreach (var field in part.PartDefinition.Fields)
+                        {
                             var indexingSettings = field.Settings.GetModel<FieldIndexing>();
-                            if (!indexingSettings.Included) {
+                            if (!indexingSettings.Included)
+                            {
                                 continue;
                             }
 
@@ -46,25 +54,30 @@ namespace Orchard.Indexing.Handlers {
                             var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
                             var indexName = infosetPart.TypeDefinition.Name.ToLower() + "-" + field.Name.ToLower();
 
-                            var membersContext = new DescribeMembersContext(null, fieldStorage, values => {
+                            var membersContext = new DescribeMembersContext(null, fieldStorage, values =>
+                            {
 
-                                foreach (var value in values) {
+                                foreach (var value in values)
+                                {
 
-                                    if (value == null) {
+                                    if (value == null)
+                                    {
                                         continue;
                                     }
 
                                     var t = value.GetType();
 
                                     // the T is nullable, convert using underlying type
-                                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+                                    {
                                         t = Nullable.GetUnderlyingType(t);
                                     }
-                                    
+
                                     var typeCode = Type.GetTypeCode(t);
 
                                     IDocumentIndex documentIndex = null;
-                                    switch (typeCode) {
+                                    switch (typeCode)
+                                    {
                                         case TypeCode.Empty:
                                         case TypeCode.Object:
                                         case TypeCode.DBNull:
@@ -94,27 +107,32 @@ namespace Orchard.Indexing.Handlers {
                                             break;
                                     }
 
-                                    if(documentIndex == null) {
+                                    if (documentIndex == null)
+                                    {
                                         // Protection against none of the case statements above being matched
                                         return;
                                     }
 
-                                    if (indexingSettings.Stored) {
+                                    if (indexingSettings.Stored)
+                                    {
                                         documentIndex.Store();
                                     }
 
-                                    if (indexingSettings.Analyzed) {
+                                    if (indexingSettings.Analyzed)
+                                    {
                                         documentIndex.Analyze();
                                     }
 
-                                    if (indexingSettings.TagsRemoved) {
+                                    if (indexingSettings.TagsRemoved)
+                                    {
                                         documentIndex.RemoveTags();
                                     }
 
                                 }
                             }, localField);
 
-                            foreach (var driver in drivers) {
+                            foreach (var driver in drivers)
+                            {
                                 driver.Describe(membersContext);
                             }
                         }

@@ -1,10 +1,11 @@
-﻿using System;
+namespace Orchard.Localization.Models
+{
+    public class DateLocalizationOptions
+    {
 
-namespace Orchard.Localization.Models {
-    public class DateLocalizationOptions {
-
-        public DateLocalizationOptions() {
-            NullText = String.Empty;
+        public DateLocalizationOptions()
+        {
+            NullText = string.Empty;
             EnableTimeZoneConversion = true;
             EnableCalendarConversion = true;
             IgnoreDate = false;

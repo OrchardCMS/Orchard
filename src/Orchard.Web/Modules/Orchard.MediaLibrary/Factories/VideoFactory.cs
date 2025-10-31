@@ -1,34 +1,41 @@
-﻿using System;
 using System.IO;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.MediaLibrary.Models;
 
-namespace Orchard.MediaLibrary.Factories {
+namespace Orchard.MediaLibrary.Factories
+{
 
-    public class VideoFactorySelector : IMediaFactorySelector {
+    public class VideoFactorySelector : IMediaFactorySelector
+    {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public VideoFactorySelector(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager) {
+        public VideoFactorySelector(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager)
+        {
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
 
-        public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType, string contentType) {
-            if (!mimeType.StartsWith("video/")) {
+        public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType, string contentType)
+        {
+            if (!mimeType.StartsWith("video/"))
+            {
                 return null;
             }
 
-            if (!String.IsNullOrEmpty(contentType)) {
+            if (!string.IsNullOrEmpty(contentType))
+            {
                 var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-                if (contentDefinition == null || contentDefinition.Parts.All(x => x.PartDefinition.Name != typeof(VideoPart).Name)) {
+                if (contentDefinition == null || contentDefinition.Parts.All(x => x.PartDefinition.Name != typeof(VideoPart).Name))
+                {
                     return null;
                 }
             }
 
-            return new MediaFactorySelectorResult {
+            return new MediaFactorySelectorResult
+            {
                 Priority = -5,
                 MediaFactory = new VideoFactory(_contentManager)
             };
@@ -36,15 +43,19 @@ namespace Orchard.MediaLibrary.Factories {
         }
     }
 
-    public class VideoFactory : IMediaFactory {
+    public class VideoFactory : IMediaFactory
+    {
         private readonly IContentManager _contentManager;
 
-        public VideoFactory(IContentManager contentManager) {
+        public VideoFactory(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
+        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType))
+            {
                 contentType = "Video";
             }
 
@@ -55,7 +66,8 @@ namespace Orchard.MediaLibrary.Factories {
             part.Title = Path.GetFileNameWithoutExtension(path);
 
             var videoPart = part.As<VideoPart>();
-            if (videoPart == null) {
+            if (videoPart == null)
+            {
                 return null;
             }
 

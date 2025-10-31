@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -11,25 +11,30 @@ using Orchard.Exceptions;
 using Orchard.Logging;
 using Orchard.Security;
 
-namespace Orchard.Data {
+namespace Orchard.Data
+{
 
-    public class SessionLocator : ISessionLocator {
+    public class SessionLocator : ISessionLocator
+    {
         private readonly ITransactionManager _transactionManager;
 
-        public SessionLocator(ITransactionManager transactionManager) {
+        public SessionLocator(ITransactionManager transactionManager)
+        {
             _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public ISession For(Type entityType) {
+        public ISession For(Type entityType)
+        {
             Logger.Debug("Acquiring session for {0}", entityType);
             return _transactionManager.GetSession();
         }
     }
 
-    public class TransactionManager : ITransactionManager, IDisposable {
+    public class TransactionManager : ITransactionManager, IDisposable
+    {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
         private Func<IContentManagerSession> _contentManagerSessionFactory;
@@ -40,7 +45,8 @@ namespace Orchard.Data {
         public TransactionManager(
             ISessionFactoryHolder sessionFactoryHolder,
             Func<IContentManagerSession> contentManagerSessionFactory,
-            IEnumerable<ISessionInterceptor> interceptors) {
+            IEnumerable<ISessionInterceptor> interceptors)
+        {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
             _contentManagerSessionFactory = contentManagerSessionFactory;
@@ -52,29 +58,36 @@ namespace Orchard.Data {
         public ILogger Logger { get; set; }
         public IsolationLevel IsolationLevel { get; set; }
 
-        public ISession GetSession() {
+        public ISession GetSession()
+        {
             Demand();
             return _session;
         }
-        public void Demand() {
+        public void Demand()
+        {
             EnsureSession(IsolationLevel);
         }
 
-        public void RequireNew() {
+        public void RequireNew()
+        {
             RequireNew(IsolationLevel);
         }
 
-        public void RequireNew(IsolationLevel level) {
+        public void RequireNew(IsolationLevel level)
+        {
             DisposeSession();
             EnsureSession(level);
         }
 
-        public void Cancel() {
-            if (_session != null) {
+        public void Cancel()
+        {
+            if (_session != null)
+            {
 
                 // IsActive is true if the transaction hasn't been committed or rolled back
                 var transaction = _session.GetCurrentTransaction();
-                if (transaction != null && transaction.IsActive) {
+                if (transaction != null && transaction.IsActive)
+                {
                     Logger.Debug("Rolling back transaction");
                     transaction.Rollback();
                 }
@@ -83,23 +96,30 @@ namespace Orchard.Data {
             }
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             DisposeSession();
         }
 
-        private void DisposeSession() {
-            if (_session != null) {
+        private void DisposeSession()
+        {
+            if (_session != null)
+            {
 
-                try {
+                try
+                {
                     // IsActive is true if the transaction hasn't been committed or rolled back
                     var transaction = _session.GetCurrentTransaction();
-                    if (transaction != null && transaction.IsActive) {
+                    if (transaction != null && transaction.IsActive)
+                    {
                         Logger.Debug("Committing transaction");
                         transaction.Commit();
                     }
                 }
-                finally {
-                    if (_contentManagerSession != null) {
+                finally
+                {
+                    if (_contentManagerSession != null)
+                    {
                         _contentManagerSession.Clear();
                     }
 
@@ -111,8 +131,10 @@ namespace Orchard.Data {
             }
         }
 
-        private void EnsureSession(IsolationLevel level) {
-            if (_session != null) {
+        private void EnsureSession(IsolationLevel level)
+        {
+            if (_session != null)
+            {
                 return;
             }
 
@@ -127,66 +149,79 @@ namespace Orchard.Data {
             _contentManagerSession = _contentManagerSessionFactory();
         }
 
-        class OrchardSessionInterceptor : IInterceptor {
+        class OrchardSessionInterceptor : IInterceptor
+        {
             private readonly ISessionInterceptor[] _interceptors;
             private readonly ILogger _logger;
 
-            public OrchardSessionInterceptor(ISessionInterceptor[] interceptors, ILogger logger) {
+            public OrchardSessionInterceptor(ISessionInterceptor[] interceptors, ILogger logger)
+            {
                 _interceptors = interceptors;
                 _logger = logger;
             }
 
-            bool IInterceptor.OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+            bool IInterceptor.OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+            {
                 if (_interceptors.Length == 0) return false;
                 return _interceptors.Invoke(i => i.OnLoad(entity, id, state, propertyNames, types), _logger).ToList().Any(r => r);
             }
 
-            bool IInterceptor.OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types) {
+            bool IInterceptor.OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+            {
                 if (_interceptors.Length == 0) return false;
                 return _interceptors.Invoke(i => i.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types), _logger).ToList().Any(r => r);
             }
 
-            bool IInterceptor.OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+            bool IInterceptor.OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+            {
                 if (_interceptors.Length == 0) return false;
                 return _interceptors.Invoke(i => i.OnSave(entity, id, state, propertyNames, types), _logger).ToList().Any(r => r);
             }
 
-            void IInterceptor.OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+            void IInterceptor.OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.OnDelete(entity, id, state, propertyNames, types), _logger);
             }
 
-            void IInterceptor.OnCollectionRecreate(object collection, object key) {
+            void IInterceptor.OnCollectionRecreate(object collection, object key)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.OnCollectionRecreate(collection, key), _logger);
             }
 
-            void IInterceptor.OnCollectionRemove(object collection, object key) {
+            void IInterceptor.OnCollectionRemove(object collection, object key)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.OnCollectionRemove(collection, key), _logger);
             }
 
-            void IInterceptor.OnCollectionUpdate(object collection, object key) {
+            void IInterceptor.OnCollectionUpdate(object collection, object key)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.OnCollectionUpdate(collection, key), _logger);
             }
 
-            void IInterceptor.PreFlush(ICollection entities) {
+            void IInterceptor.PreFlush(ICollection entities)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.PreFlush(entities), _logger);
             }
 
-            void IInterceptor.PostFlush(ICollection entities) {
+            void IInterceptor.PostFlush(ICollection entities)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.PostFlush(entities), _logger);
             }
 
-            bool? IInterceptor.IsTransient(object entity) {
+            bool? IInterceptor.IsTransient(object entity)
+            {
                 if (_interceptors.Length == 0) return null;
                 return _interceptors.Invoke(i => i.IsTransient(entity), _logger).ToList().FirstOrDefault(c => c.HasValue && c.Value);
             }
 
-            int[] IInterceptor.FindDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types) {
+            int[] IInterceptor.FindDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+            {
                 if (_interceptors.Length == 0) return null;
                 var retVal = _interceptors.Invoke(i => i.FindDirty(entity, id, currentState, previousState, propertyNames, types), _logger)
                     .Where(r => r != null)
@@ -196,52 +231,64 @@ namespace Orchard.Data {
                 return retVal.Length == 0 ? null : retVal;
             }
 
-            object IInterceptor.Instantiate(string entityName, object id) {
+            object IInterceptor.Instantiate(string entityName, object id)
+            {
                 if (_interceptors.Length == 0) return null;
                 return _interceptors.Invoke(i => i.Instantiate(entityName, id), _logger).FirstOrDefault(r => r != null);
             }
 
-            string IInterceptor.GetEntityName(object entity) {
+            string IInterceptor.GetEntityName(object entity)
+            {
                 if (_interceptors.Length == 0) return null;
                 return _interceptors.Invoke(i => i.GetEntityName(entity), _logger).FirstOrDefault(r => r != null);
             }
 
-            object IInterceptor.GetEntity(string entityName, object id) {
+            object IInterceptor.GetEntity(string entityName, object id)
+            {
                 if (_interceptors.Length == 0) return null;
                 return _interceptors.Invoke(i => i.GetEntity(entityName, id), _logger).FirstOrDefault(r => r != null);
             }
 
-            void IInterceptor.AfterTransactionBegin(ITransaction tx) {
+            void IInterceptor.AfterTransactionBegin(ITransaction tx)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.AfterTransactionBegin(tx), _logger);
             }
 
-            void IInterceptor.BeforeTransactionCompletion(ITransaction tx) {
+            void IInterceptor.BeforeTransactionCompletion(ITransaction tx)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.BeforeTransactionCompletion(tx), _logger);
             }
 
-            void IInterceptor.AfterTransactionCompletion(ITransaction tx) {
+            void IInterceptor.AfterTransactionCompletion(ITransaction tx)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.AfterTransactionCompletion(tx), _logger);
             }
 
-            SqlString IInterceptor.OnPrepareStatement(SqlString sql) {
+            SqlString IInterceptor.OnPrepareStatement(SqlString sql)
+            {
                 if (_interceptors.Length == 0) return sql;
 
                 // Cannot use Invoke, as we need to pass previous result to the next interceptor
-                return _interceptors.Aggregate(sql, (current, i) => {
-                    try {
+                return _interceptors.Aggregate(sql, (current, i) =>
+                {
+                    try
+                    {
                         return i.OnPrepareStatement(current);
                     }
-                    catch (Exception ex) {
-                        if (IsLogged(ex)) {
+                    catch (Exception ex)
+                    {
+                        if (IsLogged(ex))
+                        {
                             _logger.Error(ex, "{2} thrown from ISessionInterceptor by {0}",
                                 i.GetType().FullName,
                                 ex.GetType().Name);
                         }
 
-                        if (ex.IsFatal()) {
+                        if (ex.IsFatal())
+                        {
                             throw;
                         }
 
@@ -250,12 +297,14 @@ namespace Orchard.Data {
                 });
             }
 
-            void IInterceptor.SetSession(ISession session) {
+            void IInterceptor.SetSession(ISession session)
+            {
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.SetSession(session), _logger);
             }
 
-            private static bool IsLogged(Exception ex) {
+            private static bool IsLogged(Exception ex)
+            {
                 return ex is OrchardSecurityException || !ex.IsFatal();
             }
         }

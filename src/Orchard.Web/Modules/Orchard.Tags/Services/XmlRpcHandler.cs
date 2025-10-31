@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -9,8 +9,10 @@ using Orchard.Security;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
 
-namespace Orchard.Tags.Services {
-    public class XmlRpcHandler : IXmlRpcHandler {
+namespace Orchard.Tags.Services
+{
+    public class XmlRpcHandler : IXmlRpcHandler
+    {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IContentManager _contentManager;
@@ -22,7 +24,8 @@ namespace Orchard.Tags.Services {
             IAuthorizationService authorizationService,
             IContentManager contentManager,
             ITagService tagService,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices)
+        {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
             _contentManager = contentManager;
@@ -30,15 +33,18 @@ namespace Orchard.Tags.Services {
             _orchardServices = orchardServices;
         }
 
-        public void SetCapabilities(XElement options) {
+        public void SetCapabilities(XElement options)
+        {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsKeywords", manifestUri), "Yes");
             options.SetElementValue(XName.Get("supportsGetTags", manifestUri), "Yes");
             options.SetElementValue(XName.Get("keywordsAsTags", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context) {
-            switch (context.Request.MethodName) {
+        public void Process(XmlRpcContext context)
+        {
+            switch (context.Request.MethodName)
+            {
                 case "metaWeblog.getCategories": // hack... because live writer still asks for it...
                     if (context.Response == null)
                         context.Response = new XRpcMethodResponse().Add(new XRpcArray());
@@ -79,13 +85,15 @@ namespace Orchard.Tags.Services {
             }
         }
 
-        private static int GetId(XRpcMethodResponse response) {
+        private static int GetId(XRpcMethodResponse response)
+        {
             return response != null && response.Params.Count == 1 && response.Params[0].Value is int
                        ? Convert.ToInt32(response.Params[0].Value)
                        : 0;
         }
 
-        private void MetaWeblogAttachTagsToPost(XRpcStruct postStruct, int postId, string userName, string password, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogAttachTagsToPost(XRpcStruct postStruct, int postId, string userName, string password, ICollection<IXmlRpcDriver> drivers)
+        {
             if (postId < 1)
                 return;
 
@@ -93,7 +101,8 @@ namespace Orchard.Tags.Services {
             var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
-            var driver = new XmlRpcDriver(item => {
+            var driver = new XmlRpcDriver(item =>
+            {
                 var post = item as XRpcStruct;
                 if (post == null)
                     return;
@@ -112,19 +121,22 @@ namespace Orchard.Tags.Services {
                 drivers.Add(driver);
         }
 
-        private static XRpcStruct GetPost(XRpcMethodResponse response) {
+        private static XRpcStruct GetPost(XRpcMethodResponse response)
+        {
             return response != null && response.Params.Count == 1 && response.Params[0].Value is XRpcStruct
                        ? response.Params[0].Value as XRpcStruct
                        : null;
         }
 
-        private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
+        private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password)
+        {
             List<LocalizedString> validationErrors;
             var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var array = new XRpcArray();
-            foreach (var tag in _tagService.GetTags()) {
+            foreach (var tag in _tagService.GetTags())
+            {
                 var thisTag = tag;
                 array.Add(new XRpcStruct()
                               .Set("tag_id", thisTag.TagName)
@@ -139,7 +151,8 @@ namespace Orchard.Tags.Services {
             return array;
         }
 
-        private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers)
+        {
             List<LocalizedString> validationErrors;
             var user = _membershipService.ValidateUser(userName, password, out validationErrors);
 
@@ -148,7 +161,8 @@ namespace Orchard.Tags.Services {
                 return;
 
             var tags = TagHelpers.ParseCommaSeparatedTagNames(rawTags);
-            var driver = new XmlRpcDriver(item => {
+            var driver = new XmlRpcDriver(item =>
+            {
                 if (!(item is int))
                     return;
 
@@ -167,14 +181,17 @@ namespace Orchard.Tags.Services {
                 drivers.Add(driver);
         }
 
-        public class XmlRpcDriver : IXmlRpcDriver {
+        public class XmlRpcDriver : IXmlRpcDriver
+        {
             private readonly Action<object> _process;
 
-            public XmlRpcDriver(Action<object > process) {
+            public XmlRpcDriver(Action<object> process)
+            {
                 _process = process;
             }
 
-            public void Process(object item) {
+            public void Process(object item)
+            {
                 _process(item);
             }
         }

@@ -1,17 +1,20 @@
-﻿using System.IO;
+using System.IO;
 using System.Net;
 using TechTalk.SpecFlow;
 
-namespace Orchard.Profile.Tests {
+namespace Orchard.Profile.Tests
+{
     [Binding]
-    public class HttpClient {
+    public class HttpClient
+    {
         private readonly CookieContainer _cookieContainer = new CookieContainer();
         private HttpWebRequest _request;
         private HttpWebResponse _response;
         private string _text;
 
         [Given(@"I am logged in")]
-        public void GivenIAmLoggedIn() {
+        public void GivenIAmLoggedIn()
+        {
             DoRequest("/Users/Account/LogOn");
 
             const string requestVerificationTokenName = "__RequestVerificationToken";
@@ -27,41 +30,52 @@ namespace Orchard.Profile.Tests {
         }
 
         [When(@"I go to ""(.*)""")]
-        public void WhenIGoTo(string url) {
+        public void WhenIGoTo(string url)
+        {
             DoRequest(url);
         }
 
         [When(@"I go to ""(.*)"" (.*) times")]
-        public void WhenIGoTo(string url, int times) {
+        public void WhenIGoTo(string url, int times)
+        {
             for (int i = 0; i != times; ++i)
                 DoRequest(url);
         }
 
-        private void DoRequest(string url) {
+        private void DoRequest(string url)
+        {
             DoRequest(url, null);
         }
 
-        private void DoRequest(string url, string postData) {
+        private void DoRequest(string url, string postData)
+        {
             _request = (HttpWebRequest)WebRequest.Create("http://localhost" + url);
             _request.CookieContainer = _cookieContainer;
-            if (postData != null) {
+            if (postData != null)
+            {
                 _request.Method = "POST";
                 _request.ContentType = "application/x-www-form-urlencoded";
-                using (var stream = _request.GetRequestStream()) {
-                    using (var writer = new StreamWriter(stream)) {
+                using (var stream = _request.GetRequestStream())
+                {
+                    using (var writer = new StreamWriter(stream))
+                    {
                         writer.Write(postData);
                     }
                 }
             }
-            try {
+            try
+            {
                 _response = (HttpWebResponse)_request.GetResponse();
             }
-            catch (WebException ex) {
+            catch (WebException ex)
+            {
                 _response = (HttpWebResponse)ex.Response;
             }
 
-            using (var stream = _response.GetResponseStream()) {
-                using (var reader = new StreamReader(stream)) {
+            using (var stream = _response.GetResponseStream())
+            {
+                using (var reader = new StreamReader(stream))
+                {
                     _text = reader.ReadToEnd();
                 }
             }

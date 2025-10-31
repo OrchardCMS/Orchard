@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Blogs.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Blogs {
-    public class Routes : IRouteProvider {
+namespace Orchard.Blogs
+{
+    public class Routes : IRouteProvider
+    {
         private readonly IArchiveConstraint _archiveConstraint;
         private readonly IRsdConstraint _rsdConstraint;
 
         public Routes(
             IArchiveConstraint archiveConstraint,
-            IRsdConstraint rsdConstraint) {
+            IRsdConstraint rsdConstraint)
+        {
             _archiveConstraint = archiveConstraint;
             _rsdConstraint = rsdConstraint;
         }
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
             var routeDescriptors = new[] {
                              new RouteDescriptor {
                                                      Route = new Route(

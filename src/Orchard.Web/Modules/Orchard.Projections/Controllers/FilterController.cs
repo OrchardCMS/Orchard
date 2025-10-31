@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,13 +9,14 @@ using Orchard.Localization;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
-using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Projections.Controllers {
+namespace Orchard.Projections.Controllers
+{
     [ValidateInput(false), Admin]
-    public class FilterController : Controller {
+    public class FilterController : Controller
+    {
         public FilterController(
             IOrchardServices services,
             IFormManager formManager,
@@ -23,7 +24,8 @@ namespace Orchard.Projections.Controllers {
             IProjectionManager projectionManager,
             IRepository<FilterRecord> repository,
             IRepository<FilterGroupRecord> groupRepository,
-            IQueryService queryService) {
+            IQueryService queryService)
+        {
             Services = services;
             _formManager = formManager;
             _projectionManager = projectionManager;
@@ -42,7 +44,8 @@ namespace Orchard.Projections.Controllers {
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult Add(int id) {
+        public ActionResult Add(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
@@ -50,29 +53,33 @@ namespace Orchard.Projections.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult AddGroup(int id) {
+        public ActionResult AddGroup(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id).Record;
 
-            if (query == null) {
+            if (query == null)
+            {
                 return HttpNotFound();
             }
 
-            query.FilterGroups.Add( new FilterGroupRecord());
+            query.FilterGroups.Add(new FilterGroupRecord());
 
             return RedirectToAction("Edit", "Admin", new { query.ContentItemRecord.Id });
         }
 
         [HttpPost]
-        public ActionResult DeleteGroup(int id) {
+        public ActionResult DeleteGroup(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var group = _groupRepository.Get(id);
 
-            if (group == null) {
+            if (group == null)
+            {
                 return HttpNotFound();
             }
             var queryId = group.QueryPartRecord.Id;
@@ -84,12 +91,14 @@ namespace Orchard.Projections.Controllers {
         }
 
 
-        public ActionResult Delete(int id, int filterId) {
+        public ActionResult Delete(int id, int filterId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var filter = _repository.Get(filterId);
-            if(filter == null) {
+            if (filter == null)
+            {
                 return HttpNotFound();
             }
 
@@ -101,13 +110,15 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Edit", "Admin", new { id });
         }
 
-        public ActionResult Edit(int id, string category, string type, int filterId = -1) {
+        public ActionResult Edit(int id, string category, string type, int filterId = -1)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var filter = _projectionManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
 
-            if (filter == null) {
+            if (filter == null)
+            {
                 return HttpNotFound();
             }
 
@@ -117,10 +128,12 @@ namespace Orchard.Projections.Controllers {
             string description = "";
 
             // bind form with existing values).
-            if (filterId != -1) {
+            if (filterId != -1)
+            {
                 var group = _groupRepository.Get(id);
                 var filterRecord = group.Filters.FirstOrDefault(f => f.Id == filterId);
-                if (filterRecord != null) {
+                if (filterRecord != null)
+                {
                     description = filterRecord.Description;
                     var parameters = FormParametersHelper.FromString(filterRecord.State);
                     _formManager.Bind(form, new DictionaryValueProvider<string>(parameters, CultureInfo.InvariantCulture));
@@ -132,7 +145,8 @@ namespace Orchard.Projections.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)] int filterId, FormCollection formCollection) {
+        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)] int filterId, FormCollection formCollection)
+        {
             var group = _groupRepository.Get(id);
 
             var filter = _projectionManager.DescribeFilters().SelectMany(x => x.Descriptors).Where(x => x.Category == category && x.Type == type).FirstOrDefault();
@@ -143,14 +157,17 @@ namespace Orchard.Projections.Controllers {
             // validating form values
             _formManager.Validate(new ValidatingContext { FormName = filter.Form, ModelState = ModelState, ValueProvider = ValueProvider });
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var filterRecord = group.Filters.Where(f => f.Id == filterId).FirstOrDefault();
 
                 // add new filter record if it's a newly created filter
-                if (filterRecord == null) {
-                    filterRecord = new FilterRecord {
-                        Category = category, 
-                        Type = type, 
+                if (filterRecord == null)
+                {
+                    filterRecord = new FilterRecord
+                    {
+                        Category = category,
+                        Type = type,
                         Position = group.Filters.Count
                     };
                     group.Filters.Add(filterRecord);

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.DynamicForms.Services.Models {
-    public class ContentPartBindingDescriptor {
-        public ContentPartBindingDescriptor() {
+namespace Orchard.DynamicForms.Services.Models
+{
+    public class ContentPartBindingDescriptor
+    {
+        public ContentPartBindingDescriptor()
+        {
             BindingContexts = new List<BindingContext>();
             FieldBindings = new List<ContentFieldBindingDescriptor>();
         }

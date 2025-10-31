@@ -1,14 +1,17 @@
-﻿using NUnit.Framework;
-using Orchard.Data.Bags;
-using Orchard.Data.Bags.Serialization;
 using System.Collections.Generic;
 using System.IO;
+using NUnit.Framework;
+using Orchard.Data.Bags;
+using Orchard.Data.Bags.Serialization;
 
-namespace Orchard.Tests.Data.Bags {
+namespace Orchard.Tests.Data.Bags
+{
     [TestFixture]
-    public class BagsTests {
+    public class BagsTests
+    {
         [Test]
-        public void ShouldRemoveMember() {
+        public void ShouldRemoveMember()
+        {
             dynamic e = new Bag();
             e.Foo = "Bar";
             Assert.That(e, Is.Not.Empty);
@@ -19,7 +22,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void ShouldSupportFactoryInvocation() {
+        public void ShouldSupportFactoryInvocation()
+        {
             var e = Bag.New();
 
             e.Foo = "Bar";
@@ -28,7 +32,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void ShouldAddDynamicProperties() {
+        public void ShouldAddDynamicProperties()
+        {
             dynamic e = new Bag();
             e.Foo = "Bar";
             Assert.That(e["Foo"], Is.EqualTo("Bar"));
@@ -36,23 +41,26 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void UnknownPropertiesShouldBeNull() {
+        public void UnknownPropertiesShouldBeNull()
+        {
             dynamic e = new Bag();
             Assert.That((object)e["Foo"], Is.EqualTo(null));
             Assert.That((object)e.Foo, Is.EqualTo(null));
         }
 
         [Test]
-        public void ShouldAddDynamicObjects() {
+        public void ShouldAddDynamicObjects()
+        {
             dynamic e = new Bag();
             e.Address = new Bag();
-            
+
             e.Address.Street = "One Microsoft Way";
             Assert.That(e["Address"]["Street"], Is.EqualTo("One Microsoft Way"));
             Assert.That(e.Address.Street, Is.EqualTo("One Microsoft Way"));
         }
 
-        public void ShouldAddArraysOfAnonymousObject() {
+        public void ShouldAddArraysOfAnonymousObject()
+        {
             dynamic e = new Bag();
 
             e.Foos = new[] { new { Foo1 = "Bar1", Foo2 = "Bar2" } };
@@ -60,7 +68,8 @@ namespace Orchard.Tests.Data.Bags {
             Assert.That(e.Foos[0].Foo2, Is.EqualTo("Bar2"));
         }
 
-        public void ShouldAddAnonymousObject() {
+        public void ShouldAddAnonymousObject()
+        {
             dynamic e = new Bag();
 
             e.Foos = new { Foo1 = "Bar1", Foo2 = "Bar2" };
@@ -69,7 +78,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void ShouldAddArrays() {
+        public void ShouldAddArrays()
+        {
             dynamic e = new Bag();
             e.Owners = new[] { "Steve", "Bill" };
             Assert.That(e.Owners[0], Is.EqualTo("Steve"));
@@ -77,7 +87,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void ShouldBeEnumerable() {
+        public void ShouldBeEnumerable()
+        {
             dynamic e = new Bag();
             e.Address = new Bag();
 
@@ -92,11 +103,12 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void ShouldSerializeAndDeserialize() {
+        public void ShouldSerializeAndDeserialize()
+        {
             dynamic e = new Bag();
-            
+
             e.Foo = "Bar";
-            
+
             e.Address = new Bag();
             e.Address.Street = "One Microsoft Way";
             e.Owners = new[] { "Steve", "Bill" };
@@ -105,20 +117,23 @@ namespace Orchard.Tests.Data.Bags {
             string xml1;
 
             var serializer = new XmlSettingsSerializer();
-            using (var sw = new StringWriter()) {
+            using (var sw = new StringWriter())
+            {
                 serializer.Serialize(sw, e);
                 xml1 = sw.ToString();
             }
 
             dynamic clone;
 
-            using (var sr = new StringReader(xml1)) {
+            using (var sr = new StringReader(xml1))
+            {
                 clone = serializer.Deserialize(sr);
             }
 
             string xml2;
 
-            using (var sw = new StringWriter()) {
+            using (var sw = new StringWriter())
+            {
                 serializer.Serialize(sw, clone);
                 xml2 = sw.ToString();
             }
@@ -127,7 +142,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void MergeShouldOverwriteExistingProperties() {
+        public void MergeShouldOverwriteExistingProperties()
+        {
             var o1 = Bag.New();
             o1.Foo = "Foo1";
             o1.Bar = "Bar1";
@@ -144,7 +160,8 @@ namespace Orchard.Tests.Data.Bags {
         }
 
         [Test]
-        public void MergeShouldConcatenateArrays() {
+        public void MergeShouldConcatenateArrays()
+        {
             var o1 = Bag.New();
             o1.Foo = new[] { "a", "b" };
 

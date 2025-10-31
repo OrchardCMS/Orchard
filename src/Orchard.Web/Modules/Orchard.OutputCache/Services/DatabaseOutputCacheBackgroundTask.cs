@@ -1,19 +1,23 @@
-﻿using Orchard.Environment.Extensions;
-using Orchard.OutputCache.Services;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 
-namespace Orchard.OutputCache.Services {
+namespace Orchard.OutputCache.Services
+{
     [OrchardFeature("Orchard.OutputCache.Database")]
-    public class DatabaseOutputCacheBackgroundTask : IBackgroundTask {
+    public class DatabaseOutputCacheBackgroundTask : IBackgroundTask
+    {
         private readonly IOutputCacheStorageProvider _outputCacheStorageProvider;
 
-        public DatabaseOutputCacheBackgroundTask(IOutputCacheStorageProvider outputCacheStorageProvider) {
+        public DatabaseOutputCacheBackgroundTask(IOutputCacheStorageProvider outputCacheStorageProvider)
+        {
             _outputCacheStorageProvider = outputCacheStorageProvider;
         }
 
-        public void Sweep() {
+        public void Sweep()
+        {
             var provider = _outputCacheStorageProvider as DatabaseOutputCacheStorageProvider;
-            if (provider != null) {
+            if (provider != null)
+            {
                 provider.RemoveExpiredEntries();
             }
         }

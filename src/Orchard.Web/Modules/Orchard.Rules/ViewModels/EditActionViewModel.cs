@@ -1,8 +1,10 @@
-﻿using Orchard.Rules.Models;
+using Orchard.Rules.Models;
 
-namespace Orchard.Rules.ViewModels {
+namespace Orchard.Rules.ViewModels
+{
 
-    public class EditActionViewModel {
+    public class EditActionViewModel
+    {
         public int Id { get; set; }
         public int ActionId { get; set; }
         public ActionDescriptor Action { get; set; }

@@ -1,31 +1,27 @@
-﻿using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Recipes.ViewModels;
 
-namespace Orchard.Recipes.Providers.Builders {
-    public class RecipeMetadataStep : RecipeBuilderStep {
+namespace Orchard.Recipes.Providers.Builders
+{
+    public class RecipeMetadataStep : RecipeBuilderStep
+    {
         private readonly IOrchardServices _orchardServices;
-        public RecipeMetadataStep(IOrchardServices orchardServices) {
+        public RecipeMetadataStep(IOrchardServices orchardServices)
+        {
             _orchardServices = orchardServices;
         }
 
-        public override string Name {
-            get { return "RecipeMetadata"; }
-        }
+        public override string Name => "RecipeMetadata";
 
-        public override LocalizedString DisplayName {
-            get { return T("Recipe Metadata"); }
-        }
+        public override LocalizedString DisplayName => T("Recipe Metadata");
 
-        public override LocalizedString Description {
-            get { return T("Provides additional information about the recipe."); }
-        }
+        public override LocalizedString Description => T("Provides additional information about the recipe.");
 
-        public override int Priority { get { return 1000; } }
-        public override int Position { get { return -1000; } }
+        public override int Priority => 1000;
+        public override int Position => -1000;
 
         public string RecipeName { get; set; }
         public string RecipeDescription { get; set; }
@@ -36,16 +32,20 @@ namespace Orchard.Recipes.Providers.Builders {
         public string RecipeVersion { get; set; }
         public bool IsSetupRecipe { get; set; }
 
-        public override dynamic BuildEditor(dynamic shapeFactory) {
+        public override dynamic BuildEditor(dynamic shapeFactory)
+        {
             return UpdateEditor(shapeFactory, null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new SetupRecipeStepViewModel {
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
+        {
+            var viewModel = new SetupRecipeStepViewModel
+            {
                 RecipeAuthor = _orchardServices.WorkContext.CurrentUser.UserName
             };
 
-            if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+            if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
                 RecipeName = viewModel.RecipeName;
                 RecipeDescription = viewModel.RecipeDescription;
                 RecipeAuthor = viewModel.RecipeAuthor;
@@ -59,7 +59,8 @@ namespace Orchard.Recipes.Providers.Builders {
             return shapeFactory.EditorTemplate(TemplateName: "BuilderSteps/RecipeMetadata", Model: viewModel, Prefix: Prefix);
         }
 
-        public override void Configure(RecipeBuilderStepConfigurationContext context) {
+        public override void Configure(RecipeBuilderStepConfigurationContext context)
+        {
             RecipeName = context.ConfigurationElement.Attr("Name");
             RecipeDescription = context.ConfigurationElement.Attr("Description");
             RecipeAuthor = context.ConfigurationElement.Attr("Author");
@@ -70,9 +71,10 @@ namespace Orchard.Recipes.Providers.Builders {
             IsSetupRecipe = context.ConfigurationElement.Attr<bool>("IsSetupRecipe");
         }
 
-        public override void Build(BuildContext context) {
+        public override void Build(BuildContext context)
+        {
             var recipeElement = context.RecipeDocument.Element("Orchard").Element("Recipe");
-            
+
             recipeElement.SetElementValue("Name", RecipeName);
             recipeElement.SetElementValue("Description", RecipeDescription);
             recipeElement.SetElementValue("Author", RecipeAuthor);

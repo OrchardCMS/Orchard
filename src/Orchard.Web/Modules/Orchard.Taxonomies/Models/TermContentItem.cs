@@ -1,10 +1,12 @@
 using Orchard.Data.Conventions;
 
-namespace Orchard.Taxonomies.Models {
+namespace Orchard.Taxonomies.Models
+{
     /// <summary>
     /// Represents a relationship between a Term and a Content Item
     /// </summary>
-    public class TermContentItem {
+    public class TermContentItem
+    {
 
         public virtual int Id { get; set; }
         public virtual string Field { get; set; }

@@ -1,5 +1,7 @@
-﻿namespace Orchard.OpenId.Constants {
-    public class Twitter {
+namespace Orchard.OpenId.Constants
+{
+    public class Twitter
+    {
         public const string DefaultConsumerKey = "xXxXxXxXxXxXxXxXxXxXxXxXx";
         public const string DefaultConsumerSecret = "xXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxX";
 

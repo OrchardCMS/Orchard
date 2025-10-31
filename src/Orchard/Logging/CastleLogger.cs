@@ -1,20 +1,26 @@
-﻿using System;
+using System;
 
-namespace Orchard.Logging {
-    public class CastleLogger : ILogger {
+namespace Orchard.Logging
+{
+    public class CastleLogger : ILogger
+    {
         private readonly Castle.Core.Logging.ILogger _castleLogger;
 
-        public CastleLogger(Castle.Core.Logging.ILogger castleLogger) {
+        public CastleLogger(Castle.Core.Logging.ILogger castleLogger)
+        {
             _castleLogger = castleLogger;
-            
+
         }
 
-        public void Error(Exception exception, string format, params object[] args) {
+        public void Error(Exception exception, string format, params object[] args)
+        {
             _castleLogger.ErrorFormat(exception, format, args);
         }
 
-        public bool IsEnabled(LogLevel level) {
-            switch(level) {
+        public bool IsEnabled(LogLevel level)
+        {
+            switch (level)
+            {
                 case LogLevel.Debug:
                     return _castleLogger.IsDebugEnabled;
                 case LogLevel.Information:
@@ -29,9 +35,12 @@ namespace Orchard.Logging {
             return false;
         }
 
-        public void Log(LogLevel level, Exception exception, string format, params object[] args) {
-            if (args == null) {
-                switch (level) {
+        public void Log(LogLevel level, Exception exception, string format, params object[] args)
+        {
+            if (args == null)
+            {
+                switch (level)
+                {
                     case LogLevel.Debug:
                         _castleLogger.Debug(format, exception);
                         break;
@@ -49,8 +58,10 @@ namespace Orchard.Logging {
                         break;
                 }
             }
-            else {
-                switch (level) {
+            else
+            {
+                switch (level)
+                {
                     case LogLevel.Debug:
                         _castleLogger.DebugFormat(exception, format, args);
                         break;

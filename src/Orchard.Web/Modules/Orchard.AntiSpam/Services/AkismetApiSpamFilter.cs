@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -7,15 +7,18 @@ using System.Web;
 using Orchard.AntiSpam.Models;
 using Orchard.Logging;
 
-namespace Orchard.AntiSpam.Services {
-    public class AkismetApiSpamFilter : ISpamFilter {
+namespace Orchard.AntiSpam.Services
+{
+    public class AkismetApiSpamFilter : ISpamFilter
+    {
         private readonly string _endpoint;
         private readonly string _apiKey;
         private readonly HttpContextBase _context;
 
         private const string AkismetApiPattern = "http://{0}.{1}/1.1/{2}";
 
-        public AkismetApiSpamFilter(string endpoint, string apiKey, HttpContextBase context) {
+        public AkismetApiSpamFilter(string endpoint, string apiKey, HttpContextBase context)
+        {
             _endpoint = endpoint;
             _apiKey = apiKey;
             _context = context;
@@ -25,42 +28,53 @@ namespace Orchard.AntiSpam.Services {
 
         public ILogger Logger { get; set; }
 
-        public SpamStatus CheckForSpam(CommentCheckContext context) {
-            try {
+        public SpamStatus CheckForSpam(CommentCheckContext context)
+        {
+            try
+            {
                 var result = ExecuteValidateRequest(context, "comment-check");
 
-                if (HandleValidateResponse(_context, result)) {
+                if (HandleValidateResponse(_context, result))
+                {
                     return SpamStatus.Spam;
                 }
 
                 return SpamStatus.Ham;
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "An error occurred while checking for spam");
                 return SpamStatus.Spam;
             }
         }
 
-        public void ReportSpam(CommentCheckContext context) {
-            try {
+        public void ReportSpam(CommentCheckContext context)
+        {
+            try
+            {
                 var result = ExecuteValidateRequest(context, "submit-spam");
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "An error occurred while reporting spam");
             }
         }
 
-        public void ReportHam(CommentCheckContext context) {
-            try {
+        public void ReportHam(CommentCheckContext context)
+        {
+            try
+            {
                 var result = ExecuteValidateRequest(context, "submit-ham");
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(e, "An error occurred while reporting ham");
             }
         }
 
-        private string ExecuteValidateRequest(CommentCheckContext context, string action) {
-            var uri = String.Format(AkismetApiPattern, _apiKey, _endpoint, action);
+        private string ExecuteValidateRequest(CommentCheckContext context, string action)
+        {
+            var uri = string.Format(AkismetApiPattern, _apiKey, _endpoint, action);
 
             WebRequest request = WebRequest.Create(uri);
             request.Method = "POST";
@@ -79,20 +93,26 @@ namespace Orchard.AntiSpam.Services {
                            + "&comment_content=" + HttpUtility.UrlEncode(context.CommentContent);
 
             byte[] content = Encoding.UTF8.GetBytes(postData);
-            using (Stream stream = request.GetRequestStream()) {
+            using (Stream stream = request.GetRequestStream())
+            {
                 stream.Write(content, 0, content.Length);
             }
-            using (WebResponse webResponse = request.GetResponse()) {
-                using (var reader = new StreamReader(webResponse.GetResponseStream())) {
+            using (WebResponse webResponse = request.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
                     return reader.ReadToEnd();
                 }
             }
         }
 
-        internal static bool HandleValidateResponse(HttpContextBase context, string response) {
-            if (!String.IsNullOrEmpty(response)) {
+        internal static bool HandleValidateResponse(HttpContextBase context, string response)
+        {
+            if (!string.IsNullOrEmpty(response))
+            {
                 string[] results = response.Split('\n');
-                if (results.Length > 0) {
+                if (results.Length > 0)
+                {
                     bool rval = Convert.ToBoolean(results[0], CultureInfo.InvariantCulture);
                     return rval;
                 }

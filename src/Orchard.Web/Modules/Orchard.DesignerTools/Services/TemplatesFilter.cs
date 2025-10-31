@@ -5,27 +5,32 @@ using Orchard.Mvc.Filters;
 using Orchard.Security;
 using Orchard.UI.Admin;
 
-namespace Orchard.DesignerTools.Services {
-    public class TemplatesFilter : FilterProvider, IResultFilter {
+namespace Orchard.DesignerTools.Services
+{
+    public class TemplatesFilter : FilterProvider, IResultFilter
+    {
         private readonly WorkContext _workContext;
         private readonly IAuthorizer _authorizer;
         private readonly dynamic _shapeFactory;
 
         public TemplatesFilter(
-            WorkContext workContext, 
+            WorkContext workContext,
             IAuthorizer authorizer,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             _workContext = workContext;
             _authorizer = authorizer;
             _shapeFactory = shapeFactory;
         }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
+        public void OnResultExecuting(ResultExecutingContext filterContext)
+        {
             // should only run on a full view rendering result
             if (!(filterContext.Result is ViewResult))
                 return;
 
-            if(!IsActivable()) {
+            if (!IsActivable())
+            {
                 return;
             }
 
@@ -33,10 +38,12 @@ namespace Orchard.DesignerTools.Services {
             tail.Add(_shapeFactory.ShapeTracingTemplates());
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
+        public void OnResultExecuted(ResultExecutedContext filterContext)
+        {
         }
 
-        private bool IsActivable() {
+        private bool IsActivable()
+        {
             // activate on front-end only
             if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
                 return false;

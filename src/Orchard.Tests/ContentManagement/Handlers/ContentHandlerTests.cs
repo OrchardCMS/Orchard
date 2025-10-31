@@ -3,12 +3,15 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
 
-namespace Orchard.Tests.ContentManagement.Handlers {
+namespace Orchard.Tests.ContentManagement.Handlers
+{
 
     [TestFixture]
-    public class ContentHandlerTests {
+    public class ContentHandlerTests
+    {
         [Test]
-        public void ModelDriverShouldUsePersistenceFilterToDelegateCreateAndLoad() {
+        public void ModelDriverShouldUsePersistenceFilterToDelegateCreateAndLoad()
+        {
             var modelDriver = new TestModelHandler();
 
             var contentItem = new ContentItem();
@@ -20,7 +23,8 @@ namespace Orchard.Tests.ContentManagement.Handlers {
         }
 
         [Test]
-        public void PartShouldBeAddedBasedOnSimplePredicate() {
+        public void PartShouldBeAddedBasedOnSimplePredicate()
+        {
             var modelDriver = new TestModelHandler();
 
             var builder = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("testing").Build());
@@ -30,20 +34,25 @@ namespace Orchard.Tests.ContentManagement.Handlers {
             Assert.That(model.As<TestModelPart>(), Is.Not.Null);
         }
 
-        public class TestModelPart : ContentPart {
+        public class TestModelPart : ContentPart
+        {
             public bool CreatingCalled { get; set; }
         }
 
 
-        public class TestModelHandler : ContentHandler {
-            public TestModelHandler() {
+        public class TestModelHandler : ContentHandler
+        {
+            public TestModelHandler()
+            {
                 Filters.Add(new ActivatingFilter<TestModelPart>(x => x == "testing"));
                 Filters.Add(new TestModelStorageFilter());
             }
         }
 
-        public class TestModelStorageFilter : StorageFilterBase<TestModelPart> {
-            protected override void Creating(CreateContentContext context, TestModelPart instance) {
+        public class TestModelStorageFilter : StorageFilterBase<TestModelPart>
+        {
+            protected override void Creating(CreateContentContext context, TestModelPart instance)
+            {
                 instance.CreatingCalled = true;
             }
         }

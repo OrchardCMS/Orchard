@@ -1,5 +1,7 @@
-﻿namespace Orchard.Layouts.ViewModels {
-    public class LayoutPartViewModel {
+namespace Orchard.Layouts.ViewModels
+{
+    public class LayoutPartViewModel
+    {
         public LayoutEditor LayoutEditor { get; set; }
     }
 }

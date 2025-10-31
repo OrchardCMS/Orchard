@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
@@ -21,9 +21,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Upgrade.Services;
 
-namespace Upgrade.Controllers {
+namespace Upgrade.Controllers
+{
     [Admin]
-    public class InfosetController : Controller {
+    public class InfosetController : Controller
+    {
         private readonly IOrchardServices _orchardServices;
         private readonly IUpgradeService _upgradeService;
         private readonly ISignals _signals;
@@ -37,7 +39,8 @@ namespace Upgrade.Controllers {
             IUpgradeService upgradeService,
             IRepository<ContentItemRecord> contentItemRecord,
             IRepository<ContentItemVersionRecord> contentItemVersionRecord,
-            ISignals signals) {
+            ISignals signals)
+        {
             _orchardServices = orchardServices;
             _upgradeService = upgradeService;
             _signals = signals;
@@ -50,12 +53,14 @@ namespace Upgrade.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             return View();
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPost() {
+        public ActionResult IndexPost()
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
@@ -63,9 +68,11 @@ namespace Upgrade.Controllers {
 
             #region SiteSettingsPartRecord
             var siteTable = _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord");
-            if (_upgradeService.TableExists(siteTable)) {
+            if (_upgradeService.TableExists(siteTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + siteTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.HomePage = ConvertToString(reader["HomePage"]);
                         site.PageSize = (int)reader["PageSize"];
                         site.PageTitleSeparator = ConvertToString(reader["PageTitleSeparator"]);
@@ -86,9 +93,11 @@ namespace Upgrade.Controllers {
 
             #region SiteSettings2PartRecord
             var site2Table = _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord");
-            if (_upgradeService.TableExists(site2Table)) {
+            if (_upgradeService.TableExists(site2Table))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + site2Table,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.BaseUrl = ConvertToString(reader["BaseUrl"]);
                     });
 
@@ -99,7 +108,8 @@ namespace Upgrade.Controllers {
 
             #region ThemeSiteSettingsPartRecord
             var themesTable = _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord");
-            if (_upgradeService.TableExists(themesTable)) {
+            if (_upgradeService.TableExists(themesTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + themesTable,
                     (reader, connection) => site.As<InfosetPart>().Store("ThemeSiteSettingsPart", "CurrentThemeName", ConvertToString(reader["CurrentThemeName"])));
 
@@ -110,9 +120,11 @@ namespace Upgrade.Controllers {
 
             #region AkismetSettingsPartRecord
             var akismetTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord");
-            if (_upgradeService.TableExists(akismetTable)) {
+            if (_upgradeService.TableExists(akismetTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + akismetTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("AkismetSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
                         site.As<InfosetPart>().Store("AkismetSettingsPart", "ApiKey", ConvertToString(reader["ApiKey"]));
                     });
@@ -124,9 +136,11 @@ namespace Upgrade.Controllers {
 
             #region ReCaptchaSettingsPartRecord
             var reCaptchaTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord");
-            if (_upgradeService.TableExists(reCaptchaTable)) {
+            if (_upgradeService.TableExists(reCaptchaTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + reCaptchaTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PublicKey", ConvertToString(reader["PublicKey"]));
                         site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PrivateKey", ConvertToString(reader["PrivateKey"]));
                         site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
@@ -139,9 +153,11 @@ namespace Upgrade.Controllers {
 
             #region TypePadSettingsPartRecord
             var typePadTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord");
-            if (_upgradeService.TableExists(typePadTable)) {
+            if (_upgradeService.TableExists(typePadTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + typePadTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("TypePadSettingsPart", "ApiKey", ConvertToString(reader["ApiKey"]));
                         site.As<InfosetPart>().Store("TypePadSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
                     });
@@ -153,9 +169,11 @@ namespace Upgrade.Controllers {
 
             #region CacheSettingsPartRecord
             var cacheTable = _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord");
-            if (_upgradeService.TableExists(cacheTable)) {
+            if (_upgradeService.TableExists(cacheTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + cacheTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultCacheDuration", (int)reader["DefaultCacheDuration"]);
                         site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultMaxAge", (int)reader["DefaultMaxAge"]);
                         site.As<InfosetPart>().Store("CacheSettingsPart", "VaryQueryStringParameters", ConvertToString(reader["VaryQueryStringParameters"]));
@@ -172,9 +190,11 @@ namespace Upgrade.Controllers {
 
             #region CommentSettingsPartRecord
             var commentsTable = _upgradeService.GetPrefixedTableName("Orchard_Comments_CommentSettingsPartRecord");
-            if (_upgradeService.TableExists(commentsTable)) {
+            if (_upgradeService.TableExists(commentsTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + commentsTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("CommentSettingsPart", "ModerateComments", (bool)reader["ModerateComments"]);
                     });
 
@@ -185,9 +205,11 @@ namespace Upgrade.Controllers {
 
             #region  MessageSettingsPartRecord
             var messagesTable = _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord");
-            if (_upgradeService.TableExists(messagesTable)) {
+            if (_upgradeService.TableExists(messagesTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + messagesTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("MessageSettingsPart", "DefaultChannelService", reader["DefaultChannelService"] as string);
                     });
 
@@ -198,9 +220,11 @@ namespace Upgrade.Controllers {
 
             #region SearchSettingsPartRecord
             var searchTable = _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord");
-            if (_upgradeService.TableExists(searchTable)) {
+            if (_upgradeService.TableExists(searchTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + searchTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("SearchSettingsPart", "SearchedFields", ConvertToString(reader["SearchedFields"]));
                         site.As<InfosetPart>().Store("SearchSettingsPart", "FilterCulture", (bool)reader["FilterCulture"]);
                         site.As<InfosetPart>().Store("SearchSettingsPart", "SearchIndex", ConvertToString(reader["SearchIndex"]));
@@ -213,9 +237,11 @@ namespace Upgrade.Controllers {
 
             #region RegistrationSettingsPartRecord
             var registrationTable = _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord");
-            if (_upgradeService.TableExists(registrationTable)) {
+            if (_upgradeService.TableExists(registrationTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + registrationTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
                         site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersMustValidateEmail", (bool)reader["UsersMustValidateEmail"]);
                         site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
@@ -234,9 +260,11 @@ namespace Upgrade.Controllers {
 
             #region SmtpSettingsPartRecord
             var emailTable = _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord");
-            if (_upgradeService.TableExists(emailTable)) {
+            if (_upgradeService.TableExists(emailTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + emailTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("SmtpSettingsPart", "Address", ConvertToString(reader["Address"]));
                         site.As<InfosetPart>().Store("SmtpSettingsPart", "Host", ConvertToString(reader["Host"]));
                         site.As<InfosetPart>().Store("SmtpSettingsPart", "Port", (int)reader["Port"]);
@@ -253,9 +281,11 @@ namespace Upgrade.Controllers {
 
             #region WarmupSettingsPartRecord
             var warmupTable = _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord");
-            if (_upgradeService.TableExists(warmupTable)) {
+            if (_upgradeService.TableExists(warmupTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + warmupTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("WarmupSettingsPart", "Urls", ConvertToString(reader["Urls"]));
                         site.As<InfosetPart>().Store("WarmupSettingsPart", "Scheduled", (bool)reader["Scheduled"]);
                         site.As<InfosetPart>().Store("WarmupSettingsPart", "Delay", (int)reader["Delay"]);
@@ -269,9 +299,11 @@ namespace Upgrade.Controllers {
 
             #region BlogPartRecord
             var blogTable = _upgradeService.GetPrefixedTableName("Orchard_Blogs_BlogPartRecord");
-            if (_upgradeService.TableExists(blogTable)) {
+            if (_upgradeService.TableExists(blogTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + blogTable,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         site.As<InfosetPart>().Store("BlogPart", "Description", ConvertToString(reader["Description"]));
                     });
 
@@ -285,7 +317,8 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateBody(int id) {
+        public JsonResult MigrateBody(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
@@ -297,7 +330,8 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            foreach (var part in parts) {
+            foreach (var part in parts)
+            {
                 part.Text = part.Text;
                 lastContentItemId = part.Record.Id;
             }
@@ -306,7 +340,8 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateMedia(int id) {
+        public JsonResult MigrateMedia(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
@@ -318,7 +353,8 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            foreach (var part in parts) {
+            foreach (var part in parts)
+            {
                 part.MimeType = part.MimeType;
                 part.Caption = part.Caption;
                 part.AlternateText = part.AlternateText;
@@ -331,20 +367,24 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateContentPermissionsPart(int id) {
+        public JsonResult MigrateContentPermissionsPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var permissionsTable = _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord");
-            if (_upgradeService.TableExists(permissionsTable)) {
+            if (_upgradeService.TableExists(permissionsTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + permissionsTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (contentPermissionPart != null) {
+                        if (contentPermissionPart != null)
+                        {
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "Enabled", (bool)reader["Enabled"]);
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewContent", ConvertToString(reader["ViewContent"]));
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewOwnContent", ConvertToString(reader["ViewOwnContent"]));
@@ -353,11 +393,12 @@ namespace Upgrade.Controllers {
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditContent", ConvertToString(reader["EditContent"]));
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditOwnContent", ConvertToString(reader["EditOwnContent"]));
                             contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteContent", ConvertToString(reader["DeleteContent"]));
-                            contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteOwnContent", ConvertToString(reader["DeleteOwnContent"])); 
+                            contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteOwnContent", ConvertToString(reader["DeleteOwnContent"]));
                         }
                     });
 
-                if (lastContentItemId == id) {
+                if (lastContentItemId == id)
+                {
                     // delete the table only when there is no more content to process
                     _upgradeService.ExecuteReader("DROP TABLE " + permissionsTable, null);
                 }
@@ -367,21 +408,25 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateContentMenuItemPart(int id) {
+        public JsonResult MigrateContentMenuItemPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var contentMenuItemTable = _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord");
-            if (_upgradeService.TableExists(contentMenuItemTable)) {
+            if (_upgradeService.TableExists(contentMenuItemTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + contentMenuItemTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var contentMenuItemPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (contentMenuItemPart != null) {
-                            contentMenuItemPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]); 
+                        if (contentMenuItemPart != null)
+                        {
+                            contentMenuItemPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
                         }
                     });
             }
@@ -390,20 +435,24 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateTagsPart(int id) {
+        public JsonResult MigrateTagsPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var tagsTable = _upgradeService.GetPrefixedTableName("Orchard_Tags_TagsPartRecord");
-            if (_upgradeService.TableExists(tagsTable)) {
+            if (_upgradeService.TableExists(tagsTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + tagsTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var tagsPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (tagsPart != null) {
+                        if (tagsPart != null)
+                        {
                             var tagNames = new List<string>();
                             _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " TR.TagName as TagName FROM "
                                                             + _upgradeService.GetPrefixedTableName("Orchard_Tags_ContentTagRecord") + " as CTR "
@@ -412,7 +461,7 @@ namespace Upgrade.Controllers {
                                                             + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string)r["TagName"]));
 
 
-                            tagsPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", String.Join(",", tagNames)); 
+                            tagsPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", string.Join(",", tagNames));
                         }
                     });
             }
@@ -421,20 +470,24 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateWidgetPart(int id) {
+        public JsonResult MigrateWidgetPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var widgetsTable = _upgradeService.GetPrefixedTableName("Orchard_Widgets_WidgetPartRecord");
-            if (_upgradeService.TableExists(widgetsTable)) {
+            if (_upgradeService.TableExists(widgetsTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + widgetsTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var widgetPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (widgetPart != null) {
+                        if (widgetPart != null)
+                        {
                             widgetPart.As<InfosetPart>().Store("WidgetPart", "Title", ConvertToString(reader["Title"]));
                             widgetPart.As<InfosetPart>().Store("WidgetPart", "Position", ConvertToString(reader["Position"]));
                             widgetPart.As<InfosetPart>().Store("WidgetPart", "Zone", ConvertToString(reader["Zone"]));
@@ -448,23 +501,27 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateLayerPart(int id) {
+        public JsonResult MigrateLayerPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var layersTable = _upgradeService.GetPrefixedTableName("Orchard_Widgets_LayerPartRecord");
-            if (_upgradeService.TableExists(layersTable)) {
+            if (_upgradeService.TableExists(layersTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + layersTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var layerPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (layerPart != null) {
+                        if (layerPart != null)
+                        {
                             layerPart.As<InfosetPart>().Store("LayerPart", "Name", ConvertToString(reader["Name"]));
                             layerPart.As<InfosetPart>().Store("LayerPart", "Description", ConvertToString(reader["Description"]));
-                            layerPart.As<InfosetPart>().Store("LayerPart", "LayerRule", ConvertToString(reader["LayerRule"])); 
+                            layerPart.As<InfosetPart>().Store("LayerPart", "LayerRule", ConvertToString(reader["LayerRule"]));
                         }
                     });
             }
@@ -473,30 +530,35 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateMenuWidgetPart(int id) {
+        public JsonResult MigrateMenuWidgetPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var menuWidgetTable = _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord");
-            if (_upgradeService.TableExists(menuWidgetTable)) {
+            if (_upgradeService.TableExists(menuWidgetTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + menuWidgetTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var menuWidgetPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (menuWidgetPart != null) {
+                        if (menuWidgetPart != null)
+                        {
                             menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "StartLevel", (int)reader["StartLevel"]);
                             menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "Levels", (int)reader["Levels"]);
                             menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "Breadcrumb", (bool)reader["Breadcrumb"]);
                             menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "AddHomePage", (bool)reader["AddHomePage"]);
                             menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "AddCurrentPage", (bool)reader["AddCurrentPage"]);
-                            menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "MenuContentItemId", (int)reader["Menu_id"]); 
+                            menuWidgetPart.As<InfosetPart>().Store("MenuWidgetPart", "MenuContentItemId", (int)reader["Menu_id"]);
                         }
                     });
 
-                if (lastContentItemId == id) {
+                if (lastContentItemId == id)
+                {
                     // delete the table only when there is no more content to process
                     _upgradeService.ExecuteReader("DROP TABLE " + menuWidgetTable, null);
                 }
@@ -506,23 +568,27 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult MigrateShapeMenuItemPart(int id) {
+        public JsonResult MigrateShapeMenuItemPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var shapeMenuItemTable = _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord");
-            if (_upgradeService.TableExists(shapeMenuItemTable)) {
+            if (_upgradeService.TableExists(shapeMenuItemTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + shapeMenuItemTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
                         contentPermissionPart.As<InfosetPart>().Store("ShapeMenuItemPart", "ShapeType", ConvertToString(reader["ShapeType"]));
                     });
 
-                if (lastContentItemId == id) {
+                if (lastContentItemId == id)
+                {
                     // delete the table only when there is no more content to process
                     _upgradeService.ExecuteReader("DROP TABLE " + shapeMenuItemTable, null);
                 }
@@ -533,25 +599,30 @@ namespace Upgrade.Controllers {
 
 
         [HttpPost]
-        public JsonResult MigrateMenuItemPart(int id) {
+        public JsonResult MigrateMenuItemPart(int id)
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
 
             var menuItemTable = _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord");
-            if (_upgradeService.TableExists(menuItemTable)) {
+            if (_upgradeService.TableExists(menuItemTable))
+            {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + menuItemTable + " WHERE Id > " + id,
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         lastContentItemId = (int)reader["Id"];
                         var menuItemPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        if (menuItemPart != null) {
-                            menuItemPart.As<InfosetPart>().Store("MenuItemPart", "Url", ConvertToString(reader["Url"])); 
+                        if (menuItemPart != null)
+                        {
+                            menuItemPart.As<InfosetPart>().Store("MenuItemPart", "Url", ConvertToString(reader["Url"]));
                         }
                     });
 
-                if (lastContentItemId == id) {
+                if (lastContentItemId == id)
+                {
                     // delete the table only when there is no more content to process
                     _upgradeService.ExecuteReader("DROP TABLE " + menuItemTable, null);
                 }
@@ -561,8 +632,9 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost]
-        public JsonResult FixContentItemVersionPart(int id) {
-            string[] ignoredParts = new string[] { "CommonPart", "WidgetPart", "LayerPart", "IdentityPart", "UserPart", "MenuItemPart"};
+        public JsonResult FixContentItemVersionPart(int id)
+        {
+            string[] ignoredParts = new string[] { "CommonPart", "WidgetPart", "LayerPart", "IdentityPart", "UserPart", "MenuItemPart" };
 
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
@@ -571,62 +643,75 @@ namespace Upgrade.Controllers {
 
             var contentItemVersionTable = _upgradeService.GetPrefixedTableName("Orchard_Framework_ContentItemVersionRecord");
             var contentItemTable = _upgradeService.GetPrefixedTableName("Orchard_Framework_ContentItemRecord");
-            
-            foreach(var contentItemRecord in _contentItemRecord.Table.Take(BATCH).Where(x => x.Id > id)) {
-                    lastContentItemVersionId = contentItemRecord.Id;
-                    if (!String.IsNullOrWhiteSpace(contentItemRecord.Data)) {
-                        var data = XDocument.Parse(contentItemRecord.Data).Root; // <Data /> element
 
-                        foreach (var contentItemVersionRecord in _contentItemVersionRecord.Table.Where(x => (x.Published || x.Latest) && x.ContentItemRecord == contentItemRecord)) {
-                            var versionData = new XDocument(new XElement("Data")).Root;
-                            if (!String.IsNullOrWhiteSpace(contentItemVersionRecord.Data)) {
-                                versionData = XDocument.Parse(contentItemVersionRecord.Data).Root;
-                            }
+            foreach (var contentItemRecord in _contentItemRecord.Table.Take(BATCH).Where(x => x.Id > id))
+            {
+                lastContentItemVersionId = contentItemRecord.Id;
+                if (!string.IsNullOrWhiteSpace(contentItemRecord.Data))
+                {
+                    var data = XDocument.Parse(contentItemRecord.Data).Root; // <Data /> element
 
-                            // copy each XML element from ContentItem to ContentItemVersionRecord
-                            foreach (XElement element in data.Elements()) {
-                                
-                                if (ignoredParts.Contains(element.Name.ToString())) {
-                                    continue;
-                                }
-
-                                if (element.Name.ToString().EndsWith("SettingsPart")) {
-                                    continue;
-                                }
-
-                                var versionElement = versionData.Element(element.Name);
-                                if (versionElement != null) {
-                                    versionElement.Remove();
-                                }
-                                
-                                versionData.Add(element);
-                            }
-                            
-                            contentItemVersionRecord.Data = versionData.ToString(SaveOptions.DisableFormatting);
+                    foreach (var contentItemVersionRecord in _contentItemVersionRecord.Table.Where(x => (x.Published || x.Latest) && x.ContentItemRecord == contentItemRecord))
+                    {
+                        var versionData = new XDocument(new XElement("Data")).Root;
+                        if (!string.IsNullOrWhiteSpace(contentItemVersionRecord.Data))
+                        {
+                            versionData = XDocument.Parse(contentItemVersionRecord.Data).Root;
                         }
+
+                        // copy each XML element from ContentItem to ContentItemVersionRecord
+                        foreach (XElement element in data.Elements())
+                        {
+
+                            if (ignoredParts.Contains(element.Name.ToString()))
+                            {
+                                continue;
+                            }
+
+                            if (element.Name.ToString().EndsWith("SettingsPart"))
+                            {
+                                continue;
+                            }
+
+                            var versionElement = versionData.Element(element.Name);
+                            if (versionElement != null)
+                            {
+                                versionElement.Remove();
+                            }
+
+                            versionData.Add(element);
+                        }
+
+                        contentItemVersionRecord.Data = versionData.ToString(SaveOptions.DisableFormatting);
                     }
+                }
             }
 
             return new JsonResult { Data = lastContentItemVersionId };
         }
 
-        private static string ConvertToString(object readerValue) {
+        private static string ConvertToString(object readerValue)
+        {
             return readerValue == DBNull.Value ? null : (string)readerValue;
         }
 
-        private static bool ConvertToBool(object readerValue) {
-            if (readerValue == null) {
+        private static bool ConvertToBool(object readerValue)
+        {
+            if (readerValue == null)
+            {
                 return false;
             }
 
             var stringRepresentation = readerValue.ToString();
 
-            if (String.IsNullOrEmpty(stringRepresentation)) {
+            if (string.IsNullOrEmpty(stringRepresentation))
+            {
                 return false;
             }
 
             bool result;
-            if (bool.TryParse(stringRepresentation, out result)) {
+            if (bool.TryParse(stringRepresentation, out result))
+            {
                 return result;
             }
             return false;

@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.MediaProcessing.Models;
 
-namespace Orchard.MediaProcessing.ViewModels {
+namespace Orchard.MediaProcessing.ViewModels
+{
 
-    public class AdminIndexViewModel {
+    public class AdminIndexViewModel
+    {
         public IList<ImageProfileEntry> ImageProfiles { get; set; }
         public AdminIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }
 
-    public class ImageProfileEntry {
+    public class ImageProfileEntry
+    {
         public ImageProfilePartRecord ImageProfile { get; set; }
         public bool IsChecked { get; set; }
 
@@ -17,17 +20,20 @@ namespace Orchard.MediaProcessing.ViewModels {
         public string Name { get; set; }
     }
 
-    public class AdminIndexOptions {
+    public class AdminIndexOptions
+    {
         public string Search { get; set; }
         public ImageProfilesFilter Filter { get; set; }
         public ImageProfilesBulkAction BulkAction { get; set; }
     }
 
-    public enum ImageProfilesFilter {
+    public enum ImageProfilesFilter
+    {
         All
     }
 
-    public enum ImageProfilesBulkAction {
+    public enum ImageProfilesBulkAction
+    {
         None,
         Delete
     }

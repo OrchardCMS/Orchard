@@ -5,12 +5,15 @@ using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
 
-namespace Orchard.UI.Navigation {
-    public class MenuItem {
+namespace Orchard.UI.Navigation
+{
+    public class MenuItem
+    {
         private IList<string> _classes = new List<string>();
         private IEnumerable<MenuItem> _items;
 
-        public MenuItem() {
+        public MenuItem()
+        {
             Permissions = Enumerable.Empty<Permission>();
             LinkToFirstChild = true;
             Level = 1;
@@ -28,11 +31,14 @@ namespace Orchard.UI.Navigation {
         public int Level { get; set; }
         public RouteValueDictionary RouteValues { get; set; }
 
-        public IEnumerable<MenuItem> Items {
+        public IEnumerable<MenuItem> Items
+        {
             get { return _items; }
-            set {
+            set
+            {
                 _items = value;
-                foreach (var item in _items) {
+                foreach (var item in _items)
+                {
                     item.Level = Level + 1;
                 }
             }
@@ -40,13 +46,15 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<Permission> Permissions { get; set; }
         public IContent Content { get; set; }
-        public IList<string> Classes {
-            get { return _classes; } 
-            set {
+        public IList<string> Classes
+        {
+            get { return _classes; }
+            set
+            {
                 if (value == null)
                     return;
                 _classes = value;
             }
         }
-   }
+    }
 }

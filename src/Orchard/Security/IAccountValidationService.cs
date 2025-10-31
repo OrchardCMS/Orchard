@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Orchard.Localization;
-
-namespace Orchard.Security {
-    public interface IAccountValidationService : IDependency {
+namespace Orchard.Security
+{
+    public interface IAccountValidationService : IDependency
+    {
         /// <summary>
         /// Verifies whether the string is a valid password.
         /// </summary>
@@ -27,6 +22,6 @@ namespace Orchard.Security {
         /// <param name="context">The object describing the context of the validation.</param>
         /// <returns>true if the context contains a valid UserName, false otherwise.</returns>
         bool ValidateEmail(AccountValidationContext context);
-        
+
     }
 }

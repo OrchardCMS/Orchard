@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
-namespace Orchard.Core.Feeds.Models {
-    public class FeedContext {
-        public FeedContext(IValueProvider valueProvider, string format) {
+namespace Orchard.Core.Feeds.Models
+{
+    public class FeedContext
+    {
+        public FeedContext(IValueProvider valueProvider, string format)
+        {
             ValueProvider = valueProvider;
             Format = format;
             Response = new FeedResponse();

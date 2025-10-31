@@ -1,24 +1,29 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.FilterEditors.Forms {
-    public class BooleanFilterForm : IFormProvider {
+namespace Orchard.Projections.FilterEditors.Forms
+{
+    public class BooleanFilterForm : IFormProvider
+    {
         public const string FormName = "BooleanFilter";
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public BooleanFilterForm(IShapeFactory shapeFactory) {
+        public BooleanFilterForm(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "BooleanFilter",
@@ -45,9 +50,11 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
         }
 
-        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T) {
-            
-            if(formState.Value == "undefined") {
+        public static LocalizedString DisplayFilter(string fieldName, dynamic formState, Localizer T)
+        {
+
+            if (formState.Value == "undefined")
+            {
                 return T("{0} is undefined", fieldName);
             }
 
@@ -58,14 +65,17 @@ namespace Orchard.Projections.FilterEditors.Forms {
                        : T("{0} is false", fieldName);
         }
 
-        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property) {
-            if (formState.Value == "undefined") {
+        public static Action<IHqlExpressionFactory> GetFilterPredicate(dynamic formState, string property)
+        {
+            if (formState.Value == "undefined")
+            {
                 return x => x.IsNull(property);
             }
 
             bool value = Convert.ToBoolean(formState.Value);
-            
-            if (value) {
+
+            if (value)
+            {
                 return x => x.Gt(property, (long)0);
             }
 

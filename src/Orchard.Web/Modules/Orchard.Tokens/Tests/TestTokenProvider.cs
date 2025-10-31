@@ -1,18 +1,22 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 
-namespace Orchard.Tokens.Tests {
-    public class TestTokenProvider : ITokenProvider {
-        public TestTokenProvider() {
+namespace Orchard.Tokens.Tests
+{
+    public class TestTokenProvider : ITokenProvider
+    {
+        public TestTokenProvider()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.For("Site")
                 .Token("Global1", T("Global1"), T("description of token1"))
                 .Token("Global2", T("Global2"), T("description of token2"))
@@ -30,7 +34,8 @@ namespace Orchard.Tokens.Tests {
                 .Token("Users[*:]", T("Users"), T("A user by its username"), "User");
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
             context.For<object>("Site", null)
                 .Token("Global1", o => "[global1]")
                 .Token("Global2", o => "[global2]")
@@ -64,7 +69,8 @@ namespace Orchard.Tokens.Tests {
                     (userName, users) => users.Where(u => u.UserName == userName).Select(u => u.UserName).FirstOrDefault()
                 )
                 .Chain(
-                    (token) => {
+                    (token) =>
+                    {
                         int tokenLength = "User:".Length;
                         int chainIndex = token.IndexOf('.');
                         if (token.StartsWith("User:", StringComparison.OrdinalIgnoreCase) && chainIndex > tokenLength)
@@ -80,7 +86,8 @@ namespace Orchard.Tokens.Tests {
 
     }
 
-    public class TestUser : IUser {
+    public class TestUser : IUser
+    {
         public string UserName { get; set; }
         public string Email { get; set; }
         public ContentItem ContentItem { get; set; }

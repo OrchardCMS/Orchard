@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -16,9 +16,11 @@ using Orchard.Tests.Environment.Utility;
 using Orchard.Tests.Records;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Environment {
+namespace Orchard.Tests.Environment
+{
     [TestFixture]
-    public class DefaultCompositionStrategyTests {
+    public class DefaultCompositionStrategyTests
+    {
 
         private IContainer _container;
 
@@ -26,7 +28,8 @@ namespace Orchard.Tests.Environment {
         private IDictionary<string, IEnumerable<Type>> _featureTypes;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterAutoMocking(MockBehavior.Strict);
@@ -48,19 +51,23 @@ namespace Orchard.Tests.Environment {
                 .Returns((IEnumerable<FeatureDescriptor> x) => StubLoadFeatures(x));
         }
 
-        private IEnumerable<Feature> StubLoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
-            return featureDescriptors.Select(featureDescriptor => new Feature {
+        private IEnumerable<Feature> StubLoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors)
+        {
+            return featureDescriptors.Select(featureDescriptor => new Feature
+            {
                 Descriptor = featureDescriptor,
                 ExportedTypes = _featureTypes[featureDescriptor.Id]
             });
         }
 
-        private static ShellSettings BuildDefaultSettings() {
+        private static ShellSettings BuildDefaultSettings()
+        {
             return new ShellSettings { Name = ShellSettings.DefaultName };
         }
 
         [Test]
-        public void BlueprintIsNotNull() {
+        public void BlueprintIsNotNull()
+        {
             var descriptor = Build.ShellDescriptor();
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
@@ -71,7 +78,8 @@ namespace Orchard.Tests.Environment {
 
 
         [Test]
-        public void DependenciesFromFeatureArePutIntoBlueprint() {
+        public void DependenciesFromFeatureArePutIntoBlueprint()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Foo", "Bar");
 
             _extensionDescriptors = new[] {
@@ -97,21 +105,26 @@ namespace Orchard.Tests.Environment {
             Assert.That(bar.Feature.Descriptor.Id, Is.EqualTo("Bar"));
         }
 
-        public interface IFooService : IDependency {
+        public interface IFooService : IDependency
+        {
         }
 
-        public class FooService1 : IFooService {
+        public class FooService1 : IFooService
+        {
         }
 
-        public interface IBarService : IDependency {
+        public interface IBarService : IDependency
+        {
         }
 
-        public class BarService1 : IBarService {
+        public class BarService1 : IBarService
+        {
         }
 
 
         [Test]
-        public void DependenciesAreGivenParameters() {
+        public void DependenciesAreGivenParameters()
+        {
             var descriptor = Build.ShellDescriptor()
                 .WithFeatures("Foo")
                 .WithParameter<FooService1>("one", "two")
@@ -134,7 +147,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void ModulesArePutIntoBlueprint() {
+        public void ModulesArePutIntoBlueprint()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Foo", "Bar");
 
             _extensionDescriptors = new[] {
@@ -155,17 +169,21 @@ namespace Orchard.Tests.Environment {
             Assert.That(beta.Feature.Descriptor.Id, Is.EqualTo("Bar"));
         }
 
-        public class AlphaModule : Module {
+        public class AlphaModule : Module
+        {
         }
 
-        public class BetaModule : IModule {
-            public void Configure(IComponentRegistry componentRegistry) {
+        public class BetaModule : IModule
+        {
+            public void Configure(IComponentRegistry componentRegistry)
+            {
                 throw new NotImplementedException();
             }
         }
 
         [Test]
-        public void ControllersArePutIntoBlueprintWithAreaAndControllerName() {
+        public void ControllersArePutIntoBlueprintWithAreaAndControllerName()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Foo Plus", "Bar Minus");
 
             _extensionDescriptors = new[] {
@@ -199,24 +217,30 @@ namespace Orchard.Tests.Environment {
         }
 
 
-        public class GammaController : Controller {
+        public class GammaController : Controller
+        {
         }
 
-        public class DeltaController : ControllerBase {
-            protected override void ExecuteCore() {
+        public class DeltaController : ControllerBase
+        {
+            protected override void ExecuteCore()
+            {
                 throw new NotImplementedException();
             }
         }
 
-        public class EpsilonController : IController {
-            public void Execute(RequestContext requestContext) {
+        public class EpsilonController : IController
+        {
+            public void Execute(RequestContext requestContext)
+            {
                 throw new NotImplementedException();
             }
         }
 
 
         [Test]
-        public void RecordsArePutIntoBlueprintWithTableName() {
+        public void RecordsArePutIntoBlueprintWithTableName()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
 
             _extensionDescriptors = new[] {
@@ -243,7 +267,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void CoreRecordsAreAddedAutomatically() {
+        public void CoreRecordsAreAddedAutomatically()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Orchard.Framework");
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
@@ -264,7 +289,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void DataPrefixChangesTableName() {
+        public void DataPrefixChangesTableName()
+        {
             var settings = BuildDefaultSettings();
             settings.DataTablePrefix = "Yadda";
             var descriptor = Build.ShellDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
@@ -293,7 +319,8 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void FeatureReplacement() {
+        public void FeatureReplacement()
+        {
             var descriptor = Build.ShellDescriptor().WithFeatures("Bar");
 
             _extensionDescriptors = new[] {
@@ -311,9 +338,9 @@ namespace Orchard.Tests.Environment {
         }
 
         [OrchardSuppressDependency("Orchard.Tests.Environment.DefaultCompositionStrategyTests+ReplacedStubNestedType")]
-        internal class StubNestedType : IDependency {}
+        internal class StubNestedType : IDependency { }
 
-        internal class ReplacedStubNestedType : IDependency {}
+        internal class ReplacedStubNestedType : IDependency { }
     }
 
     [OrchardSuppressDependency("Orchard.Tests.Environment.ReplacedStubType")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,8 +11,10 @@ using Orchard.Mvc.Extensions;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Security.Providers {
-    public class FormsAuthenticationService : IAuthenticationService {
+namespace Orchard.Security.Providers
+{
+    public class FormsAuthenticationService : IAuthenticationService
+    {
         private const int _cookieVersion = 4;
 
         private readonly ShellSettings _settings;
@@ -42,7 +44,8 @@ namespace Orchard.Security.Providers {
             ISslSettingsProvider sslSettingsProvider,
             IMembershipValidationService membershipValidationService,
             IEnumerable<IUserDataProvider> userDataProviders,
-            ISecurityService securityService) {
+            ISecurityService securityService)
+        {
 
             _settings = settings;
             _clock = clock;
@@ -60,14 +63,17 @@ namespace Orchard.Security.Providers {
 
         public ILogger Logger { get; set; }
 
-        public TimeSpan ExpirationTimeSpan {
+        public TimeSpan ExpirationTimeSpan
+        {
             get; set;
             // The public setter allows injecting this from Sites.MyTenant.Config or Sites.config, by using
             // an AutoFac component 
         }
 
-        public TimeSpan GetExpirationTimeSpan() {
-            if (ExpirationTimeSpan != TimeSpan.Zero) {
+        public TimeSpan GetExpirationTimeSpan()
+        {
+            if (ExpirationTimeSpan != TimeSpan.Zero)
+            {
                 // Basically here we are checking whether a value has been injected. If that is the case
                 // that takes priority over possible services. The idea is to make the existence of those
                 // services not-breaking, so that the introduction of new ones will not affect tenants where
@@ -79,7 +85,8 @@ namespace Orchard.Security.Providers {
             return _securityService.GetAuthenticationCookieLifeSpan();
         }
 
-        public void SignIn(IUser user, bool createPersistentCookie) {
+        public void SignIn(IUser user, bool createPersistentCookie)
+        {
 
             CreateAndAddAuthCookie(user, createPersistentCookie);
 
@@ -88,31 +95,36 @@ namespace Orchard.Security.Providers {
             _signedInUser = user;
         }
 
-        public void SignOut() {
+        public void SignOut()
+        {
             _signedInUser = null;
             _isAuthenticated = false;
             FormsAuthentication.SignOut();
 
             // overwritting the authentication cookie for the given tenant
             var httpContext = _httpContextAccessor.Current();
-            var rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") {
+            var rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "")
+            {
                 Expires = DateTime.Now.AddYears(-1),
             };
 
-            if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
+            if (!string.IsNullOrEmpty(_settings.RequestUrlPrefix))
+            {
                 rFormsCookie.Path = GetCookiePath(httpContext);
             }
 
             httpContext.Response.Cookies.Add(rFormsCookie);
         }
 
-        public void SetAuthenticatedUserForRequest(IUser user) {
+        public void SetAuthenticatedUserForRequest(IUser user)
+        {
             _signedInUser = user;
             _isAuthenticated = true;
             _isNonOrchardUser = false;
         }
 
-        public IUser GetAuthenticatedUser() {
+        public IUser GetAuthenticatedUser()
+        {
 
             if (_isNonOrchardUser)
                 return null;
@@ -121,7 +133,8 @@ namespace Orchard.Security.Providers {
                 return _signedInUser;
 
             var httpContext = _httpContextAccessor.Current();
-            if (httpContext.IsBackgroundContext() || !httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity)) {
+            if (httpContext.IsBackgroundContext() || !httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity))
+            {
                 return null;
             }
 
@@ -129,54 +142,65 @@ namespace Orchard.Security.Providers {
 
             var userData = formsIdentity.Ticket.UserData ?? "";
             var userDataDictionary = new Dictionary<string, string>();
-            
-            if (formsIdentity.Ticket.Version == 3) {
+
+            if (formsIdentity.Ticket.Version == 3)
+            {
                 var userDataSegments = userData.Split(';');
 
-                if (userDataSegments.Length < 2) {
+                if (userDataSegments.Length < 2)
+                {
                     return null;
                 }
 
                 var userDataName = userDataSegments[0];
                 var userDataTenant = userDataSegments[1];
 
-                try {
+                try
+                {
                     userDataName = userDataName.FromBase64();
                 }
-                catch {
+                catch
+                {
                     return null;
                 }
                 userDataDictionary.Add("UserName", userDataName);
                 userDataDictionary.Add("TenantName", userDataTenant);
             }
-            else { //we assume that the version here will be 4
-                try {
+            else
+            { //we assume that the version here will be 4
+                try
+                {
                     userDataDictionary = DeserializeUserData(userData);
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     return null;
                 }
             }
 
             // 1. Take the username
-            if (!userDataDictionary.ContainsKey("UserName")) {
+            if (!userDataDictionary.ContainsKey("UserName"))
+            {
                 return null; // should never happen, unless the cookie has been tampered with
             }
             var userName = userDataDictionary["UserName"];
             _signedInUser = _membershipService.GetUser(userName);
-            if (_signedInUser == null || !_membershipValidationService.CanAuthenticateWithCookie(_signedInUser)) {
+            if (_signedInUser == null || !_membershipValidationService.CanAuthenticateWithCookie(_signedInUser))
+            {
                 _isNonOrchardUser = true;
                 return null;
             }
             // 2. Check the other stuff from the dictionary
             var validLogin = _userDataProviders.All(udp => udp.IsValid(_signedInUser, userDataDictionary));
-            if (!validLogin) {
+            if (!validLogin)
+            {
                 _signedInUser = null;
                 return null;
             }
 
             // Upgrade old cookies
-            if (formsIdentity.Ticket.Version < 4) {
+            if (formsIdentity.Ticket.Version < 4)
+            {
                 UpgradeAndAddAuthCookie(_signedInUser, formsIdentity.Ticket);
             }
 
@@ -184,7 +208,8 @@ namespace Orchard.Security.Providers {
             return _signedInUser;
         }
 
-        private HttpCookie UpgradeAndAddAuthCookie(IUser user, FormsAuthenticationTicket oldTicket) {
+        private HttpCookie UpgradeAndAddAuthCookie(IUser user, FormsAuthenticationTicket oldTicket)
+        {
             var ticket = UpgradeAuthenticationTicket(user, oldTicket);
 
             var cookie = CreateCookieFromTicket(ticket);
@@ -195,7 +220,8 @@ namespace Orchard.Security.Providers {
             return cookie;
         }
 
-        private HttpCookie CreateAndAddAuthCookie(IUser user, bool createPersistentCookie) {
+        private HttpCookie CreateAndAddAuthCookie(IUser user, bool createPersistentCookie)
+        {
             var ticket = NewAuthenticationTicket(user, createPersistentCookie);
 
             var cookie = CreateCookieFromTicket(ticket);
@@ -206,10 +232,12 @@ namespace Orchard.Security.Providers {
             return cookie;
         }
 
-        private HttpCookie CreateCookieFromTicket(FormsAuthenticationTicket ticket) {
+        private HttpCookie CreateCookieFromTicket(FormsAuthenticationTicket ticket)
+        {
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+            {
                 HttpOnly = true,
                 Secure = _sslSettingsProvider.GetRequiresSSL(),
                 Path = FormsAuthentication.FormsCookiePath
@@ -217,22 +245,26 @@ namespace Orchard.Security.Providers {
 
             var httpContext = _httpContextAccessor.Current();
 
-            if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
+            if (!string.IsNullOrEmpty(_settings.RequestUrlPrefix))
+            {
                 cookie.Path = GetCookiePath(httpContext);
             }
 
-            if (FormsAuthentication.CookieDomain != null) {
+            if (FormsAuthentication.CookieDomain != null)
+            {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
 
-            if (ticket.IsPersistent) {
+            if (ticket.IsPersistent)
+            {
                 cookie.Expires = ticket.Expiration;
             }
 
             return cookie;
         }
 
-        private FormsAuthenticationTicket NewAuthenticationTicket(IUser user, bool createPersistentCookie) {
+        private FormsAuthenticationTicket NewAuthenticationTicket(IUser user, bool createPersistentCookie)
+        {
             var now = _clock.UtcNow.ToLocalTime();
 
             var userData = ComputeUserData(user);
@@ -247,7 +279,8 @@ namespace Orchard.Security.Providers {
                 FormsAuthentication.FormsCookiePath);
         }
 
-        private FormsAuthenticationTicket UpgradeAuthenticationTicket(IUser user, FormsAuthenticationTicket oldTicket) {
+        private FormsAuthenticationTicket UpgradeAuthenticationTicket(IUser user, FormsAuthenticationTicket oldTicket)
+        {
             var userData = ComputeUserData(user);
 
             return new FormsAuthenticationTicket(
@@ -260,27 +293,35 @@ namespace Orchard.Security.Providers {
                 FormsAuthentication.FormsCookiePath);
         }
 
-        private Dictionary<string, string> ComputeUserDataDictionary(IUser user) {
-            var userDataDictionary = new Dictionary<string, string>();
-            userDataDictionary.Add("UserName", user.UserName);
-            foreach (var userDataProvider in _userDataProviders) {
+        private Dictionary<string, string> ComputeUserDataDictionary(IUser user)
+        {
+            var userDataDictionary = new Dictionary<string, string>
+            {
+                { "UserName", user.UserName }
+            };
+            foreach (var userDataProvider in _userDataProviders)
+            {
                 var key = userDataProvider.Key;
                 var value = userDataProvider.ComputeUserDataElement(user);
-                if (key != null && value != null) {
+                if (key != null && value != null)
+                {
                     userDataDictionary.Add(key, value);
                 }
             }
             return userDataDictionary;
         }
 
-        private string ComputeUserData(IUser user) {
+        private string ComputeUserData(IUser user)
+        {
             // serialize dictionary to userData string
             return SerializeUserDataDictionary(ComputeUserDataDictionary(user));
         }
-        
-        private string GetCookiePath(HttpContextBase httpContext) {
+
+        private string GetCookiePath(HttpContextBase httpContext)
+        {
             var cookiePath = httpContext.Request.ApplicationPath;
-            if (cookiePath != null && cookiePath.Length > 1) {
+            if (cookiePath != null && cookiePath.Length > 1)
+            {
                 cookiePath += '/';
             }
 
@@ -291,11 +332,13 @@ namespace Orchard.Security.Providers {
 
         #region Serialization of UserData Dictionary
         // Use Newtonsoft.Json to handle this
-        private string SerializeUserDataDictionary(IDictionary<string, string> userDataDictionary) {
+        private string SerializeUserDataDictionary(IDictionary<string, string> userDataDictionary)
+        {
             return JsonConvert.SerializeObject(userDataDictionary, Formatting.None);
         }
 
-        private Dictionary<string, string> DeserializeUserData(string userData) {
+        private Dictionary<string, string> DeserializeUserData(string userData)
+        {
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(userData);
         }
 

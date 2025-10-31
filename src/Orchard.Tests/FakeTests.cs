@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
-namespace Orchard.Tests {
+namespace Orchard.Tests
+{
     [TestFixture]
-    public class FakeTests {
+    public class FakeTests
+    {
         #region Setup/Teardown
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _x = 5;
         }
 
@@ -16,12 +19,14 @@ namespace Orchard.Tests {
         private int _x;
 
         [Test]
-        public void ExceptionsCanBeVerified() {
+        public void ExceptionsCanBeVerified()
+        {
             Assert.Throws<ApplicationException>(() => throw new ApplicationException("Boom"), "Boom");
         }
 
         [Test]
-        public void TestShouldRunFromResharper() {
+        public void TestShouldRunFromResharper()
+        {
             Assert.That(_x, Is.EqualTo(5));
         }
     }

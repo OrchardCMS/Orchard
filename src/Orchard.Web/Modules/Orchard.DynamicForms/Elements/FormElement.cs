@@ -1,31 +1,29 @@
-﻿using System;
+using System;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 
-namespace Orchard.DynamicForms.Elements {
-    public abstract class FormElement : Element {
+namespace Orchard.DynamicForms.Elements
+{
+    public abstract class FormElement : Element
+    {
         private Lazy<string> _runtimeValue;
 
-        protected FormElement() {
+        protected FormElement()
+        {
             _runtimeValue = new Lazy<string>(() => Value);
         }
 
-        public override string Category {
-            get { return "Forms"; }
-        }
+        public override string Category => "Forms";
 
-        public virtual string Name {
-            get { return this.Retrieve<string>("InputName"); }
-        }
+        public virtual string Name => this.Retrieve<string>("InputName");
 
-        public string Value {
-            get { return this.Retrieve(x => x.Value); }
-        }
+        public string Value => this.Retrieve(x => x.Value);
 
         /// <summary>
         /// The runtime value for this element. This is either the default value, or the submitted value.
         /// </summary>
-        public string RuntimeValue {
+        public string RuntimeValue
+        {
             get { return _runtimeValue.Value; }
             set { _runtimeValue = new Lazy<string>(() => value); }
         }
@@ -35,16 +33,20 @@ namespace Orchard.DynamicForms.Elements {
         /// </summary>
         public string PostedValue { get; set; }
 
-        public string FormBindingContentType {
+        public string FormBindingContentType
+        {
             get { return this.Retrieve(x => x.FormBindingContentType); }
             set { this.Store(x => x.FormBindingContentType, value); }
         }
 
-        public Form Form {
-            get {
+        public Form Form
+        {
+            get
+            {
                 var parent = Container;
 
-                while (parent != null) {
+                while (parent != null)
+                {
                     var form = parent as Form;
 
                     if (form != null)

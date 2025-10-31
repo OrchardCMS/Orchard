@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.UI.Zones;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class ZoneHoldingTests {
+    public class ZoneHoldingTests
+    {
 
         [Test]
-        public void ZonesShouldReturn() {
+        public void ZonesShouldReturn()
+        {
             Func<dynamic> factory = () => new Shape();
 
             var foo = new ZoneHolding(factory);
@@ -16,7 +19,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void MemberShouldCreateAZone() {
+        public void MemberShouldCreateAZone()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
@@ -24,7 +28,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void IndexShouldCreateAZone() {
+        public void IndexShouldCreateAZone()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
@@ -32,7 +37,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void ZonesMemberShouldCreateAZone() {
+        public void ZonesMemberShouldCreateAZone()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
@@ -40,7 +46,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void ZonesShouldBeUnique() {
+        public void ZonesShouldBeUnique()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
@@ -53,7 +60,8 @@ namespace Orchard.Tests.DisplayManagement {
 
 
         [Test]
-        public void EmptyZonesShouldBeNull() {
+        public void EmptyZonesShouldBeNull()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
@@ -71,7 +79,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void NoneEmptyZonesShouldNotBeNull() {
+        public void NoneEmptyZonesShouldNotBeNull()
+        {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);

@@ -3,20 +3,24 @@ using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement.Drivers;
 
-namespace Orchard.Comments.Drivers {
-    public class CommentsContainerPartDriver : ContentPartDriver<CommentsContainerPart> {
+namespace Orchard.Comments.Drivers
+{
+    public class CommentsContainerPartDriver : ContentPartDriver<CommentsContainerPart>
+    {
         private readonly ICommentService _commentService;
 
-        public CommentsContainerPartDriver(ICommentService commentService) {
+        public CommentsContainerPartDriver(ICommentService commentService)
+        {
             _commentService = commentService;
         }
 
-        protected override DriverResult Display(CommentsContainerPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(CommentsContainerPart part, string displayType, dynamic shapeHelper)
+        {
 
             var commentsForCommentedContent = _commentService.GetCommentsForContainer(part.ContentItem.Id);
             Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
             Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
-            
+
             return Combined(
                 ContentShape("Parts_Comments_Count",
                     () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),

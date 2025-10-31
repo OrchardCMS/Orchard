@@ -1,18 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.ContentTypes.ViewModels {
-    public class EditTypeViewModel  {
-        public EditTypeViewModel() {
+namespace Orchard.ContentTypes.ViewModels
+{
+    public class EditTypeViewModel
+    {
+        public EditTypeViewModel()
+        {
             Settings = new SettingsDictionary();
             Fields = new List<EditPartFieldViewModel>();
             Parts = new List<EditTypePartViewModel>();
         }
 
-        public EditTypeViewModel(ContentTypeDefinition contentTypeDefinition) {
+        public EditTypeViewModel(ContentTypeDefinition contentTypeDefinition)
+        {
             Name = contentTypeDefinition.Name;
             DisplayName = contentTypeDefinition.DisplayName;
             Settings = contentTypeDefinition.Settings;
@@ -29,7 +33,8 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public ContentTypeDefinition _Definition { get; private set; }
 
-        private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition) {
+        private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition)
+        {
             var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase));
 
             return implicitTypePart == null
@@ -37,7 +42,8 @@ namespace Orchard.ContentTypes.ViewModels {
                 : implicitTypePart.PartDefinition.Fields.Select((f, i) => new EditPartFieldViewModel(i, f) { Part = new EditPartViewModel(implicitTypePart.PartDefinition) });
         }
 
-        private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition) {
+        private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition)
+        {
             return contentTypeDefinition.Parts
                 .Where(p => !string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase))
                 .Select((p, i) => new EditTypePartViewModel(i, p) { Type = this });

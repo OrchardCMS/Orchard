@@ -1,17 +1,18 @@
 using System;
 using System.Web.Mvc;
 
-namespace Orchard.Mvc.AntiForgery {
+namespace Orchard.Mvc.AntiForgery
+{
     [AttributeUsage(AttributeTargets.Method)]
-    public class ValidateAntiForgeryTokenOrchardAttribute : FilterAttribute {
-        private readonly bool _enabled = true;
+    public class ValidateAntiForgeryTokenOrchardAttribute : FilterAttribute
+    {
+        public ValidateAntiForgeryTokenOrchardAttribute() : this(true) { }
 
-        public ValidateAntiForgeryTokenOrchardAttribute() : this(true) {}
-
-        public ValidateAntiForgeryTokenOrchardAttribute(bool enabled) {
-            _enabled = enabled;
+        public ValidateAntiForgeryTokenOrchardAttribute(bool enabled)
+        {
+            Enabled = enabled;
         }
 
-        public bool Enabled { get { return _enabled; } }
+        public bool Enabled { get; } = true;
     }
 }

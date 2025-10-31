@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Security {
+namespace Orchard.Security
+{
     /// <summary>
     /// Implementations of this interface are used to generate the userdata for
     /// authentication cookies.
     /// </summary>
-    public interface IUserDataProvider : IDependency {
+    public interface IUserDataProvider : IDependency
+    {
 
         /// <summary>
         /// The Key for the provider in the UserData Dictionary. If either this or the 

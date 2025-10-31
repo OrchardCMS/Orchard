@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Workflows.ViewModels {
-    public class WorkflowDefinitionViewModel {
+namespace Orchard.Workflows.ViewModels
+{
+    public class WorkflowDefinitionViewModel
+    {
         public int Id { get; set; }
         public string Name { get; set; }
         public string JsonData { get; set; }
     }
 
-    public class ActivityViewModel {
+    public class ActivityViewModel
+    {
         /// <summary>
         /// The local id used for connections
         /// </summary>
@@ -21,7 +24,8 @@ namespace Orchard.Workflows.ViewModels {
         public IDictionary<string, string> State { get; set; }
     }
 
-    public class ConnectionViewModel {
+    public class ConnectionViewModel
+    {
         public int Id { get; set; }
         public string SourceClientId { get; set; }
         public string Outcome { get; set; }

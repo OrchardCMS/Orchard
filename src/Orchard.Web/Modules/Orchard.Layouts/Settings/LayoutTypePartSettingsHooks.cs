@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -7,26 +6,31 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Layouts.Services;
 
-namespace Orchard.Layouts.Settings {
-    public class LayoutTypePartSettingsHooks : ContentDefinitionEditorEventsBase {
+namespace Orchard.Layouts.Settings
+{
+    public class LayoutTypePartSettingsHooks : ContentDefinitionEditorEventsBase
+    {
         private readonly ILayoutSerializer _serializer;
         private readonly ILayoutManager _layoutManager;
 
-        public LayoutTypePartSettingsHooks(ILayoutSerializer serializer, ILayoutManager layoutManager) {
+        public LayoutTypePartSettingsHooks(ILayoutSerializer serializer, ILayoutManager layoutManager)
+        {
             _serializer = serializer;
             _layoutManager = layoutManager;
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition)
+        {
             if (definition.PartDefinition.Name != "LayoutPart")
                 yield break;
 
             var model = definition.Settings.GetModel<LayoutTypePartSettings>();
-            
+
             yield return DefinitionTemplate(model);
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel)
+        {
             if (builder.Name != "LayoutPart")
                 yield break;
 

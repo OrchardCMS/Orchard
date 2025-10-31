@@ -1,7 +1,9 @@
-﻿using Orchard.Data.Migration.Schema;
+using Orchard.Data.Migration.Schema;
 
-namespace Orchard.Data.Migration.Interpreters {
-    public interface IDataMigrationInterpreter : IDependency{
+namespace Orchard.Data.Migration.Interpreters
+{
+    public interface IDataMigrationInterpreter : IDependency
+    {
         void Visit(ISchemaBuilderCommand command);
         void Visit(CreateTableCommand command);
         void Visit(DropTableCommand command);

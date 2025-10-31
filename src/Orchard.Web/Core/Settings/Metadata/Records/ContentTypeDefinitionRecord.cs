@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Core.Settings.Metadata.Records {
-    public class ContentTypeDefinitionRecord  {
-        public ContentTypeDefinitionRecord() {
+namespace Orchard.Core.Settings.Metadata.Records
+{
+    public class ContentTypeDefinitionRecord
+    {
+        public ContentTypeDefinitionRecord()
+        {
             ContentTypePartDefinitionRecords = new List<ContentTypePartDefinitionRecord>();
         }
 

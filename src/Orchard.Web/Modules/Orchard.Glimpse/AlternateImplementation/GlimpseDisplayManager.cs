@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -16,10 +16,12 @@ using Orchard.Glimpse.Tabs.Shapes;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Glimpse.AlternateImplementation {
+namespace Orchard.Glimpse.AlternateImplementation
+{
     [OrchardFeature(FeatureNames.Shapes)]
     [OrchardSuppressDependency("Orchard.DisplayManagement.Implementation.DefaultDisplayManager")]
-    public class GlimpseDisplayManager : IDisplayManager {
+    public class GlimpseDisplayManager : IDisplayManager
+    {
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly IGlimpseService _glimpseService;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -28,16 +30,17 @@ namespace Orchard.Glimpse.AlternateImplementation {
         // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
         private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
             new ForgivingConvertBinder(
-                (ConvertBinder) Binder.Convert(
+                (ConvertBinder)Binder.Convert(
                     CSharpBinderFlags.ConvertExplicit,
-                    typeof (Shape),
+                    typeof(Shape),
                     null /*typeof(DefaultDisplayManager)*/)));
 
         public GlimpseDisplayManager(
             IWorkContextAccessor workContextAccessor,
             IEnumerable<IShapeDisplayEvents> shapeDisplayEvents,
             Lazy<IShapeTableLocator> shapeTableLocator,
-            IGlimpseService glimpseService) {
+            IGlimpseService glimpseService)
+        {
             _shapeTableLocator = shapeTableLocator;
             _glimpseService = glimpseService;
             _workContextAccessor = workContextAccessor;
@@ -49,25 +52,30 @@ namespace Orchard.Glimpse.AlternateImplementation {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public IHtmlString Execute(DisplayContext context) {
+        public IHtmlString Execute(DisplayContext context)
+        {
             var shape = _convertAsShapeCallsite.Target(_convertAsShapeCallsite, context.Value);
 
             // non-shape arguments are returned as a no-op
-            if (shape == null) {
+            if (shape == null)
+            {
                 return CoerceHtmlString(context.Value);
             }
 
             var shapeMetadata = shape.Metadata;
             // can't really cope with a shape that has no type information
-            if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type)) {
+            if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
+            {
                 return CoerceHtmlString(context.Value);
             }
 
-            var result = _glimpseService.PublishTimedAction(() => {
+            var result = _glimpseService.PublishTimedAction(() =>
+            {
                 var workContext = _workContextAccessor.GetContext(context.ViewContext);
                 var shapeTable = _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id);
 
-                var displayingContext = new ShapeDisplayingContext {
+                var displayingContext = new ShapeDisplayingContext
+                {
                     Shape = shape,
                     ShapeMetadata = shapeMetadata
                 };
@@ -76,12 +84,14 @@ namespace Orchard.Glimpse.AlternateImplementation {
                 // find base shape association using only the fundamental shape type. 
                 // alternates that may already be registered do not affect the "displaying" event calls
                 ShapeBinding shapeBinding;
-                if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
+                if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding))
+                {
                     shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
 
                     // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
                     shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources.Where(x => x != null).ToList();
-                    if (!shapeMetadata.BindingSources.Any()) {
+                    if (!shapeMetadata.BindingSources.Any())
+                    {
                         shapeMetadata.BindingSources.Add(shapeBinding.ShapeDescriptor.BindingSource);
                     }
                 }
@@ -90,48 +100,60 @@ namespace Orchard.Glimpse.AlternateImplementation {
                 shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);
 
                 // use pre-fectched content if available (e.g. coming from specific cache implmentation)
-                if (displayingContext.ChildContent != null) {
+                if (displayingContext.ChildContent != null)
+                {
                     shape.Metadata.ChildContent = displayingContext.ChildContent;
                 }
-                else {
+                else
+                {
                     // now find the actual binding to render, taking alternates into account
                     ShapeBinding actualBinding;
-                    if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding)) {
+                    if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding))
+                    {
                         shape.Metadata.ChildContent = Process(actualBinding, shape, context);
                     }
-                    else {
+                    else
+                    {
                         throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
                     }
                 }
 
-                foreach (var frameType in shape.Metadata.Wrappers) {
+                foreach (var frameType in shape.Metadata.Wrappers)
+                {
                     ShapeBinding frameBinding;
-                    if (TryGetDescriptorBinding(frameType, Enumerable.Empty<string>(), shapeTable, out frameBinding)) {
+                    if (TryGetDescriptorBinding(frameType, Enumerable.Empty<string>(), shapeTable, out frameBinding))
+                    {
                         shape.Metadata.ChildContent = Process(frameBinding, shape, context);
                     }
                 }
 
-                var displayedContext = new ShapeDisplayedContext {
+                var displayedContext = new ShapeDisplayedContext
+                {
                     Shape = shape,
                     ShapeMetadata = shape.Metadata,
                     ChildContent = shape.Metadata.ChildContent,
                 };
 
-                _shapeDisplayEvents.Invoke(sde => {
+                _shapeDisplayEvents.Invoke(sde =>
+                {
                     var prior = displayedContext.ChildContent = displayedContext.ShapeMetadata.ChildContent;
                     sde.Displayed(displayedContext);
                     // update the child content if the context variable has been reassigned
-                    if (prior != displayedContext.ChildContent) {
+                    if (prior != displayedContext.ChildContent)
+                    {
                         displayedContext.ShapeMetadata.ChildContent = displayedContext.ChildContent;
                     }
                 }, Logger);
 
-                if (shapeBinding != null) {
-                    shapeBinding.ShapeDescriptor.Displayed.Invoke(action => {
+                if (shapeBinding != null)
+                {
+                    shapeBinding.ShapeDescriptor.Displayed.Invoke(action =>
+                    {
                         var prior = displayedContext.ChildContent = displayedContext.ShapeMetadata.ChildContent;
                         action(displayedContext);
                         // update the child content if the context variable has been reassigned
-                        if (prior != displayedContext.ChildContent) {
+                        if (prior != displayedContext.ChildContent)
+                        {
                             displayedContext.ShapeMetadata.ChildContent = displayedContext.ChildContent;
                         }
                     }, Logger);
@@ -141,7 +163,8 @@ namespace Orchard.Glimpse.AlternateImplementation {
                 shapeMetadata.Displayed.Invoke(action => action(displayedContext), Logger);
 
                 return shapeBinding;
-            }, (r, t) => new ShapeMessage(shape.Metadata) {
+            }, (r, t) => new ShapeMessage(shape.Metadata)
+            {
                 Duration = t.Duration,
                 BindingName = r.BindingName,
                 BindingSource = r.BindingSource
@@ -150,13 +173,16 @@ namespace Orchard.Glimpse.AlternateImplementation {
             return shape.Metadata.ChildContent;
         }
 
-        private static bool TryGetDescriptorBinding(string shapeType, IEnumerable<string> shapeAlternates, ShapeTable shapeTable, out ShapeBinding shapeBinding) {
+        private static bool TryGetDescriptorBinding(string shapeType, IEnumerable<string> shapeAlternates, ShapeTable shapeTable, out ShapeBinding shapeBinding)
+        {
             // shape alternates are optional, fully qualified binding names
             // the earliest added alternates have the lowest priority
             // the descriptor returned is based on the binding that is matched, so it may be an entirely
             // different descriptor if the alternate has a different base name
-            foreach (var shapeAlternate in shapeAlternates.Reverse()) {
-                if (shapeTable.Bindings.TryGetValue(shapeAlternate, out shapeBinding)) {
+            foreach (var shapeAlternate in shapeAlternates.Reverse())
+            {
+                if (shapeTable.Bindings.TryGetValue(shapeAlternate, out shapeBinding))
+                {
                     return true;
                 }
             }
@@ -165,13 +191,16 @@ namespace Orchard.Glimpse.AlternateImplementation {
             // the shapetype name can break itself into shorter fallbacks at double-underscore marks
             // so the shapetype itself may contain a longer alternate forms that falls back to a shorter one
             var shapeTypeScan = shapeType;
-            for (;;) {
-                if (shapeTable.Bindings.TryGetValue(shapeTypeScan, out shapeBinding)) {
+            for (; ; )
+            {
+                if (shapeTable.Bindings.TryGetValue(shapeTypeScan, out shapeBinding))
+                {
                     return true;
                 }
 
                 var delimiterIndex = shapeTypeScan.LastIndexOf("__");
-                if (delimiterIndex < 0) {
+                if (delimiterIndex < 0)
+                {
                     shapeBinding = null;
                     return false;
                 }
@@ -180,36 +209,44 @@ namespace Orchard.Glimpse.AlternateImplementation {
             }
         }
 
-        private static IHtmlString CoerceHtmlString(object value) {
-            if (value == null) {
+        private static IHtmlString CoerceHtmlString(object value)
+        {
+            if (value == null)
+            {
                 return null;
             }
 
             var result = value as IHtmlString;
-            if (result != null) {
+            if (result != null)
+            {
                 return result;
             }
 
             return new HtmlString(HttpUtility.HtmlEncode(value));
         }
 
-        private static IHtmlString Process(ShapeBinding shapeBinding, IShape shape, DisplayContext context) {
-            if (shapeBinding == null || shapeBinding.Binding == null) {
+        private static IHtmlString Process(ShapeBinding shapeBinding, IShape shape, DisplayContext context)
+        {
+            if (shapeBinding == null || shapeBinding.Binding == null)
+            {
                 // todo: create result from all child shapes
                 return shape.Metadata.ChildContent ?? new HtmlString("");
             }
             return CoerceHtmlString(shapeBinding.Binding(context));
         }
 
-        private class ForgivingConvertBinder : ConvertBinder {
+        private class ForgivingConvertBinder : ConvertBinder
+        {
             private readonly ConvertBinder _innerBinder;
 
             public ForgivingConvertBinder(ConvertBinder innerBinder)
-                : base(innerBinder.ReturnType, innerBinder.Explicit) {
+                : base(innerBinder.ReturnType, innerBinder.Explicit)
+            {
                 _innerBinder = innerBinder;
             }
 
-            public override DynamicMetaObject FallbackConvert(DynamicMetaObject target, DynamicMetaObject errorSuggestion) {
+            public override DynamicMetaObject FallbackConvert(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+            {
                 // adjust the normal csharp convert binder to allow failure to become null.
                 // this causes the same net effect as the "as" keyword, but may be applied to dynamic objects
                 var result = _innerBinder.FallbackConvert(
@@ -218,8 +255,10 @@ namespace Orchard.Glimpse.AlternateImplementation {
                 return result;
             }
 
-            private static BindingRestrictions GetTypeRestriction(DynamicMetaObject obj) {
-                if ((obj.Value == null) && obj.HasValue) {
+            private static BindingRestrictions GetTypeRestriction(DynamicMetaObject obj)
+            {
+                if ((obj.Value == null) && obj.HasValue)
+                {
                     return BindingRestrictions.GetInstanceRestriction(obj.Expression, null);
                 }
                 return BindingRestrictions.GetTypeRestriction(obj.Expression, obj.LimitType);

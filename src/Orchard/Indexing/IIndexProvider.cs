@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Indexing {
-    public interface IIndexProvider : ISingletonDependency {
+namespace Orchard.Indexing
+{
+    public interface IIndexProvider : ISingletonDependency
+    {
         /// <summary>
         /// Creates a new index
         /// </summary>

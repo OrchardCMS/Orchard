@@ -1,16 +1,17 @@
-﻿using Orchard.Localization;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Upgrade {
-    public class AdminMenu : INavigationProvider {
+namespace Upgrade
+{
+    public class AdminMenu : INavigationProvider
+    {
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "admin"; }
-        }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder
                 .AddImageSet("upgrade")
                 .Add(T("Upgrade to 1.10.3"), "0", menu => menu.Action("Index", "Route", new { area = "Upgrade" })

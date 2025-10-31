@@ -1,18 +1,20 @@
-﻿using System.IO;
+using System.IO;
 using Orchard.MediaLibrary.Models;
 
-namespace Orchard.MediaLibrary.Factories {
+namespace Orchard.MediaLibrary.Factories
+{
 
-    public interface IMediaFactory {
+    public interface IMediaFactory
+    {
         MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType);
     }
 
-    public class NullMediaFactory : IMediaFactory {
-        public static IMediaFactory Instance {
-            get { return new NullMediaFactory(); }
-        }
+    public class NullMediaFactory : IMediaFactory
+    {
+        public static IMediaFactory Instance => new NullMediaFactory();
 
-        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
+        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType)
+        {
             return null;
         }
     }

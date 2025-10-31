@@ -1,22 +1,26 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Services;
 
-namespace Orchard.Tests.ContentManagement.MetaData.Services {
+namespace Orchard.Tests.ContentManagement.MetaData.Services
+{
     [TestFixture]
-    public class ContentDefinitionWriterTests {
+    public class ContentDefinitionWriterTests
+    {
         private ContentDefinitionWriter _writer;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _writer = new ContentDefinitionWriter(new SettingsFormatter());
         }
 
         [Test]
-        public void CreatesElementWithEncodedContentTypeName() {
+        public void CreatesElementWithEncodedContentTypeName()
+        {
             var alphaInfoset = _writer.Export(new ContentTypeDefinitionBuilder().Named("alpha").Build());
             var betaInfoset = _writer.Export(new ContentTypeDefinitionBuilder().Named(":beta").Build());
             var gammaInfoset = _writer.Export(new ContentTypeDefinitionBuilder().Named(" g a m m a ").Build());
@@ -29,7 +33,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Services {
         }
 
         [Test]
-        public void ChildElementsArePartNames() {
+        public void ChildElementsArePartNames()
+        {
             var alphaInfoset = _writer.Export(new ContentTypeDefinitionBuilder().Named("alpha").WithPart(":beta").WithPart("del\r\nta").Build());
 
             Assert.That(XmlConvert.DecodeName(alphaInfoset.Name.LocalName), Is.EqualTo("alpha"));
@@ -39,7 +44,8 @@ namespace Orchard.Tests.ContentManagement.MetaData.Services {
         }
 
         [Test]
-        public void TypeAndTypePartSettingsAreAttributes() {
+        public void TypeAndTypePartSettingsAreAttributes()
+        {
 
             var alpha = new ContentTypeDefinitionBuilder()
                 .Named("alpha")

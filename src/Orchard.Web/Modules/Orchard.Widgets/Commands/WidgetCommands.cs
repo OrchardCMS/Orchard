@@ -1,13 +1,16 @@
-﻿using Orchard.Commands;
+using Orchard.Commands;
 using Orchard.Widgets.Services;
 
-namespace Orchard.Widgets.Commands {
-    public class WidgetCommands : DefaultOrchardCommandHandler {
+namespace Orchard.Widgets.Commands
+{
+    public class WidgetCommands : DefaultOrchardCommandHandler
+    {
         private readonly IWidgetCommandsService _widgetCommandsService;
 
         public WidgetCommands(
-            IWidgetCommandsService widgetCommandsService) {
-            _widgetCommandsService = widgetCommandsService;            
+            IWidgetCommandsService widgetCommandsService)
+        {
+            _widgetCommandsService = widgetCommandsService;
 
             RenderTitle = true;
         }
@@ -51,11 +54,13 @@ namespace Orchard.Widgets.Commands {
         [CommandName("widget create")]
         [CommandHelp("widget create <type> /Title:<title> /Name:<name> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false] [/MenuName:<name>]\r\n\t" + "Creates a new widget")]
         [OrchardSwitches("Title,Name,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText,MenuName,RenderTitle")]
-        public void Create(string type) {
+        public void Create(string type)
+        {
             var widget = _widgetCommandsService.CreateBaseWidget(
                 Context, type, Title, Name, Zone, Position, Layer, Identity, RenderTitle, Owner, Text, UseLoremIpsumText, MenuName);
 
-            if (widget == null) {
+            if (widget == null)
+            {
                 return;
             }
 

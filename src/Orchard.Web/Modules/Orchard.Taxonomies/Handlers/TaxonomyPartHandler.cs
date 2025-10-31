@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -12,41 +12,54 @@ using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 
-namespace Orchard.Taxonomies.Handlers {
-    public class TaxonomyPartHandler : ContentHandler {
+namespace Orchard.Taxonomies.Handlers
+{
+    public class TaxonomyPartHandler : ContentHandler
+    {
         public TaxonomyPartHandler(
             IRepository<TaxonomyPartRecord> repository,
             ITaxonomyService taxonomyService,
             IContentDefinitionManager contentDefinitionManager,
-            ILocalizationService localizationService = null) { //Localization feature may not be active
+            ILocalizationService localizationService = null)
+        { //Localization feature may not be active
 
             string previousName = null;
 
             Filters.Add(StorageFilter.For(repository));
-            OnPublished<TaxonomyPart>((context, part) => {
+            OnPublished<TaxonomyPart>((context, part) =>
+            {
 
-                if (string.IsNullOrWhiteSpace(part.TermTypeName)) {
+                if (string.IsNullOrWhiteSpace(part.TermTypeName))
+                {
                     // is it a new taxonomy ?
                     taxonomyService.CreateTermContentType(part);
                 }
-                else {
+                else
+                {
                     // update existing fields
-                    foreach (var partDefinition in contentDefinitionManager.ListPartDefinitions()) {
-                        foreach (var field in partDefinition.Fields) {
-                            if (field.FieldDefinition.Name == typeof(TaxonomyField).Name) {
+                    foreach (var partDefinition in contentDefinitionManager.ListPartDefinitions())
+                    {
+                        foreach (var field in partDefinition.Fields)
+                        {
+                            if (field.FieldDefinition.Name == typeof(TaxonomyField).Name)
+                            {
 
-                                if (field.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy == previousName) {
+                                if (field.Settings.GetModel<TaxonomyFieldSettings>().Taxonomy == previousName)
+                                {
                                     //could either be a name change, or we could be publishing a translation
-                                    if (localizationService != null) { //Localization feature may not be active
+                                    if (localizationService != null)
+                                    { //Localization feature may not be active
                                         var locPart = part.ContentItem.As<LocalizationPart>();
-                                        if (locPart != null) {
+                                        if (locPart != null)
+                                        {
                                             var localizedTaxonomies = localizationService
                                                 .GetLocalizations(part.ContentItem) //versions in all cultures
                                                 .Where(pa => pa.ContentItem.Id != part.ContentItem.Id) //but not the one we are publishing
-                                                .Select(pa => {
+                                                .Select(pa =>
+                                                {
                                                     var tax = pa.ContentItem.As<TaxonomyPart>(); //the TaxonomyPart
-                                                return tax == null ? string.Empty : tax.Name; //get its name (with sanity check)
-                                            });
+                                                    return tax == null ? string.Empty : tax.Name; //get its name (with sanity check)
+                                                });
                                             if (localizedTaxonomies.Contains(previousName))
                                                 continue; //this is a new localization, so move along
                                         }
@@ -63,14 +76,17 @@ namespace Orchard.Taxonomies.Handlers {
 
             OnLoading<TaxonomyPart>((context, part) => part.TermsField.Loader(() => taxonomyService.GetTerms(part.Id)));
 
-            OnUpdating<TitlePart>((context, part) => {
+            OnUpdating<TitlePart>((context, part) =>
+            {
                 // if altering the title of a taxonomy, save the name
-                if (part.As<TaxonomyPart>() != null) {
+                if (part.As<TaxonomyPart>() != null)
+                {
                     previousName = part.Title;
                 }
             });
         }
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             var taxonomy = context.ContentItem.As<TaxonomyPart>();
 
             if (taxonomy == null)

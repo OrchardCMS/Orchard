@@ -1,9 +1,12 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 
-namespace Orchard.MediaProcessing {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.MediaProcessing
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("ImageProfilePartRecord",
                                       table => table
                                                    .Column<string>("Name", c => c.WithLength(255))

@@ -1,5 +1,7 @@
-﻿namespace Orchard.Indexing.Services {
-    public interface IUpdateIndexScheduler : IDependency {
+namespace Orchard.Indexing.Services
+{
+    public interface IUpdateIndexScheduler : IDependency
+    {
         void Schedule(string indexName);
     }
 }

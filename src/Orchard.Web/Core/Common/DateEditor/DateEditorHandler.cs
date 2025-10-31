@@ -1,13 +1,18 @@
-using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Utilities;
 
-namespace Orchard.Core.Common.DateEditor {
-    public class DateEditorHandler : ContentHandler {
-        public DateEditorHandler() {
-            OnPublished<CommonPart>((context, part) => {
+namespace Orchard.Core.Common.DateEditor
+{
+    public class DateEditorHandler : ContentHandler
+    {
+        public DateEditorHandler()
+        {
+            OnPublished<CommonPart>((context, part) =>
+            {
                 var settings = part.TypePartDefinition.Settings.GetModel<DateEditorSettings>();
-                if (!settings.ShowDateEditor) {
+                if (!settings.ShowDateEditor)
+                {
                     return;
                 }
 
@@ -15,7 +20,8 @@ namespace Orchard.Core.Common.DateEditor {
                 var theDatesHaveNotBeenModified = DateUtils.DatesAreEquivalent(part.CreatedUtc, part.VersionCreatedUtc);
                 var theContentDateShouldBeUpdated = thisIsTheInitialVersionRecord && theDatesHaveNotBeenModified;
 
-                if (theContentDateShouldBeUpdated) {
+                if (theContentDateShouldBeUpdated)
+                {
                     // "touch" CreatedUtc in ContentItemRecord
                     part.CreatedUtc = part.PublishedUtc;
                 }

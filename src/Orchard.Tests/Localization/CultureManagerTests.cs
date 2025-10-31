@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -21,9 +21,11 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 
-namespace Orchard.Tests.Localization {
+namespace Orchard.Tests.Localization
+{
     [TestFixture]
-    public class CultureManagerTests {
+    public class CultureManagerTests
+    {
         private IContainer _container;
         private ICultureManager _cultureManager;
         private ISessionFactory _sessionFactory;
@@ -32,7 +34,8 @@ namespace Orchard.Tests.Localization {
         private StubWorkContext _stubWorkContext;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             _databaseFileName = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 _databaseFileName,
@@ -40,7 +43,8 @@ namespace Orchard.Tests.Localization {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             _stubWorkContext = new StubWorkContext();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
@@ -65,17 +69,20 @@ namespace Orchard.Tests.Localization {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             _session.Close();
         }
 
         [OneTimeTearDown]
-        public void TermFixture() {
+        public void TermFixture()
+        {
             File.Delete(_databaseFileName);
         }
 
         [Test]
-        public void CultureManagerCanAddAndListValidCultures() {
+        public void CultureManagerCanAddAndListValidCultures()
+        {
             _cultureManager.AddCulture("tr-TR");
             _cultureManager.AddCulture("fr-FR");
             _cultureManager.AddCulture("bs-Latn-BA");
@@ -84,27 +91,34 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
-        public void CultureManagerRejectsInvalidCultureNames() {
+        public void CultureManagerRejectsInvalidCultureNames()
+        {
             Assert.Throws<ArgumentException>(() => _cultureManager.AddCulture("a-b-c"));
         }
 
         [Test]
-        public void CultureManagerAcceptsValidDotNetCultureNames() {
-            foreach (var cultureInfo in CultureInfo.GetCultures(CultureTypes.NeutralCultures)) {
-                if (!String.IsNullOrEmpty(cultureInfo.Name)) {
+        public void CultureManagerAcceptsValidDotNetCultureNames()
+        {
+            foreach (var cultureInfo in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            {
+                if (!string.IsNullOrEmpty(cultureInfo.Name))
+                {
                     Assert.DoesNotThrow(() => _cultureManager.AddCulture(cultureInfo.Name));
                 }
             }
 
-            foreach (var cultureInfo in CultureInfo.GetCultures(CultureTypes.SpecificCultures)) {
-                if (!String.IsNullOrEmpty(cultureInfo.Name)) {
+            foreach (var cultureInfo in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                if (!string.IsNullOrEmpty(cultureInfo.Name))
+                {
                     Assert.DoesNotThrow(() => _cultureManager.AddCulture(cultureInfo.Name));
                 }
             }
         }
 
         [Test]
-        public void CultureManagerReturnsCultureFromWorkContext() {
+        public void CultureManagerReturnsCultureFromWorkContext()
+        {
             _stubWorkContext.CultureName = "nl-NL";
             Assert.That(_cultureManager.GetCurrentCulture(null), Is.EqualTo("nl-NL"));
         }

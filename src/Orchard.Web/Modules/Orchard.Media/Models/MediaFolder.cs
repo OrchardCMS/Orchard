@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Media.Models { 
-    public class MediaFolder {
+namespace Orchard.Media.Models
+{
+    public class MediaFolder
+    {
         public string Name { get; set; }
         public string MediaPath { get; set; }
         public string User { get; set; }

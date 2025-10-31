@@ -14,9 +14,11 @@ using Orchard.UI;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Services
+{
     [OrchardFeature("PackagingServices")]
-    public class PackageInstaller : IPackageInstaller {
+    public class PackageInstaller : IPackageInstaller
+    {
         private const string PackagesPath = "packages";
         private const string SolutionFilename = "Orchard.sln";
 
@@ -31,7 +33,8 @@ namespace Orchard.Packaging.Services {
             IVirtualPathProvider virtualPathProvider,
             IExtensionManager extensionManager,
             IFolderUpdater folderUpdater,
-            IClock clock) {
+            IClock clock)
+        {
 
             _notifier = notifier;
             _virtualPathProvider = virtualPathProvider;
@@ -46,14 +49,16 @@ namespace Orchard.Packaging.Services {
         public Localizer T { get; set; }
         public Logging.ILogger Logger { get; set; }
 
-        public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
+        public PackageInfo Install(string packageId, string version, string location, string applicationPath)
+        {
             // instantiates the appropriate package repository
             IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(location, "Default"));
 
             // gets an IPackage instance from the repository
-            var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
+            var packageVersion = string.IsNullOrEmpty(version) ? null : new Version(version);
             var package = packageRepository.FindPackage(packageId, packageVersion);
-            if (package == null) {
+            if (package == null)
+            {
                 var message = T("The specified package could not be found: ID: {0}, version: {1}.",
                     packageId, string.IsNullOrEmpty(version) ? T("No version").Text : version);
                 throw new OrchardException(message);
@@ -62,29 +67,36 @@ namespace Orchard.Packaging.Services {
             return InstallPackage(package, packageRepository, location, applicationPath);
         }
 
-        public PackageInfo Install(IPackage package, string location, string applicationPath) {
+        public PackageInfo Install(IPackage package, string location, string applicationPath)
+        {
             // instantiates the appropriate package repository
             IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(location, "Default"));
             return InstallPackage(package, packageRepository, location, applicationPath);
         }
 
-        protected PackageInfo InstallPackage(IPackage package, IPackageRepository packageRepository, string location, string applicationPath) {
+        protected PackageInfo InstallPackage(IPackage package, IPackageRepository packageRepository, string location, string applicationPath)
+        {
             bool previousInstalled;
 
             // 1. See if extension was previous installed and backup its folder if so
-            try {
+            try
+            {
                 previousInstalled = BackupExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 throw new OrchardException(T("Unable to backup existing local package directory."), exception);
             }
 
-            if (previousInstalled) {
+            if (previousInstalled)
+            {
                 // 2. If extension is installed, need to un-install first
-                try {
+                try
+                {
                     UninstallExtensionIfNeeded(package);
                 }
-                catch (Exception exception) {
+                catch (Exception exception)
+                {
                     throw new OrchardException(T("Unable to un-install local package before updating."), exception);
                 }
             }
@@ -94,18 +106,22 @@ namespace Orchard.Packaging.Services {
             // check the new package is compatible with current Orchard version
             var descriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
 
-            if (descriptor != null) {
-                if (new FlatPositionComparer().Compare(descriptor.OrchardVersion, typeof(ContentItem).Assembly.GetName().Version.ToString()) >= 0) {
-                    if (previousInstalled) {
+            if (descriptor != null)
+            {
+                if (new FlatPositionComparer().Compare(descriptor.OrchardVersion, typeof(ContentItem).Assembly.GetName().Version.ToString()) >= 0)
+                {
+                    if (previousInstalled)
+                    {
                         // restore the previous version
                         RestoreExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
                     }
-                    else {
+                    else
+                    {
                         // just uninstall the new package
                         Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
                     }
 
-                    Logger.Error(String.Format("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
+                    Logger.Error(string.Format("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
                     throw new OrchardException(T("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
                 }
             }
@@ -121,7 +137,8 @@ namespace Orchard.Packaging.Services {
         /// <param name="sourceLocation">The source location.</param>
         /// <param name="targetPath">The path where to install the package.</param>
         /// <returns>The package information.</returns>
-        protected PackageInfo ExecuteInstall(IPackage package, IPackageRepository packageRepository, string sourceLocation, string targetPath) {
+        protected PackageInfo ExecuteInstall(IPackage package, IPackageRepository packageRepository, string sourceLocation, string targetPath)
+        {
             // this logger is used to render NuGet's log on the notifier
             var logger = new NugetLogger(_notifier);
 
@@ -129,20 +146,24 @@ namespace Orchard.Packaging.Services {
 
             // if we can access the parent directory, and the solution is inside, NuGet-install the package here
             string solutionPath;
-            var installedPackagesPath = String.Empty;
-            if (TryGetSolutionPath(targetPath, out solutionPath)) {
+            var installedPackagesPath = string.Empty;
+            if (TryGetSolutionPath(targetPath, out solutionPath))
+            {
                 installedPackagesPath = Path.Combine(solutionPath, PackagesPath);
-                try {
+                try
+                {
                     var packageManager = new NuGetPackageManager(
                         packageRepository,
                         new DefaultPackagePathResolver(sourceLocation),
                         new PhysicalFileSystem(installedPackagesPath) { Logger = logger }
-                        ) { Logger = logger };
+                        )
+                    { Logger = logger };
 
                     packageManager.InstallPackage(package, true);
                     installed = true;
                 }
-                catch {
+                catch
+                {
                     // installing the package at the solution level failed
                 }
             }
@@ -159,12 +180,14 @@ namespace Orchard.Packaging.Services {
                 new DefaultPackagePathResolver(targetPath),
                 project,
                 new ExtensionReferenceRepository(project, sourceRepository, _extensionManager)
-                ) { Logger = logger };
+                )
+            { Logger = logger };
 
             // add the package to the project
             projectManager.AddPackageReference(package.Id, package.Version);
 
-            return new PackageInfo {
+            return new PackageInfo
+            {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
                 ExtensionType = package.Id.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme)) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
@@ -177,25 +200,30 @@ namespace Orchard.Packaging.Services {
         /// </summary>
         /// <param name="packageId">The package identifier for the package to be uninstalled.</param>
         /// <param name="applicationPath">The application path.</param>
-        public void Uninstall(string packageId, string applicationPath) {
+        public void Uninstall(string packageId, string applicationPath)
+        {
             string solutionPath;
             string extensionFullPath = string.Empty;
 
-            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme)))
+            {
                 extensionFullPath = _virtualPathProvider.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
             }
-            else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+            else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module)))
+            {
                 extensionFullPath = _virtualPathProvider.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
             }
 
             if (string.IsNullOrEmpty(extensionFullPath) ||
-                !Directory.Exists(extensionFullPath)) {
+                !Directory.Exists(extensionFullPath))
+            {
 
                 throw new OrchardException(T("Package not found: {0}", packageId));
             }
 
             // if we can access the parent directory, and the solution is inside, NuGet-uninstall the package here
-            if (TryGetSolutionPath(applicationPath, out solutionPath)) {
+            if (TryGetSolutionPath(applicationPath, out solutionPath))
+            {
 
                 // this logger is used to render NuGet's log on the notifier
                 var logger = new NugetLogger(_notifier);
@@ -203,71 +231,86 @@ namespace Orchard.Packaging.Services {
                 var installedPackagesPath = Path.Combine(solutionPath, PackagesPath);
                 var sourcePackageRepository = new LocalPackageRepository(installedPackagesPath);
 
-                try {
+                try
+                {
                     var project = new FileBasedProjectSystem(applicationPath) { Logger = logger };
                     var projectManager = new ProjectManager(
                         sourcePackageRepository,
                         new DefaultPackagePathResolver(installedPackagesPath),
                         project,
                         new ExtensionReferenceRepository(project, sourcePackageRepository, _extensionManager)
-                        ) { Logger = logger };
+                        )
+                    { Logger = logger };
 
                     // add the package to the project
                     projectManager.RemovePackageReference(packageId);
                 }
-                catch {
+                catch
+                {
                     // Uninstalling the package at the solution level failed
                 }
 
-                try {
+                try
+                {
                     var packageManager = new NuGetPackageManager(
                         sourcePackageRepository,
                         new DefaultPackagePathResolver(applicationPath),
                         new PhysicalFileSystem(installedPackagesPath) { Logger = logger }
-                        ) { Logger = logger };
+                        )
+                    { Logger = logger };
 
                     packageManager.UninstallPackage(packageId);
                 }
-                catch {
+                catch
+                {
                     // Package doesnt exist anymore
                 }
             }
 
             // If the package was not installed through nuget we still need to try to uninstall it by removing its directory
-            if (Directory.Exists(extensionFullPath)) {
+            if (Directory.Exists(extensionFullPath))
+            {
                 Directory.Delete(extensionFullPath, true);
             }
         }
 
-        private static bool TryGetSolutionPath(string applicationPath, out string parentPath) {
-            try {
+        private static bool TryGetSolutionPath(string applicationPath, out string parentPath)
+        {
+            try
+            {
                 parentPath = Directory.GetParent(applicationPath).Parent.FullName;
                 var solutionPath = Path.Combine(parentPath, SolutionFilename);
                 return File.Exists(solutionPath);
             }
-            catch {
+            catch
+            {
                 // Either solution does not exist or we are running under medium trust
                 parentPath = null;
                 return false;
             }
         }
 
-        private bool RestoreExtensionFolder(string extensionFolder, string extensionId) {
+        private bool RestoreExtensionFolder(string extensionFolder, string extensionId)
+        {
             var source = new DirectoryInfo(_virtualPathProvider.MapPath(_virtualPathProvider.Combine("~", extensionFolder, extensionId)));
 
-            if (source.Exists) {
+            if (source.Exists)
+            {
                 var tempPath = _virtualPathProvider.Combine("~", extensionFolder, "_Backup", extensionId);
                 string localTempPath = null;
-                for (int i = 0; i < 1000; i++) {
+                for (int i = 0; i < 1000; i++)
+                {
                     localTempPath = _virtualPathProvider.MapPath(tempPath) + (i == 0 ? "" : "." + i.ToString());
-                    if (!Directory.Exists(localTempPath)) {
+                    if (!Directory.Exists(localTempPath))
+                    {
                         Directory.CreateDirectory(localTempPath);
                         break;
                     }
                     localTempPath = null;
                 }
 
-                if (localTempPath == null) {
+                if (localTempPath == null)
+                {
                     throw new OrchardException(T("Backup folder {0} has too many backups subfolder (limit is 1,000)", tempPath));
                 }
 
@@ -281,22 +324,27 @@ namespace Orchard.Packaging.Services {
             return false;
         }
 
-        private bool BackupExtensionFolder(string extensionFolder, string extensionId) {
+        private bool BackupExtensionFolder(string extensionFolder, string extensionId)
+        {
             var source = new DirectoryInfo(_virtualPathProvider.MapPath(_virtualPathProvider.Combine("~", extensionFolder, extensionId)));
 
-            if (source.Exists) {
+            if (source.Exists)
+            {
                 var tempPath = _virtualPathProvider.Combine("~", extensionFolder, "_Backup", extensionId);
                 string localTempPath = null;
-                for (int i = 0; i < 1000; i++) {
+                for (int i = 0; i < 1000; i++)
+                {
                     localTempPath = _virtualPathProvider.MapPath(tempPath) + (i == 0 ? "" : "." + i.ToString());
-                    if (!Directory.Exists(localTempPath)) {
+                    if (!Directory.Exists(localTempPath))
+                    {
                         Directory.CreateDirectory(localTempPath);
                         break;
                     }
                     localTempPath = null;
                 }
 
-                if (localTempPath == null) {
+                if (localTempPath == null)
+                {
                     throw new OrchardException(T("Backup folder {0} has too many backups subfolder (limit is 1,000)", tempPath));
                 }
 
@@ -310,10 +358,12 @@ namespace Orchard.Packaging.Services {
             return false;
         }
 
-        private void UninstallExtensionIfNeeded(IPackage package) {
+        private void UninstallExtensionIfNeeded(IPackage package)
+        {
             // Nuget requires to un-install the currently installed packages if the new
             // package is the same version or an older version
-            try {
+            try
+            {
                 Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
                 _notifier.Success(T("Successfully un-installed local package {0}", package.ExtensionId()));
             }

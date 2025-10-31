@@ -1,20 +1,24 @@
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.ContentManagement;
 
-namespace Orchard.Comments.Handlers {
-    public class CommentPartHandler : ContentHandler {
+namespace Orchard.Comments.Handlers
+{
+    public class CommentPartHandler : ContentHandler
+    {
         public CommentPartHandler(
             IRepository<CommentPartRecord> commentsRepository,
             IContentManager contentManager,
             ICommentService commentService
-            ) {
+            )
+        {
 
             Filters.Add(StorageFilter.For(commentsRepository));
 
-            OnLoading<CommentPart>((context, comment) => {
+            OnLoading<CommentPart>((context, comment) =>
+            {
                 comment.CommentedOnContentItemField.Loader(
                     () => contentManager.Get(comment.CommentedOn)
                 );
@@ -24,8 +28,10 @@ namespace Orchard.Comments.Handlers {
                 );
             });
 
-            OnRemoving<CommentPart>((context, comment) => {
-                foreach(var response in contentManager.Query<CommentPart, CommentPartRecord>().Where(x => x.RepliedOn == comment.Id).List()) {
+            OnRemoving<CommentPart>((context, comment) =>
+            {
+                foreach (var response in contentManager.Query<CommentPart, CommentPartRecord>().Where(x => x.RepliedOn == comment.Id).List())
+                {
                     contentManager.Remove(response.ContentItem);
                 }
             });

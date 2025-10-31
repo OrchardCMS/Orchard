@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Autofac.Features.Metadata;
@@ -19,16 +19,19 @@ using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.CodeGeneration.Commands {
+namespace Orchard.Tests.Modules.CodeGeneration.Commands
+{
     [TestFixture]
-    public class CodeGenerationCommandsTests {
+    public class CodeGenerationCommandsTests
+    {
 
         private IContainer _container;
         private IExtensionManager _extensionManager;
         private ISchemaCommandGenerator _schemaCommandGenerator;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             string databaseFileName = Path.GetTempFileName();
             IDataServicesProviderFactory dataServicesProviderFactory = new DataServicesProviderFactory(new[] {
                 new Meta<CreateDataServicesProvider>(
@@ -61,7 +64,8 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
         }
 
         [Test]
-        public void CreateDataMigrationTestNonExistentFeature() {
+        public void CreateDataMigrationTestNonExistentFeature()
+        {
             CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager,
                 _schemaCommandGenerator);
 

@@ -1,28 +1,32 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Core.Settings.Tokens {
-    public interface ITokenProvider : IEventHandler {
+namespace Orchard.Core.Settings.Tokens
+{
+    public interface ITokenProvider : IEventHandler
+    {
         void Describe(dynamic context);
         void Evaluate(dynamic context);
     }
 
-    public class SettingsTokens : ITokenProvider {
+    public class SettingsTokens : ITokenProvider
+    {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IMembershipService _membershipService;
 
         public SettingsTokens(
-            IOrchardServices orchardServices, 
+            IOrchardServices orchardServices,
             IContentDefinitionManager contentDefinitionManager,
-            IMembershipService membershipService) {
+            IMembershipService membershipService)
+        {
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
             _membershipService = membershipService;
@@ -30,7 +34,8 @@ namespace Orchard.Core.Settings.Tokens {
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
 
             context.For("Site", T("Site Settings"), T("Tokens for Site Settings"))
                 .Token("SiteName", T("Site Name"), T("The name of the site."), "Text")
@@ -42,9 +47,11 @@ namespace Orchard.Core.Settings.Tokens {
 
             // Token descriptors for fields
             var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
-            if (customSettingsPart != null && customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields).Any()) {
+            if (customSettingsPart != null && customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields).Any())
+            {
                 var partContext = context.For("Site");
-                foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields)) {
+                foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields))
+                {
                     var field = partField;
                     var tokenName = field.Name;
 
@@ -55,7 +62,8 @@ namespace Orchard.Core.Settings.Tokens {
 
         }
 
-        public void Evaluate(dynamic context) {
+        public void Evaluate(dynamic context)
+        {
             var forContent = context.For<ISite>("Site", (Func<ISite>)(() => _orchardServices.WorkContext.CurrentSite));
 
             forContent
@@ -71,11 +79,14 @@ namespace Orchard.Core.Settings.Tokens {
                 .Chain("TimeZone", "Text", (Func<ISite, object>)(content => content.SiteTimeZone))
                 ;
 
-            if (context.Target == "Site") {
+            if (context.Target == "Site")
+            {
                 // is there a content available in the context ?
-                if (forContent.Data != null && forContent.Data.ContentItem != null) {
+                if (forContent.Data != null && forContent.Data.ContentItem != null)
+                {
                     var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
-                    foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields)) {
+                    foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields))
+                    {
                         var field = partField;
                         var tokenName = partField.Name;
                         forContent.Token(
@@ -90,7 +101,8 @@ namespace Orchard.Core.Settings.Tokens {
             }
         }
 
-        private static ContentField LookupField(IContent content, string fieldName) {
+        private static ContentField LookupField(IContent content, string fieldName)
+        {
             return content.ContentItem.Parts
                 .Where(part => part.PartDefinition.Name == "Site")
                 .SelectMany(part => part.Fields.Where(field => field.Name == fieldName))

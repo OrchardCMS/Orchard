@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -16,9 +16,11 @@ using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
 
-namespace Orchard.Roles.Controllers {
+namespace Orchard.Roles.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller {
+    public class AdminController : Controller
+    {
         private readonly IRoleService _roleService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -36,7 +38,8 @@ namespace Orchard.Roles.Controllers {
             IContentManager contentManager,
             IShapeFactory shapeFactory,
             IRepository<UserRolesPartRecord> userRolesRepository,
-            IRoleEventHandler roleEventHandlers) {
+            IRoleEventHandler roleEventHandlers)
+        {
 
             Services = services;
             _roleService = roleService;
@@ -57,7 +60,8 @@ namespace Orchard.Roles.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
@@ -67,12 +71,15 @@ namespace Orchard.Roles.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
+        public ActionResult IndexPOST()
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            foreach (string key in Request.Form.Keys) {
-                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                {
                     int roleId = Convert.ToInt32(key.Substring("Checkbox.".Length));
                     _roleService.DeleteRole(roleId);
                 }
@@ -80,7 +87,8 @@ namespace Orchard.Roles.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Create() {
+        public ActionResult Create()
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
@@ -89,30 +97,36 @@ namespace Orchard.Roles.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST() {
+        public ActionResult CreatePOST()
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleCreateViewModel();
             TryUpdateModel(viewModel);
 
-            if(String.IsNullOrEmpty(viewModel.Name)) {
+            if (string.IsNullOrEmpty(viewModel.Name))
+            {
                 ModelState.AddModelError("Name", T("Role name can't be empty"));
             }
 
             var role = _roleService.GetRoleByName(viewModel.Name);
-            if (role != null) {
+            if (role != null)
+            {
                 ModelState.AddModelError("Name", T("Role with same name already exists"));
             }
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 viewModel.FeaturePermissions = _roleService.GetInstalledPermissions();
                 return View(viewModel);
             }
 
             _roleService.CreateRole(viewModel.Name);
-            foreach (string key in Request.Form.Keys) {
-                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                {
                     string permissionName = key.Substring("Checkbox.".Length);
                     _roleService.CreatePermissionForRole(viewModel.Name,
                                                             permissionName);
@@ -121,24 +135,30 @@ namespace Orchard.Roles.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var role = _roleService.GetRole(id);
-            if (role == null) {
+            if (role == null)
+            {
                 return HttpNotFound();
             }
 
-            var model = new RoleEditViewModel { Name = role.Name, Id = role.Id, 
-                                                RoleCategoryPermissions = _roleService.GetInstalledPermissions(),
-                                                CurrentPermissions = _roleService.GetPermissionsForRole(id)};
+            var model = new RoleEditViewModel
+            {
+                Name = role.Name,
+                Id = role.Id,
+                RoleCategoryPermissions = _roleService.GetInstalledPermissions(),
+                CurrentPermissions = _roleService.GetPermissionsForRole(id)
+            };
 
             var simulation = UserSimulation.Create(role.Name);
             model.EffectivePermissions = model.RoleCategoryPermissions
                 .SelectMany(group => group.Value)
                 .Where(permission => _authorizationService.TryCheckAccess(permission, simulation, null))
-                .Select(permission=>permission.Name)
+                .Select(permission => permission.Name)
                 .Distinct()
                 .ToList();
 
@@ -147,30 +167,36 @@ namespace Orchard.Roles.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditSavePOST(int id) {
+        public ActionResult EditSavePOST(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleEditViewModel();
             TryUpdateModel(viewModel);
 
-            if (String.IsNullOrEmpty(viewModel.Name)) {
+            if (string.IsNullOrEmpty(viewModel.Name))
+            {
                 ModelState.AddModelError("Name", T("Role name can't be empty"));
             }
 
             var role = _roleService.GetRoleByName(viewModel.Name);
-            if (role != null && role.Id != id) {
+            if (role != null && role.Id != id)
+            {
                 ModelState.AddModelError("Name", T("Role with same name already exists"));
             }
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return Edit(id);
             }
 
             // Save
             List<string> rolePermissions = new List<string>();
-            foreach (string key in Request.Form.Keys) {
-                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                {
                     string permissionName = key.Substring("Checkbox.".Length);
                     rolePermissions.Add(permissionName);
                 }
@@ -183,12 +209,14 @@ namespace Orchard.Roles.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Delete")]
-        public ActionResult EditDeletePOST(int id) {
+        public ActionResult EditDeletePOST(int id)
+        {
             return Delete(id, null);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id, string returnUrl) {
+        public ActionResult Delete(int id, string returnUrl)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
@@ -199,13 +227,15 @@ namespace Orchard.Roles.Controllers {
         }
 
         [Authorize]
-        public ActionResult Assign(int id) {
+        public ActionResult Assign(int id)
+        {
             // CurrentUser is trying to access a page to assign roles to the User
             // with Id id.
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
             // Get the user whose roles we want to assign
             var userRolesPart = _contentManager.Get<UserRolesPart>(id);
-            if (userRolesPart == null) {
+            if (userRolesPart == null)
+            {
                 return HttpNotFound();
             }
             // Check whether the current user has any of the required permissions
@@ -216,14 +246,17 @@ namespace Orchard.Roles.Controllers {
                     currentUser,
                     userRolesPart))
                 .Select(rr => rr.Id).ToList();
-            if (!authorizedRoleIds.Any()) {
+            if (!authorizedRoleIds.Any())
+            {
                 return new HttpUnauthorizedResult();
             }
             // create the ViewModel used to manage a user's roles
-            var model = new UserRolesViewModel {
+            var model = new UserRolesViewModel
+            {
                 User = userRolesPart.As<IUser>(),
                 UserRoles = userRolesPart,
-                Roles = allRoles.Select(x => new UserRoleEntry {
+                Roles = allRoles.Select(x => new UserRoleEntry
+                {
                     RoleId = x.Id,
                     Name = x.Name,
                     Granted = userRolesPart.Roles.Contains(x.Name)
@@ -237,11 +270,13 @@ namespace Orchard.Roles.Controllers {
         }
 
         [HttpPost, ActionName("Assign"), Authorize]
-        public ActionResult AssignPOST(int id, string returnUrl) {
+        public ActionResult AssignPOST(int id, string returnUrl)
+        {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
             // Get the user whose roles we want to assign
             var userRolesPart = _contentManager.Get<UserRolesPart>(id);
-            if (userRolesPart == null) {
+            if (userRolesPart == null)
+            {
                 return HttpNotFound();
             }
             // Check whether the current user has any of the required permissions
@@ -252,15 +287,18 @@ namespace Orchard.Roles.Controllers {
                     currentUser,
                     userRolesPart))
                 .Select(rr => rr.Id).ToList();
-            if (!authorizedRoleIds.Any()) {
+            if (!authorizedRoleIds.Any())
+            {
                 return new HttpUnauthorizedResult();
             }
             // Start trying to update
-            var editModel = new UserRolesViewModel {
+            var editModel = new UserRolesViewModel
+            {
                 User = userRolesPart.As<IUser>(),
                 UserRoles = userRolesPart
             };
-            if (TryUpdateModel(editModel)) {
+            if (TryUpdateModel(editModel))
+            {
                 // same logic that is used in the UserRolesPartDriver:
                 var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == editModel.User.Id).ToArray();
                 var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
@@ -272,7 +310,8 @@ namespace Orchard.Roles.Controllers {
                         // user doesn't have the role yet
                         !currentRoleRecords.Contains(x)
                         // && we are authorized to assign this role
-                        && authorizedRoleIds.Contains(x.Id))) {
+                        && authorizedRoleIds.Contains(x.Id)))
+                {
 
                     _notifier.Warning(T("Adding role {0} to user {1}", addingRole.Name, userRolesPart.As<IUser>().UserName));
                     _userRolesRepository.Create(new UserRolesPartRecord { UserId = editModel.User.Id, Role = addingRole });
@@ -283,7 +322,8 @@ namespace Orchard.Roles.Controllers {
                         // user has this role that they shouldn't
                         !targetRoleRecords.Contains(x.Role)
                         // && we are authorized to assign this role
-                        && authorizedRoleIds.Contains(x.Role.Id))) {
+                        && authorizedRoleIds.Contains(x.Role.Id)))
+                {
 
                     _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRolesPart.As<IUser>().UserName));
                     _userRolesRepository.Delete(removingRole);
@@ -291,7 +331,8 @@ namespace Orchard.Roles.Controllers {
                 }
             }
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 editModel.AuthorizedRoleIds = authorizedRoleIds;
                 // Something went wrong in the update
                 Services.TransactionManager.Cancel();
@@ -300,7 +341,8 @@ namespace Orchard.Roles.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Assign", new { id = id }));
         }
 
-        private ActionResult AssignView(UserRolesViewModel editModel) {
+        private ActionResult AssignView(UserRolesViewModel editModel)
+        {
 
             var editor = Shape.EditorTemplate(
                 TemplateName: "Parts/Roles.UserRoles",

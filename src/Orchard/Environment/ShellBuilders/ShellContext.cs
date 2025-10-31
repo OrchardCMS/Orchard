@@ -4,8 +4,10 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
-namespace Orchard.Environment.ShellBuilders {
-    public class ShellContext : IDisposable {
+namespace Orchard.Environment.ShellBuilders
+{
+    public class ShellContext : IDisposable
+    {
         private bool _disposed = false;
 
         public ShellSettings Settings { get; set; }
@@ -14,15 +16,19 @@ namespace Orchard.Environment.ShellBuilders {
         public ILifetimeScope LifetimeScope { get; set; }
         public IOrchardShell Shell { get; set; }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing) {
-            if (!_disposed) {
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
 
-                if (disposing) {
+                if (disposing)
+                {
                     LifetimeScope.Dispose();
                 }
 
@@ -35,7 +41,8 @@ namespace Orchard.Environment.ShellBuilders {
             }
         }
 
-        ~ShellContext() {
+        ~ShellContext()
+        {
             Dispose(false);
         }
     }

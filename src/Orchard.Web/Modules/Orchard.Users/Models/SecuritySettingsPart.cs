@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
 using Orchard.ContentManagement;
 
-namespace Orchard.Users.Models {
-    public class SecuritySettingsPart : ContentPart {
-        
+namespace Orchard.Users.Models
+{
+    public class SecuritySettingsPart : ContentPart
+    {
+
         /// <summary>
         /// The way this setting works is that it controls the behaviour of 
         /// PasswordChangedDateUserDataProvider. If the setting is true, when the password
@@ -15,7 +15,8 @@ namespace Orchard.Users.Models {
         /// because the information in the cookie will fail to validate, but the LoggedOut event
         /// will not have fired for them.
         /// </summary>
-        public bool ShouldInvalidateAuthOnPasswordChanged {
+        public bool ShouldInvalidateAuthOnPasswordChanged
+        {
             get { return this.Retrieve(x => x.ShouldInvalidateAuthOnPasswordChanged); }
             set { this.Store(x => x.ShouldInvalidateAuthOnPasswordChanged, value); }
         }

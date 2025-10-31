@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Globalization;
 using System.Text;
 using System.Web;
@@ -8,20 +7,25 @@ using System.Web.Routing;
 using Orchard.Alias.Implementation.Holder;
 using Orchard.Alias.Implementation.Map;
 
-namespace Orchard.Alias.Implementation {
-    public class AliasRoute : RouteBase, IRouteWithArea {
+namespace Orchard.Alias.Implementation
+{
+    public class AliasRoute : RouteBase, IRouteWithArea
+    {
         private readonly AliasMap _aliasMap;
         private readonly IRouteHandler _routeHandler;
 
-        public AliasRoute(IAliasHolder aliasHolder, string areaName, IRouteHandler routeHandler) {
+        public AliasRoute(IAliasHolder aliasHolder, string areaName, IRouteHandler routeHandler)
+        {
             Area = areaName;
             _aliasMap = aliasHolder.GetMap(areaName);
             _routeHandler = routeHandler;
         }
 
-        public override RouteData GetRouteData(HttpContextBase httpContext) {
+        public override RouteData GetRouteData(HttpContextBase httpContext)
+        {
             // don't compute unnecessary virtual path if the map is empty
-            if (!_aliasMap.Any()) {
+            if (!_aliasMap.Any())
+            {
                 return null;
             }
 
@@ -32,10 +36,12 @@ namespace Orchard.Alias.Implementation {
             //IDictionary<string, string> routeValues;
             AliasInfo aliasInfo;
             // TODO: Might as well have the lookup in AliasHolder...
-            if (_aliasMap.TryGetAlias(virtualPath, out aliasInfo)) {
+            if (_aliasMap.TryGetAlias(virtualPath, out aliasInfo))
+            {
                 // Construct RouteData from the route values
                 var data = new RouteData(this, _routeHandler);
-                foreach (var routeValue in aliasInfo.RouteValues) {
+                foreach (var routeValue in aliasInfo.RouteValues)
+                {
                     var key = routeValue.Key;
                     if (key.EndsWith("-"))
                         data.Values.Add(key.Substring(0, key.Length - 1), routeValue.Value);
@@ -51,16 +57,20 @@ namespace Orchard.Alias.Implementation {
             return null;
         }
 
-        public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary routeValues) {
+        public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary routeValues)
+        {
             // Lookup best match for route values in the expanded tree
             var match = _aliasMap.Locate(routeValues);
-            if (match != null) {
+            if (match != null)
+            {
                 // Build any "spare" route values onto the Alias (so we correctly support any additional query parameters)
                 var sb = new StringBuilder(match.Item2);
                 var extra = 0;
-                foreach (var routeValue in routeValues) {
+                foreach (var routeValue in routeValues)
+                {
                     // Ignore any we already have
-                    if (match.Item1.ContainsKey(routeValue.Key)) {
+                    if (match.Item1.ContainsKey(routeValue.Key))
+                    {
                         continue;
                     }
 

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -18,9 +15,11 @@ using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Mvc.Routes {
+namespace Orchard.Tests.Mvc.Routes
+{
     [TestFixture]
-    public class ShellRouteTests {
+    public class ShellRouteTests
+    {
         private RouteCollection _routes;
         private ILifetimeScope _containerA;
         private ILifetimeScope _containerB;
@@ -29,7 +28,8 @@ namespace Orchard.Tests.Mvc.Routes {
         private IContainer _rootContainer;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _settingsA = new ShellSettings { Name = "Alpha" };
             _settingsB = new ShellSettings { Name = "Beta", };
             _routes = new RouteCollection();
@@ -46,11 +46,12 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             rootBuilder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
-            rootBuilder.Register<Func<RouteBase, ShellRoute>>(c => {
+            rootBuilder.Register<Func<RouteBase, ShellRoute>>(c =>
+            {
                 var context = c.Resolve<IComponentContext>();
-                return new Func<RouteBase, ShellRoute>(routeBase => 
+                return new Func<RouteBase, ShellRoute>(routeBase =>
                     new ShellRoute(
-                        routeBase, 
+                        routeBase,
                         _settingsA,
                         context.Resolve<IWorkContextAccessor>(),
                         context.Resolve<IRunningShellTable>(), objects => { return null; }));
@@ -60,38 +61,42 @@ namespace Orchard.Tests.Mvc.Routes {
 
             _containerA = _rootContainer.BeginLifetimeScope(
                 "shell",
-                builder => {
+                builder =>
+                {
                     builder.Register(ctx => _settingsA);
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerMatchingLifetimeScope("shell");
                 });
 
             _containerB = _rootContainer.BeginLifetimeScope(
                 "shell",
-                builder => {
+                builder =>
+                {
                     builder.Register(ctx => _settingsB);
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerMatchingLifetimeScope("shell");
                 });
         }
-        
+
         [Test]
-        public void FactoryMethodWillCreateShellRoutes() {
+        public void FactoryMethodWillCreateShellRoutes()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellRoute>().InstancePerDependency();
             builder.RegisterAutoMocking();
 
             var container = builder.Build();
-            var buildShellRoute = new Func<RouteBase, ShellRoute>(routeBase => 
+            var buildShellRoute = new Func<RouteBase, ShellRoute>(routeBase =>
                     new ShellRoute(
-                        routeBase, 
+                        routeBase,
                         _settingsA,
                         container.Resolve<IWorkContextAccessor>(),
-                        container.Resolve<IRunningShellTable>(), 
+                        container.Resolve<IRunningShellTable>(),
                         objects => { return null; }));
 
             var routeA = new Route("foo", new MvcRouteHandler());
             var route1 = buildShellRoute(routeA);
 
-            var routeB = new Route("bar", new MvcRouteHandler()) {
+            var routeB = new Route("bar", new MvcRouteHandler())
+            {
                 DataTokens = new RouteValueDictionary { { "area", _settingsB.Name } }
             };
             var route2 = buildShellRoute(routeB);
@@ -107,7 +112,8 @@ namespace Orchard.Tests.Mvc.Routes {
 
 
         [Test]
-        public void RoutePublisherReplacesOnlyNamedShellsRoutes() {
+        public void RoutePublisherReplacesOnlyNamedShellsRoutes()
+        {
 
             var routeA = new Route("foo", new MvcRouteHandler());
             var routeB = new Route("bar", new MvcRouteHandler());
@@ -137,7 +143,8 @@ namespace Orchard.Tests.Mvc.Routes {
         }
 
         [Test]
-        public void RoutePublisherGroupsShellRoutesByName() {
+        public void RoutePublisherGroupsShellRoutesByName()
+        {
 
             var routeA = new Route("foo", new MvcRouteHandler());
             var routeB = new Route("bar", new MvcRouteHandler());
@@ -145,7 +152,7 @@ namespace Orchard.Tests.Mvc.Routes {
 
             _containerA.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Name = "1", Priority = 0, Route = routeA } });
-            
+
             _containerA.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Name = "2", Priority = 0, Route = routeB } });
 
@@ -158,7 +165,8 @@ namespace Orchard.Tests.Mvc.Routes {
         }
 
         [Test]
-        public void MatchingRouteToActiveShellTableWillLimitTheAbilityToMatchRoutes() {
+        public void MatchingRouteToActiveShellTableWillLimitTheAbilityToMatchRoutes()
+        {
 
             var routeFoo = new Route("foo", new MvcRouteHandler());
 
@@ -166,7 +174,7 @@ namespace Orchard.Tests.Mvc.Routes {
             _containerA.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Priority = 0, Route = routeFoo } });
             _rootContainer.Resolve<IRunningShellTable>().Add(_settingsA);
-            
+
             _settingsB.RequestUrlHost = "b.example.com";
             _containerB.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Priority = 0, Route = routeFoo } });
@@ -199,7 +207,8 @@ namespace Orchard.Tests.Mvc.Routes {
         }
 
         [Test]
-        public void RequestUrlPrefixAdjustsMatchingAndPathGeneration() {
+        public void RequestUrlPrefixAdjustsMatchingAndPathGeneration()
+        {
             var settings = new ShellSettings { RequestUrlPrefix = "~/foo" };
 
             var builder = new ContainerBuilder();
@@ -218,7 +227,7 @@ namespace Orchard.Tests.Mvc.Routes {
                         routeBase,
                         settings,
                         container.Resolve<IWorkContextAccessor>(),
-                        container.Resolve<IRunningShellTable>(), 
+                        container.Resolve<IRunningShellTable>(),
                         objects => { return null; }));
 
             var helloRoute = shellRouteFactory(new Route(

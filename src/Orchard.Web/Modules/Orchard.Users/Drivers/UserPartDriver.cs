@@ -1,18 +1,22 @@
-﻿using System;
+using System;
 using System.Web.Security;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Users.Models;
 
-namespace Orchard.Users.Drivers {
+namespace Orchard.Users.Drivers
+{
     /// <summary>
     /// This class intentionally has no Display method to prevent external access to this information through standard 
     /// Content Item display methods.
     /// </summary>
-    public class UserPartDriver : ContentPartDriver<UserPart> {
+    public class UserPartDriver : ContentPartDriver<UserPart>
+    {
 
-        protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(UserPart part, ContentManagement.Handlers.ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -29,7 +33,8 @@ namespace Orchard.Users.Drivers {
             part.LastPasswordChangeUtc = DateTime.Parse(context.Attribute(part.PartDefinition.Name, "LastPasswordChangeUtc"));
         }
 
-        protected override void Exporting(UserPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(UserPart part, ContentManagement.Handlers.ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Email", part.Email);
             context.Element(part.PartDefinition.Name).SetAttributeValue("EmailChallengeToken", part.EmailChallengeToken);
             context.Element(part.PartDefinition.Name).SetAttributeValue("EmailStatus", part.EmailStatus);

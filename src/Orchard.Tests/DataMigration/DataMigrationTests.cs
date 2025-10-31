@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,18 +13,20 @@ using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
+using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
-using Orchard.Data.Providers;
 using Orchard.Tests.DataMigration.Utilities;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.DataMigration {
+namespace Orchard.Tests.DataMigration
+{
     [TestFixture]
-    public class DataMigrationTests {
+    public class DataMigrationTests
+    {
         private IContainer _container;
         private StubFolders _folders;
         private IDataMigrationManager _dataMigrationManager;
@@ -35,7 +37,8 @@ namespace Orchard.Tests.DataMigration {
         private ITransactionManager _transactionManager;
 
         [SetUp]
-        public void CreateDb() {
+        public void CreateDb()
+        {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -45,8 +48,10 @@ namespace Orchard.Tests.DataMigration {
                 typeof(ContentTypeRecord));
         }
 
-        public void InitDb() {
-            foreach ( var record in _repository.Fetch(m => m != null) ) {
+        public void InitDb()
+        {
+            foreach (var record in _repository.Fetch(m => m != null))
+            {
                 _repository.Delete(record);
             }
 
@@ -54,19 +59,21 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [TearDown]
-        public void CleanUp() {
+        public void CleanUp()
+        {
             if (_container != null)
                 _container.Dispose();
         }
 
-        public void Init(IEnumerable<Type> dataMigrations) {
-                      
+        public void Init(IEnumerable<Type> dataMigrations)
+        {
+
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
             var contentDefinitionManager = new Mock<IContentDefinitionManager>().Object;
-            
-            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
-            
+
+            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_" });
+
             builder.RegisterType<SqlServerDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
             builder.RegisterType<NullInterpreter>().As<IDataMigrationInterpreter>();
@@ -80,7 +87,8 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestTransactionManager(_session)).As<ITransactionManager>();
-            foreach(var type in dataMigrations) {
+            foreach (var type in dataMigrations)
+            {
                 builder.RegisterType(type).As<IDataMigration>();
             }
             _container = builder.Build();
@@ -91,143 +99,148 @@ namespace Orchard.Tests.DataMigration {
             InitDb();
         }
 
-        public class StubFolders : IExtensionFolders {
-            public StubFolders() {
+        public class StubFolders : IExtensionFolders
+        {
+            public StubFolders()
+            {
                 Manifests = new Dictionary<string, string>();
             }
 
             public IDictionary<string, string> Manifests { get; set; }
 
-            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach (var e in Manifests) {
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions()
+            {
+                foreach (var e in Manifests)
+                {
                     string name = e.Key;
                     yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }
 
-        public class DataMigrationEmpty : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
-            }
+        public class DataMigrationEmpty : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
         }
 
-        public class DataMigration11 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
-            }
+        public class DataMigration11 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
         }
 
-        public class DataMigration11Create : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
-            }
+        public class DataMigration11Create : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
         }
 
-        public class DataMigrationCreateCanBeFollowedByUpdates : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
-            }
+        public class DataMigrationCreateCanBeFollowedByUpdates : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 42;
             }
 
-            public int UpdateFrom42() {
+            public int UpdateFrom42()
+            {
                 return 666;
             }
         }
 
-        public class DataMigrationSameMigrationClassCanEvolve : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
-            }
+        public class DataMigrationSameMigrationClassCanEvolve : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
 
-            public int UpdateFrom42() {
+            public int UpdateFrom42()
+            {
                 return 666;
             }
 
-            public int UpdateFrom666() {
+            public int UpdateFrom666()
+            {
                 return 999;
             }
         }
 
-        public class DataMigrationDependenciesModule1 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
-            }
+        public class DataMigrationDependenciesModule1 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
         }
 
-        public class DataMigrationDependenciesModule2 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature2" } }; }
-            }
+        public class DataMigrationDependenciesModule2 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature2" } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
         }
 
-        public class DataMigrationWithSchemaBuilder : DataMigrationImpl {
-            public override Feature Feature {
-                get { return new Feature { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
-            }
+        public class DataMigrationWithSchemaBuilder : DataMigrationImpl
+        {
+            public override Feature Feature => new Feature { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } };
 
-            public int Create() {
+            public int Create()
+            {
                 Assert.That(SchemaBuilder, Is.Not.Null);
                 return 1;
             }
         }
 
-        public class DataMigrationFeatureNeedUpdate1 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
-            }
+        public class DataMigrationFeatureNeedUpdate1 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } };
         }
 
-        public class DataMigrationFeatureNeedUpdate2 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature2", Extension = new ExtensionDescriptor { Id = "Module2" } } }; }
-            }
+        public class DataMigrationFeatureNeedUpdate2 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature2", Extension = new ExtensionDescriptor { Id = "Module2" } } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
         }
 
-        public class DataMigrationFeatureNeedUpdate3 : IDataMigration {
-            public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature3", Extension = new ExtensionDescriptor { Id = "Module3" } } }; }
-            }
+        public class DataMigrationFeatureNeedUpdate3 : IDataMigration
+        {
+            public Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature3", Extension = new ExtensionDescriptor { Id = "Module3" } } };
 
-            public int Create() {
+            public int Create()
+            {
                 return 999;
             }
 
-            public int UpdateFrom42() {
+            public int UpdateFrom42()
+            {
                 return 999;
             }
         }
 
 
-        public class DataMigrationTransactional : DataMigrationImpl {
-            public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
-            }
+        public class DataMigrationTransactional : DataMigrationImpl
+        {
+            public override Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } };
 
-            public int Create() {
+            public int Create()
+            {
                 SchemaBuilder.CreateTable("FOO", table =>
                     table.Column("Id", DbType.Int32, column =>
                         column.PrimaryKey().Identity()));
@@ -235,21 +248,23 @@ namespace Orchard.Tests.DataMigration {
                 return 1;
             }
 
-            public int UpdateFrom1() {
+            public int UpdateFrom1()
+            {
                 throw new Exception();
             }
 
-            public int UpdateFrom2() {
+            public int UpdateFrom2()
+            {
                 return 3;
             }
         }
 
-        public class FailingDataMigration : DataMigrationImpl {
-            public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature4", Extension = new ExtensionDescriptor { Id = "Module4" } } }; }
-            }
+        public class FailingDataMigration : DataMigrationImpl
+        {
+            public override Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature4", Extension = new ExtensionDescriptor { Id = "Module4" } } };
 
-            public int Create() {
+            public int Create()
+            {
                 SchemaBuilder.CreateTable("FOO", table =>
                     table.Column("Id", DbType.Int32, column =>
                         column.PrimaryKey().Identity()));
@@ -257,19 +272,20 @@ namespace Orchard.Tests.DataMigration {
                 return 1;
             }
 
-            public int UpdateFrom1() {
+            public int UpdateFrom1()
+            {
                 throw new Exception();
             }
         }
-        
-        public class DataMigrationSimpleBuilder : DataMigrationImpl {
-            public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
-            }
 
-            public int Create() {
-                SchemaBuilder.CreateTable("UserPartRecord", table => 
-                    table.Column("Id", DbType.Int32, column => 
+        public class DataMigrationSimpleBuilder : DataMigrationImpl
+        {
+            public override Feature Feature => new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } };
+
+            public int Create()
+            {
+                SchemaBuilder.CreateTable("UserPartRecord", table =>
+                    table.Column("Id", DbType.Int32, column =>
                         column.PrimaryKey().Identity()));
 
                 return 1;
@@ -277,8 +293,9 @@ namespace Orchard.Tests.DataMigration {
         }
 
         [Test]
-        public void DataMigrationShouldDoNothingIfNoDataMigrationIsProvidedForFeature() {
-            Init(new[] {typeof (DataMigrationEmpty)});
+        public void DataMigrationShouldDoNothingIfNoDataMigrationIsProvidedForFeature()
+        {
+            Init(new[] { typeof(DataMigrationEmpty) });
 
             _folders.Manifests.Add("Module2", @"
 Name: Module2
@@ -294,7 +311,8 @@ Features:
         }
 
         [Test]
-        public void DataMigrationShouldDoNothingIfNoUpgradeOrCreateMethodWasFound() {
+        public void DataMigrationShouldDoNothingIfNoUpgradeOrCreateMethodWasFound()
+        {
             Init(new[] { typeof(DataMigration11) });
 
             _folders.Manifests.Add("Module1", @"
@@ -305,13 +323,14 @@ Features:
     Feature1: 
         Description: Feature
 ");
-            
+
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
         }
 
         [Test]
-        public void CreateShouldReturnVersionNumber() {
+        public void CreateShouldReturnVersionNumber()
+        {
             Init(new[] { typeof(DataMigration11Create) });
 
             _folders.Manifests.Add("Module1", @"
@@ -322,7 +341,7 @@ Features:
     Feature1: 
         Description: Feature
 ");
-            
+
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Version, Is.EqualTo(999));
@@ -330,8 +349,9 @@ Features:
         }
 
         [Test]
-        public void CreateCanBeFollowedByUpdates() {
-            Init(new[] {typeof (DataMigrationCreateCanBeFollowedByUpdates)});
+        public void CreateCanBeFollowedByUpdates()
+        {
+            Init(new[] { typeof(DataMigrationCreateCanBeFollowedByUpdates) });
 
             _folders.Manifests.Add("Module1", @"
 Name: Module1
@@ -341,14 +361,15 @@ Features:
     Feature1: 
         Description: Feature
 ");
-            
+
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Version, Is.EqualTo(666));
         }
 
         [Test]
-        public void SameMigrationClassCanEvolve() {
+        public void SameMigrationClassCanEvolve()
+        {
             Init(new[] { typeof(DataMigrationSameMigrationClassCanEvolve) });
 
             _folders.Manifests.Add("Module1", @"
@@ -359,7 +380,8 @@ Features:
     Feature1: 
         Description: Feature
 ");
-            _repository.Create(new DataMigrationRecord {
+            _repository.Create(new DataMigrationRecord
+            {
                 Version = 42,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationSameMigrationClassCanEvolve"
             });
@@ -370,7 +392,8 @@ Features:
         }
 
         [Test]
-        public void DependenciesShouldBeUpgradedFirst() {
+        public void DependenciesShouldBeUpgradedFirst()
+        {
 
             Init(new[] { typeof(DataMigrationDependenciesModule1), typeof(DataMigrationDependenciesModule2) });
 
@@ -400,7 +423,8 @@ Features:
         }
 
         [Test]
-        public void DataMigrationImplShouldGetASchemaBuilder() {
+        public void DataMigrationImplShouldGetASchemaBuilder()
+        {
             Init(new[] { typeof(DataMigrationWithSchemaBuilder) });
 
             _folders.Manifests.Add("Module1", @"
@@ -417,7 +441,8 @@ Features:
         }
 
         [Test]
-        public void ShouldDetectFeaturesThatNeedUpdates() {
+        public void ShouldDetectFeaturesThatNeedUpdates()
+        {
 
             Init(new[] { typeof(DataMigrationFeatureNeedUpdate1), typeof(DataMigrationFeatureNeedUpdate2), typeof(DataMigrationFeatureNeedUpdate3) });
 
@@ -447,7 +472,8 @@ Features:
 
             // there is an UpdateFrom42 method, so it should be fired if Current == 42
 
-            _repository.Create(new DataMigrationRecord {
+            _repository.Create(new DataMigrationRecord
+            {
                 Version = 42,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
             });
@@ -457,7 +483,8 @@ Features:
             _repository.Delete(_repository.Fetch(m => m.Version == 42).First());
             _repository.Flush();
 
-            _repository.Create(new DataMigrationRecord {
+            _repository.Create(new DataMigrationRecord
+            {
                 Version = 43,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
             });
@@ -466,7 +493,9 @@ Features:
         }
 
 
-        [Test] public void SchemaBuilderShouldCreateSql() {
+        [Test]
+        public void SchemaBuilderShouldCreateSql()
+        {
 
             Init(new[] { typeof(DataMigrationSimpleBuilder) });
 
@@ -483,7 +512,8 @@ Features:
         }
 
         [Test]
-        public void DataMigrationShouldBeTransactional() {
+        public void DataMigrationShouldBeTransactional()
+        {
             Init(new[] { typeof(DataMigrationTransactional) });
 
             _folders.Manifests.Add("Module1", @"
@@ -495,16 +525,17 @@ Features:
         Description: Feature
 ");
 
-            try {_dataMigrationManager.Update("Feature1"); } 
-            catch (OrchardException) {}
-            
+            try { _dataMigrationManager.Update("Feature1"); }
+            catch (OrchardException) { }
+
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
 
             _dataMigrationManager.Update("Feature1");
         }
 
         [Test]
-        public void FailingDataMigrationShouldThrowOrchardException() {
+        public void FailingDataMigrationShouldThrowOrchardException()
+        {
             Init(new[] { typeof(FailingDataMigration) });
 
             _folders.Manifests.Add("Module4", @"

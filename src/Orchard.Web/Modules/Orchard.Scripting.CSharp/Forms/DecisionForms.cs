@@ -1,19 +1,23 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Scripting.CSharp.Forms {
-    public class DecisionForms : IFormProvider {
+namespace Orchard.Scripting.CSharp.Forms
+{
+    public class DecisionForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public DecisionForms(IShapeFactory shapeFactory) {
+        public DecisionForms(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, dynamic> form =
               shape => Shape.Form(
                 Id: "ActionDecision",
@@ -35,24 +39,31 @@ namespace Orchard.Scripting.CSharp.Forms {
 
     }
 
-    public class DecisionFormsValidator : IFormEventHandler {
+    public class DecisionFormsValidator : IFormEventHandler
+    {
         public Localizer T { get; set; }
 
-        public void Building(BuildingContext context) {
+        public void Building(BuildingContext context)
+        {
         }
 
-        public void Built(BuildingContext context) {
+        public void Built(BuildingContext context)
+        {
         }
 
-        public void Validating(ValidatingContext context) {
-            if (context.FormName == "ActivityActionDecision") {
-                if (context.ValueProvider.GetValue("Script").AttemptedValue == string.Empty) {
+        public void Validating(ValidatingContext context)
+        {
+            if (context.FormName == "ActivityActionDecision")
+            {
+                if (context.ValueProvider.GetValue("Script").AttemptedValue == string.Empty)
+                {
                     context.ModelState.AddModelError("Script", T("You must provide a Script").Text);
                 }
             }
         }
 
-        public void Validated(ValidatingContext context) {
+        public void Validated(ValidatingContext context)
+        {
 
         }
     }

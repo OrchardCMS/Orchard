@@ -1,42 +1,52 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.IO;
+using System.Linq;
 using Orchard.Host;
 using Orchard.HostContext;
 using Orchard.Parameters;
 
-namespace Orchard {
-    class OrchardHost {
+namespace Orchard
+{
+    class OrchardHost
+    {
         private readonly TextReader _input;
         private readonly TextWriter _output;
         private readonly ICommandHostContextProvider _commandHostContextProvider;
 
-        public OrchardHost(TextReader input, TextWriter output, string[] args) {
+        public OrchardHost(TextReader input, TextWriter output, string[] args)
+        {
             _input = input;
             _output = output;
             _commandHostContextProvider = new CommandHostContextProvider(args);
         }
 
-        public CommandReturnCodes Run() {
-            try {
+        public CommandReturnCodes Run()
+        {
+            try
+            {
                 return DoRun();
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 _output.WriteLine("Error:");
-                for (; e != null; e = e.InnerException) {
+                for (; e != null; e = e.InnerException)
+                {
                     _output.WriteLine("  {0}", e.Message);
                 }
                 return CommandReturnCodes.Fail;
             }
         }
 
-        private CommandReturnCodes DoRun() {
+        private CommandReturnCodes DoRun()
+        {
             var context = CommandHostContext();
-            if (context.DisplayUsageHelp) {
+            if (context.DisplayUsageHelp)
+            {
                 DisplayUsageHelp();
                 return CommandReturnCodes.Ok;
             }
-            if(context.StartSessionResult == CommandReturnCodes.Fail) {
+            if (context.StartSessionResult == CommandReturnCodes.Fail)
+            {
                 _commandHostContextProvider.Shutdown(context);
                 return context.StartSessionResult;
             }
@@ -46,7 +56,8 @@ namespace Orchard {
                 result = ExecuteSingleCommand(context);
             else if (context.Arguments.ResponseFiles.Any())
                 result = ExecuteResponseFiles(context);
-            else {
+            else
+            {
                 result = ExecuteInteractive(context);
             }
 
@@ -54,34 +65,42 @@ namespace Orchard {
             return result;
         }
 
-        private CommandHostContext CommandHostContext() {
+        private CommandHostContext CommandHostContext()
+        {
             _output.WriteLine("Initializing Orchard session. (This might take a few seconds...)");
             var result = _commandHostContextProvider.CreateContext();
-            if (result.StartSessionResult == result.RetryResult) {
+            if (result.StartSessionResult == result.RetryResult)
+            {
                 result = _commandHostContextProvider.CreateContext();
             }
-            else if(result.StartSessionResult == CommandReturnCodes.Fail) {
-                _output.WriteLine("Failed to initialize Orchard session.");    
+            else if (result.StartSessionResult == CommandReturnCodes.Fail)
+            {
+                _output.WriteLine("Failed to initialize Orchard session.");
             }
 
             return result;
         }
 
-        private CommandReturnCodes ExecuteSingleCommand(CommandHostContext context) {
+        private CommandReturnCodes ExecuteSingleCommand(CommandHostContext context)
+        {
             return context.CommandHost.RunCommand(_input, _output, context.Logger, context.Arguments);
         }
 
 
-        private CommandReturnCodes ExecuteResponseFiles(CommandHostContext context) {
+        private CommandReturnCodes ExecuteResponseFiles(CommandHostContext context)
+        {
             var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(context.Arguments.ResponseFiles);
             return context.CommandHost.RunCommands(_input, _output, context.Logger, responseLines.ToArray());
         }
 
-        public CommandReturnCodes ExecuteInteractive(CommandHostContext context) {
+        public CommandReturnCodes ExecuteInteractive(CommandHostContext context)
+        {
             _output.WriteLine("Type \"?\" for help, \"exit\" to exit, \"cls\" to clear screen");
-            while (true) {
+            while (true)
+            {
                 var command = ReadCommand(context);
-                switch (command.ToLowerInvariant()) {
+                switch (command.ToLowerInvariant())
+                {
                     case "quit":
                     case "q":
                     case "exit":
@@ -101,18 +120,21 @@ namespace Orchard {
             }
         }
 
-        private string ReadCommand(CommandHostContext context) {
+        private string ReadCommand(CommandHostContext context)
+        {
             _output.WriteLine();
             _output.Write("orchard> ");
             return _input.ReadLine();
         }
 
-        private CommandHostContext RunCommand(CommandHostContext context, string command) {
+        private CommandHostContext RunCommand(CommandHostContext context, string command)
+        {
             if (string.IsNullOrWhiteSpace(command))
                 return context;
 
             CommandReturnCodes result = RunCommandInSession(context, command);
-            if (result == context.RetryResult) {
+            if (result == context.RetryResult)
+            {
                 _commandHostContextProvider.Shutdown(context);
                 context = CommandHostContext();
                 result = RunCommandInSession(context, command);
@@ -122,18 +144,22 @@ namespace Orchard {
             return context;
         }
 
-        private CommandReturnCodes RunCommandInSession(CommandHostContext context, string command) {
-            try {
+        private CommandReturnCodes RunCommandInSession(CommandHostContext context, string command)
+        {
+            try
+            {
                 var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(new CommandLineParser().Parse(command)));
                 return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
             }
-            catch (AppDomainUnloadedException) {
+            catch (AppDomainUnloadedException)
+            {
                 _output.WriteLine("AppDomain of Orchard session has been unloaded. (Retrying...)");
                 return context.RetryResult;
             }
         }
 
-        private void DisplayInteractiveHelp() {
+        private void DisplayInteractiveHelp()
+        {
             _output.WriteLine("The Orchard command interpreter supports running a few built-in commands");
             _output.WriteLine("as well as specific commands from enabled features of an Orchard installation.");
             _output.WriteLine("");
@@ -182,7 +208,8 @@ namespace Orchard {
             _output.WriteLine("");
         }
 
-        private void DisplayUsageHelp() {
+        private void DisplayUsageHelp()
+        {
             _output.WriteLine("Executes Orchard commands from a Orchard installation directory.");
             _output.WriteLine("");
             _output.WriteLine("Usage:");

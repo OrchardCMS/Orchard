@@ -1,19 +1,20 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
-using Orchard.Environment.Configuration;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc.Routes;
 using Orchard.UI.Zones;
 
-namespace Orchard.Layouts.Services {
+namespace Orchard.Layouts.Services
+{
     // TODO: This class contains duplicated code from the DefaultContentDisplay class.
     // Consider combining this class with DefaultContentDisplay to reuse shared code, for example by inheriting from a common base class.
-    public abstract class ContentDisplayBase : Component {
+    public abstract class ContentDisplayBase : Component
+    {
         private readonly IShapeFactory _shapeFactory;
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly RequestContext _requestContext;
@@ -25,7 +26,8 @@ namespace Orchard.Layouts.Services {
             Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
 
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
@@ -37,14 +39,15 @@ namespace Orchard.Layouts.Services {
         public abstract UrlPrefix TenantUrlPrefix { get; }
         public abstract string DefaultStereotype { get; }
 
-        public BuildDisplayContext BuildDisplayContext(IContent content, string displayType, string groupId) {
+        public BuildDisplayContext BuildDisplayContext(IContent content, string displayType, string groupId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
                 stereotype = DefaultStereotype;
 
             var actualShapeType = stereotype;
-            var actualDisplayType = String.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
+            var actualDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
             var itemShape = CreateItemShape(actualShapeType);
 
             itemShape.ContentItem = content.ContentItem;
@@ -59,7 +62,8 @@ namespace Orchard.Layouts.Services {
             return context;
         }
 
-        public BuildEditorContext BuildEditorContext(IContent content, string groupId) {
+        public BuildEditorContext BuildEditorContext(IContent content, string groupId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -79,7 +83,8 @@ namespace Orchard.Layouts.Services {
             return context;
         }
 
-        public UpdateEditorContext UpdateEditorContext(IContent content, IUpdateModel updater, string groupInfoId) {
+        public UpdateEditorContext UpdateEditorContext(IContent content, IUpdateModel updater, string groupInfoId)
+        {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -103,21 +108,26 @@ namespace Orchard.Layouts.Services {
             return context;
         }
 
-        private dynamic CreateItemShape(string actualShapeType) {
+        private dynamic CreateItemShape(string actualShapeType)
+        {
             return _shapeFactory.Create(actualShapeType, Arguments.Empty(), () => new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty())));
         }
 
         // TODO: This is the exact same code as in DefaultContentDisplay. Consider combining this class with DefaultContentDisplay to reuse shared code.
-        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
-            context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
+        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype)
+        {
+            context.FindPlacement = (partShapeType, differentiator, defaultLocation) =>
+            {
                 var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
                 var shapeTable = workContext.HttpContext != null
                     ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
                     : _shapeTableLocator.Value.Lookup(null);
 
                 ShapeDescriptor descriptor;
-                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
+                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor))
+                {
+                    var placementContext = new ShapePlacementContext
+                    {
                         Content = context.ContentItem,
                         ContentType = context.ContentItem.ContentType,
                         Stereotype = stereotype,
@@ -130,15 +140,17 @@ namespace Orchard.Layouts.Services {
                     descriptor.DefaultPlacement = defaultLocation;
 
                     var placement = descriptor.Placement(placementContext);
-                    if (placement != null) {
+                    if (placement != null)
+                    {
                         placement.Source = placementContext.Source;
                         return placement;
                     }
                 }
 
-                return new PlacementInfo {
+                return new PlacementInfo
+                {
                     Location = defaultLocation,
-                    Source = String.Empty
+                    Source = string.Empty
                 };
             };
         }
@@ -146,7 +158,8 @@ namespace Orchard.Layouts.Services {
         /// <summary>
         /// Gets the current app-relative path, i.e. ~/my-blog/foo.
         /// </summary>
-        private string GetPath() {
+        private string GetPath()
+        {
             var appRelativePath = _virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path);
             // If the tenant has a prefix, we strip the tenant prefix away.
             if (TenantUrlPrefix != null)

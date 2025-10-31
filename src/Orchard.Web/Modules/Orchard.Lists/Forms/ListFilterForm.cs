@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -8,21 +8,26 @@ using Orchard.Core.Containers.Services;
 using Orchard.DisplayManagement;
 using Orchard.Lists.Services;
 
-namespace Orchard.Lists.Forms {
-    public class ListFilterForm : Component, IFormProvider {
+namespace Orchard.Lists.Forms
+{
+    public class ListFilterForm : Component, IFormProvider
+    {
         private readonly IContainerService _containerService;
         private readonly IContentManager _contentManager;
 
-        public ListFilterForm(IShapeFactory shapeFactory, IContainerService containerService, IContentManager contentManager) {
+        public ListFilterForm(IShapeFactory shapeFactory, IContainerService containerService, IContentManager contentManager)
+        {
             _containerService = containerService;
             _contentManager = contentManager;
             New = shapeFactory;
         }
         protected dynamic New { get; set; }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
                     var f = New.Form(
                         Id: "List",
                         _Lists: New.SelectList(
@@ -31,8 +36,9 @@ namespace Orchard.Lists.Forms {
                             Description: T("Select a list."),
                             Multiple: false));
 
-                    foreach (var list in _containerService.GetContainers(VersionOptions.Latest).OrderBy(GetListName)) {
-                        f._Lists.Add(new SelectListItem {Value = list.Id.ToString(CultureInfo.InvariantCulture), Text = GetListName(list)});
+                    foreach (var list in _containerService.GetContainers(VersionOptions.Latest).OrderBy(GetListName))
+                    {
+                        f._Lists.Add(new SelectListItem { Value = list.Id.ToString(CultureInfo.InvariantCulture), Text = GetListName(list) });
                     }
 
                     return f;
@@ -41,7 +47,8 @@ namespace Orchard.Lists.Forms {
             context.Form("ListFilter", form);
         }
 
-        private string GetListName(ContainerPart containerPart) {
+        private string GetListName(ContainerPart containerPart)
+        {
             return _contentManager.GetItemMetadata(containerPart).DisplayText;
         }
     }

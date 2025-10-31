@@ -1,36 +1,43 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.CustomForms.Models;
 
-namespace Orchard.CustomForms.ViewModels {
+namespace Orchard.CustomForms.ViewModels
+{
 
-    public class CustomFormIndexViewModel {
+    public class CustomFormIndexViewModel
+    {
         public IList<CustomFormEntry> CustomForms { get; set; }
         public CustomFormIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }
 
-    public class CustomFormEntry {
+    public class CustomFormEntry
+    {
         public CustomFormPart CustomForm { get; set; }
         public bool IsChecked { get; set; }
     }
 
-    public class CustomFormIndexOptions {
+    public class CustomFormIndexOptions
+    {
         public string Search { get; set; }
         public CustomFormOrder Order { get; set; }
         public CustomFormFilter Filter { get; set; }
         public CustomFormBulkAction BulkAction { get; set; }
     }
 
-    public enum CustomFormOrder {
+    public enum CustomFormOrder
+    {
         Name,
         Creation
     }
 
-    public enum CustomFormFilter {
+    public enum CustomFormFilter
+    {
         All,
     }
 
-    public enum CustomFormBulkAction {
+    public enum CustomFormBulkAction
+    {
         None,
         Publish,
         Unpublish,

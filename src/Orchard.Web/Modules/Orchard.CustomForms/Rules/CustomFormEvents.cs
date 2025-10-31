@@ -1,22 +1,27 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Events;
 using Orchard.Localization;
 
-namespace Orchard.CustomForms.Rules {
-    public interface IEventProvider : IEventHandler {
+namespace Orchard.CustomForms.Rules
+{
+    public interface IEventProvider : IEventHandler
+    {
         void Describe(dynamic describe);
     }
 
-    public class CustomFormEvents : IEventProvider {
-        public CustomFormEvents() {
+    public class CustomFormEvents : IEventProvider
+    {
+        public CustomFormEvents()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic describe) {
+        public void Describe(dynamic describe)
+        {
             Func<dynamic, bool> contentHasPart = ContentHasPart;
 
             describe.For("CustomForm", T("Custom Forms"), T("Custom Forms"))
@@ -24,26 +29,31 @@ namespace Orchard.CustomForms.Rules {
             ;
         }
 
-        private string FormatPartsList(dynamic context) {
+        private string FormatPartsList(dynamic context)
+        {
             var contenttypes = context.Properties["ContentTypes"];
 
-            if (String.IsNullOrEmpty(contenttypes)) {
+            if (string.IsNullOrEmpty(contenttypes))
+            {
                 return T("Any").Text;
             }
 
             return contenttypes;
         }
 
-        private static bool ContentHasPart(dynamic context) {
+        private static bool ContentHasPart(dynamic context)
+        {
             string contenttypes = context.Properties["ContentTypes"];
             var content = context.Tokens["Content"] as IContent;
 
             // "" means 'any'
-            if (String.IsNullOrEmpty(contenttypes)) {
+            if (string.IsNullOrEmpty(contenttypes))
+            {
                 return true;
             }
 
-            if (content == null) {
+            if (content == null)
+            {
                 return false;
             }
 

@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Projections.Models {
-    public class LayoutRecord {
-        public LayoutRecord() {
-            Properties = new List<PropertyRecord>();    
+namespace Orchard.Projections.Models
+{
+    public class LayoutRecord
+    {
+        public LayoutRecord()
+        {
+            Properties = new List<PropertyRecord>();
         }
 
         public virtual int Id { get; set; }
@@ -30,7 +33,8 @@ namespace Orchard.Projections.Models {
         [CascadeAllDeleteOrphan, Aggregate]
         public virtual PropertyRecord GroupProperty { get; set; }
 
-        public enum Displays {
+        public enum Displays
+        {
             Content,
             Properties
         }

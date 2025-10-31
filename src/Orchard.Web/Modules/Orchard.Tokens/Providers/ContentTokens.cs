@@ -1,23 +1,25 @@
-﻿using System;
-using System.Globalization;
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Fields;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
-using Orchard.ContentManagement.FieldStorage;
 using Orchard.Mvc.Extensions;
 
-namespace Orchard.Tokens.Providers {
-    public class ContentTokens : ITokenProvider {
+namespace Orchard.Tokens.Providers
+{
+    public class ContentTokens : ITokenProvider
+    {
         private readonly IContentManager _contentManager;
         private readonly UrlHelper _urlHelper;
 
-        public ContentTokens(IContentManager contentManager, UrlHelper urlHelper) {
+        public ContentTokens(IContentManager contentManager, UrlHelper urlHelper)
+        {
             _contentManager = contentManager;
             _urlHelper = urlHelper;
             T = NullLocalizer.Instance;
@@ -25,7 +27,8 @@ namespace Orchard.Tokens.Providers {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.For("ContentItem", T("Content Items"), T("The context to access specific content items."))
                 .Token("Id:*", T("Content Item by Id"), T("The content item with the specified id."));
 
@@ -42,15 +45,19 @@ namespace Orchard.Tokens.Providers {
                 .Token("Body", T("Body"), T("The body text of the content item."), "Text");
 
             // Token descriptors for fields
-            foreach (var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
-                foreach (var typePart in typeDefinition.Parts) {
+            foreach (var typeDefinition in _contentManager.GetContentTypeDefinitions())
+            {
+                foreach (var typePart in typeDefinition.Parts)
+                {
 
-                    if (!typePart.PartDefinition.Fields.Any()) {
+                    if (!typePart.PartDefinition.Fields.Any())
+                    {
                         continue;
                     }
 
                     var partContext = context.For("Content");
-                    foreach (var partField in typePart.PartDefinition.Fields) {
+                    foreach (var partField in typePart.PartDefinition.Fields)
+                    {
                         var field = partField;
                         var tokenName = "Fields." + typePart.PartDefinition.Name + "." + field.Name;
 
@@ -73,20 +80,24 @@ namespace Orchard.Tokens.Providers {
                 .Token("Fields", T("Fields"), T("Fields for each of the attached parts. For example, Fields.Page.Approved."));
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
             context.For<IContentManager>("ContentItem", _contentManager)
                 .Token(
                         token => token.StartsWith("Id:", StringComparison.OrdinalIgnoreCase) ? ContentManagerGetToken(token) : "",
-                        (token, cm) => {
+                        (token, cm) =>
+                        {
                             // token is Id:*
-                            if (token != "") {
+                            if (token != "")
+                            {
                                 var id = token.Substring("Id:".Length);
                                 return cm.Get(Convert.ToInt32(id));
                             }
                             else { return null; }
                         })
                 .Chain(
-                    token => {
+                    token =>
+                    {
                         var cleanToken = ContentManagerGetToken(token); // is Id:*
                         if (string.IsNullOrWhiteSpace(cleanToken)) return null;
                         int cleanTokenLength = cleanToken.Length;
@@ -97,10 +108,12 @@ namespace Orchard.Tokens.Providers {
                             );
                     },
                     "Content",
-                    (token, cm) => {
+                    (token, cm) =>
+                    {
                         // token is Id:*
 
-                        if (token != "") {
+                        if (token != "")
+                        {
                             var id = token.Substring("Id:".Length);
                             return cm.Get(Convert.ToInt32(id));
                         }
@@ -112,8 +125,8 @@ namespace Orchard.Tokens.Providers {
                     .Chain("Author", "User", content => content != null ? content.As<ICommonPart>().Owner : null)
                     .Token("Date", Date)
                     .Chain("Date", "Date", Date)
-                    .Token("Identity", content => content != null ? _contentManager.GetItemMetadata(content).Identity.ToString() : String.Empty)
-                    .Token("ContentType", content => content != null ? content.ContentItem.TypeDefinition.DisplayName : String.Empty)
+                    .Token("Identity", content => content != null ? _contentManager.GetItemMetadata(content).Identity.ToString() : string.Empty)
+                    .Token("ContentType", content => content != null ? content.ContentItem.TypeDefinition.DisplayName : string.Empty)
                     .Chain("ContentType", "TypeDefinition", content => content != null ? content.ContentItem.TypeDefinition : null)
                     .Token("DisplayText", DisplayText)
                     .Chain("DisplayText", "Text", DisplayText)
@@ -126,13 +139,17 @@ namespace Orchard.Tokens.Providers {
                     .Token("Body", Body)
                     .Chain("Body", "Text", Body);
 
-            if (context.Target == "Content") {
+            if (context.Target == "Content")
+            {
                 var forContent = context.For<IContent>("Content");
                 // is there a content available in the context ?
-                if (forContent != null && forContent.Data != null && forContent.Data.ContentItem != null) {
-                    foreach (var typePart in forContent.Data.ContentItem.TypeDefinition.Parts) {
+                if (forContent != null && forContent.Data != null && forContent.Data.ContentItem != null)
+                {
+                    foreach (var typePart in forContent.Data.ContentItem.TypeDefinition.Parts)
+                    {
                         var part = typePart;
-                        foreach (var partField in typePart.PartDefinition.Fields) {
+                        foreach (var partField in typePart.PartDefinition.Fields)
+                        {
                             var field = partField;
                             var tokenName = "Fields." + typePart.PartDefinition.Name + "." + partField.Name;
                             forContent.Token(
@@ -166,9 +183,11 @@ namespace Orchard.Tokens.Providers {
                 .Token("Fields", def => string.Join(", ", def.Parts.SelectMany(x => x.PartDefinition.Fields.Select(x2 => x2.FieldDefinition.Name + " " + x.PartDefinition.Name + "." + x2.Name)).ToArray()));
         }
 
-        private IHtmlString AuthorName(IContent content) {
-            if (content == null) {
-                return new HtmlString(String.Empty); // Null content isn't "Anonymous"
+        private IHtmlString AuthorName(IContent content)
+        {
+            if (content == null)
+            {
+                return new HtmlString(string.Empty); // Null content isn't "Anonymous"
             }
 
             var commonPart = content.As<ICommonPart>();
@@ -178,92 +197,76 @@ namespace Orchard.Tokens.Providers {
             return author == null ? (IHtmlString)T("Anonymous") : new HtmlString(HttpUtility.HtmlEncode(author.UserName));
         }
 
-        private static ContentField LookupField(IContent content, string partName, string fieldName) {
+        private static ContentField LookupField(IContent content, string partName, string fieldName)
+        {
             return content.ContentItem.Parts
                 .Where(part => part.PartDefinition.Name == partName)
                 .SelectMany(part => part.Fields.Where(field => field.Name == fieldName))
                 .SingleOrDefault();
         }
 
-        private IContent Container(IContent content) {
+        private IContent Container(IContent content)
+        {
             var commonPart = content.As<ICommonPart>();
-            if (commonPart == null) {
-                return null;
-            }
-
-            return commonPart.Container;
+            return commonPart == null ? null : commonPart.Container;
         }
 
-        private string DisplayText(IContent content) {
-            if (content == null) {
-                return String.Empty;
-            }
-
-            return _contentManager.GetItemMetadata(content).DisplayText;
+        private string DisplayText(IContent content)
+        {
+            return content == null ? string.Empty : _contentManager.GetItemMetadata(content).DisplayText;
         }
 
-        private object Date(IContent content) {
+        private object Date(IContent content)
+        {
             return content != null ? content.As<ICommonPart>().CreatedUtc : null;
         }
 
-        private string DisplayUrl(IContent content) {
-            if (content == null) {
-                return String.Empty;
-            }
-
-            return _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues);
+        private string DisplayUrl(IContent content)
+        {
+            return content == null ? string.Empty : _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues);
         }
 
-        private string EditUrl(IContent content) {
-            if (content == null) {
-                return String.Empty;
-            }
-
-            return _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
+        private string EditUrl(IContent content)
+        {
+            return content == null ? string.Empty : _urlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
         }
 
-        private string Body(IContent content) {
-            if (content == null) {
-                return String.Empty;
+        private string Body(IContent content)
+        {
+            if (content == null)
+            {
+                return string.Empty;
             }
 
             var bodyPart = content.As<BodyPart>();
-            if (bodyPart == null) {
-                return String.Empty;
-            }
-
-            return bodyPart.Text;
+            return bodyPart == null ? string.Empty : bodyPart.Text;
         }
 
         //returns Id:* Token
-        private static string ContentManagerGetToken(string token) {
+        private static string ContentManagerGetToken(string token)
+        {
             string tokenPrefix, result;
             int chainIndex, tokenLength;
 
-            if (token.IndexOf(":") == -1) {
+            if (token.IndexOf(":") == -1)
+            {
                 return null;
             }
             tokenPrefix = token.Substring(0, token.IndexOf(":"));
 
             chainIndex = token.IndexOf(".");
             tokenLength = (tokenPrefix + ":").Length;
-            if (!token.StartsWith((tokenPrefix + ":"), StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength) {
+            if (!token.StartsWith(tokenPrefix + ":", StringComparison.OrdinalIgnoreCase) || chainIndex <= tokenLength)
+            {
                 return null;
             }
-            else if (chainIndex == 0) {// "." has not be found
-                result = token.Substring(tokenLength);
-            }
-            else {
-                result = token.Substring(0, chainIndex);
+            else
+            {// "." has not be found
+                result = chainIndex == 0 ? token.Substring(tokenLength) : token.Substring(0, chainIndex);
             }
 
             // return the resulting id if it is a number, otherwise an empty string
-            if (int.TryParse(result.Substring(tokenPrefix.Length + 1), out var contentid)) {
-                return result;
-            }
-            else {
-                return "";
-            }
+            return int.TryParse(result.Substring(tokenPrefix.Length + 1), out var contentid) ? result : "";
         }
     }
 }

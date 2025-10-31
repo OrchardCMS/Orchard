@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -13,15 +12,18 @@ using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
 
-namespace Orchard.ContentPermissions.Drivers {
-    public class ContentPermissionsPartDriver : ContentPartDriver<ContentPermissionsPart> {
+namespace Orchard.ContentPermissions.Drivers
+{
+    public class ContentPermissionsPartDriver : ContentPartDriver<ContentPermissionsPart>
+    {
 
         private const string TemplateName = "Parts.ContentPermissions";
         private readonly IRoleService _roleService;
         private readonly IAuthorizer _authorizer;
         private readonly IAuthorizationService _authorizationService;
 
-        public ContentPermissionsPartDriver(IRoleService roleService, IAuthorizer authorizer, IAuthorizationService authorizationService) {
+        public ContentPermissionsPartDriver(IRoleService roleService, IAuthorizer authorizer, IAuthorizationService authorizationService)
+        {
             _roleService = roleService;
             _authorizer = authorizer;
             _authorizationService = authorizationService;
@@ -30,19 +32,21 @@ namespace Orchard.ContentPermissions.Drivers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        protected override string Prefix {
-            get { return "ContentPermissionsPermissionPart"; }
-        }
+        protected override string Prefix => "ContentPermissionsPermissionPart";
 
-        protected override DriverResult Display(ContentPermissionsPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(ContentPermissionsPart part, string displayType, dynamic shapeHelper)
+        {
             return ContentShape("Parts_ContentPermissions_SummaryAdmin", () => shapeHelper.Parts_ContentPermissions_SummaryAdmin());
         }
 
-        protected override DriverResult Editor(ContentPermissionsPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_ContentPermissions_Edit", () => {
+        protected override DriverResult Editor(ContentPermissionsPart part, dynamic shapeHelper)
+        {
+            return ContentShape("Parts_ContentPermissions_Edit", () =>
+            {
 
                 // ensure the current user is allowed to define permissions
-                if (!_authorizer.Authorize(Permissions.GrantPermission)) {
+                if (!_authorizer.Authorize(Permissions.GrantPermission))
+                {
                     return null;
                 }
 
@@ -50,8 +54,10 @@ namespace Orchard.ContentPermissions.Drivers {
 
                 var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 
-                if (settings == null) {
-                    settings = new ContentPermissionsPartSettings {
+                if (settings == null)
+                {
+                    settings = new ContentPermissionsPartSettings
+                    {
                         View = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null) }).ToList()),
                         ViewOwn = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null) }).ToList()),
                         Publish = ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishContent, UserSimulation.Create(x), null) }).ToList()),
@@ -69,8 +75,10 @@ namespace Orchard.ContentPermissions.Drivers {
                 ContentPermissionsPartViewModel model;
 
                 // copy defaults settings if new content item
-                if (!part.Enabled && !part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
-                    model = new ContentPermissionsPartViewModel {
+                if (!part.Enabled && !part.ContentItem.HasDraft() && !part.ContentItem.HasPublished())
+                {
+                    model = new ContentPermissionsPartViewModel
+                    {
                         ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.View),
                         ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.ViewOwn),
                         PublishRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Publish),
@@ -84,8 +92,10 @@ namespace Orchard.ContentPermissions.Drivers {
                         AllRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.DisplayedRoles)
                     };
                 }
-                else {
-                    model = new ContentPermissionsPartViewModel {
+                else
+                {
+                    model = new ContentPermissionsPartViewModel
+                    {
                         ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.ViewContent),
                         ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.ViewOwnContent),
                         PublishRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, part.PublishContent),
@@ -118,18 +128,22 @@ namespace Orchard.ContentPermissions.Drivers {
             });
         }
 
-        protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             // ensure the current user is allowed to define permissions
-            if (!_authorizer.Authorize(Permissions.GrantPermission)) {
+            if (!_authorizer.Authorize(Permissions.GrantPermission))
+            {
                 return null;
             }
 
             var model = new ContentPermissionsPartViewModel();
 
-            if (!updater.TryUpdateModel(model, Prefix, null, null)) {
-                updater.AddModelError(String.Empty, T("Could not update permissions"));
+            if (!updater.TryUpdateModel(model, Prefix, null, null))
+            {
+                updater.AddModelError(string.Empty, T("Could not update permissions"));
             }
-            else {
+            else
+            {
                 part.Enabled = model.Enabled;
                 part.ViewContent = ContentPermissionsPartViewModel.SerializePermissions(model.ViewRoles);
                 part.ViewOwnContent = ContentPermissionsPartViewModel.SerializePermissions(model.ViewOwnRoles);
@@ -152,7 +166,8 @@ namespace Orchard.ContentPermissions.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Exporting(ContentPermissionsPart part, ExportContentContext context) {
+        protected override void Exporting(ContentPermissionsPart part, ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Enabled", part.Enabled);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ViewContent", part.ViewContent);
             context.Element(part.PartDefinition.Name).SetAttributeValue("EditContent", part.EditContent);
@@ -166,9 +181,11 @@ namespace Orchard.ContentPermissions.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("PreviewOwnContent", part.PreviewOwnContent);
         }
 
-        protected override void Importing(ContentPermissionsPart part, ImportContentContext context) {
+        protected override void Importing(ContentPermissionsPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -185,7 +202,8 @@ namespace Orchard.ContentPermissions.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "PreviewOwnContent", s => part.PreviewOwnContent = s);
         }
 
-        protected override void Cloning(ContentPermissionsPart originalPart, ContentPermissionsPart clonePart, CloneContentContext context) {
+        protected override void Cloning(ContentPermissionsPart originalPart, ContentPermissionsPart clonePart, CloneContentContext context)
+        {
             clonePart.Enabled = originalPart.Enabled;
             clonePart.ViewContent = originalPart.ViewContent;
             clonePart.EditContent = originalPart.EditContent;
@@ -199,45 +217,56 @@ namespace Orchard.ContentPermissions.Drivers {
             clonePart.PreviewOwnContent = originalPart.PreviewOwnContent;
         }
 
-        private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings) {
+        private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings)
+        {
             // reset permissions the user can't change
-            if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, part.ContentItem))
+            {
                 part.ViewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null) })) : settings.View;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.ViewOwnContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.ViewOwnContent, part.ContentItem))
+            {
                 part.ViewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewOwnContent, UserSimulation.Create(x), null) })) : settings.ViewOwn;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, part.ContentItem))
+            {
                 part.PublishContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishContent, UserSimulation.Create(x), null) })) : settings.Publish;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent, part.ContentItem))
+            {
                 part.PublishOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishOwnContent, UserSimulation.Create(x), null) })) : settings.PublishOwn;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, part.ContentItem))
+            {
                 part.EditContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditContent, UserSimulation.Create(x), null) })) : settings.Edit;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.EditOwnContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.EditOwnContent, part.ContentItem))
+            {
                 part.EditOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null) })) : settings.EditOwn;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, part.ContentItem))
+            {
                 part.DeleteContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteContent, UserSimulation.Create(x), null) })) : settings.Delete;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteOwnContent, part.ContentItem))
+            {
                 part.DeleteOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.DeleteOwnContent, UserSimulation.Create(x), null) })) : settings.DeleteOwn;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewContent, part.ContentItem))
+            {
                 part.PreviewContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewContent, UserSimulation.Create(x), null) })) : settings.Preview;
             }
 
-            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent, part.ContentItem)) {
+            if (!_authorizer.Authorize(Core.Contents.Permissions.PreviewOwnContent, part.ContentItem))
+            {
                 part.PreviewOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry { Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PreviewOwnContent, UserSimulation.Create(x), null) })) : settings.PreviewOwn;
             }
         }

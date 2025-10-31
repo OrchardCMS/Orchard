@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Alias.Implementation.Map;
 
-namespace Orchard.Alias.Implementation.Holder {
+namespace Orchard.Alias.Implementation.Holder
+{
     /// <summary>
     /// Holds every alias in a tree structure, indexed by area
     /// </summary>
-    public interface IAliasHolder : ISingletonDependency {
+    public interface IAliasHolder : ISingletonDependency
+    {
 
         /// <summary>
         /// Returns an <see cref="AliasMap"/> for a specific area

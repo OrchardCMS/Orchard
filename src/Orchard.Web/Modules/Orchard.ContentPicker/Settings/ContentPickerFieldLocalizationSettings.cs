@@ -1,10 +1,13 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.ContentPicker.Settings {
+namespace Orchard.ContentPicker.Settings
+{
     [OrchardFeature("Orchard.ContentPicker.LocalizationExtensions")]
-    public class ContentPickerFieldLocalizationSettings {
+    public class ContentPickerFieldLocalizationSettings
+    {
 
-        public ContentPickerFieldLocalizationSettings() {
+        public ContentPickerFieldLocalizationSettings()
+        {
             TryToLocalizeItems = true;
         }
         public bool TryToLocalizeItems { get; set; }

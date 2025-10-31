@@ -1,62 +1,63 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Activities {
-    public class MergeActivity : Task {
+namespace Orchard.Workflows.Activities
+{
+    public class MergeActivity : Task
+    {
 
-        public MergeActivity() {
+        public MergeActivity()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             yield return T("Done");
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             // wait for all incoming branches to trigger the Execute before returning the result
             var branchesState = workflowContext.GetStateFor<string>(activityContext.Record, "Branches");
 
-            if (String.IsNullOrWhiteSpace(branchesState)) {
+            if (string.IsNullOrWhiteSpace(branchesState))
+            {
                 yield break;
             }
-            
+
             var branches = GetBranches(branchesState);
             var inboundActivities = workflowContext.GetInboundTransitions(activityContext.Record);
             var done = inboundActivities
                 .All(x => branches.Contains(GetTransitionKey(x)));
 
-            if(done) {
+            if (done)
+            {
                 yield return T("Done");
-            } 
+            }
         }
 
-        public override string Name {
-            get { return "MergeBranch"; }
-        }
+        public override string Name => "MergeBranch";
 
-        public override LocalizedString Category {
-            get { return T("Flow"); }
-        }
+        public override LocalizedString Category => T("Flow");
 
-        public override LocalizedString Description {
-            get { return T("Merges multiple branches."); }
-        }
+        public override LocalizedString Description => T("Merges multiple branches.");
 
-        public override string Form {
-            get { return null; }
-        }
+        public override string Form => null;
 
-        public override void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
 
             // activity records pointed by the executed activity
             var outboundActivities = workflowContext.GetOutboundTransitions(activityContext.Record);
@@ -66,25 +67,29 @@ namespace Orchard.Workflows.Activities {
                 .Where(x => x.DestinationActivityRecord.Name == this.Name)
                 .ToList();
 
-            foreach (var childBranch in childBranches) {
+            foreach (var childBranch in childBranches)
+            {
                 var branchesState = workflowContext.GetStateFor<string>(childBranch.DestinationActivityRecord, "Branches");
                 var branches = GetBranches(branchesState);
-                branches = branches.Union(new[] { GetTransitionKey(childBranch)}).Distinct();
-                workflowContext.SetStateFor(childBranch.DestinationActivityRecord, "Branches", String.Join(",", branches.ToArray()));
+                branches = branches.Union(new[] { GetTransitionKey(childBranch) }).Distinct();
+                workflowContext.SetStateFor(childBranch.DestinationActivityRecord, "Branches", string.Join(",", branches.ToArray()));
             }
         }
 
-        private string GetTransitionKey(TransitionRecord transitionRecord) {
+        private string GetTransitionKey(TransitionRecord transitionRecord)
+        {
             return "@" + transitionRecord.SourceActivityRecord.Id + "_" + transitionRecord.SourceEndpoint;
         }
 
-        private IEnumerable<string> GetBranches(string branches) {
-            if (String.IsNullOrEmpty(branches)) {
+        private IEnumerable<string> GetBranches(string branches)
+        {
+            if (string.IsNullOrEmpty(branches))
+            {
                 return Enumerable.Empty<string>();
             }
 
             return branches.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
-        } 
+        }
     }
 
 

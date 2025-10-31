@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 
@@ -15,9 +15,9 @@ namespace Orchard.Environment.State
         /// Queue an event to fire inside of an explicitly decribed shell context
         /// </summary>        
         string AddTask(
-            ShellSettings shellSettings, 
-            ShellDescriptor shellDescriptor, 
-            string messageName, 
+            ShellSettings shellSettings,
+            ShellDescriptor shellDescriptor,
+            string messageName,
             Dictionary<string, object> parameters);
 
         /// <summary>

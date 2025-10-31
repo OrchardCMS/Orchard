@@ -1,25 +1,29 @@
-﻿using System;
+using System;
+using System.Globalization;
 using Orchard.Events;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using System.Globalization;
 
-namespace Orchard.Fields.Tokens {
-    public interface ITokenProvider : IEventHandler {
+namespace Orchard.Fields.Tokens
+{
+    public interface ITokenProvider : IEventHandler
+    {
         void Describe(dynamic context);
         void Evaluate(dynamic context);
     }
 
-    public class FieldTokens : ITokenProvider {
+    public class FieldTokens : ITokenProvider
+    {
 
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
 
         public FieldTokens(
-            IDateTimeFormatProvider dateTimeLocalization, 
-            IWorkContextAccessor workContextAccessor) {
+            IDateTimeFormatProvider dateTimeLocalization,
+            IWorkContextAccessor workContextAccessor)
+        {
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
 
@@ -30,7 +34,8 @@ namespace Orchard.Fields.Tokens {
 
         public Localizer T { get; set; }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
 
             context.For("LinkField", T("Link Field"), T("Tokens for Link Fields"))
                 .Token("Text", T("Text"), T("The text of the link."))
@@ -45,7 +50,8 @@ namespace Orchard.Fields.Tokens {
                 ;
         }
 
-        public void Evaluate(dynamic context) {
+        public void Evaluate(dynamic context)
+        {
             context.For<LinkField>("LinkField")
                 .Token("Text", (Func<LinkField, object>)(field => field.Text))
                 .Chain("Text", "Text", (Func<LinkField, object>)(field => field.Text))

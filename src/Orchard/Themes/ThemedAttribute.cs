@@ -1,11 +1,15 @@
-﻿using System;
+using System;
 
-namespace Orchard.Themes {
-    public class ThemedAttribute : Attribute {
-        public ThemedAttribute() {
+namespace Orchard.Themes
+{
+    public class ThemedAttribute : Attribute
+    {
+        public ThemedAttribute()
+        {
             Enabled = true;
         }
-        public ThemedAttribute(bool enabled) {
+        public ThemedAttribute(bool enabled)
+        {
             Enabled = enabled;
         }
 

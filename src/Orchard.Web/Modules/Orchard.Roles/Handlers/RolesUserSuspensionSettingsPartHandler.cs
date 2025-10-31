@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Roles.Models;
 
-namespace Orchard.Roles.Handlers {
-    public class RolesUserSuspensionSettingsPartHandler : ContentHandler {
+namespace Orchard.Roles.Handlers
+{
+    public class RolesUserSuspensionSettingsPartHandler : ContentHandler
+    {
 
-        public RolesUserSuspensionSettingsPartHandler() {
+        public RolesUserSuspensionSettingsPartHandler()
+        {
 
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<RolesUserSuspensionSettingsPart>("Site"));

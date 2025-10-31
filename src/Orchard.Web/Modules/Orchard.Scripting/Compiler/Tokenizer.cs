@@ -1,26 +1,31 @@
-﻿using System;
 using System.Text;
 
-namespace Orchard.Scripting.Compiler {
-    public class Tokenizer {
+namespace Orchard.Scripting.Compiler
+{
+    public class Tokenizer
+    {
         private readonly string _expression;
         private readonly StringBuilder _stringBuilder;
         private int _index;
         private int _startTokenIndex;
 
-        public Tokenizer(string expression) {
+        public Tokenizer(string expression)
+        {
             _expression = expression;
             _stringBuilder = new StringBuilder();
         }
 
-        public Token NextToken() {
-            while (true) {
+        public Token NextToken()
+        {
+            while (true)
+            {
                 if (Eof())
                     return CreateToken(TokenKind.Eof);
 
                 _startTokenIndex = _index;
                 char ch = Character();
-                switch (ch) {
+                switch (ch)
+                {
                     case '(':
                         NextCharacter();
                         return CreateToken(TokenKind.OpenParen);
@@ -60,13 +65,16 @@ namespace Orchard.Scripting.Compiler {
                         return LexGreaterThan();
                 }
 
-                if (IsDigitCharacter(ch)) {
+                if (IsDigitCharacter(ch))
+                {
                     return LexInteger();
                 }
-                if (IsIdentifierCharacter(ch)) {
+                if (IsIdentifierCharacter(ch))
+                {
                     return LexIdentifierOrKeyword();
                 }
-                if (IsWhitespaceCharacter(ch)) {
+                if (IsWhitespaceCharacter(ch))
+                {
                     NextCharacter();
                     continue;
                 }
@@ -75,104 +83,127 @@ namespace Orchard.Scripting.Compiler {
             }
         }
 
-        private Token InvalidToken() {
+        private Token InvalidToken()
+        {
             return CreateToken(TokenKind.Invalid, "Unrecognized character");
         }
 
-        private Token LexNotSign() {
+        private Token LexNotSign()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '=') {
+            if (ch == '=')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.NotEqual);
             }
             return CreateToken(TokenKind.NotSign);
         }
 
-        private Token LexOrSign() {
+        private Token LexOrSign()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '|') {
+            if (ch == '|')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.OrSign);
             }
             return InvalidToken();
         }
 
-        private Token LexAndSign() {
+        private Token LexAndSign()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '&') {
+            if (ch == '&')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.AndSign);
             }
             return InvalidToken();
         }
 
-        private Token LexGreaterThan() {
+        private Token LexGreaterThan()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '=') {
+            if (ch == '=')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.GreaterThanEqual);
             }
             return CreateToken(TokenKind.GreaterThan);
         }
 
-        private Token LexLessThan() {
+        private Token LexLessThan()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '=') {
+            if (ch == '=')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.LessThanEqual);
             }
             return CreateToken(TokenKind.LessThan);
         }
 
-        private Token LexEqual() {
+        private Token LexEqual()
+        {
             NextCharacter();
             char ch = Character();
-            if (ch == '=') {
+            if (ch == '=')
+            {
                 NextCharacter();
                 return CreateToken(TokenKind.EqualEqual);
             }
             return CreateToken(TokenKind.Equal);
         }
 
-        private Token LexIdentifierOrKeyword() {
+        private Token LexIdentifierOrKeyword()
+        {
             _stringBuilder.Clear();
 
             _stringBuilder.Append(Character());
-            while (true) {
+            while (true)
+            {
                 NextCharacter();
 
-                if (!Eof() && (IsIdentifierCharacter(Character()) || IsDigitCharacter(Character()))) {
+                if (!Eof() && (IsIdentifierCharacter(Character()) || IsDigitCharacter(Character())))
+                {
                     _stringBuilder.Append(Character());
                 }
-                else {
+                else
+                {
                     return CreateIdentiferOrKeyword(_stringBuilder.ToString());
                 }
             }
         }
 
-        private Token LexInteger() {
+        private Token LexInteger()
+        {
             _stringBuilder.Clear();
 
             _stringBuilder.Append(Character());
-            while (true) {
+            while (true)
+            {
                 NextCharacter();
 
-                if (!Eof() && IsDigitCharacter(Character())) {
+                if (!Eof() && IsDigitCharacter(Character()))
+                {
                     _stringBuilder.Append(Character());
                 }
-                else {
-                    return CreateToken(TokenKind.Integer, Int32.Parse(_stringBuilder.ToString()));
+                else
+                {
+                    return CreateToken(TokenKind.Integer, int.Parse(_stringBuilder.ToString()));
                 }
             }
         }
 
-        private Token CreateIdentiferOrKeyword(string identifier) {
-            switch (identifier) {
+        private Token CreateIdentiferOrKeyword(string identifier)
+        {
+            switch (identifier)
+            {
                 case "true":
                     return CreateToken(TokenKind.True, true);
                 case "false":
@@ -191,43 +222,51 @@ namespace Orchard.Scripting.Compiler {
             }
         }
 
-        private static bool IsWhitespaceCharacter(char character) {
+        private static bool IsWhitespaceCharacter(char character)
+        {
             return char.IsWhiteSpace(character);
         }
 
-        private static bool IsIdentifierCharacter(char ch) {
+        private static bool IsIdentifierCharacter(char ch)
+        {
             return
                 (ch >= 'a' && ch <= 'z') ||
                 (ch >= 'A' && ch <= 'Z') ||
                 (ch == '_');
         }
 
-        private static bool IsDigitCharacter(char ch) {
+        private static bool IsDigitCharacter(char ch)
+        {
             return ch >= '0' && ch <= '9';
         }
 
-        private Token LexSingleQuotedStringLiteral() {
+        private Token LexSingleQuotedStringLiteral()
+        {
             _stringBuilder.Clear();
 
-            while (true) {
+            while (true)
+            {
                 NextCharacter();
 
                 if (Eof())
                     return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                 // Termination
-                if (Character() == '\'') {
+                if (Character() == '\'')
+                {
                     NextCharacter();
                     return CreateToken(TokenKind.SingleQuotedStringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
-                if (Character() == '\\') {
+                if (Character() == '\\')
+                {
                     NextCharacter();
 
                     if (Eof())
                         return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
-                    switch (Character()) {
+                    switch (Character())
+                    {
                         case '\\':
                             _stringBuilder.Append('\\');
                             break;
@@ -240,29 +279,34 @@ namespace Orchard.Scripting.Compiler {
                             break;
                     }
                 }
-                    // Regular character in string
-                else {
+                // Regular character in string
+                else
+                {
                     _stringBuilder.Append(Character());
                 }
             }
         }
 
-        private Token LexStringLiteral() {
+        private Token LexStringLiteral()
+        {
             _stringBuilder.Clear();
 
-            while (true) {
+            while (true)
+            {
                 NextCharacter();
 
                 if (Eof())
                     return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                 // Termination
-                if (Character() == '"') {
+                if (Character() == '"')
+                {
                     NextCharacter();
                     return CreateToken(TokenKind.StringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
-                if (Character() == '\\') {
+                if (Character() == '\\')
+                {
                     NextCharacter();
 
                     if (Eof())
@@ -270,31 +314,37 @@ namespace Orchard.Scripting.Compiler {
 
                     _stringBuilder.Append(Character());
                 }
-                    // Regular character in string
-                else {
+                // Regular character in string
+                else
+                {
                     _stringBuilder.Append(Character());
                 }
             }
         }
 
-        private void NextCharacter() {
+        private void NextCharacter()
+        {
             _index++;
         }
 
-        private char Character() {
+        private char Character()
+        {
             return _expression[_index];
         }
 
-        private Token CreateToken(TokenKind kind, object value = null) {
-            return new Token {
+        private Token CreateToken(TokenKind kind, object value = null)
+        {
+            return new Token
+            {
                 Kind = kind,
                 Position = _startTokenIndex,
                 Value = value
             };
         }
 
-        private bool Eof() {
-            return (_index >= _expression.Length);
+        private bool Eof()
+        {
+            return _index >= _expression.Length;
         }
     }
 }

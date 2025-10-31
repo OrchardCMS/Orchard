@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Orchard;
 using Orchard.Data;
@@ -10,9 +10,11 @@ using Orchard.UI.Notify;
 using Orchard.Workflows.Models;
 using Upgrade.Services;
 
-namespace Upgrade.Controllers {
+namespace Upgrade.Controllers
+{
     [Admin]
-    public class MessagingController : Controller {
+    public class MessagingController : Controller
+    {
         private readonly IUpgradeService _upgradeService;
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<ActivityRecord> _repository;
@@ -20,7 +22,8 @@ namespace Upgrade.Controllers {
         public MessagingController(
             IUpgradeService upgradeService,
             IOrchardServices orchardServices,
-            IRepository<ActivityRecord> repository) {
+            IRepository<ActivityRecord> repository)
+        {
             _upgradeService = upgradeService;
             _orchardServices = orchardServices;
             _repository = repository;
@@ -28,20 +31,25 @@ namespace Upgrade.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             var found = false;
             var activityTable = _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord");
-            if (_upgradeService.TableExists(activityTable)) {
+            if (_upgradeService.TableExists(activityTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + activityTable + " WHERE Name = 'SendEmail'",
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         found = true;
                     });
 
-                if (!found) {
+                if (!found)
+                {
                     _orchardServices.Notifier.Warning(T("This step is unnecessary as no Send Email activities were found."));
                 }
             }
-            else {
+            else
+            {
                 _orchardServices.Notifier.Warning(T("This step appears unnecessary since it appears Orchard Workflows is not enabled."));
             }
 
@@ -49,48 +57,59 @@ namespace Upgrade.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
+        public ActionResult IndexPOST()
+        {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to upgrade.")))
                 return new HttpUnauthorizedResult();
 
             var activityTable = _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord");
-            if (_upgradeService.TableExists(activityTable)) {
+            if (_upgradeService.TableExists(activityTable))
+            {
                 _upgradeService.ExecuteReader("SELECT * FROM " + activityTable + " WHERE Name = 'SendEmail'",
-                    (reader, connection) => {
+                    (reader, connection) =>
+                    {
                         var record = _repository.Get((int)reader["Id"]);
 
-                        if (record == null) {
+                        if (record == null)
+                        {
                             return;
                         }
 
-                        var state = JsonConvert.DeserializeAnonymousType(record.State, new {
+                        var state = JsonConvert.DeserializeAnonymousType(record.State, new
+                        {
                             Body = "",
                             Subject = "",
                             Recipient = "",
                             RecipientOther = "",
                         });
 
-                        var newState = new EmailMessage {
+                        var newState = new EmailMessage
+                        {
                             Body = state.Body,
                             Subject = state.Subject
                         };
 
-                        if (!newState.Body.StartsWith("<p ")) {
+                        if (!newState.Body.StartsWith("<p "))
+                        {
                             newState.Body =
                                 newState.Body
                                 + System.Environment.NewLine;
                         }
 
-                        if (state.Recipient == "owner") {
+                        if (state.Recipient == "owner")
+                        {
                             newState.Recipients = "{Content.Author.Email}";
                         }
-                        else if (state.Recipient == "author") {
+                        else if (state.Recipient == "author")
+                        {
                             newState.Recipients = "{User.Current.Email}";
                         }
-                        else if (state.Recipient == "admin") {
+                        else if (state.Recipient == "admin")
+                        {
                             newState.Recipients = "{Site.SuperUser.Email}";
                         }
-                        else if (state.Recipient == "other") {
+                        else if (state.Recipient == "other")
+                        {
                             newState.Recipients = state.RecipientOther;
                         }
 
@@ -99,7 +118,8 @@ namespace Upgrade.Controllers {
 
                 _orchardServices.Notifier.Success(T("Email activities updated successfully"));
             }
-            else {
+            else
+            {
                 _orchardServices.Notifier.Warning(T("No email activities were updated."));
             }
 

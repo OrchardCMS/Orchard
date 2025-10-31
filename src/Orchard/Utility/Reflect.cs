@@ -1,63 +1,73 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using System.Linq;
 using Orchard.Validation;
 
-namespace Orchard.Utility {
+namespace Orchard.Utility
+{
     /// <summary>
     /// Allows static reflection on members (methods, fields, properties).
     /// This code has been adapted from the following blog post:
     /// http://wekempf.spaces.live.com/blog/cns!D18C3EC06EA971CF!694.entry
     /// </summary>
-    public static class Reflect {
-        public static MemberInfo GetMember(Expression<Action> expression) {
+    public static class Reflect
+    {
+        public static MemberInfo GetMember(Expression<Action> expression)
+        {
             Argument.ThrowIfNull(expression, "expression");
 
             return GetMemberInfo(expression);
         }
 
-        public static MemberInfo GetMember<T>(Expression<Func<T>> expression) {
+        public static MemberInfo GetMember<T>(Expression<Func<T>> expression)
+        {
             Argument.ThrowIfNull(expression, "expression");
 
             return GetMemberInfo(expression);
         }
 
-        public static MethodInfo GetMethod(Expression<Action> expression) {
+        public static MethodInfo GetMethod(Expression<Action> expression)
+        {
             MethodInfo method = GetMember(expression) as MethodInfo;
             Argument.ThrowIfNull(method, "expression", "Expression is not a method call");
 
             return method;
         }
 
-        public static PropertyInfo GetProperty<T>(Expression<Func<T>> expression) {
+        public static PropertyInfo GetProperty<T>(Expression<Func<T>> expression)
+        {
             PropertyInfo property = GetMember(expression) as PropertyInfo;
             Argument.ThrowIfNull(property, "expression", "Expression is not a property");
 
             return property;
         }
 
-        public static FieldInfo GetField<T>(Expression<Func<T>> expression) {
+        public static FieldInfo GetField<T>(Expression<Func<T>> expression)
+        {
             FieldInfo field = GetMember(expression) as FieldInfo;
             Argument.ThrowIfNull(field, "expression", "Expression is not a field access");
 
             return field;
         }
 
-        public static string NameOf<T>(T value, Expression<Action<T>> expression) {
+        public static string NameOf<T>(T value, Expression<Action<T>> expression)
+        {
             return GetNameOf(expression);
         }
 
-        public static string NameOf<T, TResult>(T value, Expression<Func<T, TResult>> expression) {
+        public static string NameOf<T, TResult>(T value, Expression<Func<T, TResult>> expression)
+        {
             return GetNameOf(expression);
         }
 
-        internal static MemberInfo GetMemberInfo(LambdaExpression lambda) {
+        internal static MemberInfo GetMemberInfo(LambdaExpression lambda)
+        {
             Argument.ThrowIfNull(lambda, "lambda");
 
-            if (lambda.Body.NodeType == ExpressionType.Call) {
+            if (lambda.Body.NodeType == ExpressionType.Call)
+            {
                 return ((MethodCallExpression)lambda.Body).Method;
             }
 
@@ -67,22 +77,27 @@ namespace Orchard.Utility {
             return memberExpression.Member;
         }
 
-        internal static MemberExpression GetMemberExpression(Expression expression) {
+        internal static MemberExpression GetMemberExpression(Expression expression)
+        {
             MemberExpression memberExpression = null;
-            if (expression.NodeType == ExpressionType.Convert) {
+            if (expression.NodeType == ExpressionType.Convert)
+            {
                 memberExpression = ((UnaryExpression)expression).Operand as MemberExpression;
             }
-            else if (expression.NodeType == ExpressionType.MemberAccess) {
+            else if (expression.NodeType == ExpressionType.MemberAccess)
+            {
                 memberExpression = expression as MemberExpression;
             }
             return memberExpression;
         }
 
-        internal static void AddNames(Expression expression, NameBuilder nb) {
+        internal static void AddNames(Expression expression, NameBuilder nb)
+        {
             if (expression == null)
                 return;
 
-            switch (expression.NodeType) {
+            switch (expression.NodeType)
+            {
                 case ExpressionType.MemberAccess:
                     var memberExpression = (MemberExpression)expression;
                     AddNames(memberExpression.Expression, nb);
@@ -99,8 +114,9 @@ namespace Orchard.Utility {
                 case ExpressionType.Call:
                     var callExpression = (MethodCallExpression)expression;
                     MethodInfo method = callExpression.Method;
-                    bool isIndexer = (method.Name == "get_Item" && method.IsSpecialName);
-                    if (!isIndexer) {
+                    bool isIndexer = method.Name == "get_Item" && method.IsSpecialName;
+                    if (!isIndexer)
+                    {
                         goto default;
                     }
 
@@ -117,16 +133,20 @@ namespace Orchard.Utility {
             }
         }
 
-        private static IEnumerable<string> GetArguments(IEnumerable<Expression> expressions) {
-            foreach (var expression in expressions) {
+        private static IEnumerable<string> GetArguments(IEnumerable<Expression> expressions)
+        {
+            foreach (var expression in expressions)
+            {
                 object value = GetExpressionConstantValue(expression);
                 string result = value == null ? null : value.ToString();
                 yield return result;
             }
         }
 
-        private static object GetExpressionConstantValue(Expression expression) {
-            switch (expression.NodeType) {
+        private static object GetExpressionConstantValue(Expression expression)
+        {
+            switch (expression.NodeType)
+            {
                 case ExpressionType.Constant:
                     var constantExpression = (ConstantExpression)expression;
                     return constantExpression.Value;
@@ -138,12 +158,14 @@ namespace Orchard.Utility {
                         throw new InvalidOperationException("Member access to \"null\" instance is not supported");
 
                     FieldInfo fieldInfo = memberExpression.Member as FieldInfo;
-                    if (fieldInfo != null){
+                    if (fieldInfo != null)
+                    {
                         return fieldInfo.GetValue(value);
                     }
 
                     PropertyInfo propertyInfo = memberExpression.Member as PropertyInfo;
-                    if (propertyInfo != null) {
+                    if (propertyInfo != null)
+                    {
                         return propertyInfo.GetValue(value, null);
                     }
                     throw new InvalidOperationException(
@@ -155,29 +177,32 @@ namespace Orchard.Utility {
             }
         }
 
-        internal static string GetNameOf(LambdaExpression expression) {
+        internal static string GetNameOf(LambdaExpression expression)
+        {
             var nb = new NameBuilder(expression);
             AddNames(expression.Body, nb);
             return nb.ToString();
         }
 
-        internal class NameBuilder {
+        internal class NameBuilder
+        {
             private readonly StringBuilder _stringBuilder = new StringBuilder();
             private readonly LambdaExpression _expression;
 
-            public NameBuilder(LambdaExpression expression) {
+            public NameBuilder(LambdaExpression expression)
+            {
                 _expression = expression;
             }
 
-            public override string ToString() {
+            public override string ToString()
+            {
                 return _stringBuilder.ToString();
             }
 
-            public bool DotNeeded {
-                get { return _stringBuilder.Length > 0; }
-            }
+            public bool DotNeeded => _stringBuilder.Length > 0;
 
-                public void Append(string s) {
+            public void Append(string s)
+            {
                 _stringBuilder.Append(s);
             }
         }

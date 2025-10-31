@@ -1,4 +1,4 @@
-﻿using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -6,16 +6,20 @@ using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class CheckboxElementDriver : FormsElementDriver<CheckBox> {
+namespace Orchard.DynamicForms.Drivers
+{
+    public class CheckboxElementDriver : FormsElementDriver<CheckBox>
+    {
         private readonly ITokenizer _tokenizer;
 
         public CheckboxElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer)
-            : base(formsServices) {
+            : base(formsServices)
+        {
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(CheckBox element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(CheckBox element, ElementEditorContext context)
+        {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
             var checkBoxEditor = BuildForm(context, "CheckBox", "Properties:15");
             var checkBoxValidation = BuildForm(context, "CheckBoxValidation", "Validation:10");
@@ -23,8 +27,10 @@ namespace Orchard.DynamicForms.Drivers {
             return Editor(context, autoLabelEditor, checkBoxEditor, checkBoxValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("CheckBox", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("CheckBox", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "CheckBox",
@@ -38,7 +44,8 @@ namespace Orchard.DynamicForms.Drivers {
                 return form;
             });
 
-            context.Form("CheckBoxValidation", factory => {
+            context.Form("CheckBoxValidation", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "CheckBoxValidation",
@@ -65,7 +72,8 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(CheckBox element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(CheckBox element, ElementDisplayingContext context)
+        {
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, context.GetTokenData());
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, context.GetTokenData(), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             context.ElementShape.ProcessedValue = _tokenizer.Replace(element.Value, context.GetTokenData());

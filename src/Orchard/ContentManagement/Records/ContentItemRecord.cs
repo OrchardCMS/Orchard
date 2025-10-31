@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.Data.Conventions;
 
-namespace Orchard.ContentManagement.Records {
-    public class ContentItemRecord {
-        public ContentItemRecord() {
+namespace Orchard.ContentManagement.Records
+{
+    public class ContentItemRecord
+    {
+        public ContentItemRecord()
+        {
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             Versions = new List<ContentItemVersionRecord>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor

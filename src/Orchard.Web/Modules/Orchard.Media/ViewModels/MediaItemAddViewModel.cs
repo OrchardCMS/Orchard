@@ -1,6 +1,9 @@
-﻿namespace Orchard.Media.ViewModels {
-    public class MediaItemAddViewModel {
-        public MediaItemAddViewModel() {
+namespace Orchard.Media.ViewModels
+{
+    public class MediaItemAddViewModel
+    {
+        public MediaItemAddViewModel()
+        {
             ExtractZip = true;
         }
 

@@ -4,19 +4,24 @@ using System.Linq;
 using System.Web.Http.Dependencies;
 using Autofac;
 
-namespace Orchard.WebApi {
-    public class AutofacWebApiDependencyScope : IDependencyScope {
+namespace Orchard.WebApi
+{
+    public class AutofacWebApiDependencyScope : IDependencyScope
+    {
         readonly ILifetimeScope _lifetimeScope;
 
-        public AutofacWebApiDependencyScope(ILifetimeScope lifetimeScope) {
+        public AutofacWebApiDependencyScope(ILifetimeScope lifetimeScope)
+        {
             _lifetimeScope = lifetimeScope;
         }
 
-        public object GetService(Type serviceType) {
+        public object GetService(Type serviceType)
+        {
             return _lifetimeScope.ResolveOptional(serviceType);
         }
 
-        public IEnumerable<object> GetServices(Type serviceType) {
+        public IEnumerable<object> GetServices(Type serviceType)
+        {
             if (!_lifetimeScope.IsRegistered(serviceType))
                 return Enumerable.Empty<object>();
 
@@ -25,7 +30,8 @@ namespace Orchard.WebApi {
             return (IEnumerable<object>)instance;
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             if (_lifetimeScope != null)
                 _lifetimeScope.Dispose();
         }

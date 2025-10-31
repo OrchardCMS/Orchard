@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.ImportExport.ViewModels {
-    public class ImportViewModel {
-        public ImportViewModel() {
+namespace Orchard.ImportExport.ViewModels
+{
+    public class ImportViewModel
+    {
+        public ImportViewModel()
+        {
             Actions = new List<ImportActionViewModel>();
         }
 

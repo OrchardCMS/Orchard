@@ -1,4 +1,6 @@
-namespace Orchard.DynamicForms.Services.Models {
-    public class FormSubmittedEventContext : FormEventContext {
+namespace Orchard.DynamicForms.Services.Models
+{
+    public class FormSubmittedEventContext : FormEventContext
+    {
     }
 }

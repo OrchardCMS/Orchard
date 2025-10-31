@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Services {
+namespace Orchard.Services
+{
     /// <summary>
     /// Provides access to the client host address.
     /// </summary>
-    public class ClientHostAddressAccessor : IClientHostAddressAccessor {
+    public class ClientHostAddressAccessor : IClientHostAddressAccessor
+    {
         private readonly IWorkContextAccessor _wca;
-        public ClientHostAddressAccessor(IWorkContextAccessor wca) {
+        public ClientHostAddressAccessor(IWorkContextAccessor wca)
+        {
             _wca = wca;
         }
 
@@ -23,7 +26,8 @@ namespace Orchard.Services {
         /// </summary>
         public string ClientHostAddressHeaderName { get; set; }
 
-        public string GetClientAddress() {
+        public string GetClientAddress()
+        {
             var workContext = _wca.GetContext();
 
             if (workContext == null || workContext.HttpContext == null)
@@ -31,7 +35,8 @@ namespace Orchard.Services {
 
             var request = workContext.HttpContext.Request;
 
-            if (EnableClientHostAddressHeader && !String.IsNullOrWhiteSpace(ClientHostAddressHeaderName)) {
+            if (EnableClientHostAddressHeader && !string.IsNullOrWhiteSpace(ClientHostAddressHeaderName))
+            {
                 var headerName = ClientHostAddressHeaderName.Trim();
                 var customAddresses = ParseAddresses(request.Headers[headerName]).ToArray();
 
@@ -42,9 +47,10 @@ namespace Orchard.Services {
             return request.UserHostAddress;
         }
 
-        private static IEnumerable<string> ParseAddresses(string value) {
-            return !String.IsNullOrWhiteSpace(value)
-                ? value.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
+        private static IEnumerable<string> ParseAddresses(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value)
+                ? value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
                 : Enumerable.Empty<string>();
         }
     }

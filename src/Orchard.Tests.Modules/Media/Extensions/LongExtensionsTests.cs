@@ -1,26 +1,31 @@
-﻿using System.Globalization;
+using System.Globalization;
 using NUnit.Framework;
 using Orchard.Media.Extensions;
 
-namespace Orchard.Tests.Modules.Media.Extensions {
+namespace Orchard.Tests.Modules.Media.Extensions
+{
     [TestFixture]
-    public class LongExtensionsTests {
+    public class LongExtensionsTests
+    {
         [Test]
-        public void BytesAreFriendly() {
+        public void BytesAreFriendly()
+        {
             long size = 123;
             string friendly = size.ToFriendlySizeString();
             Assert.That(friendly, Is.EqualTo("123 B"));
         }
 
         [Test]
-        public void KilobytesAreFriendly() {
+        public void KilobytesAreFriendly()
+        {
             long size = 93845;
             string friendly = size.ToFriendlySizeString();
             Assert.That(friendly, Is.EqualTo("92 KB"));
         }
 
         [Test]
-        public void MegabytesAreFriendly() {
+        public void MegabytesAreFriendly()
+        {
             long size = 6593528;
             string friendly = size.ToFriendlySizeString();
 
@@ -30,17 +35,19 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         }
 
         [Test]
-        public void GigabytesAreFriendly() {
+        public void GigabytesAreFriendly()
+        {
             long size = 46896534657;
             string friendly = size.ToFriendlySizeString();
 
-            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ? 
-                Is.EqualTo("43.68 GB") : 
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ?
+                Is.EqualTo("43.68 GB") :
                 Is.EqualTo("43,68 GB"));
         }
 
         [Test]
-        public void TerabytesAreFriendly() {
+        public void TerabytesAreFriendly()
+        {
             long size = 386594723458690;
             string friendly = size.ToFriendlySizeString();
 
@@ -50,7 +57,8 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         }
 
         [Test]
-        public void PetabytesAreSlightlyFriendlyAsTerabytes() {
+        public void PetabytesAreSlightlyFriendlyAsTerabytes()
+        {
             long size = 56794738495678965;
             string friendly = size.ToFriendlySizeString();
 
@@ -60,7 +68,8 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         }
 
         [Test]
-        public void VeryLargeSizeDoesNotCauseFailure() {
+        public void VeryLargeSizeDoesNotCauseFailure()
+        {
             long size = 5679473849567896593;
             string friendly = size.ToFriendlySizeString();
 
@@ -70,7 +79,8 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         }
 
         [Test]
-        public void NegativeSizeDoesNotCauseFailure(){
+        public void NegativeSizeDoesNotCauseFailure()
+        {
             long size = -2598;
             string friendly = size.ToFriendlySizeString();
             Assert.That(friendly, Is.EqualTo("-2598 B"));

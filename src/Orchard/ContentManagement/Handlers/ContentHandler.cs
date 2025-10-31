@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Handlers {
-    public abstract class ContentHandler : IContentHandler {
-        protected ContentHandler() {
+namespace Orchard.ContentManagement.Handlers
+{
+    public abstract class ContentHandler : IContentHandler
+    {
+        protected ContentHandler()
+        {
             Filters = new List<IContentFilter>();
             Logger = NullLogger.Instance;
         }
@@ -13,141 +16,176 @@ namespace Orchard.ContentManagement.Handlers {
         public List<IContentFilter> Filters { get; set; }
         public ILogger Logger { get; set; }
 
-        protected void OnActivated<TPart>(Action<ActivatedContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnActivated<TPart>(Action<ActivatedContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnActivated = handler });
         }
 
-        protected void OnInitializing<TPart>(Action<InitializingContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnInitializing<TPart>(Action<InitializingContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnInitializing = handler });
         }
 
-        protected void OnInitialized<TPart>(Action<InitializingContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnInitialized<TPart>(Action<InitializingContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnInitialized = handler });
         }
 
-        protected void OnCreating<TPart>(Action<CreateContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnCreating<TPart>(Action<CreateContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreating = handler });
         }
 
-        protected void OnCreated<TPart>(Action<CreateContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnCreated<TPart>(Action<CreateContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreated = handler });
         }
 
-        protected void OnLoading<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnLoading<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoading = handler });
         }
 
-        protected void OnLoaded<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnLoaded<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoaded = handler });
         }
 
-        protected void OnUpdating<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUpdating<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnUpdating = handler });
         }
 
-        protected void OnUpdated<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUpdated<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnUpdated = handler });
         }
 
-        protected void OnVersioning<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent {
+        protected void OnVersioning<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnVersioning = handler });
         }
 
-        protected void OnVersioned<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent {
+        protected void OnVersioned<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnVersioned = handler });
         }
 
-        protected void OnPublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnPublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnPublishing = handler });
         }
 
-        protected void OnPublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnPublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnPublished = handler });
         }
 
-        protected void OnUnpublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUnpublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnUnpublishing = handler });
         }
 
-        protected void OnUnpublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUnpublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnUnpublished = handler });
         }
 
-        protected void OnRemoving<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnRemoving<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoving = handler });
         }
 
-        protected void OnRemoved<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnRemoved<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoved = handler });
         }
 
-        protected void OnDestroying<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnDestroying<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnDestroying = handler });
         }
 
-        protected void OnDestroyed<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnDestroyed<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnDestroyed = handler });
         }
 
-        protected void OnIndexing<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnIndexing<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnIndexing = handler });
         }
 
-        protected void OnIndexed<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnIndexed<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnIndexed = handler });
         }
-        protected void OnCloning<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnCloning<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnCloning = handler });
         }
 
-        protected void OnCloned<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnCloned<TPart>(Action<CloneContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnCloned = handler });
         }
 
-        protected void OnImporting<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnImporting<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnImporting = handler });
         }
 
-        protected void OnImported<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnImported<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnImported = handler });
         }
 
-        protected void OnImportCompleted<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnImportCompleted<TPart>(Action<ImportContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnImportCompleted = handler });
         }
 
-        protected void OnExporting<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnExporting<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnExporting = handler });
         }
 
-        protected void OnExported<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnExported<TPart>(Action<ExportContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnExported = handler });
         }
 
-        protected void OnRestoring<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnRestoring<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnRestoring = handler });
         }
 
-        protected void OnRestored<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent {
+        protected void OnRestored<TPart>(Action<RestoreContentContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineStorageFilter<TPart> { OnRestored = handler });
         }
 
-        protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
-        protected void OnGetDisplayShape<TPart>(Action<BuildDisplayContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetDisplayShape<TPart>(Action<BuildDisplayContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetDisplayShape = handler });
         }
 
-        protected void OnGetEditorShape<TPart>(Action<BuildEditorContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetEditorShape<TPart>(Action<BuildEditorContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetEditorShape = handler });
         }
 
-        protected void OnUpdateEditorShape<TPart>(Action<UpdateEditorContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUpdateEditorShape<TPart>(Action<UpdateEditorContext, TPart> handler) where TPart : class, IContent
+        {
             Filters.Add(new InlineTemplateFilter<TPart> { OnUpdateEditorShape = handler });
         }
 
-        class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IContent {
+        class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IContent
+        {
             public Action<ActivatedContentContext, TPart> OnActivated { get; set; }
             public Action<InitializingContentContext, TPart> OnInitializing { get; set; }
             public Action<InitializingContentContext, TPart> OnInitialized { get; set; }
@@ -178,332 +216,402 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<RestoreContentContext, TPart> OnRestored { get; set; }
             public Action<DestroyContentContext, TPart> OnDestroying { get; set; }
             public Action<DestroyContentContext, TPart> OnDestroyed { get; set; }
-            protected override void Activated(ActivatedContentContext context, TPart instance) {
+            protected override void Activated(ActivatedContentContext context, TPart instance)
+            {
                 if (OnActivated != null) OnActivated(context, instance);
             }
-            protected override void Initializing(InitializingContentContext context, TPart instance) {
+            protected override void Initializing(InitializingContentContext context, TPart instance)
+            {
                 if (OnInitializing != null) OnInitializing(context, instance);
             }
-            protected override void Initialized(InitializingContentContext context, TPart instance) {
+            protected override void Initialized(InitializingContentContext context, TPart instance)
+            {
                 if (OnInitialized != null) OnInitialized(context, instance);
             }
-            protected override void Creating(CreateContentContext context, TPart instance) {
+            protected override void Creating(CreateContentContext context, TPart instance)
+            {
                 if (OnCreating != null) OnCreating(context, instance);
             }
-            protected override void Created(CreateContentContext context, TPart instance) {
+            protected override void Created(CreateContentContext context, TPart instance)
+            {
                 if (OnCreated != null) OnCreated(context, instance);
             }
-            protected override void Loading(LoadContentContext context, TPart instance) {
+            protected override void Loading(LoadContentContext context, TPart instance)
+            {
                 if (OnLoading != null) OnLoading(context, instance);
             }
-            protected override void Loaded(LoadContentContext context, TPart instance) {
+            protected override void Loaded(LoadContentContext context, TPart instance)
+            {
                 if (OnLoaded != null) OnLoaded(context, instance);
             }
-            protected override void Updating(UpdateContentContext context, TPart instance) {
+            protected override void Updating(UpdateContentContext context, TPart instance)
+            {
                 if (OnUpdating != null) OnUpdating(context, instance);
             }
-            protected override void Updated(UpdateContentContext context, TPart instance) {
+            protected override void Updated(UpdateContentContext context, TPart instance)
+            {
                 if (OnUpdated != null) OnUpdated(context, instance);
             }
-            protected override void Versioning(VersionContentContext context, TPart existing, TPart building) {
+            protected override void Versioning(VersionContentContext context, TPart existing, TPart building)
+            {
                 if (OnVersioning != null) OnVersioning(context, existing, building);
             }
-            protected override void Versioned(VersionContentContext context, TPart existing, TPart building) {
+            protected override void Versioned(VersionContentContext context, TPart existing, TPart building)
+            {
                 if (OnVersioned != null) OnVersioned(context, existing, building);
             }
-            protected override void Publishing(PublishContentContext context, TPart instance) {
+            protected override void Publishing(PublishContentContext context, TPart instance)
+            {
                 if (OnPublishing != null) OnPublishing(context, instance);
             }
-            protected override void Published(PublishContentContext context, TPart instance) {
+            protected override void Published(PublishContentContext context, TPart instance)
+            {
                 if (OnPublished != null) OnPublished(context, instance);
             }
-            protected override void Unpublishing(PublishContentContext context, TPart instance) {
+            protected override void Unpublishing(PublishContentContext context, TPart instance)
+            {
                 if (OnUnpublishing != null) OnUnpublishing(context, instance);
             }
-            protected override void Unpublished(PublishContentContext context, TPart instance) {
+            protected override void Unpublished(PublishContentContext context, TPart instance)
+            {
                 if (OnUnpublished != null) OnUnpublished(context, instance);
             }
-            protected override void Removing(RemoveContentContext context, TPart instance) {
+            protected override void Removing(RemoveContentContext context, TPart instance)
+            {
                 if (OnRemoving != null) OnRemoving(context, instance);
             }
-            protected override void Removed(RemoveContentContext context, TPart instance) {
+            protected override void Removed(RemoveContentContext context, TPart instance)
+            {
                 if (OnRemoved != null) OnRemoved(context, instance);
             }
-            protected override void Indexing(IndexContentContext context, TPart instance) {
+            protected override void Indexing(IndexContentContext context, TPart instance)
+            {
                 if (OnIndexing != null)
                     OnIndexing(context, instance);
             }
-            protected override void Indexed(IndexContentContext context, TPart instance) {
+            protected override void Indexed(IndexContentContext context, TPart instance)
+            {
                 if (OnIndexed != null)
                     OnIndexed(context, instance);
             }
-            protected override void Cloning(CloneContentContext context, TPart instance) {
+            protected override void Cloning(CloneContentContext context, TPart instance)
+            {
                 if (OnCloning != null)
                     OnCloning(context, instance);
             }
-            protected override void Cloned(CloneContentContext context, TPart instance) {
+            protected override void Cloned(CloneContentContext context, TPart instance)
+            {
                 if (OnCloned != null)
                     OnCloned(context, instance);
             }
-            protected override void Importing(ImportContentContext context, TPart instance) {
+            protected override void Importing(ImportContentContext context, TPart instance)
+            {
                 if (OnImporting != null)
                     OnImporting(context, instance);
             }
-            protected override void Imported(ImportContentContext context, TPart instance) {
+            protected override void Imported(ImportContentContext context, TPart instance)
+            {
                 if (OnImported != null)
                     OnImported(context, instance);
             }
-            protected override void ImportCompleted(ImportContentContext context, TPart instance) {
+            protected override void ImportCompleted(ImportContentContext context, TPart instance)
+            {
                 if (OnImportCompleted != null)
                     OnImportCompleted(context, instance);
             }
-            protected override void Exporting(ExportContentContext context, TPart instance) {
+            protected override void Exporting(ExportContentContext context, TPart instance)
+            {
                 if (OnExporting != null)
                     OnExporting(context, instance);
             }
-            protected override void Exported(ExportContentContext context, TPart instance) {
+            protected override void Exported(ExportContentContext context, TPart instance)
+            {
                 if (OnExported != null)
                     OnExported(context, instance);
             }
-            protected override void Restoring(RestoreContentContext context, TPart instance) {
+            protected override void Restoring(RestoreContentContext context, TPart instance)
+            {
                 if (OnRestoring != null)
                     OnRestoring(context, instance);
             }
-            protected override void Restored(RestoreContentContext context, TPart instance) {
+            protected override void Restored(RestoreContentContext context, TPart instance)
+            {
                 if (OnRestored != null)
                     OnRestored(context, instance);
             }
-            protected override void Destroying(DestroyContentContext context, TPart instance) {
+            protected override void Destroying(DestroyContentContext context, TPart instance)
+            {
                 if (OnDestroying != null)
                     OnDestroying(context, instance);
             }
-            protected override void Destroyed(DestroyContentContext context, TPart instance) {
+            protected override void Destroyed(DestroyContentContext context, TPart instance)
+            {
                 if (OnDestroyed != null)
                     OnDestroyed(context, instance);
             }
         }
 
-        class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
+        class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent
+        {
             public Action<GetContentItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
             public Action<BuildDisplayContext, TPart> OnGetDisplayShape { get; set; }
             public Action<BuildEditorContext, TPart> OnGetEditorShape { get; set; }
             public Action<UpdateEditorContext, TPart> OnUpdateEditorShape { get; set; }
-            protected override void GetContentItemMetadata(GetContentItemMetadataContext context, TPart instance) {
+            protected override void GetContentItemMetadata(GetContentItemMetadataContext context, TPart instance)
+            {
                 if (OnGetItemMetadata != null) OnGetItemMetadata(context, instance);
             }
-            protected override void BuildDisplayShape(BuildDisplayContext context, TPart instance) {
+            protected override void BuildDisplayShape(BuildDisplayContext context, TPart instance)
+            {
                 if (OnGetDisplayShape != null) OnGetDisplayShape(context, instance);
             }
-            protected override void BuildEditorShape(BuildEditorContext context, TPart instance) {
+            protected override void BuildEditorShape(BuildEditorContext context, TPart instance)
+            {
                 if (OnGetEditorShape != null) OnGetEditorShape(context, instance);
             }
-            protected override void UpdateEditorShape(UpdateEditorContext context, TPart instance) {
+            protected override void UpdateEditorShape(UpdateEditorContext context, TPart instance)
+            {
                 if (OnUpdateEditorShape != null) OnUpdateEditorShape(context, instance);
             }
         }
 
-        void IContentHandler.Activating(ActivatingContentContext context) {
+        void IContentHandler.Activating(ActivatingContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentActivatingFilter>())
                 filter.Activating(context);
             Activating(context);
         }
 
-        void IContentHandler.Activated(ActivatedContentContext context) {
+        void IContentHandler.Activated(ActivatedContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Activated(context);
             Activated(context);
         }
 
-        void IContentHandler.Initializing(InitializingContentContext context) {
+        void IContentHandler.Initializing(InitializingContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Initializing(context);
             Initializing(context);
         }
 
-        void IContentHandler.Initialized(InitializingContentContext context) {
+        void IContentHandler.Initialized(InitializingContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Initialized(context);
             Initialized(context);
         }
-        
-        void IContentHandler.Creating(CreateContentContext context) {
+
+        void IContentHandler.Creating(CreateContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Creating(context);
             Creating(context);
         }
 
-        void IContentHandler.Created(CreateContentContext context) {
+        void IContentHandler.Created(CreateContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Created(context);
             Created(context);
         }
 
-        void IContentHandler.Loading(LoadContentContext context) {
+        void IContentHandler.Loading(LoadContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loading(context);
             Loading(context);
         }
 
-        void IContentHandler.Loaded(LoadContentContext context) {
+        void IContentHandler.Loaded(LoadContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loaded(context);
             Loaded(context);
         }
 
-        void IContentHandler.Updating(UpdateContentContext context) {
+        void IContentHandler.Updating(UpdateContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Updating(context);
             Updating(context);
         }
 
-        void IContentHandler.Updated(UpdateContentContext context) {
+        void IContentHandler.Updated(UpdateContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Updated(context);
             Updated(context);
         }
 
-        void IContentHandler.Versioning(VersionContentContext context) {
+        void IContentHandler.Versioning(VersionContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Versioning(context);
             Versioning(context);
         }
 
-        void IContentHandler.Versioned(VersionContentContext context) {
+        void IContentHandler.Versioned(VersionContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Versioned(context);
             Versioned(context);
         }
 
-        void IContentHandler.Publishing(PublishContentContext context) {
+        void IContentHandler.Publishing(PublishContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Publishing(context);
             Publishing(context);
         }
 
-        void IContentHandler.Published(PublishContentContext context) {
+        void IContentHandler.Published(PublishContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Published(context);
             Published(context);
         }
 
-        void IContentHandler.Unpublishing(PublishContentContext context) {
+        void IContentHandler.Unpublishing(PublishContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Unpublishing(context);
             Unpublishing(context);
         }
 
-        void IContentHandler.Unpublished(PublishContentContext context) {
+        void IContentHandler.Unpublished(PublishContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Unpublished(context);
             Unpublished(context);
         }
 
-        void IContentHandler.Removing(RemoveContentContext context) {
+        void IContentHandler.Removing(RemoveContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Removing(context);
             Removing(context);
         }
 
-        void IContentHandler.Removed(RemoveContentContext context) {
+        void IContentHandler.Removed(RemoveContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Removed(context);
             Removed(context);
         }
 
-        void IContentHandler.Indexing(IndexContentContext context) {
-            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+        void IContentHandler.Indexing(IndexContentContext context)
+        {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Indexing(context);
             Indexing(context);
         }
 
-        void IContentHandler.Indexed(IndexContentContext context) {
-            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+        void IContentHandler.Indexed(IndexContentContext context)
+        {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Indexed(context);
             Indexed(context);
         }
 
-        void IContentHandler.Importing(ImportContentContext context) {
+        void IContentHandler.Importing(ImportContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Importing(context);
             Importing(context);
         }
 
-        void IContentHandler.Cloned(CloneContentContext context) {
+        void IContentHandler.Cloned(CloneContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Cloned(context);
             Cloned(context);
         }
 
-        void IContentHandler.Cloning(CloneContentContext context) {
+        void IContentHandler.Cloning(CloneContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Cloning(context);
             Cloning(context);
         }
 
-        void IContentHandler.Imported(ImportContentContext context) {
+        void IContentHandler.Imported(ImportContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Imported(context);
             Imported(context);
         }
 
-        void IContentHandler.ImportCompleted(ImportContentContext importContentContext) {
+        void IContentHandler.ImportCompleted(ImportContentContext importContentContext)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.ImportCompleted(importContentContext);
             ImportCompleted(importContentContext);
         }
 
-        void IContentHandler.Exporting(ExportContentContext context) {
+        void IContentHandler.Exporting(ExportContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Exporting(context);
             Exporting(context);
         }
 
-        void IContentHandler.Exported(ExportContentContext context) {
+        void IContentHandler.Exported(ExportContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Exported(context);
             Exported(context);
         }
 
-        void IContentHandler.Restoring(RestoreContentContext context) {
+        void IContentHandler.Restoring(RestoreContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Restoring(context);
             Restoring(context);
         }
 
-        void IContentHandler.Restored(RestoreContentContext context) {
+        void IContentHandler.Restored(RestoreContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Restored(context);
             Restored(context);
         }
 
-        void IContentHandler.Destroying(DestroyContentContext context) {
+        void IContentHandler.Destroying(DestroyContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Destroying(context);
             Destroying(context);
         }
 
-        void IContentHandler.Destroyed(DestroyContentContext context) {
+        void IContentHandler.Destroyed(DestroyContentContext context)
+        {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Destroyed(context);
             Destroyed(context);
         }
 
-        void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
+        void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context)
+        {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetContentItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentHandler.BuildDisplay(BuildDisplayContext context) {
+        void IContentHandler.BuildDisplay(BuildDisplayContext context)
+        {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildDisplayShape(context);
             BuildDisplayShape(context);
         }
-        void IContentHandler.BuildEditor(BuildEditorContext context) {
+        void IContentHandler.BuildEditor(BuildEditorContext context)
+        {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildEditorShape(context);
             BuildEditorShape(context);
         }
-        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
+        void IContentHandler.UpdateEditor(UpdateEditorContext context)
+        {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.UpdateEditorShape(context);
             UpdateEditorShape(context);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Autofac;
@@ -29,8 +29,10 @@ using Orchard.Tasks.Indexing;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Indexing {
-    public class IndexingTaskExecutorTests : DatabaseEnabledTestsBase {
+namespace Orchard.Tests.Modules.Indexing
+{
+    public class IndexingTaskExecutorTests : DatabaseEnabledTestsBase
+    {
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
         private ShellSettings _shellSettings;
@@ -44,14 +46,18 @@ namespace Orchard.Tests.Modules.Indexing {
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
         [OneTimeTearDown]
-        public void Clean() {
-            if (Directory.Exists(_basePath)) {
+        public void Clean()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
         }
 
-        public override void Register(ContainerBuilder builder) {
-            if (Directory.Exists(_basePath)) {
+        public override void Register(ContainerBuilder builder)
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
 
@@ -92,20 +98,23 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterInstance(_shellSettings).As<ShellSettings>();
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] { typeof(IndexingTaskRecord),
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),
-                    typeof(ContentItemVersionRecord), 
-                    typeof(BodyPartRecord), 
+                    typeof(ContentItemVersionRecord),
+                    typeof(BodyPartRecord),
                     typeof(CommonPartRecord),
                     typeof(CommonPartVersionRecord),
                 };
             }
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
             _lockFileManager = _container.Resolve<ILockFileManager>();
             _provider = _container.Resolve<IIndexProvider>();
@@ -124,13 +133,15 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexShouldBeEmptyWhenThereIsNoContent() {
-            while(_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+        public void IndexShouldBeEmptyWhenThereIsNoContent()
+        {
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
         [Test]
-        public void ShouldIgnoreNonIndexableContentWhenRebuildingTheIndex() {
+        public void ShouldIgnoreNonIndexableContentWhenRebuildingTheIndex()
+        {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .Build();
@@ -141,12 +152,13 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
         [Test]
-        public void ShouldNotIndexContentIfIndexDocumentIsEmpty() {
+        public void ShouldNotIndexContentIfIndexDocumentIsEmpty()
+        {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .WithSetting("TypeIndexing.Indexes", "Search") // the content types should be indexed, but there is no content at all
@@ -158,70 +170,76 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
         [Test]
-        public void ShouldIndexContentIfSettingsIsSetAndHandlerIsProvided() {
+        public void ShouldIndexContentIfSettingsIsSetAndHandlerIsProvided()
+        {
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
         }
 
         [Test]
-        public void ShouldUpdateTheIndexWhenContentIsPublished() {
+        public void ShouldUpdateTheIndexWhenContentIsPublished()
+        {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             // there should be nothing done
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
         }
 
         [Test]
-        public void IndexingTaskExecutorShouldNotBeReEntrant() {
+        public void IndexingTaskExecutorShouldNotBeReEntrant()
+        {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
-            using (lockFile) {
-                while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            using (lockFile)
+            {
+                while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
                 Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
                 Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
             }
 
             _logger.LogEntries.Clear();
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
         }
 
         [Test]
-        public void ShouldUpdateTheIndexWhenContentIsUnPublished() {
+        public void ShouldUpdateTheIndexWhenContentIsUnPublished()
+        {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Unpublish(content.ContentItem);
 
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
         }
 
         [Test]
-        public void ShouldUpdateTheIndexWhenContentIsDeleted() {
+        public void ShouldUpdateTheIndexWhenContentIsDeleted()
+        {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
@@ -240,19 +258,23 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldIndexAllContentOverTheLoopSize() {
-            for (int i = 0; i < 999; i++) {
+        public void ShouldIndexAllContentOverTheLoopSize()
+        {
+            for (int i = 0; i < 999; i++)
+            {
                 var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
                 content.Text = "Lorem ipsum " + i;
             }
-            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(999));
         }
 
         #region Stubs
 
-        public class ThingHandler : ContentHandler {
-            public ThingHandler() {
+        public class ThingHandler : ContentHandler
+        {
+            public ThingHandler()
+            {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentTypeName));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentTypeName));
                 Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentTypeName));
@@ -260,41 +282,51 @@ namespace Orchard.Tests.Modules.Indexing {
             }
         }
 
-        public class Thing : ContentPart {
-            public string Text {
+        public class Thing : ContentPart
+        {
+            public string Text
+            {
                 get { return this.As<BodyPart>().Text; }
                 set { this.As<BodyPart>().Text = value; }
             }
         }
 
-        public class ThingDriver : ContentPartDriver<Thing> {
+        public class ThingDriver : ContentPartDriver<Thing>
+        {
             public static readonly string ContentTypeName = "thing";
         }
 
-        public class LogEntry {
+        public class LogEntry
+        {
             public Exception LogException { get; set; }
             public string LogFormat { get; set; }
             public object[] LogArgs { get; set; }
             public LogLevel LogLevel { get; set; }
         }
 
-        public class StubLogger : ILogger {
+        public class StubLogger : ILogger
+        {
             public List<LogEntry> LogEntries { get; set; }
 
-            public StubLogger() {
+            public StubLogger()
+            {
                 LogEntries = new List<LogEntry>();
             }
 
-            public void Clear() {
+            public void Clear()
+            {
                 LogEntries.Clear();
             }
 
-            public bool IsEnabled(LogLevel level) {
+            public bool IsEnabled(LogLevel level)
+            {
                 return true;
             }
 
-            public void Log(LogLevel level, Exception exception, string format, params object[] args) {
-                LogEntries.Add(new LogEntry {
+            public void Log(LogLevel level, Exception exception, string format, params object[] args)
+            {
+                LogEntries.Add(new LogEntry
+                {
                     LogArgs = args,
                     LogException = exception,
                     LogFormat = format,

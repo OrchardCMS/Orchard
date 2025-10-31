@@ -1,8 +1,10 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.Tokens.Models {
+namespace Orchard.Tokens.Models
+{
     [OrchardFeature("Orchard.Tokens.Feeds")]
-    public class RssPart : ContentPart {
+    public class RssPart : ContentPart
+    {
     }
 }

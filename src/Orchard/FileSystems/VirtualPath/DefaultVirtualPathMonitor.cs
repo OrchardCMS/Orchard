@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Caching;
@@ -7,15 +7,18 @@ using Orchard.Caching;
 using Orchard.Logging;
 using Orchard.Services;
 
-namespace Orchard.FileSystems.VirtualPath {
+namespace Orchard.FileSystems.VirtualPath
+{
 
-    public class DefaultVirtualPathMonitor : IVirtualPathMonitor {
+    public class DefaultVirtualPathMonitor : IVirtualPathMonitor
+    {
         private readonly Thunk _thunk;
         private readonly string _prefix = Guid.NewGuid().ToString("n");
         private readonly IDictionary<string, Weak<Token>> _tokens = new Dictionary<string, Weak<Token>>();
         private readonly IClock _clock;
 
-        public DefaultVirtualPathMonitor(IClock clock) {
+        public DefaultVirtualPathMonitor(IClock clock)
+        {
             _clock = clock;
             _thunk = new Thunk(this);
             Logger = NullLogger.Instance;
@@ -23,12 +26,15 @@ namespace Orchard.FileSystems.VirtualPath {
 
         public ILogger Logger { get; set; }
 
-        public IVolatileToken WhenPathChanges(string virtualPath) {
+        public IVolatileToken WhenPathChanges(string virtualPath)
+        {
             var token = BindToken(virtualPath);
-            try {
+            try
+            {
                 BindSignal(virtualPath);
             }
-            catch (HttpException e) {
+            catch (HttpException e)
+            {
                 // This exception happens if trying to monitor a directory or file
                 // inside a directory which doesn't exist
                 Logger.Information(e, "Error monitoring file changes on virtual path '{0}'", virtualPath);
@@ -38,16 +44,20 @@ namespace Orchard.FileSystems.VirtualPath {
             return token;
         }
 
-        private Token BindToken(string virtualPath) {
-            lock (_tokens) {
+        private Token BindToken(string virtualPath)
+        {
+            lock (_tokens)
+            {
                 Weak<Token> weak;
-                if (!_tokens.TryGetValue(virtualPath, out weak)) {
+                if (!_tokens.TryGetValue(virtualPath, out weak))
+                {
                     weak = new Weak<Token>(new Token(virtualPath));
                     _tokens[virtualPath] = weak;
                 }
 
                 var token = weak.Target;
-                if (token == null) {
+                if (token == null)
+                {
                     token = new Token(virtualPath);
                     weak.Target = token;
                 }
@@ -56,10 +66,13 @@ namespace Orchard.FileSystems.VirtualPath {
             }
         }
 
-        private Token DetachToken(string virtualPath) {
-            lock (_tokens) {
+        private Token DetachToken(string virtualPath)
+        {
+            lock (_tokens)
+            {
                 Weak<Token> weak;
-                if (!_tokens.TryGetValue(virtualPath, out weak)) {
+                if (!_tokens.TryGetValue(virtualPath, out weak))
+                {
                     return null;
                 }
                 var token = weak.Target;
@@ -68,12 +81,14 @@ namespace Orchard.FileSystems.VirtualPath {
             }
         }
 
-        private void BindSignal(string virtualPath) {
+        private void BindSignal(string virtualPath)
+        {
             BindSignal(virtualPath, _thunk.Signal);
 
         }
 
-        private void BindSignal(string virtualPath, CacheItemRemovedCallback callback) {
+        private void BindSignal(string virtualPath, CacheItemRemovedCallback callback)
+        {
             string key = _prefix + virtualPath;
 
             //PERF: Don't add in the cache if already present. Creating a "CacheDependency"
@@ -98,7 +113,8 @@ namespace Orchard.FileSystems.VirtualPath {
                 callback);
         }
 
-        public void Signal(string key, object value, CacheItemRemovedReason reason) {
+        public void Signal(string key, object value, CacheItemRemovedReason reason)
+        {
             var virtualPath = Convert.ToString(value);
             Logger.Debug("Virtual path changed ({1}) '{0}'", virtualPath, reason.ToString());
 
@@ -107,27 +123,33 @@ namespace Orchard.FileSystems.VirtualPath {
                 token.IsCurrent = false;
         }
 
-        public class Token : IVolatileToken {
-            public Token(string virtualPath) {
+        public class Token : IVolatileToken
+        {
+            public Token(string virtualPath)
+            {
                 IsCurrent = true;
                 VirtualPath = virtualPath;
             }
             public bool IsCurrent { get; set; }
             public string VirtualPath { get; private set; }
 
-            public override string ToString() {
+            public override string ToString()
+            {
                 return string.Format("IsCurrent: {0}, VirtualPath: \"{1}\"", IsCurrent, VirtualPath);
             }
         }
 
-        class Thunk {
+        class Thunk
+        {
             private readonly Weak<DefaultVirtualPathMonitor> _weak;
 
-            public Thunk(DefaultVirtualPathMonitor provider) {
+            public Thunk(DefaultVirtualPathMonitor provider)
+            {
                 _weak = new Weak<DefaultVirtualPathMonitor>(provider);
             }
 
-            public void Signal(string key, object value, CacheItemRemovedReason reason) {
+            public void Signal(string key, object value, CacheItemRemovedReason reason)
+            {
                 var provider = _weak.Target;
                 if (provider != null)
                     provider.Signal(key, value, reason);

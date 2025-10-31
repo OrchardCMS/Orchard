@@ -1,10 +1,12 @@
-﻿using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.AuditTrail.Providers.ContentDefinition {
+namespace Orchard.AuditTrail.Providers.ContentDefinition
+{
     [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
-    public class ContentPartAuditTrailEventProvider : AuditTrailEventProviderBase {
+    public class ContentPartAuditTrailEventProvider : AuditTrailEventProviderBase
+    {
         public const string Created = "Created";
         public const string Removed = "Removed";
         public const string Imported = "Imported";
@@ -14,7 +16,8 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         public const string PartSettingsUpdated = "PartSettingsUpdated";
         public const string FieldSettingsUpdated = "FieldSettingsUpdated";
 
-        public override void Describe(DescribeContext context) {
+        public override void Describe(DescribeContext context)
+        {
             context.For("ContentPart", T("Content Parts"))
                 .Event(this, Created, T("Created"), T("A content part was created."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content part was removed."), enableByDefault: true)

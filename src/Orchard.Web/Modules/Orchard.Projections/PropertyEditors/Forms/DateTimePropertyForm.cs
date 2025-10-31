@@ -1,26 +1,31 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.PropertyEditors.Forms {
-    public class DateTimePropertyForm : IFormProvider {
+namespace Orchard.Projections.PropertyEditors.Forms
+{
+    public class DateTimePropertyForm : IFormProvider
+    {
 
         public const string FormName = "DateTimeProperty";
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public DateTimePropertyForm(IShapeFactory shapeFactory) {
+        public DateTimePropertyForm(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         _Format: Shape.SelectList(
@@ -58,20 +63,22 @@ namespace Orchard.Projections.PropertyEditors.Forms {
             context.Form(FormName, form);
 
         }
-        
-        public static dynamic FormatDateTime(dynamic display, DateTime dateTime, dynamic state, string culture) {
+
+        public static dynamic FormatDateTime(dynamic display, DateTime dateTime, dynamic state, string culture)
+        {
 
             string format = state.Format;
             var cultureInfo = CultureInfo.CreateSpecificCulture(culture);
 
-            switch(format) {
+            switch (format)
+            {
                 case "ago":
                     return display.DateTimeRelative(DateTimeUtc: dateTime);
-                case "day" :
+                case "day":
                     return dateTime.Day.ToString(cultureInfo);
-                case "month" :
+                case "month":
                     return dateTime.Month.ToString(cultureInfo);
-                case "year" :
+                case "year":
                     return dateTime.Year.ToString(cultureInfo);
                 case "dayOfYear":
                     return dateTime.DayOfYear.ToString(cultureInfo);

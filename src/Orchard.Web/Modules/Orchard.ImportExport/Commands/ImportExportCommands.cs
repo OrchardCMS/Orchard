@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,8 +12,10 @@ using Orchard.Recipes.Models;
 using Orchard.Security;
 using Orchard.Settings;
 
-namespace Orchard.ImportExport.Commands {
-    public class ImportExportCommands : DefaultOrchardCommandHandler {
+namespace Orchard.ImportExport.Commands
+{
+    public class ImportExportCommands : DefaultOrchardCommandHandler
+    {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ISiteService _siteService;
@@ -26,8 +28,9 @@ namespace Orchard.ImportExport.Commands {
             IContentDefinitionManager contentDefinitionManager,
             ISiteService siteService,
             IMembershipService membershipService,
-            IAuthenticationService authenticationService, 
-            IEnumerable<IExportAction> exportActions) {
+            IAuthenticationService authenticationService,
+            IEnumerable<IExportAction> exportActions)
+        {
 
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
@@ -53,17 +56,20 @@ namespace Orchard.ImportExport.Commands {
         public string Version { get; set; }
         [OrchardSwitch]
         public bool SiteSettings { get; set; }
-        
+
         [CommandName("import file")]
         [CommandHelp("import file /Filename:<path> [/ConfigFilename:<configFilename>]\r\n\t" + "Imports the content of a file.")]
         [OrchardSwitches("Filename,ConfigFilename")]
-        public void ImportFile() {
-            if (String.IsNullOrEmpty(Filename)) {
+        public void ImportFile()
+        {
+            if (string.IsNullOrEmpty(Filename))
+            {
                 Context.Output.WriteLine(T("Invalid file path"));
                 return;
             }
 
-            if (!File.Exists(Filename)) {
+            if (!File.Exists(Filename))
+            {
                 Context.Output.WriteLine(T("File not found."));
                 return;
             }
@@ -73,7 +79,7 @@ namespace Orchard.ImportExport.Commands {
 
             // Read config file if specified.
             var configurationDocument = ReadImportConfigurationFile(ConfigFilename);
-            
+
             // Configure any steps based on the configuration.
             _importExportService.ConfigureImportActions(new ConfigureImportActionsContext(configurationDocument));
 
@@ -86,17 +92,20 @@ namespace Orchard.ImportExport.Commands {
         [CommandName("export file")]
         [CommandHelp("export file [/Filename:<path>] [/ConfigFilename:<path>] [/Types:<type-name-1>, ... ,<type-name-n>] [/Metadata:true|false] [/Data:true|false] [/Version:Published|Draft|Latest] [/SiteSettings:true|false] [/Steps:<custom-step-1>, ... ,<custom-step-n>]\r\n\t" + "Create an export file according to the specified options.")]
         [OrchardSwitches("Filename,ConfigFilename,Types,Metadata,Data,Version,SiteSettings,Steps")]
-        public void ExportFile() {
+        public void ExportFile()
+        {
             // Impersonate the Site owner.
             ImpersonateSuperUser();
 
             IEnumerable<IExportAction> actions;
 
-            if (!IsAnySwitchDefined("ConfigFilename", "Types", "Metadata", "Version", "SiteSettings", "Steps")) {
+            if (!IsAnySwitchDefined("ConfigFilename", "Types", "Metadata", "Version", "SiteSettings", "Steps"))
+            {
                 // Get default configured actions.
                 actions = GetDefaultConfiguration();
             }
-            else {
+            else
+            {
                 // Read config file if specified.
                 var configurationDocument = UpdateExportConfiguration(ReadExportConfigurationFile(ConfigFilename), Types, Metadata, Data, Version, SiteSettings, Steps);
 
@@ -109,7 +118,8 @@ namespace Orchard.ImportExport.Commands {
             _importExportService.Export(exportContext, actions);
             var exportFilePath = _importExportService.WriteExportFile(exportContext.RecipeDocument);
 
-            if (!String.IsNullOrEmpty(Filename)) {
+            if (!string.IsNullOrEmpty(Filename))
+            {
                 var directory = Path.GetDirectoryName(Filename);
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
@@ -120,25 +130,30 @@ namespace Orchard.ImportExport.Commands {
             Context.Output.WriteLine(T("Export completed at {0}", exportFilePath));
         }
 
-        private bool IsAnySwitchDefined(params string[] switches) {
+        private bool IsAnySwitchDefined(params string[] switches)
+        {
             return Context.Switches.Keys.Any(switches.Contains);
         }
 
-        private IEnumerable<IExportAction> GetDefaultConfiguration() {
-            foreach (var action in _exportActions) {
+        private IEnumerable<IExportAction> GetDefaultConfiguration()
+        {
+            foreach (var action in _exportActions)
+            {
                 action.ConfigureDefault();
             }
 
             return _exportActions;
         }
 
-        private XDocument UpdateExportConfiguration(XDocument configurationDocument, string types, bool metadata, bool data, string version, bool siteSettings, string customSteps) {
+        private XDocument UpdateExportConfiguration(XDocument configurationDocument, string types, bool metadata, bool data, string version, bool siteSettings, string customSteps)
+        {
             var buildRecipeElement = GetOrCreateElement(configurationDocument.Root, "BuildRecipe");
             var stepsElement = GetOrCreateElement(buildRecipeElement, "Steps");
 
-            if (metadata || data) {
+            if (metadata || data)
+            {
                 var contentStepElement = GetOrCreateElement(stepsElement, "Content");
-                var enteredTypes = (types ?? String.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var enteredTypes = (types ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 var exportTypes = _contentDefinitionManager
                     .ListTypeDefinitions()
@@ -147,27 +162,32 @@ namespace Orchard.ImportExport.Commands {
                     .ToList();
 
                 if (data)
-                    contentStepElement.Attr("DataContentTypes", String.Join(",", exportTypes));
+                    contentStepElement.Attr("DataContentTypes", string.Join(",", exportTypes));
 
                 if (metadata)
-                    contentStepElement.Attr("SchemaContentTypes", String.Join(",", exportTypes));
+                    contentStepElement.Attr("SchemaContentTypes", string.Join(",", exportTypes));
 
-                if (!String.IsNullOrEmpty(version)) {
+                if (!string.IsNullOrEmpty(version))
+                {
                     VersionHistoryOptions versionHistoryOptions;
-                    if (Enum.TryParse(version, true, out versionHistoryOptions)) {
+                    if (Enum.TryParse(version, true, out versionHistoryOptions))
+                    {
                         contentStepElement.Attr("VersionHistoryOptions", versionHistoryOptions);
                     }
                 }
             }
 
-            if (siteSettings) {
+            if (siteSettings)
+            {
                 GetOrCreateElement(stepsElement, "Settings");
             }
 
-            if (!String.IsNullOrEmpty(customSteps)) {
+            if (!string.IsNullOrEmpty(customSteps))
+            {
                 var customStepsList = customSteps.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var customStepName in customStepsList) {
+                foreach (var customStepName in customStepsList)
+                {
                     GetOrCreateElement(stepsElement, customStepName);
                 }
 
@@ -179,24 +199,29 @@ namespace Orchard.ImportExport.Commands {
             return configurationDocument;
         }
 
-        private void ImpersonateSuperUser() {
+        private void ImpersonateSuperUser()
+        {
             var superUser = _siteService.GetSiteSettings().SuperUser;
             var owner = _membershipService.GetUser(superUser);
             _authenticationService.SetAuthenticatedUserForRequest(owner);
         }
 
-        private XDocument ReadExportConfigurationFile(string filePath) {
-            return !String.IsNullOrEmpty(filePath) && File.Exists(filePath) ? XDocument.Load(filePath) : new XDocument(new XElement("Export"));
+        private XDocument ReadExportConfigurationFile(string filePath)
+        {
+            return !string.IsNullOrEmpty(filePath) && File.Exists(filePath) ? XDocument.Load(filePath) : new XDocument(new XElement("Export"));
         }
 
-        private XDocument ReadImportConfigurationFile(string filePath) {
-            return !String.IsNullOrEmpty(filePath) && File.Exists(filePath) ? XDocument.Load(filePath) : new XDocument(new XElement("Import"));
+        private XDocument ReadImportConfigurationFile(string filePath)
+        {
+            return !string.IsNullOrEmpty(filePath) && File.Exists(filePath) ? XDocument.Load(filePath) : new XDocument(new XElement("Import"));
         }
 
-        private XElement GetOrCreateElement(XElement element, string childElementName) {
+        private XElement GetOrCreateElement(XElement element, string childElementName)
+        {
             var childElement = element.Element(childElementName);
 
-            if (childElement == null) {
+            if (childElement == null)
+            {
                 childElement = new XElement(childElementName);
                 element.Add(childElement);
             }

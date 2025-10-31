@@ -15,6 +15,6 @@ namespace Orchard.Specs.Hosting.Orchard.Web
             context.Response.Write("Hello yet again");
         }
 
-        public bool IsReusable { get { return false; } }
+        public bool IsReusable => false;
     }
 }

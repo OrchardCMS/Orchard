@@ -1,7 +1,9 @@
-﻿using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.Records;
 
-namespace Orchard.Projections.Models {
-    public class NavigationQueryPartRecord : ContentPartRecord {
+namespace Orchard.Projections.Models
+{
+    public class NavigationQueryPartRecord : ContentPartRecord
+    {
         /// <summary>
         /// Maximum number of items to retrieve from db
         /// </summary>

@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Themes.Models {
+namespace Orchard.Themes.Models
+{
     /// <summary>
     /// Represents a theme.
     /// </summary>
-    public class ThemeEntry {
+    public class ThemeEntry
+    {
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ThemeEntry() {
+        public ThemeEntry()
+        {
             Notifications = new List<string>();
         }
 
@@ -17,7 +20,8 @@ namespace Orchard.Themes.Models {
         /// Instantiates a theme based on an extension descriptor.
         /// </summary>
         /// <param name="extensionDescriptor">The extension descriptor.</param>
-        public ThemeEntry(ExtensionDescriptor extensionDescriptor) {
+        public ThemeEntry(ExtensionDescriptor extensionDescriptor)
+        {
             Descriptor = extensionDescriptor;
         }
 
@@ -59,6 +63,6 @@ namespace Orchard.Themes.Models {
         /// <summary>
         /// The theme's name.
         /// </summary>
-        public string Name { get { return Descriptor.Name; } }
+        public string Name => Descriptor.Name;
     }
 }

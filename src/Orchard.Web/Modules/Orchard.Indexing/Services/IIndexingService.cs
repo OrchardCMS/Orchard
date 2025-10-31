@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Indexing.Services {
-    public class IndexEntry {
+namespace Orchard.Indexing.Services
+{
+    public class IndexEntry
+    {
         public string IndexName { get; set; }
         public int DocumentCount { get; set; }
         public DateTime LastUpdateUtc { get; set; }
@@ -10,7 +12,8 @@ namespace Orchard.Indexing.Services {
         public IndexingStatus IndexingStatus { get; set; }
     }
 
-    public interface IIndexingService : IDependency {
+    public interface IIndexingService : IDependency
+    {
         void DeleteIndex(string indexName);
         void RebuildIndex(string indexName);
         void UpdateIndex(string indexName);

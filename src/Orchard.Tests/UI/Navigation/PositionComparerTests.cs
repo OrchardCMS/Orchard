@@ -1,21 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Orchard.UI;
 
-namespace Orchard.Tests.UI.Navigation {
+namespace Orchard.Tests.UI.Navigation
+{
     [TestFixture]
-    public class PositionComparerTests {
+    public class PositionComparerTests
+    {
         private IComparer<string> _comparer;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _comparer = new FlatPositionComparer();
         }
 
 
         [Test]
-        public void LessThanAndGreaterThanShouldBeBelowAndAboveZero() {
+        public void LessThanAndGreaterThanShouldBeBelowAndAboveZero()
+        {
             var lessThan = StringComparer.InvariantCultureIgnoreCase.Compare("alpha", "beta");
             var greaterThan = StringComparer.InvariantCultureIgnoreCase.Compare("gamma", "delta");
 
@@ -25,7 +29,8 @@ namespace Orchard.Tests.UI.Navigation {
 
 
         [Test]
-        public void NullIsLessThanEmptyAndEmptyIsLessThanNonEmpty() {
+        public void NullIsLessThanEmptyAndEmptyIsLessThanNonEmpty()
+        {
             Assert.That(_comparer.Compare(null, ""), Is.LessThan(0));
             Assert.That(_comparer.Compare("", "5"), Is.LessThan(0));
             Assert.That(_comparer.Compare(null, "5"), Is.LessThan(0));
@@ -39,7 +44,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NumericValuesShouldCompareNumerically() {
+        public void NumericValuesShouldCompareNumerically()
+        {
             AssertLess("3", "5");
             AssertMore("8", "5");
             AssertSame("5", "5");
@@ -48,14 +54,16 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NegativeNumericValuesAreLessThanPositive() {
+        public void NegativeNumericValuesAreLessThanPositive()
+        {
             AssertLess("-5", "5");
             AssertSame("-5", "-5");
             AssertMore("42", "-42");
         }
 
         [Test]
-        public void NegativeNumericValuesShouldCompareNumerically() {
+        public void NegativeNumericValuesShouldCompareNumerically()
+        {
             AssertMore("-3", "-5");
             AssertLess("-8", "-5");
             AssertSame("-5", "-5");
@@ -64,7 +72,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void DotsSplitParts() {
+        public void DotsSplitParts()
+        {
             AssertLess("0500.3", "0500.5");
             AssertMore("0500.8", "0500.5");
             AssertSame("0500.5", "0500.5");
@@ -79,14 +88,16 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void NumericValuesShouldComeBeforeNonNumeric() {
+        public void NumericValuesShouldComeBeforeNonNumeric()
+        {
             AssertLess("5", "x");
             AssertLess("50", "50a");
             AssertLess("1.50", "1.50a");
         }
 
         [Test]
-        public void NonNumericValuesCompareOrdinallyAndIgnoreCase() {
+        public void NonNumericValuesCompareOrdinallyAndIgnoreCase()
+        {
             AssertSame("x", "X");
             AssertLess("rt675x", "rt685x");
             AssertMore("ru675x", "rt675x");
@@ -109,13 +120,15 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void LongerNonNumericShouldComeLater() {
+        public void LongerNonNumericShouldComeLater()
+        {
             AssertLess("rt675x", "rt675xx");
         }
 
 
         [Test]
-        public void EmptyBitsAreSafeAndShouldComeFirst() {
+        public void EmptyBitsAreSafeAndShouldComeFirst()
+        {
             AssertSame("1.2.3", "1.2.3");
             AssertSame(".1.2.3.", ".1.2.3.");
             AssertSame(".1..3.", ".1..3.");
@@ -130,7 +143,8 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
-        public void AdditionalNonEmptySegmentsShouldComeLater() {
+        public void AdditionalNonEmptySegmentsShouldComeLater()
+        {
             AssertLess("1.2", "1.2.3");
             AssertSame("1.2", "1.2.");
 
@@ -139,15 +153,18 @@ namespace Orchard.Tests.UI.Navigation {
 
         }
 
-        void AssertLess(string x, string y) {
+        void AssertLess(string x, string y)
+        {
             Assert.That(_comparer.Compare(x, y), Is.LessThan(0));
             Assert.That(_comparer.Compare(y, x), Is.GreaterThan(0));
         }
-        void AssertMore(string x, string y) {
+        void AssertMore(string x, string y)
+        {
             Assert.That(_comparer.Compare(x, y), Is.GreaterThan(0));
             Assert.That(_comparer.Compare(y, x), Is.LessThan(0));
         }
-        void AssertSame(string x, string y) {
+        void AssertSame(string x, string y)
+        {
             Assert.That(_comparer.Compare(x, y), Is.EqualTo(0));
             Assert.That(_comparer.Compare(y, x), Is.EqualTo(0));
         }

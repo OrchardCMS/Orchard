@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 
-namespace Orchard.Indexing {
+namespace Orchard.Indexing
+{
 
-    public interface IDocumentIndex {
+    public interface IDocumentIndex
+    {
 
         IDocumentIndex SetContentItemId(int contentItemId);
 

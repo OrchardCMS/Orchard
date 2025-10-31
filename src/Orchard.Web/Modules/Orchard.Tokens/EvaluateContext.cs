@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Tokens {
-    public abstract class EvaluateContext {
+namespace Orchard.Tokens
+{
+    public abstract class EvaluateContext
+    {
         public abstract string Target { get; }
         public abstract IDictionary<string, string> Tokens { get; }
         public abstract IDictionary<string, object> Data { get; }

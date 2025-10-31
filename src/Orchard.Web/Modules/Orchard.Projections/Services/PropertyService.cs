@@ -1,16 +1,20 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Data;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.Services {
-    public class PropertyService : IPropertyService {
+namespace Orchard.Projections.Services
+{
+    public class PropertyService : IPropertyService
+    {
         private readonly IRepository<PropertyRecord> _repository;
 
-        public PropertyService(IRepository<PropertyRecord> repository) {
+        public PropertyService(IRepository<PropertyRecord> repository)
+        {
             _repository = repository;
         }
 
-        public void MoveUp(int propertyId) {
+        public void MoveUp(int propertyId)
+        {
             var property = _repository.Get(propertyId);
 
             // look for the previous action in order in same rule
@@ -20,7 +24,8 @@ namespace Orchard.Projections.Services {
                 .FirstOrDefault();
 
             // nothing to do if already at the top
-            if (previous == null) {
+            if (previous == null)
+            {
                 return;
             }
 
@@ -30,7 +35,8 @@ namespace Orchard.Projections.Services {
             property.Position = temp;
         }
 
-        public void MoveDown(int propertyId) {
+        public void MoveDown(int propertyId)
+        {
             var property = _repository.Get(propertyId);
 
             // look for the next action in order in same rule
@@ -40,7 +46,8 @@ namespace Orchard.Projections.Services {
                 .FirstOrDefault();
 
             // nothing to do if already at the end
-            if (next == null) {
+            if (next == null)
+            {
                 return;
             }
 

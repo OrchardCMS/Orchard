@@ -4,18 +4,22 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Services
+{
     [OrchardFeature("Orchard.Localization.CultureSelector")]
-    public class AdminDirectionalityFactory : ShapeDisplayEvents {
+    public class AdminDirectionalityFactory : ShapeDisplayEvents
+    {
         private readonly WorkContext _workContext;
 
         public AdminDirectionalityFactory(
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
             _workContext = workContextAccessor.GetContext();
         }
 
 
-        private bool IsActivable() {
+        private bool IsActivable()
+        {
             // activate on admin screen only
             if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
                 return true;
@@ -23,9 +27,12 @@ namespace Orchard.Localization.Services {
             return false;
         }
 
-        public override void Displaying(ShapeDisplayingContext context) {
-            context.ShapeMetadata.OnDisplaying(displayedContext => {
-                if (!IsActivable()) {
+        public override void Displaying(ShapeDisplayingContext context)
+        {
+            context.ShapeMetadata.OnDisplaying(displayedContext =>
+            {
+                if (!IsActivable())
+                {
                     return;
                 }
 
@@ -36,9 +43,11 @@ namespace Orchard.Localization.Services {
                 ContentItem contentItem = context.Shape.ContentItem;
 
                 // if not, check for ContentPart 
-                if (contentItem == null) {
+                if (contentItem == null)
+                {
                     ContentPart contentPart = context.Shape.ContentPart;
-                    if (contentPart != null) {
+                    if (contentPart != null)
+                    {
                         contentItem = contentPart.ContentItem;
                     }
                 }

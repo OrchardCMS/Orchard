@@ -1,84 +1,81 @@
-﻿using System;
+using System;
 using System.Web;
 
-namespace Orchard.Localization {
+namespace Orchard.Localization
+{
 
     /// <summary>
     /// An HTML-encoded localized string
     /// </summary>
-    public class LocalizedString : MarshalByRefObject, IHtmlString {
-        private readonly string _localized;
-        private readonly string _scope;
-        private readonly string _textHint;
-        private readonly object[] _args;
-
-        public LocalizedString(string languageNeutral) {
-            _localized = languageNeutral;
-            _textHint = languageNeutral;
+    public class LocalizedString : MarshalByRefObject, IHtmlString
+    {
+        public LocalizedString(string languageNeutral)
+        {
+            Text = languageNeutral;
+            TextHint = languageNeutral;
         }
 
-        public LocalizedString(string localized, string scope, string textHint, object[] args) {
-            _localized = localized;
-            _scope = scope;
-            _textHint = textHint;
-            _args = args;
+        public LocalizedString(string localized, string scope, string textHint, object[] args)
+        {
+            Text = localized;
+            Scope = scope;
+            TextHint = textHint;
+            Args = args;
         }
 
-        public static LocalizedString TextOrDefault(string text, LocalizedString defaultValue) {
+        public static LocalizedString TextOrDefault(string text, LocalizedString defaultValue)
+        {
             if (string.IsNullOrEmpty(text))
                 return defaultValue;
             return new LocalizedString(text);
         }
 
-        public string Scope {
-            get { return _scope; }
-        }
+        public string Scope { get; }
 
         /// <summary>
         /// The HTML-Encoded original text
         /// </summary>
-        public string TextHint {
-            get { return _textHint; }
-        }
+        public string TextHint { get; }
 
-        public object[] Args {
-            get { return _args; }
-        }
+        public object[] Args { get; }
 
         /// <summary>
         /// The HTML-encoded localized text
         /// </summary>
-        public string Text {
-            get { return _localized; }
-        }
+        public string Text { get; }
 
         /// <summary>
         /// The HTML-encoded localized text
         /// </summary>
-        public override string ToString() {
-            return _localized;
+        public override string ToString()
+        {
+            return Text;
         }
 
-        string IHtmlString.ToHtmlString() {
-            return _localized;
+        string IHtmlString.ToHtmlString()
+        {
+            return Text;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             var hashCode = 0;
-            if (_localized != null)
-                hashCode ^= _localized.GetHashCode();
+            if (Text != null)
+                hashCode ^= Text.GetHashCode();
             return hashCode;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             if (obj == null || obj.GetType() != GetType())
                 return false;
 
             var that = (LocalizedString)obj;
-            return string.Equals(_localized, that._localized);
+            return string.Equals(Text, that.Text);
         }
 
-        public override object InitializeLifetimeService() {
+        public override object InitializeLifetimeService()
+        {
             // never expire the cross-AppDomain lease on this object
             return null;
         }

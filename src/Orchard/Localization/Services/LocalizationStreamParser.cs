@@ -1,12 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Orchard.Logging;
 
-namespace Orchard.Localization.Services {
-    
-    public class LocalizationStreamParser : ILocalizationStreamParser {
+namespace Orchard.Localization.Services
+{
+
+    public class LocalizationStreamParser : ILocalizationStreamParser
+    {
 
         private const string HashtagScope = "#:";
         private const string MsgctxtScope = "msgctxt";
@@ -19,13 +20,15 @@ namespace Orchard.Localization.Services {
             { 't', '\t' }
         };
 
-        public LocalizationStreamParser() {
+        public LocalizationStreamParser()
+        {
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; private set; }
 
-        public void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
+        public void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge)
+        {
             var reader = new StringReader(text);
             var scopes = new List<string>();
             var id = string.Empty;
@@ -58,8 +61,8 @@ namespace Orchard.Localization.Services {
 
                 string nextPoLine = reader.ReadLine() ?? "";
 
-                while (nextPoLine != null && (!nextPoLine.StartsWith("#") && !nextPoLine.StartsWith(MsgctxtScope) &&
-                                              !nextPoLine.StartsWith(MsgidScope) && !nextPoLine.StartsWith(MsgstrScope)))
+                while (nextPoLine != null && !nextPoLine.StartsWith("#") && !nextPoLine.StartsWith(MsgctxtScope) &&
+                                              !nextPoLine.StartsWith(MsgidScope) && !nextPoLine.StartsWith(MsgstrScope))
                 {
                     currentPoLine = string.Concat(currentPoLine, TrimQuote(nextPoLine));
                     nextPoLine = reader.ReadLine();
@@ -77,17 +80,23 @@ namespace Orchard.Localization.Services {
                         break;
 
                     case MsgstrScope:
-                        if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(currentPoLine)) {
-                            if (scopes.Count == 0) {
+                        if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(currentPoLine))
+                        {
+                            if (scopes.Count == 0)
+                            {
                                 scopes.Add(string.Empty);
                             }
-                            foreach (var scope in scopes) {
+                            foreach (var scope in scopes)
+                            {
                                 var scopedKey = (scope + "|" + id).ToLowerInvariant();
-                                if (!translations.ContainsKey(scopedKey)) {
+                                if (!translations.ContainsKey(scopedKey))
+                                {
                                     translations.Add(scopedKey, currentPoLine);
                                 }
-                                else {
-                                    if (merge) {
+                                else
+                                {
+                                    if (merge)
+                                    {
                                         translations[scopedKey] = currentPoLine;
                                     }
                                 }
@@ -104,33 +113,43 @@ namespace Orchard.Localization.Services {
             } while (currentPoLine != null);
         }
 
-        private static string Unescape(string str) {
+        private static string Unescape(string str)
+        {
             StringBuilder sb = null;
             bool escaped = false;
-            for (var i = 0; i < str.Length; i++) {
+            for (var i = 0; i < str.Length; i++)
+            {
                 var c = str[i];
-                if (escaped) {
-                    if (sb == null) {
+                if (escaped)
+                {
+                    if (sb == null)
+                    {
                         sb = new StringBuilder(str.Length);
-                        if (i > 1) {
+                        if (i > 1)
+                        {
                             sb.Append(str.Substring(0, i - 1));
                         }
                     }
                     char unescaped;
-                    if (_escapeTranslations.TryGetValue(c, out unescaped)) {
+                    if (_escapeTranslations.TryGetValue(c, out unescaped))
+                    {
                         sb.Append(unescaped);
                     }
-                    else {
+                    else
+                    {
                         // General rule: \x ==> x
                         sb.Append(c);
                     }
                     escaped = false;
                 }
-                else {
-                    if (c == '\\') {
+                else
+                {
+                    if (c == '\\')
+                    {
                         escaped = true;
                     }
-                    else if (sb != null) {
+                    else if (sb != null)
+                    {
                         sb.Append(c);
                     }
                 }
@@ -138,9 +157,12 @@ namespace Orchard.Localization.Services {
             return sb == null ? str : sb.ToString();
         }
 
-        private string TrimQuote(string str) {
-            if (str.StartsWith("\"") && str.EndsWith("\"")) {
-                if (str.Length == 1) {
+        private string TrimQuote(string str)
+        {
+            if (str.StartsWith("\"") && str.EndsWith("\""))
+            {
+                if (str.Length == 1)
+                {
                     // Handle corner case - string containing single quote
                     Logger.Warning("Invalid localization string detected: " + str);
                     return "";

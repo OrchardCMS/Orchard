@@ -1,13 +1,15 @@
-﻿using Orchard.Data;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.Security;
 using Orchard.UI.Notify;
 
-namespace Orchard {
+namespace Orchard
+{
     /// <summary>
     /// Most important parts of the Orchard API
     /// </summary>
-    public interface IOrchardServices : IDependency {
+    public interface IOrchardServices : IDependency
+    {
         IContentManager ContentManager { get; }
         ITransactionManager TransactionManager { get; }
         IAuthorizer Authorizer { get; }

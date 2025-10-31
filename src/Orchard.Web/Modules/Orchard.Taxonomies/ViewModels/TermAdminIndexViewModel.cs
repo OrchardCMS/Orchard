@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using Orchard.Taxonomies.Models;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.Taxonomies.Models;
 
-namespace Orchard.Taxonomies.ViewModels {
-    public class TermAdminIndexViewModel {
+namespace Orchard.Taxonomies.ViewModels
+{
+    public class TermAdminIndexViewModel
+    {
         public IList<TermEntry> Terms { get; set; }
         public TermsAdminIndexBulkAction BulkAction { get; set; }
         public TaxonomyPart Taxonomy { get; set; }
@@ -11,7 +13,8 @@ namespace Orchard.Taxonomies.ViewModels {
         public dynamic Pager { get; set; }
     }
 
-    public class TermEntry {
+    public class TermEntry
+    {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
@@ -23,7 +26,8 @@ namespace Orchard.Taxonomies.ViewModels {
         public bool HasDraft { get; set; }
     }
 
-    public enum TermsAdminIndexBulkAction {
+    public enum TermsAdminIndexBulkAction
+    {
         None,
         Delete,
         Merge,

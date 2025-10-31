@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -11,9 +11,11 @@ using Orchard.Roles.Services;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Roles.Activities {
+namespace Orchard.Roles.Activities
+{
     [OrchardFeature("Orchard.Roles.Workflows")]
-    public class AssignRoleActivity : Task {
+    public class AssignRoleActivity : Task
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRepository<UserRolesPartRecord> _repository;
         private readonly IRoleService _roleService;
@@ -21,7 +23,8 @@ namespace Orchard.Roles.Activities {
         public AssignRoleActivity(
             IWorkContextAccessor workContextAccessor,
             IRepository<UserRolesPartRecord> repository,
-            IRoleService roleService) {
+            IRoleService roleService)
+        {
             _workContextAccessor = workContextAccessor;
             _repository = repository;
             _roleService = roleService;
@@ -32,44 +35,44 @@ namespace Orchard.Roles.Activities {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public override string Name {
-            get { return "AssignRole"; }
-        }
+        public override string Name => "AssignRole";
 
-        public override LocalizedString Category {
-            get { return T("User"); }
-        }
+        public override LocalizedString Category => T("User");
 
-        public override LocalizedString Description {
-            get { return T("Assign specific roles to the current content item if it's a user."); }
-        }
+        public override LocalizedString Description => T("Assign specific roles to the current content item if it's a user.");
 
-        public override string Form {
-            get { return "SelectRoles"; }
-        }
+        public override string Form => "SelectRoles";
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return new[] { T("Done") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             var user = workflowContext.Content.As<IUserRoles>();
 
             // if the current workflow subject is not a user, use current user
-            if (user == null) {
+            if (user == null)
+            {
                 user = _workContextAccessor.GetContext().CurrentUser.As<IUserRoles>();
             }
 
             var roles = GetRoles(activityContext);
 
-            if (user != null) {
-                foreach (var role in roles) {
-                    if (!user.Roles.Contains(role)) {
+            if (user != null)
+            {
+                foreach (var role in roles)
+                {
+                    if (!user.Roles.Contains(role))
+                    {
                         var roleRecord = _roleService.GetRoleByName(role);
-                        if (roleRecord != null) {
+                        if (roleRecord != null)
+                        {
                             _repository.Create(new UserRolesPartRecord { UserId = user.Id, Role = roleRecord });
                         }
-                        else {
+                        else
+                        {
                             Logger.Debug("Role not found: {0}", role);
                         }
                     }
@@ -79,10 +82,12 @@ namespace Orchard.Roles.Activities {
             yield return T("Done");
         }
 
-        private IEnumerable<string> GetRoles(ActivityContext context) {
+        private IEnumerable<string> GetRoles(ActivityContext context)
+        {
             var roles = context.GetState<string>("Roles");
 
-            if (String.IsNullOrEmpty(roles)) {
+            if (string.IsNullOrEmpty(roles))
+            {
                 return Enumerable.Empty<string>();
             }
 

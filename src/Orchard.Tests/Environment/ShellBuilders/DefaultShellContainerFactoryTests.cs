@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Controllers;
 using System.Web.Mvc;
@@ -12,19 +12,22 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Events;
 
-namespace Orchard.Tests.Environment.ShellBuilders {
+namespace Orchard.Tests.Environment.ShellBuilders
+{
     [TestFixture]
-    public class DefaultShellContainerFactoryTests {
+    public class DefaultShellContainerFactoryTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>();
             builder.RegisterType<ShellContainerRegistrations>().As<IShellContainerRegistrations>();
@@ -33,11 +36,14 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             _container = builder.Build();
         }
 
-        ShellSettings CreateSettings() {
+        ShellSettings CreateSettings()
+        {
             return new ShellSettings { Name = ShellSettings.DefaultName };
         }
-        ShellBlueprint CreateBlueprint(params ShellBlueprintItem[] items) {
-            return new ShellBlueprint {
+        ShellBlueprint CreateBlueprint(params ShellBlueprintItem[] items)
+        {
+            return new ShellBlueprint
+            {
                 Dependencies = items.OfType<DependencyBlueprint>(),
                 Controllers = items.OfType<ControllerBlueprint>().Where(bp => typeof(IController).IsAssignableFrom(bp.Type)),
                 HttpControllers = items.OfType<ControllerBlueprint>().Where(bp => typeof(IHttpController).IsAssignableFrom(bp.Type)),
@@ -45,20 +51,24 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             };
         }
 
-        DependencyBlueprint WithModule<T>() {
+        DependencyBlueprint WithModule<T>()
+        {
             return new DependencyBlueprint { Type = typeof(T), Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
-        ControllerBlueprint WithController<T>(string areaName, string controllerName) {
+        ControllerBlueprint WithController<T>(string areaName, string controllerName)
+        {
             return new ControllerBlueprint { Type = typeof(T), AreaName = areaName, ControllerName = controllerName };
         }
 
-        DependencyBlueprint WithDependency<T>() {
+        DependencyBlueprint WithDependency<T>()
+        {
             return new DependencyBlueprint { Type = typeof(T), Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         [Test]
-        public void ShouldReturnChildLifetimeScopeNamedShell() {
+        public void ShouldReturnChildLifetimeScopeNamedShell()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint();
             var factory = _container.Resolve<IShellContainerFactory>();
@@ -74,7 +84,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
 
         [Test]
-        public void ControllersAreRegisteredAsKeyedServices() {
+        public void ControllersAreRegisteredAsKeyedServices()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithModule<TestModule>(),
@@ -88,12 +99,14 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(controller, Is.InstanceOf<TestController>());
         }
 
-        public class TestController : Controller {
+        public class TestController : Controller
+        {
         }
 
 
         [Test]
-        public void ModulesAreResolvedAndRegistered() {
+        public void ModulesAreResolvedAndRegistered()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithModule<TestModule>(),
@@ -109,14 +122,17 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
 
-        public class TestModule : Module {
-            protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+        public class TestModule : Module
+        {
+            protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+            {
                 registration.Metadata["Hello"] = "World";
             }
         }
 
         [Test]
-        public void ModulesMayResolveHostServices() {
+        public void ModulesMayResolveHostServices()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithModule<ModuleUsingThatComponent>());
@@ -126,24 +142,29 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(shellContainer.Resolve<string>(), Is.EqualTo("Module was loaded"));
         }
 
-        public class ComponentForHostContainer {
+        public class ComponentForHostContainer
+        {
 
         }
 
-        public class ModuleUsingThatComponent : Module {
+        public class ModuleUsingThatComponent : Module
+        {
             private readonly ComponentForHostContainer _di;
 
-            public ModuleUsingThatComponent(ComponentForHostContainer di) {
+            public ModuleUsingThatComponent(ComponentForHostContainer di)
+            {
                 _di = di;
             }
 
-            protected override void Load(ContainerBuilder builder) {
+            protected override void Load(ContainerBuilder builder)
+            {
                 builder.RegisterInstance("Module was loaded");
             }
         }
 
         [Test]
-        public void DependenciesAreResolvable() {
+        public void DependenciesAreResolvable()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDependency>());
@@ -156,14 +177,17 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(testDependency, Is.InstanceOf<TestDependency>());
         }
 
-        public interface ITestDependency : IDependency {
+        public interface ITestDependency : IDependency
+        {
 
         }
-        public class TestDependency : ITestDependency {
+        public class TestDependency : ITestDependency
+        {
         }
 
         [Test]
-        public void ComponentsImplementingMultipleContractsAreResolvableOnce() {
+        public void ComponentsImplementingMultipleContractsAreResolvableOnce()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<MultipleDependency>()
@@ -184,18 +208,22 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.True(multipleDependency1 == multipleDependency2);
         }
 
-        public interface IMultipleDependency1 : IDependency {
+        public interface IMultipleDependency1 : IDependency
+        {
 
         }
-        public interface IMultipleDependency2 : IDependency {
+        public interface IMultipleDependency2 : IDependency
+        {
 
         }
-        public class MultipleDependency : IMultipleDependency1, IMultipleDependency2 {
+        public class MultipleDependency : IMultipleDependency1, IMultipleDependency2
+        {
 
         }
 
         [Test]
-        public void ExtraInformationCanDropIntoProperties() {
+        public void ExtraInformationCanDropIntoProperties()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                           WithDependency<TestDependency2>());
@@ -211,17 +239,19 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(testDependency, Is.InstanceOf<TestDependency2>());
 
             var testDependency2 = (TestDependency2)testDependency;
-            
+
             Assert.That(testDependency2.Feature.Descriptor, Is.Not.Null);
             Assert.That(testDependency2.Feature.Descriptor.Id, Is.EqualTo("Hello"));
         }
 
-        public class TestDependency2 : ITestDependency {
+        public class TestDependency2 : ITestDependency
+        {
             public Feature Feature { get; set; }
         }
 
         [Test]
-        public void ParametersMayOrMayNotBeUsedAsPropertiesAndConstructorParameters() {
+        public void ParametersMayOrMayNotBeUsedAsPropertiesAndConstructorParameters()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDependency3>());
@@ -246,10 +276,12 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(testDependency3.Delta, Is.EqualTo("y"));
         }
 
-        public class TestDependency3 : ITestDependency {
+        public class TestDependency3 : ITestDependency
+        {
             private readonly string _alpha;
 
-            public TestDependency3(string alpha) {
+            public TestDependency3(string alpha)
+            {
                 _alpha = alpha;
                 Beta = "x";
                 Delta = "y";
@@ -258,14 +290,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             public string Beta { get; set; }
             public string Delta { get; set; }
 
-            public string GetAlpha() {
+            public string GetAlpha()
+            {
                 return _alpha;
             }
         }
 
 
         [Test]
-        public void DynamicProxyIsInEffect() {
+        public void DynamicProxyIsInEffect()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithModule<ProxModule>(),
@@ -286,36 +320,46 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(testDependency2.Hello(), Is.EqualTo("World"));
         }
 
-        public interface IProxDependency : IDependency {
+        public interface IProxDependency : IDependency
+        {
             string Hello();
         }
 
-        public class ProxDependency : IProxDependency {
-            public virtual string Hello() {
+        public class ProxDependency : IProxDependency
+        {
+            public virtual string Hello()
+            {
                 return "World";
             }
         }
 
-        public class ProxIntercept : IInterceptor {
-            public void Intercept(IInvocation invocation) {
+        public class ProxIntercept : IInterceptor
+        {
+            public void Intercept(IInvocation invocation)
+            {
                 invocation.ReturnValue = "Foo";
             }
         }
 
-        public class ProxModule : Module {
-            protected override void Load(ContainerBuilder builder) {
+        public class ProxModule : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
                 builder.RegisterType<ProxIntercept>();
             }
 
-            protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
-                if (registration.Activator.LimitType == typeof(ProxDependency)) {
+            protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
+            {
+                if (registration.Activator.LimitType == typeof(ProxDependency))
+                {
                     registration.InterceptedBy<ProxIntercept>();
                 }
             }
         }
 
         [Test]
-        public void DynamicProxyAndShellSettingsAreResolvableToSameInstances() {
+        public void DynamicProxyAndShellSettingsAreResolvableToSameInstances()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint();
 
@@ -357,7 +401,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public class StubEventHandler3 : IStubEventHandlerB { }
 
         [Test]
-        public void EventHandlersAreNamedAndResolvedCorrectly() {
+        public void EventHandlersAreNamedAndResolvedCorrectly()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<StubEventHandler1>(),
@@ -381,24 +426,30 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public class TestDecoratorImpl2 : ITestDecorator { public ITestDecorator DecoratedService => null; }
         public class TestDecoratorImpl3 : ITestDecorator { public ITestDecorator DecoratedService => null; }
 
-        public class TestDecorator1 : IDecorator<ITestDecorator>, ITestDecorator {
-            public TestDecorator1(ITestDecorator decoratedService) {
+        public class TestDecorator1 : IDecorator<ITestDecorator>, ITestDecorator
+        {
+            public TestDecorator1(ITestDecorator decoratedService)
+            {
                 DecoratedService = decoratedService;
             }
 
             public ITestDecorator DecoratedService { get; }
         }
 
-        public class TestDecorator2 : IDecorator<ITestDecorator>, ITestDecorator {
-            public TestDecorator2(ITestDecorator decoratedService) {
+        public class TestDecorator2 : IDecorator<ITestDecorator>, ITestDecorator
+        {
+            public TestDecorator2(ITestDecorator decoratedService)
+            {
                 DecoratedService = decoratedService;
             }
 
             public ITestDecorator DecoratedService { get; }
         }
 
-        public class TestDecorator3 : IDecorator<ITestDecorator>, ITestDecorator {
-            public TestDecorator3(ITestDecorator decoratedService) {
+        public class TestDecorator3 : IDecorator<ITestDecorator>, ITestDecorator
+        {
+            public TestDecorator3(ITestDecorator decoratedService)
+            {
                 DecoratedService = decoratedService;
             }
 
@@ -406,7 +457,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void DecoratedComponentsAreResolvedToTheDecorator() {
+        public void DecoratedComponentsAreResolvedToTheDecorator()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDecoratorImpl1>(),
@@ -424,7 +476,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void DecoratedComponentsAreResolvedToTheDecoratorWhenTheDecoratorIsRegisteredFirst() {
+        public void DecoratedComponentsAreResolvedToTheDecoratorWhenTheDecoratorIsRegisteredFirst()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDecorator1>(),
@@ -442,7 +495,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void DecoratedComponentsAreNeverResolved() {
+        public void DecoratedComponentsAreNeverResolved()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDecoratorImpl1>(),
@@ -461,7 +515,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void MultipleComponentsCanBeDecoratedWithASingleDecorator() {
+        public void MultipleComponentsCanBeDecoratedWithASingleDecorator()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDecoratorImpl1>(),
@@ -489,7 +544,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void ASingleComponentCanBeDecoratedWithMultipleDecorators() {
+        public void ASingleComponentCanBeDecoratedWithMultipleDecorators()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                 WithDependency<TestDecoratorImpl1>(),
@@ -515,7 +571,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void MultipleComponentsCanBeDecoratedWithMultipleDecorators() {
+        public void MultipleComponentsCanBeDecoratedWithMultipleDecorators()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                     WithDependency<TestDecoratorImpl1>(),
@@ -547,7 +604,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void RegisteringDecoratorsWithoutConcreteThrowsFatalException() {
+        public void RegisteringDecoratorsWithoutConcreteThrowsFatalException()
+        {
             var settings = CreateSettings();
             var blueprint = CreateBlueprint(
                     WithDependency<TestDecorator1>(),
@@ -557,7 +615,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             var factory = _container.Resolve<IShellContainerFactory>();
 
-            Assert.Throws<OrchardFatalException>(delegate {
+            Assert.Throws<OrchardFatalException>(delegate
+            {
                 factory.CreateContainer(settings, blueprint);
             });
         }

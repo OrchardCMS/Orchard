@@ -1,24 +1,27 @@
-﻿using System.Web;
+using System.Web;
 using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Environment.ShellBuilders {
+namespace Orchard.Tests.Environment.ShellBuilders
+{
     [TestFixture]
-    public class DefaultShellContextFactoryTests {
+    public class DefaultShellContextFactoryTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
             builder.RegisterModule(new MvcModule());
@@ -29,7 +32,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void NormalExecutionReturnsExpectedObjects() {
+        public void NormalExecutionReturnsExpectedObjects()
+        {
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
             var blueprint = new ShellBlueprint();
@@ -71,14 +75,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void CreatingSetupContextUsesOrchardSetupFeature() {
+        public void CreatingSetupContextUsesOrchardSetupFeature()
+        {
             var settings = default(ShellSettings);
             var descriptor = default(ShellDescriptor);
             var blueprint = new ShellBlueprint();
 
             _container.Mock<ICompositionStrategy>()
                 .Setup(x => x.Compose(It.IsAny<ShellSettings>(), It.IsAny<ShellDescriptor>()))
-                .Callback((ShellSettings s, ShellDescriptor d) => {
+                .Callback((ShellSettings s, ShellDescriptor d) =>
+                {
                     settings = s;
                     descriptor = d;
                 })

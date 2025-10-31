@@ -1,5 +1,7 @@
-﻿namespace Orchard.Fields.Settings {
-    public class LinkFieldSettings {
+namespace Orchard.Fields.Settings
+{
+    public class LinkFieldSettings
+    {
         public string Hint { get; set; }
         public bool Required { get; set; }
         public TargetMode TargetMode { get; set; }
@@ -10,13 +12,15 @@
         public string DefaultValue { get; set; }
         public string TextDefaultValue { get; set; }
 
-        public LinkFieldSettings() {
+        public LinkFieldSettings()
+        {
             TargetMode = TargetMode.None;
             LinkTextMode = LinkTextMode.Optional;
         }
     }
 
-    public enum TargetMode {
+    public enum TargetMode
+    {
         None,
         NewWindow,
         Parent,
@@ -24,7 +28,8 @@
         UserChoice
     }
 
-    public enum LinkTextMode {
+    public enum LinkTextMode
+    {
         // some text can be entered or not, if not the url is used
         Optional,
         // some text must be entered

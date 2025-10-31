@@ -1,7 +1,9 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.CustomForms.Services {
-    public interface IEditorBuilderWrapper : IDependency {
+namespace Orchard.CustomForms.Services
+{
+    public interface IEditorBuilderWrapper : IDependency
+    {
         dynamic BuildEditor(IContent content);
         dynamic UpdateEditor(IContent content, IUpdateModel updateModel);
     }

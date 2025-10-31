@@ -1,25 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement;
+using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Rules.Models;
 using Orchard.Rules.Services;
 using Orchard.Rules.ViewModels;
-using Orchard.ContentManagement;
-using Orchard.Data;
-using Orchard.DisplayManagement;
-using Orchard.Localization;
 using Orchard.Security;
-using Orchard.UI.Notify;
-using System;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 
-namespace Orchard.Rules.Controllers {
+namespace Orchard.Rules.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly ISiteService _siteService;
         private readonly IRulesManager _rulesManager;
         private readonly IRulesServices _rulesServices;
@@ -30,7 +32,8 @@ namespace Orchard.Rules.Controllers {
             ISiteService siteService,
             IRulesManager rulesManager,
             IRulesServices rulesServices,
-            IRepository<RuleRecord> repository) {
+            IRepository<RuleRecord> repository)
+        {
             _siteService = siteService;
             _rulesManager = rulesManager;
             _rulesServices = rulesServices;
@@ -44,7 +47,8 @@ namespace Orchard.Rules.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(RulesIndexOptions options, PagerParameters pagerParameters) {
+        public ActionResult Index(RulesIndexOptions options, PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list rules")))
                 return new HttpUnauthorizedResult();
 
@@ -56,7 +60,8 @@ namespace Orchard.Rules.Controllers {
 
             var rules = _rulesServices.GetRules();
 
-            switch (options.Filter) {
+            switch (options.Filter)
+            {
                 case RulesFilter.Disabled:
                     rules = rules.Where(r => r.Enabled == false);
                     break;
@@ -65,13 +70,15 @@ namespace Orchard.Rules.Controllers {
                     break;
             }
 
-            if (!String.IsNullOrWhiteSpace(options.Search)) {
+            if (!string.IsNullOrWhiteSpace(options.Search))
+            {
                 rules = rules.Where(r => r.Name.Contains(options.Search));
             }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(rules.Count());
 
-            switch (options.Order) {
+            switch (options.Order)
+            {
                 case RulesOrder.Name:
                     rules = rules.OrderBy(u => u.Name);
                     break;
@@ -82,8 +89,10 @@ namespace Orchard.Rules.Controllers {
                 .Take(pager.PageSize)
                 .ToList();
 
-            var model = new RulesIndexViewModel {
-                Rules = results.Select(x => new RulesEntry {
+            var model = new RulesIndexViewModel
+            {
+                Rules = results.Select(x => new RulesEntry
+                {
                     Rule = x,
                     IsChecked = false,
                     RuleId = x.Id
@@ -105,7 +114,8 @@ namespace Orchard.Rules.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult Index(FormCollection input)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
@@ -113,21 +123,25 @@ namespace Orchard.Rules.Controllers {
             UpdateModel(viewModel);
 
             var checkedEntries = viewModel.Rules.Where(c => c.IsChecked);
-            switch (viewModel.Options.BulkAction) {
+            switch (viewModel.Options.BulkAction)
+            {
                 case RulesBulkAction.None:
                     break;
                 case RulesBulkAction.Enable:
-                    foreach (var entry in checkedEntries) {
+                    foreach (var entry in checkedEntries)
+                    {
                         _rulesServices.GetRule(entry.RuleId).Enabled = true;
                     }
                     break;
                 case RulesBulkAction.Disable:
-                    foreach (var entry in checkedEntries) {
+                    foreach (var entry in checkedEntries)
+                    {
                         _rulesServices.GetRule(entry.RuleId).Enabled = false;
                     }
                     break;
                 case RulesBulkAction.Delete:
-                    foreach (var entry in checkedEntries) {
+                    foreach (var entry in checkedEntries)
+                    {
                         _rulesServices.DeleteRule(entry.RuleId);
                     }
                     break;
@@ -136,14 +150,18 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Move(string direction, int id, int actionId) {
+        public ActionResult Move(string direction, int id, int actionId)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
-            switch(direction) {
-                case "up" : _rulesServices.MoveUp(actionId);
+            switch (direction)
+            {
+                case "up":
+                    _rulesServices.MoveUp(actionId);
                     break;
-                case "down": _rulesServices.MoveDown(actionId);
+                case "down":
+                    _rulesServices.MoveDown(actionId);
                     break;
                 default:
                     throw new ArgumentException("direction");
@@ -152,7 +170,8 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Edit", new { id });
         }
 
-        public ActionResult Create() {
+        public ActionResult Create()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
@@ -160,14 +179,17 @@ namespace Orchard.Rules.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePost(CreateRuleViewModel viewModel) {
+        public ActionResult CreatePost(CreateRuleViewModel viewModel)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
             }
-            else {
+            else
+            {
                 var rule = _rulesServices.CreateRule(viewModel.Name);
                 return RedirectToAction("Edit", new { id = rule.Id });
             }
@@ -175,12 +197,14 @@ namespace Orchard.Rules.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit rules")))
                 return new HttpUnauthorizedResult();
 
             var rule = _rulesServices.GetRule(id);
-            var viewModel = new EditRuleViewModel {
+            var viewModel = new EditRuleViewModel
+            {
                 Id = rule.Id,
                 Enabled = rule.Enabled,
                 Name = rule.Name
@@ -190,15 +214,18 @@ namespace Orchard.Rules.Controllers {
             var eventEntries = new List<EventEntry>();
             var allEvents = _rulesManager.DescribeEvents().SelectMany(x => x.Descriptors);
 
-            foreach (var eventRecord in rule.Events) {
+            foreach (var eventRecord in rule.Events)
+            {
                 var category = eventRecord.Category;
                 var type = eventRecord.Type;
 
                 var ev = allEvents.Where(x => category == x.Category && type == x.Type).FirstOrDefault();
-                if (ev != null) {
+                if (ev != null)
+                {
                     var eventParameters = FormParametersHelper.FromString(eventRecord.Parameters);
                     eventEntries.Add(
-                        new EventEntry {
+                        new EventEntry
+                        {
                             Category = ev.Category,
                             Type = ev.Type,
                             EventRecordId = eventRecord.Id,
@@ -215,15 +242,18 @@ namespace Orchard.Rules.Controllers {
             var actionEntries = new List<ActionEntry>();
             var allActions = _rulesManager.DescribeActions().SelectMany(x => x.Descriptors);
 
-            foreach (var actionRecord in rule.Actions.OrderBy(x => x.Position)) {
+            foreach (var actionRecord in rule.Actions.OrderBy(x => x.Position))
+            {
                 var category = actionRecord.Category;
                 var type = actionRecord.Type;
 
                 var action = allActions.Where(x => category == x.Category && type == x.Type).FirstOrDefault();
-                if (action != null) {
+                if (action != null)
+                {
                     var actionParameters = FormParametersHelper.FromString(actionRecord.Parameters);
                     actionEntries.Add(
-                        new ActionEntry {
+                        new ActionEntry
+                        {
                             Category = action.Category,
                             Type = action.Type,
                             ActionRecordId = actionRecord.Id,
@@ -240,14 +270,17 @@ namespace Orchard.Rules.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPost(EditRuleViewModel viewModel) {
+        public ActionResult EditPost(EditRuleViewModel viewModel)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
             }
-            else {
+            else
+            {
                 var rule = _rulesServices.GetRule(viewModel.Id);
                 rule.Name = viewModel.Name;
                 rule.Enabled = viewModel.Enabled;
@@ -261,19 +294,22 @@ namespace Orchard.Rules.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.SaveAndEnable")]
-        public ActionResult EditAndEnablePost(EditRuleViewModel viewModel) {
+        public ActionResult EditAndEnablePost(EditRuleViewModel viewModel)
+        {
             viewModel.Enabled = true;
             return EditPost(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
             var rule = _rulesServices.GetRule(id);
 
-            if (rule != null) {
+            if (rule != null)
+            {
                 _rulesServices.DeleteRule(id);
                 Services.Notifier.Success(T("Rule {0} deleted", rule.Name));
             }
@@ -281,13 +317,15 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Enable(int id) {
+        public ActionResult Enable(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
             var rule = _rulesServices.GetRule(id);
 
-            if (rule != null) {
+            if (rule != null)
+            {
                 rule.Enabled = true;
                 Services.Notifier.Success(T("Rule enabled"));
             }
@@ -295,13 +333,15 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Disable(int id) {
+        public ActionResult Disable(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
             var rule = _rulesServices.GetRule(id);
 
-            if (rule != null) {
+            if (rule != null)
+            {
                 rule.Enabled = false;
                 Services.Notifier.Success(T("Rule disabled"));
             }
@@ -309,11 +349,13 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Index");
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        public void AddModelError(string key, LocalizedString errorMessage) {
+        public void AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

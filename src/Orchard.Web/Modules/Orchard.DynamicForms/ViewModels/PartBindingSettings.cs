@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 
-namespace Orchard.DynamicForms.ViewModels {
-    public class PartBindingSettings {
-        public PartBindingSettings() {
+namespace Orchard.DynamicForms.ViewModels
+{
+    public class PartBindingSettings
+    {
+        public PartBindingSettings()
+        {
             Bindings = new List<BindingSettings>();
             Fields = new List<FieldBindingSettings>();
         }

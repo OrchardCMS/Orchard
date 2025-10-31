@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Orchard.Localization.Services {
-    internal static class PersianDateTimeFormatInfo {
-        internal static DateTimeFormatInfo Build(DateTimeFormatInfo original) {
+namespace Orchard.Localization.Services
+{
+    internal static class PersianDateTimeFormatInfo
+    {
+        internal static DateTimeFormatInfo Build(DateTimeFormatInfo original)
+        {
             var persianFormats = (DateTimeFormatInfo)original.Clone();
 
             var persianCalendarMonthNames = new[] {

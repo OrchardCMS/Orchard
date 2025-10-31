@@ -1,13 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Orchard.Mvc.Routes {
-    public class DefaultRouteProvider : IRouteProvider {
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            var routeDescriptor = new RouteDescriptor {
+namespace Orchard.Mvc.Routes
+{
+    public class DefaultRouteProvider : IRouteProvider
+    {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            var routeDescriptor = new RouteDescriptor
+            {
                 Priority = -20,
                 Route = new Route(
                     "{controller}/{action}/{id}",
@@ -26,10 +30,13 @@ namespace Orchard.Mvc.Routes {
         }
 
         //TEMP: this is hardcoded to allow base web app controllers to pass
-        public class HomeOrAccount : IRouteConstraint {
-            public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
+        public class HomeOrAccount : IRouteConstraint
+        {
+            public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+            {
                 object value;
-                if (values.TryGetValue(parameterName, out value)) {
+                if (values.TryGetValue(parameterName, out value))
+                {
                     var parameterValue = Convert.ToString(value);
                     return string.Equals(parameterValue, "home", StringComparison.OrdinalIgnoreCase) ||
                            string.Equals(parameterValue, "account", StringComparison.OrdinalIgnoreCase);

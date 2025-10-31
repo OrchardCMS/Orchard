@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Events;
 using Orchard.Rules.Models;
 
-namespace Orchard.Rules.Services {
-    public interface IRulesManager : IEventHandler {
+namespace Orchard.Rules.Services
+{
+    public interface IRulesManager : IEventHandler
+    {
         IEnumerable<TypeDescriptor<EventDescriptor>> DescribeEvents();
         IEnumerable<TypeDescriptor<ActionDescriptor>> DescribeActions();
 

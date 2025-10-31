@@ -1,21 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 
-namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
-    public interface IThemeAwareViewEngine : IDependency {
+namespace Orchard.Mvc.ViewEngines.ThemeAwareness
+{
+    public interface IThemeAwareViewEngine : IDependency
+    {
         ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool useDeepPaths);
         ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool useDeepPaths);
     }
 
-    public class ThemeAwareViewEngine : IThemeAwareViewEngine {
+    public class ThemeAwareViewEngine : IThemeAwareViewEngine
+    {
         private readonly WorkContext _workContext;
         private readonly IEnumerable<IViewEngineProvider> _viewEngineProviders;
         private readonly IConfiguredEnginesCache _configuredEnginesCache;
@@ -28,7 +29,8 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             IEnumerable<IViewEngineProvider> viewEngineProviders,
             IConfiguredEnginesCache configuredEnginesCache,
             IExtensionManager extensionManager,
-            ShellDescriptor shellDescriptor) {
+            ShellDescriptor shellDescriptor)
+        {
             _workContext = workContext;
             _viewEngineProviders = viewEngineProviders;
             _configuredEnginesCache = configuredEnginesCache;
@@ -40,26 +42,32 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
         public ILogger Logger { get; set; }
 
-        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool useDeepPaths) {
+        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool useDeepPaths)
+        {
             var engines = _nullEngines;
 
-            if (partialViewName.StartsWith("/") || partialViewName.StartsWith("~")) {
+            if (partialViewName.StartsWith("/") || partialViewName.StartsWith("~"))
+            {
                 engines = BareEngines();
             }
-            else if (_workContext.CurrentTheme != null) {
+            else if (_workContext.CurrentTheme != null)
+            {
                 engines = useDeepPaths ? DeepEngines(_workContext.CurrentTheme) : ShallowEngines(_workContext.CurrentTheme);
             }
 
             return engines.FindPartialView(controllerContext, partialViewName, useCache);
         }
 
-        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool useDeepPaths) {
+        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool useDeepPaths)
+        {
             var engines = _nullEngines;
 
-            if (viewName.StartsWith("/") || viewName.StartsWith("~")) {
+            if (viewName.StartsWith("/") || viewName.StartsWith("~"))
+            {
                 engines = BareEngines();
             }
-            else if (_workContext.CurrentTheme != null) {
+            else if (_workContext.CurrentTheme != null)
+            {
                 engines = useDeepPaths ? DeepEngines(_workContext.CurrentTheme) : ShallowEngines(_workContext.CurrentTheme);
             }
 
@@ -67,17 +75,21 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         }
 
 
-        private IViewEngine BareEngines() {
+        private IViewEngine BareEngines()
+        {
             return _configuredEnginesCache.BindBareEngines(() => new ViewEngineCollectionWrapper(_viewEngineProviders.Select(vep => vep.CreateBareViewEngine())));
         }
 
-        private IViewEngine ShallowEngines(ExtensionDescriptor theme) {
+        private IViewEngine ShallowEngines(ExtensionDescriptor theme)
+        {
             //return _configuredEnginesCache.BindShallowEngines(theme.ThemeName, () => new ViewEngineCollectionWrapper(_viewEngineProviders.Select(vep => vep.CreateBareViewEngine())));
             return DeepEngines(theme);
         }
 
-        private IViewEngine DeepEngines(ExtensionDescriptor theme) {
-            return _configuredEnginesCache.BindDeepEngines(theme.Id, () => {
+        private IViewEngine DeepEngines(ExtensionDescriptor theme)
+        {
+            return _configuredEnginesCache.BindDeepEngines(theme.Id, () =>
+            {
                 // The order for searching for views is:
                 // 1. Current "theme"
                 // 2. Base themes of the current theme (in "base" order)
@@ -102,7 +114,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
                 var moduleLocations = enabledModules
                     .Select(fd => fd.Extension.Location)
-                    .Distinct(StringComparer.OrdinalIgnoreCase) 
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
                 var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = moduleVirtualPaths, ExtensionLocations = moduleLocations };
@@ -112,14 +124,17 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             });
         }
 
-        private IEnumerable<IViewEngine> CreateThemeViewEngines(ExtensionDescriptor theme) {
+        private IEnumerable<IViewEngine> CreateThemeViewEngines(ExtensionDescriptor theme)
+        {
             var themeLocation = theme.Location + "/" + theme.Id;
-            var themeParams = new CreateThemeViewEngineParams {VirtualPath = themeLocation};
+            var themeParams = new CreateThemeViewEngineParams { VirtualPath = themeLocation };
             return _viewEngineProviders.Select(vep => vep.CreateThemeViewEngine(themeParams));
         }
 
-        private IEnumerable<ExtensionDescriptor> GetBaseThemes(ExtensionDescriptor themeExtension) {
-            if (themeExtension.Id.Equals("TheAdmin", StringComparison.OrdinalIgnoreCase)) {
+        private IEnumerable<ExtensionDescriptor> GetBaseThemes(ExtensionDescriptor themeExtension)
+        {
+            if (themeExtension.Id.Equals("TheAdmin", StringComparison.OrdinalIgnoreCase))
+            {
                 // Special case: conceptually, the base themes of "TheAdmin" is the list of all
                 // enabled themes. This is so that any enabled theme can have controller/action/views
                 // in the Admin of the site.
@@ -129,24 +144,28 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     .Select(fd => fd.Extension)
                     .Where(fd => DefaultExtensionTypes.IsTheme(fd.ExtensionType));
             }
-            else {
+            else
+            {
                 var availableFeatures = _extensionManager.AvailableFeatures();
                 var list = new List<ExtensionDescriptor>();
-                while(true) {
+                while (true)
+                {
                     if (themeExtension == null)
                         break;
 
-                    if (String.IsNullOrEmpty(themeExtension.BaseTheme))
+                    if (string.IsNullOrEmpty(themeExtension.BaseTheme))
                         break;
 
                     var baseFeature = availableFeatures.FirstOrDefault(fd => fd.Id == themeExtension.BaseTheme);
-                    if (baseFeature == null) {
+                    if (baseFeature == null)
+                    {
                         Logger.Error("Base theme '{0}' of theme '{1}' not found in list of features", themeExtension.BaseTheme, themeExtension.Id);
                         break;
                     }
 
                     // Protect against potential infinite loop
-                    if (list.Contains(baseFeature.Extension)) {
+                    if (list.Contains(baseFeature.Extension))
+                    {
                         Logger.Error("Base theme '{0}' of theme '{1}' ignored, as it seems there is recursion in base themes", themeExtension.BaseTheme, themeExtension.Id);
                         break;
                     }
@@ -159,7 +178,8 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             }
         }
 
-        public void ReleaseView(ControllerContext controllerContext, IView view) {
+        public void ReleaseView(ControllerContext controllerContext, IView view)
+        {
             throw new NotImplementedException();
         }
     }

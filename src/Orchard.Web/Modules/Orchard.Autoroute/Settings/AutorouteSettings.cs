@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Services;
-using System;
 
-namespace Orchard.Autoroute.Settings {
+namespace Orchard.Autoroute.Settings
+{
 
     /// <summary>
     /// Settings when attaching part to a content item
     /// </summary>
-    public class AutorouteSettings {
+    public class AutorouteSettings
+    {
 
         private List<RoutePattern> _patterns;
         private List<DefaultPattern> _defaultPatterns;
 
-        public AutorouteSettings() {
+        public AutorouteSettings()
+        {
             PerItemConfiguration = false;
             AllowCustomPattern = true;
             AllowSetAsHomePage = true;
@@ -41,16 +43,20 @@ namespace Orchard.Autoroute.Settings {
         /// </summary>
         public string PatternDefinitions { get; set; }
 
-        public List<RoutePattern> Patterns {
-            get {
-                if (_patterns == null) {
+        public List<RoutePattern> Patterns
+        {
+            get
+            {
+                if (_patterns == null)
+                {
                     _patterns = new DefaultJsonConverter().Deserialize<RoutePattern[]>(PatternDefinitions).ToList();
                 }
 
                 return _patterns;
             }
 
-            set {
+            set
+            {
                 _patterns = value;
                 PatternDefinitions = new DefaultJsonConverter().Serialize(_patterns.ToArray());
             }
@@ -61,17 +67,23 @@ namespace Orchard.Autoroute.Settings {
         /// </summary>
         public string DefaultPatternDefinitions { get; set; }
 
-        public List<DefaultPattern> DefaultPatterns {
-            get {
-                if (_defaultPatterns == null) {
+        public List<DefaultPattern> DefaultPatterns
+        {
+            get
+            {
+                if (_defaultPatterns == null)
+                {
                     _defaultPatterns = new DefaultJsonConverter().Deserialize<DefaultPattern[]>(DefaultPatternDefinitions).ToList();
                 }
 
                 //We split the values from the radio button returned values
                 int i = 0;
-                foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (!String.IsNullOrWhiteSpace(defaultPattern.Culture)) {
-                        if (defaultPattern.Culture.Split('|').Count() > 1) {
+                foreach (DefaultPattern defaultPattern in _defaultPatterns)
+                {
+                    if (!string.IsNullOrWhiteSpace(defaultPattern.Culture))
+                    {
+                        if (defaultPattern.Culture.Split('|').Count() > 1)
+                        {
                             _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
                             _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
                         }
@@ -81,14 +93,18 @@ namespace Orchard.Autoroute.Settings {
                 return _defaultPatterns;
             }
 
-            set {
+            set
+            {
                 _defaultPatterns = value;
 
                 //We split the values from the radio button returned values
                 int i = 0;
-                foreach (DefaultPattern defaultPattern in _defaultPatterns) {
-                    if (!String.IsNullOrWhiteSpace(defaultPattern.Culture)) {
-                        if (defaultPattern.Culture.Split('|').Count() > 1) {
+                foreach (DefaultPattern defaultPattern in _defaultPatterns)
+                {
+                    if (!string.IsNullOrWhiteSpace(defaultPattern.Culture))
+                    {
+                        if (defaultPattern.Culture.Split('|').Count() > 1)
+                        {
                             _defaultPatterns[i].PatternIndex = defaultPattern.Culture.Split('|').Last();
                             _defaultPatterns[i].Culture = defaultPattern.Culture.Split('|').First();
                         }
@@ -99,7 +115,8 @@ namespace Orchard.Autoroute.Settings {
             }
         }
 
-        public void Build(ContentTypePartDefinitionBuilder builder) {
+        public void Build(ContentTypePartDefinitionBuilder builder)
+        {
             builder.WithSetting("AutorouteSettings.PerItemConfiguration", PerItemConfiguration.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.AllowCustomPattern", AllowCustomPattern.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.AllowSetAsHomePage", AllowSetAsHomePage.ToString(CultureInfo.InvariantCulture));

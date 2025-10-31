@@ -1,39 +1,44 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Diagnostics;
 using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 using Orchard.Data.Providers;
 using Orchard.Tests.Records;
-using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
-namespace Orchard.Tests {
+namespace Orchard.Tests
+{
     [TestFixture]
-    public class FluentDbTests {
-        public class Types : ITypeSource {
+    public class FluentDbTests
+    {
+        public class Types : ITypeSource
+        {
             private readonly IEnumerable<Type> _types;
 
-            public Types(params Type[] types) {
+            public Types(params Type[] types)
+            {
                 _types = types;
             }
 
             #region ITypeSource Members
 
-            public IEnumerable<Type> GetTypes() {
+            public IEnumerable<Type> GetTypes()
+            {
                 return _types;
             }
 
-            public void LogSource(IDiagnosticLogger logger) {
+            public void LogSource(IDiagnosticLogger logger)
+            {
                 throw new NotImplementedException();
             }
 
-            public string GetIdentifier() {
+            public string GetIdentifier()
+            {
                 throw new NotImplementedException();
             }
 
@@ -41,7 +46,8 @@ namespace Orchard.Tests {
         }
 
         [Test]
-        public void CreatingSchemaForStatedClassesInTempFile() {
+        public void CreatingSchemaForStatedClassesInTempFile()
+        {
             var types = new Types(typeof(FooRecord), typeof(BarRecord));
 
             var fileName = "temp.sdf";
@@ -52,7 +58,8 @@ namespace Orchard.Tests {
             var sessionFactory = Fluently.Configure()
                 .Database(persistenceConfigurer)
                 .Mappings(m => m.AutoMappings.Add(AutoMap.Source(types)))
-                .ExposeConfiguration(c => {
+                .ExposeConfiguration(c =>
+                {
                     // This is to work around what looks to be an issue in the NHibernate driver:
                     // When inserting a row with IDENTITY column, the "SELET @@IDENTITY" statement
                     // is issued as a separate command. By default, it is also issued in a separate
@@ -76,7 +83,8 @@ namespace Orchard.Tests {
 
 
         [Test]
-        public void UsingDataUtilityToBuildSessionFactory() {
+        public void UsingDataUtilityToBuildSessionFactory()
+        {
             var factory = DataUtility.CreateSessionFactory(typeof(FooRecord), typeof(BarRecord));
 
             var session = factory.OpenSession();

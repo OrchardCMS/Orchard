@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 
-namespace Orchard.Environment.Descriptor {
+namespace Orchard.Environment.Descriptor
+{
     /// <summary>
     /// Service resolved out of the shell container. Primarily used by host.
     /// </summary>
-    public interface IShellDescriptorManager : IDependency {
+    public interface IShellDescriptorManager : IDependency
+    {
         /// <summary>
         /// Uses shell-specific database or other resources to return 
         /// the current "correct" configuration. The host will use this information
@@ -24,10 +26,11 @@ namespace Orchard.Environment.Descriptor {
             IEnumerable<ShellFeature> enabledFeatures,
             IEnumerable<ShellParameter> parameters);
 
-        
+
     }
 
-    public interface IShellDescriptorManagerEventHandler : IEventHandler {
+    public interface IShellDescriptorManagerEventHandler : IEventHandler
+    {
         void Changed(ShellDescriptor descriptor, string tenant);
     }
 }

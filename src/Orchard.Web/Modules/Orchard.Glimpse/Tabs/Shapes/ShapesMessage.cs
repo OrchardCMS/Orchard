@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Glimpse.Core.Message;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Glimpse.Models;
 
-namespace Orchard.Glimpse.Tabs.Shapes {
-    public class ShapeMessage : MessageBase, IDurationMessage {
+namespace Orchard.Glimpse.Tabs.Shapes
+{
+    public class ShapeMessage : MessageBase, IDurationMessage
+    {
         private readonly ShapeMetadata _metaData;
 
-        public ShapeMessage(ShapeMetadata metaData) {
+        public ShapeMessage(ShapeMetadata metaData)
+        {
             _metaData = metaData;
         }
 

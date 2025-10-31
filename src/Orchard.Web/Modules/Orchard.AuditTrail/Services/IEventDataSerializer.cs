@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 
-namespace Orchard.AuditTrail.Services {
+namespace Orchard.AuditTrail.Services
+{
 
     /// <summary>
     /// A service responsible for serializing and deserializing audit trail event data.
     /// </summary>
-    public interface IEventDataSerializer : IDependency {
+    public interface IEventDataSerializer : IDependency
+    {
 
         /// <summary>
         /// Serialize event data.

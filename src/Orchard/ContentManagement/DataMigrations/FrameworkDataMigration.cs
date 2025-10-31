@@ -1,17 +1,20 @@
-﻿using Orchard.Data.Migration;
+using Orchard.Data.Migration;
 
-namespace Orchard.ContentManagement.DataMigrations {
-    public class FrameworkDataMigration : DataMigrationImpl {
+namespace Orchard.ContentManagement.DataMigrations
+{
+    public class FrameworkDataMigration : DataMigrationImpl
+    {
 
-        public int Create() {
-            SchemaBuilder.CreateTable("ContentItemRecord", 
+        public int Create()
+        {
+            SchemaBuilder.CreateTable("ContentItemRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Data", c => c.Unlimited())
                     .Column<int>("ContentType_id")
                 );
 
-            SchemaBuilder.CreateTable("ContentItemVersionRecord", 
+            SchemaBuilder.CreateTable("ContentItemVersionRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<int>("Number")
@@ -21,13 +24,13 @@ namespace Orchard.ContentManagement.DataMigrations {
                     .Column<int>("ContentItemRecord_id", c => c.NotNull())
                 );
 
-            SchemaBuilder.CreateTable("ContentTypeRecord", 
+            SchemaBuilder.CreateTable("ContentTypeRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
                 );
 
-            SchemaBuilder.CreateTable("CultureRecord", 
+            SchemaBuilder.CreateTable("CultureRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Culture")
@@ -36,7 +39,8 @@ namespace Orchard.ContentManagement.DataMigrations {
             return 1;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.AlterTable("ContentItemRecord",
                table => table
                    .CreateIndex("IDX_ContentType_id", "ContentType_id")
@@ -50,7 +54,8 @@ namespace Orchard.ContentManagement.DataMigrations {
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             SchemaBuilder.AlterTable("ContentTypeRecord",
                table => table
                    .CreateIndex("IDX_ContentType_Name", "Name")
@@ -64,7 +69,8 @@ namespace Orchard.ContentManagement.DataMigrations {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             SchemaBuilder
                 .AlterTable("ContentTypeRecord", table =>
                     table.AddUniqueConstraint("UC_CTR_Name", "Name"))

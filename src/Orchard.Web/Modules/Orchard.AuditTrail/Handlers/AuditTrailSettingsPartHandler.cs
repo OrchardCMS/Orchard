@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Providers.AuditTrail;
 using Orchard.AuditTrail.Services;
@@ -7,14 +7,17 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
-namespace Orchard.AuditTrail.Handlers {
-    public class AuditTrailSettingsPartHandler : ContentHandler {
+namespace Orchard.AuditTrail.Handlers
+{
+    public class AuditTrailSettingsPartHandler : ContentHandler
+    {
         private readonly ISignals _signals;
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
         private string _oldEventSettings;
 
-        public AuditTrailSettingsPartHandler(ISignals signals, IAuditTrailManager auditTrailManager, IWorkContextAccessor wca) {
+        public AuditTrailSettingsPartHandler(ISignals signals, IAuditTrailManager auditTrailManager, IWorkContextAccessor wca)
+        {
             _signals = signals;
             _auditTrailManager = auditTrailManager;
             _wca = wca;
@@ -28,24 +31,29 @@ namespace Orchard.AuditTrail.Handlers {
 
         public Localizer T { get; set; }
 
-        private void GetMetadata(GetContentItemMetadataContext context, AuditTrailSettingsPart part) {
+        private void GetMetadata(GetContentItemMetadataContext context, AuditTrailSettingsPart part)
+        {
             context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Audit Trail")));
         }
 
-        private void SetupLazyFields(ActivatedContentContext context, AuditTrailSettingsPart part) {
+        private void SetupLazyFields(ActivatedContentContext context, AuditTrailSettingsPart part)
+        {
             part._eventProviderSettingsField.Loader(() => _auditTrailManager.DeserializeProviderConfiguration(part.Retrieve<string>("Events")));
-            part._eventProviderSettingsField.Setter(value => {
+            part._eventProviderSettingsField.Setter(value =>
+            {
                 part.Store("Events", _auditTrailManager.SerializeProviderConfiguration(value));
                 _signals.Trigger("AuditTrail.EventSettings");
                 return value;
             });
         }
 
-        private void BeginUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part) {
+        private void BeginUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part)
+        {
             _oldEventSettings = part.Retrieve<string>("Events");
         }
 
-        private void EndUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part) {
+        private void EndUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part)
+        {
             var newEventSettings = part.Retrieve<string>("Events");
 
             if (newEventSettings == _oldEventSettings)

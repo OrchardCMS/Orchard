@@ -1,4 +1,6 @@
-﻿namespace Orchard.DynamicForms.Elements {
-    public class HiddenField : FormElement {
+namespace Orchard.DynamicForms.Elements
+{
+    public class HiddenField : FormElement
+    {
     }
 }

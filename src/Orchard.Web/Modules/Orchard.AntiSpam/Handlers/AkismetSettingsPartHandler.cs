@@ -1,13 +1,16 @@
-﻿using Orchard.AntiSpam.Models;
+using Orchard.AntiSpam.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 
-namespace Orchard.AntiSpam.Handlers {
+namespace Orchard.AntiSpam.Handlers
+{
     [OrchardFeature("Akismet.Filter")]
-    public class AkismetSettingsPartHandler : ContentHandler {
-        public AkismetSettingsPartHandler() {
+    public class AkismetSettingsPartHandler : ContentHandler
+    {
+        public AkismetSettingsPartHandler()
+        {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<AkismetSettingsPart>("Site"));
             Filters.Add(new TemplateFilterForPart<AkismetSettingsPart>("AkismetSettings", "Parts/AntiSpam.AkismetSettings", "spam"));
@@ -15,7 +18,8 @@ namespace Orchard.AntiSpam.Handlers {
 
         public Localizer T { get; set; }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);

@@ -1,10 +1,13 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Containers {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Core.Containers
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("ContainerPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("Paginated")
@@ -52,13 +55,15 @@ namespace Orchard.Core.Containers {
             return 7;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.AlterTable("ContainerPartRecord", table => table.AddColumn<string>("ItemContentType"));
             return 2;
         }
 
-        public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("ContainerPartRecord",  table => table
+        public int UpdateFrom2()
+        {
+            SchemaBuilder.AlterTable("ContainerPartRecord", table => table
                 .AddColumn<bool>("ItemsShown", column => column.WithDefault(true)));
 
             SchemaBuilder.CreateTable("ContainablePartRecord", table => table
@@ -68,7 +73,8 @@ namespace Orchard.Core.Containers {
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterPartDefinition("ContainerPart", part => part
                 .WithDescription("Turns your content item into a container that is capable of containing content items that have the ContainablePart attached."));
 
@@ -80,10 +86,12 @@ namespace Orchard.Core.Containers {
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             ContentDefinitionManager.DeleteTypeDefinition("CustomPropertiesPart");
             SchemaBuilder.DropTable("CustomPropertiesPartRecord");
-            SchemaBuilder.AlterTable("ContainerPartRecord", table => {
+            SchemaBuilder.AlterTable("ContainerPartRecord", table =>
+            {
                 table.DropColumn("ItemContentType");
                 table.AddColumn<string>("ItemContentTypes");
                 table.AddColumn<bool>("ShowOnAdminMenu");
@@ -95,7 +103,8 @@ namespace Orchard.Core.Containers {
                 table.AddColumn<int>("ItemCount");
             });
 
-            SchemaBuilder.AlterTable("ContainablePartRecord", table => {
+            SchemaBuilder.AlterTable("ContainablePartRecord", table =>
+            {
                 table.DropColumn("Weight");
                 table.AddColumn<int>("Position");
             });
@@ -103,7 +112,8 @@ namespace Orchard.Core.Containers {
             return 6;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             SchemaBuilder.AlterTable("ContainerWidgetPartRecord", table => table
                 .AddColumn<string>("OrderByProperty", c => c.WithLength(64)));
 
@@ -125,7 +135,8 @@ namespace Orchard.Core.Containers {
             return 6;
         }
 
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             ContentDefinitionManager.AlterTypeDefinition("ContainerWidget", type => type
                 .WithIdentity());
 

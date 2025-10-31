@@ -1,12 +1,14 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Fields.Fields {
-    public class NumericField : ContentField {
+namespace Orchard.Fields.Fields
+{
+    public class NumericField : ContentField
+    {
 
-        public Decimal? Value {
-            get { return Storage.Get<Decimal?>(); }
+        public decimal? Value
+        {
+            get { return Storage.Get<decimal?>(); }
             set { Storage.Set(value); }
         }
     }

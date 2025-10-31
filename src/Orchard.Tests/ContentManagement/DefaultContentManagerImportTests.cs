@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -22,14 +22,18 @@ using Orchard.Core.Title.Models;
 using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement
+{
     [TestFixture]
-    public class DefaultContentManagerImportTests : DatabaseEnabledTestsBase {
+    public class DefaultContentManagerImportTests : DatabaseEnabledTestsBase
+    {
         private const string ContentTypeName = "Dummy";
         private IContentManager _contentManager;
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
                     typeof (ContentTypeRecord),
                     typeof (ContentItemRecord),
@@ -40,7 +44,8 @@ namespace Orchard.Tests.ContentManagement {
             }
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<IdentifierResolverSelector>().As<IIdentityResolverSelector>();
             builder.RegisterType<DummyHandler>().As<IContentHandler>();
             builder.RegisterType<IdentityPartDriver>().As<IContentPartDriver>();
@@ -57,13 +62,15 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
             _contentManager = _container.Resolve<IContentManager>();
         }
 
         [Test]
-        public void ImportingDraftShouldCreateNewDraft() {
+        public void ImportingDraftShouldCreateNewDraft()
+        {
             // Create a draft element and import it.
             var element = CreateContentElement(version: "Draft");
             Import(element);
@@ -79,7 +86,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImportingPublishedShouldCreateNewPublished() {
+        public void ImportingPublishedShouldCreateNewPublished()
+        {
             // Create a published element and import it.
             var element = CreateContentElement(version: "Published");
             Import(element);
@@ -95,13 +103,14 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImportingDraftShouldUpdateExistingDraft() {
+        public void ImportingDraftShouldUpdateExistingDraft()
+        {
             // Create a draft and an export of it.
             var contentItem = _contentManager.New(ContentTypeName);
             contentItem.As<TitlePart>().Title = "Dummy";
             _contentManager.Create(contentItem, VersionOptions.Draft);
             var element = _contentManager.Export(contentItem);
-            
+
             // Change the title and then import the element.
             element.Element("TitlePart").Attr("Title", "Smarty");
             Import(element);
@@ -117,7 +126,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImportingDraftShouldCreateNewDraftForExistingPublished() {
+        public void ImportingDraftShouldCreateNewDraftForExistingPublished()
+        {
             // Create a draft and an export of it.
             var contentItem = _contentManager.New(ContentTypeName);
             contentItem.As<TitlePart>().Title = "Draft Dummy";
@@ -145,7 +155,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImportingPublishedShouldUpdateAndPublishExistingDraft() {
+        public void ImportingPublishedShouldUpdateAndPublishExistingDraft()
+        {
             // Create a draft and an export of it.
             var contentItem = _contentManager.New(ContentTypeName);
             contentItem.As<TitlePart>().Title = "Draft Dummy";
@@ -171,7 +182,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void ImportingPublishedShouldUpdateAndPublishExistingPublishedItem() {
+        public void ImportingPublishedShouldUpdateAndPublishExistingPublishedItem()
+        {
             // Create a published item and an export of it.
             var contentItem = _contentManager.New(ContentTypeName);
             contentItem.As<TitlePart>().Title = "Published Dummy";
@@ -199,13 +211,15 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(published.As<TitlePart>().Title, Is.EqualTo("Published Smarty"));
         }
 
-        private void Import(XElement element) {
+        private void Import(XElement element)
+        {
             var importContentSession = new ImportContentSession(_contentManager);
             _contentManager.Import(element, importContentSession);
             _contentManager.CompleteImport(element, importContentSession);
         }
 
-        private XElement CreateContentElement(string title = "Dummy", string identity = "123456789012345678901234567890ab", string version = null) {
+        private XElement CreateContentElement(string title = "Dummy", string identity = "123456789012345678901234567890ab", string version = null)
+        {
             var identifier = "/Identifier=" + identity;
             var element =
                 new XElement("Dummy",

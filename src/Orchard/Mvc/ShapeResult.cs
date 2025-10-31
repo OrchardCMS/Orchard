@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
-namespace Orchard.Mvc {
-    public class ShapeResult : ViewResult {
-        public ShapeResult(ControllerBase controller, dynamic shape) {
+namespace Orchard.Mvc
+{
+    public class ShapeResult : ViewResult
+    {
+        public ShapeResult(ControllerBase controller, dynamic shape)
+        {
             ViewData = controller.ViewData;
             TempData = controller.TempData;
             ViewData.Model = shape;
@@ -10,8 +13,10 @@ namespace Orchard.Mvc {
         }
     }
 
-    public class ShapePartialResult : PartialViewResult {
-        public ShapePartialResult(ControllerBase controller, dynamic shape) {
+    public class ShapePartialResult : PartialViewResult
+    {
+        public ShapePartialResult(ControllerBase controller, dynamic shape)
+        {
             ViewData = controller.ViewData;
             TempData = controller.TempData;
             ViewData.Model = shape;

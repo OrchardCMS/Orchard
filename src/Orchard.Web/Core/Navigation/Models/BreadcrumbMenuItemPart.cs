@@ -1,6 +1,8 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.Core.Navigation.Models {
-    public class BreadcrumbMenuItemPart : ContentPart {
+namespace Orchard.Core.Navigation.Models
+{
+    public class BreadcrumbMenuItemPart : ContentPart
+    {
     }
 }

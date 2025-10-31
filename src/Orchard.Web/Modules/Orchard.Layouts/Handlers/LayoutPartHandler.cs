@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Alias;
@@ -12,8 +11,10 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Layouts.Handlers {
-    public class LayoutPartHandler : ContentHandler {
+namespace Orchard.Layouts.Handlers
+{
+    public class LayoutPartHandler : ContentHandler
+    {
         private readonly ILayoutManager _layoutManager;
         private readonly IContentManager _contentManager;
         private readonly IContentPartDisplay _contentPartDisplay;
@@ -30,7 +31,8 @@ namespace Orchard.Layouts.Handlers {
             IContentPartDisplay contentPartDisplay,
             IShapeDisplay shapeDisplay,
             ILayoutSerializer serializer,
-            IAliasService aliasService) {
+            IAliasService aliasService)
+        {
 
             _layoutManager = layoutManager;
             _contentManager = contentManager;
@@ -46,7 +48,8 @@ namespace Orchard.Layouts.Handlers {
             OnRemoved<LayoutPart>(RemoveElements);
         }
 
-        private void IndexLayout(IndexContentContext context, LayoutPart part) {
+        private void IndexLayout(IndexContentContext context, LayoutPart part)
+        {
             var layoutShape = _contentPartDisplay.BuildDisplay(part);
             var layoutHtml = _shapeDisplay.Display(layoutShape);
 
@@ -55,14 +58,16 @@ namespace Orchard.Layouts.Handlers {
                 .Add("format", "html").Store();
         }
 
-        private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {
+        private void UpdateTemplateClients(PublishContentContext context, LayoutPart part)
+        {
             UpdateTemplateClients(part);
         }
 
         /// <summary>
         /// Recursively updates all layouts that use the specified layout as its template.
         /// </summary>
-        private void UpdateTemplateClients(LayoutPart part) {
+        private void UpdateTemplateClients(LayoutPart part)
+        {
             if (!part.IsTemplate)
                 return;
 
@@ -71,32 +76,38 @@ namespace Orchard.Layouts.Handlers {
             // If the layout is published, we will require a new draft, perform the update, and then publish.
             var templateClients = _layoutManager.GetTemplateClients(part.Id, VersionOptions.Latest);
 
-            foreach (var layout in templateClients) {
+            foreach (var layout in templateClients)
+            {
                 var isPublished = layout.ContentItem.VersionRecord.Published;
                 var draft = isPublished ? _contentManager.Get<LayoutPart>(layout.Id, VersionOptions.DraftRequired) : layout;
                 var updatedLayout = _layoutManager.ApplyTemplate(layout, part);
 
                 draft.LayoutData = _serializer.Serialize(updatedLayout);
 
-                if (isPublished) {
+                if (isPublished)
+                {
                     // If the content being published is currently the homepage, we need to change the DisplayAlias from "" to "/"
                     // so that the autoroute part handler will not regenerate the alias and causes the homepage to become "lost".
-                    if (IsHomePage(layout)) {
+                    if (IsHomePage(layout))
+                    {
                         PromoteToHomePage(draft);
                     }
 
                     // We don't have to recurse here, since invoking Publish on a Layout will cause this handler to execute again.
                     _contentManager.Publish(draft.ContentItem);
                 }
-                else if (layout.IsTemplate) {
+                else if (layout.IsTemplate)
+                {
                     UpdateTemplateClients(draft);
                 }
             }
         }
 
-        private void RemoveElements(RemoveContentContext context, LayoutPart part) {
+        private void RemoveElements(RemoveContentContext context, LayoutPart part)
+        {
             var elements = _layoutManager.LoadElements(part).ToList();
-            var savingContext = new LayoutSavingContext {
+            var savingContext = new LayoutSavingContext
+            {
                 Content = part,
                 Elements = new List<Element>(),
                 RemovedElements = elements
@@ -104,13 +115,15 @@ namespace Orchard.Layouts.Handlers {
             _elementManager.Removing(savingContext);
         }
 
-        private bool IsHomePage(IContent content) {
-            var homepage = _aliasService.Get(String.Empty);
+        private bool IsHomePage(IContent content)
+        {
+            var homepage = _aliasService.Get(string.Empty);
             var displayRouteValues = _contentManager.GetItemMetadata(content).DisplayRouteValues;
             return homepage.Match(displayRouteValues);
         }
 
-        private void PromoteToHomePage(IContent content) {
+        private void PromoteToHomePage(IContent content)
+        {
             var autoroutePart = content.As<AutoroutePart>();
 
             if (autoroutePart == null)

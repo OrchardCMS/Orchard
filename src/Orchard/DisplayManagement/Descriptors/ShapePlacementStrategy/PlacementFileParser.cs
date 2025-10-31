@@ -1,26 +1,30 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 
-namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
+namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy
+{
 
     /// <summary>
     /// Parses and caches the Placement.info file contents for a given IWebSiteFolder vdir
     /// </summary>
-    public interface IPlacementFileParser : IDependency {
+    public interface IPlacementFileParser : IDependency
+    {
         PlacementFile Parse(string virtualPath);
         PlacementFile ParseText(string placementText);
     }
 
 
-    public class PlacementFileParser : IPlacementFileParser {
+    public class PlacementFileParser : IPlacementFileParser
+    {
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
 
-        public PlacementFileParser(ICacheManager cacheManager, IWebSiteFolder webSiteFolder) {
+        public PlacementFileParser(ICacheManager cacheManager, IWebSiteFolder webSiteFolder)
+        {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
             Logger = NullLogger.Instance;
@@ -29,10 +33,13 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         public ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        public PlacementFile Parse(string virtualPath) {
-            return _cacheManager.Get(virtualPath, true, context => {
+        public PlacementFile Parse(string virtualPath)
+        {
+            return _cacheManager.Get(virtualPath, true, context =>
+            {
 
-                if (!DisableMonitoring) {
+                if (!DisableMonitoring)
+                {
                     Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
                     context.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
                 }
@@ -42,19 +49,23 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             });
         }
 
-        public PlacementFile ParseText(string placementText) {
+        public PlacementFile ParseText(string placementText)
+        {
             if (placementText == null)
                 return null;
 
 
             var element = XElement.Parse(placementText);
-            return new PlacementFile {
+            return new PlacementFile
+            {
                 Nodes = Accept(element).ToList()
             };
         }
 
-        private IEnumerable<PlacementNode> Accept(XElement element) {
-            switch (element.Name.LocalName) {
+        private IEnumerable<PlacementNode> Accept(XElement element)
+        {
+            switch (element.Name.LocalName)
+            {
                 case "Placement":
                     return AcceptMatch(element);
                 case "Match":
@@ -66,8 +77,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         }
 
 
-        private IEnumerable<PlacementNode> AcceptMatch(XElement element) {
-            if (element.HasAttributes == false) {
+        private IEnumerable<PlacementNode> AcceptMatch(XElement element)
+        {
+            if (element.HasAttributes == false)
+            {
                 // Match with no attributes will collapse child results upward
                 // rather than return an unconditional node
                 return element.Elements().SelectMany(Accept);
@@ -81,9 +94,11 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             }};
         }
 
-        private IEnumerable<PlacementShapeLocation> AcceptPlace(XElement element) {
+        private IEnumerable<PlacementShapeLocation> AcceptPlace(XElement element)
+        {
             // return attributes as part locations
-            return element.Attributes().Select(attr => new PlacementShapeLocation {
+            return element.Attributes().Select(attr => new PlacementShapeLocation
+            {
                 ShapeType = attr.Name.LocalName,
                 Location = attr.Value
             });

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Orchard.Data {
-    public interface IRepository<T> {
+namespace Orchard.Data
+{
+    public interface IRepository<T>
+    {
         void Create(T entity);
         void Update(T entity);
         void Delete(T entity);

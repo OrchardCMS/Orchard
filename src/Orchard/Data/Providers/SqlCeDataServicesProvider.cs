@@ -9,36 +9,41 @@ using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.SqlTypes;
 
-namespace Orchard.Data.Providers {
-    public class SqlCeDataServicesProvider : AbstractDataServicesProvider {
+namespace Orchard.Data.Providers
+{
+    public class SqlCeDataServicesProvider : AbstractDataServicesProvider
+    {
         private readonly string _fileName;
         private readonly string _dataFolder;
         private readonly string _connectionString;
 
-        public SqlCeDataServicesProvider(string dataFolder, string connectionString) {
+        public SqlCeDataServicesProvider(string dataFolder, string connectionString)
+        {
             _dataFolder = dataFolder;
             _connectionString = connectionString;
             _fileName = Path.Combine(_dataFolder, "Orchard.sdf");
         }
 
-        public SqlCeDataServicesProvider(string fileName) {
+        public SqlCeDataServicesProvider(string fileName)
+        {
             _dataFolder = Path.GetDirectoryName(fileName);
             _fileName = fileName;
         }
 
-        public static string ProviderName {
-            get { return "SqlCe"; }
-        }
+        public static string ProviderName => "SqlCe";
 
-        public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
+        public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase)
+        {
             var persistence = MsSqlCeConfiguration.MsSqlCe40;
 
-            if (createDatabase) {
+            if (createDatabase)
+            {
                 File.Delete(_fileName);
             }
 
             string localConnectionString = string.Format("Data Source={0}", _fileName);
-            if (!File.Exists(_fileName)) {
+            if (!File.Exists(_fileName))
+            {
                 CreateSqlCeDatabaseFile(localConnectionString);
             }
 
@@ -47,7 +52,8 @@ namespace Orchard.Data.Providers {
             return persistence;
         }
 
-        private void CreateSqlCeDatabaseFile(string connectionString) {
+        private void CreateSqlCeDatabaseFile(string connectionString)
+        {
             if (!string.IsNullOrEmpty(_dataFolder))
                 Directory.CreateDirectory(_dataFolder);
 
@@ -72,30 +78,37 @@ namespace Orchard.Data.Providers {
             engine.GetType().GetMethod("Dispose").Invoke(engine, null);
         }
 
-        public class OrchardSqlServerCeDriver : SqlServerCeDriver {
+        public class OrchardSqlServerCeDriver : SqlServerCeDriver
+        {
             private PropertyInfo _dbParamSqlDbTypeProperty;
 
-            public override void Configure(IDictionary<string, string> settings) {
+            public override void Configure(IDictionary<string, string> settings)
+            {
                 base.Configure(settings);
-                using ( var cmd = CreateCommand() ) {
+                using (var cmd = CreateCommand())
+                {
                     var dbParam = cmd.CreateParameter();
                     _dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
                 }
             }
 
-            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType) {
+            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType)
+            {
                 base.InitializeParameter(dbParam, name, sqlType);
 
-                if(sqlType.DbType == DbType.Binary) {
+                if (sqlType.DbType == DbType.Binary)
+                {
                     _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
                     return;
                 }
 
-                if ( sqlType.Length <= 4000 ) {
+                if (sqlType.Length <= 4000)
+                {
                     return;
                 }
 
-                switch(sqlType.DbType) {
+                switch (sqlType.DbType)
+                {
                     case DbType.String:
                         _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.NText, null);
                         break;
@@ -107,30 +120,33 @@ namespace Orchard.Data.Providers {
         }
     }
 
-    public class MsSqlCeConfiguration : PersistenceConfiguration<MsSqlCeConfiguration> {
-        protected MsSqlCeConfiguration() {
+    public class MsSqlCeConfiguration : PersistenceConfiguration<MsSqlCeConfiguration>
+    {
+        protected MsSqlCeConfiguration()
+        {
             Driver<CustomSqlServerCeDriver>();
         }
 
-        public static MsSqlCeConfiguration MsSqlCe40 {
-            get { return new MsSqlCeConfiguration().Dialect<CustomMsSqlCe40Dialect>(); }
-
-        }
+        public static MsSqlCeConfiguration MsSqlCe40 => new MsSqlCeConfiguration().Dialect<CustomMsSqlCe40Dialect>();
 
         /// <summary>
         /// Custom driver so that Text/NText fields are not truncated at 4000 characters
         /// </summary>
-        public class CustomSqlServerCeDriver : SqlServerCeDriver {
-            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType) {
+        public class CustomSqlServerCeDriver : SqlServerCeDriver
+        {
+            protected override void InitializeParameter(DbParameter dbParam, string name, SqlType sqlType)
+            {
                 base.InitializeParameter(dbParam, name, sqlType);
 
                 PropertyInfo dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
 
-                if (sqlType.Length <= 4000) {
+                if (sqlType.Length <= 4000)
+                {
                     return;
                 }
 
-                switch (sqlType.DbType) {
+                switch (sqlType.DbType)
+                {
                     case DbType.String:
                         dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.NText, null);
                         break;
@@ -141,10 +157,9 @@ namespace Orchard.Data.Providers {
             }
         }
 
-        public class CustomMsSqlCe40Dialect : MsSqlCe40Dialect {
-            public override bool SupportsVariableLimit {
-                get { return true; }
-            }
+        public class CustomMsSqlCe40Dialect : MsSqlCe40Dialect
+        {
+            public override bool SupportsVariableLimit => true;
         }
     }
 }

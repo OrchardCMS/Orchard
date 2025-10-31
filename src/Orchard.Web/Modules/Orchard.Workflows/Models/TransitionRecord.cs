@@ -1,8 +1,10 @@
-﻿namespace Orchard.Workflows.Models {
+namespace Orchard.Workflows.Models
+{
     /// <summary>
     /// Reprensents a transition between two <see cref="ActivityRecord"/>
     /// </summary>
-    public class TransitionRecord {
+    public class TransitionRecord
+    {
 
         public virtual int Id { get; set; }
 

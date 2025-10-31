@@ -1,11 +1,9 @@
-namespace Orchard.Layouts.Elements {
-    public class Break : ContentElement {
-        public override string ToolboxIcon {
-            get { return "\uf068"; }
-        }
+namespace Orchard.Layouts.Elements
+{
+    public class Break : ContentElement
+    {
+        public override string ToolboxIcon => "\uf068";
 
-        public override bool HasEditor {
-            get { return false; }
-        }
+        public override bool HasEditor => false;
     }
 }

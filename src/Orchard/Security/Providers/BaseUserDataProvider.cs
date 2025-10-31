@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Security.Providers {
+namespace Orchard.Security.Providers
+{
     /// <summary>
     /// Base implementation for providers that generate the UserData for Authentication Cookies.
     /// To use this, inherit from this abstract class calling the ctor(bool) as follows:
@@ -19,9 +20,11 @@ namespace Orchard.Security.Providers {
     /// On top of that, you will be required to implement the Value(IUser) method that computes
     /// the value provided by the implementation.
     /// </summary>
-    public abstract class BaseUserDataProvider : IUserDataProvider {
+    public abstract class BaseUserDataProvider : IUserDataProvider
+    {
 
-        public BaseUserDataProvider(bool defaultValid) {
+        public BaseUserDataProvider(bool defaultValid)
+        {
             DefaultValid = defaultValid;
         }
 
@@ -37,9 +40,7 @@ namespace Orchard.Security.Providers {
         /// <summary>
         /// This is the key that will be used in the UserData dictionary
         /// </summary>
-        public virtual string Key {
-            get { return GetType().FullName; }
-        }
+        public virtual string Key => GetType().FullName;
 
         /// <summary>
         /// This is the value that this provider will compute for the given user. This is 
@@ -49,12 +50,15 @@ namespace Orchard.Security.Providers {
         /// </summary>
         protected abstract string Value(IUser user);
 
-        public virtual string ComputeUserDataElement(IUser user) {
+        public virtual string ComputeUserDataElement(IUser user)
+        {
             return Value(user);
         }
 
-        public virtual bool IsValid(IUser user, IDictionary<string, string> userData) {
-            if (userData.ContainsKey(Key)) {
+        public virtual bool IsValid(IUser user, IDictionary<string, string> userData)
+        {
+            if (userData.ContainsKey(Key))
+            {
                 return string.Equals(userData[Key], Value(user), StringComparison.Ordinal);
             }
             return DefaultValid;

@@ -1,9 +1,12 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
-namespace Orchard.Core.Dashboard.Controllers {
-    public class AdminController : Controller {
+namespace Orchard.Core.Dashboard.Controllers
+{
+    public class AdminController : Controller
+    {
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             return View();
         }
     }

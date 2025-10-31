@@ -1,8 +1,10 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 using Orchard.Security;
 
-namespace Orchard.Users.Events {
-    public interface IUserEventHandler : IEventHandler {
+namespace Orchard.Users.Events
+{
+    public interface IUserEventHandler : IEventHandler
+    {
         /// <summary>
         /// Called before a User is created
         /// </summary>

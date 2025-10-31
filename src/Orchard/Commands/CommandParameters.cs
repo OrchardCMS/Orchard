@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 
-namespace Orchard.Commands {
-    public class CommandParameters {
+namespace Orchard.Commands
+{
+    public class CommandParameters
+    {
         public IEnumerable<string> Arguments { get; set; }
         public IDictionary<string, string> Switches { get; set; }
 

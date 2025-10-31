@@ -1,12 +1,14 @@
-﻿using System;
-using Orchard.Data;
+using System;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Security;
 using Orchard.UI.Notify;
 
-namespace Orchard.Environment {
-    public class OrchardServices : IOrchardServices {
+namespace Orchard.Environment
+{
+    public class OrchardServices : IOrchardServices
+    {
         private readonly Lazy<IShapeFactory> _shapeFactory;
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -16,7 +18,8 @@ namespace Orchard.Environment {
             IAuthorizer authorizer,
             INotifier notifier,
             Lazy<IShapeFactory> shapeFactory,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
             _shapeFactory = shapeFactory;
             _workContextAccessor = workContextAccessor;
             ContentManager = contentManager;
@@ -29,7 +32,7 @@ namespace Orchard.Environment {
         public ITransactionManager TransactionManager { get; private set; }
         public IAuthorizer Authorizer { get; private set; }
         public INotifier Notifier { get; private set; }
-        public dynamic New { get { return _shapeFactory.Value; } }
-        public WorkContext WorkContext { get { return _workContextAccessor.GetContext(); } }
+        public dynamic New => _shapeFactory.Value;
+        public WorkContext WorkContext => _workContextAccessor.GetContext();
     }
 }

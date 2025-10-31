@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
-using Orchard.OutputCache.ViewModels;
-using Orchard;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Services {
-    public interface ICacheService : IDependency {
+namespace Orchard.OutputCache.Services
+{
+    public interface ICacheService : IDependency
+    {
         /// <summary>
         /// Returns the parameters for a specific route
         /// </summary>

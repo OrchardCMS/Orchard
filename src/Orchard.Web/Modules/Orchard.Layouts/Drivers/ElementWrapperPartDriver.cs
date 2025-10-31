@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -11,8 +11,10 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
 
-namespace Orchard.Layouts.Drivers {
-    public class ElementWrapperPartDriver : ContentPartDriver<ElementWrapperPart> {
+namespace Orchard.Layouts.Drivers
+{
+    public class ElementWrapperPartDriver : ContentPartDriver<ElementWrapperPart>
+    {
         private readonly IElementManager _elementManager;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementSerializer _serializer;
@@ -20,11 +22,12 @@ namespace Orchard.Layouts.Drivers {
         private readonly IWorkContextAccessor _wca;
 
         public ElementWrapperPartDriver(
-            IElementManager elementManager, 
-            IElementDisplay elementDisplay, 
-            IElementSerializer serializer, 
-            ICultureAccessor cultureAccessor, 
-            IWorkContextAccessor wca) {
+            IElementManager elementManager,
+            IElementDisplay elementDisplay,
+            IElementSerializer serializer,
+            ICultureAccessor cultureAccessor,
+            IWorkContextAccessor wca)
+        {
 
             _elementManager = elementManager;
             _elementDisplay = elementDisplay;
@@ -33,24 +36,29 @@ namespace Orchard.Layouts.Drivers {
             _wca = wca;
         }
 
-        protected override DriverResult Display(ElementWrapperPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_ElementWrapper", () => {
+        protected override DriverResult Display(ElementWrapperPart part, string displayType, dynamic shapeHelper)
+        {
+            return ContentShape("Parts_ElementWrapper", () =>
+            {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
                 var data = ElementDataHelper.Deserialize(part.ElementData);
                 var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
                 var elementShape = _elementDisplay.DisplayElement(element, part, displayType);
-                
+
                 return shapeHelper.Parts_ElementWrapper(ElementShape: elementShape);
             });
         }
 
-        protected override DriverResult Editor(ElementWrapperPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(ElementWrapperPart part, dynamic shapeHelper)
+        {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(ElementWrapperPart part, IUpdateModel updater, dynamic shapeHelper) {
-            return ContentShape("Parts_ElementWrapper_Edit", () => {
+        protected override DriverResult Editor(ElementWrapperPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
+            return ContentShape("Parts_ElementWrapper_Edit", () =>
+            {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
                 var data = ElementDataHelper.Deserialize(part.ElementData).Combine(_wca.GetContext().HttpContext.Request.Form.ToDictionary());
@@ -58,7 +66,8 @@ namespace Orchard.Layouts.Drivers {
                 var element = _elementManager.ActivateElement(descriptor, e => e.Data = dataClosure);
                 var context = CreateEditorContext(describeContext.Content, element, data, updater, shapeHelper);
                 var editorResult = (EditorResult)(updater != null ? _elementManager.UpdateEditor(context) : _elementManager.BuildEditor(context));
-                var viewModel = new ElementWrapperPartViewModel {
+                var viewModel = new ElementWrapperPartViewModel
+                {
                     Tabs = editorResult.CollectTabs().ToArray(),
                     ElementTypeName = part.ElementTypeName,
                     ElementDisplayText = element.DisplayText,
@@ -68,7 +77,8 @@ namespace Orchard.Layouts.Drivers {
 
                 data = context.ElementData;
 
-                if (updater != null) {
+                if (updater != null)
+                {
                     part.ElementData = data.Serialize();
                 }
 
@@ -76,7 +86,8 @@ namespace Orchard.Layouts.Drivers {
             });
         }
 
-        protected override void Exporting(ElementWrapperPart part, ExportContentContext context) {
+        protected override void Exporting(ElementWrapperPart part, ExportContentContext context)
+        {
             var describeContext = CreateDescribeContext(part);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
             var data = ElementDataHelper.Deserialize(part.ElementData);
@@ -88,38 +99,47 @@ namespace Orchard.Layouts.Drivers {
             context.Element(part.PartDefinition.Name).SetValue(exportableData);
         }
 
-        protected override void Exported(ElementWrapperPart part, ExportContentContext context) {
+        protected override void Exported(ElementWrapperPart part, ExportContentContext context)
+        {
             var describeContext = CreateDescribeContext(part);
             // Deserialize element from the version set in the Exporting method
             var currentContextValue = context.Element(part.PartDefinition.Name).Value;
             var element = _serializer.Deserialize(currentContextValue, describeContext);
-            _elementManager.Exported(new[] {element}, new ExportLayoutContext());
+            _elementManager.Exported(new[] { element }, new ExportLayoutContext());
             var exportableData = _serializer.Serialize(element);
 
             context.Element(part.PartDefinition.Name).SetValue(exportableData);
         }
 
-        protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
-            HandleImportEvent(part, context, (describeContext, element) => {
+        protected override void Importing(ElementWrapperPart part, ImportContentContext context)
+        {
+            HandleImportEvent(part, context, (describeContext, element) =>
+            {
                 _elementManager.Importing(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
             });
         }
 
-        protected override void Imported(ElementWrapperPart part, ImportContentContext context) {
-            HandleSecondaryImportEvent(part, context, (describeContext, element) => {
+        protected override void Imported(ElementWrapperPart part, ImportContentContext context)
+        {
+            HandleSecondaryImportEvent(part, context, (describeContext, element) =>
+            {
                 _elementManager.Imported(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
             });
         }
 
-        protected override void ImportCompleted(ElementWrapperPart part, ImportContentContext context) {
-            HandleSecondaryImportEvent(part, context, (describeContext, element) => {
+        protected override void ImportCompleted(ElementWrapperPart part, ImportContentContext context)
+        {
+            HandleSecondaryImportEvent(part, context, (describeContext, element) =>
+            {
                 _elementManager.ImportCompleted(new[] { element }, new ImportLayoutContext { Session = new ImportContentContextWrapper(context) });
             });
         }
 
-        private void HandleSecondaryImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback) {
+        private void HandleSecondaryImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback)
+        {
             var root = context.Data.Element(part.PartDefinition.Name);
-            if (root == null) {
+            if (root == null)
+            {
                 return;
             }
 
@@ -133,9 +153,11 @@ namespace Orchard.Layouts.Drivers {
             part.ElementData = element.Data.Serialize();
         }
 
-        private void HandleImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback) {
+        private void HandleImportEvent(ElementWrapperPart part, ImportContentContext context, Action<DescribeElementsContext, Element> callback)
+        {
             var root = context.Data.Element(part.PartDefinition.Name);
-            if (root == null) {
+            if (root == null)
+            {
                 return;
             }
 
@@ -147,14 +169,18 @@ namespace Orchard.Layouts.Drivers {
             part.ElementData = element.Data.Serialize();
         }
 
-        private static DescribeElementsContext CreateDescribeContext(IContent part) {
-            return new DescribeElementsContext {
+        private static DescribeElementsContext CreateDescribeContext(IContent part)
+        {
+            return new DescribeElementsContext
+            {
                 Content = part
             };
         }
 
-        private ElementEditorContext CreateEditorContext(IContent content, Element element, ElementDataDictionary elementData, IUpdateModel updater, dynamic shapeFactory) {
-            var context = new ElementEditorContext {
+        private ElementEditorContext CreateEditorContext(IContent content, Element element, ElementDataDictionary elementData, IUpdateModel updater, dynamic shapeFactory)
+        {
+            var context = new ElementEditorContext
+            {
                 Content = content,
                 Element = element,
                 Updater = updater,

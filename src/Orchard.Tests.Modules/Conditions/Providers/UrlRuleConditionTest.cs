@@ -1,4 +1,3 @@
-﻿using System;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Conditions.Providers;
@@ -7,18 +6,21 @@ using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Conditions.Providers {
+namespace Orchard.Tests.Modules.Conditions.Providers
+{
     [TestFixture]
-    public class UrlRuleConditionTest {
+    public class UrlRuleConditionTest
+    {
         private IContainer _container;
         private IConditionProvider _urlCondition;
         private StubHttpContextAccessor _stubContextAccessor;
         private ShellSettings _shellSettings;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
-            _shellSettings = new ShellSettings { RequestUrlPrefix = String.Empty };
+            _shellSettings = new ShellSettings { RequestUrlPrefix = string.Empty };
             builder.RegisterType<UrlCondition>().As<IConditionProvider>();
             builder.RegisterInstance(_shellSettings);
             _stubContextAccessor = new StubHttpContextAccessor();
@@ -28,7 +30,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForHomePageMatchesHomePagePath() {
+        public void UrlForHomePageMatchesHomePagePath()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlCondition.Evaluate(context);
@@ -36,7 +39,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForAboutPageMatchesAboutPagePath() {
+        public void UrlForAboutPageMatchesAboutPagePath()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/about"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlCondition.Evaluate(context);
@@ -44,7 +48,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForBlogWithEndingWildcardMatchesBlogPostPageInSaidBlog() {
+        public void UrlForBlogWithEndingWildcardMatchesBlogPostPageInSaidBlog()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/my-blog/my-blog-post"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/my-blog/*" } };
             _urlCondition.Evaluate(context);
@@ -52,7 +57,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForHomePageDoesNotMatchAboutPagePath() {
+        public void UrlForHomePageDoesNotMatchAboutPagePath()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/about"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlCondition.Evaluate(context);
@@ -60,7 +66,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForAboutPageMatchesDifferentCasedAboutPagePath() {
+        public void UrlForAboutPageMatchesDifferentCasedAboutPagePath()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/About"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlCondition.Evaluate(context);
@@ -68,7 +75,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForAboutPageWithEndingSlashMatchesAboutPagePath() {
+        public void UrlForAboutPageWithEndingSlashMatchesAboutPagePath()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/About/"));
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlCondition.Evaluate(context);
@@ -76,7 +84,8 @@ namespace Orchard.Tests.Modules.Conditions.Providers {
         }
 
         [Test]
-        public void UrlForHomePageMatchesHomePagePathWithUrlPrefix() {
+        public void UrlForHomePageMatchesHomePagePathWithUrlPrefix()
+        {
             _stubContextAccessor.Set(new StubHttpContext("~/site1"));
             _shellSettings.RequestUrlPrefix = "site1";
             var context = new ConditionEvaluationContext { FunctionName = "url", Arguments = new[] { "~/" } };

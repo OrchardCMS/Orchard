@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 
-namespace Orchard.Layouts.Providers {
-    public class DefaultCategoryProvider : Component, ICategoryProvider {
-        public IEnumerable<Category> GetCategories() {
+namespace Orchard.Layouts.Providers
+{
+    public class DefaultCategoryProvider : Component, ICategoryProvider
+    {
+        public IEnumerable<Category> GetCategories()
+        {
             yield return new Category("Content", T("Content"), T("Contains text elements"), -90);
             yield return new Category("Media", T("Media"), T("Contains media elements"), -80);
             yield return new Category("ContentParts", T("Parts"), T("Contains content parts"), -70);

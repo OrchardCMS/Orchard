@@ -1,24 +1,29 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.ContentManagement;
 
-namespace Orchard.MediaLibrary.Models {
-    public class MediaLibrarySettingsPart : ContentPart {
+namespace Orchard.MediaLibrary.Models
+{
+    public class MediaLibrarySettingsPart : ContentPart
+    {
 
         /// <summary>
         /// Gets or sets the list of file extensions that can be uploaded
         /// </summary>
-        public string UploadAllowedFileTypeWhitelist {
+        public string UploadAllowedFileTypeWhitelist
+        {
             get { return this.Retrieve(x => x.UploadAllowedFileTypeWhitelist); }
             set { this.Store(x => x.UploadAllowedFileTypeWhitelist, value); }
         }
 
-        public int LimitConcurrentUploads {
+        public int LimitConcurrentUploads
+        {
             get { return this.Retrieve(x => x.LimitConcurrentUploads); }
             set { this.Store(x => x.LimitConcurrentUploads, value); }
         }
 
-        public bool IsFileAllowed(string filename) {
+        public bool IsFileAllowed(string filename)
+        {
 
             var allowedExtensions = (UploadAllowedFileTypeWhitelist ?? "")
                 .Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
@@ -26,14 +31,17 @@ namespace Orchard.MediaLibrary.Models {
                 .ToArray();
 
             // skip file if the allowed extensions is defined and doesn't match
-            if (allowedExtensions.Any()) {
-                if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))) {
+            if (allowedExtensions.Any())
+            {
+                if (!allowedExtensions.Any(e => filename.EndsWith(e, StringComparison.OrdinalIgnoreCase)))
+                {
                     return false;
                 }
             }
 
             // web.config files are always ignored, even if the white list includes it
-            if (String.Equals(filename, "web.config", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(filename, "web.config", StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
             }
 

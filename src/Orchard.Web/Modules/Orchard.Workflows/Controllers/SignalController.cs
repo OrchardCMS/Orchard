@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Workflows.Activities;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Controllers {
-    public class SignalController : Controller {
+namespace Orchard.Workflows.Controllers
+{
+    public class SignalController : Controller
+    {
         private readonly IWorkflowManager _workflowManager;
         private readonly ISignalService _genericEventService;
         private readonly IContentManager _contentManager;
 
         public SignalController(
-            IWorkflowManager workflowManager, 
+            IWorkflowManager workflowManager,
             ISignalService genericEventService,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _workflowManager = workflowManager;
             _genericEventService = genericEventService;
             _contentManager = contentManager;
@@ -23,26 +26,30 @@ namespace Orchard.Workflows.Controllers {
         public ILogger Logger { get; set; }
 
         // This could be invoked by external applications and services to trigger an event within the workflows.
-        public ActionResult Trigger(string nonce) {
+        public ActionResult Trigger(string nonce)
+        {
 
             int contentItemId;
             string signal;
 
-            if (!_genericEventService.DecryptNonce(nonce, out contentItemId, out signal)) {
+            if (!_genericEventService.DecryptNonce(nonce, out contentItemId, out signal))
+            {
                 Logger.Debug("Invalid nonce provided: " + nonce);
                 return HttpNotFound();
             }
 
             var contentItem = _contentManager.Get(contentItemId, VersionOptions.Latest);
 
-            if (contentItem == null) {
+            if (contentItem == null)
+            {
                 Logger.Debug("Could not find specified content item in none: " + contentItemId);
                 return HttpNotFound();
             }
 
             // Right now, all workflow instances that are at the WebRequest activity node would continue as soon as a request
             // to this action comes in, but that should not happen; it should be controlled by activity configuration and evaluations.
-            _workflowManager.TriggerEvent(SignalActivity.SignalEventName, contentItem, () => {
+            _workflowManager.TriggerEvent(SignalActivity.SignalEventName, contentItem, () =>
+            {
                 var dictionary = new Dictionary<string, object> { { "Content", contentItem }, { SignalActivity.SignalEventName, signal } };
 
                 // Let's include query string stuff, so that the WebRequest activity can

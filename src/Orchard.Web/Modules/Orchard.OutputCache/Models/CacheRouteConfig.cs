@@ -1,5 +1,7 @@
-﻿namespace Orchard.OutputCache.Models {
-    public class CacheRouteConfig {
+namespace Orchard.OutputCache.Models
+{
+    public class CacheRouteConfig
+    {
         public string RouteKey { get; set; }
         public string Url { get; set; }
         public int Priority { get; set; }

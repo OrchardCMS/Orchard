@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,73 +6,89 @@ using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Services;
 
-namespace Orchard.Tests.Stubs {
-    public class StubAppDataFolder : IAppDataFolder {
+namespace Orchard.Tests.Stubs
+{
+    public class StubAppDataFolder : IAppDataFolder
+    {
         private readonly IClock _clock;
-        private readonly StubFileSystem _fileSystem;
 
-        public StubAppDataFolder(IClock clock) {
+        public StubAppDataFolder(IClock clock)
+        {
             _clock = clock;
-            _fileSystem = new StubFileSystem(_clock);
+            FileSystem = new StubFileSystem(_clock);
         }
 
-        public StubFileSystem FileSystem {
-            get { return _fileSystem; }
-        }
+        public StubFileSystem FileSystem { get; }
 
-        public IEnumerable<string> ListFiles(string path) {
-            var entry = _fileSystem.GetDirectoryEntry(path);
+        public IEnumerable<string> ListFiles(string path)
+        {
+            var entry = FileSystem.GetDirectoryEntry(path);
             if (entry == null)
                 throw new ArgumentException();
 
             return entry.Entries.Where(e => e is StubFileSystem.FileEntry).Select(e => Combine(path, e.Name));
         }
 
-        public IEnumerable<string> ListDirectories(string path) {
-            var entry = _fileSystem.GetDirectoryEntry(path);
+        public IEnumerable<string> ListDirectories(string path)
+        {
+            var entry = FileSystem.GetDirectoryEntry(path);
             if (entry == null)
                 throw new ArgumentException();
 
             return entry.Entries.Where(e => e is StubFileSystem.DirectoryEntry).Select(e => Combine(path, e.Name));
         }
 
-        public bool FileExists(string path) {
-            return _fileSystem.GetFileEntry(path) != null;
+        public bool FileExists(string path)
+        {
+            return FileSystem.GetFileEntry(path) != null;
         }
 
-        public string Combine(params string[] paths) {
+        public string Combine(params string[] paths)
+        {
             return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
         }
 
-        public void CreateFile(string path, string content) {
-            using (var stream = CreateFile(path)) {
-                using (var writer = new StreamWriter(stream)) {
+        public void CreateFile(string path, string content)
+        {
+            using (var stream = CreateFile(path))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
                     writer.Write(content);
                 }
             }
         }
 
-        public Stream CreateFile(string path) {
-            return _fileSystem.CreateFile(path);
+        public Stream CreateFile(string path)
+        {
+            return FileSystem.CreateFile(path);
         }
 
-        public string ReadFile(string path) {
-            using (var stream = OpenFile(path)) {
-                using (var reader = new StreamReader(stream)) {
+        public string ReadFile(string path)
+        {
+            using (var stream = OpenFile(path))
+            {
+                using (var reader = new StreamReader(stream))
+                {
                     return reader.ReadToEnd();
                 }
             }
         }
 
-        public Stream OpenFile(string path) {
-            return _fileSystem.OpenFile(path);
+        public Stream OpenFile(string path)
+        {
+            return FileSystem.OpenFile(path);
         }
 
-        public void StoreFile(string sourceFileName, string destinationPath) {
-            using (var inputStream = File.OpenRead(sourceFileName)) {
-                using (var outputStream = _fileSystem.CreateFile(destinationPath)) {
+        public void StoreFile(string sourceFileName, string destinationPath)
+        {
+            using (var inputStream = File.OpenRead(sourceFileName))
+            {
+                using (var outputStream = FileSystem.CreateFile(destinationPath))
+                {
                     byte[] buffer = new byte[1024];
-                    for (; ; ) {
+                    for (; ; )
+                    {
                         var count = inputStream.Read(buffer, 0, buffer.Length);
                         if (count == 0)
                             break;
@@ -82,39 +98,47 @@ namespace Orchard.Tests.Stubs {
             }
         }
 
-        public void DeleteFile(string path) {
-            _fileSystem.DeleteFile(path);
+        public void DeleteFile(string path)
+        {
+            FileSystem.DeleteFile(path);
         }
 
-        public DateTime GetFileLastWriteTimeUtc(string path) {
-            var entry = _fileSystem.GetFileEntry(path);
+        public DateTime GetFileLastWriteTimeUtc(string path)
+        {
+            var entry = FileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new ArgumentException();
             return entry.LastWriteTimeUtc;
         }
 
-        public void CreateDirectory(string path) {
-            _fileSystem.CreateDirectoryEntry(path);
+        public void CreateDirectory(string path)
+        {
+            FileSystem.CreateDirectoryEntry(path);
         }
 
-        public bool DirectoryExists(string path) {
-            return _fileSystem.GetDirectoryEntry(path) != null;
+        public bool DirectoryExists(string path)
+        {
+            return FileSystem.GetDirectoryEntry(path) != null;
         }
 
-        public IVolatileToken WhenPathChanges(string path) {
-            return _fileSystem.WhenPathChanges(path);
+        public IVolatileToken WhenPathChanges(string path)
+        {
+            return FileSystem.WhenPathChanges(path);
         }
 
-        public string MapPath(string path) {
+        public string MapPath(string path)
+        {
             throw new NotImplementedException();
         }
 
-        public string GetVirtualPath(string path) {
+        public string GetVirtualPath(string path)
+        {
             throw new NotImplementedException();
         }
 
-        public DateTime GetLastWriteTimeUtc(string path) {
-            var entry = _fileSystem.GetFileEntry(path);
+        public DateTime GetLastWriteTimeUtc(string path)
+        {
+            var entry = FileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new InvalidOperationException();
             return entry.LastWriteTimeUtc;

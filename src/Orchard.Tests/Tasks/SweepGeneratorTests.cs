@@ -1,17 +1,19 @@
-﻿using System;
+using System;
 using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.Tasks;
-using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Tasks {
+namespace Orchard.Tests.Tasks
+{
     [TestFixture]
-    public class SweepGeneratorTests : ContainerTestBase {
-        protected override void Register(ContainerBuilder builder) {
+    public class SweepGeneratorTests : ContainerTestBase
+    {
+        protected override void Register(ContainerBuilder builder)
+        {
             builder.RegisterAutoMocking(MockBehavior.Loose);
             builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new WorkContextModule());
@@ -19,7 +21,8 @@ namespace Orchard.Tests.Tasks {
             builder.RegisterType<SweepGenerator>();
         }
 
-        protected override void Resolve(ILifetimeScope container) {
+        protected override void Resolve(ILifetimeScope container)
+        {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => null);
@@ -29,7 +32,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void DoWorkShouldSendHeartbeatToTaskManager() {
+        public void DoWorkShouldSendHeartbeatToTaskManager()
+        {
             var heartbeatSource = _container.Resolve<SweepGenerator>();
             heartbeatSource.DoWork();
             _container.Resolve<Mock<IBackgroundService>>()
@@ -37,7 +41,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void ActivatedEventShouldStartTimer() {
+        public void ActivatedEventShouldStartTimer()
+        {
 
             var heartbeatSource = _container.Resolve<SweepGenerator>();
             heartbeatSource.Interval = TimeSpan.FromMilliseconds(25);

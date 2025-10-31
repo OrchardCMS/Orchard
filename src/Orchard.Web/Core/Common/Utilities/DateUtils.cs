@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System;
 
-namespace Orchard.Core.Common.Utilities {
-    public class DateUtils {
+namespace Orchard.Core.Common.Utilities
+{
+    public class DateUtils
+    {
 
         /// <summary>
         /// Compares two <see cref="DateTime" /> instance without their milliseconds portion.
@@ -12,7 +11,8 @@ namespace Orchard.Core.Common.Utilities {
         /// <param name="a">The first <see cref="DateTime" /> to compare.</param>
         /// <param name="b">The second <see cref="DateTime" /> to compare.</param>
         /// <returns><c>True</c> if the two instances are in the same second, <c>False</c> otherwise.</returns>
-        public static bool DatesAreEquivalent(DateTime a, DateTime b) {
+        public static bool DatesAreEquivalent(DateTime a, DateTime b)
+        {
             a = a.ToUniversalTime();
             b = b.ToUniversalTime();
 
@@ -28,12 +28,15 @@ namespace Orchard.Core.Common.Utilities {
         /// <param name="a">The first <see cref="DateTime?" /> to compare.</param>
         /// <param name="b">The second <see cref="DateTime?" /> to compare.</param>
         /// <returns><c>True</c> if the two instances are in the same second, <c>False</c> otherwise.</returns>
-        public static bool DatesAreEquivalent(DateTime? a, DateTime? b) {
-            if (!a.HasValue && !b.HasValue) {
+        public static bool DatesAreEquivalent(DateTime? a, DateTime? b)
+        {
+            if (!a.HasValue && !b.HasValue)
+            {
                 return true;
             }
 
-            if (a.HasValue != b.HasValue) {
+            if (a.HasValue != b.HasValue)
+            {
                 return false;
             }
 

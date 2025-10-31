@@ -1,11 +1,14 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Containers.Models;
 
-namespace Orchard.Lists.Handlers {
-    public class ContainerPartHandler : ContentHandler {
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+namespace Orchard.Lists.Handlers
+{
+    public class ContainerPartHandler : ContentHandler
+    {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             var container = context.ContentItem.As<ContainerPart>();
 
             if (container == null)

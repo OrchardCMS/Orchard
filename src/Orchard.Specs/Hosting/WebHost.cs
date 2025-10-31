@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,8 +10,10 @@ using System.Web.Hosting;
 using Orchard.Specs.Util;
 using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Specs.Hosting {
-    public class WebHost {
+namespace Orchard.Specs.Hosting
+{
+    public class WebHost
+    {
         private readonly Path _orchardTemp;
         private WebHostAgent _webHostAgent;
         private Path _tempSite;
@@ -22,11 +23,13 @@ namespace Orchard.Specs.Hosting {
         private IEnumerable<string> _knownThemes;
         private IEnumerable<string> _knownBinAssemblies;
 
-        public WebHost(Path orchardTemp) {
+        public WebHost(Path orchardTemp)
+        {
             _orchardTemp = orchardTemp;
         }
 
-        public void Initialize(string templateName, string virtualDirectory, DynamicCompilationOption dynamicCompilationOption) {
+        public void Initialize(string templateName, string virtualDirectory, DynamicCompilationOption dynamicCompilationOption)
+        {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -35,13 +38,14 @@ namespace Orchard.Specs.Hosting {
             _tempSite = _orchardTemp.Combine(System.IO.Path.GetRandomFileName());
             try { _tempSite.Delete(); }
             catch { }
-            
+
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
-            
+
             _orchardWebPath = baseDir;
 
-            while (!_orchardWebPath.Combine("Orchard.proj").Exists && _orchardWebPath.Parent != null) {
+            while (!_orchardWebPath.Combine("Orchard.proj").Exists && _orchardWebPath.Parent != null)
+            {
                 _orchardWebPath = _orchardWebPath.Parent;
             }
 
@@ -67,10 +71,12 @@ namespace Orchard.Specs.Hosting {
             baseDir.Combine("Hosting").Combine(templateName)
                 .DeepCopy(_tempSite);
 
-            if (dynamicCompilationOption != DynamicCompilationOption.Enabled) {
+            if (dynamicCompilationOption != DynamicCompilationOption.Enabled)
+            {
                 var sourceConfig = baseDir.Combine("Hosting").Combine("TemplateConfigs");
                 var siteConfig = _tempSite.Combine("Config");
-                switch (dynamicCompilationOption) {
+                switch (dynamicCompilationOption)
+                {
                     case DynamicCompilationOption.Disabled:
                         File.Copy(sourceConfig.Combine("DisableDynamicCompilation.HostComponents.config"), siteConfig.Combine("HostComponents.config"));
                         break;
@@ -86,18 +92,21 @@ namespace Orchard.Specs.Hosting {
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
             Log("Copy SqlCe native binaries");
-            if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory) {
+            if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory)
+            {
                 _orchardWebPath.Combine("bin").Combine("x86")
                     .DeepCopy("*.*", _tempSite.Combine("bin").Combine("x86"));
             }
 
-            if (_orchardWebPath.Combine("bin").Combine("amd64").IsDirectory) {
+            if (_orchardWebPath.Combine("bin").Combine("amd64").IsDirectory)
+            {
                 _orchardWebPath.Combine("bin").Combine("amd64")
                     .DeepCopy("*.*", _tempSite.Combine("bin").Combine("amd64"));
             }
 
             Log("Copy Roslyn binaries");
-            if (_orchardWebPath.Combine("bin").Combine("roslyn").IsDirectory) {
+            if (_orchardWebPath.Combine("bin").Combine("roslyn").IsDirectory)
+            {
                 _orchardWebPath.Combine("bin").Combine("roslyn")
                     .DeepCopy("*.*", _tempSite.Combine("bin").Combine("roslyn"));
             }
@@ -107,7 +116,7 @@ namespace Orchard.Specs.Hosting {
             // (see Execute(Action) method)
             Log("Copy Orchard.Specflow test project binaries");
             baseDir.ShallowCopy(
-                path => IsSpecFlowTestAssembly(path) && !_tempSite.Combine("bin").Combine(path.FileName).Exists, 
+                path => IsSpecFlowTestAssembly(path) && !_tempSite.Combine("bin").Combine(path.FileName).Exists,
                 _tempSite.Combine("bin"));
 
             Log("Copy Orchard recipes");
@@ -118,7 +127,8 @@ namespace Orchard.Specs.Hosting {
             Log("ASP.NET host initialization completed in {0} sec", stopwatch.Elapsed.TotalSeconds);
         }
 
-        private void StartAspNetHost(string virtualDirectory) {
+        private void StartAspNetHost(string virtualDirectory)
+        {
             Log("Starting up ASP.NET host");
             HostName = "localhost";
             PhysicalDirectory = _tempSite;
@@ -137,43 +147,54 @@ namespace Orchard.Specs.Hosting {
         }
 
         [Serializable]
-        public class Shuttle {
+        public class Shuttle
+        {
             public string CodeGenDir;
         }
 
-        public void Dispose() {
-            if (_webHostAgent != null) {
+        public void Dispose()
+        {
+            if (_webHostAgent != null)
+            {
                 _webHostAgent.Shutdown();
                 _webHostAgent = null;
             }
             Clean();
         }
 
-        private void Log(string format, params object[] args) {
+        private void Log(string format, params object[] args)
+        {
             Trace.WriteLine(string.Format(format, args));
         }
 
-        public void Clean() {
+        public void Clean()
+        {
             // Try to delete temporary files for up to ~1.2 seconds.
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 Log("Waiting 300msec before trying to delete temporary files");
                 Thread.Sleep(300);
 
-                if (TryDeleteTempFiles(i == 4)) {
+                if (TryDeleteTempFiles(i == 4))
+                {
                     Log("Successfully deleted all temporary files");
                     break;
                 }
             }
         }
 
-        private bool TryDeleteTempFiles(bool lastTry) {
+        private bool TryDeleteTempFiles(bool lastTry)
+        {
             var result = true;
-            if (_codeGenDir != null && _codeGenDir.Exists) {
+            if (_codeGenDir != null && _codeGenDir.Exists)
+            {
                 Log("Trying to delete temporary files at \"{0}\"", _codeGenDir);
-                try {
+                try
+                {
                     _codeGenDir.Delete(true); // <- clean as much as possible
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     if (lastTry)
                         Log("Failure: \"{0}\"", e);
                     result = false;
@@ -181,11 +202,13 @@ namespace Orchard.Specs.Hosting {
             }
 
             if (_tempSite != null && _tempSite.Exists)
-                try {
+                try
+                {
                     Log("Trying to delete temporary files at \"{0}\"", _tempSite);
                     _tempSite.Delete(true); // <- progressively clean as much as possible
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     if (lastTry)
                         Log("failure: \"{0}\"", e);
                     result = false;
@@ -194,7 +217,8 @@ namespace Orchard.Specs.Hosting {
             return result;
         }
 
-        public void CopyExtension(string extensionFolder, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
+        public void CopyExtension(string extensionFolder, string extensionName, ExtensionDeploymentOptions deploymentOptions)
+        {
             Log("Copy extension \"{0}\\{1}\" (options={2})", extensionFolder, extensionName, deploymentOptions);
             var sourceModule = _orchardWebPath.Combine(extensionFolder).Combine(extensionName);
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
@@ -203,12 +227,14 @@ namespace Orchard.Specs.Hosting {
             sourceModule.ShallowCopy("*.info", targetModule);
             sourceModule.ShallowCopy("*.config", targetModule);
 
-            if ((deploymentOptions & ExtensionDeploymentOptions.SourceCode) == ExtensionDeploymentOptions.SourceCode) {
+            if ((deploymentOptions & ExtensionDeploymentOptions.SourceCode) == ExtensionDeploymentOptions.SourceCode)
+            {
                 sourceModule.ShallowCopy("*.csproj", targetModule);
                 sourceModule.DeepCopy("*.cs", targetModule);
             }
 
-            if (sourceModule.Combine("bin").IsDirectory) {
+            if (sourceModule.Combine("bin").IsDirectory)
+            {
                 sourceModule.Combine("bin").ShallowCopy(path => IsExtensionBinaryFile(path, extensionName, deploymentOptions), targetModule.Combine("bin"));
             }
 
@@ -218,34 +244,40 @@ namespace Orchard.Specs.Hosting {
             // don't copy content folders as they are useless in this headless scenario
         }
 
-        public void CopyFile(string source, string destination) {
+        public void CopyFile(string source, string destination)
+        {
 
             StackTrace st = new StackTrace(true);
             Path origin = null;
-            foreach(var sf in st.GetFrames()) {
+            foreach (var sf in st.GetFrames())
+            {
                 var sourceFile = sf.GetFileName();
-                if(String.IsNullOrEmpty(sourceFile)) {
+                if (string.IsNullOrEmpty(sourceFile))
+                {
                     continue;
                 }
 
                 var testOrigin = Path.Get(sourceFile).Parent.Combine(source);
-                if(testOrigin.Exists) {
+                if (testOrigin.Exists)
+                {
                     origin = testOrigin;
                     break;
                 }
             }
-            
-            if(origin == null) {
+
+            if (origin == null)
+            {
                 throw new FileNotFoundException("File not found: " + source);
             }
-            
+
             var target = _tempSite.Combine(destination);
 
             Directory.CreateDirectory(target.DirectoryName);
             File.Copy(origin, target);
         }
 
-        private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
+        private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions)
+        {
             bool isValidExtension = IsAssemblyFile(path);
             if (!isValidExtension)
                 return false;
@@ -262,7 +294,8 @@ namespace Orchard.Specs.Hosting {
             return true;
         }
 
-        private bool IsSpecFlowTestAssembly(Path path) {
+        private bool IsSpecFlowTestAssembly(Path path)
+        {
             if (!IsAssemblyFile(path))
                 return false;
 
@@ -272,13 +305,15 @@ namespace Orchard.Specs.Hosting {
             return true;
         }
 
-        private bool IsAssemblyFile(Path path) {
+        private bool IsAssemblyFile(Path path)
+        {
             return StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".exe") ||
                    StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".dll") ||
                    StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb");
         }
 
-        private bool IsOrchardExtensionFile(Path path) {
+        private bool IsOrchardExtensionFile(Path path)
+        {
             return _knownModules.Where(name => StringComparer.OrdinalIgnoreCase.Equals(name, path.FileNameWithoutExtension)).Any() ||
                    _knownThemes.Where(name => StringComparer.OrdinalIgnoreCase.Equals(name, path.FileNameWithoutExtension)).Any();
         }
@@ -290,16 +325,19 @@ namespace Orchard.Specs.Hosting {
         public string Cookies { get; set; }
 
 
-        public void Execute(Action action) {
+        public void Execute(Action action)
+        {
             var shuttleSend = new SerializableDelegate<Action>(action);
             var shuttleRecv = _webHostAgent.Execute(shuttleSend);
             CopyFields(shuttleRecv.Delegate.Target, shuttleSend.Delegate.Target);
         }
 
-        private static void CopyFields<T>(T from, T to) where T : class {
+        private static void CopyFields<T>(T from, T to) where T : class
+        {
             if (from == null || to == null)
                 return;
-            foreach (FieldInfo fieldInfo in from.GetType().GetFields()) {
+            foreach (FieldInfo fieldInfo in from.GetType().GetFields())
+            {
                 var value = fieldInfo.GetValue(from);
                 fieldInfo.SetValue(to, value);
             }

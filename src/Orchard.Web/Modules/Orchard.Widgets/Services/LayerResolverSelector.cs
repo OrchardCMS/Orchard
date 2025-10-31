@@ -1,19 +1,25 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Widgets.Services {
-    public class LayerResolverSelector : IIdentityResolverSelector {
+namespace Orchard.Widgets.Services
+{
+    public class LayerResolverSelector : IIdentityResolverSelector
+    {
         private readonly IContentManager _contentManager;
 
-        public LayerResolverSelector(IContentManager contentManager) {
+        public LayerResolverSelector(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity) {
-            if (contentIdentity.Has("Layer.LayerName")) {
-                return new IdentityResolverSelectorResult {
+        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity)
+        {
+            if (contentIdentity.Has("Layer.LayerName"))
+            {
+                return new IdentityResolverSelectorResult
+                {
                     Priority = 0,
                     Resolve = ResolveIdentity
                 };
@@ -22,10 +28,12 @@ namespace Orchard.Widgets.Services {
             return null;
         }
 
-        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity) {
+        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity)
+        {
             var identifier = identity.Get("Layer.LayerName");
 
-            if (identifier == null) {
+            if (identifier == null)
+            {
                 return null;
             }
 

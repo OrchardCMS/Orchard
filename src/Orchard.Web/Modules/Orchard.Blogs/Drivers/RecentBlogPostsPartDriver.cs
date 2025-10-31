@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
@@ -8,23 +8,29 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
-namespace Orchard.Blogs.Drivers {
-    public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart> {
+namespace Orchard.Blogs.Drivers
+{
+    public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart>
+    {
         private readonly IBlogService _blogService;
         private readonly IContentManager _contentManager;
 
         public RecentBlogPostsPartDriver(
             IBlogService blogService,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _blogService = blogService;
             _contentManager = contentManager;
         }
 
-        protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
+        protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper)
+        {
+            return ContentShape("Parts_Blogs_RecentBlogPosts", () =>
+            {
                 var blog = _contentManager.Get<BlogPart>(part.BlogId);
 
-                if (blog == null) {
+                if (blog == null)
+                {
                     return null;
                 }
 
@@ -43,8 +49,10 @@ namespace Orchard.Blogs.Drivers {
             });
         }
 
-        protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
-            var viewModel = new RecentBlogPostsViewModel {
+        protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper)
+        {
+            var viewModel = new RecentBlogPostsViewModel
+            {
                 Count = part.Count,
                 BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
@@ -54,10 +62,12 @@ namespace Orchard.Blogs.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.RecentBlogPosts", Model: viewModel, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var viewModel = new RecentBlogPostsViewModel();
 
-            if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+            {
                 part.BlogId = viewModel.BlogId;
                 part.Count = viewModel.Count;
             }
@@ -65,9 +75,11 @@ namespace Orchard.Blogs.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
+        protected override void Importing(RecentBlogPostsPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -80,7 +92,8 @@ namespace Orchard.Blogs.Drivers {
             );
         }
 
-        protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
+        protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context)
+        {
             var blog = _contentManager.Get(part.BlogId);
             var blogIdentity = _contentManager.GetItemMetadata(blog).Identity;
 
@@ -88,7 +101,8 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
 
-        protected override void Cloning(RecentBlogPostsPart originalPart, RecentBlogPostsPart clonePart, CloneContentContext context) {
+        protected override void Cloning(RecentBlogPostsPart originalPart, RecentBlogPostsPart clonePart, CloneContentContext context)
+        {
             clonePart.BlogId = originalPart.BlogId;
             clonePart.Count = originalPart.Count;
         }

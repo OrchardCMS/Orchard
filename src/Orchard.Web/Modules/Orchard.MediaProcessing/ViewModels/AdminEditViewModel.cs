@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orchard.MediaProcessing.ViewModels {
-    public class AdminEditViewModel {
+namespace Orchard.MediaProcessing.ViewModels
+{
+    public class AdminEditViewModel
+    {
         public int Id { get; set; }
 
         [Required, StringLength(1024)]
@@ -11,7 +13,8 @@ namespace Orchard.MediaProcessing.ViewModels {
         public IEnumerable<FilterEntry> Filters { get; set; }
     }
 
-    public class FilterEntry {
+    public class FilterEntry
+    {
         public int FilterRecordId { get; set; }
         public string Category { get; set; }
         public string Type { get; set; }

@@ -1,19 +1,22 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
 
-namespace Orchard.Core.Contents.Controllers {
+namespace Orchard.Core.Contents.Controllers
+{
     [Themed]
-    public class ItemController : ContentControllerBase {
+    public class ItemController : ContentControllerBase
+    {
         private readonly IContentManager _contentManager;
         private readonly IHttpContextAccessor _hca;
 
         public ItemController(
             IOrchardServices orchardServices,
-            IHttpContextAccessor hca) : base(orchardServices.ContentManager) {
+            IHttpContextAccessor hca) : base(orchardServices.ContentManager)
+        {
             _contentManager = orchardServices.ContentManager;
             _hca = hca;
             Services = orchardServices;
@@ -25,7 +28,8 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public ActionResult Display(int? id, int? version) {
+        public ActionResult Display(int? id, int? version)
+        {
             if (id == null)
                 return HttpNotFound();
 
@@ -35,7 +39,8 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 
             var customRouteRedirection = GetCustomContentItemRouteRedirection(contentItem, ContentItemRoute.Display);
-            if (customRouteRedirection != null) {
+            if (customRouteRedirection != null)
+            {
                 return customRouteRedirection;
             }
 
@@ -44,21 +49,25 @@ namespace Orchard.Core.Contents.Controllers {
 
 
             var container = contentItem.As<CommonPart>()?.Container;
-            if (container != null && !container.HasPublished()) {
+            if (container != null && !container.HasPublished())
+            {
                 // if the content has a container that has not a published version we check preview permissions
                 // in order to check if user can view the content or not.
                 // Open point: should we handle hierarchies? 
-                if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem)) {
+                if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem))
+                {
                     return HttpNotFound();
                 }
             }
 
-            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot view content"))) {
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot view content")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
             var model = _contentManager.BuildDisplay(contentItem);
-            if (_hca.Current().Request.IsAjaxRequest()) {
+            if (_hca.Current().Request.IsAjaxRequest())
+            {
                 return new ShapePartialResult(this, model);
             }
 
@@ -67,7 +76,8 @@ namespace Orchard.Core.Contents.Controllers {
 
         // /Contents/Item/Preview/72
         // /Contents/Item/Preview/72?version=5
-        public ActionResult Preview(int? id, int? version) {
+        public ActionResult Preview(int? id, int? version)
+        {
             if (id == null)
                 return HttpNotFound();
 
@@ -80,12 +90,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem, T("Cannot preview content"))) {
+            if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem, T("Cannot preview content")))
+            {
                 return new HttpUnauthorizedResult();
             }
 
             var model = _contentManager.BuildDisplay(contentItem);
-            if (_hca.Current().Request.IsAjaxRequest()) {
+            if (_hca.Current().Request.IsAjaxRequest())
+            {
                 return new ShapePartialResult(this, model);
             }
 

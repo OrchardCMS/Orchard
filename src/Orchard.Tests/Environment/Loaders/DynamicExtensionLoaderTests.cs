@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Moq;
@@ -15,15 +14,18 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Loaders {
+namespace Orchard.Tests.Environment.Loaders
+{
     [TestFixture]
-    public class DynamicExtensionLoaderTests {
+    public class DynamicExtensionLoaderTests
+    {
         private IContainer _container;
         private Mock<IProjectFileParser> _mockedStubProjectFileParser;
         private Mock<IDependenciesFolder> _mockedDependenciesFolder;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<DynamicExtensionLoaderAccessor>().As<DynamicExtensionLoaderAccessor>();
 
@@ -50,7 +52,8 @@ namespace Orchard.Tests.Environment.Loaders {
         }
 
         [Test]
-        public void GetDependenciesContainsNoDuplicatesTest() {
+        public void GetDependenciesContainsNoDuplicatesTest()
+        {
             const string pathPrefix = "~/modules/foo";
             const string projectName = "orchard.a.csproj";
             const string fileName1 = "a.cs";
@@ -74,7 +77,8 @@ namespace Orchard.Tests.Environment.Loaders {
         }
 
         [Test]
-        public void GetDependenciesContainsNoDuplicatesEvenIfMultipleProjectsTest() {
+        public void GetDependenciesContainsNoDuplicatesEvenIfMultipleProjectsTest()
+        {
             const string path1Prefix = "~/modules/foo";
             const string path2Prefix = "~/modules/bar";
             const string path3Prefix = "~/modules/blah";
@@ -103,8 +107,9 @@ namespace Orchard.Tests.Environment.Loaders {
             _mockedStubProjectFileParser
                 .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == project1Path)))
                 .Returns(
-                    new ProjectFileDescriptor {
-                        SourceFilenames = new[] {fileName1, fileName2},
+                    new ProjectFileDescriptor
+                    {
+                        SourceFilenames = new[] { fileName1, fileName2 },
                         References = new[] {
                             new ReferenceDescriptor {
                                 ReferenceType = ReferenceType.Project,
@@ -123,9 +128,10 @@ namespace Orchard.Tests.Environment.Loaders {
 
             // Result for project b and c
             _mockedStubProjectFileParser
-                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => (virtualPath == project2Path || virtualPath == project3Path))))
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == project2Path || virtualPath == project3Path)))
                 .Returns(
-                    new ProjectFileDescriptor {
+                    new ProjectFileDescriptor
+                    {
                         SourceFilenames = new[] { commonFileName }
                     });
 
@@ -146,7 +152,8 @@ namespace Orchard.Tests.Environment.Loaders {
             Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(vpp.Combine(path3Prefix, commonFileName))), Is.Not.Null);
         }
 
-        internal class DynamicExtensionLoaderAccessor : DynamicExtensionLoader {
+        internal class DynamicExtensionLoaderAccessor : DynamicExtensionLoader
+        {
             public DynamicExtensionLoaderAccessor(
                 IBuildManager buildManager,
                 IVirtualPathProvider virtualPathProvider,
@@ -156,9 +163,10 @@ namespace Orchard.Tests.Environment.Loaders {
                 IDependenciesFolder dependenciesFolder,
                 IProjectFileParser projectFileParser,
                 ExtensionLocations extensionLocations)
-                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser, extensionLocations) {}
+                : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser, extensionLocations) { }
 
-            public IEnumerable<string> GetDependenciesAccessor(string projectPath) {
+            public IEnumerable<string> GetDependenciesAccessor(string projectPath)
+            {
                 return GetDependencies(projectPath);
             }
         }

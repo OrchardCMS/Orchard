@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -14,13 +14,16 @@ using Orchard.Tasks;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Activities {
+namespace Orchard.Workflows.Activities
+{
     [OrchardFeature("Orchard.Workflows.Timer")]
-    public class TimerActivity : Event {
+    public class TimerActivity : Event
+    {
         private readonly IClock _clock;
         private readonly IDateLocalizationServices _dateServices;
 
-        public TimerActivity(IClock clock, IDateLocalizationServices dateServices) {
+        public TimerActivity(IClock clock, IDateLocalizationServices dateServices)
+        {
             _clock = clock;
             _dateServices = dateServices;
             T = NullLocalizer.Instance;
@@ -28,47 +31,46 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override string Name {
-            get { return "Timer"; }
-        }
+        public override string Name => "Timer";
 
-        public override LocalizedString Category {
-            get { return T("Tasks"); }
-        }
+        public override LocalizedString Category => T("Tasks");
 
-        public override LocalizedString Description {
-            get { return T("Wait for a specific time has passed."); }
-        }
+        public override LocalizedString Description => T("Wait for a specific time has passed.");
 
-        public override string Form {
-            get { return "ActivityTimer"; }
-        }
+        public override string Form => "ActivityTimer";
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             yield return T("Done");
         }
 
-        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             return IsExpired(workflowContext, activityContext);
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            if(IsExpired(workflowContext, activityContext)) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
+            if (IsExpired(workflowContext, activityContext))
+            {
                 yield return T("Done");
             }
         }
 
-        private bool IsExpired(WorkflowContext workflowContext, ActivityContext activityContext) {
+        private bool IsExpired(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
             DateTime started;
 
-            if (!workflowContext.HasStateFor(activityContext.Record, "StartedUtc")) {
+            if (!workflowContext.HasStateFor(activityContext.Record, "StartedUtc"))
+            {
                 var dateString = activityContext.GetState<string>("Date");
                 var date = _dateServices.ConvertFromLocalizedString(dateString);
                 started = date ?? _clock.UtcNow;
 
                 workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started);
             }
-            else {
+            else
+            {
                 started = workflowContext.GetStateFor<DateTime>(activityContext.Record, "StartedUtc");
             }
 
@@ -78,11 +80,14 @@ namespace Orchard.Workflows.Activities {
             return _clock.UtcNow > When(started, amount, type);
         }
 
-        public static DateTime When(DateTime started, int amount, string type) {
-            try {
+        public static DateTime When(DateTime started, int amount, string type)
+        {
+            try
+            {
                 var when = started;
 
-                switch (type) {
+                switch (type)
+                {
                     case "Minute":
                         when = when.AddMinutes(amount);
                         break;
@@ -93,7 +98,7 @@ namespace Orchard.Workflows.Activities {
                         when = when.AddDays(amount);
                         break;
                     case "Week":
-                        when = when.AddDays(7*amount);
+                        when = when.AddDays(7 * amount);
                         break;
                     case "Month":
                         when = when.AddMonths(amount);
@@ -105,14 +110,16 @@ namespace Orchard.Workflows.Activities {
 
                 return when;
             }
-            catch {
+            catch
+            {
                 return DateTime.MaxValue;
             }
         }
     }
 
     [OrchardFeature("Orchard.Workflows.Timer")]
-    public class TimerBackgroundTask : IBackgroundTask {
+    public class TimerBackgroundTask : IBackgroundTask
+    {
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
         private readonly IRepository<AwaitingActivityRecord> _awaitingActivityRepository;
@@ -120,7 +127,8 @@ namespace Orchard.Workflows.Activities {
         public TimerBackgroundTask(
             IContentManager contentManager,
             IWorkflowManager workflowManager,
-            IRepository<AwaitingActivityRecord> awaitingActivityRepository) {
+            IRepository<AwaitingActivityRecord> awaitingActivityRepository)
+        {
             _contentManager = contentManager;
             _workflowManager = workflowManager;
             _awaitingActivityRepository = awaitingActivityRepository;
@@ -128,12 +136,15 @@ namespace Orchard.Workflows.Activities {
         }
 
         public ILogger Logger { get; set; }
-        public void Sweep() {
+        public void Sweep()
+        {
             var awaiting = _awaitingActivityRepository.Table.Where(x => x.ActivityRecord.Name == "Timer").ToList();
 
 
-            foreach (var action in awaiting) {
-                try {
+            foreach (var action in awaiting)
+            {
+                try
+                {
                     var contentItem = action.WorkflowRecord.ContentItemRecord != null ? _contentManager.Get(action.WorkflowRecord.ContentItemRecord.Id, VersionOptions.Latest) : null;
                     var tokens = new Dictionary<string, object> { { "Content", contentItem } };
                     var workflowState = FormParametersHelper.FromJsonString(action.WorkflowRecord.State);
@@ -141,8 +152,10 @@ namespace Orchard.Workflows.Activities {
                     action.WorkflowRecord.State = FormParametersHelper.ToJsonString(workflowState);
                     _workflowManager.TriggerEvent("Timer", contentItem, () => tokens);
                 }
-                catch (Exception ex) {
-                    if (ex.IsFatal()) {
+                catch (Exception ex)
+                {
+                    if (ex.IsFatal())
+                    {
                         throw;
                     }
                     Logger.Error(ex, "TimerBackgroundTask: Error while processing background task \"{0}\".", action.ActivityRecord.Name);

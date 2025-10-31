@@ -1,20 +1,24 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Templates {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.Templates
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission ManageTemplates = new Permission { Description = "Managing Templates", Name = "ManageTemplates" };
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 ManageTemplates,
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",

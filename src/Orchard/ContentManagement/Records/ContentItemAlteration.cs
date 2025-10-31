@@ -7,25 +7,31 @@ using System.Reflection;
 using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
-using FluentNHibernate.Mapping;
 using Orchard.Environment.ShellBuilders.Models;
 
-namespace Orchard.ContentManagement.Records {
-    class ContentItemAlteration : IAutoMappingAlteration {
+namespace Orchard.ContentManagement.Records
+{
+    class ContentItemAlteration : IAutoMappingAlteration
+    {
         private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
-        public ContentItemAlteration() {
+        public ContentItemAlteration()
+        {
             _recordDescriptors = Enumerable.Empty<RecordBlueprint>();
         }
 
-        public ContentItemAlteration(IEnumerable<RecordBlueprint> recordDescriptors) {
+        public ContentItemAlteration(IEnumerable<RecordBlueprint> recordDescriptors)
+        {
             _recordDescriptors = recordDescriptors;
         }
 
-        public void Alter(AutoPersistenceModel model) {
+        public void Alter(AutoPersistenceModel model)
+        {
 
-            model.Override<ContentItemRecord>(mapping => {
-                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartRecord(d.Type))) {
+            model.Override<ContentItemRecord>(mapping =>
+            {
+                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartRecord(d.Type)))
+                {
                     var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemRecord), descriptor.Type);
                     var alteration = (IAlteration<ContentItemRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
@@ -33,8 +39,10 @@ namespace Orchard.ContentManagement.Records {
                 mapping.IgnoreProperty(x => x.Infoset);
             });
 
-            model.Override<ContentItemVersionRecord>(mapping => {
-                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartVersionRecord(d.Type))) {
+            model.Override<ContentItemVersionRecord>(mapping =>
+            {
+                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartVersionRecord(d.Type)))
+                {
                     var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemVersionRecord), descriptor.Type);
                     var alteration = (IAlteration<ContentItemVersionRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
@@ -43,7 +51,8 @@ namespace Orchard.ContentManagement.Records {
             });
         }
 
-        interface IAlteration<TItemRecord> {
+        interface IAlteration<TItemRecord>
+        {
             void Override(AutoMapping<TItemRecord> mapping);
         }
 
@@ -53,8 +62,10 @@ namespace Orchard.ContentManagement.Records {
         /// <typeparam name="TItemRecord">Either ContentItemRecord or ContentItemVersionRecord</typeparam>
         /// <typeparam name="TPartRecord">A part record (deriving from TItemRecord)</typeparam>
         /// </summary>
-        class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord> {
-            public void Override(AutoMapping<TItemRecord> mapping) {
+        class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord>
+        {
+            public void Override(AutoMapping<TItemRecord> mapping)
+            {
 
                 // public TPartRecord TPartRecord {get;set;}
                 var name = typeof(TPartRecord).Name;
@@ -84,158 +95,144 @@ namespace Orchard.ContentManagement.Records {
         /// Synthetic method around a dynamic method. We need this so that we can
         /// override the "static" method attributes, and also return a valid "DeclaringType".
         /// </summary>
-        public class SyntheticMethodInfo : MethodInfo {
+        public class SyntheticMethodInfo : MethodInfo
+        {
             private readonly DynamicMethod _dynamicMethod;
             private readonly Type _declaringType;
 
-            public SyntheticMethodInfo(DynamicMethod dynamicMethod, Type declaringType) {
+            public SyntheticMethodInfo(DynamicMethod dynamicMethod, Type declaringType)
+            {
                 _dynamicMethod = dynamicMethod;
                 _declaringType = declaringType;
             }
 
-            public override object[] GetCustomAttributes(bool inherit) {
+            public override object[] GetCustomAttributes(bool inherit)
+            {
                 return _dynamicMethod.GetCustomAttributes(inherit);
             }
 
-            public override bool IsDefined(Type attributeType, bool inherit) {
+            public override bool IsDefined(Type attributeType, bool inherit)
+            {
                 return IsDefined(attributeType, inherit);
             }
 
-            public override ParameterInfo[] GetParameters() {
+            public override ParameterInfo[] GetParameters()
+            {
                 return _dynamicMethod.GetParameters();
             }
 
-            public override MethodImplAttributes GetMethodImplementationFlags() {
+            public override MethodImplAttributes GetMethodImplementationFlags()
+            {
                 return _dynamicMethod.GetMethodImplementationFlags();
             }
 
-            public override object Invoke(object obj, BindingFlags invokeAttr, Binder binder, object[] parameters, CultureInfo culture) {
+            public override object Invoke(object obj, BindingFlags invokeAttr, Binder binder, object[] parameters, CultureInfo culture)
+            {
                 return _dynamicMethod.Invoke(obj, invokeAttr, binder, parameters, culture);
             }
 
-            public override MethodInfo GetBaseDefinition() {
+            public override MethodInfo GetBaseDefinition()
+            {
                 return _dynamicMethod.GetBaseDefinition();
             }
 
-            public override ICustomAttributeProvider ReturnTypeCustomAttributes {
-                get { return ReturnTypeCustomAttributes; }
-            }
+            public override ICustomAttributeProvider ReturnTypeCustomAttributes => ReturnTypeCustomAttributes;
 
-            public override string Name {
-                get { return _dynamicMethod.Name; }
-            }
+            public override string Name => _dynamicMethod.Name;
 
-            public override Type DeclaringType {
-                get { return _declaringType; }
-            }
+            public override Type DeclaringType => _declaringType;
 
-            public override Type ReflectedType {
-                get { return _dynamicMethod.ReflectedType; }
-            }
+            public override Type ReflectedType => _dynamicMethod.ReflectedType;
 
-            public override RuntimeMethodHandle MethodHandle {
-                get { return _dynamicMethod.MethodHandle; }
-            }
+            public override RuntimeMethodHandle MethodHandle => _dynamicMethod.MethodHandle;
 
-            public override MethodAttributes Attributes {
-                get { return _dynamicMethod.Attributes & ~MethodAttributes.Static; }
-            }
+            public override MethodAttributes Attributes => _dynamicMethod.Attributes & ~MethodAttributes.Static;
 
-            public override object[] GetCustomAttributes(Type attributeType, bool inherit) {
+            public override object[] GetCustomAttributes(Type attributeType, bool inherit)
+            {
                 return _dynamicMethod.GetCustomAttributes(attributeType, inherit);
             }
 
-            public override Type ReturnType {
-                get { return _dynamicMethod.ReturnType; }
-            }
+            public override Type ReturnType => _dynamicMethod.ReturnType;
         }
 
         /// <summary>
         /// Synthetic property around a method info (the "getter" method).
         /// This is a minimal implementation enabling support for AutoMapping.References.
         /// </summary>
-        public class SyntheticPropertyInfo : PropertyInfo {
+        public class SyntheticPropertyInfo : PropertyInfo
+        {
             private readonly MethodInfo _getMethod;
 
-            public SyntheticPropertyInfo(MethodInfo getMethod) {
+            public SyntheticPropertyInfo(MethodInfo getMethod)
+            {
                 _getMethod = getMethod;
             }
 
-            public override object[] GetCustomAttributes(bool inherit) {
+            public override object[] GetCustomAttributes(bool inherit)
+            {
                 throw new NotImplementedException();
             }
 
-            public override bool IsDefined(Type attributeType, bool inherit) {
+            public override bool IsDefined(Type attributeType, bool inherit)
+            {
                 throw new NotImplementedException();
             }
 
-            public override object GetValue(object obj, BindingFlags invokeAttr, Binder binder, object[] index, CultureInfo culture) {
+            public override object GetValue(object obj, BindingFlags invokeAttr, Binder binder, object[] index, CultureInfo culture)
+            {
                 throw new NotImplementedException();
             }
 
-            public override void SetValue(object obj, object value, BindingFlags invokeAttr, Binder binder, object[] index, CultureInfo culture) {
+            public override void SetValue(object obj, object value, BindingFlags invokeAttr, Binder binder, object[] index, CultureInfo culture)
+            {
                 throw new NotImplementedException();
             }
 
-            public override MethodInfo[] GetAccessors(bool nonPublic) {
+            public override MethodInfo[] GetAccessors(bool nonPublic)
+            {
                 throw new NotImplementedException();
             }
 
-            public override MethodInfo GetGetMethod(bool nonPublic) {
+            public override MethodInfo GetGetMethod(bool nonPublic)
+            {
                 return _getMethod;
             }
 
-            public override MethodInfo GetSetMethod(bool nonPublic) {
+            public override MethodInfo GetSetMethod(bool nonPublic)
+            {
                 return null;
             }
 
-            public override ParameterInfo[] GetIndexParameters() {
+            public override ParameterInfo[] GetIndexParameters()
+            {
                 throw new NotImplementedException();
             }
 
-            public override string Name {
-                get { return _getMethod.Name; }
-            }
+            public override string Name => _getMethod.Name;
 
-            public override Type DeclaringType {
-                get { return _getMethod.DeclaringType; }
-            }
+            public override Type DeclaringType => _getMethod.DeclaringType;
 
-            public override Type ReflectedType {
-                get { return _getMethod.ReflectedType; }
-            }
+            public override Type ReflectedType => _getMethod.ReflectedType;
 
-            public override Type PropertyType {
-                get { return _getMethod.ReturnType; }
-            }
+            public override Type PropertyType => _getMethod.ReturnType;
 
-            public override PropertyAttributes Attributes {
-                get { throw new NotImplementedException(); }
-            }
+            public override PropertyAttributes Attributes => throw new NotImplementedException();
 
-            public override bool CanRead {
-                get { return true; }
-            }
+            public override bool CanRead => true;
 
-            public override bool CanWrite {
-                get { throw new NotImplementedException(); }
-            }
+            public override bool CanWrite => throw new NotImplementedException();
 
-            public override object[] GetCustomAttributes(Type attributeType, bool inherit) {
+            public override object[] GetCustomAttributes(Type attributeType, bool inherit)
+            {
                 return _getMethod.GetCustomAttributes(attributeType, inherit);
             }
 
-            public override int MetadataToken {
-                get { return 0; }
-            }
+            public override int MetadataToken => 0;
 
-            public override Module Module {
-                get { return null; }
-            }
+            public override Module Module => null;
 
-            public override MemberTypes MemberType {
-                get { return MemberTypes.Property; }
-            }
+            public override MemberTypes MemberType => MemberTypes.Property;
         }
     }
 }

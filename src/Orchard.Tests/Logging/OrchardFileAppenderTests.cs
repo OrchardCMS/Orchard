@@ -1,15 +1,18 @@
-﻿using System;
+using System;
 using log4net.Util;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using Orchard.Logging;
 
-namespace Orchard.Tests.Logging {
+namespace Orchard.Tests.Logging
+{
     [TestFixture]
-    public class OrchardFileAppenderTests {
+    public class OrchardFileAppenderTests
+    {
         [Test]
-        public void AddSuffixTest() {
+        public void AddSuffixTest()
+        {
             const string filename = "Orchard-debug";
             const string filenameAlternative1 = "Orchard-debug-1";
             const string filenameAlternative2 = "Orchard-debug-2";
@@ -50,8 +53,10 @@ namespace Orchard.Tests.Logging {
             Assert.That(filenameUsed, Is.EqualTo(filenameAlternative2));
         }
 
-        public class StubOrchardFileAppender : OrchardFileAppender {
-            public void OpenFileStub(string fileName, bool append) {
+        public class StubOrchardFileAppender : OrchardFileAppender
+        {
+            public void OpenFileStub(string fileName, bool append)
+            {
                 base.OpenFile(fileName, append);
             }
         }

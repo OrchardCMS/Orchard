@@ -1,19 +1,23 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Records;
 
-namespace Orchard.Tests.Data.Builders {
+namespace Orchard.Tests.Data.Builders
+{
     [TestFixture]
-    public class SessionFactoryBuilderTests {
+    public class SessionFactoryBuilderTests
+    {
         [Test]
-        public void SqlCeSchemaShouldBeGeneratedAndUsable() {
+        public void SqlCeSchemaShouldBeGeneratedAndUsable()
+        {
 
             var recordDescriptors = new[] {
                                               new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
 
             ProviderUtilities.RunWithSqlCe(recordDescriptors,
-                sessionFactory => {
+                sessionFactory =>
+                {
                     var session = sessionFactory.OpenSession();
                     var foo = new FooRecord { Name = "hi there" };
                     session.Save(foo);
@@ -27,13 +31,15 @@ namespace Orchard.Tests.Data.Builders {
         }
 
         [Test]
-        public void SqlServerSchemaShouldBeGeneratedAndUsable() {
+        public void SqlServerSchemaShouldBeGeneratedAndUsable()
+        {
             var recordDescriptors = new[] {
                                               new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
 
             ProviderUtilities.RunWithSqlServer(recordDescriptors,
-                sessionFactory => {
+                sessionFactory =>
+                {
                     var session = sessionFactory.OpenSession();
                     var foo = new FooRecord { Name = "hi there" };
                     session.Save(foo);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -9,13 +9,16 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.DisplayManagement {
+namespace Orchard.Tests.DisplayManagement
+{
     [TestFixture]
-    public class ShapeFactoryTests {
+    public class ShapeFactoryTests
+    {
         private IContainer _container;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
@@ -27,9 +30,10 @@ namespace Orchard.Tests.DisplayManagement {
             _container = builder.Build();
         }
 
-        
+
         [Test]
-        public void ShapeHasAttributesType() {
+        public void ShapeHasAttributesType()
+        {
             var factory = _container.Resolve<IShapeFactory>();
             dynamic foo = factory.Create("Foo", ArgsUtility.Empty());
             ShapeMetadata metadata = foo.Metadata;
@@ -37,7 +41,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CreateShapeWithNamedArguments() {
+        public void CreateShapeWithNamedArguments()
+        {
             var factory = _container.Resolve<IShapeFactory>();
             dynamic foo = factory.Create("Foo", ArgsUtility.Named(new { one = 1, two = "dos" }));
             Assert.That(foo.one, Is.EqualTo(1));
@@ -45,7 +50,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CallSyntax() {
+        public void CallSyntax()
+        {
             dynamic factory = _container.Resolve<IShapeFactory>();
             var foo = factory.Foo();
             ShapeMetadata metadata = foo.Metadata;
@@ -53,9 +59,10 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CallInitializer() {
+        public void CallInitializer()
+        {
             dynamic factory = _container.Resolve<IShapeFactory>();
-            var bar = new {One = 1, Two = "two"};
+            var bar = new { One = 1, Two = "two" };
             var foo = factory.Foo(bar);
 
             Assert.That(foo.One, Is.EqualTo(1));
@@ -63,7 +70,8 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void CallInitializerWithBaseType() {
+        public void CallInitializerWithBaseType()
+        {
             dynamic factory = _container.Resolve<IShapeFactory>();
             var bar = new { One = 1, Two = "two" };
             var foo = factory.Foo(typeof(MyShape), bar);
@@ -73,7 +81,8 @@ namespace Orchard.Tests.DisplayManagement {
             Assert.That(foo.Two, Is.EqualTo("two"));
         }
 
-        public class MyShape : Shape {
+        public class MyShape : Shape
+        {
             public string Kind { get; set; }
         }
 

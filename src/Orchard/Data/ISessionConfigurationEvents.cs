@@ -1,13 +1,15 @@
-﻿using FluentNHibernate.Automapping;
+using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using NHibernate.Cfg;
 using Orchard.Utility;
 
-namespace Orchard.Data {
+namespace Orchard.Data
+{
     /// <summary>
     /// Allows hooking into NHibernate session configuration pipeline.
     /// </summary>
-    public interface ISessionConfigurationEvents : ISingletonDependency {
+    public interface ISessionConfigurationEvents : ISingletonDependency
+    {
         /// <summary>
         /// Called when an empty fluent configuration object has been created, 
         /// before applying any default Orchard config settings (alterations, conventions etc.).

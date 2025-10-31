@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
@@ -8,16 +8,20 @@ using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using IFilterProvider = Orchard.Projections.Services.IFilterProvider;
 
-namespace Orchard.Projections.Providers.Filters {
-    public class ContentTypesFilter : IFilterProvider {
-        public ContentTypesFilter() {
+namespace Orchard.Projections.Providers.Filters
+{
+    public class ContentTypesFilter : IFilterProvider
+    {
+        public ContentTypesFilter()
+        {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeFilterContext describe) {
-            describe.For("Content", T("Content"),T("Content"))
+        public void Describe(DescribeFilterContext describe)
+        {
+            describe.For("Content", T("Content"), T("Content"))
                 .Element("ContentTypes", T("Content Types"), T("Specific content types"),
                     ApplyFilter,
                     DisplayFilter,
@@ -26,17 +30,21 @@ namespace Orchard.Projections.Providers.Filters {
 
         }
 
-        public void ApplyFilter(FilterContext context) {
+        public void ApplyFilter(FilterContext context)
+        {
             var contentTypes = (string)context.State.ContentTypes;
-            if (!String.IsNullOrEmpty(contentTypes)) {
+            if (!string.IsNullOrEmpty(contentTypes))
+            {
                 context.Query = context.Query.ForType(contentTypes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
             }
         }
 
-        public LocalizedString DisplayFilter(FilterContext context) {
+        public LocalizedString DisplayFilter(FilterContext context)
+        {
             string contenttypes = context.State.ContentTypes;
 
-            if (String.IsNullOrEmpty(contenttypes)) {
+            if (string.IsNullOrEmpty(contenttypes))
+            {
                 return T("Any content item");
             }
 
@@ -44,22 +52,26 @@ namespace Orchard.Projections.Providers.Filters {
         }
     }
 
-    public class ContentTypesFilterForms : IFormProvider {
+    public class ContentTypesFilterForms : IFormProvider
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public ContentTypesFilterForms(
             IShapeFactory shapeFactory,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "AnyOfContentTypes",
@@ -74,7 +86,8 @@ namespace Orchard.Projections.Providers.Filters {
 
                     f._Parts.Add(new SelectListItem { Value = "", Text = T("Any").Text });
 
-                    foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.DisplayName)) {
+                    foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.DisplayName))
+                    {
                         f._Parts.Add(new SelectListItem { Value = contentType.Name, Text = contentType.DisplayName });
                     }
 

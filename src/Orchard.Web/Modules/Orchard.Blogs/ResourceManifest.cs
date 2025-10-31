@@ -1,8 +1,11 @@
 using Orchard.UI.Resources;
 
-namespace Orchard.Blogs {
-    public class ResourceManifest : IResourceManifestProvider {
-        public void BuildManifests(ResourceManifestBuilder builder) {
+namespace Orchard.Blogs
+{
+    public class ResourceManifest : IResourceManifestProvider
+    {
+        public void BuildManifests(ResourceManifestBuilder builder)
+        {
             var manifest = builder.Add();
             manifest.DefineStyle("BlogsAdmin")
                 .SetUrl("orchard-blogs-admin.min.css", "orchard-blogs-admin.css");

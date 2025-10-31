@@ -1,9 +1,12 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Markdown.Models {
-    public class MarkdownSiteSettingsPart : ContentPart {
+namespace Markdown.Models
+{
+    public class MarkdownSiteSettingsPart : ContentPart
+    {
 
-        public bool UseMarkdownForBlogs {
+        public bool UseMarkdownForBlogs
+        {
             get { return this.Retrieve(x => x.UseMarkdownForBlogs); }
             set { this.Store(x => x.UseMarkdownForBlogs, value); }
         }

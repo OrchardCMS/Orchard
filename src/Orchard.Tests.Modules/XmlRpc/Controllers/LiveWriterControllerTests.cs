@@ -1,20 +1,22 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Controllers;
-using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 
-namespace Orchard.Tests.Modules.XmlRpc.Controllers {
+namespace Orchard.Tests.Modules.XmlRpc.Controllers
+{
     [TestFixture]
-    public class LiveWriterControllerTests {
+    public class LiveWriterControllerTests
+    {
         [Test]
-        public void HandlersShouldSetCapabilitiesForManifest() {
+        public void HandlersShouldSetCapabilitiesForManifest()
+        {
             var thing = new StubHandler();
             var thingToo = new StubTooHandler();
-            
+
             var builder = new ContainerBuilder();
             builder.RegisterType<LiveWriterController>();
             builder.RegisterType<XmlRpcReader>().As<IXmlRpcReader>();
@@ -33,8 +35,10 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
 
         }
 
-        public class StubHandler : IXmlRpcHandler {
-            public void SetCapabilities(XElement options) {
+        public class StubHandler : IXmlRpcHandler
+        {
+            public void SetCapabilities(XElement options)
+            {
                 const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
                 options.SetElementValue(XName.Get("supportsGetTags", manifestUri), "No");
                 options.SetElementValue(XName.Get("keywordsAsTags", manifestUri), "Yes");
@@ -45,8 +49,10 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
             public int ProcessCalls { get; set; }
         }
 
-        public class StubTooHandler : IXmlRpcHandler {
-            public void SetCapabilities(XElement options) {
+        public class StubTooHandler : IXmlRpcHandler
+        {
+            public void SetCapabilities(XElement options)
+            {
                 const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
                 options.SetElementValue(XName.Get("supportsKeywords", manifestUri), "Maybe");
             }

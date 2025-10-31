@@ -1,19 +1,23 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Scripting.Hosting;
 using Orchard.Caching;
 
-namespace Orchard.Scripting.Dlr.Services {
-    public class RubyScriptExpressionEvaluator : IScriptExpressionEvaluator {
+namespace Orchard.Scripting.Dlr.Services
+{
+    public class RubyScriptExpressionEvaluator : IScriptExpressionEvaluator
+    {
         private readonly IScriptingManager _scriptingManager;
         private readonly ICacheManager _cacheManager;
 
-        public RubyScriptExpressionEvaluator(IScriptingManager scriptingManager, ICacheManager cacheManager) {
+        public RubyScriptExpressionEvaluator(IScriptingManager scriptingManager, ICacheManager cacheManager)
+        {
             _scriptingManager = scriptingManager;
             _cacheManager = cacheManager;
         }
 
-        public object Evaluate(string expression, IEnumerable<IGlobalMethodProvider> providers) {
+        public object Evaluate(string expression, IEnumerable<IGlobalMethodProvider> providers)
+        {
             object execContextType = _cacheManager.Get("---", true, ctx => (object)_scriptingManager.ExecuteExpression(@"
 class ExecBlock
     def initialize(callbacks)
@@ -44,33 +48,40 @@ ExecContext
             return ConvertRubyValue(result);
         }
 
-        private object ConvertRubyValue(object result) {
+        private object ConvertRubyValue(object result)
+        {
             if (result is IronRuby.Builtins.MutableString)
                 return result.ToString();
             return result;
         }
 
-        public class CallbackApi {
+        public class CallbackApi
+        {
             private readonly RubyScriptExpressionEvaluator _ruleManager;
             private readonly IEnumerable<IGlobalMethodProvider> _providers;
 
-            public CallbackApi(RubyScriptExpressionEvaluator ruleManager, IEnumerable<IGlobalMethodProvider> providers) {
+            public CallbackApi(RubyScriptExpressionEvaluator ruleManager, IEnumerable<IGlobalMethodProvider> providers)
+            {
                 _ruleManager = ruleManager;
                 _providers = providers;
             }
 
-            public object send(string name, IList<object> args) {
+            public object send(string name, IList<object> args)
+            {
                 return _ruleManager.Evaluate(_providers, name, args);
             }
         }
 
-        private object Evaluate(IEnumerable<IGlobalMethodProvider> providers, string name, IEnumerable<object> args) {
-            var ruleContext = new GlobalMethodContext {
-                FunctionName = name, 
+        private object Evaluate(IEnumerable<IGlobalMethodProvider> providers, string name, IEnumerable<object> args)
+        {
+            var ruleContext = new GlobalMethodContext
+            {
+                FunctionName = name,
                 Arguments = args.Select(v => ConvertRubyValue(v)).ToArray()
             };
 
-            foreach (var ruleProvider in providers) {
+            foreach (var ruleProvider in providers)
+            {
                 ruleProvider.Process(ruleContext);
             }
 

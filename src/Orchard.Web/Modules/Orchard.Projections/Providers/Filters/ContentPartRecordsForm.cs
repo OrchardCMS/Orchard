@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Records;
@@ -7,23 +7,28 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Providers.Filters {
-    public class ContentPartRecordsForm : IFormProvider {
+namespace Orchard.Projections.Providers.Filters
+{
+    public class ContentPartRecordsForm : IFormProvider
+    {
         private readonly ShellBlueprint _shellBlueprint;
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public ContentPartRecordsForm(
             ShellBlueprint shellBlueprint,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             _shellBlueprint = shellBlueprint;
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "AnyOfContentPartRecords",
@@ -36,8 +41,10 @@ namespace Orchard.Projections.Providers.Filters {
                             )
                         );
 
-                    foreach (var recordBluePrint in _shellBlueprint.Records.OrderBy(x => x.Type.Name)) {
-                        if (typeof(ContentPartRecord).IsAssignableFrom(recordBluePrint.Type) || typeof(ContentPartVersionRecord).IsAssignableFrom(recordBluePrint.Type)) {
+                    foreach (var recordBluePrint in _shellBlueprint.Records.OrderBy(x => x.Type.Name))
+                    {
+                        if (typeof(ContentPartRecord).IsAssignableFrom(recordBluePrint.Type) || typeof(ContentPartVersionRecord).IsAssignableFrom(recordBluePrint.Type))
+                        {
                             f._Parts.Add(new SelectListItem { Value = recordBluePrint.Type.Name, Text = recordBluePrint.Type.Name });
                         }
                     }

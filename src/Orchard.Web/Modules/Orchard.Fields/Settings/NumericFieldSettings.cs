@@ -1,5 +1,7 @@
-﻿namespace Orchard.Fields.Settings {
-    public class NumericFieldSettings {
+namespace Orchard.Fields.Settings
+{
+    public class NumericFieldSettings
+    {
         public string Hint { get; set; }
         public bool Required { get; set; }
         public int Scale { get; set; }
@@ -8,7 +10,8 @@
         public string Placeholder { get; set; }
         public string DefaultValue { get; set; }
 
-        public NumericFieldSettings() {
+        public NumericFieldSettings()
+        {
             Scale = 0;
         }
     }

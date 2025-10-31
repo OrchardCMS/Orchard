@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Environment.Descriptor.Models {
+namespace Orchard.Environment.Descriptor.Models
+{
 
     /// <summary>
     /// Contains a snapshot of a tenant's enabled features.
@@ -9,8 +10,10 @@ namespace Orchard.Environment.Descriptor.Models {
     /// and cached by the host via IShellDescriptorCache. It is
     /// passed to the ICompositionStrategy to build the ShellBlueprint.
     /// </summary>
-    public class ShellDescriptor {
-        public ShellDescriptor() {
+    public class ShellDescriptor
+    {
+        public ShellDescriptor()
+        {
             Features = Enumerable.Empty<ShellFeature>();
             Parameters = Enumerable.Empty<ShellParameter>();
         }
@@ -20,14 +23,16 @@ namespace Orchard.Environment.Descriptor.Models {
         public IEnumerable<ShellParameter> Parameters { get; set; }
     }
 
-    public class ShellFeature {
+    public class ShellFeature
+    {
         public string Name { get; set; }
     }
 
-    public class ShellParameter {
+    public class ShellParameter
+    {
         public string Component { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
     }
-    
+
 }

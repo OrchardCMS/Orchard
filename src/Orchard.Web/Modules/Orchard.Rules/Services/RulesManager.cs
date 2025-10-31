@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Data;
 using Orchard.Forms.Services;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Rules.Models;
-using Orchard.Data;
-using Orchard.Localization;
 using Orchard.Tokens;
 
-namespace Orchard.Rules.Services {
-    public class RulesManager : IRulesManager {
+namespace Orchard.Rules.Services
+{
+    public class RulesManager : IRulesManager
+    {
         private readonly IRepository<EventRecord> _eventRepository;
         private readonly IRepository<RuleRecord> _ruleRepository;
         private readonly IEnumerable<IEventProvider> _eventProviders;
@@ -21,7 +23,8 @@ namespace Orchard.Rules.Services {
             IRepository<RuleRecord> ruleRepository,
             IEnumerable<IEventProvider> eventProviders,
             IEnumerable<IActionProvider> actionProviders,
-            ITokenizer tokenizer) {
+            ITokenizer tokenizer)
+        {
             _eventRepository = eventRepository;
             _ruleRepository = ruleRepository;
             _eventProviders = eventProviders;
@@ -34,23 +37,28 @@ namespace Orchard.Rules.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public IEnumerable<TypeDescriptor<EventDescriptor>> DescribeEvents() {
+        public IEnumerable<TypeDescriptor<EventDescriptor>> DescribeEvents()
+        {
             var context = new DescribeEventContext();
-            foreach (var provider in _eventProviders) {
+            foreach (var provider in _eventProviders)
+            {
                 provider.Describe(context);
             }
             return context.Describe();
         }
 
-        public IEnumerable<TypeDescriptor<ActionDescriptor>> DescribeActions() {
+        public IEnumerable<TypeDescriptor<ActionDescriptor>> DescribeActions()
+        {
             var context = new DescribeActionContext();
-            foreach (var provider in _actionProviders) {
+            foreach (var provider in _actionProviders)
+            {
                 provider.Describe(context);
             }
             return context.Describe();
         }
 
-        public void TriggerEvent(string category, string type, Func<Dictionary<string, object>> tokensContext) {
+        public void TriggerEvent(string category, string type, Func<Dictionary<string, object>> tokensContext)
+        {
             var tokens = tokensContext();
             var eventDescriptors = DescribeEvents().SelectMany(x => x.Descriptors).ToList();
 
@@ -59,14 +67,16 @@ namespace Orchard.Rules.Services {
             var events = _eventRepository.Table
                 .Where(x => x.Category == category && x.Type == type && x.RuleRecord.Enabled)
                 .ToList() // execute the query at this point of time
-                .Where(e => { // take the first event which has a valid condition
+                .Where(e =>
+                { // take the first event which has a valid condition
                     var eventCategory = e.Category;
                     var eventType = e.Type;
 
                     // look for the specified Event target/type
                     var descriptor = eventDescriptors.FirstOrDefault(x => eventCategory == x.Category && eventType == x.Type);
 
-                    if (descriptor == null) {
+                    if (descriptor == null)
+                    {
                         return false;
                     }
 
@@ -80,8 +90,9 @@ namespace Orchard.Rules.Services {
                 .ToList();
 
             // if no events are true simply do nothing and return
-            if(!events.Any()) {
-                 return;
+            if (!events.Any())
+            {
+                return;
             }
 
             // load rules too for eager loading
@@ -89,25 +100,29 @@ namespace Orchard.Rules.Services {
                 .Where(x => x.Enabled && x.Events.Any(e => e.Category == category && e.Type == type));
 
             // evaluate their conditions
-            foreach (var e in events) {
+            foreach (var e in events)
+            {
                 var rule = e.RuleRecord;
 
                 ExecuteActions(rule.Actions.OrderBy(x => x.Position), tokens);
             }
         }
 
-        public void ExecuteActions(IEnumerable<ActionRecord> actions, Dictionary<string, object> tokens) {
+        public void ExecuteActions(IEnumerable<ActionRecord> actions, Dictionary<string, object> tokens)
+        {
             var actionDescriptors = DescribeActions().SelectMany(x => x.Descriptors).ToList();
 
             // execute each action associated with this rule
-            foreach (var actionRecord in actions) {
+            foreach (var actionRecord in actions)
+            {
                 var actionCategory = actionRecord.Category;
                 var actionType = actionRecord.Type;
 
                 // look for the specified Event target/type
                 var descriptor = actionDescriptors.FirstOrDefault(x => actionCategory == x.Category && actionType == x.Type);
 
-                if (descriptor == null) {
+                if (descriptor == null)
+                {
                     continue;
                 }
 
@@ -118,17 +133,20 @@ namespace Orchard.Rules.Services {
                 var context = new ActionContext { Properties = properties, Tokens = tokens };
 
                 // execute the action
-                try {
+                try
+                {
                     var continuation = descriptor.Action(context);
 
                     // early termination of the actions ?
-                    if (!continuation) {
+                    if (!continuation)
+                    {
                         break;
                     }
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     Logger.Error(e, "An action could not be executed.");
-                    
+
                     // stop executing other actions
                     break;
                 }

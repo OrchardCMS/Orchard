@@ -7,13 +7,16 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Security;
 
-namespace Orchard.Blogs.Handlers {
-    public class BlogPostPartHandler : ContentHandler {
+namespace Orchard.Blogs.Handlers
+{
+    public class BlogPostPartHandler : ContentHandler
+    {
         private readonly IAuthorizationService _authorizationService;
         private readonly IBlogService _blogService;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public BlogPostPartHandler(IAuthorizationService authorizationService, IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext, IWorkContextAccessor workContextAccessor) {
+        public BlogPostPartHandler(IAuthorizationService authorizationService, IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext, IWorkContextAccessor workContextAccessor)
+        {
             _authorizationService = authorizationService;
             _blogService = blogService;
             _workContextAccessor = workContextAccessor;
@@ -34,39 +37,49 @@ namespace Orchard.Blogs.Handlers {
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
 
-        private void ProcessBlogPostsCount(BlogPostPart blogPostPart) {
+        private void ProcessBlogPostsCount(BlogPostPart blogPostPart)
+        {
             CommonPart commonPart = blogPostPart.As<CommonPart>();
             if (commonPart != null &&
-                commonPart.Record.Container != null) {
+                commonPart.Record.Container != null)
+            {
 
                 _blogService.ProcessBlogPostsCount(commonPart.Container.Id);
             }
         }
 
-        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
+        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost)
+        {
             context.Shape.Blog = blogPost.BlogPart;
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+        protected override void GetItemMetadata(GetContentItemMetadataContext context)
+        {
             var blogPost = context.ContentItem.As<BlogPostPart>();
 
-            if (blogPost == null) {
+            if (blogPost == null)
+            {
                 return;
             }
 
             int blogId = 0;
             // BlogPart can be null if this is a new Blog Post item.
-            if (blogPost.BlogPart == null) {
+            if (blogPost.BlogPart == null)
+            {
                 var blogs = _blogService.Get().Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
-                if (blogs.Count() == 1) {
+                if (blogs.Count() == 1)
+                {
                     var singleBlog = blogs.ElementAt(0);
                     if (singleBlog != null) blogId = singleBlog.Id;
                 }
-            } else {
+            }
+            else
+            {
                 blogId = blogPost.BlogPart.Id;
             }
 
-            if (blogId == 0) {
+            if (blogId == 0)
+            {
                 context.Metadata.CreateRouteValues = new RouteValueDictionary {
                     {"Area", "Orchard.Blogs"},
                     {"Controller", "BlogPostAdmin"},

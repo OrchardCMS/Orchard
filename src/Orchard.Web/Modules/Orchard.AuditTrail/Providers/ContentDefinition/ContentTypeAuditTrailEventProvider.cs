@@ -1,4 +1,3 @@
-﻿using System;
 using System.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
@@ -6,12 +5,15 @@ using Orchard.AuditTrail.Services.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.AuditTrail.Providers.ContentDefinition {
+namespace Orchard.AuditTrail.Providers.ContentDefinition
+{
     [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
-    public class ContentTypeAuditTrailEventProvider : AuditTrailEventProviderBase {
+    public class ContentTypeAuditTrailEventProvider : AuditTrailEventProviderBase
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public ContentTypeAuditTrailEventProvider(IContentDefinitionManager contentDefinitionManager) {
+        public ContentTypeAuditTrailEventProvider(IContentDefinitionManager contentDefinitionManager)
+        {
             _contentDefinitionManager = contentDefinitionManager;
         }
 
@@ -25,7 +27,8 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         public const string PartSettingsUpdated = "PartSettingsUpdated";
         public const string FieldSettingsUpdated = "FieldSettingsUpdated";
 
-        public override void Describe(DescribeContext context) {
+        public override void Describe(DescribeContext context)
+        {
             context.For("ContentType", T("Content Type"))
                 .Event(this, Created, T("Created"), T("A content type was created."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content type was removed."), enableByDefault: true)
@@ -41,16 +44,18 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             context.DisplayFilter(DisplayFilter);
         }
 
-        private void QueryFilter(QueryFilterContext context) {
+        private void QueryFilter(QueryFilterContext context)
+        {
             var contentType = context.Filters.Get("contenttype");
 
-            if(String.IsNullOrWhiteSpace(contentType))
+            if (string.IsNullOrWhiteSpace(contentType))
                 return;
 
             context.Query = context.Query.Where(x => x.EventFilterKey == "contenttype" && x.EventFilterData == contentType);
         }
 
-        private void DisplayFilter(DisplayFilterContext context) {
+        private void DisplayFilter(DisplayFilterContext context)
+        {
             var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentType(
                 ContentType: context.Filters.Get("contenttype"),
                 ContentTypes: _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.DisplayName).ToArray());

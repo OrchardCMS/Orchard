@@ -1,32 +1,38 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.OpenId.Models {
+namespace Orchard.OpenId.Models
+{
     [OrchardFeature("Orchard.OpenId.ActiveDirectoryFederationServices")]
-    public class ActiveDirectoryFederationServicesSettingsPart : ContentPart {
+    public class ActiveDirectoryFederationServicesSettingsPart : ContentPart
+    {
 
-        public string ClientId {
+        public string ClientId
+        {
             get { return this.Retrieve(x => x.ClientId, () => Constants.ActiveDirectoryFederationServices.DefaultClientId); }
             set { this.Store(x => x.ClientId, value); }
         }
 
-        public string MetadataAddress {
+        public string MetadataAddress
+        {
             get { return this.Retrieve(x => x.MetadataAddress, () => Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress); }
             set { this.Store(x => x.MetadataAddress, value); }
         }
 
-        public string PostLogoutRedirectUri {
+        public string PostLogoutRedirectUri
+        {
             get { return this.Retrieve(x => x.PostLogoutRedirectUri); }
             set { this.Store(x => x.PostLogoutRedirectUri, value); }
         }
 
-        public bool IsValid() {
-            if (String.IsNullOrWhiteSpace(ClientId) ||
-                String.CompareOrdinal(ClientId, Constants.ActiveDirectoryFederationServices.DefaultClientId) == 0 ||
-                String.IsNullOrWhiteSpace(MetadataAddress) ||
-                String.CompareOrdinal(MetadataAddress, Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress) == 0 ||
-                String.IsNullOrWhiteSpace(PostLogoutRedirectUri)) {
+        public bool IsValid()
+        {
+            if (string.IsNullOrWhiteSpace(ClientId) ||
+                string.CompareOrdinal(ClientId, Constants.ActiveDirectoryFederationServices.DefaultClientId) == 0 ||
+                string.IsNullOrWhiteSpace(MetadataAddress) ||
+                string.CompareOrdinal(MetadataAddress, Constants.ActiveDirectoryFederationServices.DefaultMetadataAddress) == 0 ||
+                string.IsNullOrWhiteSpace(PostLogoutRedirectUri))
+            {
 
                 return false;
             }

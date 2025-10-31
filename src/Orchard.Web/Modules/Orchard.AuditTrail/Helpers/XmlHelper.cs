@@ -1,16 +1,21 @@
-﻿using System;
+using System;
 using System.Xml.Linq;
 
-namespace Orchard.AuditTrail.Helpers {
-    public static class XmlHelper {
-        public static XElement Parse(string xml) {
-            if (String.IsNullOrEmpty(xml))
+namespace Orchard.AuditTrail.Helpers
+{
+    public static class XmlHelper
+    {
+        public static XElement Parse(string xml)
+        {
+            if (string.IsNullOrEmpty(xml))
                 return null;
 
-            try {
+            try
+            {
                 return XElement.Parse(xml);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return null;
             }
         }

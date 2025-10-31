@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Drivers;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.OwnerEditor;
 using Orchard.Core.Common.Services;
 using Orchard.Core.Scheduling.Models;
@@ -24,7 +24,6 @@ using Orchard.Core.Scheduling.Services;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
-using Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -35,20 +34,22 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Tests.DisplayManagement;
 using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Modules;
-using System.Web.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Core.Tests.Common.Providers {
+namespace Orchard.Core.Tests.Common.Providers
+{
     [TestFixture]
-    public class CommonPartProviderTests : DatabaseEnabledTestsBase {
+    public class CommonPartProviderTests : DatabaseEnabledTestsBase
+    {
         private Mock<IAuthenticationService> _authn;
         private Mock<IAuthorizationService> _authz;
         private Mock<IMembershipService> _membership;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
@@ -71,13 +72,14 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            
+
             // IContentDisplay
-            var workContext = new DefaultDisplayManagerTests.TestWorkContext {
+            var workContext = new DefaultDisplayManagerTests.TestWorkContext
+            {
                 CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
             builder.RegisterInstance<DefaultDisplayManagerTests.TestWorkContextAccessor>(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             DefaultShapeTableManagerTests.TestShapeProvider.FeatureShapes = new Dictionary<Feature, IEnumerable<string>> {
@@ -107,12 +109,16 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterInstance(virtualPathProviderMock.Object);
         }
 
-        static Feature TestFeature() {
-            return new Feature {
-                Descriptor = new FeatureDescriptor {
+        static Feature TestFeature()
+        {
+            return new Feature
+            {
+                Descriptor = new FeatureDescriptor
+                {
                     Id = "Testing",
                     Dependencies = Enumerable.Empty<string>(),
-                    Extension = new ExtensionDescriptor {
+                    Extension = new ExtensionDescriptor
+                    {
                         Id = "Testing",
                         ExtensionType = DefaultExtensionTypes.Module,
                     }
@@ -120,12 +126,14 @@ namespace Orchard.Core.Tests.Common.Providers {
             };
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
+            get
+            {
                 return new[] {
-                                 typeof(ContentTypeRecord), 
-                                 typeof(ContentItemRecord), 
-                                 typeof(ContentItemVersionRecord), 
+                                 typeof(ContentTypeRecord),
+                                 typeof(ContentItemRecord),
+                                 typeof(ContentItemVersionRecord),
                                  typeof(CommonPartRecord),
                                  typeof(CommonPartVersionRecord),
                                  typeof(ScheduledTaskRecord),
@@ -133,8 +141,10 @@ namespace Orchard.Core.Tests.Common.Providers {
             }
         }
 
-        class TestHandler : ContentHandler {
-            public TestHandler() {
+        class TestHandler : ContentHandler
+        {
+            public TestHandler()
+            {
                 Filters.Add(new ActivatingFilter<CommonPart>("test-item"));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>("test-item"));
                 Filters.Add(new ActivatingFilter<TestUser>("User"));
@@ -142,19 +152,22 @@ namespace Orchard.Core.Tests.Common.Providers {
             }
         }
 
-        class TestUser : ContentPart, IUser {
-            public new int Id { get { return 6655321; } }
-            public string UserName { get { return "x"; } }
-            public string Email { get { return "y"; } }
+        class TestUser : ContentPart, IUser
+        {
+            public new int Id => 6655321;
+            public string UserName => "x";
+            public string Email => "y";
         }
-        class AlternateTestUser : ContentPart, IUser {
-            public new int Id { get { return 6655322; } }
-            public string UserName { get { return "y"; } }
-            public string Email { get { return "x"; } }
+        class AlternateTestUser : ContentPart, IUser
+        {
+            public new int Id => 6655322;
+            public string UserName => "y";
+            public string Email => "x";
         }
 
         [Test]
-        public void OwnerShouldBeNullAndZeroByDefault() {
+        public void OwnerShouldBeNullAndZeroByDefault()
+        {
             var contentManager = _container.Resolve<IContentManager>();
             var item = contentManager.Create<CommonPart>("test-item", init => { });
             ClearSession();
@@ -164,7 +177,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldFailIfOwnerIsUnknown() {
+        public void PublishingShouldFailIfOwnerIsUnknown()
+        {
             var contentManager = _container.Resolve<IContentManager>();
             var updateModel = new Mock<IUpdateModel>();
 
@@ -177,28 +191,28 @@ namespace Orchard.Core.Tests.Common.Providers {
             contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
         }
 
-        class UpdateModelStub : IUpdateModel {
-
-            ModelStateDictionary _modelState = new ModelStateDictionary();
-
-            public ModelStateDictionary ModelErrors {
-                get { return _modelState; }
-            }
+        class UpdateModelStub : IUpdateModel
+        {
+            public ModelStateDictionary ModelErrors { get; } = new ModelStateDictionary();
 
             public string Owner { get; set; }
 
-            public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
+            public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class
+            {
                 (model as OwnerEditorViewModel).Owner = Owner;
                 return true;
             }
 
-            public void AddModelError(string key, LocalizedString errorMessage) {
-                _modelState.AddModelError(key, errorMessage.ToString());
+            public void AddModelError(string key, LocalizedString errorMessage)
+            {
+                ModelErrors.AddModelError(key, errorMessage.ToString());
             }
         }
 
-        class StubThemeService : IThemeManager {
-            private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
+        class StubThemeService : IThemeManager
+        {
+            private readonly ExtensionDescriptor _theme = new ExtensionDescriptor
+            {
                 Id = "SafeMode",
                 Name = "SafeMode",
                 Location = "~/Themes",
@@ -208,7 +222,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldNotThrowExceptionIfOwnerIsNull() {
+        public void PublishingShouldNotThrowExceptionIfOwnerIsNull()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
@@ -225,7 +240,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldFailIfOwnerIsEmpty() {
+        public void PublishingShouldFailIfOwnerIsEmpty()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
@@ -248,7 +264,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldNotFailIfOwnerIsEmptyAndShapeIsHidden() {
+        public void PublishingShouldNotFailIfOwnerIsEmptyAndShapeIsHidden()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
@@ -270,7 +287,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             Assert.That(updater.ModelErrors.ContainsKey("OwnerEditor.Owner"), Is.False);
         }
         [Test]
-        public void CreatingShouldSetCreatedAndModifiedUtc() {
+        public void CreatingShouldSetCreatedAndModifiedUtc()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
@@ -282,7 +300,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldSetPublishUtcAndShouldNotChangeModifiedUtc() {
+        public void PublishingShouldSetPublishUtcAndShouldNotChangeModifiedUtc()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
@@ -303,7 +322,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingTwiceShouldKeepSettingPublishUtcAndShouldNotChangeModifiedUtc() {
+        public void PublishingTwiceShouldKeepSettingPublishUtcAndShouldNotChangeModifiedUtc()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
@@ -335,7 +355,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void UnpublishingShouldNotChangePublishUtcAndModifiedUtc() {
+        public void UnpublishingShouldNotChangePublishUtcAndModifiedUtc()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
@@ -362,7 +383,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void EditingShouldSetModifiedUtc() {
+        public void EditingShouldSetModifiedUtc()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var user = contentManager.New<IUser>("User");
@@ -395,7 +417,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void VersioningItemShouldCreatedAndPublishedUtcValuesPerVersion() {
+        public void VersioningItemShouldCreatedAndPublishedUtcValuesPerVersion()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
@@ -437,7 +460,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void UnpublishShouldClearFlagButLeaveMostrecentPublishDatesIntact() {
+        public void UnpublishShouldClearFlagButLeaveMostrecentPublishDatesIntact()
+        {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;

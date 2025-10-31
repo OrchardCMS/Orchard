@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Themes {
-    public class ThemeManager : IThemeManager {
+namespace Orchard.Themes
+{
+    public class ThemeManager : IThemeManager
+    {
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IExtensionManager _extensionManager;
 
         public ThemeManager(IEnumerable<IThemeSelector> themeSelectors,
-                            IExtensionManager extensionManager) {
+                            IExtensionManager extensionManager)
+        {
             _themeSelectors = themeSelectors;
             _extensionManager = extensionManager;
         }
 
-        public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) {
+        public ExtensionDescriptor GetRequestTheme(RequestContext requestContext)
+        {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -24,7 +28,8 @@ namespace Orchard.Themes {
             if (!requestTheme.Any())
                 return null;
 
-            foreach (var theme in requestTheme) {
+            foreach (var theme in requestTheme)
+            {
                 var t = _extensionManager.GetExtension(theme.ThemeName);
                 if (t != null)
                     return t;

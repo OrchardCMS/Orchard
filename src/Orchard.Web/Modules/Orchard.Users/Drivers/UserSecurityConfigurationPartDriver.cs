@@ -1,14 +1,17 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Users.Models;
 
-namespace Orchard.Users.Drivers {
-    public class UserSecurityConfigurationPartDriver : ContentPartDriver<UserSecurityConfigurationPart> {
+namespace Orchard.Users.Drivers
+{
+    public class UserSecurityConfigurationPartDriver : ContentPartDriver<UserSecurityConfigurationPart>
+    {
 
         public UserSecurityConfigurationPartDriver() { }
 
         protected override DriverResult Editor(
-            UserSecurityConfigurationPart part, dynamic shapeHelper) {
+            UserSecurityConfigurationPart part, dynamic shapeHelper)
+        {
 
             return ContentShape("Parts_User_UserSecurityConfiguration_Edit",
                 () => shapeHelper.EditorTemplate(
@@ -18,7 +21,8 @@ namespace Orchard.Users.Drivers {
                     ));
         }
         protected override DriverResult Editor(
-            UserSecurityConfigurationPart part, IUpdateModel updater, dynamic shapeHelper) {
+            UserSecurityConfigurationPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }

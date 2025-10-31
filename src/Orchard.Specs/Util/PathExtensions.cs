@@ -1,11 +1,13 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using System.IO;
 using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Specs.Util {
-    public static class PathExtensions {
-        public static Path GetRelativePath(this Path path, Path basePath) {
+namespace Orchard.Specs.Util
+{
+    public static class PathExtensions
+    {
+        public static Path GetRelativePath(this Path path, Path basePath)
+        {
             if (path.Equals(basePath))
                 return Path.Get(".");
 
@@ -19,35 +21,40 @@ namespace Orchard.Specs.Util {
         }
 
 
-        public static Path DeepCopy(this Path sourcePath, Path targetPath) {
+        public static Path DeepCopy(this Path sourcePath, Path targetPath)
+        {
             sourcePath
                 .GetFiles("*", true /*recursive*/)
                 .ForEach(file => FileCopy(sourcePath, targetPath, file));
             return sourcePath;
         }
 
-        public static Path DeepCopy(this Path sourcePath, string pattern, Path targetPath) {
+        public static Path DeepCopy(this Path sourcePath, string pattern, Path targetPath)
+        {
             sourcePath
                 .GetFiles(pattern, true /*recursive*/)
                 .ForEach(file => FileCopy(sourcePath, targetPath, file));
             return sourcePath;
         }
 
-        public static Path ShallowCopy(this Path sourcePath, string pattern, Path targetPath) {
+        public static Path ShallowCopy(this Path sourcePath, string pattern, Path targetPath)
+        {
             sourcePath
                 .GetFiles(pattern, false /*recursive*/)
                 .ForEach(file => FileCopy(sourcePath, targetPath, file));
             return sourcePath;
         }
 
-        public static Path ShallowCopy(this Path sourcePath, Predicate<Path> predicatePath, Path targetPath) {
+        public static Path ShallowCopy(this Path sourcePath, Predicate<Path> predicatePath, Path targetPath)
+        {
             sourcePath
                 .GetFiles(predicatePath, false /*recursive*/)
                 .ForEach(file => FileCopy(sourcePath, targetPath, file));
             return sourcePath;
         }
 
-        private static void FileCopy(Path sourcePath, Path targetPath, Path sourceFile) {
+        private static void FileCopy(Path sourcePath, Path targetPath, Path sourceFile)
+        {
             var targetFile = targetPath.Combine(sourceFile.GetRelativePath(sourcePath));
             targetFile.Parent.CreateDirectory();
             // Trace.WriteLine(string.Format("Copying file '{0}' to '{1}'", sourceFile, targetFile));

@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Setup {
-    public class Routes : IRouteProvider {
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            var routeDescriptor = new RouteDescriptor {
+namespace Orchard.Setup
+{
+    public class Routes : IRouteProvider
+    {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            var routeDescriptor = new RouteDescriptor
+            {
                 Route = new Route(
                         "{controller}/{action}",
                         new RouteValueDictionary {

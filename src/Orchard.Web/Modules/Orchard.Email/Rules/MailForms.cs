@@ -1,23 +1,28 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Events;
 using Orchard.Localization;
 
-namespace Orchard.Email.Rules {
-    public interface IFormProvider : IEventHandler {
+namespace Orchard.Email.Rules
+{
+    public interface IFormProvider : IEventHandler
+    {
         void Describe(dynamic context);
     }
 
-    public class MailForms : IFormProvider {
+    public class MailForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public MailForms(IShapeFactory shapeFactory) {
+        public MailForms(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(dynamic context) {
+        public void Describe(dynamic context)
+        {
             Func<IShapeFactory, dynamic> form =
                 shape => Shape.Form(
                 Id: "ActionEmail",
@@ -75,29 +80,37 @@ namespace Orchard.Email.Rules {
         }
     }
 
-    public interface IFormEventHandler : IEventHandler {
+    public interface IFormEventHandler : IEventHandler
+    {
         void Validating(dynamic context);
     }
 
-    public class MailFormsValidator : IFormEventHandler {
+    public class MailFormsValidator : IFormEventHandler
+    {
         public Localizer T { get; set; }
 
-        public void Validating(dynamic context) {
-            if (context.FormName == "ActionEmail") {
-                if (context.ValueProvider.GetValue("Recipient").AttemptedValue == String.Empty) {
+        public void Validating(dynamic context)
+        {
+            if (context.FormName == "ActionEmail")
+            {
+                if (context.ValueProvider.GetValue("Recipient").AttemptedValue == string.Empty)
+                {
                     context.ModelState.AddModelError("Recipient", T("You must select at least one recipient").Text);
                 }
 
-                if (context.ValueProvider.GetValue("Subject").AttemptedValue == String.Empty) {
+                if (context.ValueProvider.GetValue("Subject").AttemptedValue == string.Empty)
+                {
                     context.ModelState.AddModelError("Subject", T("You must provide a Subject").Text);
                 }
 
-                if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
+                if (context.ValueProvider.GetValue("Body").AttemptedValue == string.Empty)
+                {
                     context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
                 }
 
-                if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == String.Empty &&
-                    context.ValueProvider.GetValue("Recipient").AttemptedValue == "other") {
+                if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == string.Empty &&
+                    context.ValueProvider.GetValue("Recipient").AttemptedValue == "other")
+                {
                     context.ModelState.AddModelError("Recipient", T("You must provide an e-mail address").Text);
                 }
             }

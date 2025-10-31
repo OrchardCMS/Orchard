@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Indexing.Models {
-    public class IndexingTaskRecord {
+namespace Orchard.Indexing.Models
+{
+    public class IndexingTaskRecord
+    {
 
         public const int Update = 0;
         public const int Delete = 1;

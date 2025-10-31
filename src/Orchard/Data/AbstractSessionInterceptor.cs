@@ -1,13 +1,15 @@
-﻿using System.Collections;
+using System.Collections;
 using NHibernate;
 using NHibernate.SqlCommand;
 using NHibernate.Type;
 
-namespace Orchard.Data {
+namespace Orchard.Data
+{
     /// <summary>
     /// Abstract implementation of a per-session NHibernate session interceptor.
     /// </summary>
-    public abstract class AbstractSessionInterceptor : ISessionInterceptor {
+    public abstract class AbstractSessionInterceptor : ISessionInterceptor
+    {
         /// <summary>
         /// Called just before an object is initialized
         /// </summary>
@@ -20,7 +22,8 @@ namespace Orchard.Data {
         /// <returns>
         /// <see langword="true"/> if the user modified the <c>state</c> in any way
         /// </returns>
-        public virtual bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+        public virtual bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
             return false;
         }
 
@@ -38,7 +41,8 @@ namespace Orchard.Data {
         /// <returns>
         /// <see langword="true"/> if the user modified the <c>currentState</c> in any way
         /// </returns>
-        public virtual bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types) {
+        public virtual bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+        {
             return false;
         }
 
@@ -53,7 +57,8 @@ namespace Orchard.Data {
         /// <returns>
         /// <see langword="true"/> if the user modified the <c>state</c> in any way
         /// </returns>
-        public virtual bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+        public virtual bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
             return false;
         }
 
@@ -64,32 +69,37 @@ namespace Orchard.Data {
         /// <remarks>
         /// It is not recommended that the interceptor modify the <c>state</c>.
         /// </remarks>
-        public virtual void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
+        public virtual void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
         }
 
         /// <summary>
         /// Called before a collection is (re)created.
         /// </summary>
-        public virtual void OnCollectionRecreate(object collection, object key) {
+        public virtual void OnCollectionRecreate(object collection, object key)
+        {
         }
 
         /// <summary>
         /// Called before a collection is deleted.
         /// </summary>
-        public virtual void OnCollectionRemove(object collection, object key) {
+        public virtual void OnCollectionRemove(object collection, object key)
+        {
         }
 
         /// <summary>
         /// Called before a collection is updated.
         /// </summary>
-        public virtual void OnCollectionUpdate(object collection, object key) {
+        public virtual void OnCollectionUpdate(object collection, object key)
+        {
         }
 
         /// <summary>
         /// Called before a flush
         /// </summary>
         /// <param name="entities">The entities</param>
-        public virtual void PreFlush(ICollection entities) {
+        public virtual void PreFlush(ICollection entities)
+        {
         }
 
         /// <summary>
@@ -97,7 +107,8 @@ namespace Orchard.Data {
         ///             synchronize in-memory state with the database.
         /// </summary>
         /// <param name="entities">The entitites</param>
-        public virtual void PostFlush(ICollection entities) {
+        public virtual void PostFlush(ICollection entities)
+        {
         }
 
         /// <summary>
@@ -121,7 +132,8 @@ namespace Orchard.Data {
         /// <returns>
         /// Boolean or <see langword="null"/> to choose default behaviour
         /// </returns>
-        public virtual bool? IsTransient(object entity) {
+        public virtual bool? IsTransient(object entity)
+        {
             return null;
         }
 
@@ -145,7 +157,8 @@ namespace Orchard.Data {
         /// <returns>
         /// An array of dirty property indicies or <see langword="null"/> to choose default behavior
         /// </returns>
-        public virtual int[] FindDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types) {
+        public virtual int[] FindDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+        {
             return null;
         }
 
@@ -161,7 +174,8 @@ namespace Orchard.Data {
         /// The identifier property of the returned instance
         ///             should be initialized with the given identifier.
         /// </remarks>
-        public virtual object Instantiate(string entityName, object id) {
+        public virtual object Instantiate(string entityName, object id)
+        {
             return null;
         }
 
@@ -172,7 +186,8 @@ namespace Orchard.Data {
         /// <returns>
         /// the name of the entity 
         /// </returns>
-        public virtual string GetEntityName(object entity) {
+        public virtual string GetEntityName(object entity)
+        {
             return null;
         }
 
@@ -192,19 +207,22 @@ namespace Orchard.Data {
         /// Called when a NHibernate transaction is begun via the NHibernate <see cref="T:NHibernate.ITransaction"/>
         ///             API. Will not be called if transactions are being controlled via some other mechanism.
         /// </summary>
-        public virtual void AfterTransactionBegin(ITransaction tx) {
+        public virtual void AfterTransactionBegin(ITransaction tx)
+        {
         }
 
         /// <summary>
         /// Called before a transaction is committed (but not before rollback).
         /// </summary>
-        public virtual void BeforeTransactionCompletion(ITransaction tx) {
+        public virtual void BeforeTransactionCompletion(ITransaction tx)
+        {
         }
 
         /// <summary>
         /// Called after a transaction is committed or rolled back.
         /// </summary>
-        public virtual void AfterTransactionCompletion(ITransaction tx) {
+        public virtual void AfterTransactionCompletion(ITransaction tx)
+        {
         }
 
         /// <summary>
@@ -214,7 +232,8 @@ namespace Orchard.Data {
         /// <returns>
         /// original or modified sql 
         /// </returns>
-        public virtual SqlString OnPrepareStatement(SqlString sql) {
+        public virtual SqlString OnPrepareStatement(SqlString sql)
+        {
             return sql;
         }
 
@@ -227,7 +246,8 @@ namespace Orchard.Data {
         ///             The use of singleton-interceptor may cause problems in multi-thread scenario. 
         /// </remarks>
         /// <seealso cref="M:NHibernate.ISessionFactory.OpenSession(NHibernate.IInterceptor)"/><seealso cref="M:NHibernate.ISessionFactory.OpenSession(System.Data.IDbConnection,NHibernate.IInterceptor)"/>
-        public virtual void SetSession(ISession session) {
+        public virtual void SetSession(ISession session)
+        {
         }
     }
 }

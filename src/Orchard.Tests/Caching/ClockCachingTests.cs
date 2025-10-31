@@ -1,19 +1,22 @@
-﻿using System;
+using System;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Caching {
+namespace Orchard.Tests.Caching
+{
     [TestFixture]
-    public class ClockCachingTests {
+    public class ClockCachingTests
+    {
         private IContainer _container;
         private ICacheManager _cacheManager;
         private StubClock _clock;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new CacheModule());
             builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
@@ -25,21 +28,24 @@ namespace Orchard.Tests.Caching {
         }
 
         [Test]
-        public void WhenAbsoluteShouldHandleAbsoluteTime() {
+        public void WhenAbsoluteShouldHandleAbsoluteTime()
+        {
             var inOneSecond = _clock.UtcNow.AddSeconds(1);
             var cached = 0;
 
             // each call after the specified datetime will be reevaluated
             Func<int> retrieve = ()
                 => _cacheManager.Get("testItem",
-                        ctx => {
+                        ctx =>
+                        {
                             ctx.Monitor(_clock.WhenUtc(inOneSecond));
                             return ++cached;
                         });
 
             Assert.That(retrieve(), Is.EqualTo(1));
 
-            for ( var i = 0; i < 10; i++ ) {
+            for (var i = 0; i < 10; i++)
+            {
                 Assert.That(retrieve(), Is.EqualTo(1));
             }
 
@@ -51,32 +57,37 @@ namespace Orchard.Tests.Caching {
         }
 
         [Test]
-        public void WhenAbsoluteShouldHandleAbsoluteTimeSpan() {
+        public void WhenAbsoluteShouldHandleAbsoluteTimeSpan()
+        {
             var cached = 0;
 
             // each cached value has a lifetime of the specified duration
             Func<int> retrieve = ()
                 => _cacheManager.Get("testItem",
-                        ctx => {
+                        ctx =>
+                        {
                             ctx.Monitor(_clock.When(TimeSpan.FromSeconds(1)));
                             return ++cached;
                         });
 
             Assert.That(retrieve(), Is.EqualTo(1));
 
-            for ( var i = 0; i < 10; i++ ) {
+            for (var i = 0; i < 10; i++)
+            {
                 Assert.That(retrieve(), Is.EqualTo(1));
             }
 
             _clock.Advance(TimeSpan.FromSeconds(1));
 
-            for ( var i = 0; i < 10; i++ ) {
+            for (var i = 0; i < 10; i++)
+            {
                 Assert.That(retrieve(), Is.EqualTo(2));
             }
 
             _clock.Advance(TimeSpan.FromSeconds(1));
 
-            for ( var i = 0; i < 10; i++ ) {
+            for (var i = 0; i < 10; i++)
+            {
                 Assert.That(retrieve(), Is.EqualTo(3));
             }
         }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Orchard.Projections.ViewModels;
 
-namespace Orchard.Projections.Settings {
-    public class ProjectionPartSettings {
-        public ProjectionPartSettings() {
+namespace Orchard.Projections.Settings
+{
+    public class ProjectionPartSettings
+    {
+        public ProjectionPartSettings()
+        {
             FilterQueryRecordsId = new List<string>();
         }
 

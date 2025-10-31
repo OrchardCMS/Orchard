@@ -1,13 +1,17 @@
-﻿using System.Linq;
+using System.Linq;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Extensions;
 
-namespace Orchard.Glimpse.Tabs.Layers {
-    public class LayerTab : TabBase, ITabSetup, IKey {
-        public override object GetData(ITabContext context) {
+namespace Orchard.Glimpse.Tabs.Layers
+{
+    public class LayerTab : TabBase, ITabSetup, IKey
+    {
+        public override object GetData(ITabContext context)
+        {
             var messages = context.GetMessages<LayerMessage>().ToList();
 
-            if (!messages.Any()) {
+            if (!messages.Any())
+            {
                 return null;
             }
 
@@ -16,7 +20,8 @@ namespace Orchard.Glimpse.Tabs.Layers {
 
         public override string Name => "Layers";
 
-        public void Setup(ITabSetupContext context) {
+        public void Setup(ITabSetupContext context)
+        {
             context.PersistMessages<LayerMessage>();
         }
 

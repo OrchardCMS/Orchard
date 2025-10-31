@@ -1,25 +1,32 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Security {
-    public class StandardPermissions : IPermissionProvider {
+namespace Orchard.Security
+{
+    public class StandardPermissions : IPermissionProvider
+    {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
-        public static readonly Permission SiteOwner = new Permission { Name = "SiteOwner", Description = "Site Owners Permission" }; 
+        public static readonly Permission SiteOwner = new Permission { Name = "SiteOwner", Description = "Site Owners Permission" };
 
-        public Feature Feature {
-            get {
+        public Feature Feature
+        {
+            get
+            {
                 // This is a lie, but it enables the permissions and stereotypes to be created
-                return new Feature {
-                    Descriptor = new FeatureDescriptor {
+                return new Feature
+                {
+                    Descriptor = new FeatureDescriptor
+                    {
                         Id = "Orchard.Framework",
                         Category = "Core",
                         Dependencies = Enumerable.Empty<string>(),
                         Description = "",
-                        Extension = new ExtensionDescriptor {
+                        Extension = new ExtensionDescriptor
+                        {
                             Id = "Orchard.Framework"
                         }
                     },
@@ -28,7 +35,8 @@ namespace Orchard.Security {
             }
         }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 AccessAdminPanel,
                 AccessFrontEnd,
@@ -36,7 +44,8 @@ namespace Orchard.Security {
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",

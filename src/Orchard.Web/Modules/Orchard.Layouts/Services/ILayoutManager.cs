@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 
-namespace Orchard.Layouts.Services {
-    public interface ILayoutManager : IDependency {
+namespace Orchard.Layouts.Services
+{
+    public interface ILayoutManager : IDependency
+    {
         /// <summary>
         /// Returns all content items with a LayoutPart whose IsTemplate setting is set to true.
         /// </summary>
@@ -45,7 +47,7 @@ namespace Orchard.Layouts.Services {
         /// </summary>
         /// <returns>Returns the merged layout Data.</returns>
         IEnumerable<Element> ApplyTemplate(IEnumerable<Element> layout, IEnumerable<Element> templateLayout);
-        
+
         /// <summary>
         /// Updates the specified layout by unmarking all templated elements so that they become normal elements again.
         /// </summary>

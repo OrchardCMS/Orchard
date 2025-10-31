@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -37,9 +37,12 @@ using Orchard.UI.Resources;
 using Orchard.WebApi;
 using Orchard.WebApi.Filters;
 
-namespace Orchard.Environment {
-    public static class OrchardStarter {
-        public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
+namespace Orchard.Environment
+{
+    public static class OrchardStarter
+    {
+        public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations)
+        {
             ExtensionLocations extensionLocations = new ExtensionLocations();
 
             var builder = new ContainerBuilder();
@@ -85,7 +88,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
-            
+
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
                 .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
                 .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)
@@ -149,8 +152,10 @@ namespace Orchard.Environment {
             //
             // Register Virtual Path Providers
             //
-            if (HostingEnvironment.IsHosted) {
-                foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
+            if (HostingEnvironment.IsHosted)
+            {
+                foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>())
+                {
                     HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
                 }
             }
@@ -180,14 +185,16 @@ namespace Orchard.Environment {
             return container;
         }
 
-        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
+        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider
+        {
             builder.RegisterType<TRegister>()
                 .As<TService>()
                 .As<IVolatileProvider>()
                 .SingleInstance();
         }
 
-        public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
+        public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations)
+        {
             var container = CreateHostContainer(registrations);
             return container.Resolve<IOrchardHost>();
         }

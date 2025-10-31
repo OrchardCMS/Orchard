@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Security {
-    public interface ISecurityService : IDependency {
+namespace Orchard.Security
+{
+    public interface ISecurityService : IDependency
+    {
         /// <summary>
         /// Provides the TimeSpan telling how long an authentication cookie will be allowed to be valid.
         /// </summary>

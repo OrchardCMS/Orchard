@@ -1,9 +1,12 @@
-﻿using Orchard.Data.Migration;
+using Orchard.Data.Migration;
 
-namespace Orchard.Rules {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Rules
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("RuleRecord",
                 table => table
                     .Column<int>("Id", c => c.PrimaryKey().Identity())

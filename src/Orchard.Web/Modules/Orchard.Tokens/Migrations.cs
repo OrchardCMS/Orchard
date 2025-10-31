@@ -1,13 +1,16 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.Tokens {
+namespace Orchard.Tokens
+{
     [OrchardFeature("Orchard.Tokens.Feeds")]
-    public class FeedsMigrations : DataMigrationImpl {
+    public class FeedsMigrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
 
             ContentDefinitionManager.AlterPartDefinition("RssPart",
                 cfg => cfg

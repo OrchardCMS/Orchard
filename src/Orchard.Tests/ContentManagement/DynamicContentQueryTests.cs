@@ -1,35 +1,38 @@
-﻿using System.Linq;
+using System.Linq;
 using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
-using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
-using Orchard.DisplayManagement.Implementation;
+using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.Stubs;
 using Orchard.UI.PageClass;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement
+{
     [TestFixture]
-    public class DynamicContentQueryTests {
+    public class DynamicContentQueryTests
+    {
         private IContainer _container;
         private IContentManager _manager;
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
         [OneTimeSetUp]
-        public void InitFixture() {
+        public void InitFixture()
+        {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -42,7 +45,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new ContentModule());
@@ -68,7 +72,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
@@ -89,12 +93,14 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [TearDown]
-        public void Cleanup() {
+        public void Cleanup()
+        {
             if (_container != null)
                 _container.Dispose();
         }
 
-        private void AddSampleData() {
+        private void AddSampleData()
+        {
             _manager.Create<AlphaPart>("alpha", init => { });
             _manager.Create<BetaPart>("beta", init => { });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "the frap value"; });
@@ -103,7 +109,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void SpecificTypeIsReturnedWhenSpecified() {
+        public void SpecificTypeIsReturnedWhenSpecified()
+        {
             AddSampleData();
 
             var alphaBeta = _manager.HqlQuery().ForType("alpha", "beta").List();
@@ -124,7 +131,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void WherePredicateRestrictsResults() {
+        public void WherePredicateRestrictsResults()
+        {
             AddSampleData();
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
@@ -135,7 +143,7 @@ namespace Orchard.Tests.ContentManagement {
             var twoOrFour = _manager
                 .HqlQuery()
                 .Where(
-                    alias => alias.ContentPartRecord<GammaRecord>(), 
+                    alias => alias.ContentPartRecord<GammaRecord>(),
                     x => x.Or(a => a.Eq("Frap", "one"), b => b.Eq("Frap", "four")))
                 .List();
 
@@ -147,7 +155,8 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void EmptyWherePredicateRequiresRecord() {
+        public void EmptyWherePredicateRequiresRecord()
+        {
             AddSampleData();
             var gammas = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<GammaRecord>()).List();
             var deltas = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<DeltaRecord>()).List();
@@ -159,7 +168,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void OrderMaySortOnJoinedRecord() {
+        public void OrderMaySortOnJoinedRecord()
+        {
             AddSampleData();
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
@@ -190,7 +200,8 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void SkipAndTakeProvidePagination() {
+        public void SkipAndTakeProvidePagination()
+        {
             AddSampleData();
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
@@ -214,21 +225,26 @@ namespace Orchard.Tests.ContentManagement {
 
 
         [Test]
-        public void QueryShouldJoinVersionedRecords() {
+        public void QueryShouldJoinVersionedRecords()
+        {
             AddSampleData();
-            _manager.Create<GammaPart>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init =>
+            {
                 init.Record.Frap = "one";
                 init.As<EpsilonPart>().Record.Quad = "1";
             });
-            _manager.Create<GammaPart>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init =>
+            {
                 init.Record.Frap = "two";
                 init.As<EpsilonPart>().Record.Quad = "2";
             });
-            _manager.Create<GammaPart>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init =>
+            {
                 init.Record.Frap = "three";
                 init.As<EpsilonPart>().Record.Quad = "3";
             });
-            _manager.Create<GammaPart>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init =>
+            {
                 init.Record.Frap = "four";
                 init.As<EpsilonPart>().Record.Quad = "4";
             });

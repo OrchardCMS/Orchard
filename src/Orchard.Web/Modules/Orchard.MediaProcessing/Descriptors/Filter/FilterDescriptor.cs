@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 
-namespace Orchard.MediaProcessing.Descriptors.Filter {
-    public class FilterDescriptor {
+namespace Orchard.MediaProcessing.Descriptors.Filter
+{
+    public class FilterDescriptor
+    {
         public string Category { get; set; }
         public string Type { get; set; }
         public LocalizedString Name { get; set; }

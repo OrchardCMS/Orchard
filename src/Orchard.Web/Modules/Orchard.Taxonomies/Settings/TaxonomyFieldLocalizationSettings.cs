@@ -1,10 +1,13 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.Taxonomies.Settings {
+namespace Orchard.Taxonomies.Settings
+{
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
-    public class TaxonomyFieldLocalizationSettings {
+    public class TaxonomyFieldLocalizationSettings
+    {
         public bool TryToLocalize { get; set; }
-        public TaxonomyFieldLocalizationSettings() {
+        public TaxonomyFieldLocalizationSettings()
+        {
             TryToLocalize = true; // default value
         }
     }

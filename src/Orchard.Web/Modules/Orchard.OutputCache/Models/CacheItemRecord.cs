@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Data.Conventions;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.OutputCache.Models {
+namespace Orchard.OutputCache.Models
+{
     [OrchardFeature("Orchard.OutputCache.Database")]
-    public class CacheItemRecord {
+    public class CacheItemRecord
+    {
         public virtual int Id { get; set; }
         public virtual DateTime CachedOnUtc { get; set; }
         public virtual int Duration { get; set; }

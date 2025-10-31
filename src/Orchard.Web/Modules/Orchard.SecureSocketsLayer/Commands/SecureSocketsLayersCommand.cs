@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.SecureSocketsLayer.Models;
 
-namespace Orchard.SecureSocketsLayer.Commands {
-    public class SecureSocketsLayersCommand : DefaultOrchardCommandHandler {
+namespace Orchard.SecureSocketsLayer.Commands
+{
+    public class SecureSocketsLayersCommand : DefaultOrchardCommandHandler
+    {
         private readonly IOrchardServices _services;
 
-        public SecureSocketsLayersCommand(IOrchardServices services) {
+        public SecureSocketsLayersCommand(IOrchardServices services)
+        {
             _services = services;
         }
 
@@ -27,33 +30,42 @@ namespace Orchard.SecureSocketsLayer.Commands {
         [CommandHelp("site setting set ssl /SecureEverything:true /CustomEnabled:true /Urls:<value> /SecureHostName:domain.com /InsecureHostName:secure.domain.com\r\n" +
             "\tSet the 'SSL' site settings. Urls example: /Urls:\"'mysite.com/a','mysite.com/b'\"")]
         [OrchardSwitches("SecureEverything,CustomEnabled,Urls,SecureHostName,InsecureHostName")]
-        public void SetSSLInfo() {
+        public void SetSSLInfo()
+        {
             var settings = _services.WorkContext.CurrentSite.As<SslSettingsPart>();
-            if (settings == null) {
+            if (settings == null)
+            {
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(Urls)) {
+            if (!string.IsNullOrWhiteSpace(Urls))
+            {
                 var comma = false;
                 var urlList = new List<string>();
-                try {
+                try
+                {
                     Urls = Urls.Trim();
-                    while (Urls.Length != 0) {
+                    while (Urls.Length != 0)
+                    {
                         var first = Urls[0];
-                        if (first == ',' && comma) {
+                        if (first == ',' && comma)
+                        {
                             Urls = Urls.Substring(1);
                             comma = false;
                         }
-                        else if (first == '\'' && !comma) {
+                        else if (first == '\'' && !comma)
+                        {
                             int end = Urls.IndexOf('\'', 1);
-                            if (end == -1) {
+                            if (end == -1)
+                            {
                                 throw new ArgumentException("Invalid Urls");
                             }
                             urlList.Add(Urls.Substring(1, end - 1));
                             Urls = Urls.Substring(end + 1);
                             comma = true;
                         }
-                        else {
+                        else
+                        {
                             throw new ArgumentException("Invalid Urls");
                         }
                     }
@@ -61,13 +73,15 @@ namespace Orchard.SecureSocketsLayer.Commands {
                         throw new ArgumentException("Invalid Urls");
                     Urls = string.Join("\r\n", urlList);
                 }
-                catch(ArgumentException) {
+                catch (ArgumentException)
+                {
                     Context.Output.WriteLine(T("'Urls' site setting invalid"));
                     return;
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(Urls)) {
+            if (string.IsNullOrWhiteSpace(Urls))
+            {
                 Urls = null;
             }
 

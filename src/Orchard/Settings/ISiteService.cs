@@ -1,5 +1,7 @@
-﻿namespace Orchard.Settings {
-    public interface ISiteService : IDependency {
+namespace Orchard.Settings
+{
+    public interface ISiteService : IDependency
+    {
         ISite GetSiteSettings();
     }
 }

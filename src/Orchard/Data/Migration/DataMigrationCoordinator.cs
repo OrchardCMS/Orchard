@@ -1,7 +1,8 @@
-﻿using Orchard.Environment;
+using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Data.Migration {
+namespace Orchard.Data.Migration
+{
     /// <summary>
     /// Responsible for executing data migration tasks when a feature is enabled for the first time
     /// 1) Initial install of a module:
@@ -14,39 +15,50 @@ namespace Orchard.Data.Migration {
     ///     1) feature wasn't not enabled when new code was installed
     ///     2) feature was enabled when new code was installed
     /// </summary>
-    public class DataMigrationCoordinator : IFeatureEventHandler {
+    public class DataMigrationCoordinator : IFeatureEventHandler
+    {
         private readonly IDataMigrationManager _dataMigrationManager;
 
-        public DataMigrationCoordinator(IDataMigrationManager dataMigrationManager) {
+        public DataMigrationCoordinator(IDataMigrationManager dataMigrationManager)
+        {
             _dataMigrationManager = dataMigrationManager;
         }
 
-        public void Installing(Feature feature) {
+        public void Installing(Feature feature)
+        {
             var featureName = feature.Descriptor.Id;
             _dataMigrationManager.Update(featureName);
         }
 
-        public void Installed(Feature feature) {
+        public void Installed(Feature feature)
+        {
         }
 
-        public void Enabling(Feature feature) {
+        public void Enabling(Feature feature)
+        {
         }
 
-        public void Enabled(Feature feature) {
+        public void Enabled(Feature feature)
+        {
         }
 
-        public void Disabling(Feature feature) {
+        public void Disabling(Feature feature)
+        {
         }
 
-        public void Disabled(Feature feature) {
+        public void Disabled(Feature feature)
+        {
         }
 
-        public void Uninstalling(Feature feature) {
+        public void Uninstalling(Feature feature)
+        {
         }
 
-        public void Uninstalled(Feature feature) {
+        public void Uninstalled(Feature feature)
+        {
             var featureName = feature.Descriptor.Id;
-            if ( _dataMigrationManager.IsFeatureAlreadyInstalled(featureName) ) {
+            if (_dataMigrationManager.IsFeatureAlreadyInstalled(featureName))
+            {
                 _dataMigrationManager.Uninstall(featureName);
             }
         }

@@ -1,7 +1,9 @@
-﻿using Orchard.Layouts.Elements;
+using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
 
-namespace Orchard.Layouts.Drivers {
-    public class ContentFieldElementDriver : ElementDriver<ContentField> {
+namespace Orchard.Layouts.Drivers
+{
+    public class ContentFieldElementDriver : ElementDriver<ContentField>
+    {
     }
 }

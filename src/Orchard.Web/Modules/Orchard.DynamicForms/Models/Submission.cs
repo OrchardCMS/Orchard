@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Data.Conventions;
 
-namespace Orchard.DynamicForms.Models {
-    public class Submission {
+namespace Orchard.DynamicForms.Models
+{
+    public class Submission
+    {
         public virtual int Id { get; set; }
         public virtual string FormName { get; set; }
 

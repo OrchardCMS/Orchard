@@ -1,9 +1,12 @@
-﻿namespace Orchard.Data.Migration.Schema {
-    public class DropIndexCommand : TableCommand {
+namespace Orchard.Data.Migration.Schema
+{
+    public class DropIndexCommand : TableCommand
+    {
         public string IndexName { get; set; }
 
         public DropIndexCommand(string tableName, string indexName)
-            : base(tableName) {
+            : base(tableName)
+        {
             IndexName = indexName;
         }
     }

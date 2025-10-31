@@ -1,11 +1,9 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Orchard.Data.Providers {
-    public interface INoLockTableProvider : IDependency {
+namespace Orchard.Data.Providers
+{
+    public interface INoLockTableProvider : IDependency
+    {
         /// <summary>
         /// Returns the names of the tables from which read operations should ignore shared locks.
         /// </summary>

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -12,15 +12,18 @@ using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Rules.Controllers {
+namespace Orchard.Rules.Controllers
+{
     [ValidateInput(false), Admin]
-    public class ActionController : Controller {
+    public class ActionController : Controller
+    {
         public ActionController(
             IOrchardServices services,
             IRulesManager rulesManager,
             IRulesServices rulesServices,
             IFormManager formManager,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Services = services;
             _rulesManager = rulesManager;
             _rulesServices = rulesServices;
@@ -35,7 +38,8 @@ namespace Orchard.Rules.Controllers {
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
-        public ActionResult Add(int id) {
+        public ActionResult Add(int id)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
@@ -44,7 +48,8 @@ namespace Orchard.Rules.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(int id, int actionId) {
+        public ActionResult Delete(int id, int actionId)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
@@ -54,19 +59,23 @@ namespace Orchard.Rules.Controllers {
             return RedirectToAction("Edit", "Admin", new { id });
         }
 
-        public ActionResult Edit(int id, string category, string type, int actionId = -1) {
+        public ActionResult Edit(int id, string category, string type, int actionId = -1)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
                 return new HttpUnauthorizedResult();
 
             var action = _rulesManager.DescribeActions().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
 
-            if (action == null) {
+            if (action == null)
+            {
                 return HttpNotFound();
             }
 
             // if there is no form to edit, save the action and go back to the rule
-            if (action.Form == null) {
-                if (actionId == -1) {
+            if (action.Form == null)
+            {
+                if (actionId == -1)
+                {
                     var rule = _rulesServices.GetRule(id);
                     rule.Actions.Add(new ActionRecord { Category = category, Type = type, Position = rule.Actions.Count + 1 });
                 }
@@ -93,10 +102,12 @@ namespace Orchard.Rules.Controllers {
                 );
 
             // bind form with existing values).
-            if (actionId != -1) {
+            if (actionId != -1)
+            {
                 var rule = _rulesServices.GetRule(id);
                 var actionRecord = rule.Actions.FirstOrDefault(a => a.Id == actionId);
-                if (actionRecord != null) {
+                if (actionRecord != null)
+                {
                     var parameters = FormParametersHelper.FromString(actionRecord.Parameters);
                     _formManager.Bind(form, new DictionaryValueProvider<string>(parameters, CultureInfo.InvariantCulture));
                 }
@@ -107,13 +118,15 @@ namespace Orchard.Rules.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)]int actionId, FormCollection formCollection) {
+        public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)] int actionId, FormCollection formCollection)
+        {
             var rule = _rulesServices.GetRule(id);
 
             var actionRecord = rule.Actions.FirstOrDefault(a => a.Id == actionId);
 
             // add new action record if it's a newly created action
-            if (actionRecord == null) {
+            if (actionRecord == null)
+            {
                 actionRecord = new ActionRecord { Category = category, Type = type, Position = rule.Actions.Count };
                 rule.Actions.Add(actionRecord);
             }
@@ -123,7 +136,8 @@ namespace Orchard.Rules.Controllers {
             // validating form values
             _formManager.Validate(new ValidatingContext { FormName = action.Form, ModelState = ModelState, ValueProvider = ValueProvider });
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var dictionary = formCollection.AllKeys.ToDictionary(key => key, formCollection.Get);
 
                 // save form parameters
@@ -146,11 +160,13 @@ namespace Orchard.Rules.Controllers {
             return View(viewModel);
         }
 
-        private class ViewDataContainer : IViewDataContainer {
+        private class ViewDataContainer : IViewDataContainer
+        {
             public ViewDataDictionary ViewData { get; set; }
         }
 
-        private void AddSubmitButton(dynamic form) {
+        private void AddSubmitButton(dynamic form)
+        {
             var viewContext = new ViewContext { HttpContext = HttpContext, Controller = this };
             var token = new HtmlHelper(viewContext, new ViewDataContainer()).AntiForgeryToken();
 

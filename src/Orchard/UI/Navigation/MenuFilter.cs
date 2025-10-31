@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -6,31 +6,37 @@ using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
 
-namespace Orchard.UI.Navigation {
-    public class MenuFilter : FilterProvider, IResultFilter {
+namespace Orchard.UI.Navigation
+{
+    public class MenuFilter : FilterProvider, IResultFilter
+    {
         private readonly INavigationManager _navigationManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly dynamic _shapeFactory;
 
         public MenuFilter(INavigationManager navigationManager,
             IWorkContextAccessor workContextAccessor,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
 
             _navigationManager = navigationManager;
             _workContextAccessor = workContextAccessor;
             _shapeFactory = shapeFactory;
         }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
+        public void OnResultExecuting(ResultExecutingContext filterContext)
+        {
             // should only run on a full view rendering result
-            if (!(filterContext.Result is ViewResult)) {
+            if (!(filterContext.Result is ViewResult))
+            {
                 return;
             }
 
             WorkContext workContext = _workContextAccessor.GetContext(filterContext);
 
             const string menuName = "admin";
-            if (!AdminFilter.IsApplied(filterContext.RequestContext)) {
+            if (!AdminFilter.IsApplied(filterContext.RequestContext))
+            {
                 return;
             }
 
@@ -39,8 +45,10 @@ namespace Orchard.UI.Navigation {
             // adding query string parameters
             var routeData = new RouteValueDictionary(filterContext.RouteData.Values);
             var queryString = workContext.HttpContext.Request.QueryString;
-            if (queryString != null) {
-                foreach (var key in from string key in queryString.Keys where key != null && !routeData.ContainsKey(key) let value = queryString[key] select key) {
+            if (queryString != null)
+            {
+                foreach (var key in from string key in queryString.Keys where key != null && !routeData.ContainsKey(key) let value = queryString[key] select key)
+                {
                     routeData[key] = queryString[key];
                 }
             }

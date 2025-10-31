@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Rules.Models;
 using Orchard.Rules.Services;
-using Orchard.Localization;
 using Orchard.Services;
-using Orchard.Mvc.Html;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tokens;
 
-namespace Orchard.Rules.Providers {
-    public class ScheduleActions : IActionProvider {
+namespace Orchard.Rules.Providers
+{
+    public class ScheduleActions : IActionProvider
+    {
         private readonly IContentManager _contentManager;
         private readonly IScheduledTaskManager _scheduledTaskManager;
         private readonly IRepository<RuleRecord> _repository;
@@ -26,7 +28,8 @@ namespace Orchard.Rules.Providers {
             IRepository<ActionRecord> actionRecordRepository,
             IRepository<ScheduledActionRecord> scheduledActionRecordRepository,
             IClock clock,
-            ITokenizer tokenizer) {
+            ITokenizer tokenizer)
+        {
             _contentManager = contentManager;
             _scheduledTaskManager = scheduledTaskManager;
             _repository = repository;
@@ -39,12 +42,14 @@ namespace Orchard.Rules.Providers {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeActionContext context) {
+        public void Describe(DescribeActionContext context)
+        {
             context.For("System", T("System"), T("System"))
                 .Element("Delayed", T("Delayed Action"), T("Triggers some actions after a specific amount of time."), CreateDelayedAction, DisplayDelayedAction, "ActionDelay");
         }
 
-        private LocalizedString DisplayDelayedAction(ActionContext context) {
+        private LocalizedString DisplayDelayedAction(ActionContext context)
+        {
             var amount = Convert.ToInt32(context.Properties["Amount"]);
             var type = context.Properties["Unity"];
             var ruleId = Convert.ToInt32(context.Properties["RuleId"]);
@@ -54,7 +59,8 @@ namespace Orchard.Rules.Providers {
             return T.Plural("Triggers \"{1}\" in {0} {2}", "Triggers \"{1}\" in {0} {2}s", amount, rule.Name, type);
         }
 
-        private bool CreateDelayedAction(ActionContext context) {
+        private bool CreateDelayedAction(ActionContext context)
+        {
             var amount = Convert.ToInt32(context.Properties["Amount"]);
             var type = context.Properties["Unity"];
             var ruleId = Convert.ToInt32(context.Properties["RuleId"]);
@@ -64,7 +70,8 @@ namespace Orchard.Rules.Providers {
 
             var when = _clock.UtcNow;
 
-            switch (type) {
+            switch (type)
+            {
                 case "Minute":
                     when = when.AddMinutes(amount);
                     break;
@@ -85,8 +92,10 @@ namespace Orchard.Rules.Providers {
                     break;
             }
 
-            foreach (var action in rule.Actions) {
-                var actionRecord = new ActionRecord {
+            foreach (var action in rule.Actions)
+            {
+                var actionRecord = new ActionRecord
+                {
                     Category = action.Category,
                     Position = action.Position,
                     Type = action.Type,

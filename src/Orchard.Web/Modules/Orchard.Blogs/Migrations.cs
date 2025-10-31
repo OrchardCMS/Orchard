@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Blogs {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Blogs
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("BlogPartArchiveRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -86,22 +89,26 @@ namespace Orchard.Blogs {
             return 7;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             // adding the new fields required as Routable was removed
             // the user still needs to execute the corresponding migration
             // steps from the migration module
@@ -115,7 +122,8 @@ namespace Orchard.Blogs {
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             ContentDefinitionManager.AlterPartDefinition("BlogPart", builder => builder
                 .WithDescription("Turns a content type into a Blog."));
 
@@ -131,7 +139,8 @@ namespace Orchard.Blogs {
             return 6;
         }
 
-        public int UpdateFrom6() {
+        public int UpdateFrom6()
+        {
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
                 cfg => cfg
                     .WithIdentity()
@@ -142,7 +151,7 @@ namespace Orchard.Blogs {
                     .WithIdentity()
                 );
 
-           return 7;
-       }
+            return 7;
+        }
     }
 }

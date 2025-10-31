@@ -1,7 +1,9 @@
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.ContentManagement.Handlers {
-    public class VersionContentContext {
+namespace Orchard.ContentManagement.Handlers
+{
+    public class VersionContentContext
+    {
         public int Id { get; set; }
         public string ContentType { get; set; }
 

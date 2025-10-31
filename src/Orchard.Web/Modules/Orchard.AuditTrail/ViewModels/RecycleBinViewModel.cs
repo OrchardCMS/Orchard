@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 
-namespace Orchard.AuditTrail.ViewModels {
-    public class RecycleBinViewModel {
-        public RecycleBinViewModel() {
+namespace Orchard.AuditTrail.ViewModels
+{
+    public class RecycleBinViewModel
+    {
+        public RecycleBinViewModel()
+        {
             SelectedContentItems = new List<RemovedContentItemViewModel>(0);
         }
         public RecycleBinCommand? RecycleBinCommand { get; set; }

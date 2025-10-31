@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.ContentTypes.ViewModels {
+namespace Orchard.ContentTypes.ViewModels
+{
 
-    public class EditFieldViewModel {
+    public class EditFieldViewModel
+    {
         public EditFieldViewModel() { }
 
-        public EditFieldViewModel(ContentFieldDefinition contentFieldDefinition) {
+        public EditFieldViewModel(ContentFieldDefinition contentFieldDefinition)
+        {
             Name = contentFieldDefinition.Name;
             _Definition = contentFieldDefinition;
         }

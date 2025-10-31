@@ -2,17 +2,21 @@ using System;
 using System.Web;
 using Autofac;
 
-namespace Orchard.Mvc {
-    public class HttpContextAccessor : IHttpContextAccessor {
+namespace Orchard.Mvc
+{
+    public class HttpContextAccessor : IHttpContextAccessor
+    {
         readonly ILifetimeScope _lifetimeScope;
         private HttpContextBase _httpContext;
         private IWorkContextAccessor _wca;
 
-        public HttpContextAccessor(ILifetimeScope lifetimeScope) {
+        public HttpContextAccessor(ILifetimeScope lifetimeScope)
+        {
             _lifetimeScope = lifetimeScope;
         }
 
-        public HttpContextBase Current() {
+        public HttpContextBase Current()
+        {
             var httpContext = GetStaticProperty();
 
             if (!IsBackgroundHttpContext(httpContext))
@@ -28,27 +32,34 @@ namespace Orchard.Mvc {
             return workContext != null ? workContext.HttpContext : null;
         }
 
-        public void Set(HttpContextBase httpContext) {
+        public void Set(HttpContextBase httpContext)
+        {
             _httpContext = httpContext;
         }
 
-        internal static bool IsBackgroundHttpContext(HttpContext httpContext) {
+        internal static bool IsBackgroundHttpContext(HttpContext httpContext)
+        {
             return httpContext == null || httpContext.Items.Contains(MvcModule.IsBackgroundHttpContextKey);
         }
 
-        private static HttpContext GetStaticProperty() {
+        private static HttpContext GetStaticProperty()
+        {
             var httpContext = HttpContext.Current;
-            if (httpContext == null) {
+            if (httpContext == null)
+            {
                 return null;
             }
 
-            try {
+            try
+            {
                 // The "Request" property throws at application startup on IIS integrated pipeline mode.
-                if (httpContext.Request == null) {
+                if (httpContext.Request == null)
+                {
                     return null;
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return null;
             }
             return httpContext;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement;
@@ -11,8 +11,10 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Widgets.Services {
-    public class WidgetCommandsService : IWidgetCommandsService {
+namespace Orchard.Widgets.Services
+{
+    public class WidgetCommandsService : IWidgetCommandsService
+    {
         private readonly IMenuService _menuService;
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteService _siteService;
@@ -26,7 +28,8 @@ namespace Orchard.Widgets.Services {
             IMenuService menuService,
             ISiteService siteService,
             IMembershipService membershipService,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _siteService = siteService;
             _membershipService = membershipService;
             _widgetsService = widgetsService;
@@ -37,9 +40,11 @@ namespace Orchard.Widgets.Services {
 
         public Localizer T { get; set; }
 
-        public WidgetPart CreateBaseWidget(CommandContext context, string type, string title, string name, string zone, string position, string layer, string identity, bool renderTitle, string owner, string text, bool useLoremIpsumText, string menuName) {
+        public WidgetPart CreateBaseWidget(CommandContext context, string type, string title, string name, string zone, string position, string layer, string identity, bool renderTitle, string owner, string text, bool useLoremIpsumText, string menuName)
+        {
             var widgetTypeNames = _widgetsService.GetWidgetTypeNames().ToList();
-            if (!widgetTypeNames.Contains(type)) {
+            if (!widgetTypeNames.Contains(type))
+            {
                 context.Output.WriteLine(T("Creating widget failed : type {0} was not found. Supported widget types are: {1}.",
                     type,
                     string.Join(" ", widgetTypeNames)));
@@ -47,24 +52,30 @@ namespace Orchard.Widgets.Services {
             }
 
             var layerPart = GetLayer(layer);
-            if (layerPart == null) {
+            if (layerPart == null)
+            {
                 context.Output.WriteLine(T("Creating widget failed : layer {0} was not found.", layer));
                 return null;
             }
 
             var widget = _widgetsService.CreateWidget(layerPart.ContentItem.Id, type, T(title).Text, position, zone);
 
-            if (!String.IsNullOrWhiteSpace(name)) {
+            if (!string.IsNullOrWhiteSpace(name))
+            {
                 widget.Name = name.Trim();
             }
 
-            var widgetText = String.Empty;
-            if (widget.Has<BodyPart>()) {
-                if (useLoremIpsumText) {
+            var widgetText = string.Empty;
+            if (widget.Has<BodyPart>())
+            {
+                if (useLoremIpsumText)
+                {
                     widgetText = T(LoremIpsum).Text;
                 }
-                else {
-                    if (!String.IsNullOrEmpty(text)) {
+                else
+                {
+                    if (!string.IsNullOrEmpty(text))
+                    {
                         widgetText = text;
                     }
                 }
@@ -73,32 +84,38 @@ namespace Orchard.Widgets.Services {
 
             widget.RenderTitle = renderTitle;
 
-            if (widget.Has<MenuWidgetPart>() && !String.IsNullOrWhiteSpace(menuName)) {
+            if (widget.Has<MenuWidgetPart>() && !string.IsNullOrWhiteSpace(menuName))
+            {
                 var menu = _menuService.GetMenu(menuName);
 
-                if (menu != null) {
+                if (menu != null)
+                {
                     widget.As<MenuWidgetPart>().MenuContentItemId = menu.ContentItem.Id;
                 }
             }
 
-            if (String.IsNullOrEmpty(owner)) {
+            if (string.IsNullOrEmpty(owner))
+            {
                 owner = _siteService.GetSiteSettings().SuperUser;
             }
             var widgetOwner = _membershipService.GetUser(owner);
             widget.As<ICommonPart>().Owner = widgetOwner;
 
-            if (widget.Has<IdentityPart>() && !String.IsNullOrEmpty(identity)) {
+            if (widget.Has<IdentityPart>() && !string.IsNullOrEmpty(identity))
+            {
                 widget.As<IdentityPart>().Identifier = identity;
             }
 
             return widget;
         }
-        private LayerPart GetLayer(string layer) {
+        private LayerPart GetLayer(string layer)
+        {
             var layers = _widgetsService.GetLayers();
-            return layers.FirstOrDefault(layerPart => String.Equals(layerPart.Name, layer, StringComparison.OrdinalIgnoreCase));
+            return layers.FirstOrDefault(layerPart => string.Equals(layerPart.Name, layer, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void Publish(WidgetPart widget) {
+        public void Publish(WidgetPart widget)
+        {
             _contentManager.Publish(widget.ContentItem);
         }
     }

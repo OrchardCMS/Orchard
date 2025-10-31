@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.UI.Resources {
-    public class RequireSettings {
+namespace Orchard.UI.Resources
+{
+    public class RequireSettings
+    {
         private Dictionary<string, string> _attributes;
 
         public string BasePath { get; set; }
@@ -16,18 +18,18 @@ namespace Orchard.UI.Resources {
         public ResourceLocation Location { get; set; }
         public string Condition { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
-        public Dictionary<string, string> Attributes {
+        public Dictionary<string, string> Attributes
+        {
             get { return _attributes ?? (_attributes = new Dictionary<string, string>()); }
             set { _attributes = value; }
         }
-        public bool HasAttributes {
-            get { return _attributes != null && _attributes.Any(a => a.Value != null); }
-        }
+        public bool HasAttributes => _attributes != null && _attributes.Any(a => a.Value != null);
 
         /// <summary>
         /// The resource will be displayed in the head of the page
         /// </summary>
-        public RequireSettings AtHead() {
+        public RequireSettings AtHead()
+        {
             return AtLocation(ResourceLocation.Head);
         }
 
@@ -35,7 +37,8 @@ namespace Orchard.UI.Resources {
         /// The resource will be displayed at the foot of the page
         /// </summary>
         /// <returns></returns>
-        public RequireSettings AtFoot() {
+        public RequireSettings AtFoot()
+        {
             return AtLocation(ResourceLocation.Foot);
         }
 
@@ -43,101 +46,125 @@ namespace Orchard.UI.Resources {
         /// The resource will be displayed at the specified location
         /// </summary>
         /// <param name="location">The location where the resource should be displayed</param>
-        public RequireSettings AtLocation(ResourceLocation location) {
+        public RequireSettings AtLocation(ResourceLocation location)
+        {
             // if head is specified it takes precedence since it's safer than foot
             Location = (ResourceLocation)Math.Max((int)Location, (int)location);
             return this;
         }
 
-        public RequireSettings UseCulture(string cultureName) {
-            if (!String.IsNullOrEmpty(cultureName)) {
+        public RequireSettings UseCulture(string cultureName)
+        {
+            if (!string.IsNullOrEmpty(cultureName))
+            {
                 Culture = cultureName;
             }
             return this;
         }
 
-        public RequireSettings UseDebugMode() {
+        public RequireSettings UseDebugMode()
+        {
             return UseDebugMode(true);
         }
 
-        public RequireSettings UseDebugMode(bool debugMode) {
+        public RequireSettings UseDebugMode(bool debugMode)
+        {
             DebugMode |= debugMode;
             return this;
         }
 
-        public RequireSettings UseCdn() {
+        public RequireSettings UseCdn()
+        {
             return UseCdn(true);
         }
 
-        public RequireSettings UseCdn(bool cdnMode) {
+        public RequireSettings UseCdn(bool cdnMode)
+        {
             CdnMode |= cdnMode;
             return this;
         }
 
-        public RequireSettings UseFileHash() {
+        public RequireSettings UseFileHash()
+        {
             return UseFileHash(true);
         }
 
-        public RequireSettings UseFileHash(bool fileHashMode) {
+        public RequireSettings UseFileHash(bool fileHashMode)
+        {
             FileHashMode |= fileHashMode;
             return this;
         }
 
-        public RequireSettings WithBasePath(string basePath) {
+        public RequireSettings WithBasePath(string basePath)
+        {
             BasePath = basePath;
             return this;
         }
 
-        public RequireSettings UseCondition(string condition) {
+        public RequireSettings UseCondition(string condition)
+        {
             Condition = Condition ?? condition;
             return this;
         }
 
-        public RequireSettings Define(Action<ResourceDefinition> resourceDefinition) {
-            if (resourceDefinition != null) {
+        public RequireSettings Define(Action<ResourceDefinition> resourceDefinition)
+        {
+            if (resourceDefinition != null)
+            {
                 var previous = InlineDefinition;
-                if (previous != null) {
-                    InlineDefinition = r => {
+                if (previous != null)
+                {
+                    InlineDefinition = r =>
+                    {
                         previous(r);
                         resourceDefinition(r);
                     };
                 }
-                else {
+                else
+                {
                     InlineDefinition = resourceDefinition;
                 }
             }
             return this;
         }
 
-        public RequireSettings SetAttribute(string name, string value) {
-            if (_attributes == null) {
+        public RequireSettings SetAttribute(string name, string value)
+        {
+            if (_attributes == null)
+            {
                 _attributes = new Dictionary<string, string>();
             }
             _attributes[name] = value;
             return this;
         }
 
-        private Dictionary<string, string> MergeAttributes(RequireSettings other) {
+        private Dictionary<string, string> MergeAttributes(RequireSettings other)
+        {
             // efficiently merge the two dictionaries, taking into account that one or both may not exist
             // and that attributes in 'other' should overridde attributes in this, even if the value is null.
-            if (_attributes == null) {
+            if (_attributes == null)
+            {
                 return other._attributes == null ? null : new Dictionary<string, string>(other._attributes);
             }
-            if (other._attributes == null) {
+            if (other._attributes == null)
+            {
                 return new Dictionary<string, string>(_attributes);
             }
             var mergedAttributes = new Dictionary<string, string>(_attributes);
-            foreach (var pair in other._attributes) {
+            foreach (var pair in other._attributes)
+            {
                 mergedAttributes[pair.Key] = pair.Value;
             }
             return mergedAttributes;
         }
 
-        public RequireSettings Combine(RequireSettings other) {
-            var settings = (new RequireSettings {
+        public RequireSettings Combine(RequireSettings other)
+        {
+            var settings = new RequireSettings
+            {
                 Name = Name,
                 Type = Type
-            }).AtLocation(Location).AtLocation(other.Location)
+            }.AtLocation(Location).AtLocation(other.Location)
                 .WithBasePath(BasePath).WithBasePath(other.BasePath)
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)

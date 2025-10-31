@@ -1,16 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Module = Autofac.Module;
 
-namespace Orchard.Environment {
-    public class WorkContextModule : Module {
-        protected override void Load(ContainerBuilder builder) {
+namespace Orchard.Environment
+{
+    public class WorkContextModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
             builder.RegisterType<WorkContextAccessor>()
                 .As<IWorkContextAccessor>()
                 .InstancePerMatchingLifetimeScope("shell");
@@ -26,21 +28,23 @@ namespace Orchard.Environment {
         }
     }
 
-    public class Work<T> where T : class {
+    public class Work<T> where T : class
+    {
         private readonly Func<Work<T>, T> _resolve;
 
-        public Work(Func<Work<T>, T> resolve) {
+        public Work(Func<Work<T>, T> resolve)
+        {
             _resolve = resolve;
         }
 
-        public T Value {
-            get { return _resolve(this); }
-        }
+        public T Value => _resolve(this);
     }
 
 
-    class WorkValues<T> where T : class {
-        public WorkValues(IComponentContext componentContext) {
+    class WorkValues<T> where T : class
+    {
+        public WorkValues(IComponentContext componentContext)
+        {
             ComponentContext = componentContext;
             Values = new Dictionary<Work<T>, T>();
         }
@@ -54,15 +58,18 @@ namespace Orchard.Environment {
     /// types automatically whenever type T is registered with the container.
     /// Metadata values come from the component registration's metadata.
     /// </summary>
-    class WorkRegistrationSource : IRegistrationSource {
+    class WorkRegistrationSource : IRegistrationSource
+    {
         static readonly MethodInfo CreateMetaRegistrationMethod = typeof(WorkRegistrationSource).GetMethod(
             "CreateMetaRegistration", BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static bool IsClosingTypeOf(Type type, Type openGenericType) {
+        private static bool IsClosingTypeOf(Type type, Type openGenericType)
+        {
             return type.IsGenericType && type.GetGenericTypeDefinition() == openGenericType;
         }
 
-        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor) {
+        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
+        {
             var swt = service as IServiceWithType;
             if (swt == null || !IsClosingTypeOf(swt.ServiceType, typeof(Work<>)))
                 return Enumerable.Empty<IComponentRegistration>();
@@ -78,15 +85,16 @@ namespace Orchard.Environment {
                 .Cast<IComponentRegistration>();
         }
 
-        public bool IsAdapterForIndividualComponents {
-            get { return true; }
-        }
+        public bool IsAdapterForIndividualComponents => true;
 
-        static IComponentRegistration CreateMetaRegistration<T>(Service providedService, IComponentRegistration valueRegistration) where T : class {
+        static IComponentRegistration CreateMetaRegistration<T>(Service providedService, IComponentRegistration valueRegistration) where T : class
+        {
             var rb = RegistrationBuilder.ForDelegate(
-                (c, p) => {
+                (c, p) =>
+                {
                     var workContextAccessor = c.Resolve<IWorkContextAccessor>();
-                    return new Work<T>(w => {
+                    return new Work<T>(w =>
+                    {
                         var workContext = workContextAccessor.GetContext();
                         if (workContext == null)
                             return default(T);
@@ -94,7 +102,8 @@ namespace Orchard.Environment {
                         var workValues = workContext.Resolve<WorkValues<T>>();
 
                         T value;
-                        if (!workValues.Values.TryGetValue(w, out value)) {
+                        if (!workValues.Values.TryGetValue(w, out value))
+                        {
                             value = (T)workValues.ComponentContext.ResolveComponent(valueRegistration, p);
                             workValues.Values[w] = value;
                         }

@@ -1,4 +1,4 @@
-﻿using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Helpers;
@@ -6,15 +6,19 @@ using Orchard.Layouts.Services;
 using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Drivers {
-    public class EmailFieldElementDriver : FormsElementDriver<EmailField>{
+namespace Orchard.DynamicForms.Drivers
+{
+    public class EmailFieldElementDriver : FormsElementDriver<EmailField>
+    {
         private readonly ITokenizer _tokenizer;
 
-        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices) {
+        public EmailFieldElementDriver(IFormsBasedElementServices formsServices, ITokenizer tokenizer) : base(formsServices)
+        {
             _tokenizer = tokenizer;
         }
 
-        protected override EditorResult OnBuildEditor(EmailField element, ElementEditorContext context) {
+        protected override EditorResult OnBuildEditor(EmailField element, ElementEditorContext context)
+        {
             var autoLabelEditor = BuildForm(context, "AutoLabel", "Properties:1");
             var placeholderEditor = BuildForm(context, "Placeholder", "Properties:10");
             var emailFieldEditor = BuildForm(context, "EmailField", "Properties:15");
@@ -23,8 +27,10 @@ namespace Orchard.DynamicForms.Drivers {
             return Editor(context, autoLabelEditor, placeholderEditor, emailFieldEditor, emailFieldValidation);
         }
 
-        protected override void DescribeForm(DescribeContext context) {
-            context.Form("EmailField", factory => {
+        protected override void DescribeForm(DescribeContext context)
+        {
+            context.Form("EmailField", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "EmailField",
@@ -38,7 +44,8 @@ namespace Orchard.DynamicForms.Drivers {
                 return form;
             });
 
-            context.Form("EmailFieldValidation", factory => {
+            context.Form("EmailFieldValidation", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "EmailFieldValidation",
@@ -77,7 +84,8 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(EmailField element, ElementDisplayingContext context) {
+        protected override void OnDisplaying(EmailField element, ElementDisplayingContext context)
+        {
             var tokenData = context.GetTokenData();
             context.ElementShape.ProcessedName = _tokenizer.Replace(element.Name, tokenData);
             context.ElementShape.ProcessedLabel = _tokenizer.Replace(element.Label, tokenData, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });

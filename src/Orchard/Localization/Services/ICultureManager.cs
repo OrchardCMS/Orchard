@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web;
 using Orchard.Localization.Records;
 
-namespace Orchard.Localization.Services {
-    public interface ICultureManager : IDependency {
+namespace Orchard.Localization.Services
+{
+    public interface ICultureManager : IDependency
+    {
         IEnumerable<string> ListCultures();
         void AddCulture(string cultureName);
         void DeleteCulture(string cultureName);

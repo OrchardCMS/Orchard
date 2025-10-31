@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Projections.Models {
-    public class FieldIndexPartRecord : ContentPartRecord {
-        public FieldIndexPartRecord() {
+namespace Orchard.Projections.Models
+{
+    public class FieldIndexPartRecord : ContentPartRecord
+    {
+        public FieldIndexPartRecord()
+        {
             StringFieldIndexRecords = new List<StringFieldIndexRecord>();
             IntegerFieldIndexRecords = new List<IntegerFieldIndexRecord>();
             DoubleFieldIndexRecords = new List<DoubleFieldIndexRecord>();

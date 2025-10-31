@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Roles.Models;
 using Orchard.Security;
 
-namespace Orchard.Roles.ViewModels {
-    public class UserRolesViewModel {
-        public UserRolesViewModel() {
+namespace Orchard.Roles.ViewModels
+{
+    public class UserRolesViewModel
+    {
+        public UserRolesViewModel()
+        {
             Roles = new List<UserRoleEntry>();
             AuthorizedRoleIds = new List<int>();
         }
@@ -15,7 +18,8 @@ namespace Orchard.Roles.ViewModels {
         public IList<int> AuthorizedRoleIds { get; set; }
     }
 
-    public class UserRoleEntry {
+    public class UserRoleEntry
+    {
         public int RoleId { get; set; }
         public string Name { get; set; }
         public bool Granted { get; set; }

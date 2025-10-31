@@ -1,7 +1,9 @@
-﻿using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.ContentManagement.FieldStorage {
-    public interface IFieldStorageProviderSelector : IDependency {
+namespace Orchard.ContentManagement.FieldStorage
+{
+    public interface IFieldStorageProviderSelector : IDependency
+    {
         IFieldStorageProvider GetProvider(ContentPartFieldDefinition partFieldDefinition);
     }
 }

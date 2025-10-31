@@ -1,5 +1,7 @@
-namespace Orchard.ContentManagement.Handlers {
-    public abstract class StorageFilterBase<TPart> : IContentStorageFilter where TPart : class, IContent {
+namespace Orchard.ContentManagement.Handlers
+{
+    public abstract class StorageFilterBase<TPart> : IContentStorageFilter where TPart : class, IContent
+    {
 
         protected virtual void Activated(ActivatedContentContext context, TPart instance) { }
         protected virtual void Activating(ActivatingContentContext context, TPart instance) { }
@@ -33,152 +35,182 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Destroying(DestroyContentContext context, TPart instance) { }
         protected virtual void Destroyed(DestroyContentContext context, TPart instance) { }
 
-        void IContentStorageFilter.Activated(ActivatedContentContext context) {
+        void IContentStorageFilter.Activated(ActivatedContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Activated(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Initializing(InitializingContentContext context) {
+        void IContentStorageFilter.Initializing(InitializingContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Initializing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Initialized(InitializingContentContext context) {
+        void IContentStorageFilter.Initialized(InitializingContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Initialized(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Creating(CreateContentContext context) {
+        void IContentStorageFilter.Creating(CreateContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Creating(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Created(CreateContentContext context) {
+        void IContentStorageFilter.Created(CreateContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Created(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Loading(LoadContentContext context) {
+        void IContentStorageFilter.Loading(LoadContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Loading(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Loaded(LoadContentContext context) {
+        void IContentStorageFilter.Loaded(LoadContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Loaded(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Updating(UpdateContentContext context) {
+        void IContentStorageFilter.Updating(UpdateContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Updating(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Updated(UpdateContentContext context) {
+        void IContentStorageFilter.Updated(UpdateContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Updated(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Versioning(VersionContentContext context) {
+        void IContentStorageFilter.Versioning(VersionContentContext context)
+        {
             if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
                 Versioning(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Versioned(VersionContentContext context) {
+        void IContentStorageFilter.Versioned(VersionContentContext context)
+        {
             if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
                 Versioned(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Publishing(PublishContentContext context) {
+        void IContentStorageFilter.Publishing(PublishContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Publishing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Published(PublishContentContext context) {
+        void IContentStorageFilter.Published(PublishContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Published(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Unpublishing(PublishContentContext context) {
+        void IContentStorageFilter.Unpublishing(PublishContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Unpublishing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Unpublished(PublishContentContext context) {
+        void IContentStorageFilter.Unpublished(PublishContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Unpublished(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Removing(RemoveContentContext context) {
+        void IContentStorageFilter.Removing(RemoveContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Removing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Removed(RemoveContentContext context) {
+        void IContentStorageFilter.Removed(RemoveContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Removed(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Indexing(IndexContentContext context) {
-            if ( context.ContentItem.Is<TPart>() )
+        void IContentStorageFilter.Indexing(IndexContentContext context)
+        {
+            if (context.ContentItem.Is<TPart>())
                 Indexing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Indexed(IndexContentContext context) {
-            if ( context.ContentItem.Is<TPart>() )
+        void IContentStorageFilter.Indexed(IndexContentContext context)
+        {
+            if (context.ContentItem.Is<TPart>())
                 Indexed(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Cloning(CloneContentContext context) {
+        void IContentStorageFilter.Cloning(CloneContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Cloning(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Cloned(CloneContentContext context) {
+        void IContentStorageFilter.Cloned(CloneContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Cloned(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Importing(ImportContentContext context) {
+        void IContentStorageFilter.Importing(ImportContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Importing(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Imported(ImportContentContext context) {
+        void IContentStorageFilter.Imported(ImportContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Imported(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.ImportCompleted(ImportContentContext context) {
+        void IContentStorageFilter.ImportCompleted(ImportContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 ImportCompleted(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Exporting(ExportContentContext context) {
+        void IContentStorageFilter.Exporting(ExportContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Exporting(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Exported(ExportContentContext context) {
+        void IContentStorageFilter.Exported(ExportContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Exported(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Restoring(RestoreContentContext context) {
+        void IContentStorageFilter.Restoring(RestoreContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Restoring(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Restored(RestoreContentContext context) {
+        void IContentStorageFilter.Restored(RestoreContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Restored(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Destroying(DestroyContentContext context) {
+        void IContentStorageFilter.Destroying(DestroyContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Destroying(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.Destroyed(DestroyContentContext context) {
+        void IContentStorageFilter.Destroyed(DestroyContentContext context)
+        {
             if (context.ContentItem.Is<TPart>())
                 Destroyed(context, context.ContentItem.As<TPart>());
         }

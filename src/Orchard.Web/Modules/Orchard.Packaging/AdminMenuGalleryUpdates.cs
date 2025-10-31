@@ -1,28 +1,29 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
 using Orchard.Packaging.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Packaging {
+namespace Orchard.Packaging
+{
     [OrchardFeature("Gallery.Updates")]
-    public class AdminMenuGalleryUpdates : INavigationProvider {
+    public class AdminMenuGalleryUpdates : INavigationProvider
+    {
         public Localizer T { get; set; }
 
-        public string MenuName {
-            get { return "admin"; }
-        }
+        public string MenuName => "admin";
 
         readonly IBackgroundPackageUpdateStatus _backgroundPackageUpdateStatus;
 
-        public AdminMenuGalleryUpdates(IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus) {
+        public AdminMenuGalleryUpdates(IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus)
+        {
             _backgroundPackageUpdateStatus = backgroundPackageUpdateStatus;
         }
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             int? modulesCount = GetUpdateCount(DefaultExtensionTypes.Module);
             var modulesCaption = modulesCount == null ? T("Updates") : T("Updates ({0})", modulesCount);
 
@@ -36,8 +37,10 @@ namespace Orchard.Packaging {
                     .Add(themesCaption, "8", item => Describe(item, "ThemesUpdates", "GalleryUpdates", true)));
         }
 
-        private int? GetUpdateCount(string extensionType) {
-            try {
+        private int? GetUpdateCount(string extensionType)
+        {
+            try
+            {
                 // Admin menu should never block, so simply return the result from the background task
                 if (_backgroundPackageUpdateStatus.Value == null)
                     return null;
@@ -46,12 +49,14 @@ namespace Orchard.Packaging {
                     updatePackageEntry.NewVersionToInstall != null &&
                         updatePackageEntry.ExtensionsDescriptor.ExtensionType == extensionType);
             }
-            catch {
+            catch
+            {
                 return null;
             }
         }
 
-        private static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav) {
+        private static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav)
+        {
             item = item.Action(actionName, controllerName, new { area = "Orchard.Packaging" }).Permission(StandardPermissions.SiteOwner);
             if (localNav)
                 item = item.LocalNav();

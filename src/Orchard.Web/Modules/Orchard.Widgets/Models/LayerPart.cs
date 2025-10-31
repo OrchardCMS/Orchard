@@ -1,14 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 
-namespace Orchard.Widgets.Models {
-    public class LayerPart : ContentPart<LayerPartRecord> {
-        
+namespace Orchard.Widgets.Models
+{
+    public class LayerPart : ContentPart<LayerPartRecord>
+    {
+
         /// <summary>
         /// The layer's name.
         /// </summary>
         [Required]
-        public string Name {
+        public string Name
+        {
             get { return Retrieve(x => x.Name); }
             set { Store(x => x.Name, value); }
         }
@@ -16,7 +19,8 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The layer's description.
         /// </summary>
-        public string Description {
+        public string Description
+        {
             get { return Retrieve(x => x.Description); }
             set { Store(x => x.Description, value); }
         }
@@ -25,7 +29,8 @@ namespace Orchard.Widgets.Models {
         /// The layer's rule. 
         /// The rule defines when the layer is active (should or not be displayed).
         /// </summary>
-        public string LayerRule {
+        public string LayerRule
+        {
             get { return Retrieve(x => x.LayerRule); }
             set { Store(x => x.LayerRule, value); }
         }

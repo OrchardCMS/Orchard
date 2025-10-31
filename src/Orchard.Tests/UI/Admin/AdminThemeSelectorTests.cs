@@ -1,20 +1,24 @@
-﻿using System.Web.Routing;
+using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;
 
-namespace Orchard.Tests.UI.Admin {
+namespace Orchard.Tests.UI.Admin
+{
     [TestFixture]
-    public class AdminThemeSelectorTests {
+    public class AdminThemeSelectorTests
+    {
         [Test]
-        public void IsAppliedShouldBeFalseByDefault() {
+        public void IsAppliedShouldBeFalseByDefault()
+        {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
             var isApplied = AdminFilter.IsApplied(context);
             Assert.That(isApplied, Is.False);
         }
 
         [Test]
-        public void IsAppliedShouldBeTrueAfterBeingApplied() {
+        public void IsAppliedShouldBeTrueAfterBeingApplied()
+        {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
             Assert.That(AdminFilter.IsApplied(context), Is.False);
             AdminFilter.Apply(context);
@@ -23,7 +27,8 @@ namespace Orchard.Tests.UI.Admin {
 
 
         [Test]
-        public void IsAppliedIsFalseOnNewContext() {
+        public void IsAppliedIsFalseOnNewContext()
+        {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
             Assert.That(AdminFilter.IsApplied(context), Is.False);
             AdminFilter.Apply(context);
@@ -33,7 +38,8 @@ namespace Orchard.Tests.UI.Admin {
         }
 
         [Test]
-        public void ThemeResultShouldBeNullNormally() {
+        public void ThemeResultShouldBeNullNormally()
+        {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
 
             var selector = new AdminThemeSelector();
@@ -43,7 +49,8 @@ namespace Orchard.Tests.UI.Admin {
 
 
         [Test]
-        public void ThemeResultShouldBeTheAdminAt100AfterBeingSet() {
+        public void ThemeResultShouldBeTheAdminAt100AfterBeingSet()
+        {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
 
             AdminFilter.Apply(context);

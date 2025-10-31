@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
@@ -6,21 +6,25 @@ using System.Xml.Linq;
 using Orchard.Logging;
 using Orchard.Security;
 
-namespace Orchard.Core.XmlRpc.Controllers {
-    public class LiveWriterController : Controller {
+namespace Orchard.Core.XmlRpc.Controllers
+{
+    public class LiveWriterController : Controller
+    {
         private readonly IEnumerable<IXmlRpcHandler> _xmlRpcHandlers;
         private const string ManifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
 
-        public LiveWriterController(IEnumerable<IXmlRpcHandler> xmlRpcHandlers) {
+        public LiveWriterController(IEnumerable<IXmlRpcHandler> xmlRpcHandlers)
+        {
             _xmlRpcHandlers = xmlRpcHandlers;
             Logger = NullLogger.Instance;
         }
 
         protected ILogger Logger { get; set; }
-        
+
         [NoCache]
         [AlwaysAccessible]
-        public ActionResult Manifest() {
+        public ActionResult Manifest()
+        {
             Logger.Debug("Manifest requested");
 
             var options = new XElement(
@@ -42,8 +46,10 @@ namespace Orchard.Core.XmlRpc.Controllers {
             return Content(doc.ToString(), "text/xml");
         }
 
-        public class NoCache : ActionFilterAttribute {
-            public override void OnResultExecuting(ResultExecutingContext filterContext) {
+        public class NoCache : ActionFilterAttribute
+        {
+            public override void OnResultExecuting(ResultExecutingContext filterContext)
+            {
                 filterContext.HttpContext.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                 filterContext.HttpContext.Response.Cache.SetValidUntilExpires(false);
                 filterContext.HttpContext.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);

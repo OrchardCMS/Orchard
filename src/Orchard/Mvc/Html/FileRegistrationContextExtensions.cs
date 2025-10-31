@@ -1,6 +1,9 @@
-﻿namespace Orchard.Mvc.Html {
-    public static class FileRegistrationContextExtensions {
-        public static T WithCondition<T>(this T fileRegistrationContext, string condition)where T : FileRegistrationContext {
+namespace Orchard.Mvc.Html
+{
+    public static class FileRegistrationContextExtensions
+    {
+        public static T WithCondition<T>(this T fileRegistrationContext, string condition) where T : FileRegistrationContext
+        {
             if (fileRegistrationContext == null)
                 return null;
 
@@ -8,7 +11,8 @@
             return fileRegistrationContext;
         }
 
-        public static T ForMedia<T>(this T fileRegistrationContext, string media) where T : FileRegistrationContext {
+        public static T ForMedia<T>(this T fileRegistrationContext, string media) where T : FileRegistrationContext
+        {
             if (fileRegistrationContext == null)
                 return null;
 

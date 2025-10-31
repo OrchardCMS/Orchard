@@ -1,15 +1,18 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Services;
 using Orchard.Data;
-using Orchard.Core.Containers.Models;
 
-namespace Orchard.Core.Containers.Handlers {
-    public class ContainablePartHandler : ContentHandler {
+namespace Orchard.Core.Containers.Handlers
+{
+    public class ContainablePartHandler : ContentHandler
+    {
         private readonly IContainerService _containerService;
 
-        public ContainablePartHandler(IRepository<ContainablePartRecord> repository, IContainerService containerService) {
+        public ContainablePartHandler(IRepository<ContainablePartRecord> repository, IContainerService containerService)
+        {
             _containerService = containerService;
             Filters.Add(StorageFilter.For(repository));
 
@@ -20,7 +23,8 @@ namespace Orchard.Core.Containers.Handlers {
             OnRemoved<ContainablePart>((context, part) => UpdateItemCount(part));
         }
 
-        private void UpdateItemCount(ContainablePart part) {
+        private void UpdateItemCount(ContainablePart part)
+        {
             var commonPart = part.As<CommonPart>();
             if (commonPart == null || commonPart.Container == null)
                 return;

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using NuGet;
@@ -27,9 +26,11 @@ using Orchard.UI.Notify;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 using PackageBuilder = Orchard.Packaging.Services.PackageBuilder;
 
-namespace Orchard.Packaging.Controllers {
+namespace Orchard.Packaging.Controllers
+{
     [Themed, Admin]
-    public class PackagingServicesController : Controller {
+    public class PackagingServicesController : Controller
+    {
 
         private readonly ShellSettings _shellSettings;
         private readonly IPackageManager _packageManager;
@@ -48,7 +49,8 @@ namespace Orchard.Packaging.Controllers {
             IOrchardServices services,
             IModuleService moduleService,
             IHostEnvironment hostEnvironment)
-            : this(shellSettings, packageManager, packagingSourceManager, appDataFolderRoot, services, moduleService, hostEnvironment, null, null) {
+            : this(shellSettings, packageManager, packagingSourceManager, appDataFolderRoot, services, moduleService, hostEnvironment, null, null)
+        {
         }
 
         public PackagingServicesController(
@@ -60,7 +62,8 @@ namespace Orchard.Packaging.Controllers {
             IModuleService moduleService,
             IHostEnvironment hostEnvironment,
             IRecipeHarvester recipeHarvester,
-            IRecipeManager recipeManager) {
+            IRecipeManager recipeManager)
+        {
 
             _shellSettings = shellSettings;
             _packageManager = packageManager;
@@ -80,7 +83,8 @@ namespace Orchard.Packaging.Controllers {
         public IOrchardServices Services { get; set; }
         public Logging.ILogger Logger { get; set; }
 
-        public ActionResult AddTheme(string returnUrl) {
+        public ActionResult AddTheme(string returnUrl)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
                 return new HttpUnauthorizedResult();
 
@@ -88,8 +92,10 @@ namespace Orchard.Packaging.Controllers {
         }
 
         [HttpPost, ActionName("UninstallTheme")]
-        public ActionResult UninstallThemePost(string themeId, string returnUrl, string retryUrl) {
-            if (String.IsNullOrEmpty(themeId)) {
+        public ActionResult UninstallThemePost(string themeId, string returnUrl, string retryUrl)
+        {
+            if (string.IsNullOrEmpty(themeId))
+            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
@@ -100,8 +106,10 @@ namespace Orchard.Packaging.Controllers {
         }
 
         [HttpPost, ActionName("UninstallModule")]
-        public ActionResult UninstallModulePost(string moduleId, string returnUrl, string retryUrl) {
-            if (String.IsNullOrEmpty(moduleId)) {
+        public ActionResult UninstallModulePost(string moduleId, string returnUrl, string retryUrl)
+        {
+            if (string.IsNullOrEmpty(moduleId))
+            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
@@ -111,29 +119,35 @@ namespace Orchard.Packaging.Controllers {
             return UninstallPackage(PackageBuilder.BuildPackageId(moduleId, DefaultExtensionTypes.Module), returnUrl, retryUrl);
         }
 
-        public ActionResult AddModule(string returnUrl) {
+        public ActionResult AddModule(string returnUrl)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add modules")))
                 return new HttpUnauthorizedResult();
 
             return View();
         }
 
-        public ActionResult InstallGallery(string packageId, string version, int sourceId, string redirectUrl) {
+        public ActionResult InstallGallery(string packageId, string version, int sourceId, string redirectUrl)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
             var source = _packagingSourceManager.GetSources().FirstOrDefault(s => s.Id == sourceId);
-            if (source == null) {
+            if (source == null)
+            {
                 return HttpNotFound();
             }
 
-           try {
+            try
+            {
                 PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, MapAppRoot());
 
-                if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
+                if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType))
+                {
                     Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                } 
-                else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
+                }
+                else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType))
+                {
                     Services.Notifier.Success(T("The module has been successfully installed."));
 
                     IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
@@ -143,30 +157,35 @@ namespace Orchard.Packaging.Controllers {
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
-           catch (OrchardException e) {
-               Services.Notifier.Error(T("Package installation failed: {0}", e.Message));
-               return View("InstallPackageFailed");
-           }
-           catch (Exception) {
-               Services.Notifier.Error(T("Package installation failed."));
-               return View("InstallPackageFailed");
-           }   
+            catch (OrchardException e)
+            {
+                Services.Notifier.Error(T("Package installation failed: {0}", e.Message));
+                return View("InstallPackageFailed");
+            }
+            catch (Exception)
+            {
+                Services.Notifier.Error(T("Package installation failed."));
+                return View("InstallPackageFailed");
+            }
 
-           return Redirect(redirectUrl);
+            return Redirect(redirectUrl);
         }
 
-        public ActionResult InstallLocally(string redirectUrl) {
+        public ActionResult InstallLocally(string redirectUrl)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
                 return new HttpUnauthorizedResult();
 
             var httpPostedFileBase = Request.Files.Get(0);
-            if (httpPostedFileBase == null 
-                || Request.Files.Count == 0 
-                || string.IsNullOrWhiteSpace(httpPostedFileBase.FileName)) {
+            if (httpPostedFileBase == null
+                || Request.Files.Count == 0
+                || string.IsNullOrWhiteSpace(httpPostedFileBase.FileName))
+            {
 
                 throw new OrchardException(T("Select a file to upload."));
             }
-            try {
+            try
+            {
                 string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(httpPostedFileBase.FileName)).Replace(Path.DirectorySeparatorChar, '/');
                 httpPostedFileBase.SaveAs(fullFileName);
                 var package = new ZipPackage(fullFileName);
@@ -174,20 +193,24 @@ namespace Orchard.Packaging.Controllers {
                 ExtensionDescriptor extensionDescriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
                 System.IO.File.Delete(fullFileName);
 
-                if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
+                if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType))
+                {
                     Services.Notifier.Success(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
                 }
-                else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
+                else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
+                {
                     Services.Notifier.Success(T("The module has been successfully installed."));
 
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
-            catch (OrchardException e) {
+            catch (OrchardException e)
+            {
                 Services.Notifier.Error(T("Package uploading and installation failed: {0}", e.Message));
                 return View("InstallPackageFailed");
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 Services.Notifier.Error(T("Package uploading and installation failed."));
                 return View("InstallPackageFailed");
             }
@@ -195,26 +218,33 @@ namespace Orchard.Packaging.Controllers {
             return Redirect(redirectUrl);
         }
 
-        private ActionResult InstallPackageDetails(ExtensionDescriptor extensionDescriptor, string redirectUrl) {
-            if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
+        private ActionResult InstallPackageDetails(ExtensionDescriptor extensionDescriptor, string redirectUrl)
+        {
+            if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
+            {
                 List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
                     .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType))
-                    .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
+                    .Select(featureDescriptor => new PackagingInstallFeatureViewModel
+                    {
                         Enable = true, // by default all features are enabled
                         FeatureDescriptor = featureDescriptor
                     }).ToList();
 
                 List<PackagingInstallRecipeViewModel> recipes = null;
-                if (_recipeHarvester != null) {
+                if (_recipeHarvester != null)
+                {
                     recipes = _recipeHarvester.HarvestRecipes(extensionDescriptor.Id)
-                        .Select(recipe => new PackagingInstallRecipeViewModel {
+                        .Select(recipe => new PackagingInstallRecipeViewModel
+                        {
                             Execute = false, // by default no recipes are executed
                             Recipe = recipe
                         }).ToList();
                 }
 
-                if (features.Count > 0) {
-                    return View("InstallModuleDetails", new PackagingInstallViewModel {
+                if (features.Count > 0)
+                {
+                    return View("InstallModuleDetails", new PackagingInstallViewModel
+                    {
                         Features = features,
                         Recipes = recipes,
                         ExtensionDescriptor = extensionDescriptor
@@ -226,37 +256,45 @@ namespace Orchard.Packaging.Controllers {
         }
 
         [HttpPost, ActionName("InstallPackageDetails")]
-        public ActionResult InstallPackageDetailsPOST(PackagingInstallViewModel packagingInstallViewModel, string redirectUrl) {
+        public ActionResult InstallPackageDetailsPOST(PackagingInstallViewModel packagingInstallViewModel, string redirectUrl)
+        {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                if (_recipeHarvester != null && _recipeManager != null) {
+            try
+            {
+                if (_recipeHarvester != null && _recipeManager != null)
+                {
                     IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(packagingInstallViewModel.ExtensionDescriptor.Id)
                         .Where(loadedRecipe => packagingInstallViewModel.Recipes.FirstOrDefault(recipeViewModel => recipeViewModel.Execute && recipeViewModel.Recipe.Name.Equals(loadedRecipe.Name)) != null);
 
-                    foreach (Recipe recipe in recipes) {
-                        try {
+                    foreach (Recipe recipe in recipes)
+                    {
+                        try
+                        {
                             _recipeManager.Execute(recipe);
                         }
-                        catch {
+                        catch
+                        {
                             Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
                         }
                     }
                 }
 
                 // Enable selected features
-                if (packagingInstallViewModel.Features.Count > 0) {
+                if (packagingInstallViewModel.Features.Count > 0)
+                {
                     IEnumerable<string> featureIds = packagingInstallViewModel.Features
                         .Where(feature => feature.Enable)
                         .Select(feature => feature.FeatureDescriptor.Id);
 
                     // Enable the features and its dependencies using recipes, so that they are run after the module's recipes
 
-                    var recipe = new Recipe {
+                    var recipe = new Recipe
+                    {
                         Name = "Test",
                         RecipeSteps = featureIds.Select(
-                            (i,x) => new RecipeStep(
+                            (i, x) => new RecipeStep(
                                 id: i.ToString(CultureInfo.InvariantCulture),
                                 recipeName: "Test",
                                 name: "Feature",
@@ -265,27 +303,33 @@ namespace Orchard.Packaging.Controllers {
 
                     _recipeManager.Execute(recipe);
                 }
-            } catch (Exception exception) {
+            }
+            catch (Exception exception)
+            {
                 Services.Notifier.Error(T("Post installation steps failed with error: {0}", exception.Message));
             }
 
             return Redirect(redirectUrl);
         }
 
-        private ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
-            try {
+        private ActionResult UninstallPackage(string id, string returnUrl, string retryUrl)
+        {
+            try
+            {
                 _packageManager.Uninstall(id, MapAppRoot());
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Services.Notifier.Error(T("Uninstall failed: {0}", exception.Message));
-                return Redirect(!String.IsNullOrEmpty(retryUrl) ? retryUrl : returnUrl);
+                return Redirect(!string.IsNullOrEmpty(retryUrl) ? retryUrl : returnUrl);
             }
 
             Services.Notifier.Success(T("Uninstalled package \"{0}\"", id));
             return this.RedirectLocal(returnUrl, "~/");
         }
 
-        private string MapAppRoot() {
+        private string MapAppRoot()
+        {
             return _hostEnvironment.MapPath("~/");
         }
     }

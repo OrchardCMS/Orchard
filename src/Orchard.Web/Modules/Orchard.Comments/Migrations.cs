@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
@@ -6,19 +6,23 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Comments {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.Comments
+{
+    public class Migrations : DataMigrationImpl
+    {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
 
         public Migrations(
             ICommentService commentService,
-            IContentManager contentManager) {
+            IContentManager contentManager)
+        {
             _commentService = commentService;
             _contentManager = contentManager;
         }
 
-        public int Create() {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("CommentPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Author")
@@ -52,7 +56,7 @@ namespace Orchard.Comments {
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("CommentPart")
-                   .WithPart("CommonPart", 
+                   .WithPart("CommonPart",
                         p => p
                             .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                             .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
@@ -81,32 +85,37 @@ namespace Orchard.Comments {
             return 6;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Comment", cfg => cfg.WithIdentity());
 
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             SchemaBuilder.AlterTable("CommentPartRecord", table => table
                 .AddColumn<int>("CommentsPartRecord_id")
                 );
 
             // populate the CommentsPartRecord.Comments property
-            foreach(var comment in _commentService.GetComments().List()) {
+            foreach (var comment in _commentService.GetComments().List())
+            {
                 var commentedContent = _commentService.GetCommentedContent(comment.Record.CommentedOn);
                 var commentsPart = commentedContent.As<CommentsPart>();
-                
+
                 // the comment part might have been removed since the comment was placed
-                if(commentsPart != null) {
+                if (commentsPart != null)
+                {
                     commentsPart.Record.CommentPartRecords.Add(comment.Record);
                 }
             }
-            
+
             return 3;
         }
 
-        public int UpdateFrom3() {
+        public int UpdateFrom3()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("CommonPart",
@@ -140,19 +149,22 @@ namespace Orchard.Comments {
                 );
 
             // define the default value for positions
-            foreach (var comment in _commentService.GetComments().List()) {
+            foreach (var comment in _commentService.GetComments().List())
+            {
                 comment.Position = comment.Id;
 
                 // migrating the Spam value which is now deprecated
-                if (comment.Status != CommentStatus.Approved) {
+                if (comment.Status != CommentStatus.Approved)
+                {
                     comment.Status = CommentStatus.Pending;
                 }
             }
-            
+
             return 4;
         }
 
-        public int UpdateFrom4() {
+        public int UpdateFrom4()
+        {
             ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
                 .WithDescription("Used by the Comment content type."));
 
@@ -165,7 +177,8 @@ namespace Orchard.Comments {
             return 5;
         }
 
-        public int UpdateFrom5() {
+        public int UpdateFrom5()
+        {
             SchemaBuilder.AlterTable("CommentsPartRecord", table => table
                 .AddColumn<int>("CommentsCount")
                 );
@@ -181,7 +194,8 @@ namespace Orchard.Comments {
                );
 
             // populate the CommentsPartRecord.CommentsCount property
-            foreach (var commentsPart in _contentManager.Query<CommentsPart, CommentsPartRecord>().List()) {
+            foreach (var commentsPart in _contentManager.Query<CommentsPart, CommentsPartRecord>().List())
+            {
                 _commentService.ProcessCommentsCount(commentsPart.Id);
             }
 

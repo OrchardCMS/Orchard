@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 
-namespace Orchard.Core.Contents.ViewModels {
-    public class ListContentsViewModel  {
-        public ListContentsViewModel() {
+namespace Orchard.Core.Contents.ViewModels
+{
+    public class ListContentsViewModel
+    {
+        public ListContentsViewModel()
+        {
             Options = new ContentOptions();
         }
 
         public string Id { get; set; }
 
-        public string TypeName {
-            get { return Id; }
-        }
+        public string TypeName => Id;
 
         public string TypeDisplayName { get; set; }
         public int? Page { get; set; }
@@ -20,7 +21,8 @@ namespace Orchard.Core.Contents.ViewModels {
 
         #region Nested type: Entry
 
-        public class Entry {
+        public class Entry
+        {
             public ContentItem ContentItem { get; set; }
             public ContentItemMetadata ContentItemMetadata { get; set; }
         }
@@ -28,8 +30,10 @@ namespace Orchard.Core.Contents.ViewModels {
         #endregion
     }
 
-    public class ContentOptions {
-        public ContentOptions() {
+    public class ContentOptions
+    {
+        public ContentOptions()
+        {
             OrderBy = ContentsOrder.Modified;
             BulkAction = ContentsBulkAction.None;
             ContentsStatus = ContentsStatus.Latest;
@@ -43,13 +47,15 @@ namespace Orchard.Core.Contents.ViewModels {
         public IEnumerable<string> Cultures { get; set; }
     }
 
-    public enum ContentsOrder {
+    public enum ContentsOrder
+    {
         Modified,
         Published,
         Created
     }
 
-    public enum ContentsStatus {
+    public enum ContentsStatus
+    {
         Draft,
         Published,
         AllVersions,
@@ -57,7 +63,8 @@ namespace Orchard.Core.Contents.ViewModels {
         Owner
     }
 
-    public enum ContentsBulkAction {
+    public enum ContentsBulkAction
+    {
         None,
         PublishNow,
         Unpublish,

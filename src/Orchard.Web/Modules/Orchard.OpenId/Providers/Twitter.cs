@@ -1,39 +1,36 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.OpenId.Models;
 using Orchard.OpenId.Services;
 using Orchard.Settings;
 
-namespace Orchard.OpenId.Providers {
+namespace Orchard.OpenId.Providers
+{
     [OrchardFeature("Orchard.OpenId.Twitter")]
-    public class Twitter : IOpenIdProvider {
+    public class Twitter : IOpenIdProvider
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public Twitter(
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor)
+        {
 
             _workContextAccessor = workContextAccessor;
         }
 
-        public string AuthenticationType {
-            get { return "Twitter"; }
-        }
+        public string AuthenticationType => "Twitter";
 
-        public string Name {
-            get { return "Twitter"; }
-        }
+        public string Name => "Twitter";
 
-        public string DisplayName {
-            get { return "Twitter"; }
-        }
+        public string DisplayName => "Twitter";
 
-        public bool IsValid {
-            get { return IsProviderValid(); }
-        }
+        public bool IsValid => IsProviderValid();
 
-        private bool IsProviderValid() {
-            try {
+        private bool IsProviderValid()
+        {
+            try
+            {
                 TwitterSettingsPart settings;
                 ISite site;
 
@@ -42,9 +39,10 @@ namespace Orchard.OpenId.Providers {
                 site = scope.Resolve<ISiteService>().GetSiteSettings();
                 settings = site.As<TwitterSettingsPart>();
 
-                return (settings != null && settings.IsValid());
+                return settings != null && settings.IsValid();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
         }

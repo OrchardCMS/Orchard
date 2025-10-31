@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Orchard.Projections.Descriptors.Property;
 
-namespace Orchard.Projections.ViewModels {
+namespace Orchard.Projections.ViewModels
+{
 
-    public class PropertyEditViewModel {
+    public class PropertyEditViewModel
+    {
         public int Id { get; set; }
         public string Description { get; set; }
         public PropertyDescriptor Property { get; set; }

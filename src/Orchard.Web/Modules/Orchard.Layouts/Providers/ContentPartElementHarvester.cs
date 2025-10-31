@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
@@ -13,8 +12,10 @@ using Orchard.Layouts.Settings;
 using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Layouts.Providers {
-    public class ContentPartElementHarvester : Component, IElementHarvester {
+namespace Orchard.Layouts.Providers
+{
+    public class ContentPartElementHarvester : Component, IElementHarvester
+    {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<IElementFactory> _elementFactory;
         private readonly Work<IElementManager> _elementManager;
@@ -22,24 +23,28 @@ namespace Orchard.Layouts.Providers {
         public ContentPartElementHarvester(
             Work<IContentDefinitionManager> contentDefinitionManager,
             Work<IElementFactory> elementFactory,
-            Work<IElementManager> elementManager) {
+            Work<IElementManager> elementManager)
+        {
 
             _contentDefinitionManager = contentDefinitionManager;
             _elementFactory = elementFactory;
             _elementManager = elementManager;
         }
 
-        public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
+        public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context)
+        {
             var elementType = typeof(Elements.ContentPart);
             var contentPartElement = _elementFactory.Value.Activate(elementType);
             var contentParts = GetContentParts(context);
 
-            return contentParts.Select(contentPart => {
+            return contentParts.Select(contentPart =>
+            {
 
                 var partSettings = contentPart.Settings.TryGetModel<ContentPartSettings>();
                 var partDescription = partSettings != null ? partSettings.Description : null;
-                var description = T.Encode(!String.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
-                return new ElementDescriptor(elementType, contentPart.Name, T.Encode(contentPart.Name.CamelFriendly()), description, contentPartElement.Category) {
+                var description = T.Encode(!string.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
+                return new ElementDescriptor(elementType, contentPart.Name, T.Encode(contentPart.Name.CamelFriendly()), description, contentPartElement.Category)
+                {
                     Displaying = displayContext => Displaying(displayContext),
                     ToolboxIcon = "\uf1b2",
                     StateBag = new Dictionary<string, object> {
@@ -49,7 +54,8 @@ namespace Orchard.Layouts.Providers {
             });
         }
 
-        private IEnumerable<ContentPartDefinition> GetContentParts(HarvestElementsContext context) {
+        private IEnumerable<ContentPartDefinition> GetContentParts(HarvestElementsContext context)
+        {
             var contentTypeDefinition = context.Content != null
                 ? _contentDefinitionManager.Value.GetTypeDefinition(context.Content.ContentItem.ContentType)
                 : default(ContentTypeDefinition);
@@ -61,10 +67,12 @@ namespace Orchard.Layouts.Providers {
             return parts.Where(p => p.Settings.GetModel<ContentPartLayoutSettings>().Placeable);
         }
 
-        private void Displaying(ElementDisplayingContext context) {
+        private void Displaying(ElementDisplayingContext context)
+        {
             var drivers = _elementManager.Value.GetDrivers(context.Element);
 
-            foreach (var driver in drivers) {
+            foreach (var driver in drivers)
+            {
                 driver.Displaying(context);
             }
         }

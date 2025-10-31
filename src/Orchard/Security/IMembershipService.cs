@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Localization;
 
-namespace Orchard.Security {
-    public interface IMembershipService : IDependency {
+namespace Orchard.Security
+{
+    public interface IMembershipService : IDependency
+    {
         IMembershipSettings GetSettings();
 
         IUser CreateUser(CreateUserParams createUserParams);

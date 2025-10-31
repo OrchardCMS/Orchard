@@ -1,3 +1,4 @@
-﻿namespace Orchard.Layouts.Framework.Elements {
-    public interface IElement : ITransientDependency {}
+namespace Orchard.Layouts.Framework.Elements
+{
+    public interface IElement : ITransientDependency { }
 }

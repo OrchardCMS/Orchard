@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Taxonomies {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.Taxonomies
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission ManageTaxonomies = new Permission { Description = "Manage taxonomies", Name = "ManageTaxonomies" };
         public static readonly Permission CreateTaxonomy = new Permission { Description = "Create taxonomy", Name = "CreateTaxonomy", ImpliedBy = new[] { ManageTaxonomies } };
         public static readonly Permission ManageTerms = new Permission { Description = "Manage terms", Name = "ManageTerms", ImpliedBy = new[] { CreateTaxonomy } };
@@ -14,7 +16,8 @@ namespace Orchard.Taxonomies {
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 ManageTaxonomies,
                 CreateTaxonomy,
@@ -26,7 +29,8 @@ namespace Orchard.Taxonomies {
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
@@ -46,7 +50,7 @@ namespace Orchard.Taxonomies {
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new Permission[0] 
+                    Permissions = new Permission[0]
                 },
             };
         }

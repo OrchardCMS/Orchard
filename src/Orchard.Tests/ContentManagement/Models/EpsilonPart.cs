@@ -1,6 +1,8 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.Tests.ContentManagement.Models {
-    public class EpsilonPart : ContentPart<EpsilonRecord> {
+namespace Orchard.Tests.ContentManagement.Models
+{
+    public class EpsilonPart : ContentPart<EpsilonRecord>
+    {
     }
 }

@@ -1,23 +1,28 @@
-﻿using System;
+using System;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Providers.Layouts {
+namespace Orchard.Projections.Providers.Layouts
+{
 
-    public class GridLayoutForms : IFormProvider {
+    public class GridLayoutForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public GridLayoutForms(
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             Func<IShapeFactory, object> form =
-                shape => {
+                shape =>
+                {
 
                     var f = Shape.Form(
                         Id: "GridLayout",
@@ -103,21 +108,28 @@ namespace Orchard.Projections.Providers.Layouts {
         }
     }
 
-    public class GridLayoutFormsValidator : FormHandler {
+    public class GridLayoutFormsValidator : FormHandler
+    {
         public Localizer T { get; set; }
 
-        public override void Validating(ValidatingContext context) {
-            if (context.FormName == "GridLayout") {
-                if (context.ValueProvider.GetValue("Alignment") == null) {
+        public override void Validating(ValidatingContext context)
+        {
+            if (context.FormName == "GridLayout")
+            {
+                if (context.ValueProvider.GetValue("Alignment") == null)
+                {
                     context.ModelState.AddModelError("Alignment", T("The field Alignment is required.").Text);
                 }
 
-                if (context.ValueProvider.GetValue("Columns") == null) {
+                if (context.ValueProvider.GetValue("Columns") == null)
+                {
                     context.ModelState.AddModelError("Columns", T("The field Columns/Lines is required.").Text);
                 }
-                else {
+                else
+                {
                     int value;
-                    if (!Int32.TryParse(context.ValueProvider.GetValue("Columns").AttemptedValue, out value)) {
+                    if (!int.TryParse(context.ValueProvider.GetValue("Columns").AttemptedValue, out value))
+                    {
                         context.ModelState.AddModelError("Columns", T("The field Columns/Lines must be a valid number.").Text);
                     }
                 }

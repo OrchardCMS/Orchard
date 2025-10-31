@@ -1,8 +1,11 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
-namespace Orchard.Recipes.Models {
-    public class ConfigurationContext {
-        protected ConfigurationContext(XElement configurationElement) {
+namespace Orchard.Recipes.Models
+{
+    public class ConfigurationContext
+    {
+        protected ConfigurationContext(XElement configurationElement)
+        {
             ConfigurationElement = configurationElement;
         }
 

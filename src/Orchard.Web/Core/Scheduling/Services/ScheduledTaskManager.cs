@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -8,14 +8,17 @@ using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Core.Scheduling.Services {
-    public class ScheduledTaskManager : IScheduledTaskManager {
+namespace Orchard.Core.Scheduling.Services
+{
+    public class ScheduledTaskManager : IScheduledTaskManager
+    {
         private readonly IContentManager _contentManager;
         private readonly IRepository<ScheduledTaskRecord> _repository;
 
         public ScheduledTaskManager(
             IContentManager contentManager,
-            IRepository<ScheduledTaskRecord> repository) {
+            IRepository<ScheduledTaskRecord> repository)
+        {
             _repository = repository;
             _contentManager = contentManager;
             Logger = NullLogger.Instance;
@@ -23,18 +26,22 @@ namespace Orchard.Core.Scheduling.Services {
 
         public ILogger Logger { get; set; }
 
-        public void CreateTask(string action, DateTime scheduledUtc, ContentItem contentItem) {
-            var taskRecord = new ScheduledTaskRecord {
+        public void CreateTask(string action, DateTime scheduledUtc, ContentItem contentItem)
+        {
+            var taskRecord = new ScheduledTaskRecord
+            {
                 TaskType = action,
                 ScheduledUtc = scheduledUtc,
             };
-            if (contentItem != null) {
+            if (contentItem != null)
+            {
                 taskRecord.ContentItemVersionRecord = contentItem.VersionRecord;
             }
             _repository.Create(taskRecord);
         }
 
-        public IEnumerable<IScheduledTask> GetTasks(ContentItem contentItem) {
+        public IEnumerable<IScheduledTask> GetTasks(ContentItem contentItem)
+        {
             return _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record)
                 .Select(x => new Task(_contentManager, x))
@@ -42,28 +49,32 @@ namespace Orchard.Core.Scheduling.Services {
                 .ToReadOnlyCollection();
         }
 
-        public IEnumerable<IScheduledTask> GetTasks(string taskType, DateTime? scheduledBeforeUtc = null) {
-            var query = scheduledBeforeUtc != null 
+        public IEnumerable<IScheduledTask> GetTasks(string taskType, DateTime? scheduledBeforeUtc = null)
+        {
+            var query = scheduledBeforeUtc != null
                 ? _repository.Fetch(t => t.TaskType == taskType && t.ScheduledUtc <= scheduledBeforeUtc)
                 : _repository.Fetch(t => t.TaskType == taskType);
 
-            return 
+            return
                 query.Select(x => new Task(_contentManager, x))
                 .Cast<IScheduledTask>()
                 .ToReadOnlyCollection();
         }
 
-        public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate = null ) {
+        public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate = null)
+        {
             // if contentItem is null, all tasks are used
             var tasks = contentItem == null ? _repository.Table : _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record);
 
-            foreach (var task in tasks) {
-                if (predicate == null || predicate(new Task(_contentManager, task))) {
+            foreach (var task in tasks)
+            {
+                if (predicate == null || predicate(new Task(_contentManager, task)))
+                {
                     _repository.Delete(task);
                 }
             }
-            
+
             _repository.Flush();
         }
     }

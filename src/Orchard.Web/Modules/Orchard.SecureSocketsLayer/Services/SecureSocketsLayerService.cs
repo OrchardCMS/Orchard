@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,31 +9,37 @@ using Orchard.ContentManagement;
 using Orchard.SecureSocketsLayer.Models;
 using Orchard.UI.Admin;
 
-namespace Orchard.SecureSocketsLayer.Services {
-    public class SecureSocketsLayerService : ISecureSocketsLayerService {
+namespace Orchard.SecureSocketsLayer.Services
+{
+    public class SecureSocketsLayerService : ISecureSocketsLayerService
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
 
         public SecureSocketsLayerService(
-            IWorkContextAccessor workContextAccessor, 
+            IWorkContextAccessor workContextAccessor,
             ICacheManager cacheManager,
-            ISignals signals) {
+            ISignals signals)
+        {
             _workContextAccessor = workContextAccessor;
             _cacheManager = cacheManager;
             _signals = signals;
         }
 
-        public bool ShouldBeSecure(string actionName, string controllerName, RouteValueDictionary routeValues) {
+        public bool ShouldBeSecure(string actionName, string controllerName, RouteValueDictionary routeValues)
+        {
             var requestContext = GetRequestContext(actionName, controllerName, routeValues);
             return ShouldBeSecure(requestContext, null);
         }
 
-        public bool ShouldBeSecure(RequestContext requestContext) {
+        public bool ShouldBeSecure(RequestContext requestContext)
+        {
             return ShouldBeSecure(requestContext, null);
         }
 
-        public bool ShouldBeSecure(ActionExecutingContext actionContext) {
+        public bool ShouldBeSecure(ActionExecutingContext actionContext)
+        {
             var requestContext = GetRequestContext(
                 actionContext.ActionDescriptor.ActionName,
                 actionContext.ActionDescriptor.ControllerDescriptor.ControllerName,
@@ -41,18 +47,21 @@ namespace Orchard.SecureSocketsLayer.Services {
             return ShouldBeSecure(requestContext, actionContext);
         }
 
-        private bool ShouldBeSecure(RequestContext requestContext, ActionExecutingContext actionContext) {
-            var controllerName = (string) requestContext.RouteData.Values["controller"];
+        private bool ShouldBeSecure(RequestContext requestContext, ActionExecutingContext actionContext)
+        {
+            var controllerName = (string)requestContext.RouteData.Values["controller"];
             if (controllerName == null) return false;
-            var actionName = (string) requestContext.RouteData.Values["action"];
+            var actionName = (string)requestContext.RouteData.Values["action"];
             if (actionName == null) return false;
 
             var settings = GetSettings();
-            if (settings == null || !settings.Enabled) {
+            if (settings == null || !settings.Enabled)
+            {
                 return false;
             }
 
-            if (actionName.EndsWith("Ssl") || controllerName.EndsWith("Ssl")) {
+            if (actionName.EndsWith("Ssl") || controllerName.EndsWith("Ssl"))
+            {
                 return true;
             }
 
@@ -60,21 +69,26 @@ namespace Orchard.SecureSocketsLayer.Services {
                 ? actionContext.Controller
                 : ControllerBuilder.Current.GetControllerFactory()
                     .CreateController(requestContext, controllerName)) as ControllerBase;
-            if (controller != null) {
+            if (controller != null)
+            {
                 var controllerType = controller.GetType();
-                if (controllerType.GetCustomAttributes(typeof(RequireHttpsAttribute), false).Any()) {
+                if (controllerType.GetCustomAttributes(typeof(RequireHttpsAttribute), false).Any())
+                {
                     return true;
                 }
                 ActionDescriptor actionDescriptor;
-                if (actionContext != null) {
+                if (actionContext != null)
+                {
                     actionDescriptor = actionContext.ActionDescriptor;
                 }
-                else {
+                else
+                {
                     var controllerContext = new ControllerContext(requestContext, controller);
                     var controllerDescriptor = new ReflectedControllerDescriptor(controllerType);
                     actionDescriptor = controllerDescriptor.FindAction(controllerContext, actionName);
                 }
-                if (actionDescriptor.GetCustomAttributes(typeof(RequireHttpsAttribute), false).Any()) {
+                if (actionDescriptor.GetCustomAttributes(typeof(RequireHttpsAttribute), false).Any())
+                {
                     return true;
                 }
             }
@@ -86,11 +100,13 @@ namespace Orchard.SecureSocketsLayer.Services {
                  || actionName == "ChangePassword"
                  || actionName == "AccessDenied"
                  || actionName == "Register"
-                 || actionName.StartsWith("ChallengeEmail", StringComparison.OrdinalIgnoreCase))) {
+                 || actionName.StartsWith("ChallengeEmail", StringComparison.OrdinalIgnoreCase)))
+            {
                 return true;
             }
 
-            if (controllerName == "Admin" || AdminFilter.IsApplied(requestContext)) {
+            if (controllerName == "Admin" || AdminFilter.IsApplied(requestContext))
+            {
                 return true;
             }
 
@@ -99,7 +115,8 @@ namespace Orchard.SecureSocketsLayer.Services {
             var urlHelper = new UrlHelper(requestContext);
             var url = urlHelper.Action(actionName, controllerName, requestContext.RouteData.Values);
 
-            if (String.IsNullOrWhiteSpace(url)) {
+            if (string.IsNullOrWhiteSpace(url))
+            {
                 return false;
             }
 
@@ -107,15 +124,18 @@ namespace Orchard.SecureSocketsLayer.Services {
                 url, requestContext.HttpContext.Request.ApplicationPath, settings);
         }
 
-        public string SecureActionUrl(string actionName, string controllerName) {
+        public string SecureActionUrl(string actionName, string controllerName)
+        {
             return SecureActionUrl(actionName, controllerName, new object());
         }
 
-        public string SecureActionUrl(string actionName, string controllerName, object routeValues) {
+        public string SecureActionUrl(string actionName, string controllerName, object routeValues)
+        {
             return SecureActionUrl(actionName, controllerName, new RouteValueDictionary(routeValues));
         }
 
-        public string SecureActionUrl(string actionName, string controllerName, RouteValueDictionary routeValues) {
+        public string SecureActionUrl(string actionName, string controllerName, RouteValueDictionary routeValues)
+        {
             var requestContext = GetRequestContext(actionName, controllerName, routeValues);
             var url = new UrlHelper(requestContext);
             var actionUrl = url.Action(actionName, controllerName, routeValues);
@@ -126,15 +146,18 @@ namespace Orchard.SecureSocketsLayer.Services {
                 MakeSecure(actionUrl);
         }
 
-        public string InsecureActionUrl(string actionName, string controllerName) {
+        public string InsecureActionUrl(string actionName, string controllerName)
+        {
             return InsecureActionUrl(actionName, controllerName, new object());
         }
 
-        public string InsecureActionUrl(string actionName, string controllerName, object routeValues) {
+        public string InsecureActionUrl(string actionName, string controllerName, object routeValues)
+        {
             return InsecureActionUrl(actionName, controllerName, new RouteValueDictionary(routeValues));
         }
 
-        public string InsecureActionUrl(string actionName, string controllerName, RouteValueDictionary routeValues) {
+        public string InsecureActionUrl(string actionName, string controllerName, RouteValueDictionary routeValues)
+        {
             var requestContext = GetRequestContext(actionName, controllerName, routeValues);
             var url = new UrlHelper(requestContext);
             var actionUrl = url.Action(actionName, controllerName, routeValues);
@@ -148,11 +171,13 @@ namespace Orchard.SecureSocketsLayer.Services {
         private RequestContext GetRequestContext(
             string actionName,
             string controllerName,
-            RouteValueDictionary routeValues) {
-            
+            RouteValueDictionary routeValues)
+        {
+
             var httpContext = _workContextAccessor.GetContext().HttpContext;
             var routeData = new RouteData();
-            foreach (var routeValue in routeValues) {
+            foreach (var routeValue in routeValues)
+            {
                 routeData.Values[routeValue.Key] = routeValue.Value;
             }
             routeData.Values["controller"] = controllerName;
@@ -161,12 +186,14 @@ namespace Orchard.SecureSocketsLayer.Services {
             return requestContext;
         }
 
-        private static bool IsRequestProtected(string path, string appPath, SslSettings settings) {
+        private static bool IsRequestProtected(string path, string appPath, SslSettings settings)
+        {
             var match = false;
             var sr = new StringReader(settings.Urls ?? "");
             string pattern;
 
-            while (!match && null != (pattern = sr.ReadLine())) {
+            while (!match && null != (pattern = sr.ReadLine()))
+            {
                 pattern = pattern.Trim();
                 match = IsMatched(pattern, path, appPath);
             }
@@ -174,8 +201,10 @@ namespace Orchard.SecureSocketsLayer.Services {
             return match;
         }
 
-        private static bool IsMatched(string pattern, string path, string appPath) {
-            if (pattern.StartsWith("~/")) {
+        private static bool IsMatched(string pattern, string path, string appPath)
+        {
+            if (pattern.StartsWith("~/"))
+            {
                 pattern = pattern.Substring(2);
                 if (appPath == "/")
                     appPath = "";
@@ -194,12 +223,15 @@ namespace Orchard.SecureSocketsLayer.Services {
                 : string.Equals(requestPath, pattern, StringComparison.OrdinalIgnoreCase);
         }
 
-        public SslSettings GetSettings() {
+        public SslSettings GetSettings()
+        {
             return _cacheManager.Get("SslSettings",
-                ctx => {
+                ctx =>
+                {
                     ctx.Monitor(_signals.When(SslSettingsPart.CacheKey));
                     var settingsPart = _workContextAccessor.GetContext().CurrentSite.As<SslSettingsPart>();
-                    return new SslSettings {
+                    return new SslSettings
+                    {
                         Urls = settingsPart.Urls,
                         CustomEnabled = settingsPart.CustomEnabled,
                         SecureEverything = settingsPart.SecureEverything,
@@ -211,37 +243,44 @@ namespace Orchard.SecureSocketsLayer.Services {
                 });
         }
 
-        private string MakeInsecure(string path) {
+        private string MakeInsecure(string path)
+        {
             var settings = GetSettings();
             if (settings == null) return path;
             var insecureHostName = settings.InsecureHostName;
-            var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path) {
-                Scheme = Uri.UriSchemeHttp, 
+            var builder = new UriBuilder(insecureHostName.Split(':').First().Trim('/') + path)
+            {
+                Scheme = Uri.UriSchemeHttp,
                 Port = 80
             };
             SetPort(insecureHostName, builder);
             return builder.Uri.ToString();
         }
 
-        private string MakeSecure(string path) {
+        private string MakeSecure(string path)
+        {
             var settings = GetSettings();
             if (settings == null) return path;
             var secureHostName = settings.SecureHostName;
-            var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path) {
-                Scheme = Uri.UriSchemeHttps, 
+            var builder = new UriBuilder(secureHostName.Split(':').First().Trim('/') + path)
+            {
+                Scheme = Uri.UriSchemeHttps,
                 Port = 443
             };
             SetPort(secureHostName, builder);
             return builder.Uri.ToString();
         }
 
-        private static void SetPort(string hostName, UriBuilder builder) {
+        private static void SetPort(string hostName, UriBuilder builder)
+        {
             if (string.IsNullOrWhiteSpace(hostName)) return;
             var splitSecuredHostName = hostName.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            if (splitSecuredHostName.Length == 2) {
+            if (splitSecuredHostName.Length == 2)
+            {
                 int port;
                 if (int.TryParse(splitSecuredHostName[1], NumberStyles.Integer, CultureInfo.InvariantCulture,
-                    out port)) {
+                    out port))
+                {
                     builder.Port = port;
                 }
             }

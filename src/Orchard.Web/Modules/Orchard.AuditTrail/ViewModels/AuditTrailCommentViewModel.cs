@@ -1,5 +1,7 @@
-﻿namespace Orchard.AuditTrail.ViewModels {
-    public class AuditTrailCommentViewModel {
+namespace Orchard.AuditTrail.ViewModels
+{
+    public class AuditTrailCommentViewModel
+    {
         public string Comment { get; set; }
     }
 }

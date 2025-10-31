@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc;
@@ -6,14 +6,17 @@ using Orchard.Core.XmlRpc.Controllers;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 
-namespace Orchard.Tests.Modules.XmlRpc.Controllers {
+namespace Orchard.Tests.Modules.XmlRpc.Controllers
+{
     [TestFixture]
-    public class HomeControllerTests {
+    public class HomeControllerTests
+    {
         [Test]
-        public void RequestShouldBeDispatchedToAllHandlers() {
+        public void RequestShouldBeDispatchedToAllHandlers()
+        {
             var thing1 = new StubHandler();
             var thing2 = new StubHandler();
-            
+
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<HomeController>();
@@ -36,10 +39,12 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
 
         }
 
-        public class StubHandler : IXmlRpcHandler {
-            public void SetCapabilities(XElement element) {}
+        public class StubHandler : IXmlRpcHandler
+        {
+            public void SetCapabilities(XElement element) { }
 
-            public void Process(XmlRpcContext context) {
+            public void Process(XmlRpcContext context)
+            {
                 ProcessCalls++;
                 context.Response = new XRpcMethodResponse();
             }

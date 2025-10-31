@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.MediaLibrary {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.MediaLibrary
+{
+    public class Permissions : IPermissionProvider
+    {
         public static readonly Permission ManageMediaContent = new Permission { Description = "Manage Media", Name = "ManageMediaContent" };
         public static readonly Permission ImportMediaContent = new Permission { Description = "Import All Media", Name = "ImportMedia", ImpliedBy = new[] { ManageMediaContent } };
         public static readonly Permission EditMediaContent = new Permission { Description = "Edit All Media", Name = "EditMedia", ImpliedBy = new[] { ManageMediaContent } };
@@ -13,7 +15,8 @@ namespace Orchard.MediaLibrary {
 
         public virtual Feature Feature { get; set; }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             return new[] {
                 ManageMediaContent,
                 ImportMediaContent,
@@ -24,7 +27,8 @@ namespace Orchard.MediaLibrary {
             };
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",

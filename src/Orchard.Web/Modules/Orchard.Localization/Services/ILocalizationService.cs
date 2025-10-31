@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
 
-namespace Orchard.Localization.Services {
-    public interface ILocalizationService : IDependency {
+namespace Orchard.Localization.Services
+{
+    public interface ILocalizationService : IDependency
+    {
         LocalizationPart GetLocalizedContentItem(IContent content, string culture);
         LocalizationPart GetLocalizedContentItem(IContent content, string culture, VersionOptions versionOptions);
         string GetContentCulture(IContent content);

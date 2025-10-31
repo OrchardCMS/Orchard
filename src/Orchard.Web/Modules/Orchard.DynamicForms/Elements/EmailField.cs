@@ -1,9 +1,9 @@
-﻿using Orchard.DynamicForms.Validators.Settings;
+using Orchard.DynamicForms.Validators.Settings;
 
-namespace Orchard.DynamicForms.Elements {
-    public class EmailField : FormElementWithPlaceholder {
-        public EmailFieldValidationSettings ValidationSettings {
-            get { return Data.GetModel<EmailFieldValidationSettings>(""); }
-        }
+namespace Orchard.DynamicForms.Elements
+{
+    public class EmailField : FormElementWithPlaceholder
+    {
+        public EmailFieldValidationSettings ValidationSettings => Data.GetModel<EmailFieldValidationSettings>("");
     }
 }

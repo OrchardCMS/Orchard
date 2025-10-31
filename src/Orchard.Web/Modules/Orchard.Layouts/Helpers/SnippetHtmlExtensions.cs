@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Models;
 using Orchard.Localization;
 
-namespace Orchard.Layouts.Helpers {
-    public static class SnippetHtmlExtensions {
+namespace Orchard.Layouts.Helpers
+{
+    public static class SnippetHtmlExtensions
+    {
 
-        public static SnippetFieldDescriptorBuilder SnippetField(this HtmlHelper htmlHelper, string name, string type = null) {
+        public static SnippetFieldDescriptorBuilder SnippetField(this HtmlHelper htmlHelper, string name, string type = null)
+        {
             var shape = (dynamic)htmlHelper.ViewData.Model;
 
             return new SnippetFieldDescriptorBuilder(shape)
@@ -16,37 +19,44 @@ namespace Orchard.Layouts.Helpers {
                 .WithType(type);
         }
 
-        public class SnippetFieldDescriptorBuilder : IHtmlString {
+        public class SnippetFieldDescriptorBuilder : IHtmlString
+        {
             private readonly dynamic _shape;
 
-            public SnippetFieldDescriptorBuilder(dynamic shape) {
+            public SnippetFieldDescriptorBuilder(dynamic shape)
+            {
                 _shape = shape;
                 Descriptor = new SnippetFieldDescriptor();
             }
 
             public SnippetFieldDescriptor Descriptor { get; private set; }
 
-            public SnippetFieldDescriptorBuilder Named(string value) {
+            public SnippetFieldDescriptorBuilder Named(string value)
+            {
                 Descriptor.Name = value;
                 return this;
             }
 
-            public SnippetFieldDescriptorBuilder WithType(string value) {
+            public SnippetFieldDescriptorBuilder WithType(string value)
+            {
                 Descriptor.Type = value;
                 return this;
             }
 
-            public SnippetFieldDescriptorBuilder DisplayedAs(LocalizedString value) {
+            public SnippetFieldDescriptorBuilder DisplayedAs(LocalizedString value)
+            {
                 Descriptor.DisplayName = value;
                 return this;
             }
 
-            public SnippetFieldDescriptorBuilder WithDescription(LocalizedString value) {
+            public SnippetFieldDescriptorBuilder WithDescription(LocalizedString value)
+            {
                 Descriptor.Description = value;
                 return this;
             }
 
-            public override string ToString() {
+            public override string ToString()
+            {
                 ((Action<SnippetFieldDescriptor>)_shape.DescriptorRegistrationCallback)?.Invoke(Descriptor);
 
                 var element = (Snippet)_shape.Element;
@@ -54,7 +64,8 @@ namespace Orchard.Layouts.Helpers {
                 return element?.Data.Get(Descriptor.Name);
             }
 
-            public string ToHtmlString() {
+            public string ToHtmlString()
+            {
                 return ToString();
             }
         }

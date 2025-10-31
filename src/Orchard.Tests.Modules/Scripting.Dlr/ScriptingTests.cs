@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,9 +6,11 @@ using NUnit.Framework;
 using Orchard.Scripting.Dlr.Services;
 using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Tests.Modules.Scripting.Dlr {
+namespace Orchard.Tests.Modules.Scripting.Dlr
+{
     [TestFixture]
-    public class ScriptingTests {
+    public class ScriptingTests
+    {
         private IContainer _container;
         private IScriptingRuntime _scriptingRuntime;
         private IScriptingManager _scriptingManager;
@@ -17,7 +18,8 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
         private Path _tempFolderName;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<RubyScriptingRuntime>().As<IScriptingRuntime>();
             builder.RegisterType<ScriptingManager>().As<IScriptingManager>();
@@ -25,7 +27,8 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
             _scriptingRuntime = _container.Resolve<IScriptingRuntime>();
             _scriptingManager = _container.Resolve<IScriptingManager>();
             _tempFolderName = _tempFixtureFolderName.Combine(System.IO.Path.GetRandomFileName());
-            try {
+            try
+            {
                 _tempFolderName.Delete();
             }
             catch { }
@@ -33,13 +36,15 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
         }
 
         [TearDown]
-        public void Term() {
+        public void Term()
+        {
             try { _tempFixtureFolderName.Delete(true); }
             catch { }
         }
 
         [Test]
-        public void CreateScopeReturnsWorkingScope() {
+        public void CreateScopeReturnsWorkingScope()
+        {
             var scope = _scriptingRuntime.CreateScope();
 
             Assert.IsNotNull(scope);
@@ -48,19 +53,22 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
         }
 
         [Test]
-        public void ScriptingManagerCanGetAndSetRubyVariables() {
+        public void ScriptingManagerCanGetAndSetRubyVariables()
+        {
             _scriptingManager.SetVariable("foo", 42);
             Assert.That(_scriptingManager.GetVariable("foo"), Is.EqualTo(42));
         }
 
         [Test]
-        public void ScriptingManagerCanEvalExpression() {
+        public void ScriptingManagerCanEvalExpression()
+        {
             _scriptingManager.SetVariable("foo", 21);
             Assert.That(_scriptingManager.ExecuteExpression("foo + 21"), Is.EqualTo(42));
         }
 
         [Test]
-        public void ScriptCanBeExecutedAndScopeProvidesContextIsolation() {
+        public void ScriptCanBeExecutedAndScopeProvidesContextIsolation()
+        {
             var scriptManager1 = new ScriptingManager(_scriptingRuntime);
             var scriptManager2 = new ScriptingManager(_scriptingRuntime);
 
@@ -75,7 +83,8 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
         }
 
         [Test]
-        public void ScriptingManagerCanExecuteFile() {
+        public void ScriptingManagerCanExecuteFile()
+        {
             var targetPath = _tempFolderName.Combine("SampleMethodDefinition.rb");
             File.WriteAllText(targetPath, "def f\r\nreturn 32\r\nend\r\n");
             _scriptingManager.ExecuteFile(targetPath);
@@ -83,7 +92,8 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
         }
 
         [Test]
-        public void CanDeclareCallbackOnInstanceEvalWithFile() {
+        public void CanDeclareCallbackOnInstanceEvalWithFile()
+        {
             var targetPath = _tempFolderName.Combine("CallbackOnInstanceEval.rb");
             File.WriteAllText(targetPath, "class ExecContext\r\ndef initialize(callbacks)\r\n@callbacks = callbacks;\r\nend\r\ndef execute(text)\r\ninstance_eval(text.to_s);\r\nend\r\ndef method_missing(name, *args, &block)\r\n@callbacks.send(name, args, &block);\r\nend\r\nend\r\ndef execute(&block)\r\nExecContext.new(callbacks).instance_eval(&block);\r\nend\r\n");
             _scriptingManager.ExecuteFile(targetPath);
@@ -92,8 +102,10 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
             Assert.That(_scriptingManager.ExecuteExpression("execute { 1 + hello + world('yep') }"), Is.EqualTo(11));
         }
 
-        public class CallbackApi {
-            public object send(string name, IList<object> args) {
+        public class CallbackApi
+        {
+            public object send(string name, IList<object> args)
+            {
                 Trace.WriteLine("Returning length of method " + name);
                 return name.Length;
             }

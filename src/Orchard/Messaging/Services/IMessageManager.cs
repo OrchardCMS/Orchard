@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Messaging.Services {
+namespace Orchard.Messaging.Services
+{
     [Obsolete]
-    public interface IMessageManager : IDependency {
+    public interface IMessageManager : IDependency
+    {
         /// <summary>
         /// Sends a message to a channel using a content item as the recipient
         /// </summary>

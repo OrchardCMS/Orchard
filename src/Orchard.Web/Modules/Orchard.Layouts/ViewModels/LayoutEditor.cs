@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Models;
 
-namespace Orchard.Layouts.ViewModels {
-    public class LayoutEditor {
+namespace Orchard.Layouts.ViewModels
+{
+    public class LayoutEditor
+    {
         public IContent Content { get; set; }
         public string Data { get; set; }
         public string ConfigurationData { get; set; }

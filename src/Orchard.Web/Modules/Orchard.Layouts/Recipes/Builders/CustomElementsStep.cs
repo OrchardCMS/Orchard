@@ -1,35 +1,32 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.Data;
+using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
+using Orchard.Layouts.Services;
 using Orchard.Localization;
 using Orchard.Recipes.Services;
-using Orchard.Layouts.Services;
-using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Framework.Drivers;
 
-namespace Orchard.Layouts.Recipes.Builders {
+namespace Orchard.Layouts.Recipes.Builders
+{
 
-    public class CustomElementsStep : RecipeBuilderStep {
+    public class CustomElementsStep : RecipeBuilderStep
+    {
         private readonly IRepository<ElementBlueprint> _repository;
         private readonly IElementManager _elementManager;
 
-        public CustomElementsStep(IRepository<ElementBlueprint> repository, IElementManager elementManager) {
+        public CustomElementsStep(IRepository<ElementBlueprint> repository, IElementManager elementManager)
+        {
             _repository = repository;
             _elementManager = elementManager;
         }
 
-        public override string Name {
-            get { return "CustomElements"; }
-        }
+        public override string Name => "CustomElements";
 
-        public override LocalizedString DisplayName {
-            get { return T("Custom Elements"); }
-        }
+        public override LocalizedString DisplayName => T("Custom Elements");
 
-        public override LocalizedString Description {
-            get { return T("Exports custom defined elements."); }
-        }
+        public override LocalizedString Description => T("Exports custom defined elements.");
 
         public override void Build(BuildContext context)
         {
@@ -38,7 +35,8 @@ namespace Orchard.Layouts.Recipes.Builders {
             if (!blueprints.Any())
                 return;
 
-            var blueprintEntries = blueprints.Select(blueprint => {
+            var blueprintEntries = blueprints.Select(blueprint =>
+            {
 
                 var describeContext = DescribeElementsContext.Empty;
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
@@ -52,11 +50,12 @@ namespace Orchard.Layouts.Recipes.Builders {
             var exportLayoutContext = new ExportLayoutContext();
             _elementManager.Exporting(baseElements, exportLayoutContext);
             _elementManager.Exported(baseElements, exportLayoutContext);
-            
+
             var root = new XElement("CustomElements");
             context.RecipeDocument.Element("Orchard").Add(root);
 
-            foreach (var blueprintEntry in blueprintEntries) {
+            foreach (var blueprintEntry in blueprintEntries)
+            {
                 root.Add(new XElement("Element",
                     new XAttribute("ElementTypeName", blueprintEntry.Blueprint.ElementTypeName),
                     new XAttribute("BaseElementTypeName", blueprintEntry.Blueprint.BaseElementTypeName),

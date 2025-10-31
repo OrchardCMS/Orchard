@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,24 +11,30 @@ using Orchard.Indexing;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Indexing {
-    public class LuceneIndexProviderTests {
+namespace Orchard.Tests.Modules.Indexing
+{
+    public class LuceneIndexProviderTests
+    {
         private IContainer _container;
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
         private ShellSettings _shellSettings;
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        
+
         [OneTimeTearDown]
-        public void Clean() {
-            if (Directory.Exists(_basePath)) {
+        public void Clean()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
         }
 
         [SetUp]
-        public void Setup() {
-            if (Directory.Exists(_basePath)) {
+        public void Setup()
+        {
+            if (Directory.Exists(_basePath))
+            {
                 Directory.Delete(_basePath, true);
             }
             Directory.CreateDirectory(_basePath);
@@ -50,12 +56,14 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider = _container.Resolve<IIndexProvider>();
         }
 
-        private IEnumerable<string> Indexes() {
+        private IEnumerable<string> Indexes()
+        {
             return _provider.List();
         }
 
         [Test]
-        public void IndexProviderShouldCreateNewIndex() {
+        public void IndexProviderShouldCreateNewIndex()
+        {
             Assert.That(Indexes().Count(), Is.EqualTo(0));
 
             _provider.CreateIndex("default");
@@ -63,7 +71,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexProviderShouldCreateMultipleIndexesAndListThem() {
+        public void IndexProviderShouldCreateMultipleIndexesAndListThem()
+        {
             Assert.That(Indexes().Count(), Is.EqualTo(0));
 
             _provider.CreateIndex("default");
@@ -77,7 +86,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexProviderShouldOverwriteAlreadyExistingIndex() {
+        public void IndexProviderShouldOverwriteAlreadyExistingIndex()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", null));
             Assert.That(_provider.IsEmpty("default"), Is.False);
@@ -87,7 +97,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexProviderShouldDeleteExistingIndex() {
+        public void IndexProviderShouldDeleteExistingIndex()
+        {
             Assert.That(Indexes().Count(), Is.EqualTo(0));
 
             _provider.CreateIndex("default");
@@ -98,9 +109,10 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexProviderShouldListExistingIndexes() {
+        public void IndexProviderShouldListExistingIndexes()
+        {
             Assert.That(Indexes().Count(), Is.EqualTo(0));
-            
+
             _provider.CreateIndex("default");
             Assert.That(Indexes().Count(), Is.EqualTo(1));
             Assert.That(Indexes().ElementAt(0), Is.EqualTo("default"));
@@ -110,7 +122,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ANewIndexShouldBeEmpty() {
+        public void ANewIndexShouldBeEmpty()
+        {
             _provider.CreateIndex("default");
             var searchBuilder = _provider.CreateSearchBuilder("default");
             var hits = searchBuilder.Search();
@@ -119,11 +132,12 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void DocumentsShouldBeSearchableById() {
+        public void DocumentsShouldBeSearchableById()
+        {
             _provider.CreateIndex("default");
 
             _provider.Store("default", _provider.New(42));
-            
+
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
             var hit = searchBuilder.Get(42);
@@ -135,29 +149,31 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void PropertiesShouldNotBeLost() {
+        public void PropertiesShouldNotBeLost()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(42)
                 .Add("prop1", "value1").Store()
                 .Add("prop2", 123).Store()
                 .Add("prop3", 123.456).Store()
-                .Add("prop4", new DateTime(2001,1,1,1,1,1,1)).Store()
+                .Add("prop4", new DateTime(2001, 1, 1, 1, 1, 1, 1)).Store()
                 .Add("prop5", true).Store()
             );
 
             var hit = _provider.CreateSearchBuilder("default").Get(42);
-            
+
             Assert.IsNotNull(hit);
             Assert.That(hit.ContentItemId, Is.EqualTo(42));
             Assert.That(hit.GetString("prop1"), Is.EqualTo("value1"));
             Assert.That(hit.GetInt("prop2"), Is.EqualTo(123));
             Assert.That(hit.GetDouble("prop3"), Is.EqualTo(123.456));
             Assert.That(hit.GetDateTime("prop4"), Is.EqualTo(new DateTime(2001, 1, 1, 1, 1, 1, 1)));
-            Assert.That(hit.GetBoolean("prop5"), Is.EqualTo(true));            
+            Assert.That(hit.GetBoolean("prop5"), Is.EqualTo(true));
         }
-        
+
         [Test]
-        public void ShouldHandleMultipleIndexes() {
+        public void ShouldHandleMultipleIndexes()
+        {
             _provider.CreateIndex("default1");
             _provider.Store("default1", _provider.New(1));
 
@@ -178,7 +194,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IdentifierShouldNotCollide() {
+        public void IdentifierShouldNotCollide()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("field", "value1"));
             _provider.Store("default", _provider.New(11).Add("field", "value11"));
@@ -190,9 +207,10 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
             Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
         }
-        
+
         [Test]
-        public void TagsShouldBeRemoved() {
+        public void TagsShouldBeRemoved()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "<hr>some content</hr>").Analyze());
             _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>").RemoveTags().Analyze());
@@ -203,7 +221,9 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(searchBuilder.WithField("body", "hr").Search().First().ContentItemId, Is.EqualTo(1));
         }
 
-        [Test] public void ShouldAllowNullOrEmptyStrings() {
+        [Test]
+        public void ShouldAllowNullOrEmptyStrings()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", null));
             _provider.Store("default", _provider.New(2).Add("body", ""));
@@ -217,33 +237,38 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IsEmptyShouldBeTrueForNoneExistingIndexes() {
+        public void IsEmptyShouldBeTrueForNoneExistingIndexes()
+        {
             _provider.IsEmpty("dummy");
             Assert.That(_provider.IsEmpty("default"), Is.True);
         }
 
         [Test]
-        public void IsEmptyShouldBeTrueForJustNewIndexes() {
+        public void IsEmptyShouldBeTrueForJustNewIndexes()
+        {
             _provider.CreateIndex("default");
             Assert.That(_provider.IsEmpty("default"), Is.True);
         }
 
         [Test]
-        public void IsEmptyShouldBeFalseWhenThereIsADocument() {
+        public void IsEmptyShouldBeFalseWhenThereIsADocument()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", null));
             Assert.That(_provider.IsEmpty("default"), Is.False);
         }
 
         [Test]
-        public void IsDirtyShouldBeFalseForNewDocuments() {
+        public void IsDirtyShouldBeFalseForNewDocuments()
+        {
             IDocumentIndex doc = _provider.New(1);
             Assert.That(doc.IsDirty, Is.False);
         }
 
 
         [Test]
-        public void IsDirtyShouldBeTrueWhenIndexIsModified() {
+        public void IsDirtyShouldBeTrueWhenIndexIsModified()
+        {
             IDocumentIndex doc = _provider.New(1);
             doc.Add("foo", "value");
             Assert.That(doc.IsDirty, Is.True);
@@ -267,7 +292,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void DocumentsShouldBeDeleted() {
+        public void DocumentsShouldBeDeleted()
+        {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("field", "value1"));
             _provider.Store("default", _provider.New(11).Add("field", "value11"));
@@ -285,7 +311,7 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
             Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
 
-            _provider.Delete("default", new [] {1, 11, 111 });
+            _provider.Delete("default", new[] { 1, 11, 111 });
 
             Assert.That(searchBuilder.Get(1), Is.Null);
             Assert.That(searchBuilder.Get(11), Is.Null);
@@ -294,7 +320,8 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void SameContentItemShouldNotBeIndexedTwice() {
+        public void SameContentItemShouldNotBeIndexedTwice()
+        {
             _provider.CreateIndex("default");
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
@@ -307,12 +334,13 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void IndexProviderShouldDeleteMoreThanMaxTermsCount() {
+        public void IndexProviderShouldDeleteMoreThanMaxTermsCount()
+        {
             _provider.CreateIndex("default");
 
             var documents = Enumerable.Range(1, 1025).Select(i => _provider.New(i).Add("field", "value1"));
             _provider.Store("default", documents);
-            
+
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
             Assert.That(searchBuilder.Count(), Is.EqualTo(1025));

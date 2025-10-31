@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Orchard.Recipes.Models;
 
-namespace Orchard.Recipes.ViewModels {
-    public class ContentBuilderStepViewModel {
-        public ContentBuilderStepViewModel() {
+namespace Orchard.Recipes.ViewModels
+{
+    public class ContentBuilderStepViewModel
+    {
+        public ContentBuilderStepViewModel()
+        {
             ContentTypes = new List<ContentTypeEntry>();
         }
 

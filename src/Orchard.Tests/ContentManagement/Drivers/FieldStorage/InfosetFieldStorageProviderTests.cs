@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
@@ -9,13 +9,16 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
-    public class InfosetFieldStorageProviderTests {
+namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage
+{
+    public class InfosetFieldStorageProviderTests
+    {
         private IContainer _container;
         private IFieldStorageProvider _provider;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<InfosetStorageProvider>().As<IFieldStorageProvider>();
 
@@ -23,28 +26,34 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             _provider = _container.Resolve<IFieldStorageProvider>();
         }
 
-        private ContentPartDefinition FooPartDefinition() {
+        private ContentPartDefinition FooPartDefinition()
+        {
             return new ContentPartDefinitionBuilder()
                 .Named("Foo")
                 .WithField("Bar")
                 .Build();
         }
 
-        private ContentPart CreateContentItemPart() {
+        private ContentPart CreateContentItemPart()
+        {
             var partDefinition = FooPartDefinition();
             var typeDefinition = new ContentTypeDefinitionBuilder()
                 .WithPart(partDefinition, part => { })
                 .Build();
-            var contentItem = new ContentItem {
-                VersionRecord = new ContentItemVersionRecord {
+            var contentItem = new ContentItem
+            {
+                VersionRecord = new ContentItemVersionRecord
+                {
                     ContentItemRecord = new ContentItemRecord()
                 }
             };
-            var contentPart = new ContentPart {
+            var contentPart = new ContentPart
+            {
                 TypePartDefinition = typeDefinition.Parts.Single()
             };
             contentItem.Weld(contentPart);
-            contentItem.Weld(new InfosetPart {
+            contentItem.Weld(new InfosetPart
+            {
                 Infoset = contentItem.Record.Infoset,
                 VersionInfoset = contentItem.VersionRecord.Infoset
             });
@@ -52,14 +61,16 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void BoundStorageIsNotNull() {
+        public void BoundStorageIsNotNull()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
             Assert.That(storage, Is.Not.Null);
         }
 
         [Test]
-        public void GettingUnsetNamedAndUnnamedValueIsSafeAndNull() {
+        public void GettingUnsetNamedAndUnnamedValueIsSafeAndNull()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
             Assert.That(storage.Get<string>(null), Is.Null);
@@ -68,7 +79,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void ValueThatIsSetIsAlsoReturned() {
+        public void ValueThatIsSetIsAlsoReturned()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
@@ -79,7 +91,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void NullAndEmptyValueNamesAreTreatedTheSame() {
+        public void NullAndEmptyValueNamesAreTreatedTheSame()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
@@ -94,7 +107,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void RecordDataPropertyReflectsChangesToFields() {
+        public void RecordDataPropertyReflectsChangesToFields()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
@@ -105,7 +119,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test]
-        public void ChangingRecordDataHasImmediateEffectOnStorageAccessors() {
+        public void ChangingRecordDataHasImmediateEffectOnStorageAccessors()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
@@ -120,16 +135,19 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         }
 
         [Test, Ignore("implementation pending")]
-        public void VersionedSettingOnInfosetField() {
+        public void VersionedSettingOnInfosetField()
+        {
             Assert.Fail("todo");
         }
 
         [Test]
-        public void ForbiddenXmlCharactersCauseException() {
+        public void ForbiddenXmlCharactersCauseException()
+        {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            foreach (var character in InfosetHelper.InvalidXmlCharacters) {
+            foreach (var character in InfosetHelper.InvalidXmlCharacters)
+            {
                 Assert.Throws<ArgumentException>(() => storage.Set("alpha", character));
             }
         }

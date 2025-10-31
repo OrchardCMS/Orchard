@@ -14,18 +14,21 @@ using Orchard.Mvc.Extensions;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Blogs.Controllers {
+namespace Orchard.Blogs.Controllers
+{
 
     /// <summary>
     /// TODO: (PH:Autoroute) This replicates a whole lot of Core.Contents functionality. All we actually need to do is take the BlogId from the query string in the BlogPostPartDriver, and remove
     /// helper extensions from UrlHelperExtensions.
     /// </summary>
     [ValidateInput(false), Admin]
-    public class BlogPostAdminController : Controller, IUpdateModel {
+    public class BlogPostAdminController : Controller, IUpdateModel
+    {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogPostAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogPostAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService)
+        {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -35,7 +38,8 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Create(int blogId) {
+        public ActionResult Create(int blogId)
+        {
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
             if (blog == null)
@@ -48,26 +52,29 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = Services.ContentManager.BuildEditor(blogPost);
-            
+
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(int blogId) {
+        public ActionResult CreatePOST(int blogId)
+        {
             return CreatePOST(blogId, false);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(int blogId) {
+        public ActionResult CreateAndPublishPOST(int blogId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(blogId, true);
         }
 
-        private ActionResult CreatePOST(int blogId, bool publish = false) {
+        private ActionResult CreatePOST(int blogId, bool publish = false)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
             if (blog == null)
@@ -78,16 +85,18 @@ namespace Orchard.Blogs.Controllers {
 
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
-            
+
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            if (publish) {
+            if (publish)
+            {
                 if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blogPost.ContentItem, T("Couldn't publish blog post")))
                     return new HttpUnauthorizedResult();
 
@@ -98,13 +107,17 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogPostEdit(blogPost));
         }
 
-        public ActionResult CreateWithoutBlog() {
+        public ActionResult CreateWithoutBlog()
+        {
             var blogs = _blogService.Get().ToArray();
 
-            if (blogs.Count() == 0) {
+            if (blogs.Count() == 0)
+            {
                 Services.Notifier.Warning(T("To create a BlogPost you need to create a blog first. You have been redirected to the Blog creation page."));
                 return RedirectToAction("Create", "BlogAdmin", new { area = "Orchard.Blogs" });
-            } else {
+            }
+            else
+            {
                 Services.Notifier.Warning(T("To create a BlogPost you need to choose a blog first. You have been redirected to the Blog selection page."));
                 return RedirectToAction("List", "BlogAdmin", new { area = "Orchard.Blogs" });
             }
@@ -112,7 +125,8 @@ namespace Orchard.Blogs.Controllers {
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
-        public ActionResult Edit(int blogId, int postId) {
+        public ActionResult Edit(int blogId, int postId)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -130,8 +144,10 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
-            return EditPOST(blogId, postId, returnUrl, contentItem => {
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl)
+        {
+            return EditPOST(blogId, postId, returnUrl, contentItem =>
+            {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
@@ -139,13 +155,15 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Delete")]
-        public ActionResult EditDeletePOST(int blogId, int postId, string returnUrl) {
+        public ActionResult EditDeletePOST(int blogId, int postId, string returnUrl)
+        {
             return Delete(blogId, postId);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
+        public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -163,11 +181,13 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Unpublish")]
-        public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl) {
+        public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl)
+        {
             return Unpublish(blogId, postId);
         }
 
-        public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -182,7 +202,8 @@ namespace Orchard.Blogs.Controllers {
 
             // Validate form input
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
@@ -195,10 +216,12 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult DiscardDraft(int id) {
+        public ActionResult DiscardDraft(int id)
+        {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
-            if (draft == null) {
+            if (draft == null)
+            {
                 Services.Notifier.Warning(T("There is no draft to discard."));
                 return RedirectToEdit(id);
             }
@@ -209,7 +232,8 @@ namespace Orchard.Blogs.Controllers {
 
             // locate the published revision to revert onto
             var published = Services.ContentManager.Get(id, VersionOptions.Published);
-            if (published == null) {
+            if (published == null)
+            {
                 Services.Notifier.Error(T("Can not discard draft on unpublished blog post."));
                 return RedirectToEdit(draft);
             }
@@ -223,18 +247,21 @@ namespace Orchard.Blogs.Controllers {
             return RedirectToEdit(published);
         }
 
-        ActionResult RedirectToEdit(int id) {
+        ActionResult RedirectToEdit(int id)
+        {
             return RedirectToEdit(Services.ContentManager.GetLatest<BlogPostPart>(id));
         }
 
-        ActionResult RedirectToEdit(IContent item) {
+        ActionResult RedirectToEdit(IContent item)
+        {
             if (item == null || item.As<BlogPostPart>() == null)
                 return HttpNotFound();
             return RedirectToAction("Edit", new { BlogId = item.As<BlogPostPart>().BlogPart.Id, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Delete(int blogId, int postId) {
+        public ActionResult Delete(int blogId, int postId)
+        {
             //refactoring: test PublishBlogPost/PublishBlogPost in addition if published
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -255,7 +282,8 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Publish(int blogId, int postId) {
+        public ActionResult Publish(int blogId, int postId)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -274,7 +302,8 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Unpublish(int blogId, int postId) {
+        public ActionResult Unpublish(int blogId, int postId)
+        {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -292,11 +321,13 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

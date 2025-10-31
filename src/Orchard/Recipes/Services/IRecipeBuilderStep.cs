@@ -1,10 +1,11 @@
-﻿using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Recipes.Models;
 
-namespace Orchard.Recipes.Services {
-    public interface IRecipeBuilderStep : IDependency {
+namespace Orchard.Recipes.Services
+{
+    public interface IRecipeBuilderStep : IDependency
+    {
         string Name { get; }
         LocalizedString DisplayName { get; }
         LocalizedString Description { get; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -9,27 +9,33 @@ using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.ViewModels;
 
-namespace Orchard.Taxonomies.Drivers {
-    public class TaxonomyNavigationPartDriver : ContentPartDriver<TaxonomyNavigationPart> {
+namespace Orchard.Taxonomies.Drivers
+{
+    public class TaxonomyNavigationPartDriver : ContentPartDriver<TaxonomyNavigationPart>
+    {
         private readonly ITaxonomyService _taxonomyService;
         private readonly IContentManager _contentManager;
 
-        public TaxonomyNavigationPartDriver(ITaxonomyService taxonomyService, IContentManager contentManager) {
+        public TaxonomyNavigationPartDriver(ITaxonomyService taxonomyService, IContentManager contentManager)
+        {
             _taxonomyService = taxonomyService;
             _contentManager = contentManager;
         }
 
         public Localizer T { get; set; }
 
-        protected override string Prefix { get { return "TaxonomyNavigationPart"; } }
+        protected override string Prefix => "TaxonomyNavigationPart";
 
         protected override DriverResult Editor(TaxonomyNavigationPart part, dynamic shapeHelper) =>
             Editor(part, null, shapeHelper);
 
-        protected override DriverResult Editor(TaxonomyNavigationPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(TaxonomyNavigationPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             return ContentShape(
-                "Parts_Navigation_Taxonomy_Edit", () => {
-                    var model = new TaxonomyNavigationViewModel {
+                "Parts_Navigation_Taxonomy_Edit", () =>
+                {
+                    var model = new TaxonomyNavigationViewModel
+                    {
                         SelectedTaxonomyId = part.TaxonomyId,
                         SelectedTermId = part.TermId,
                         DisplayContentCount = part.DisplayContentCount,
@@ -38,13 +44,17 @@ namespace Orchard.Taxonomies.Drivers {
                         LevelsToDisplay = part.LevelsToDisplay,
                     };
 
-                    if (updater != null) {
-                        if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                    if (updater != null)
+                    {
+                        if (updater.TryUpdateModel(model, Prefix, null, null))
+                        {
 
-                            if (model.LevelsToDisplay < 0) {
+                            if (model.LevelsToDisplay < 0)
+                            {
                                 updater.AddModelError("LevelsToDisplay", T("The levels to display must be a positive number"));
                             }
-                            else {
+                            else
+                            {
                                 // taxonomy to render
                                 part.TaxonomyId = model.SelectedTaxonomyId;
                                 // root term (can be null)
@@ -59,7 +69,8 @@ namespace Orchard.Taxonomies.Drivers {
 
                     var taxonomies = _taxonomyService.GetTaxonomies().ToArray();
 
-                    var listItems = taxonomies.Select(taxonomy => new SelectListItem {
+                    var listItems = taxonomies.Select(taxonomy => new SelectListItem
+                    {
                         Value = Convert.ToString(taxonomy.Id),
                         Text = taxonomy.Name,
                         Selected = taxonomy.Id == part.TaxonomyId,
@@ -69,9 +80,11 @@ namespace Orchard.Taxonomies.Drivers {
 
                     // if no taxonomy is selected, take the first available one as 
                     // the terms drop down needs one by default
-                    if (model.SelectedTaxonomyId <= 0) {
+                    if (model.SelectedTaxonomyId <= 0)
+                    {
                         var firstTaxonomy = taxonomies.FirstOrDefault();
-                        if (firstTaxonomy != null) {
+                        if (firstTaxonomy != null)
+                        {
                             model.SelectedTaxonomyId = firstTaxonomy.Id;
                         }
                     }
@@ -80,7 +93,8 @@ namespace Orchard.Taxonomies.Drivers {
                 });
         }
 
-        protected override void Exporting(TaxonomyNavigationPart part, ExportContentContext context) {
+        protected override void Exporting(TaxonomyNavigationPart part, ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayContentCount", part.DisplayContentCount);
             context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayRootTerm", part.DisplayRootTerm);
             context.Element(part.PartDefinition.Name).SetAttributeValue("HideEmptyTerms", part.HideEmptyTerms);
@@ -91,7 +105,8 @@ namespace Orchard.Taxonomies.Drivers {
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", taxonomyId);
 
-            if (part.TermId != -1) {
+            if (part.TermId != -1)
+            {
                 var term = _contentManager.Get(part.TermId);
                 var termId = _contentManager.GetItemMetadata(term).Identity.ToString();
 
@@ -99,16 +114,18 @@ namespace Orchard.Taxonomies.Drivers {
             }
         }
 
-        protected override void Importing(TaxonomyNavigationPart part, ImportContentContext context) {
+        protected override void Importing(TaxonomyNavigationPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
-            part.DisplayContentCount = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayContentCount"));
-            part.DisplayRootTerm = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayRootTerm"));
-            part.HideEmptyTerms = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "HideEmptyTerms"));
-            part.LevelsToDisplay = Int32.Parse(context.Attribute(part.PartDefinition.Name, "LevelsToDisplay"));
+            part.DisplayContentCount = bool.Parse(context.Attribute(part.PartDefinition.Name, "DisplayContentCount"));
+            part.DisplayRootTerm = bool.Parse(context.Attribute(part.PartDefinition.Name, "DisplayRootTerm"));
+            part.HideEmptyTerms = bool.Parse(context.Attribute(part.PartDefinition.Name, "HideEmptyTerms"));
+            part.LevelsToDisplay = int.Parse(context.Attribute(part.PartDefinition.Name, "LevelsToDisplay"));
 
             var taxonomyId = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
             var taxonomy = context.GetItemFromSession(taxonomyId)
@@ -117,7 +134,8 @@ namespace Orchard.Taxonomies.Drivers {
             part.TaxonomyId = taxonomy.Id;
             var termId = context.Attribute(part.PartDefinition.Name, "TermId");
 
-            if (!String.IsNullOrEmpty(termId)) {
+            if (!string.IsNullOrEmpty(termId))
+            {
                 var term = context.GetItemFromSession(termId)
                     ?? throw new OrchardException(T("Unknown term: {0}", termId));
 
@@ -125,7 +143,8 @@ namespace Orchard.Taxonomies.Drivers {
             }
         }
 
-        protected override void Cloning(TaxonomyNavigationPart originalPart, TaxonomyNavigationPart clonePart, CloneContentContext context) {
+        protected override void Cloning(TaxonomyNavigationPart originalPart, TaxonomyNavigationPart clonePart, CloneContentContext context)
+        {
             clonePart.DisplayContentCount = originalPart.DisplayContentCount;
             clonePart.DisplayRootTerm = originalPart.DisplayRootTerm;
             clonePart.HideEmptyTerms = originalPart.HideEmptyTerms;

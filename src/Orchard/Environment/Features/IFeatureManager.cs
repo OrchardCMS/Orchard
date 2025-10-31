@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Extensions;
 
-namespace Orchard.Environment.Features {
+namespace Orchard.Environment.Features
+{
     public delegate void FeatureDependencyNotificationHandler(string messageFormat, string featureId, IEnumerable<string> featureIds);
 
-    public interface IFeatureManager : IDependency {
+    public interface IFeatureManager : IDependency
+    {
         FeatureDependencyNotificationHandler FeatureDependencyNotification { get; set; }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -7,14 +7,17 @@ using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.UI.Notify;
 
-namespace Orchard.Comments.Controllers {
-    public class CommentController : Controller, IUpdateModel {
+namespace Orchard.Comments.Controllers
+{
+    public class CommentController : Controller, IUpdateModel
+    {
         public IOrchardServices Services { get; set; }
         private readonly ICommentService _commentService;
 
         public Localizer T { get; set; }
 
-        public CommentController(IOrchardServices services, ICommentService commentService) {
+        public CommentController(IOrchardServices services, ICommentService commentService)
+        {
             Services = services;
             _commentService = commentService;
 
@@ -22,30 +25,36 @@ namespace Orchard.Comments.Controllers {
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult Create(string returnUrl) {
+        public ActionResult Create(string returnUrl)
+        {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
-            if (!ModelState.IsValidField("Comments.Author")) {
+            if (!ModelState.IsValidField("Comments.Author"))
+            {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.Email")) {
+            if (!ModelState.IsValidField("Comments.Email"))
+            {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.SiteName")) {
+            if (!ModelState.IsValidField("Comments.SiteName"))
+            {
                 Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.CommentText")) {
+            if (!ModelState.IsValidField("Comments.CommentText"))
+            {
                 Services.Notifier.Error(T("Comment is mandatory"));
             }
 
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 Services.ContentManager.Create(comment, VersionOptions.Draft);
                 Services.ContentManager.UpdateEditor(comment, this);
                 Services.ContentManager.Publish(comment.ContentItem);
@@ -53,21 +62,25 @@ namespace Orchard.Comments.Controllers {
                 var commentPart = comment.As<CommentPart>();
 
                 // ensure the comments are not closed on the container, as the html could have been tampered manually
-                if (!_commentService.CanCreateComment(commentPart)) {
+                if (!_commentService.CanCreateComment(commentPart))
+                {
                     Services.TransactionManager.Cancel();
                     return this.RedirectLocal(returnUrl, "~/");
                 }
 
                 var commentsPart = Services.ContentManager.Get(commentPart.CommentedOn).As<CommentsPart>();
-           
+
                 // is it a response to another comment ?
-                if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
+                if (commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments)
+                {
                     var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
-                    if(replied != null) {
+                    if (replied != null)
+                    {
                         var repliedPart = replied.As<CommentPart>();
-                            
+
                         // what is the next position after the anwered comment
-                        if(repliedPart != null) {
+                        if (repliedPart != null)
+                        {
                             // the next comment is the one right after the RepliedOn one, at the same level
                             var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
                                 .Where(x => x.RepliedOn == repliedPart.RepliedOn && x.CommentDateUtc > repliedPart.CommentDateUtc)
@@ -82,54 +95,66 @@ namespace Orchard.Comments.Controllers {
                                 .Slice(0, 1)
                                 .FirstOrDefault();
 
-                            if(nextComment == null) {
+                            if (nextComment == null)
+                            {
                                 commentPart.Position = repliedPart.Position + 1;
                             }
-                            else {
-                                if (previousComment == null) {
+                            else
+                            {
+                                if (previousComment == null)
+                                {
                                     commentPart.Position = (repliedPart.Position + nextComment.Position) / 2;
                                 }
-                                else {
+                                else
+                                {
                                     commentPart.Position = (previousComment.Position + nextComment.Position) / 2;
                                 }
                             }
                         }
                     }
-                        
+
                 }
-                else {
+                else
+                {
                     // new comment, last in position
                     commentPart.RepliedOn = null;
                     commentPart.Position = comment.Id;
                 }
 
-                if (commentPart.Status == CommentStatus.Pending) {
+                if (commentPart.Status == CommentStatus.Pending)
+                {
                     // if the user who submitted the comment has the right to moderate, don't make this comment moderated
-                    if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
+                    if (Services.Authorizer.Authorize(Permissions.ManageComments))
+                    {
                         commentPart.Status = CommentStatus.Approved;
                         Services.Notifier.Success(T("Your comment has been posted."));
                     }
-                    else {
+                    else
+                    {
                         Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
                     }
                 }
-                else {
+                else
+                {
                     Services.Notifier.Success(T("Your comment has been posted."));
                 }
 
                 // send email notification
                 var siteSettings = Services.WorkContext.CurrentSite.As<CommentSettingsPart>();
-                if (siteSettings.NotificationEmail) {
+                if (siteSettings.NotificationEmail)
+                {
                     _commentService.SendNotificationEmail(commentPart);
                 }
 
             }
-            else {
+            else
+            {
                 Services.TransactionManager.Cancel();
 
                 TempData["Comments.InvalidCommentEditorShape"] = editorShape;
-                var commentPart = comment.As<CommentPart>(); 
-                if(commentPart.RepliedOn.HasValue) {
+                var commentPart = comment.As<CommentPart>();
+                if (commentPart.RepliedOn.HasValue)
+                {
                     TempData["Comments.RepliedOn"] = commentPart.RepliedOn.Value;
                 }
             }
@@ -137,9 +162,11 @@ namespace Orchard.Comments.Controllers {
             return this.RedirectLocal(returnUrl, "~/");
         }
 
-        public ActionResult Approve(string nonce) {
+        public ActionResult Approve(string nonce)
+        {
             int id;
-            if (_commentService.DecryptNonce(nonce, out id)) {
+            if (_commentService.DecryptNonce(nonce, out id))
+            {
                 _commentService.ApproveComment(id);
             }
 
@@ -147,9 +174,11 @@ namespace Orchard.Comments.Controllers {
             return Redirect("~/");
         }
 
-        public ActionResult Delete(string nonce) {
+        public ActionResult Delete(string nonce)
+        {
             int id;
-            if (_commentService.DecryptNonce(nonce, out id)) {
+            if (_commentService.DecryptNonce(nonce, out id))
+            {
                 _commentService.DeleteComment(id);
             }
 
@@ -157,9 +186,11 @@ namespace Orchard.Comments.Controllers {
             return Redirect("~/");
         }
 
-        public ActionResult Moderate(string nonce) {
+        public ActionResult Moderate(string nonce)
+        {
             int id;
-            if (_commentService.DecryptNonce(nonce, out id)) {
+            if (_commentService.DecryptNonce(nonce, out id))
+            {
                 _commentService.UnapproveComment(id);
             }
 
@@ -167,11 +198,13 @@ namespace Orchard.Comments.Controllers {
             return Redirect("~/");
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

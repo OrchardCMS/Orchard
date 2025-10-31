@@ -1,9 +1,12 @@
-﻿using Orchard.Localization;
+using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.ContentManagement {
-    public class GroupInfo {
-        public GroupInfo(LocalizedString name) {
+namespace Orchard.ContentManagement
+{
+    public class GroupInfo
+    {
+        public GroupInfo(LocalizedString name)
+        {
             Id = name.TextHint.ToSafeName();
             Name = name;
         }

@@ -1,13 +1,18 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Core.Feeds.Models;
 
-namespace Orchard.Core.Feeds.Rss {
-    public class RssFeedBuilder : IFeedBuilderProvider, IFeedBuilder {
-        public FeedBuilderMatch Match(FeedContext context) {
-            if (context.Format == "rss") {
-                return new FeedBuilderMatch {
+namespace Orchard.Core.Feeds.Rss
+{
+    public class RssFeedBuilder : IFeedBuilderProvider, IFeedBuilder
+    {
+        public FeedBuilderMatch Match(FeedContext context)
+        {
+            if (context.Format == "rss")
+            {
+                return new FeedBuilderMatch
+                {
                     FeedBuilder = this,
                     Priority = -5
                 };
@@ -15,7 +20,8 @@ namespace Orchard.Core.Feeds.Rss {
             return null;
         }
 
-        public ActionResult Process(FeedContext context, Action populate) {
+        public ActionResult Process(FeedContext context, Action populate)
+        {
             var rss = new XElement("rss");
             rss.SetAttributeValue("version", "2.0");
 
@@ -28,8 +34,10 @@ namespace Orchard.Core.Feeds.Rss {
             return new RssResult(new XDocument(rss));
         }
 
-        public FeedItem<TItem> AddItem<TItem>(FeedContext context, TItem item) {
-            var feedItem = new FeedItem<TItem> {
+        public FeedItem<TItem> AddItem<TItem>(FeedContext context, TItem item)
+        {
+            var feedItem = new FeedItem<TItem>
+            {
                 Item = item,
                 Element = new XElement("item"),
             };
@@ -38,11 +46,14 @@ namespace Orchard.Core.Feeds.Rss {
             return feedItem;
         }
 
-        public void AddProperty(FeedContext context, FeedItem feedItem, string name, string value) {
-            if (feedItem == null) {
+        public void AddProperty(FeedContext context, FeedItem feedItem, string name, string value)
+        {
+            if (feedItem == null)
+            {
                 context.Response.Element.Add(new XElement(name, value));
             }
-            else {
+            else
+            {
                 feedItem.Element.Add(new XElement(name, value));
             }
         }

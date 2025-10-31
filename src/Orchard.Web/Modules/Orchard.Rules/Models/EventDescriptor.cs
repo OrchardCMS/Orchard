@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using Orchard.Localization;
 
-namespace Orchard.Rules.Models {
-    public class EventDescriptor {
+namespace Orchard.Rules.Models
+{
+    public class EventDescriptor
+    {
         public string Category { get; set; } // e.g. Content
         public string Type { get; set; } // e.g. Created
         public LocalizedString Name { get; set; }

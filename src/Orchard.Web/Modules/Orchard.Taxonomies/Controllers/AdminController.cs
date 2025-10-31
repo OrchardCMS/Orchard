@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,10 +22,12 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Taxonomies.Controllers {
+namespace Orchard.Taxonomies.Controllers
+{
 
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly ITaxonomyService _taxonomyService;
         private readonly ISiteService _siteService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
@@ -39,7 +41,8 @@ namespace Orchard.Taxonomies.Controllers {
             ITransactionManager transactionManager,
             ITaxonomyService taxonomyService,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             Services = services;
             _siteService = siteService;
             _taxonomyService = taxonomyService;
@@ -56,7 +59,8 @@ namespace Orchard.Taxonomies.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters) {
+        public ActionResult Index(PagerParameters pagerParameters)
+        {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var taxonomies = _taxonomyService.GetTaxonomiesQuery().Slice(pager.GetStartIndex(), pager.PageSize);
@@ -73,22 +77,26 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
             var viewModel = new TaxonomyAdminIndexViewModel { Taxonomies = new List<TaxonomyEntry>(), BulkAction = new TaxonomiesAdminIndexBulkAction() };
 
-            if (!TryUpdateModel(viewModel)) {
+            if (!TryUpdateModel(viewModel))
+            {
                 return View(viewModel);
             }
 
             var checkedEntries = viewModel.Taxonomies.Where(t => t.IsChecked);
-            switch (viewModel.BulkAction) {
+            switch (viewModel.BulkAction)
+            {
                 case TaxonomiesAdminIndexBulkAction.None:
                     break;
                 case TaxonomiesAdminIndexBulkAction.Delete:
                     if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                         return new HttpUnauthorizedResult();
 
-                    foreach (var entry in checkedEntries) {
+                    foreach (var entry in checkedEntries)
+                    {
                         _taxonomyService.DeleteTaxonomy(_taxonomyService.GetTaxonomy(entry.Id));
                     }
 
@@ -107,7 +115,8 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
 
-        public ActionResult Create() {
+        public ActionResult Create()
+        {
             var contentItem = _contentManager.New(_contentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Cannot create taxonomies")))
@@ -118,8 +127,10 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(string returnUrl) {
-            return CreatePOST(returnUrl, contentItem => {
+        public ActionResult CreatePOST(string returnUrl)
+        {
+            return CreatePOST(returnUrl, contentItem =>
+            {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
@@ -127,7 +138,8 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(string returnUrl) {
+        public ActionResult CreateAndPublishPOST(string returnUrl)
+        {
 
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(_contentType);
@@ -138,7 +150,8 @@ namespace Orchard.Taxonomies.Controllers {
             return CreatePOST(returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult CreatePOST(string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult CreatePOST(string returnUrl, Action<ContentItem> conditionallyPublish)
+        {
             var contentItem = _contentManager.New(_contentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, contentItem, T("Couldn't create taxonomies")))
@@ -148,7 +161,8 @@ namespace Orchard.Taxonomies.Controllers {
 
             var model = _contentManager.UpdateEditor(contentItem, this);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _transactionManager.Cancel();
                 return View(model);
             }
@@ -158,14 +172,16 @@ namespace Orchard.Taxonomies.Controllers {
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
-            if (!string.IsNullOrEmpty(returnUrl)) {
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
                 return this.RedirectLocal(returnUrl);
             }
             var adminRouteValues = _contentManager.GetItemMetadata(contentItem).AdminRouteValues;
             return RedirectToRoute(adminRouteValues);
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
@@ -180,8 +196,10 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(int id, string returnUrl) {
-            return EditPOST(id, returnUrl, contentItem => {
+        public ActionResult EditPOST(int id, string returnUrl)
+        {
+            return EditPOST(id, returnUrl, contentItem =>
+            {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
@@ -189,7 +207,8 @@ namespace Orchard.Taxonomies.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Publish")]
-        public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+        public ActionResult EditAndPublishPOST(int id, string returnUrl)
+        {
             var content = _contentManager.Get(id, VersionOptions.Latest);
 
             if (content == null)
@@ -201,7 +220,8 @@ namespace Orchard.Taxonomies.Controllers {
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish)
+        {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
@@ -215,13 +235,15 @@ namespace Orchard.Taxonomies.Controllers {
                 && !string.IsNullOrWhiteSpace(returnUrl)
                 && Request.IsLocalUrl(returnUrl)
                 // only if the original returnUrl is the content itself
-                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase)
-                ) {
+                && string.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase)
+                )
+            {
                 previousRoute = contentItem.As<IAliasAspect>().Path;
             }
 
             var model = _contentManager.UpdateEditor(contentItem, this);
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _transactionManager.Cancel();
                 return View("Edit", model);
             }
@@ -230,7 +252,8 @@ namespace Orchard.Taxonomies.Controllers {
 
             if (!string.IsNullOrWhiteSpace(returnUrl)
                 && previousRoute != null
-                && !String.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
+                && !string.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase))
+            {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
 
@@ -246,12 +269,14 @@ namespace Orchard.Taxonomies.Controllers {
         public ActionResult EditDeletePOST(int id) => Delete(id);
 
         [HttpPost]
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't delete taxonomy")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
-            if (taxonomy == null) {
+            if (taxonomy == null)
+            {
                 return HttpNotFound();
             }
 
@@ -262,13 +287,15 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Import(int id, string terms) {
+        public ActionResult Import(int id, string terms)
+        {
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't import terms")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
 
-            if (taxonomy == null) {
+            if (taxonomy == null)
+            {
                 return HttpNotFound();
             }
 
@@ -276,27 +303,32 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [HttpPost, ActionName("Import")]
-        public ActionResult ImportPost(int id, string terms) {
+        public ActionResult ImportPost(int id, string terms)
+        {
             if (!Services.Authorizer.Authorize(Permissions.CreateTaxonomy, T("Couldn't import terms")))
                 return new HttpUnauthorizedResult();
 
             var taxonomy = _taxonomyService.GetTaxonomy(id);
 
-            if (taxonomy == null) {
+            if (taxonomy == null)
+            {
                 return HttpNotFound();
             }
 
             var topTerm = new TermPosition();
 
-            using (var reader = new StringReader(terms)) {
+            using (var reader = new StringReader(terms))
+            {
                 string line;
                 var previousLevel = 0;
                 var parents = new Stack<TermPosition>();
                 TermPosition parentTerm = null;
-                while (null != (line = reader.ReadLine())) {
+                while (null != (line = reader.ReadLine()))
+                {
 
                     // ignore empty lines
-                    if (String.IsNullOrWhiteSpace(line)) {
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
                         continue;
                     }
 
@@ -308,18 +340,21 @@ namespace Orchard.Taxonomies.Controllers {
                     var term = _taxonomyService.NewTerm(taxonomy);
 
                     // detect parent term
-                    if (level == previousLevel + 1) {
+                    if (level == previousLevel + 1)
+                    {
                         parentTerm = parents.Peek();
                         parents.Push(new TermPosition { Term = term });
                     }
-                    else if (level == previousLevel) {
+                    else if (level == previousLevel)
+                    {
                         // same parent term
                         if (parents.Any())
                             parents.Pop();
 
                         parents.Push(new TermPosition { Term = term });
                     }
-                    else if (level < previousLevel) {
+                    else if (level < previousLevel)
+                    {
                         for (var i = previousLevel; i >= level; i--)
                             parents.Pop();
 
@@ -328,7 +363,8 @@ namespace Orchard.Taxonomies.Controllers {
                     }
 
                     // increment number of children
-                    if (parentTerm == null) {
+                    if (parentTerm == null)
+                    {
                         parentTerm = topTerm;
                     }
 
@@ -341,18 +377,21 @@ namespace Orchard.Taxonomies.Controllers {
                     var scIndex = line.IndexOf(';'); // seek first semi-colon to extract term and slug
 
                     // is there a semi-colon
-                    if (scIndex != -1) {
+                    if (scIndex != -1)
+                    {
                         term.Name = line.Substring(0, scIndex);
                         term.Slug = line.Substring(scIndex + 1);
                     }
-                    else {
+                    else
+                    {
                         term.Name = line;
                     }
 
                     var existing = _taxonomyService.GetTermByName(id, term.Name);
 
                     // a different term exist under the same parent term ?
-                    if (existing != null && existing.Container.ContentItem.Record == term.Container.ContentItem.Record) {
+                    if (existing != null && existing.Container.ContentItem.Record == term.Container.ContentItem.Record)
+                    {
                         Services.Notifier.Error(T("The term {0} already exists at this level", term.Name));
                         Services.TransactionManager.Cancel();
                         return View(new ImportViewModel { Taxonomy = taxonomy, Terms = terms });
@@ -370,8 +409,10 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId = id });
         }
 
-        private static TaxonomyEntry CreateTaxonomyEntry(TaxonomyPart taxonomy) {
-            return new TaxonomyEntry {
+        private static TaxonomyEntry CreateTaxonomyEntry(TaxonomyPart taxonomy)
+        {
+            return new TaxonomyEntry
+            {
                 Id = taxonomy.Id,
                 Name = taxonomy.Name,
                 IsInternal = taxonomy.IsInternal,
@@ -381,15 +422,18 @@ namespace Orchard.Taxonomies.Controllers {
             };
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
 
-        private class TermPosition {
+        private class TermPosition
+        {
             public TermPart Term { get; set; }
             public int Position { get; set; }
         }

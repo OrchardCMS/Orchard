@@ -1,19 +1,23 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Rules.Providers {
-    public class NotificationForms : IFormProvider {
+namespace Orchard.Rules.Providers
+{
+    public class NotificationForms : IFormProvider
+    {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public NotificationForms(IShapeFactory shapeFactory) {
+        public NotificationForms(IShapeFactory shapeFactory)
+        {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.Form("ActionNotify",
                 shape => Shape.Form(
                 Id: "ActionNotify",

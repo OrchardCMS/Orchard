@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.Core.Containers.ViewModels {
-    public class ContainerViewModel {
+namespace Orchard.Core.Containers.ViewModels
+{
+    public class ContainerViewModel
+    {
         public IList<string> SelectedItemContentTypes { get; set; }
         public bool ItemsShown { get; set; }
         public bool Paginated { get; set; }
@@ -17,14 +19,16 @@ namespace Orchard.Core.Containers.ViewModels {
         public bool OverrideEnablePositioning { get; set; }
     }
 
-    public enum SortBy {
+    public enum SortBy
+    {
         Modified,
         Published,
         Created,
         DisplayText
     }
 
-    public enum SortDirection {
+    public enum SortDirection
+    {
         Ascending,
         Descending
     }

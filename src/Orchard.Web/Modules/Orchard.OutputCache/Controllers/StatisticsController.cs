@@ -1,19 +1,19 @@
-﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.OutputCache.Services;
-using Orchard.OutputCache.ViewModels;
-using Orchard;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.OutputCache.Services;
+using Orchard.OutputCache.ViewModels;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 
-namespace Orchard.OutputCache.Controllers {
+namespace Orchard.OutputCache.Controllers
+{
     [Admin]
-    public class StatisticsController : Controller {
+    public class StatisticsController : Controller
+    {
         private readonly ICacheService _cacheService;
         private readonly IOutputCacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSettings;
@@ -24,25 +24,28 @@ namespace Orchard.OutputCache.Controllers {
             ICacheService cacheService,
             IOutputCacheStorageProvider cacheStorageProvider,
             ShellSettings shellSettings,
-            ISiteService siteService) {
+            ISiteService siteService)
+        {
             _cacheService = cacheService;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSettings = shellSettings;
             _siteService = siteService;
             Services = services;
-            }
+        }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters) {
+        public ActionResult Index(PagerParameters pagerParameters)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var pagerShape = Services.New.Pager(pager).TotalItemCount(_cacheStorageProvider.GetCacheItemsCount());
 
-            var model = new StatisticsViewModel {
+            var model = new StatisticsViewModel
+            {
                 CacheItems = _cacheStorageProvider
                     .GetCacheItems(pager.GetStartIndex(), pager.PageSize)
                     .ToList(),
@@ -52,7 +55,8 @@ namespace Orchard.OutputCache.Controllers {
             return View(model);
         }
 
-        public ActionResult Evict(string cacheKey) {
+        public ActionResult Evict(string cacheKey)
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 
@@ -62,7 +66,8 @@ namespace Orchard.OutputCache.Controllers {
         }
 
         [HttpPost]
-        public ActionResult EvictAll() {
+        public ActionResult EvictAll()
+        {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("You do not have permission to manage output cache.")))
                 return new HttpUnauthorizedResult();
 

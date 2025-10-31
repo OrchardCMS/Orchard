@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Localization;
 
-namespace Orchard.MediaProcessing.Descriptors {
-    public class TypeDescriptor<T> {
+namespace Orchard.MediaProcessing.Descriptors
+{
+    public class TypeDescriptor<T>
+    {
         public string Category { get; set; }
         public LocalizedString Name { get; set; }
         public LocalizedString Description { get; set; }

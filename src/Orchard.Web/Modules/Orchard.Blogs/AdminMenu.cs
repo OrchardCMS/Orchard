@@ -1,17 +1,20 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Blogs {
-    public class AdminMenu : INavigationProvider {
+namespace Orchard.Blogs
+{
+    public class AdminMenu : INavigationProvider
+    {
         private readonly IBlogService _blogService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public AdminMenu(IBlogService blogService, IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor) {
+        public AdminMenu(IBlogService blogService, IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor)
+        {
             _blogService = blogService;
             _authorizationService = authorizationService;
             _workContextAccessor = workContextAccessor;
@@ -19,19 +22,22 @@ namespace Orchard.Blogs {
 
         public Localizer T { get; set; }
 
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder.AddImageSet("blog")
                 .Add(T("Blog"), "1.5", BuildMenu);
         }
 
-        private void BuildMenu(NavigationItemBuilder menu) {
+        private void BuildMenu(NavigationItemBuilder menu)
+        {
             var blogs = _blogService.Get(VersionOptions.Latest).Where(x => _authorizationService.TryCheckAccess(Permissions.MetaListBlogs, _workContextAccessor.GetContext().CurrentUser, x)).ToArray();
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
-            if (blogCount > 0 && singleBlog == null) {
+            if (blogCount > 0 && singleBlog == null)
+            {
                 menu.Add(T("Manage Blogs"), "3",
                          item => item.Action("List", "BlogAdmin", new { area = "Orchard.Blogs" }).Permission(Permissions.MetaListOwnBlogs));
             }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using Orchard.ContentManagement;
+using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.CustomForms.Models;
@@ -9,8 +7,10 @@ using Orchard.Data;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.CustomForms {
-    public class Permissions : IPermissionProvider {
+namespace Orchard.CustomForms
+{
+    public class Permissions : IPermissionProvider
+    {
         private static readonly Permission SubmitAnyForm = new Permission { Description = "Submit any forms", Name = "Submit" };
         private static readonly Permission SubmitForm = new Permission { Description = "Submit {0} forms", Name = "Submit_{0}", ImpliedBy = new[] { SubmitAnyForm } };
         public static readonly Permission ManageForms = new Permission { Description = "Manage custom forms", Name = "ManageForms" };
@@ -20,18 +20,21 @@ namespace Orchard.CustomForms {
 
         public virtual Feature Feature { get; set; }
 
-        public Permissions(IContentDefinitionManager contentDefinitionManager, IRepository<CustomFormPartRecord> customFormPartRepository) {
+        public Permissions(IContentDefinitionManager contentDefinitionManager, IRepository<CustomFormPartRecord> customFormPartRepository)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _customFormPartRepository = customFormPartRepository;
         }
 
-        public IEnumerable<Permission> GetPermissions() {
+        public IEnumerable<Permission> GetPermissions()
+        {
             var formContentTypes = _customFormPartRepository.Table
                 .Select(r => r.ContentType)
                 .Distinct()
                 .ToList();
 
-            foreach (var contentType in formContentTypes) {
+            foreach (var contentType in formContentTypes)
+            {
                 var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
                 if (typeDefinition == null)
                 {
@@ -44,7 +47,8 @@ namespace Orchard.CustomForms {
             yield return ManageForms;
         }
 
-        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes()
+        {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
@@ -72,22 +76,26 @@ namespace Orchard.CustomForms {
         /// <summary>
         /// Generates a permission dynamically for a content type
         /// </summary>
-        public static Permission CreateSubmitPermission(ContentTypeDefinition typeDefinition) {
-            return new Permission {
-                Name = String.Format(SubmitForm.Name, typeDefinition.Name),
-                Description = String.Format(SubmitForm.Description, typeDefinition.DisplayName),
+        public static Permission CreateSubmitPermission(ContentTypeDefinition typeDefinition)
+        {
+            return new Permission
+            {
+                Name = string.Format(SubmitForm.Name, typeDefinition.Name),
+                Description = string.Format(SubmitForm.Description, typeDefinition.DisplayName),
                 Category = "Custom Forms",
-                ImpliedBy = new [] { SubmitForm }
+                ImpliedBy = new[] { SubmitForm }
             };
         }
 
         /// <summary>
         /// Generates a permission dynamically for a content type
         /// </summary>
-        public static Permission CreateSubmitPermission(string contentType) {
-            return new Permission {
-                Name = String.Format(SubmitForm.Name, contentType),
-                Description = String.Format(SubmitForm.Description, contentType),
+        public static Permission CreateSubmitPermission(string contentType)
+        {
+            return new Permission
+            {
+                Name = string.Format(SubmitForm.Name, contentType),
+                Description = string.Format(SubmitForm.Description, contentType),
                 Category = "Custom Forms",
                 ImpliedBy = new[] { SubmitForm }
             };

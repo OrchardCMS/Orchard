@@ -1,35 +1,42 @@
-﻿using System;
 using System.IO;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.MediaLibrary.Models;
 
-namespace Orchard.MediaLibrary.Factories {
+namespace Orchard.MediaLibrary.Factories
+{
 
-    public class VectorImageFactorySelector : IMediaFactorySelector {
+    public class VectorImageFactorySelector : IMediaFactorySelector
+    {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public VectorImageFactorySelector(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager) {
+        public VectorImageFactorySelector(IContentManager contentManager, IContentDefinitionManager contentDefinitionManager)
+        {
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
         }
 
 
-        public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType, string contentType) {
-            if (!mimeType.StartsWith("image/svg")) {
+        public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType, string contentType)
+        {
+            if (!mimeType.StartsWith("image/svg"))
+            {
                 return null;
             }
 
-            if (!String.IsNullOrEmpty(contentType)) {
+            if (!string.IsNullOrEmpty(contentType))
+            {
                 var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-                if (contentDefinition == null || contentDefinition.Parts.All(x => x.PartDefinition.Name != typeof(VectorImagePart).Name)) {
+                if (contentDefinition == null || contentDefinition.Parts.All(x => x.PartDefinition.Name != typeof(VectorImagePart).Name))
+                {
                     return null;
                 }
             }
 
-            return new MediaFactorySelectorResult {
+            return new MediaFactorySelectorResult
+            {
                 Priority = -5,
                 MediaFactory = new VectorImageFactory(_contentManager)
             };
@@ -37,15 +44,19 @@ namespace Orchard.MediaLibrary.Factories {
         }
     }
 
-    public class VectorImageFactory : IMediaFactory {
+    public class VectorImageFactory : IMediaFactory
+    {
         private readonly IContentManager _contentManager;
 
-        public VectorImageFactory(IContentManager contentManager) {
+        public VectorImageFactory(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
-            if (String.IsNullOrEmpty(contentType)) {
+        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType))
+            {
                 contentType = "VectorImage";
             }
 
@@ -56,7 +67,8 @@ namespace Orchard.MediaLibrary.Factories {
             part.Title = Path.GetFileNameWithoutExtension(path);
 
             var imagePart = part.As<VectorImagePart>();
-            if (imagePart == null) {
+            if (imagePart == null)
+            {
                 return null;
             }
 

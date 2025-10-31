@@ -5,14 +5,17 @@ using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
 using Orchard.UI.Admin;
 
-namespace Orchard.Localization.Controllers {
+namespace Orchard.Localization.Controllers
+{
     [OrchardFeature("Orchard.Localization.Transliteration")]
     [Admin, ValidateInput(false)]
-    public class TransliterationAdminController : Controller {
+    public class TransliterationAdminController : Controller
+    {
         private readonly ITransliterationService _transliterationService;
 
         public TransliterationAdminController(ITransliterationService transliterationService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory)
+        {
             _transliterationService = transliterationService;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -21,7 +24,8 @@ namespace Orchard.Localization.Controllers {
         dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
 
             var specifications = _transliterationService.GetSpecifications();
 
@@ -31,16 +35,19 @@ namespace Orchard.Localization.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Create() {
+        public ActionResult Create()
+        {
             var viewModel = new CreateTransliterationViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePost(CreateTransliterationViewModel viewModel) {
+        public ActionResult CreatePost(CreateTransliterationViewModel viewModel)
+        {
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(viewModel);
             }
 
@@ -49,23 +56,27 @@ namespace Orchard.Localization.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int id)
+        {
             var record = _transliterationService.Get(id);
 
-            var viewModel = new EditTransliterationViewModel {
+            var viewModel = new EditTransliterationViewModel
+            {
                 Id = record.Id,
                 CultureFrom = record.CultureFrom,
                 CultureTo = record.CultureTo,
                 Rules = record.Rules
             };
 
-            return View(viewModel);            
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(EditTransliterationViewModel viewModel) {
+        public ActionResult EditPost(EditTransliterationViewModel viewModel)
+        {
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(viewModel);
             }
 
@@ -74,7 +85,8 @@ namespace Orchard.Localization.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Remove(int id) {
+        public ActionResult Remove(int id)
+        {
             _transliterationService.Remove(id);
 
             return RedirectToAction("Index");

@@ -1,5 +1,7 @@
-﻿namespace Orchard.Core.Contents.Settings {
-    public class ContentTypeSettings {
+namespace Orchard.Core.Contents.Settings
+{
+    public class ContentTypeSettings
+    {
         /// <summary>
         /// Used to determine if an instance of this content type can be created through the UI
         /// </summary>

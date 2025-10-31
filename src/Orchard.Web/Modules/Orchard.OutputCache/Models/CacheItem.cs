@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 
-namespace Orchard.OutputCache.Models {
+namespace Orchard.OutputCache.Models
+{
     [Serializable]
-    public class CacheItem {
+    public class CacheItem
+    {
         // used for serialization compatibility
         public static readonly string Version = "2";
 
@@ -20,27 +22,21 @@ namespace Orchard.OutputCache.Models {
         public string[] Tags { get; set; }
         public string ETag { get; set; }
 
-        public int ValidFor {
-            get { return Duration; }
-        }
+        public int ValidFor => Duration;
 
-        public DateTime ValidUntilUtc {
-            get { return CachedOnUtc.AddSeconds(ValidFor); }
-        }
+        public DateTime ValidUntilUtc => CachedOnUtc.AddSeconds(ValidFor);
 
-        public bool IsValid(DateTime utcNow) {
+        public bool IsValid(DateTime utcNow)
+        {
             return utcNow < ValidUntilUtc;
         }
 
-        public int StoredFor {
-            get { return Duration + GraceTime; }
-        }
+        public int StoredFor => Duration + GraceTime;
 
-        public DateTime StoredUntilUtc {
-            get { return CachedOnUtc.AddSeconds(StoredFor); }
-        }
+        public DateTime StoredUntilUtc => CachedOnUtc.AddSeconds(StoredFor);
 
-        public bool IsInGracePeriod(DateTime utcNow) {
+        public bool IsInGracePeriod(DateTime utcNow)
+        {
             return utcNow > ValidUntilUtc && utcNow < StoredUntilUtc;
         }
     }

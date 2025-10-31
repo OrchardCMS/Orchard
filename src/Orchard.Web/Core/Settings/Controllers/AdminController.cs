@@ -1,16 +1,18 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization;
-using Orchard.ContentManagement;
 using Orchard.Localization.Services;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 
-namespace Orchard.Core.Settings.Controllers {
+namespace Orchard.Core.Settings.Controllers
+{
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : Controller, IUpdateModel
+    {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
         public IOrchardServices Services { get; private set; }
@@ -18,7 +20,8 @@ namespace Orchard.Core.Settings.Controllers {
         public AdminController(
             ISiteService siteService,
             IOrchardServices services,
-            ICultureManager cultureManager) {
+            ICultureManager cultureManager)
+        {
             _siteService = siteService;
             _cultureManager = cultureManager;
             Services = services;
@@ -27,13 +30,15 @@ namespace Orchard.Core.Settings.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index(string groupInfoId) {
+        public ActionResult Index(string groupInfoId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
             dynamic model;
             var site = _siteService.GetSiteSettings();
-            if (!string.IsNullOrWhiteSpace(groupInfoId)) {
+            if (!string.IsNullOrWhiteSpace(groupInfoId))
+            {
                 model = Services.ContentManager.BuildEditor(site, groupInfoId);
 
                 if (model == null)
@@ -45,7 +50,8 @@ namespace Orchard.Core.Settings.Controllers {
 
                 model.GroupInfo = groupInfo;
             }
-            else {
+            else
+            {
                 model = Services.ContentManager.BuildEditor(site);
             }
 
@@ -53,7 +59,8 @@ namespace Orchard.Core.Settings.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(string groupInfoId) {
+        public ActionResult IndexPOST(string groupInfoId)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
@@ -62,20 +69,24 @@ namespace Orchard.Core.Settings.Controllers {
 
             GroupInfo groupInfo = null;
 
-            if (!string.IsNullOrWhiteSpace(groupInfoId)) {
-                if (model == null) {
+            if (!string.IsNullOrWhiteSpace(groupInfoId))
+            {
+                if (model == null)
+                {
                     Services.TransactionManager.Cancel();
                     return HttpNotFound();
                 }
 
                 groupInfo = Services.ContentManager.GetEditorGroupInfo(site, groupInfoId);
-                if (groupInfo == null) {
+                if (groupInfo == null)
+                {
                     Services.TransactionManager.Cancel();
                     return HttpNotFound();
                 }
             }
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 Services.TransactionManager.Cancel();
                 model.GroupInfo = groupInfo;
 
@@ -86,12 +97,14 @@ namespace Orchard.Core.Settings.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Culture() {
+        public ActionResult Culture()
+        {
             //todo: class and/or method attributes for our auth?
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var model = new SiteCulturesViewModel {
+            var model = new SiteCulturesViewModel
+            {
                 CurrentCulture = _cultureManager.GetCurrentCulture(HttpContext),
                 SiteCultures = _cultureManager.ListCultures(),
             };
@@ -103,20 +116,23 @@ namespace Orchard.Core.Settings.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddCulture(string systemCultureName, string cultureName) {
+        public ActionResult AddCulture(string systemCultureName, string cultureName)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
             cultureName = string.IsNullOrWhiteSpace(cultureName) ? systemCultureName : cultureName;
 
-            if (!string.IsNullOrWhiteSpace(cultureName)) {
+            if (!string.IsNullOrWhiteSpace(cultureName))
+            {
                 _cultureManager.AddCulture(cultureName);
             }
             return RedirectToAction("Culture");
         }
 
         [HttpPost]
-        public ActionResult DeleteCulture(string cultureName) {
+        public ActionResult DeleteCulture(string cultureName)
+        {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
@@ -124,11 +140,13 @@ namespace Orchard.Core.Settings.Controllers {
             return RedirectToAction("Culture");
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
+        {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

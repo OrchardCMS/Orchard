@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -7,24 +7,33 @@ using Orchard.Taxonomies.Events;
 using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 
-namespace Orchard.Taxonomies.EventHandlers {
+namespace Orchard.Taxonomies.EventHandlers
+{
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
-    public class TermMovingEventHandler : ITermLocalizationEventHandler {
+    public class TermMovingEventHandler : ITermLocalizationEventHandler
+    {
         private readonly INotifier _notifier;
-        public TermMovingEventHandler(INotifier notifier) {
+        public TermMovingEventHandler(INotifier notifier)
+        {
             _notifier = notifier;
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
-        public void MovingTerms(MoveTermsContext context) {
+        public void MovingTerms(MoveTermsContext context)
+        {
             bool termsRemoved = false;
-            if (context.ParentTerm != null) {
-                if (context.ParentTerm.Has<LocalizationPart>()) {
+            if (context.ParentTerm != null)
+            {
+                if (context.ParentTerm.Has<LocalizationPart>())
+                {
                     var parentTermCulture = context.ParentTerm.As<LocalizationPart>().Culture;
-                    for (int i = context.Terms.Count() - 1; i >= 0; i--) {
-                        if (context.Terms[i].Has<LocalizationPart>()) {
+                    for (int i = context.Terms.Count() - 1; i >= 0; i--)
+                    {
+                        if (context.Terms[i].Has<LocalizationPart>())
+                        {
                             var termCulture = context.Terms[i].As<LocalizationPart>().Culture;
-                            if (termCulture != null && termCulture != parentTermCulture) {
+                            if (termCulture != null && termCulture != parentTermCulture)
+                            {
                                 context.Terms.RemoveAt(i);
                                 termsRemoved = true;
                             }

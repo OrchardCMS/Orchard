@@ -1,7 +1,9 @@
-﻿using System.Web;
+using System.Web;
 
-namespace Orchard.Time {
-    public interface ITimeZoneSelector : IDependency {
+namespace Orchard.Time
+{
+    public interface ITimeZoneSelector : IDependency
+    {
         TimeZoneSelectorResult GetTimeZone(HttpContextBase context);
     }
 }

@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Events;
 using Orchard.JobsQueue.Models;
 using Orchard.Logging;
 using Orchard.Tasks.Locking.Services;
-using Orchard.Data;
 
-namespace Orchard.JobsQueue.Services {
-    public class JobsQueueProcessor : IJobsQueueProcessor {
+namespace Orchard.JobsQueue.Services
+{
+    public class JobsQueueProcessor : IJobsQueueProcessor
+    {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
         private readonly Work<IEventBus> _eventBus;
         private readonly Work<IDistributedLockService> _distributedLockService;
@@ -20,7 +22,8 @@ namespace Orchard.JobsQueue.Services {
             Work<IJobsQueueManager> jobsQueueManager,
             Work<IEventBus> eventBus,
             Work<IDistributedLockService> distributedLockService,
-            Work<ITransactionManager> transactionManager) {
+            Work<ITransactionManager> transactionManager)
+        {
 
             _jobsQueueManager = jobsQueueManager;
             _eventBus = eventBus;
@@ -31,14 +34,19 @@ namespace Orchard.JobsQueue.Services {
 
         public ILogger Logger { get; set; }
 
-        public void ProcessQueue(int batchSize, uint batchCount) {
+        public void ProcessQueue(int batchSize, uint batchCount)
+        {
             IDistributedLock @lock;
-            if (_distributedLockService.Value.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock)) {
-                using (@lock) {
+            if (_distributedLockService.Value.TryAcquireLock(GetType().FullName, TimeSpan.FromMinutes(5), out @lock))
+            {
+                using (@lock)
+                {
                     IEnumerable<QueuedJobRecord> messages;
                     var currentBatch = 0;
-                    while (batchCount > currentBatch && (messages = _jobsQueueManager.Value.GetJobs(0, batchSize).ToArray()).Any()) {
-                        foreach (var message in messages) {
+                    while (batchCount > currentBatch && (messages = _jobsQueueManager.Value.GetJobs(0, batchSize).ToArray()).Any())
+                    {
+                        foreach (var message in messages)
+                        {
                             ProcessMessage(message);
                         }
 
@@ -48,12 +56,14 @@ namespace Orchard.JobsQueue.Services {
             }
         }
 
-        private void ProcessMessage(QueuedJobRecord job) {
+        private void ProcessMessage(QueuedJobRecord job)
+        {
             Logger.Debug("Processing job {0}.", job.Id);
 
             _transactionManager.Value.RequireNew();
 
-            try {
+            try
+            {
                 var payload = JObject.Parse(job.Parameters);
                 var parameters = payload.ToDictionary();
 
@@ -63,25 +73,31 @@ namespace Orchard.JobsQueue.Services {
 
                 Logger.Debug("Processed job Id {0}.", job.Id);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 _transactionManager.Value.Cancel();
                 Logger.Error(e, "An unexpected error while processing job {0}. Error message: {1}.", job.Id, e);
             }
         }
     }
 
-    public static class JObjectExtensions {
+    public static class JObjectExtensions
+    {
 
-        public static IDictionary<string, object> ToDictionary(this JObject jObject) {
+        public static IDictionary<string, object> ToDictionary(this JObject jObject)
+        {
             return (IDictionary<string, object>)Convert(jObject);
         }
 
-        private static object Convert(this JToken jToken) {
-            if (jToken == null) {
+        private static object Convert(this JToken jToken)
+        {
+            if (jToken == null)
+            {
                 throw new ArgumentNullException();
             }
 
-            switch (jToken.Type) {
+            switch (jToken.Type)
+            {
                 case JTokenType.Array:
                     var array = jToken as JArray;
                     return array.Values().Select(Convert).ToArray();

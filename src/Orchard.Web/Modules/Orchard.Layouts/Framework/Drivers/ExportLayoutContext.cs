@@ -1,7 +1,9 @@
-﻿using Orchard.Layouts.Models;
+using Orchard.Layouts.Models;
 
-namespace Orchard.Layouts.Framework.Drivers {
-    public class ExportLayoutContext {
+namespace Orchard.Layouts.Framework.Drivers
+{
+    public class ExportLayoutContext
+    {
         public ILayoutAspect Layout { get; set; }
     }
 }

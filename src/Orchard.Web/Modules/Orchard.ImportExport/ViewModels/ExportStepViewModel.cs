@@ -1,7 +1,9 @@
 using Orchard.Localization;
 
-namespace Orchard.ImportExport.ViewModels {
-    public class ExportStepViewModel {
+namespace Orchard.ImportExport.ViewModels
+{
+    public class ExportStepViewModel
+    {
         public string Name { get; set; }
         public LocalizedString DisplayName { get; set; }
         public LocalizedString Description { get; set; }

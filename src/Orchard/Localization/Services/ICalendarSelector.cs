@@ -1,18 +1,23 @@
-﻿using System.Web;
+using System.Web;
 
-namespace Orchard.Localization.Services {
-	public class CalendarSelectorResult {
-		public int Priority {
-			get;
-			set;
-		}
-		public string CalendarName {
-			get;
-			set;
-		}
-	}
+namespace Orchard.Localization.Services
+{
+    public class CalendarSelectorResult
+    {
+        public int Priority
+        {
+            get;
+            set;
+        }
+        public string CalendarName
+        {
+            get;
+            set;
+        }
+    }
 
-	public interface ICalendarSelector : IDependency {
-		CalendarSelectorResult GetCalendar(HttpContextBase context);
-	}
+    public interface ICalendarSelector : IDependency
+    {
+        CalendarSelectorResult GetCalendar(HttpContextBase context);
+    }
 }

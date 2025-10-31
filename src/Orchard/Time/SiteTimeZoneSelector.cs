@@ -1,16 +1,19 @@
-﻿using System;
+using System;
 using System.Web;
-using Orchard.Logging;
 using Orchard.Exceptions;
+using Orchard.Logging;
 
-namespace Orchard.Time {
+namespace Orchard.Time
+{
     /// <summary>
     /// Implements <see cref="ITimeZoneSelector"/> by providing the timezone defined in the sites settings.
     /// </summary>
-    public class SiteTimeZoneSelector : ITimeZoneSelector {
+    public class SiteTimeZoneSelector : ITimeZoneSelector
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public SiteTimeZoneSelector(IWorkContextAccessor workContextAccessor) {
+        public SiteTimeZoneSelector(IWorkContextAccessor workContextAccessor)
+        {
             _workContextAccessor = workContextAccessor;
 
             Logger = NullLogger.Instance;
@@ -18,24 +21,30 @@ namespace Orchard.Time {
 
         public ILogger Logger { get; set; }
 
-        public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
-            
-            try {
+        public TimeZoneSelectorResult GetTimeZone(HttpContextBase context)
+        {
+
+            try
+            {
                 var siteTimeZoneId = _workContextAccessor.GetContext().CurrentSite.SiteTimeZone;
 
-                if (String.IsNullOrEmpty(siteTimeZoneId)) {
+                if (string.IsNullOrEmpty(siteTimeZoneId))
+                {
                     return null;
                 }
 
-                return new TimeZoneSelectorResult {
+                return new TimeZoneSelectorResult
+                {
                     Priority = -5,
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
                 };
             }
-            catch(Exception ex) {
-                if (ex.IsFatal()) {
+            catch (Exception ex)
+            {
+                if (ex.IsFatal())
+                {
                     throw;
-                } 
+                }
                 Logger.Error(ex, "TimeZone could not be loaded");
 
                 // if the database could not be updated in time, ignore this provider

@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Orchard.MultiTenancy.ViewModels {
-    public class TenantResetViewModel  {
-        public TenantResetViewModel() {
+namespace Orchard.MultiTenancy.ViewModels
+{
+    public class TenantResetViewModel
+    {
+        public TenantResetViewModel()
+        {
             DatabaseTableNames = Enumerable.Empty<string>();
         }
 

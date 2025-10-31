@@ -1,9 +1,11 @@
-﻿using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
 using Orchard.Tokens.Models;
 
-namespace Orchard.Tokens.Drivers {
+namespace Orchard.Tokens.Drivers
+{
     [OrchardFeature("Orchard.Tokens.Feeds")]
-    public class RssPartDriver : ContentPartDriver<RssPart> {
+    public class RssPartDriver : ContentPartDriver<RssPart>
+    {
     }
 }

@@ -1,20 +1,24 @@
-﻿using System;
+using System;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc.Services;
 
-namespace Orchard.Tests.Modules.XmlRpc.Services {
+namespace Orchard.Tests.Modules.XmlRpc.Services
+{
     [TestFixture]
-    public class XmlRpcReaderTests {
+    public class XmlRpcReaderTests
+    {
         private IXmlRpcReader _xmlRpcReader;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             _xmlRpcReader = new XmlRpcReader();
         }
 
         [Test]
-        public void MethodCallShouldMapName() {
+        public void MethodCallShouldMapName()
+        {
             var source = XElement.Parse(@"
 <methodCall>
     <methodName>hello world</methodName>
@@ -26,7 +30,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void CallWithParametersShouldMapValuesAccordingToSpec() {
+        public void CallWithParametersShouldMapValuesAccordingToSpec()
+        {
             var source = XElement.Parse(@"
 <methodCall>
     <methodName>hello world</methodName>
@@ -56,7 +61,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void StructShouldMapAllMembersByNameWithCorrectType() {
+        public void StructShouldMapAllMembersByNameWithCorrectType()
+        {
             var source = XElement.Parse(@"
 <struct>
     <member><name>one</name><value><i4>-12</i4></value></member>
@@ -82,7 +88,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void StructShouldMapDefaultDateTimeWithBadFormat() {
+        public void StructShouldMapDefaultDateTimeWithBadFormat()
+        {
             var source = XElement.Parse(@"
 <struct>
     <member><name>seven</name><value><dateTime.iso8601>FOO</dateTime.iso8601></value></member>
@@ -94,7 +101,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void ArrayShouldBringDataItemsWithCorrectType() {
+        public void ArrayShouldBringDataItemsWithCorrectType()
+        {
             var source = XElement.Parse(@"
 <array>
    <data>

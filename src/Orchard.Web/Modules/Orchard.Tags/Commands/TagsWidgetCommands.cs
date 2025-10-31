@@ -1,15 +1,17 @@
-﻿using System;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.Tags.Models;
 using Orchard.Widgets.Services;
 
-namespace Orchard.Tags.Commands {
-    public class TagWidgetCommands : DefaultOrchardCommandHandler {
+namespace Orchard.Tags.Commands
+{
+    public class TagWidgetCommands : DefaultOrchardCommandHandler
+    {
         private readonly IWidgetCommandsService _widgetCommandsService;
 
         public TagWidgetCommands(
-            IWidgetCommandsService widgetCommandsService) {
+            IWidgetCommandsService widgetCommandsService)
+        {
             _widgetCommandsService = widgetCommandsService;
 
             RenderTitle = true;
@@ -48,7 +50,8 @@ namespace Orchard.Tags.Commands {
         [CommandName("tags widget create tagcloud")]
         [CommandHelp("tags widget create tagcloud /Title:<title> /Name:<name> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Slug:<slug>] [/Buckets:<number>]\r\n\t" + "Creates a new widget")]
         [OrchardSwitches("Title,Name,Zone,Position,Layer,Buckets,Identity,Owner,RenderTitle,Slug")]
-        public void CreateTagsCloudWidget() {
+        public void CreateTagsCloudWidget()
+        {
             var type = "TagCloud";
 
             // Check any custom parameters that could cause creating the widget to fail.
@@ -58,7 +61,8 @@ namespace Orchard.Tags.Commands {
             var widget = _widgetCommandsService.CreateBaseWidget(
                 Context, type, Title, Name, Zone, Position, Layer, Identity, RenderTitle, Owner, null, false, null);
 
-            if (widget == null) {
+            if (widget == null)
+            {
                 return;
             }
 
@@ -66,9 +70,11 @@ namespace Orchard.Tags.Commands {
             widget.As<TagCloudPart>().Slug = Slug;
 
             // It's an optional parameter and defaults to 5.
-            if (!string.IsNullOrWhiteSpace(Buckets)) {
+            if (!string.IsNullOrWhiteSpace(Buckets))
+            {
                 int BucketsAsNumber = 0;
-                if (Int32.TryParse(Buckets, out BucketsAsNumber)) {
+                if (int.TryParse(Buckets, out BucketsAsNumber))
+                {
                     widget.As<TagCloudPart>().Buckets = BucketsAsNumber;
                 }
             }

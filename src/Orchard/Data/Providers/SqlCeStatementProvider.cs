@@ -1,11 +1,13 @@
-﻿namespace Orchard.Data.Providers {
-    public class SqlCeStatementProvider : ISqlStatementProvider {
-        public string DataProvider {
-            get { return "SqlCe"; }
-        }
+namespace Orchard.Data.Providers
+{
+    public class SqlCeStatementProvider : ISqlStatementProvider
+    {
+        public string DataProvider => "SqlCe";
 
-        public string GetStatement(string command) {
-            switch (command) {
+        public string GetStatement(string command)
+        {
+            switch (command)
+            {
                 case "random":
                     return "newid()";
                 case "table_names":

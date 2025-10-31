@@ -1,11 +1,15 @@
-﻿using Orchard.Forms.Services;
+using Orchard.Forms.Services;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
-namespace Orchard.DynamicForms.Forms {
-    public class AutoLabelForm : Component, IFormProvider {
-    
-        public void Describe(DescribeContext context) {
-            context.Form("AutoLabel", factory => {
+namespace Orchard.DynamicForms.Forms
+{
+    public class AutoLabelForm : Component, IFormProvider
+    {
+
+        public void Describe(DescribeContext context)
+        {
+            context.Form("AutoLabel", factory =>
+            {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
                     Id: "AutoLabel",

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Metadata;
@@ -11,9 +11,11 @@ using Orchard.Logging;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.DisplayManagement.Descriptors {
+namespace Orchard.DisplayManagement.Descriptors
+{
 
-    public class DefaultShapeTableManager : IShapeTableManager {
+    public class DefaultShapeTableManager : IShapeTableManager
+    {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
@@ -36,7 +38,8 @@ namespace Orchard.DisplayManagement.Descriptors {
             ICacheManager cacheManager,
             IParallelCacheContext parallelCacheContext,
             Work<IEnumerable<IShapeTableEventHandler>> shapeTableEventHandlersWork
-            ) {
+            )
+        {
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
             _parallelCacheContext = parallelCacheContext;
@@ -47,11 +50,14 @@ namespace Orchard.DisplayManagement.Descriptors {
 
         public ILogger Logger { get; set; }
 
-        public ShapeTable GetShapeTable(string themeName) {
-            return _cacheManager.Get(themeName ?? "", true, x => {
+        public ShapeTable GetShapeTable(string themeName)
+        {
+            return _cacheManager.Get(themeName ?? "", true, x =>
+            {
                 Logger.Information("Start building shape table");
 
-                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
+                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy =>
+                {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
                                                                (Feature)bindingStrategy.Metadata["Feature"] :
                                                                null;
@@ -62,7 +68,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                 });
 
                 List<ShapeAlteration> alterations;
-                if (GroupByFeatures) {
+                if (GroupByFeatures)
+                {
                     var unsortedAlterations = alterationSets
                         .SelectMany(shapeAlterations => shapeAlterations)
                         .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
@@ -73,7 +80,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                     // former may end up being too expensive.
                     var alterationsByFeature = unsortedAlterations
                         .GroupBy(sa => sa.Feature.Descriptor.Id)
-                        .Select(g => new AlterationGroup {
+                        .Select(g => new AlterationGroup
+                        {
                             Feature = g.First().Feature,
                             Alterations = g
                         });
@@ -83,7 +91,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                         .SelectMany(g => g.Alterations)
                         .ToList();
                 }
-                else {
+                else
+                {
                     alterations = alterationSets
                         .SelectMany(shapeAlterations => shapeAlterations)
                         .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
@@ -95,20 +104,24 @@ namespace Orchard.DisplayManagement.Descriptors {
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
                         new ShapeDescriptor { ShapeType = group.Key },
-                        (descriptor, alteration) => {
+                        (descriptor, alteration) =>
+                        {
                             alteration.Alter(descriptor);
                             return descriptor;
                         })).ToList();
 
-                foreach (var descriptor in descriptors) {
-                    foreach (var alteration in alterations.Where(a => a.ShapeType == descriptor.ShapeType).ToList()) {
+                foreach (var descriptor in descriptors)
+                {
+                    foreach (var alteration in alterations.Where(a => a.ShapeType == descriptor.ShapeType).ToList())
+                    {
                         var local = new ShapeDescriptor { ShapeType = descriptor.ShapeType };
                         alteration.Alter(local);
                         descriptor.BindingSources.Add(local.BindingSource);
                     }
                 }
 
-                var result = new ShapeTable {
+                var result = new ShapeTable
+                {
                     Descriptors = descriptors.ToDictionary(sd => sd.ShapeType, StringComparer.OrdinalIgnoreCase),
                     Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
@@ -120,47 +133,57 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        private static int GetPriority(ShapeAlteration shapeAlteration) {
+        private static int GetPriority(ShapeAlteration shapeAlteration)
+        {
             return shapeAlteration.Feature.Descriptor.Priority;
         }
 
-        private static bool AlterationHasDependency(ShapeAlteration item, ShapeAlteration subject) {
+        private static bool AlterationHasDependency(ShapeAlteration item, ShapeAlteration subject)
+        {
             return ExtensionManager.HasDependency(item.Feature.Descriptor, subject.Feature.Descriptor);
         }
 
-        private bool IsModuleOrRequestedTheme(ShapeAlteration alteration, string themeName) {
+        private bool IsModuleOrRequestedTheme(ShapeAlteration alteration, string themeName)
+        {
             if (alteration == null ||
                 alteration.Feature == null ||
                 alteration.Feature.Descriptor == null ||
-                alteration.Feature.Descriptor.Extension == null) {
+                alteration.Feature.Descriptor.Extension == null)
+            {
                 return false;
             }
 
             var extensionType = alteration.Feature.Descriptor.Extension.ExtensionType;
-            if (DefaultExtensionTypes.IsModule(extensionType)) {
+            if (DefaultExtensionTypes.IsModule(extensionType))
+            {
                 return true;
             }
 
-            if (DefaultExtensionTypes.IsTheme(extensionType)) {
+            if (DefaultExtensionTypes.IsTheme(extensionType))
+            {
                 // alterations from themes must be from the given theme or a base theme
                 var featureName = alteration.Feature.Descriptor.Id;
-                return String.IsNullOrEmpty(featureName) || featureName == themeName || IsBaseTheme(featureName, themeName);
+                return string.IsNullOrEmpty(featureName) || featureName == themeName || IsBaseTheme(featureName, themeName);
             }
 
             return false;
         }
 
-        private bool IsBaseTheme(string featureName, string themeName) {
+        private bool IsBaseTheme(string featureName, string themeName)
+        {
             // determine if the given feature is a base theme of the given theme
             var availableFeatures = _extensionManager.AvailableFeatures();
 
             var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == themeName);
-            while (themeFeature != null) {
+            while (themeFeature != null)
+            {
                 var baseTheme = themeFeature.Extension.BaseTheme;
-                if (String.IsNullOrEmpty(baseTheme)) {
+                if (string.IsNullOrEmpty(baseTheme))
+                {
                     return false;
                 }
-                if (featureName == baseTheme) {
+                if (featureName == baseTheme)
+                {
                     return true;
                 }
                 themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == baseTheme);
@@ -168,15 +191,18 @@ namespace Orchard.DisplayManagement.Descriptors {
             return false;
         }
 
-        class AlterationGroup {
+        class AlterationGroup
+        {
             public Feature Feature { get; set; }
             public IEnumerable<ShapeAlteration> Alterations { get; set; }
         }
-        private static int GetPriority(AlterationGroup shapeAlteration) {
+        private static int GetPriority(AlterationGroup shapeAlteration)
+        {
             return shapeAlteration.Feature.Descriptor.Priority;
         }
 
-        private static bool AlterationHasDependency(AlterationGroup item, AlterationGroup subject) {
+        private static bool AlterationHasDependency(AlterationGroup item, AlterationGroup subject)
+        {
             return ExtensionManager.HasDependency(item.Feature.Descriptor, subject.Feature.Descriptor);
         }
 

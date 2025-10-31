@@ -13,24 +13,27 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Blogs.Controllers {
+namespace Orchard.Blogs.Controllers
+{
     [Themed]
-    public class BlogPostController : Controller {
+    public class BlogPostController : Controller
+    {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IFeedManager _feedManager;
         private readonly IArchiveConstraint _archiveConstraint;
         private readonly ISiteService _siteService;
-        
+
         public BlogPostController(
-            IOrchardServices services, 
-            IBlogService blogService, 
+            IOrchardServices services,
+            IBlogService blogService,
             IBlogPostService blogPostService,
             IFeedManager feedManager,
             IShapeFactory shapeFactory,
             IArchiveConstraint archiveConstraint,
-            ISiteService siteService) {
+            ISiteService siteService)
+        {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -44,7 +47,8 @@ namespace Orchard.Blogs.Controllers {
         dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult ListByArchive(string path, PagerParameters pagerParameters) {
+        public ActionResult ListByArchive(string path, PagerParameters pagerParameters)
+        {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var blogPath = _archiveConstraint.FindPath(path);
@@ -61,7 +65,8 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
 
-            if (archive.ToDateTime() == DateTime.MinValue) {
+            if (archive.ToDateTime() == DateTime.MinValue)
+            {
                 // render the archive data
                 return new ShapeResult(this, Shape.Parts_Blogs_BlogArchives(Blog: blogPart, Archives: _blogPostService.GetArchives(blogPart)));
             }

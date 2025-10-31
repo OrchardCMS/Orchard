@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Data.Bags {
-    public interface ISItem : ICloneable {
+namespace Orchard.Data.Bags
+{
+    public interface ISItem : ICloneable
+    {
 
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Orchard.Data.Migration.Schema {
-    public interface ISchemaBuilderCommand {
+namespace Orchard.Data.Migration.Schema
+{
+    public interface ISchemaBuilderCommand
+    {
     }
 }

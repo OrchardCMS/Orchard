@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace Orchard.Mvc.ViewEngines {
-    public class CreateThemeViewEngineParams {
+namespace Orchard.Mvc.ViewEngines
+{
+    public class CreateThemeViewEngineParams
+    {
         public string VirtualPath { get; set; }
     }
 
-    public class CreateModulesViewEngineParams {
+    public class CreateModulesViewEngineParams
+    {
         public IEnumerable<string> VirtualPaths { get; set; }
         public IEnumerable<string> ExtensionLocations { get; set; }
     }
 
-    public interface IViewEngineProvider : ISingletonDependency {
+    public interface IViewEngineProvider : ISingletonDependency
+    {
         IViewEngine CreateThemeViewEngine(CreateThemeViewEngineParams parameters);
         IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters);
 

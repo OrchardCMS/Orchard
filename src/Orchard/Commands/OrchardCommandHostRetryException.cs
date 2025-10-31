@@ -2,19 +2,24 @@ using System;
 using System.Runtime.Serialization;
 using Orchard.Localization;
 
-namespace Orchard.Commands {
+namespace Orchard.Commands
+{
     [Serializable]
-    public class OrchardCommandHostRetryException : OrchardCoreException {
+    public class OrchardCommandHostRetryException : OrchardCoreException
+    {
         public OrchardCommandHostRetryException(LocalizedString message)
-            : base(message) {
+            : base(message)
+        {
         }
 
         public OrchardCommandHostRetryException(LocalizedString message, Exception innerException)
-            : base(message, innerException) {
+            : base(message, innerException)
+        {
         }
 
         protected OrchardCommandHostRetryException(SerializationInfo info, StreamingContext context)
-            : base(info, context) {
+            : base(info, context)
+        {
         }
     }
 }

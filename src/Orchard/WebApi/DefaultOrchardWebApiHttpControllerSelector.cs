@@ -8,11 +8,14 @@ using Autofac.Core;
 using Autofac.Features.Metadata;
 using Orchard.WebApi.Extensions;
 
-namespace Orchard.WebApi {
-    public class DefaultOrchardWebApiHttpControllerSelector : DefaultHttpControllerSelector, IHttpControllerSelector {
+namespace Orchard.WebApi
+{
+    public class DefaultOrchardWebApiHttpControllerSelector : DefaultHttpControllerSelector, IHttpControllerSelector
+    {
         private readonly HttpConfiguration _configuration;
 
-        public DefaultOrchardWebApiHttpControllerSelector(HttpConfiguration configuration) : base(configuration) {
+        public DefaultOrchardWebApiHttpControllerSelector(HttpConfiguration configuration) : base(configuration)
+        {
             _configuration = configuration;
         }
 
@@ -24,11 +27,14 @@ namespace Orchard.WebApi {
         /// <param name="serviceKey">The service key for the controller.</param>
         /// <param name="instance">The controller instance.</param>
         /// <returns>True if the controller was resolved; false otherwise.</returns>
-        protected bool TryResolve<T>(WorkContext workContext, object serviceKey, out T instance) {
-            if (workContext != null && serviceKey != null) {
+        protected bool TryResolve<T>(WorkContext workContext, object serviceKey, out T instance)
+        {
+            if (workContext != null && serviceKey != null)
+            {
                 var key = new KeyedService(serviceKey, typeof(T));
                 object value;
-                if (workContext.Resolve<ILifetimeScope>().TryResolveService(key, out value)) {
+                if (workContext.Resolve<ILifetimeScope>().TryResolveService(key, out value))
+                {
                     instance = (T)value;
                     return true;
                 }
@@ -38,9 +44,10 @@ namespace Orchard.WebApi {
             return false;
         }
 
-        public override HttpControllerDescriptor SelectController(HttpRequestMessage request) {
+        public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
+        {
             var routeData = request.GetRouteData();
-            
+
             // Determine the area name for the request, and fall back to stock orchard controllers
             var areaName = routeData.GetAreaName();
 
@@ -50,14 +57,15 @@ namespace Orchard.WebApi {
             var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
 
             var controllerContext = new HttpControllerContext(_configuration, routeData, request);
-            
+
             // Now that the request container is known - try to resolve the controller information
             Meta<Lazy<IHttpController>> info;
             var workContext = controllerContext.GetWorkContext();
-            if (TryResolve(workContext, serviceKey, out info)) {
+            if (TryResolve(workContext, serviceKey, out info))
+            {
                 var type = (Type)info.Metadata["ControllerType"];
 
-                return 
+                return
                     new HttpControllerDescriptor(_configuration, controllerName, type);
             }
 

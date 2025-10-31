@@ -1,7 +1,9 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 
-namespace Orchard.Roles.Events {
-    public interface IRoleEventHandler : IEventHandler {
+namespace Orchard.Roles.Events
+{
+    public interface IRoleEventHandler : IEventHandler
+    {
         void Created(RoleCreatedContext context);
         void Removed(RoleRemovedContext context);
         void Renamed(RoleRenamedContext context);

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Orchard.Packaging.Models {
-    public class PackagingEntry {
-        public PackagingEntry() {
+namespace Orchard.Packaging.Models
+{
+    public class PackagingEntry
+    {
+        public PackagingEntry()
+        {
             Notifications = new List<string>();
         }
 
@@ -22,7 +25,7 @@ namespace Orchard.Packaging.Models {
         public double Rating { get; set; }
         public int RatingsCount { get; set; }
         public int DownloadCount { get; set; }
-        
+
         /// <summary>
         /// List of package notifications.
         /// </summary>

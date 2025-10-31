@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
@@ -11,8 +11,10 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Notify;
 
-namespace Orchard.Themes.Services {
-    public class ThemeService : IThemeService {
+namespace Orchard.Themes.Services
+{
+    public class ThemeService : IThemeService
+    {
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
@@ -27,7 +29,8 @@ namespace Orchard.Themes.Services {
             IEnumerable<IThemeSelector> themeSelectors,
             IVirtualPathProvider virtualPathProvider,
             ICacheManager cacheManager,
-            ISiteThemeService siteThemeService) {
+            ISiteThemeService siteThemeService)
+        {
 
             Services = orchardServices;
 
@@ -38,7 +41,8 @@ namespace Orchard.Themes.Services {
             _cacheManager = cacheManager;
             _siteThemeService = siteThemeService;
 
-            if (_featureManager.FeatureDependencyNotification == null) {
+            if (_featureManager.FeatureDependencyNotification == null)
+            {
                 _featureManager.FeatureDependencyNotification = GenerateWarning;
             }
 
@@ -50,9 +54,11 @@ namespace Orchard.Themes.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public void DisableThemeFeatures(string themeName) {
+        public void DisableThemeFeatures(string themeName)
+        {
             var themes = new Queue<string>();
-            while (themeName != null) {
+            while (themeName != null)
+            {
                 if (themes.Contains(themeName))
                     throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
                 var theme = _extensionManager.GetExtension(themeName);
@@ -67,19 +73,23 @@ namespace Orchard.Themes.Services {
 
             var currentTheme = _siteThemeService.GetCurrentThemeName();
 
-            while (themes.Count > 0) {
+            while (themes.Count > 0)
+            {
                 var themeId = themes.Dequeue();
 
                 // Not disabling base theme if it's the current theme.
-                if (themeId != currentTheme) {
+                if (themeId != currentTheme)
+                {
                     _featureManager.DisableFeatures(new[] { themeId });
                 }
             }
         }
 
-        public void EnableThemeFeatures(string themeName) {
+        public void EnableThemeFeatures(string themeName)
+        {
             var themes = new Stack<string>();
-            while(themeName != null) {
+            while (themeName != null)
+            {
                 if (themes.Contains(themeName))
                     throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features enabled.", themeName).Text);
                 themes.Push(themeName);
@@ -90,10 +100,13 @@ namespace Orchard.Themes.Services {
                     : null;
             }
 
-            while (themes.Count > 0) {
+            while (themes.Count > 0)
+            {
                 var themeId = themes.Pop();
-                foreach (var featureId in _featureManager.EnableFeatures(new[] { themeId }, true)) {
-                    if (themeId != featureId) {
+                foreach (var featureId in _featureManager.EnableFeatures(new[] { themeId }, true))
+                {
+                    if (themeId != featureId)
+                    {
                         var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
                         Services.Notifier.Success(T("{0} was enabled", featureName));
                     }
@@ -101,7 +114,8 @@ namespace Orchard.Themes.Services {
             }
         }
 
-        public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) {
+        public ExtensionDescriptor GetRequestTheme(RequestContext requestContext)
+        {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -110,7 +124,8 @@ namespace Orchard.Themes.Services {
             if (!requestTheme.Any())
                 return null;
 
-            foreach (var theme in requestTheme) {
+            foreach (var theme in requestTheme)
+            {
                 var t = _extensionManager.GetExtension(theme.ThemeName);
                 if (t != null)
                     return t;
@@ -122,21 +137,26 @@ namespace Orchard.Themes.Services {
         /// <summary>
         /// Loads only installed themes
         /// </summary>
-        public IEnumerable<ExtensionDescriptor> GetInstalledThemes() {
+        public IEnumerable<ExtensionDescriptor> GetInstalledThemes()
+        {
             return GetThemes(_extensionManager.AvailableExtensions());
         }
 
-        private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
+        private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions)
+        {
             var themes = new List<ExtensionDescriptor>();
-            foreach (var descriptor in extensions) {
+            foreach (var descriptor in extensions)
+            {
 
-                if (!DefaultExtensionTypes.IsTheme(descriptor.ExtensionType)) {
+                if (!DefaultExtensionTypes.IsTheme(descriptor.ExtensionType))
+                {
                     continue;
                 }
 
                 ExtensionDescriptor theme = descriptor;
 
-                if (theme.Tags == null || !theme.Tags.Contains("hidden")) {
+                if (theme.Tags == null || !theme.Tags.Contains("hidden"))
+                {
                     themes.Add(theme);
                 }
             }
@@ -147,10 +167,13 @@ namespace Orchard.Themes.Services {
         /// Determines if a theme was recently installed by using the project's last written time.
         /// </summary>
         /// <param name="extensionDescriptor">The extension descriptor.</param>
-        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor) {
-            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor => {
+        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor)
+        {
+            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor =>
+            {
                 string projectFile = GetManifestPath(extensionDescriptor);
-                if (!string.IsNullOrEmpty(projectFile)) {
+                if (!string.IsNullOrEmpty(projectFile))
+                {
                     // If project file was modified less than 24 hours ago, the module was recently deployed
                     return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
                 }
@@ -161,18 +184,21 @@ namespace Orchard.Themes.Services {
             return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
         }
 
-        private string GetManifestPath(ExtensionDescriptor descriptor) {
+        private string GetManifestPath(ExtensionDescriptor descriptor)
+        {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
                                                        "theme.txt");
 
-            if (!_virtualPathProvider.FileExists(projectPath)) {
+            if (!_virtualPathProvider.FileExists(projectPath))
+            {
                 return null;
             }
 
             return projectPath;
         }
 
-        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion) {
+        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion)
+        {
             if (featuresInQuestion.Count() < 1)
                 return;
 
@@ -191,11 +217,13 @@ namespace Orchard.Themes.Services {
                     : featuresInQuestion.First()));
         }
 
-        public void DisablePreviewFeatures(IEnumerable<string> features) {
-             foreach (var featureId in _featureManager.DisableFeatures(features,true)) {
-                 var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
-                        Services.Notifier.Success(T("{0} was disabled", featureName));
-             }
+        public void DisablePreviewFeatures(IEnumerable<string> features)
+        {
+            foreach (var featureId in _featureManager.DisableFeatures(features, true))
+            {
+                var featureName = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
+                Services.Notifier.Success(T("{0} was disabled", featureName));
+            }
         }
     }
 }

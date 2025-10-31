@@ -1,17 +1,20 @@
-﻿using Orchard.Logging;
+using Orchard.Logging;
 using Orchard.Tasks;
 
-namespace Orchard.Indexing.Services {
+namespace Orchard.Indexing.Services
+{
     /// <summary>
     /// Regularly fires IIndexNotifierHandler events
     /// </summary>
-    public class IndexingBackgroundTask : IBackgroundTask {
+    public class IndexingBackgroundTask : IBackgroundTask
+    {
         private readonly IIndexNotifierHandler _indexNotifierHandler;
         private readonly IIndexManager _indexManager;
 
         public IndexingBackgroundTask(
             IIndexNotifierHandler indexNotifierHandler,
-            IIndexManager indexManager) {
+            IIndexManager indexManager)
+        {
             _indexNotifierHandler = indexNotifierHandler;
             _indexManager = indexManager;
             Logger = NullLogger.Instance;
@@ -19,12 +22,15 @@ namespace Orchard.Indexing.Services {
 
         public ILogger Logger { get; set; }
 
-        public void Sweep() {
-            if (!_indexManager.HasIndexProvider()) {
+        public void Sweep()
+        {
+            if (!_indexManager.HasIndexProvider())
+            {
                 return;
             }
 
-            foreach (var index in _indexManager.GetSearchIndexProvider().List()) {
+            foreach (var index in _indexManager.GetSearchIndexProvider().List())
+            {
                 _indexNotifierHandler.UpdateIndex(index);
             }
         }

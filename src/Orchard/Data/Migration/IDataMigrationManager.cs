@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 
-namespace Orchard.Data.Migration {
-    public interface IDataMigrationManager : IDependency {
+namespace Orchard.Data.Migration
+{
+    public interface IDataMigrationManager : IDependency
+    {
         /// <summary>
         /// Whether a feature has already been installed, i.e. one of its Data Migration class has already been processed
         /// </summary>

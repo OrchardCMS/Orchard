@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.ImportExport.ViewModels {
-    public class UploadRecipeViewModel {
-        public UploadRecipeViewModel() {
+namespace Orchard.ImportExport.ViewModels
+{
+    public class UploadRecipeViewModel
+    {
+        public UploadRecipeViewModel()
+        {
             RecipeExecutionSteps = new List<RecipeExecutionStepViewModel>();
         }
 

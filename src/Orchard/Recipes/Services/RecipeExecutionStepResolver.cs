@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orchard.Recipes.Services
 {
@@ -10,19 +8,22 @@ namespace Orchard.Recipes.Services
     {
         private readonly IEnumerable<IRecipeExecutionStep> _recipeExecutionSteps;
 
-        public RecipeExecutionStepResolver(IEnumerable<IRecipeExecutionStep> recipeExecutionSteps) {
+        public RecipeExecutionStepResolver(IEnumerable<IRecipeExecutionStep> recipeExecutionSteps)
+        {
             _recipeExecutionSteps = recipeExecutionSteps;
         }
 
-        public IRecipeExecutionStep Resolve(string importStepName) {
-           return _recipeExecutionSteps.SingleOrDefault(x => x.Names.Contains(importStepName));
+        public IRecipeExecutionStep Resolve(string importStepName)
+        {
+            return _recipeExecutionSteps.SingleOrDefault(x => x.Names.Contains(importStepName));
         }
 
-        public IEnumerable<IRecipeExecutionStep> Resolve(IEnumerable<string> importStepNames) {
+        public IEnumerable<IRecipeExecutionStep> Resolve(IEnumerable<string> importStepNames)
+        {
             return from name in importStepNames
-                let provider = _recipeExecutionSteps.SingleOrDefault(x => x.Names.Contains(name))
-                where provider != null
-                select provider;
+                   let provider = _recipeExecutionSteps.SingleOrDefault(x => x.Names.Contains(name))
+                   where provider != null
+                   select provider;
         }
     }
 }

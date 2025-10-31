@@ -1,20 +1,24 @@
-﻿using System;
+using System;
 using System.Timers;
-using Orchard.Logging;
 using Orchard.Exceptions;
+using Orchard.Logging;
 
-namespace Orchard.Tasks {
+namespace Orchard.Tasks
+{
 
-    public interface ISweepGenerator : ISingletonDependency {
+    public interface ISweepGenerator : ISingletonDependency
+    {
         void Activate();
         void Terminate();
     }
 
-    public class SweepGenerator : ISweepGenerator, IDisposable {
+    public class SweepGenerator : ISweepGenerator, IDisposable
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
 
-        public SweepGenerator(IWorkContextAccessor workContextAccessor) {
+        public SweepGenerator(IWorkContextAccessor workContextAccessor)
+        {
             _workContextAccessor = workContextAccessor;
             _timer = new Timer();
             _timer.Elapsed += Elapsed;
@@ -24,54 +28,68 @@ namespace Orchard.Tasks {
 
         public ILogger Logger { get; set; }
 
-        public TimeSpan Interval {
+        public TimeSpan Interval
+        {
             get { return TimeSpan.FromMilliseconds(_timer.Interval); }
             set { _timer.Interval = value.TotalMilliseconds; }
         }
 
-        public void Activate() {
-            lock (_timer) {
+        public void Activate()
+        {
+            lock (_timer)
+            {
                 _timer.Start();
             }
         }
 
-        public void Terminate() {
-            lock (_timer) {
+        public void Terminate()
+        {
+            lock (_timer)
+            {
                 _timer.Stop();
             }
         }
 
-        void Elapsed(object sender, ElapsedEventArgs e) {
+        void Elapsed(object sender, ElapsedEventArgs e)
+        {
             // current implementation disallows re-entrancy
             if (!System.Threading.Monitor.TryEnter(_timer))
                 return;
 
-            try {
-                if (_timer.Enabled) {
+            try
+            {
+                if (_timer.Enabled)
+                {
                     DoWork();
                 }
             }
-            catch (Exception ex) {
-                if (ex.IsFatal()) {
+            catch (Exception ex)
+            {
+                if (ex.IsFatal())
+                {
                     throw;
                 }
 
                 Logger.Warning(ex, "Problem in background tasks");
             }
-            finally {
+            finally
+            {
                 System.Threading.Monitor.Exit(_timer);
             }
         }
 
-        public void DoWork() {
-            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+        public void DoWork()
+        {
+            using (var scope = _workContextAccessor.CreateWorkContextScope())
+            {
                 // resolve the manager and invoke it
                 var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();
             }
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             _timer.Dispose();
         }
     }

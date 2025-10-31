@@ -1,7 +1,9 @@
-﻿using Orchard.Data.Conventions;
+using Orchard.Data.Conventions;
 
-namespace Orchard.Rules.Models {
-    public class EventRecord {
+namespace Orchard.Rules.Models
+{
+    public class EventRecord
+    {
         public virtual int Id { get; set; }
         public virtual string Category { get; set; }
         public virtual string Type { get; set; }

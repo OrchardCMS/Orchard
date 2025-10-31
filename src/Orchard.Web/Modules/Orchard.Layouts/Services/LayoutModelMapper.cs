@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -6,25 +6,30 @@ using Newtonsoft.Json.Linq;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Services {
-    public class LayoutModelMapper : ILayoutModelMapper {
+namespace Orchard.Layouts.Services
+{
+    public class LayoutModelMapper : ILayoutModelMapper
+    {
         private readonly ILayoutSerializer _serializer;
         private readonly IElementManager _elementManager;
         private readonly Lazy<IEnumerable<ILayoutModelMap>> _maps;
 
-        public LayoutModelMapper(ILayoutSerializer serializer, IElementManager elementManager, Lazy<IEnumerable<ILayoutModelMap>> maps) {
+        public LayoutModelMapper(ILayoutSerializer serializer, IElementManager elementManager, Lazy<IEnumerable<ILayoutModelMap>> maps)
+        {
             _serializer = serializer;
             _elementManager = elementManager;
             _maps = maps;
         }
 
-        public object ToEditorModel(string layoutData, DescribeElementsContext describeContext) {
+        public object ToEditorModel(string layoutData, DescribeElementsContext describeContext)
+        {
             var elements = _serializer.Deserialize(layoutData, describeContext);
             var canvas = elements.FirstOrDefault(x => x is Canvas) ?? _elementManager.ActivateElement<Canvas>();
             return ToEditorModel(canvas, describeContext);
         }
 
-        public object ToEditorModel(Element element, DescribeElementsContext describeContext) {
+        public object ToEditorModel(Element element, DescribeElementsContext describeContext)
+        {
             var map = GetMapFor(element);
             var node = new JObject();
             var container = element as Container;
@@ -33,7 +38,8 @@ namespace Orchard.Layouts.Services {
             // so that we can perform a JSON string comparison on the client side editor to detect if the user changed anything.
             // If the initial state would contain null values, these would become empty strings after the user made a change
             // (e.g. setting some HtmlID property from empty to "my-id" and then clearing out that field).
-            node.PropertyChanged += (sender, args) => {
+            node.PropertyChanged += (sender, args) =>
+            {
                 var value = node[args.PropertyName] as JValue;
 
                 if (value != null && value.Value == null)
@@ -50,19 +56,22 @@ namespace Orchard.Layouts.Services {
             return JsonConvert.DeserializeObject(node.ToString());
         }
 
-        public IEnumerable<Element> ToLayoutModel(string editorData, DescribeElementsContext describeContext) {
-            if (String.IsNullOrWhiteSpace(editorData))
+        public IEnumerable<Element> ToLayoutModel(string editorData, DescribeElementsContext describeContext)
+        {
+            if (string.IsNullOrWhiteSpace(editorData))
                 yield break;
 
             var canvas = JToken.Parse(editorData);
             yield return ParseEditorNode(node: canvas, parent: null, index: 0, describeContext: describeContext);
         }
 
-        public ILayoutModelMap GetMapFor(Element element) {
+        public ILayoutModelMap GetMapFor(Element element)
+        {
             return SelectMap(x => x.CanMap(element));
         }
 
-        private Element ParseEditorNode(JToken node, Container parent, int index, DescribeElementsContext describeContext) {
+        private Element ParseEditorNode(JToken node, Container parent, int index, DescribeElementsContext describeContext)
+        {
             var element = LoadElement(node, parent, index, describeContext);
             var childNodes = (JArray)node["children"];
             var container = element as Container;
@@ -75,7 +84,8 @@ namespace Orchard.Layouts.Services {
             return element;
         }
 
-        private Element LoadElement(JToken node, Container parent, int index, DescribeElementsContext describeContext) {
+        private Element LoadElement(JToken node, Container parent, int index, DescribeElementsContext describeContext)
+        {
             var type = (string)node["type"];
             var map = SelectMap(x => x.LayoutElementType == type);
             var element = map.ToElement(_elementManager, describeContext, node);
@@ -86,7 +96,8 @@ namespace Orchard.Layouts.Services {
             return element;
         }
 
-        private ILayoutModelMap SelectMap(Func<ILayoutModelMap, bool> predicate) {
+        private ILayoutModelMap SelectMap(Func<ILayoutModelMap, bool> predicate)
+        {
             return _maps.Value.OrderByDescending(x => x.Priority).FirstOrDefault(predicate);
         }
     }

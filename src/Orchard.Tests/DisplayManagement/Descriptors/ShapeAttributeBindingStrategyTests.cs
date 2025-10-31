@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
@@ -13,20 +13,27 @@ using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.DisplayManagement.Descriptors {
+namespace Orchard.Tests.DisplayManagement.Descriptors
+{
     [TestFixture]
-    public class ShapeAttributeBindingStrategyTests : ContainerTestBase {
+    public class ShapeAttributeBindingStrategyTests : ContainerTestBase
+    {
         private Feature _testFeature;
 
-        protected override void Register(ContainerBuilder builder) {
-            if (builder == null) {
+        protected override void Register(ContainerBuilder builder)
+        {
+            if (builder == null)
+            {
                 throw new ArgumentNullException("builder");
             }
             builder.RegisterAutoMocking();
-            _testFeature = new Feature {
-                Descriptor = new FeatureDescriptor {
+            _testFeature = new Feature
+            {
+                Descriptor = new FeatureDescriptor
+                {
                     Id = "Testing",
-                    Extension = new ExtensionDescriptor {
+                    Extension = new ExtensionDescriptor
+                    {
                         Id = "Testing",
                         ExtensionType = DefaultExtensionTypes.Module,
                     }
@@ -38,39 +45,46 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
-        protected override void Resolve(ILifetimeScope container) {
+        protected override void Resolve(ILifetimeScope container)
+        {
             // implementation resorts to orchard host to resolve "current scope" services
             container.Resolve<Mock<IOrchardHostContainer>>()
                 .Setup(x => x.Resolve<IComponentContext>())
                 .Returns(container);
         }
 
-        class TestProvider {
+        class TestProvider
+        {
             [Shape]
-            public string Simple() {
+            public string Simple()
+            {
                 return "Simple";
             }
 
             [Shape("Renamed")]
-            public string RenamedMethod() {
+            public string RenamedMethod()
+            {
                 return "Renamed";
             }
         }
 
-        static IEnumerable<ShapeAlteration> GetAlterationBuilders(IShapeTableProvider strategy) {
+        static IEnumerable<ShapeAlteration> GetAlterationBuilders(IShapeTableProvider strategy)
+        {
             var builder = new ShapeTableBuilder(null);
             strategy.Discover(builder);
             return builder.BuildAlterations();
         }
 
         [Test]
-        public void ShapeAttributeOccurrencesAreDetected() {
+        public void ShapeAttributeOccurrencesAreDetected()
+        {
             var occurrences = _container.Resolve<IEnumerable<ShapeAttributeOccurrence>>();
             Assert.That(occurrences.Any(o => o.MethodInfo == typeof(TestProvider).GetMethod("Simple")));
         }
 
         [Test]
-        public void InitializersHaveExpectedShapeTypeNames() {
+        public void InitializersHaveExpectedShapeTypeNames()
+        {
             var strategy = _container.Resolve<IShapeTableProvider>();
             var initializers = GetAlterationBuilders(strategy);
             Assert.That(initializers.Any(i => i.ShapeType == "Simple"));
@@ -79,14 +93,16 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         [Test]
-        public void FeatureMetadataIsDetected() {
+        public void FeatureMetadataIsDetected()
+        {
             var strategy = _container.Resolve<IShapeTableProvider>();
             var initializers = GetAlterationBuilders(strategy);
             Assert.That(initializers.All(i => i.Feature == _testFeature));
         }
 
         [Test]
-        public void LifetimeScopeContainersHaveMetadata() {
+        public void LifetimeScopeContainersHaveMetadata()
+        {
             var strategy = _container.Resolve<IShapeTableProvider>();
             var initializers = GetAlterationBuilders(strategy);
             Assert.That(initializers.Any(i => i.ShapeType == "Simple"));
@@ -101,7 +117,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         [Test]
-        public void BindingProvidedByStrategyInvokesMethod() {
+        public void BindingProvidedByStrategyInvokesMethod()
+        {
             var initializers = GetAlterationBuilders(_container.Resolve<IShapeTableProvider>());
 
             var shapeDescriptor = initializers.Where(i => i.ShapeType == "Simple")

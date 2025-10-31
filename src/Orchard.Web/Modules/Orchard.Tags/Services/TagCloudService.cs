@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Autoroute.Models;
@@ -9,9 +9,11 @@ using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Tags.Models;
 
-namespace Orchard.Tags.Services {
+namespace Orchard.Tags.Services
+{
     [OrchardFeature("Orchard.Tags.TagCloud")]
-    public class TagCloudService : ITagCloudService {
+    public class TagCloudService : ITagCloudService
+    {
         private readonly IRepository<ContentTagRecord> _contentTagRepository;
         private readonly IContentManager _contentManager;
         private readonly ICacheManager _cacheManager;
@@ -22,7 +24,8 @@ namespace Orchard.Tags.Services {
             IRepository<ContentTagRecord> contentTagRepository,
             IContentManager contentManager,
             ICacheManager cacheManager,
-            ISignals signals) {
+            ISignals signals)
+        {
 
             _contentTagRepository = contentTagRepository;
             _contentManager = contentManager;
@@ -30,24 +33,30 @@ namespace Orchard.Tags.Services {
             _signals = signals;
         }
 
-        public IEnumerable<TagCount> GetPopularTags(int buckets, string slug) {
+        public IEnumerable<TagCount> GetPopularTags(int buckets, string slug)
+        {
             var cacheKey = "Orchard.Tags.TagCloud." + (slug ?? "") + '.' + buckets;
             return _cacheManager.Get(cacheKey, true,
-                ctx => {
+                ctx =>
+                {
                     ctx.Monitor(_signals.When(TagCloudTagsChanged));
                     IEnumerable<TagCount> tagCounts;
-                    if (string.IsNullOrWhiteSpace(slug)) {
+                    if (string.IsNullOrWhiteSpace(slug))
+                    {
                         tagCounts = (from tc in _contentTagRepository.Table
-                            where tc.TagsPartRecord.ContentItemRecord.Versions.Any(v => v.Published)
-                            group tc by tc.TagRecord.TagName
+                                     where tc.TagsPartRecord.ContentItemRecord.Versions.Any(v => v.Published)
+                                     group tc by tc.TagRecord.TagName
                             into g
-                            select new TagCount {
-                                TagName = g.Key,
-                                Count = g.Count()
-                            }).ToList();
+                                     select new TagCount
+                                     {
+                                         TagName = g.Key,
+                                         Count = g.Count()
+                                     }).ToList();
                     }
-                    else {
-                        if (slug == "/") {
+                    else
+                    {
+                        if (slug == "/")
+                        {
                             slug = "";
                         }
 
@@ -58,7 +67,8 @@ namespace Orchard.Tags.Services {
                                           .Select(x => x.ContentItem.Id)
                                           .FirstOrDefault();
 
-                        if (containerId == 0) {
+                        if (containerId == 0)
+                        {
                             return new List<TagCount>();
                         }
 
@@ -69,13 +79,15 @@ namespace Orchard.Tags.Services {
                                           .List()
                                           .SelectMany(t => t.CurrentTags)
                                           .GroupBy(t => t)
-                                          .Select(g => new TagCount {
+                                          .Select(g => new TagCount
+                                          {
                                               TagName = g.Key,
                                               Count = g.Count()
                                           })
                                           .ToList();
 
-                        if (!tagCounts.Any()) {
+                        if (!tagCounts.Any())
+                        {
                             return new List<TagCount>();
                         }
                     }
@@ -85,23 +97,28 @@ namespace Orchard.Tags.Services {
                     var maxCount = tagCounts.Any() ? tagCounts.Max(tc => tc.Count) : 0;
                     var minCount = tagCounts.Any() ? tagCounts.Min(tc => tc.Count) : 0;
                     var maxDistance = maxCount - minCount;
-                    for (int i = 0; i < centroids.Length; i++) {
-                        centroids[i] = maxDistance/buckets * (i+1);
+                    for (int i = 0; i < centroids.Length; i++)
+                    {
+                        centroids[i] = maxDistance / buckets * (i + 1);
                     }
 
                     var balanced = false;
                     var loops = 0;
 
                     // loop until equilibrium or instability
-                    while (!balanced && loops++ < 50) {
+                    while (!balanced && loops++ < 50)
+                    {
                         balanced = true;
                         // assign to closest buckets
-                        foreach (var tagCount in tagCounts) {
+                        foreach (var tagCount in tagCounts)
+                        {
                             // look for closest bucket
                             var currentDistance = Math.Abs(tagCount.Count - centroids[tagCount.Bucket - 1]);
-                            for(int i=0; i<buckets; i++) {
+                            for (int i = 0; i < buckets; i++)
+                            {
                                 var distance = Math.Abs(tagCount.Count - centroids[i]);
-                                if (distance < currentDistance) {
+                                if (distance < currentDistance)
+                                {
                                     tagCount.Bucket = i + 1;
                                     currentDistance = distance;
                                     balanced = false;
@@ -110,9 +127,11 @@ namespace Orchard.Tags.Services {
                         }
 
                         // recalculate centroids
-                        for (int i = 0; i < buckets; i++) {
+                        for (int i = 0; i < buckets; i++)
+                        {
                             var target = tagCounts.Where(x => x.Bucket == i + 1).ToArray();
-                            if (target.Any()) {
+                            if (target.Any())
+                            {
                                 centroids[i] = (int)target.Average(x => x.Count);
                             }
                         }

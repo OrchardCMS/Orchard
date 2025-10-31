@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 
-namespace Orchard.FileSystems.WebSite {
+namespace Orchard.FileSystems.WebSite
+{
     /// <summary>
     /// Abstraction over the virtual files/directories of a web site.
     /// </summary>
-    public interface IWebSiteFolder : IVolatileProvider {
+    public interface IWebSiteFolder : IVolatileProvider
+    {
         IEnumerable<string> ListDirectories(string virtualPath);
         IEnumerable<string> ListFiles(string virtualPath, bool recursive);
 

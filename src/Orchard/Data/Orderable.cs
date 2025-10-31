@@ -2,27 +2,28 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Orchard.Data {
-    public class Orderable<T> {
-        private IQueryable<T> _queryable;
-
-        public Orderable(IQueryable<T> enumerable) {
-            _queryable = enumerable;
+namespace Orchard.Data
+{
+    public class Orderable<T>
+    {
+        public Orderable(IQueryable<T> enumerable)
+        {
+            Queryable = enumerable;
         }
 
-        public IQueryable<T> Queryable {
-            get { return _queryable; }
-        }
+        public IQueryable<T> Queryable { get; private set; }
 
-        public Orderable<T> Asc<TKey>(Expression<Func<T, TKey>> keySelector) {
-            _queryable = _queryable
+        public Orderable<T> Asc<TKey>(Expression<Func<T, TKey>> keySelector)
+        {
+            Queryable = Queryable
                 .OrderBy(keySelector);
             return this;
         }
 
         public Orderable<T> Asc<TKey1, TKey2>(Expression<Func<T, TKey1>> keySelector1,
-                                              Expression<Func<T, TKey2>> keySelector2) {
-            _queryable = _queryable
+                                              Expression<Func<T, TKey2>> keySelector2)
+        {
+            Queryable = Queryable
                 .OrderBy(keySelector1)
                 .OrderBy(keySelector2);
             return this;
@@ -30,23 +31,26 @@ namespace Orchard.Data {
 
         public Orderable<T> Asc<TKey1, TKey2, TKey3>(Expression<Func<T, TKey1>> keySelector1,
                                                      Expression<Func<T, TKey2>> keySelector2,
-                                                     Expression<Func<T, TKey3>> keySelector3) {
-            _queryable = _queryable
+                                                     Expression<Func<T, TKey3>> keySelector3)
+        {
+            Queryable = Queryable
                 .OrderBy(keySelector1)
                 .OrderBy(keySelector2)
                 .OrderBy(keySelector3);
             return this;
         }
 
-        public Orderable<T> Desc<TKey>(Expression<Func<T, TKey>> keySelector) {
-            _queryable = _queryable
+        public Orderable<T> Desc<TKey>(Expression<Func<T, TKey>> keySelector)
+        {
+            Queryable = Queryable
                 .OrderByDescending(keySelector);
             return this;
         }
 
         public Orderable<T> Desc<TKey1, TKey2>(Expression<Func<T, TKey1>> keySelector1,
-                                               Expression<Func<T, TKey2>> keySelector2) {
-            _queryable = _queryable
+                                               Expression<Func<T, TKey2>> keySelector2)
+        {
+            Queryable = Queryable
                 .OrderByDescending(keySelector1)
                 .OrderByDescending(keySelector2);
             return this;
@@ -54,8 +58,9 @@ namespace Orchard.Data {
 
         public Orderable<T> Desc<TKey1, TKey2, TKey3>(Expression<Func<T, TKey1>> keySelector1,
                                                       Expression<Func<T, TKey2>> keySelector2,
-                                                      Expression<Func<T, TKey3>> keySelector3) {
-            _queryable = _queryable
+                                                      Expression<Func<T, TKey3>> keySelector3)
+        {
+            Queryable = Queryable
                 .OrderByDescending(keySelector1)
                 .OrderByDescending(keySelector2)
                 .OrderByDescending(keySelector3);

@@ -1,13 +1,15 @@
-﻿using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 
-namespace Orchard.Tests.Modules.XmlRpc.Services {
+namespace Orchard.Tests.Modules.XmlRpc.Services
+{
     [TestFixture]
-    public class XmlRpcWriterTests {
+    public class XmlRpcWriterTests
+    {
         [Test]
-        public void MethodResponseWriterShouldSendParametersWithValues() {
+        public void MethodResponseWriterShouldSendParametersWithValues()
+        {
             var mapper = new XmlRpcWriter();
 
             var response = new XRpcMethodResponse();
@@ -18,7 +20,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void ArrayAndStructShouldWorkAsExpected() {
+        public void ArrayAndStructShouldWorkAsExpected()
+        {
             var mapper = new XmlRpcWriter();
 
             var arr = new XRpcArray();
@@ -28,7 +31,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
             arr.Data.Add(XRpcData.For(19));
 
             structParam.Value.Members.Add("Hello", XRpcData.For("world"));
-            
+
             var element = mapper.MapArray(arr);
 
             Assert.That(NoSpace(element.ToString()), Is.EqualTo(NoSpace(@"
@@ -42,9 +45,11 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
-        public void FaultShouldBeCorrectlyFormatted() {
+        public void FaultShouldBeCorrectlyFormatted()
+        {
             var mapper = new XmlRpcWriter();
-            var response = new XRpcMethodResponse {
+            var response = new XRpcMethodResponse
+            {
                 Fault = new XRpcFault(10, "foo")
             };
 
@@ -60,7 +65,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
 ")));
         }
 
-        private static string NoSpace(string text) {
+        private static string NoSpace(string text)
+        {
             return text.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace("\t", "");
         }
     }

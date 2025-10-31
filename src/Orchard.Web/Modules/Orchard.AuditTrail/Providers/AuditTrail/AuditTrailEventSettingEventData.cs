@@ -1,4 +1,5 @@
-﻿namespace Orchard.AuditTrail.Providers.AuditTrail {
+namespace Orchard.AuditTrail.Providers.AuditTrail
+{
     public class AuditTrailEventSettingEventData
     {
         public string EventName { get; set; }

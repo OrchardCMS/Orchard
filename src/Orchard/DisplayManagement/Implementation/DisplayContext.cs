@@ -1,7 +1,9 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
-namespace Orchard.DisplayManagement.Implementation {
-    public class DisplayContext  {
+namespace Orchard.DisplayManagement.Implementation
+{
+    public class DisplayContext
+    {
         public DisplayHelper Display { get; set; }
         public ViewContext ViewContext { get; set; }
         public IViewDataContainer ViewDataContainer { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -7,12 +7,15 @@ using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Compilers {
-    public class DefaultProjectFileParser : IProjectFileParser {
+namespace Orchard.Environment.Extensions.Compilers
+{
+    public class DefaultProjectFileParser : IProjectFileParser
+    {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly ICacheManager _cacheManager;
 
-        public DefaultProjectFileParser(IWebSiteFolder webSiteFolder, ICacheManager cacheManager) {
+        public DefaultProjectFileParser(IWebSiteFolder webSiteFolder, ICacheManager cacheManager)
+        {
             _webSiteFolder = webSiteFolder;
             _cacheManager = cacheManager;
 
@@ -22,37 +25,46 @@ namespace Orchard.Environment.Extensions.Compilers {
         ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        public ProjectFileDescriptor Parse(string virtualPath) {
+        public ProjectFileDescriptor Parse(string virtualPath)
+        {
             return _cacheManager.Get(virtualPath, true,
-                ctx => {
-                    if (!DisableMonitoring) {
+                ctx =>
+                {
+                    if (!DisableMonitoring)
+                    {
                         Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
                         ctx.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
                     }
 
                     string content = _webSiteFolder.ReadFile(virtualPath);
-                    using (var reader = new StringReader(content)) {
+                    using (var reader = new StringReader(content))
+                    {
                         return Parse(reader);
                     }
                 });
         }
 
-        public ProjectFileDescriptor Parse(Stream stream) {
-            using (var reader = new StreamReader(stream)) {
+        public ProjectFileDescriptor Parse(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
                 return Parse(reader);
             }
         }
 
-        public ProjectFileDescriptor Parse(TextReader reader) {
+        public ProjectFileDescriptor Parse(TextReader reader)
+        {
             var document = XDocument.Load(XmlReader.Create(reader));
-            return new ProjectFileDescriptor {
+            return new ProjectFileDescriptor
+            {
                 AssemblyName = GetAssemblyName(document),
                 SourceFilenames = GetSourceFilenames(document).ToArray(),
                 References = GetReferences(document).ToArray()
             };
         }
 
-        private static string GetAssemblyName(XDocument document) {
+        private static string GetAssemblyName(XDocument document)
+        {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("PropertyGroup"))
@@ -61,7 +73,8 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Value;
         }
 
-        private static IEnumerable<string> GetSourceFilenames(XDocument document) {
+        private static IEnumerable<string> GetSourceFilenames(XDocument document)
+        {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
@@ -70,33 +83,38 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Select(c => c.Value);
         }
 
-        private static IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
+        private static IEnumerable<ReferenceDescriptor> GetReferences(XDocument document)
+        {
             var assemblyReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
                 .Where(c => c.Attribute("Include") != null)
-                .Select(c => {
-                            string path = null;
-                            XElement attribute = c.Elements(ns("HintPath")).FirstOrDefault();
-                            if (attribute != null) {
-                                path = attribute.Value;
-                            }
+                .Select(c =>
+                {
+                    string path = null;
+                    XElement attribute = c.Elements(ns("HintPath")).FirstOrDefault();
+                    if (attribute != null)
+                    {
+                        path = attribute.Value;
+                    }
 
-                            return new ReferenceDescriptor {
-                                SimpleName = ExtractAssemblyName(c.Attribute("Include").Value),
-                                FullName = c.Attribute("Include").Value,
-                                Path = path,
-                                ReferenceType = ReferenceType.Library
-                            };
-                        });
+                    return new ReferenceDescriptor
+                    {
+                        SimpleName = ExtractAssemblyName(c.Attribute("Include").Value),
+                        FullName = c.Attribute("Include").Value,
+                        Path = path,
+                        ReferenceType = ReferenceType.Library
+                    };
+                });
 
             var projectReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("ProjectReference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor {
+                .Select(c => new ReferenceDescriptor
+                {
                     SimpleName = Path.GetFileNameWithoutExtension(c.Value),
                     FullName = Path.GetFileNameWithoutExtension(c.Value),
                     Path = c.Value,
@@ -106,12 +124,14 @@ namespace Orchard.Environment.Extensions.Compilers {
             return assemblyReferences.Union(projectReferences);
         }
 
-        private static string ExtractAssemblyName(string value) {
+        private static string ExtractAssemblyName(string value)
+        {
             int index = value.IndexOf(',');
             return index < 0 ? value : value.Substring(0, index);
         }
 
-        private static XName ns(string name) {
+        private static XName ns(string name)
+        {
             return XName.Get(name, "http://schemas.microsoft.com/developer/msbuild/2003");
         }
     }

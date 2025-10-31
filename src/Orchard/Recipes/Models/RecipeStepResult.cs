@@ -1,7 +1,7 @@
-﻿using System.Xml.Linq;
-
-namespace Orchard.Recipes.Models {
-    public class RecipeStepResult {
+namespace Orchard.Recipes.Models
+{
+    public class RecipeStepResult
+    {
         public string RecipeName { get; set; }
         public string StepName { get; set; }
         public bool IsCompleted { get; set; }

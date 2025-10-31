@@ -14,9 +14,11 @@ using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Templates.Compilation.Razor {
+namespace Orchard.Templates.Compilation.Razor
+{
     [OrchardFeature("Orchard.Templates.Razor")]
-    public class RazorCompiler : IRazorCompiler {
+    public class RazorCompiler : IRazorCompiler
+    {
         private readonly ICacheManager _cache;
         private readonly ISignals _signals;
         private const string DynamicallyGeneratedClassName = "RazorTemplate";
@@ -49,7 +51,8 @@ namespace Orchard.Templates.Compilation.Razor {
 
         public RazorCompiler(
             ICacheManager cache,
-            ISignals signals) {
+            ISignals signals)
+        {
             _cache = cache;
             _signals = signals;
             Logger = NullLogger.Instance;
@@ -57,20 +60,24 @@ namespace Orchard.Templates.Compilation.Razor {
 
         public ILogger Logger { get; set; }
 
-        public IRazorTemplateBase<TModel> CompileRazor<TModel>(string code, string name, IDictionary<string, object> parameters) {
+        public IRazorTemplateBase<TModel> CompileRazor<TModel>(string code, string name, IDictionary<string, object> parameters)
+        {
             return (RazorTemplateBase<TModel>)Compile(code, name, typeof(TModel), parameters);
         }
 
-        public IRazorTemplateBase CompileRazor(string code, string name, IDictionary<string, object> parameters) {
+        public IRazorTemplateBase CompileRazor(string code, string name, IDictionary<string, object> parameters)
+        {
             return (IRazorTemplateBase)Compile(code, name, null, parameters);
         }
 
-        private object Compile(string code, string name, Type modelType, IDictionary<string, object> parameters) {
+        private object Compile(string code, string name, Type modelType, IDictionary<string, object> parameters)
+        {
 
             var cacheKey = (name ?? DynamicallyGeneratedClassName) + GetHash(code);
-            var generatedClassName = name != null ? name.Strip(c => !c.IsLetter() && !Char.IsDigit(c)) : DynamicallyGeneratedClassName;
+            var generatedClassName = name != null ? name.Strip(c => !c.IsLetter() && !char.IsDigit(c)) : DynamicallyGeneratedClassName;
 
-            var assembly = _cache.Get(cacheKey, ctx => {
+            var assembly = _cache.Get(cacheKey, ctx =>
+            {
                 _signals.When(ForceRecompile);
 
                 var modelTypeName = "dynamic";
@@ -80,9 +87,11 @@ namespace Orchard.Templates.Compilation.Razor {
                 // A hack to remove any @model directive as it's MVC-specific and compiler does not recognize it.
                 // We should use this information to compile a strongly-typed template in the future
                 string line;
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = reader.ReadLine()) != null)
+                {
                     var trimmedLine = line.TrimStart(' ', '\t', '\n', '\r');
-                    if (trimmedLine.StartsWith("@model ")) {
+                    if (trimmedLine.StartsWith("@model "))
+                    {
                         modelTypeName = trimmedLine.Substring("@model ".Length).Trim();
                         continue;
                     }
@@ -91,13 +100,15 @@ namespace Orchard.Templates.Compilation.Razor {
                 }
 
                 var language = new CSharpRazorCodeLanguage();
-                var host = new RazorEngineHost(language) {
+                var host = new RazorEngineHost(language)
+                {
                     DefaultBaseClass = "RazorTemplateBase<" + modelTypeName + ">",
                     DefaultClassName = generatedClassName,
                     DefaultNamespace = NamespaceForDynamicClasses
                 };
 
-                foreach (var n in DefaultNamespaces) {
+                foreach (var n in DefaultNamespaces)
+                {
                     host.NamespaceImports.Add(n);
                 }
 
@@ -110,7 +121,8 @@ namespace Orchard.Templates.Compilation.Razor {
             return assembly.CreateInstance(NamespaceForDynamicClasses + "." + generatedClassName);
         }
 
-        public static string GetHash(string value) {
+        public static string GetHash(string value)
+        {
             var data = Encoding.ASCII.GetBytes(value);
             var hashData = new MD5CryptoServiceProvider().ComputeHash(data);
 
@@ -120,7 +132,8 @@ namespace Orchard.Templates.Compilation.Razor {
             return strBuilder.ToString();
         }
 
-        private static Assembly CreateCompiledAssemblyFor(CodeCompileUnit unitToCompile, string templateName) {
+        private static Assembly CreateCompiledAssemblyFor(CodeCompileUnit unitToCompile, string templateName)
+        {
             var compilerParameters = new CompilerParameters();
             compilerParameters.ReferencedAssemblies.AddRange(AppDomain.CurrentDomain
                 .GetAssemblies()
@@ -131,11 +144,13 @@ namespace Orchard.Templates.Compilation.Razor {
             compilerParameters.GenerateInMemory = true;
 
             var compilerResults = new CSharpCodeProvider().CompileAssemblyFromDom(compilerParameters, unitToCompile);
-            if (compilerResults.Errors.HasErrors) {
+            if (compilerResults.Errors.HasErrors)
+            {
                 var errors = compilerResults.Errors.Cast<CompilerError>().Aggregate(string.Empty, (s, error) => s + "\r\nTemplate '" + templateName + "': " + error.ToString());
                 throw new Exception(string.Format("Razor template compilation errors:\r\n{0}", errors));
             }
-            else {
+            else
+            {
                 var compiledAssembly = compilerResults.CompiledAssembly;
                 return compiledAssembly;
             }

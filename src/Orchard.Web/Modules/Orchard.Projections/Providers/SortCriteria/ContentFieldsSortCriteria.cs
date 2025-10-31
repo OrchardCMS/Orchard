@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -9,12 +9,13 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.SortCriterion;
 using Orchard.Projections.FieldTypeEditors;
-using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Projections.Providers.SortCriteria {
-    public class ContentFieldsSortCriterion : ISortCriterionProvider {
+namespace Orchard.Projections.Providers.SortCriteria
+{
+    public class ContentFieldsSortCriterion : ISortCriterionProvider
+    {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IEnumerable<IFieldTypeEditor> _fieldTypeEditors;
@@ -22,7 +23,8 @@ namespace Orchard.Projections.Providers.SortCriteria {
         public ContentFieldsSortCriterion(
             IContentDefinitionManager contentDefinitionManager,
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
-            IEnumerable<IFieldTypeEditor> fieldTypeEditors) {
+            IEnumerable<IFieldTypeEditor> fieldTypeEditors)
+        {
             _contentDefinitionManager = contentDefinitionManager;
             _contentFieldDrivers = contentFieldDrivers;
             _fieldTypeEditors = fieldTypeEditors;
@@ -31,21 +33,26 @@ namespace Orchard.Projections.Providers.SortCriteria {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeSortCriterionContext describe) {
-            foreach (var part in _contentDefinitionManager.ListPartDefinitions()) {
-                if (!part.Fields.Any()) {
+        public void Describe(DescribeSortCriterionContext describe)
+        {
+            foreach (var part in _contentDefinitionManager.ListPartDefinitions())
+            {
+                if (!part.Fields.Any())
+                {
                     continue;
                 }
 
                 var descriptor = describe.For(part.Name + "ContentFields", T("{0} Content Fields", part.Name.CamelFriendly()), T("Content Fields for {0}", part.Name.CamelFriendly()));
 
-                foreach (var field in part.Fields) {
+                foreach (var field in part.Fields)
+                {
                     var localField = field;
                     var localPart = part;
                     var drivers = _contentFieldDrivers.Where(x => x.GetFieldInfo().Any(fi => fi.FieldTypeName == localField.FieldDefinition.Name)).ToList();
 
                     var membersContext = new DescribeMembersContext(
-                        (storageName, storageType, displayName, description) => {
+                        (storageName, storageType, displayName, description) =>
+                        {
                             // look for a compatible field type editor
                             IFieldTypeEditor fieldTypeEditor = _fieldTypeEditors.FirstOrDefault(x => x.CanHandle(storageType));
 
@@ -58,16 +65,18 @@ namespace Orchard.Projections.Providers.SortCriteria {
                                 form: SortCriterionFormProvider.FormName);
                         });
 
-                    foreach (var driver in drivers) {
+                    foreach (var driver in drivers)
+                    {
                         driver.Describe(membersContext);
                     }
                 }
             }
         }
 
-        public void ApplySortCriterion(SortCriterionContext context, IFieldTypeEditor fieldTypeEditor, string storageName, Type storageType, ContentPartDefinition part, ContentPartFieldDefinition field) {
+        public void ApplySortCriterion(SortCriterionContext context, IFieldTypeEditor fieldTypeEditor, string storageName, Type storageType, ContentPartDefinition part, ContentPartFieldDefinition field)
+        {
             bool ascending = (bool)context.State.Sort;
-            var propertyName = String.Join(".", part.Name, field.Name, storageName ?? "");
+            var propertyName = string.Join(".", part.Name, field.Name, storageName ?? "");
 
             // use an alias with the join so that two filters on the same Field Type wont collide
             var relationship = fieldTypeEditor.GetFilterRelationship(propertyName.ToSafeName());
@@ -86,7 +95,8 @@ namespace Orchard.Projections.Providers.SortCriteria {
                 : context.Query.OrderBy(relationship, x => x.Desc(context.GetSortColumnName()));
         }
 
-        public LocalizedString DisplaySortCriterion(SortCriterionContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition) {
+        public LocalizedString DisplaySortCriterion(SortCriterionContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition)
+        {
             bool ascending = (bool)context.State.Sort;
 
             return ascending

@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
@@ -21,7 +20,8 @@ namespace Orchard.OpenId.Controllers
     [Themed]
     [AlwaysAccessible]
     [OrchardFeature("Orchard.OpenId")]
-    public class AccountController : Controller {
+    public class AccountController : Controller
+    {
         private readonly IEnumerable<IOpenIdProvider> _openIdProviders;
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
@@ -33,7 +33,8 @@ namespace Orchard.OpenId.Controllers
             IAuthenticationService authenticationService,
             IMembershipService membershipService,
             IOrchardServices orchardServices,
-            IUserEventHandler userEventHandler) {
+            IUserEventHandler userEventHandler)
+        {
 
             _openIdProviders = openIdProviders;
             _authenticationService = authenticationService;
@@ -50,8 +51,10 @@ namespace Orchard.OpenId.Controllers
 
         [AlwaysAccessible]
         [HttpGet]
-        public ActionResult LogOn(string returnUrl) {
-            if (Request.IsAuthenticated) {
+        public ActionResult LogOn(string returnUrl)
+        {
+            if (Request.IsAuthenticated)
+            {
                 return Redirect("~/");
             }
 
@@ -63,11 +66,13 @@ namespace Orchard.OpenId.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
+        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false)
+        {
             _userEventHandler.LoggingIn(userNameOrEmail, password);
 
             var user = ValidateLogOn(userNameOrEmail, password);
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(_openIdProviders);
             }
 
@@ -75,7 +80,8 @@ namespace Orchard.OpenId.Controllers
             if (user != null &&
                 membershipSettings.EnableCustomPasswordPolicy &&
                 membershipSettings.EnablePasswordExpiration &&
-                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays)) {
+                _membershipService.PasswordIsExpired(user, membershipSettings.PasswordExpirationTimeInDays))
+            {
                 return RedirectToAction("ChangeExpiredPassword", new { username = user.UserName });
             }
 
@@ -87,17 +93,20 @@ namespace Orchard.OpenId.Controllers
 
         [AlwaysAccessible]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public void Challenge(string openIdProvider, string returnUrl) {
-            _userEventHandler.LoggingIn(openIdProvider, String.Empty);
+        public void Challenge(string openIdProvider, string returnUrl)
+        {
+            _userEventHandler.LoggingIn(openIdProvider, string.Empty);
 
-            if (String.IsNullOrWhiteSpace(openIdProvider))
+            if (string.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
-            if (Request.IsAuthenticated) {
+            if (Request.IsAuthenticated)
+            {
                 this.RedirectLocal(returnUrl);
                 return;
             }
-            else {
+            else
+            {
                 TempData["ReturnUrl"] = returnUrl;
             }
 
@@ -106,39 +115,45 @@ namespace Orchard.OpenId.Controllers
             HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, openIdProvider);
         }
 
-        public ActionResult LogOff(string openIdProvider) {
-            if (String.IsNullOrWhiteSpace(openIdProvider))
+        public ActionResult LogOff(string openIdProvider)
+        {
+            if (string.IsNullOrWhiteSpace(openIdProvider))
                 openIdProvider = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
             HttpContext.GetOwinContext().Authentication.SignOut(openIdProvider, CookieAuthenticationDefaults.AuthenticationType);
             _authenticationService.SignOut();
 
             var loggedUser = _authenticationService.GetAuthenticatedUser();
-            if (loggedUser != null) {
+            if (loggedUser != null)
+            {
                 _userEventHandler.LoggedOut(loggedUser);
             }
 
             return Redirect("~/");
         }
 
-        public ActionResult LogonCallback() {
+        public ActionResult LogonCallback()
+        {
             var user = _authenticationService.GetAuthenticatedUser();
 
-            if (user != null) {
-                _userEventHandler.LoggedIn(user); 
+            if (user != null)
+            {
+                _userEventHandler.LoggedIn(user);
             }
 
             if (TempData.ContainsKey("ReturnUrl"))
-                return this.RedirectLocal((String)TempData["ReturnUrl"]);
+                return this.RedirectLocal((string)TempData["ReturnUrl"]);
             else
                 return Redirect("~/");
         }
 
-        public ActionResult AccessDenied() {
+        public ActionResult AccessDenied()
+        {
             var returnUrl = Request.QueryString["ReturnUrl"];
             var currentUser = _authenticationService.GetAuthenticatedUser();
 
-            if (currentUser == null) {
+            if (currentUser == null)
+            {
                 return RedirectToAction("Logon", new { returnUrl = returnUrl });
             }
 
@@ -147,18 +162,22 @@ namespace Orchard.OpenId.Controllers
             return View();
         }
 
-        public ActionResult Error() {
+        public ActionResult Error()
+        {
             return View();
         }
 
-        private IUser ValidateLogOn(string userNameOrEmail, string password) {
+        private IUser ValidateLogOn(string userNameOrEmail, string password)
+        {
             bool validate = true;
 
-            if (String.IsNullOrEmpty(userNameOrEmail)) {
+            if (string.IsNullOrEmpty(userNameOrEmail))
+            {
                 ModelState.AddModelError("userNameOrEmail", T("You must specify a username or e-mail."));
                 validate = false;
             }
-            if (String.IsNullOrEmpty(password)) {
+            if (string.IsNullOrEmpty(password))
+            {
                 ModelState.AddModelError("password", T("You must specify a password."));
                 validate = false;
             }
@@ -168,15 +187,16 @@ namespace Orchard.OpenId.Controllers
 
             List<LocalizedString> validationErrors;
             var user = _membershipService.ValidateUser(userNameOrEmail, password, out validationErrors);
-            if (user == null) {
+            if (user == null)
+            {
                 ModelState.AddModelError("password", T("The username or e-mail or password provided is incorrect."));
             }
 
             return user;
         }
 
-        private string GetCallbackPath(WorkContext workContext) 
-            {
+        private string GetCallbackPath(WorkContext workContext)
+        {
             var shellSettings = workContext.Resolve<ShellSettings>();
             var tenantPrefix = shellSettings.RequestUrlPrefix;
 

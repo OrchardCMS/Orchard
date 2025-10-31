@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -7,15 +7,18 @@ using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
 
-namespace Orchard.Core.Common.Drivers {
-    public class CommonPartDriver : ContentPartDriver<CommonPart> {
+namespace Orchard.Core.Common.Drivers
+{
+    public class CommonPartDriver : ContentPartDriver<CommonPart>
+    {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
 
         public CommonPartDriver(
             IOrchardServices services,
             IContentManager contentManager,
-            IMembershipService membershipService) {
+            IMembershipService membershipService)
+        {
             _contentManager = contentManager;
             _membershipService = membershipService;
             T = NullLocalizer.Instance;
@@ -25,11 +28,10 @@ namespace Orchard.Core.Common.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override string Prefix {
-            get { return "CommonPart"; }
-        }
+        protected override string Prefix => "CommonPart";
 
-        protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper)
+        {
             return Combined(
                 ContentShape("Parts_Common_Metadata",
                              () => shapeHelper.Parts_Common_Metadata()),
@@ -40,24 +42,31 @@ namespace Orchard.Core.Common.Drivers {
                 );
         }
 
-        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper)
+        {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper)
+        {
             var model = new ContainerEditorViewModel();
             if (part.Container != null)
                 model.ContainerId = part.Container.ContentItem.Id;
 
-            if (updater != null) {
+            if (updater != null)
+            {
                 var priorContainerId = model.ContainerId;
                 updater.TryUpdateModel(model, Prefix, null, null);
 
-                if (model.ContainerId != null && model.ContainerId != priorContainerId) {
+                if (model.ContainerId != null && model.ContainerId != priorContainerId)
+                {
                     var newContainer = _contentManager.Get((int)model.ContainerId, VersionOptions.Latest);
-                    if (newContainer == null) {
+                    if (newContainer == null)
+                    {
                         updater.AddModelError("CommonPart.ContainerId", T("Invalid container"));
-                    } else {
+                    }
+                    else
+                    {
                         part.Container = newContainer;
                     }
                 }
@@ -67,13 +76,16 @@ namespace Orchard.Core.Common.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
         }
 
-        protected override void Importing(CommonPart part, ImportContentContext context) {
+        protected override void Importing(CommonPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "Owner", owner => {
+            context.ImportAttribute(part.PartDefinition.Name, "Owner", owner =>
+            {
                 var contentIdentity = new ContentIdentity(owner);
 
                 // use the super user if the referenced one doesn't exist;
@@ -99,32 +111,39 @@ namespace Orchard.Core.Common.Drivers {
             );
         }
 
-        protected override void Exporting(CommonPart part, ExportContentContext context) {
-            if (part.Owner != null) {
+        protected override void Exporting(CommonPart part, ExportContentContext context)
+        {
+            if (part.Owner != null)
+            {
                 var ownerIdentity = _contentManager.GetItemMetadata(part.Owner).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Owner", ownerIdentity.ToString());
             }
 
-            if (part.Container != null) {
+            if (part.Container != null)
+            {
                 var containerIdentity = _contentManager.GetItemMetadata(part.Container).Identity;
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString()); 
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString());
             }
 
-            if (part.CreatedUtc != null) {
+            if (part.CreatedUtc != null)
+            {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("CreatedUtc", XmlConvert.ToString(part.CreatedUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
-            if (part.PublishedUtc != null) {
+            if (part.PublishedUtc != null)
+            {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("PublishedUtc", XmlConvert.ToString(part.PublishedUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
-            if (part.ModifiedUtc != null) {
+            if (part.ModifiedUtc != null)
+            {
                 context.Element(part.PartDefinition.Name)
                     .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
             }
         }
 
-        protected override void Cloning(CommonPart originalPart, CommonPart clonePart, CloneContentContext context) {
+        protected override void Cloning(CommonPart originalPart, CommonPart clonePart, CloneContentContext context)
+        {
             clonePart.Container = originalPart.Container;
         }
     }

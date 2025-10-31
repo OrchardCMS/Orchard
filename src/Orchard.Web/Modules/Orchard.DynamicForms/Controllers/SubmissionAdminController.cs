@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DynamicForms.Helpers;
@@ -10,13 +10,16 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.DynamicForms.Controllers {
+namespace Orchard.DynamicForms.Controllers
+{
     [Admin]
-    public class SubmissionAdminController : Controller {
+    public class SubmissionAdminController : Controller
+    {
         private readonly IFormService _formService;
         private readonly IOrchardServices _services;
 
-        public SubmissionAdminController(IFormService formService, IOrchardServices services) {
+        public SubmissionAdminController(IFormService formService, IOrchardServices services)
+        {
             _formService = formService;
             _services = services;
             T = NullLocalizer.Instance;
@@ -24,11 +27,13 @@ namespace Orchard.DynamicForms.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index(string id, PagerParameters pagerParameters) {
+        public ActionResult Index(string id, PagerParameters pagerParameters)
+        {
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
             var submissions = _formService.GetSubmissions(id, pager.GetStartIndex(), pager.PageSize);
             var pagerShape = _services.New.Pager(pager).TotalItemCount(submissions.TotalItemCount);
-            var viewModel = new SubmissionsIndexViewModel {
+            var viewModel = new SubmissionsIndexViewModel
+            {
                 FormName = id,
                 Submissions = _formService.GenerateDataTable(submissions),
                 Pager = pagerShape
@@ -36,20 +41,23 @@ namespace Orchard.DynamicForms.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Details(int id) {
+        public ActionResult Details(int id)
+        {
             var submission = _formService.GetSubmission(id);
 
             if (submission == null)
                 return HttpNotFound();
 
-            var viewModel = new SubmissionViewModel {
+            var viewModel = new SubmissionViewModel
+            {
                 Submission = submission,
                 NameValues = submission.ToNameValues()
             };
             return View(viewModel);
         }
 
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id)
+        {
             var submission = _formService.GetSubmission(id);
 
             if (submission == null)
@@ -62,12 +70,15 @@ namespace Orchard.DynamicForms.Controllers {
 
         [FormValueRequired("submit.BulkEdit")]
         [ActionName("Index")]
-        public ActionResult BulkDelete(IEnumerable<int> submissionIds) {
-            if (submissionIds == null || !submissionIds.Any()) {
+        public ActionResult BulkDelete(IEnumerable<int> submissionIds)
+        {
+            if (submissionIds == null || !submissionIds.Any())
+            {
                 _services.Notifier.Error(T("Please select the submissions to delete."));
 
             }
-            else {
+            else
+            {
                 var numDeletedSubmissions = _formService.DeleteSubmissions(submissionIds);
                 _services.Notifier.Success(T("{0} submissions have been deleted.", numDeletedSubmissions));
             }

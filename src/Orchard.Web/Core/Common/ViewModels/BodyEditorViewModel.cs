@@ -1,15 +1,19 @@
-﻿using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Models;
 
-namespace Orchard.Core.Common.ViewModels {
-    public class BodyEditorViewModel {
+namespace Orchard.Core.Common.ViewModels
+{
+    public class BodyEditorViewModel
+    {
         public BodyPart BodyPart { get; set; }
 
-        public string Text {
+        public string Text
+        {
             get { return BodyPart.Text; }
             set { BodyPart.Text = value; }
         }
 
-        public string Format {
+        public string Format
+        {
             get { return BodyPart.Format; }
             set { BodyPart.Format = value; }
         }

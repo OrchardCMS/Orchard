@@ -1,23 +1,26 @@
-﻿using System;
 using NUnit.Framework;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Records;
 
-namespace Orchard.Tests.Data {
+namespace Orchard.Tests.Data
+{
     [TestFixture]
-    public class ProvidersTests {
+    public class ProvidersTests
+    {
 
         [Test]
-        public void SqlCeShouldHandleBigFields() {
-           
+        public void SqlCeShouldHandleBigFields()
+        {
+
             var recordDescriptors = new[] {
                                               new RecordBlueprint {TableName = "Big", Type = typeof (BigRecord)}
                                           };
 
             ProviderUtilities.RunWithSqlCe(recordDescriptors,
-                sessionFactory => {
+                sessionFactory =>
+                {
                     var session = sessionFactory.OpenSession();
-                    var foo = new BigRecord { Body = new String('x', 10000), Banner = new byte[10000]};
+                    var foo = new BigRecord { Body = new string('x', 10000), Banner = new byte[10000] };
                     session.Save(foo);
                     session.Flush();
                     session.Close();
@@ -27,23 +30,25 @@ namespace Orchard.Tests.Data {
                     session.Close();
 
                     Assert.That(foo, Is.Not.Null);
-                    Assert.That(foo.Body, Is.EqualTo(new String('x', 10000)));
+                    Assert.That(foo.Body, Is.EqualTo(new string('x', 10000)));
                     Assert.That(foo.Banner.Length, Is.EqualTo(10000));
                 });
         }
 
 
         [Test]
-        public void SqlServerShouldHandleBigFields() {
+        public void SqlServerShouldHandleBigFields()
+        {
 
             var recordDescriptors = new[] {
                                               new RecordBlueprint {TableName = "Big", Type = typeof (BigRecord)}
                                           };
 
             ProviderUtilities.RunWithSqlServer(recordDescriptors,
-                sessionFactory => {
+                sessionFactory =>
+                {
                     var session = sessionFactory.OpenSession();
-                    var foo = new BigRecord { Body = new String('x', 10000), Banner = new byte[10000] };
+                    var foo = new BigRecord { Body = new string('x', 10000), Banner = new byte[10000] };
                     session.Save(foo);
                     session.Flush();
                     session.Close();
@@ -53,7 +58,7 @@ namespace Orchard.Tests.Data {
                     session.Close();
 
                     Assert.That(foo, Is.Not.Null);
-                    Assert.That(foo.Body, Is.EqualTo(new String('x', 10000)));
+                    Assert.That(foo.Body, Is.EqualTo(new string('x', 10000)));
                     Assert.That(foo.Banner.Length, Is.EqualTo(10000));
 
                 });

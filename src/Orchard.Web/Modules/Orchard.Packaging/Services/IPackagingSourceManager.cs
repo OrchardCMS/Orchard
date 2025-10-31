@@ -4,11 +4,13 @@ using System.Linq;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Services
+{
     /// <summary>
     /// Responsible for managing package sources and getting the list of packages from it.
     /// </summary>
-    public interface IPackagingSourceManager : IDependency {
+    public interface IPackagingSourceManager : IDependency
+    {
         /// <summary>
         /// Gets the different feed sources.
         /// </summary>

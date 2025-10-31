@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Services {
-    public class HtmlFilterProcessor : IHtmlFilterProcessor {
+namespace Orchard.Services
+{
+    public class HtmlFilterProcessor : IHtmlFilterProcessor
+    {
         private readonly IEnumerable<IHtmlFilter> _filters;
 
-        public HtmlFilterProcessor(IEnumerable<IHtmlFilter> filters) {
+        public HtmlFilterProcessor(IEnumerable<IHtmlFilter> filters)
+        {
             _filters = filters;
         }
 
-        public string ProcessFilters(string text, HtmlFilterContext context) {
+        public string ProcessFilters(string text, HtmlFilterContext context)
+        {
             return _filters.Aggregate(text, (current, htmlFilter) => htmlFilter.ProcessContent(current, context));
         }
     }

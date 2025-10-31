@@ -8,9 +8,11 @@ using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Packaging.Models;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Services
+{
     [OrchardFeature("PackagingServices")]
-    public class PackageManager : IPackageManager {
+    public class PackageManager : IPackageManager
+    {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
         private readonly IPackageInstaller _packageInstaller;
@@ -24,7 +26,8 @@ namespace Orchard.Packaging.Services {
             IPackageInstaller packageInstaller,
             IShellStateManager shellStateManager,
             IFeatureManager featureManager,
-            IPackageUninstallHandler packageUninstallHandler) {
+            IPackageUninstallHandler packageUninstallHandler)
+        {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
             _packageInstaller = packageInstaller;
@@ -37,14 +40,18 @@ namespace Orchard.Packaging.Services {
 
         public Localizer T { get; set; }
 
-        private PackageInfo DoInstall(Func<PackageInfo> installer) {
-            try {
+        private PackageInfo DoInstall(Func<PackageInfo> installer)
+        {
+            try
+            {
                 return installer();
             }
-            catch (OrchardException) {
+            catch (OrchardException)
+            {
                 throw;
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 var message = T(
                     "There was an error installing the requested package. " +
                     "This can happen if the server does not have write access to the '~/Modules' or '~/Themes' folder of the web site. " +
@@ -56,12 +63,15 @@ namespace Orchard.Packaging.Services {
 
         #region IPackageManager Members
 
-        public PackageData Harvest(string extensionName) {
+        public PackageData Harvest(string extensionName)
+        {
             ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Id == extensionName);
-            if (extensionDescriptor == null) {
+            if (extensionDescriptor == null)
+            {
                 return null;
             }
-            return new PackageData {
+            return new PackageData
+            {
                 ExtensionType = extensionDescriptor.ExtensionType,
                 ExtensionName = extensionDescriptor.Id,
                 ExtensionVersion = extensionDescriptor.Version,
@@ -69,19 +79,23 @@ namespace Orchard.Packaging.Services {
             };
         }
 
-        public PackageInfo Install(IPackage package, string location, string applicationPath) {
+        public PackageInfo Install(IPackage package, string location, string applicationPath)
+        {
             return DoInstall(() => _packageInstaller.Install(package, location, applicationPath));
         }
 
-        public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
+        public PackageInfo Install(string packageId, string version, string location, string applicationPath)
+        {
             return DoInstall(() => _packageInstaller.Install(packageId, version, location, applicationPath));
         }
 
-        public void Uninstall(string packageId, string applicationPath) {
+        public void Uninstall(string packageId, string applicationPath)
+        {
             var extensionToUninstall = _extensionManager.AvailableExtensions()
                 .FirstOrDefault(extension => PackageBuilder.BuildPackageId(extension.Id, extension.ExtensionType) == packageId);
 
-            if (extensionToUninstall == null) {
+            if (extensionToUninstall == null)
+            {
                 throw new OrchardException(T("There is no extension that has the package ID \"{0}\".", packageId));
             }
 
@@ -90,15 +104,18 @@ namespace Orchard.Packaging.Services {
             var featureStates = shellState.Features.Where(featureState => featureIdsToUninstall.Contains(featureState.Name));
 
             // This means that no feature from this extension wasn enabled yet, can be uninstalled directly.
-            if (!featureStates.Any()) {
+            if (!featureStates.Any())
+            {
                 _packageUninstallHandler.QueuePackageUninstall(packageId);
             }
-            else {
+            else
+            {
                 _featureManager.DisableFeatures(extensionToUninstall.Features.Select(feature => feature.Id), true);
 
                 // Installed state can't be deduced from the shell state changes like for enabled state, so have to
                 // set that explicitly.
-                foreach (var featureState in featureStates) {
+                foreach (var featureState in featureStates)
+                {
                     _shellStateManager.UpdateInstalledState(featureState, Environment.State.Models.ShellFeatureState.State.Falling);
                 }
             }

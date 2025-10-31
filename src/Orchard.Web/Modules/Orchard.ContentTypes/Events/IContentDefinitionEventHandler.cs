@@ -1,7 +1,9 @@
-﻿using Orchard.Events;
+using Orchard.Events;
 
-namespace Orchard.ContentTypes.Events {
-    public interface IContentDefinitionEventHandler : IEventHandler {
+namespace Orchard.ContentTypes.Events
+{
+    public interface IContentDefinitionEventHandler : IEventHandler
+    {
         void ContentTypeCreated(ContentTypeCreatedContext context);
         void ContentTypeRemoved(ContentTypeRemovedContext context);
         void ContentTypeImporting(ContentTypeImportingContext context);

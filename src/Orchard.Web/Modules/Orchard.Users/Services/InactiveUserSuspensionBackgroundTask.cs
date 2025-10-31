@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -11,8 +11,10 @@ using Orchard.Tasks.Locking.Services;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 
-namespace Orchard.Users.Services {
-    public class InactiveUserSuspensionBackgroundTask : Component, IBackgroundTask {
+namespace Orchard.Users.Services
+{
+    public class InactiveUserSuspensionBackgroundTask : Component, IBackgroundTask
+    {
 
         private readonly IDistributedLockService _distributedLockService;
         private readonly ISiteService _siteService;
@@ -29,7 +31,8 @@ namespace Orchard.Users.Services {
             IContentManager contentManager,
             IUserEventHandler userEventHandlers,
             IAuthorizationService authorizationService,
-            IEnumerable<IUserSuspensionConditionProvider> userSuspensionConditionProviders) {
+            IEnumerable<IUserSuspensionConditionProvider> userSuspensionConditionProviders)
+        {
 
             _distributedLockService = distributedLockService;
             _siteService = siteService;
@@ -41,15 +44,20 @@ namespace Orchard.Users.Services {
         }
 
 
-        public void Sweep() {
+        public void Sweep()
+        {
             Logger.Debug("Beginning sweep to suspend inactive users.");
-            try {
+            try
+            {
                 // Only allow this task to run on one farm node at a time.
                 IDistributedLock @lock;
-                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock)) {
-                    using (@lock) {
+                if (_distributedLockService.TryAcquireLock(GetType().FullName, TimeSpan.FromHours(1), out @lock))
+                {
+                    using (@lock)
+                    {
                         // Check whether it's time to do another sweep.
-                        if (!IsItTimeToSweep()) {
+                        if (!IsItTimeToSweep())
+                        {
                             return; // too soon
                         }
 
@@ -71,19 +79,22 @@ namespace Orchard.Users.Services {
                         // If providers could alter the query we'd be able to immediately limit the number
                         // of ContentItems we'll fetch, and as a consequence the number of operations later.
                         // However, such conditions would make users immune from being suspended.
-                        foreach (var provider in _userSuspensionConditionProviders) {
+                        foreach (var provider in _userSuspensionConditionProviders)
+                        {
                             inactiveUsersQuery = provider.AlterQuery(inactiveUsersQuery);
                         }
                         var inactiveUsers = inactiveUsersQuery.List();
                         // By default, all inactive users should be suspended, except SiteOwner.
-                        foreach (var userUnderTest in inactiveUsers.Where(up => !IsSiteOwner(up))) {
+                        foreach (var userUnderTest in inactiveUsers.Where(up => !IsSiteOwner(up)))
+                        {
 
                             // Ask providers whether users should be processed/disabled
                             var saveTheUser = _userSuspensionConditionProviders
                                 .Aggregate(false, (prev, scp) => prev || scp.UserIsProtected(userUnderTest));
 
                             // Suspend the users that have gotten this far.
-                            if (!saveTheUser) {
+                            if (!saveTheUser)
+                            {
                                 DisableUser(userUnderTest);
                             }
                         }
@@ -92,33 +103,44 @@ namespace Orchard.Users.Services {
                         GetSettings().LastSweepUtc = _clock.UtcNow;
                         Logger.Debug("Done checking for inactive users.");
                     }
-                } else {
+                }
+                else
+                {
                     Logger.Debug("Distributed lock could not be acquired; going back to sleep.");
                 }
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Logger.Error(ex, "Error during sweep to suspend inactive users.");
-            } finally {
+            }
+            finally
+            {
                 Logger.Debug("Ending sweep to suspend inactive users.");
             }
         }
 
-        private bool IsSiteOwner(UserPart userPart) {
+        private bool IsSiteOwner(UserPart userPart)
+        {
             return _authorizationService
                 .TryCheckAccess(StandardPermissions.SiteOwner,
                     userPart, null);
         }
 
-        private void DisableUser(UserPart userPart) {
+        private void DisableUser(UserPart userPart)
+        {
             userPart.RegistrationStatus = UserStatus.Pending;
             Logger.Information(T("User {0} disabled by automatic moderation", userPart.UserName).Text);
             _userEventHandlers.Moderate(userPart);
         }
 
-        private bool IsItTimeToSweep() {
+        private bool IsItTimeToSweep()
+        {
             var settings = GetSettings();
-            if (settings.SuspendInactiveUsers) {
-                if (settings.MinimumSweepInterval <= 0) {
+            if (settings.SuspendInactiveUsers)
+            {
+                if (settings.MinimumSweepInterval <= 0)
+                {
                     return true;
                 }
                 var lastSweep = settings.LastSweepUtc ?? DateTime.MinValue;
@@ -131,15 +153,19 @@ namespace Orchard.Users.Services {
 
         #region Memorize settings
         private ISite _siteSettings;
-        private ISite GetSiteSettings() {
-            if (_siteSettings == null) {
+        private ISite GetSiteSettings()
+        {
+            if (_siteSettings == null)
+            {
                 _siteSettings = _siteService.GetSiteSettings();
             }
             return _siteSettings;
         }
         private UserSuspensionSettingsPart _settingsPart;
-        private UserSuspensionSettingsPart GetSettings() {
-            if (_settingsPart == null) {
+        private UserSuspensionSettingsPart GetSettings()
+        {
+            if (_settingsPart == null)
+            {
                 _settingsPart = GetSiteSettings().As<UserSuspensionSettingsPart>();
             }
             return _settingsPart;

@@ -1,21 +1,21 @@
-﻿using System.Linq;
+using System.Linq;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 
-namespace Orchard.Workflows.Activities {
-    public class ExclusiveBranchActivity : BranchActivity {
-        public override string Name {
-            get { return "ExclusiveBranch"; }
-        }
+namespace Orchard.Workflows.Activities
+{
+    public class ExclusiveBranchActivity : BranchActivity
+    {
+        public override string Name => "ExclusiveBranch";
 
-        public override LocalizedString Description {
-            get { return T("Splits the workflow on different branches, activating the first event to occur."); }
-        }
+        public override LocalizedString Description => T("Splits the workflow on different branches, activating the first event to occur.");
 
-        public override void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext) {
+        public override void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext)
+        {
 
             // for blocking activities only
-            if (!activityContext.Activity.IsEvent) {
+            if (!activityContext.Activity.IsEvent)
+            {
                 return;
             }
 
@@ -29,13 +29,16 @@ namespace Orchard.Workflows.Activities {
                 .Select(x => x.SourceActivityRecord)
                 .ToList();
 
-            if (parentBranchActivities.Any()) {
-                foreach (var parentBranch in parentBranchActivities) {
+            if (parentBranchActivities.Any())
+            {
+                foreach (var parentBranch in parentBranchActivities)
+                {
                     // remove all other waiting activities after the parent branch
 
                     var siblings = workflowContext.GetOutboundTransitions(parentBranch).Select(x => x.DestinationActivityRecord).ToList();
                     var awaitings = workflowContext.Record.AwaitingActivities.Where(x => siblings.Contains(x.ActivityRecord)).ToList();
-                    foreach (var awaiting in awaitings) {
+                    foreach (var awaiting in awaitings)
+                    {
                         workflowContext.Record.AwaitingActivities.Remove(awaiting);
                     }
                 }

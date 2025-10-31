@@ -1,18 +1,24 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.Autoroute.Services {
-    public class AliasResolverSelector : IIdentityResolverSelector {
+namespace Orchard.Autoroute.Services
+{
+    public class AliasResolverSelector : IIdentityResolverSelector
+    {
         private readonly IContentManager _contentManager;
 
-        public AliasResolverSelector(IContentManager contentManager) {
+        public AliasResolverSelector(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
-        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity) {
-            if (contentIdentity.Has("alias")) {
-                return new IdentityResolverSelectorResult {
+        public IdentityResolverSelectorResult GetResolver(ContentIdentity contentIdentity)
+        {
+            if (contentIdentity.Has("alias"))
+            {
+                return new IdentityResolverSelectorResult
+                {
                     Priority = 0,
                     Resolve = ResolveIdentity
                 };
@@ -21,10 +27,12 @@ namespace Orchard.Autoroute.Services {
             return null;
         }
 
-        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity) {
+        private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity)
+        {
             var identifier = identity.Get("alias");
 
-            if (identifier == null) {
+            if (identifier == null)
+            {
                 return null;
             }
 

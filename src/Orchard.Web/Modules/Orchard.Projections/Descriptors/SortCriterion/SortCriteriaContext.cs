@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Projections.Models;
 
-namespace Orchard.Projections.Descriptors.SortCriterion {
-    public class SortCriterionContext {
-        public SortCriterionContext() {
+namespace Orchard.Projections.Descriptors.SortCriterion
+{
+    public class SortCriterionContext
+    {
+        public SortCriterionContext()
+        {
             Tokens = new Dictionary<string, object>();
         }
 
@@ -13,7 +16,8 @@ namespace Orchard.Projections.Descriptors.SortCriterion {
         public IHqlQuery Query { get; set; }
 
         public QueryPartRecord QueryPartRecord { get; set; }
-        public string GetSortColumnName() {
+        public string GetSortColumnName()
+        {
             return QueryPartRecord.GetVersionedFieldIndexColumnName();
         }
     }

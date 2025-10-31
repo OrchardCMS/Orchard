@@ -1,3 +1,4 @@
-namespace Orchard.Recipes.ViewModels {
-    public class SiteSettingsStepViewModel {}
+namespace Orchard.Recipes.ViewModels
+{
+    public class SiteSettingsStepViewModel { }
 }

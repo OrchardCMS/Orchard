@@ -1,39 +1,48 @@
-﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement;
 
-namespace Orchard.Core.Navigation.Models {
-    public class MenuWidgetPart : ContentPart {
+namespace Orchard.Core.Navigation.Models
+{
+    public class MenuWidgetPart : ContentPart
+    {
 
-        public int StartLevel {
+        public int StartLevel
+        {
             get { return this.Retrieve(x => x.StartLevel); }
             set { this.Store(x => x.StartLevel, value); }
         }
 
-        public int Levels {
+        public int Levels
+        {
             get { return this.Retrieve(x => x.Levels); }
             set { this.Store(x => x.Levels, value); }
         }
 
-        public bool Breadcrumb {
+        public bool Breadcrumb
+        {
             get { return this.Retrieve(x => x.Breadcrumb); }
             set { this.Store(x => x.Breadcrumb, value); }
         }
 
-        public bool AddHomePage {
+        public bool AddHomePage
+        {
             get { return this.Retrieve(x => x.AddHomePage); }
             set { this.Store(x => x.AddHomePage, value); }
         }
 
-        public bool AddCurrentPage {
+        public bool AddCurrentPage
+        {
             get { return this.Retrieve(x => x.AddCurrentPage); }
             set { this.Store(x => x.AddCurrentPage, value); }
         }
 
-        public int MenuContentItemId {
+        public int MenuContentItemId
+        {
             get { return this.Retrieve(x => x.MenuContentItemId); }
             set { this.Store(x => x.MenuContentItemId, value); }
         }
 
-        public bool ShowFullMenu {
+        public bool ShowFullMenu
+        {
             get { return this.Retrieve(x => x.ShowFullMenu); }
             set { this.Store(x => x.ShowFullMenu, value); }
         }

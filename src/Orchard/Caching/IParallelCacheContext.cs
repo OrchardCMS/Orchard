@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Orchard.Caching {
+namespace Orchard.Caching
+{
     /// <summary>
     /// Provides services to enable parallel tasks aware of the current cache context.
     /// </summary>
-    public interface IParallelCacheContext {
+    public interface IParallelCacheContext
+    {
         /// <summary>
         /// Create a task that wraps some piece of code that implictly depends on the cache context.
         /// The return task can be used in any execution thread (e.g. System.Threading.Tasks).
@@ -15,7 +17,8 @@ namespace Orchard.Caching {
         IEnumerable<TResult> RunInParallel<T, TResult>(IEnumerable<T> source, Func<T, TResult> selector);
     }
 
-    public interface ITask<T> : IDisposable {
+    public interface ITask<T> : IDisposable
+    {
         /// <summary>
         /// Execute task and collect eventual volatile tokens
         /// </summary>

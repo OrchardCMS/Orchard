@@ -1,16 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http.Description;
 using System.Web.Mvc;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
 using IFilterProvider = Orchard.Mvc.Filters.IFilterProvider;
 
-namespace Orchard.Exceptions.Filters {
-    public class UnhandledExceptionFilter : FilterProvider, IActionFilter, IResultFilter {
+namespace Orchard.Exceptions.Filters
+{
+    public class UnhandledExceptionFilter : FilterProvider, IActionFilter, IResultFilter
+    {
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly IOrchardServices _orchardServices;
         private readonly Lazy<IEnumerable<IFilterProvider>> _filterProviders;
@@ -18,7 +19,8 @@ namespace Orchard.Exceptions.Filters {
         public UnhandledExceptionFilter(
             IExceptionPolicy exceptionPolicy,
             IOrchardServices orchardServices,
-            Lazy<IEnumerable<IFilterProvider>> filters) {
+            Lazy<IEnumerable<IFilterProvider>> filters)
+        {
             _exceptionPolicy = exceptionPolicy;
             _orchardServices = orchardServices;
             _filterProviders = filters;
@@ -27,28 +29,36 @@ namespace Orchard.Exceptions.Filters {
 
         public ILogger Logger { get; set; }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext) {
+        public void OnActionExecuting(ActionExecutingContext filterContext)
+        {
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext) {
+        public void OnActionExecuted(ActionExecutedContext filterContext)
+        {
             // for exceptions which occurred during the action execution
 
             // don't provide custom errors if the action has some custom code to handle exceptions
-            if (!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any()) {
-                if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
-                    if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
+            if (!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any())
+            {
+                if (!filterContext.ExceptionHandled && filterContext.Exception != null)
+                {
+                    if (_exceptionPolicy.HandleException(this, filterContext.Exception))
+                    {
                         filterContext.ExceptionHandled = true;
 
                         // inform exception filters of the exception that was suppressed
                         var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
-                        foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>()) {
+                        foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>())
+                        {
                             exceptionFilter.OnException(exceptionContext);
                         }
 
-                        if (exceptionContext.ExceptionHandled) {
+                        if (exceptionContext.ExceptionHandled)
+                        {
                             filterContext.Result = exceptionContext.Result;
                         }
-                        else {
+                        else
+                        {
                             var shape = _orchardServices.New.ErrorPage();
                             shape.Message = filterContext.Exception.Message;
                             shape.Exception = filterContext.Exception;
@@ -63,7 +73,8 @@ namespace Orchard.Exceptions.Filters {
                 }
             }
 
-            if (filterContext.Result is HttpNotFoundResult) {
+            if (filterContext.Result is HttpNotFoundResult)
+            {
                 var model = _orchardServices.New.NotFound();
                 var request = filterContext.RequestContext.HttpContext.Request;
                 var url = request.RawUrl;
@@ -87,19 +98,24 @@ namespace Orchard.Exceptions.Filters {
             }
         }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
-            
+        public void OnResultExecuting(ResultExecutingContext filterContext)
+        {
+
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
+        public void OnResultExecuted(ResultExecutedContext filterContext)
+        {
             // for exceptions which occurred during the action execution
 
             // don't provide custom errors if the action has some custom code to handle exceptions
-            if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
-                if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
+            if (!filterContext.ExceptionHandled && filterContext.Exception != null)
+            {
+                if (_exceptionPolicy.HandleException(this, filterContext.Exception))
+                {
                     // inform exception filters of the exception that was suppressed
                     var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
-                    foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>()) {
+                    foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>())
+                    {
                         exceptionFilter.OnException(exceptionContext);
                     }
                 }

@@ -1,12 +1,13 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Rules.Models;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.Rules.Models;
 
-namespace Orchard.Rules.Services {
-    public class RulesServices : IRulesServices {
+namespace Orchard.Rules.Services
+{
+    public class RulesServices : IRulesServices
+    {
         private readonly IRepository<EventRecord> _eventRepository;
         private readonly IRepository<ActionRecord> _actionRepository;
         private readonly IRepository<RuleRecord> _ruleRepository;
@@ -14,7 +15,8 @@ namespace Orchard.Rules.Services {
         public RulesServices(
             IRepository<EventRecord> eventRepository,
             IRepository<ActionRecord> actionRepository,
-            IRepository<RuleRecord> ruleRepository) {
+            IRepository<RuleRecord> ruleRepository)
+        {
             _eventRepository = eventRepository;
             _actionRepository = actionRepository;
             _ruleRepository = ruleRepository;
@@ -22,43 +24,53 @@ namespace Orchard.Rules.Services {
 
         public Localizer T { get; set; }
 
-        public RuleRecord CreateRule(string name) {
+        public RuleRecord CreateRule(string name)
+        {
             var ruleRecord = new RuleRecord { Name = name };
             _ruleRepository.Create(ruleRecord);
 
             return ruleRecord;
         }
 
-        public RuleRecord GetRule(int id) {
+        public RuleRecord GetRule(int id)
+        {
             return _ruleRepository.Get(id);
         }
 
-        public IEnumerable<RuleRecord> GetRules() {
+        public IEnumerable<RuleRecord> GetRules()
+        {
             return _ruleRepository.Table.ToList();
         }
 
-        public void DeleteRule(int ruleId) {
+        public void DeleteRule(int ruleId)
+        {
             var e = _ruleRepository.Get(ruleId);
-            if (e != null) {
+            if (e != null)
+            {
                 _ruleRepository.Delete(e);
             }
         }
 
-        public void DeleteEvent(int eventId) {
+        public void DeleteEvent(int eventId)
+        {
             var e = _eventRepository.Get(eventId);
-            if (e != null) {
+            if (e != null)
+            {
                 _eventRepository.Delete(e);
             }
         }
 
-        public void DeleteAction(int actionId) {
+        public void DeleteAction(int actionId)
+        {
             var a = _actionRepository.Get(actionId);
-            if (a != null) {
+            if (a != null)
+            {
                 _actionRepository.Delete(a);
             }
         }
 
-        public void MoveUp(int actionId) {
+        public void MoveUp(int actionId)
+        {
             var action = _actionRepository.Get(actionId);
 
             // look for the previous action in order in same rule
@@ -68,7 +80,8 @@ namespace Orchard.Rules.Services {
                 .FirstOrDefault();
 
             // nothing to do if already at the top
-            if (previous == null) {
+            if (previous == null)
+            {
                 return;
             }
 
@@ -78,7 +91,8 @@ namespace Orchard.Rules.Services {
             action.Position = temp;
         }
 
-        public void MoveDown(int actionId) {
+        public void MoveDown(int actionId)
+        {
             var action = _actionRepository.Get(actionId);
 
             // look for the next action in order in same rule
@@ -88,7 +102,8 @@ namespace Orchard.Rules.Services {
                 .FirstOrDefault();
 
             // nothing to do if already at the end
-            if (next == null) {
+            if (next == null)
+            {
                 return;
             }
 

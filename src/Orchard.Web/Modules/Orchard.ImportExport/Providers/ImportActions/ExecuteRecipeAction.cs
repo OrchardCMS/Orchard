@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,8 +16,10 @@ using Orchard.Setup.Services;
 using Orchard.Tasks;
 using Orchard.UI.Notify;
 
-namespace Orchard.ImportExport.Providers.ImportActions {
-    public class ExecuteRecipeAction : ImportAction {
+namespace Orchard.ImportExport.Providers.ImportActions
+{
+    public class ExecuteRecipeAction : ImportAction
+    {
         private readonly IOrchardServices _orchardServices;
         private readonly ISetupService _setupService;
         private readonly ShellSettings _shellSettings;
@@ -33,13 +35,14 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             IOrchardServices orchardServices,
             ISetupService setupService,
             ShellSettings shellSettings,
-            IEnumerable<IRecipeExecutionStep> recipeExecutionSteps, 
-            IRecipeParser recipeParser, 
-            IRecipeExecutor recipeExecutor, 
-            IDatabaseManager databaseManager, 
-            ISweepGenerator sweepGenerator, 
-            IRecipeStepQueue recipeStepQueue, 
-            IRepository<RecipeStepResultRecord> recipeStepResultRepository) {
+            IEnumerable<IRecipeExecutionStep> recipeExecutionSteps,
+            IRecipeParser recipeParser,
+            IRecipeExecutor recipeExecutor,
+            IDatabaseManager databaseManager,
+            ISweepGenerator sweepGenerator,
+            IRecipeStepQueue recipeStepQueue,
+            IRepository<RecipeStepResultRecord> recipeStepResultRepository)
+        {
 
             _orchardServices = orchardServices;
             _setupService = setupService;
@@ -55,21 +58,25 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             RecipeExecutionTimeout = 600;
         }
 
-        public override string Name { get { return "ExecuteRecipe"; } }
+        public override string Name => "ExecuteRecipe";
 
         public XDocument RecipeDocument { get; set; }
         public bool ResetSite { get; set; }
         public string SuperUserPassword { get; set; }
         public int RecipeExecutionTimeout { get; set; }
 
-        public override dynamic BuildEditor(dynamic shapeFactory) {
+        public override dynamic BuildEditor(dynamic shapeFactory)
+        {
             return UpdateEditor(shapeFactory, null);
         }
 
-        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater) {
-            var viewModel = new UploadRecipeViewModel {
+        public override dynamic UpdateEditor(dynamic shapeFactory, IUpdateModel updater)
+        {
+            var viewModel = new UploadRecipeViewModel
+            {
                 SuperUserName = _orchardServices.WorkContext.CurrentSite.SuperUser,
-                RecipeExecutionSteps = _recipeExecutionSteps.Select(x => new RecipeExecutionStepViewModel {
+                RecipeExecutionSteps = _recipeExecutionSteps.Select(x => new RecipeExecutionStepViewModel
+                {
                     Name = x.Name,
                     DisplayName = x.DisplayName,
                     Description = x.Description,
@@ -77,8 +84,10 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                 }).Where(x => x.Editor != null).ToList()
             };
 
-            if (updater != null) {
-                if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+            if (updater != null)
+            {
+                if (updater.TryUpdateModel(viewModel, Prefix, null, null))
+                {
                     // Validate and read uploaded recipe file.
                     var request = _orchardServices.WorkContext.HttpContext.Request;
                     var file = request.Files["RecipeFile"];
@@ -87,27 +96,32 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                     ResetSite = viewModel.ResetSite;
                     SuperUserPassword = viewModel.SuperUserPassword;
 
-                    if (file == null || file.ContentLength == 0) {
+                    if (file == null || file.ContentLength == 0)
+                    {
                         updater.AddModelError("RecipeFile", T("No recipe file selected."));
                         isValid = false;
                     }
 
-                    if (ResetSite) {
-                        if (String.IsNullOrWhiteSpace(viewModel.SuperUserPassword)) {
+                    if (ResetSite)
+                    {
+                        if (string.IsNullOrWhiteSpace(viewModel.SuperUserPassword))
+                        {
                             updater.AddModelError("SuperUserPassword", T("Please specify a new password for the super user."));
                             isValid = false;
                         }
-                        else if (!String.Equals(viewModel.SuperUserPassword, viewModel.SuperUserPasswordConfirmation)) {
+                        else if (!string.Equals(viewModel.SuperUserPassword, viewModel.SuperUserPasswordConfirmation))
+                        {
                             updater.AddModelError("SuperUserPassword", T("The passwords do not match."));
                             isValid = false;
                         }
                     }
 
-                    var stepUpdater = new Updater(updater, secondHalf => String.Format("{0}.{1}", Prefix, secondHalf));
+                    var stepUpdater = new Updater(updater, secondHalf => string.Format("{0}.{1}", Prefix, secondHalf));
 
                     // Update the view model with non-roundtripped values.
                     viewModel.SuperUserName = _orchardServices.WorkContext.CurrentSite.SuperUser;
-                    foreach (var stepViewModel in viewModel.RecipeExecutionSteps) {
+                    foreach (var stepViewModel in viewModel.RecipeExecutionSteps)
+                    {
                         var step = _recipeExecutionSteps.Single(x => x.Name == stepViewModel.Name);
                         stepViewModel.DisplayName = step.DisplayName;
                         stepViewModel.Description = step.Description;
@@ -116,7 +130,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
                         stepViewModel.Editor = step.UpdateEditor(shapeFactory, stepUpdater);
                     }
 
-                    if (isValid) {
+                    if (isValid)
+                    {
                         // Read recipe file.
                         RecipeDocument = XDocument.Parse(new StreamReader(file.InputStream).ReadToEnd());
                     }
@@ -126,7 +141,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             return shapeFactory.EditorTemplate(TemplateName: "ImportActions/ExecuteRecipe", Model: viewModel, Prefix: Prefix);
         }
 
-        public override void Configure(ImportActionConfigurationContext context) {
+        public override void Configure(ImportActionConfigurationContext context)
+        {
             ResetSite = context.ConfigurationElement.Attr<bool>("ResetSite");
             SuperUserPassword = context.ConfigurationElement.Attr("SuperUserPassword");
 
@@ -134,17 +150,20 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             if (executionStepsElement == null)
                 return;
 
-            foreach (var stepElement in executionStepsElement.Elements()) {
+            foreach (var stepElement in executionStepsElement.Elements())
+            {
                 var step = _recipeExecutionSteps.SingleOrDefault(x => x.Name == stepElement.Name.LocalName);
 
-                if (step != null) {
+                if (step != null)
+                {
                     var stepContext = new RecipeExecutionStepConfigurationContext(stepElement);
                     step.Configure(stepContext);
                 }
             }
         }
 
-        public override void Execute(ImportActionContext context) {
+        public override void Execute(ImportActionContext context)
+        {
             var recipeDocument = context.RecipeDocument ?? RecipeDocument;
             if (recipeDocument == null)
                 return;
@@ -153,7 +172,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             PrepareRecipe(recipeDocument);
 
             // Sets the request timeout to a configurable amount of seconds to give enough time to execute custom recipes.
-            if (_orchardServices.WorkContext.HttpContext != null) {
+            if (_orchardServices.WorkContext.HttpContext != null)
+            {
                 _orchardServices.WorkContext.HttpContext.Server.ScriptTimeout = RecipeExecutionTimeout;
             }
 
@@ -163,7 +183,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             // Import or setup using the specified recipe.
             var executionId = ResetSite ? Setup(recipeDocument) : ExecuteRecipe(recipeDocument);
 
-            if(executionId == null) {
+            if (executionId == null)
+            {
                 _orchardServices.Notifier.Warning(T("The recipe contained no steps. No work was scheduled."));
                 _sweepGenerator.Activate();
                 return;
@@ -173,7 +194,8 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             var recipe = _recipeParser.ParseRecipe(recipeDocument);
             var activateSweepGeneratorStep = new RecipeStep(Guid.NewGuid().ToString("N"), recipe.Name, "ActivateSweepGenerator", new XElement("ActivateSweepGenerator"));
             _recipeStepQueue.Enqueue(executionId, activateSweepGeneratorStep);
-            _recipeStepResultRepository.Create(new RecipeStepResultRecord {
+            _recipeStepResultRepository.Create(new RecipeStepResultRecord
+            {
                 ExecutionId = executionId,
                 RecipeName = recipe.Name,
                 StepId = activateSweepGeneratorStep.Id,
@@ -184,9 +206,11 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             context.RecipeDocument = recipeDocument;
         }
 
-        private string Setup(XDocument recipeDocument) {
+        private string Setup(XDocument recipeDocument)
+        {
             // Prepare Setup.
-            var setupContext = new SetupContext {
+            var setupContext = new SetupContext
+            {
                 Recipe = _recipeParser.ParseRecipe(recipeDocument),
                 AdminPassword = SuperUserPassword,
                 AdminUsername = _orchardServices.WorkContext.CurrentSite.SuperUser,
@@ -206,25 +230,29 @@ namespace Orchard.ImportExport.Providers.ImportActions {
             return executionId;
         }
 
-        private string ExecuteRecipe(XDocument recipeDocument) {
+        private string ExecuteRecipe(XDocument recipeDocument)
+        {
             var recipe = _recipeParser.ParseRecipe(recipeDocument);
             return _recipeExecutor.Execute(recipe);
         }
 
-        private void PrepareRecipe(XDocument recipeDocument) {
-            var query = 
+        private void PrepareRecipe(XDocument recipeDocument)
+        {
+            var query =
                 from stepElement in recipeDocument.Element("Orchard").Elements()
                 let step = _recipeExecutionSteps.SingleOrDefault(x => x.Name == stepElement.Name.LocalName)
                 where step != null
                 select new { Step = step, StepElement = stepElement };
 
-            foreach (var step in query) {
+            foreach (var step in query)
+            {
                 var context = new UpdateRecipeExecutionStepContext { Step = step.StepElement };
                 step.Step.UpdateStep(context);
             }
         }
 
-        private void DropTenantDatabaseTables() {
+        private void DropTenantDatabaseTables()
+        {
             _databaseManager.DropTenantDatabaseTables();
             _orchardServices.TransactionManager.RequireNew();
         }

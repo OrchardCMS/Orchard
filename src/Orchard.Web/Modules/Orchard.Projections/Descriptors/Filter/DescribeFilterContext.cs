@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
 
-namespace Orchard.Projections.Descriptors.Filter {
-    public class DescribeFilterContext {
+namespace Orchard.Projections.Descriptors.Filter
+{
+    public class DescribeFilterContext
+    {
         private readonly Dictionary<string, DescribeFilterFor> _describes = new Dictionary<string, DescribeFilterFor>();
 
-        public IEnumerable<TypeDescriptor<FilterDescriptor>> Describe() {
-            return _describes.Select(kp => new TypeDescriptor<FilterDescriptor> {
+        public IEnumerable<TypeDescriptor<FilterDescriptor>> Describe()
+        {
+            return _describes.Select(kp => new TypeDescriptor<FilterDescriptor>
+            {
                 Category = kp.Key,
                 Name = kp.Value.Name,
                 Description = kp.Value.Description,
@@ -15,13 +19,16 @@ namespace Orchard.Projections.Descriptors.Filter {
             });
         }
 
-        public DescribeFilterFor For(string category) {
+        public DescribeFilterFor For(string category)
+        {
             return For(category, null, null);
         }
 
-        public DescribeFilterFor For(string category, LocalizedString name, LocalizedString description) {
+        public DescribeFilterFor For(string category, LocalizedString name, LocalizedString description)
+        {
             DescribeFilterFor describeFor;
-            if (!_describes.TryGetValue(category, out describeFor)) {
+            if (!_describes.TryGetValue(category, out describeFor))
+            {
                 describeFor = new DescribeFilterFor(category, name, description);
                 _describes[category] = describeFor;
             }

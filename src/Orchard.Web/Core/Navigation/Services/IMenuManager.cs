@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Core.Navigation.Services {
-    public interface IMenuManager : IDependency {
-        
+namespace Orchard.Core.Navigation.Services
+{
+    public interface IMenuManager : IDependency
+    {
+
         /// <summary>
         /// Gets the list of Menu Item content types
         /// </summary>
@@ -10,7 +12,8 @@ namespace Orchard.Core.Navigation.Services {
         IEnumerable<MenuItemDescriptor> GetMenuItemTypes();
     }
 
-    public class MenuItemDescriptor {
+    public class MenuItemDescriptor
+    {
         public string Type { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }

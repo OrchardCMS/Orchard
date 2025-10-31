@@ -10,8 +10,10 @@ using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 
-namespace Orchard.Media.Services {
-    public class XmlRpcHandler : IXmlRpcHandler {
+namespace Orchard.Media.Services
+{
+    public class XmlRpcHandler : IXmlRpcHandler
+    {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMediaService _mediaService;
@@ -21,7 +23,8 @@ namespace Orchard.Media.Services {
             IMembershipService membershipService,
             IAuthorizationService authorizationService,
             IMediaService mediaService,
-            RouteCollection routeCollection) {
+            RouteCollection routeCollection)
+        {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
             _mediaService = mediaService;
@@ -32,15 +35,18 @@ namespace Orchard.Media.Services {
 
         public Localizer T { get; set; }
 
-        public void SetCapabilities(XElement options) {
+        public void SetCapabilities(XElement options)
+        {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsFileUpload", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context) {
+        public void Process(XmlRpcContext context)
+        {
             var urlHelper = new UrlHelper(context.ControllerContext.RequestContext, _routeCollection);
 
-            if (context.Request.MethodName == "metaWeblog.newMediaObject") {
+            if (context.Request.MethodName == "metaWeblog.newMediaObject")
+            {
                 var result = MetaWeblogNewMediaObject(
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
@@ -54,11 +60,13 @@ namespace Orchard.Media.Services {
             string userName,
             string password,
             XRpcStruct file,
-            UrlHelper url) {
+            UrlHelper url)
+        {
 
             List<LocalizedString> validationErrors;
             var user = _membershipService.ValidateUser(userName, password, out validationErrors);
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user, null)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user, null))
+            {
                 throw new OrchardCoreException(T("Access denied"));
             }
 
@@ -66,16 +74,19 @@ namespace Orchard.Media.Services {
             var bits = file.Optional<byte[]>("bits");
 
             string directoryName = Path.GetDirectoryName(name);
-            if (string.IsNullOrWhiteSpace(directoryName)) { // Some clients only pass in a name path that does not contain a directory component.
+            if (string.IsNullOrWhiteSpace(directoryName))
+            { // Some clients only pass in a name path that does not contain a directory component.
                 directoryName = "media";
             }
 
-            try {
+            try
+            {
                 // delete the file if it already exists, e.g. an updated image in a blog post
                 // it's safe to delete the file as each content item gets a specific folder
                 _mediaService.DeleteFile(directoryName, Path.GetFileName(name));
             }
-            catch {
+            catch
+            {
                 // current way to delete a file if it exists
             }
 

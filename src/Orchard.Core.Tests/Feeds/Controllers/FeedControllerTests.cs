@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -17,23 +17,27 @@ using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
-using Orchard.Tests.Modules;
-using Orchard.Tests.Stubs;
 using Orchard.Core.Title.Models;
 using Orchard.Services;
+using Orchard.Tests.Modules;
+using Orchard.Tests.Stubs;
 
-namespace Orchard.Core.Tests.Feeds.Controllers {
+namespace Orchard.Core.Tests.Feeds.Controllers
+{
     [TestFixture]
-    public class FeedControllerTests {
+    public class FeedControllerTests
+    {
         [Test]
-        public void InvalidFormatShpuldReturnNotFoundResult() {
+        public void InvalidFormatShpuldReturnNotFoundResult()
+        {
             var controller = new FeedController(
                 Enumerable.Empty<IFeedQueryProvider>(),
                 Enumerable.Empty<IFeedBuilderProvider>(),
                 new StubItemBuilder()
-                ) {
-                    ValueProvider = Values.From(new { })
-                };
+                )
+            {
+                ValueProvider = Values.From(new { })
+            };
 
             var result = controller.Index("no-such-format");
             Assert.That(result, Is.Not.Null);
@@ -41,7 +45,8 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         }
 
         [Test]
-        public void ControllerShouldReturnAnActionResult() {
+        public void ControllerShouldReturnAnActionResult()
+        {
             var formatProvider = new Mock<IFeedBuilderProvider>();
             var format = new Mock<IFeedBuilder>();
             formatProvider.Setup(x => x.Match(It.IsAny<FeedContext>()))
@@ -59,9 +64,10 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
                 new[] { queryProvider.Object },
                 new[] { formatProvider.Object },
                 new StubItemBuilder()
-                ) {
-                    ValueProvider = Values.From(new { })
-                };
+                )
+            {
+                ValueProvider = Values.From(new { })
+            };
 
             var result = controller.Index("test-format");
             Assert.That(result, Is.Not.Null);
@@ -73,31 +79,39 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         }
 
 
-        class StubQuery : IFeedQueryProvider, IFeedQuery {
+        class StubQuery : IFeedQueryProvider, IFeedQuery
+        {
             private readonly IEnumerable<ContentItem> _items;
 
-            public StubQuery(IEnumerable<ContentItem> items) {
+            public StubQuery(IEnumerable<ContentItem> items)
+            {
                 _items = items;
             }
 
-            public FeedQueryMatch Match(FeedContext context) {
+            public FeedQueryMatch Match(FeedContext context)
+            {
                 return new FeedQueryMatch { FeedQuery = this, Priority = 10 };
             }
 
-            public void Execute(FeedContext context) {
-                foreach (var item in _items) {
+            public void Execute(FeedContext context)
+            {
+                foreach (var item in _items)
+                {
                     context.Builder.AddItem(context, item);
                 }
             }
         }
 
-        class StubItemBuilder : IFeedItemBuilder {
-            public void Populate(FeedContext context) {
+        class StubItemBuilder : IFeedItemBuilder
+        {
+            public void Populate(FeedContext context)
+            {
             }
         }
 
         [Test]
-        public void RssFeedShouldBeStructuredAppropriately() {
+        public void RssFeedShouldBeStructuredAppropriately()
+        {
             var query = new StubQuery(Enumerable.Empty<ContentItem>());
 
             var builder = new ContainerBuilder();
@@ -120,7 +134,8 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         }
 
         [Test]
-        public void OneItemPerContentItemShouldBeCreated() {
+        public void OneItemPerContentItemShouldBeCreated()
+        {
             var query = new StubQuery(new[] {
                 new ContentItem(),
                 new ContentItem(),
@@ -146,7 +161,8 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         }
 
         [Test]
-        public void CorePartValuesAreExtracted() {
+        public void CorePartValuesAreExtracted()
+        {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
                 .Weld<CommonPart>()

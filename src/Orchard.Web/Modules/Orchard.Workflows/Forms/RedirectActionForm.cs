@@ -1,18 +1,22 @@
-﻿using Orchard.DisplayManagement;
+using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Workflows.Forms {
-    public class RedirectActionForm : IFormProvider {
+namespace Orchard.Workflows.Forms
+{
+    public class RedirectActionForm : IFormProvider
+    {
         protected dynamic New { get; set; }
         public Localizer T { get; set; }
 
-        public RedirectActionForm(IShapeFactory shapeFactory) {
+        public RedirectActionForm(IShapeFactory shapeFactory)
+        {
             New = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.Form("ActionRedirect",
                 shape => New.Form(
                 Id: "ActionRedirect",

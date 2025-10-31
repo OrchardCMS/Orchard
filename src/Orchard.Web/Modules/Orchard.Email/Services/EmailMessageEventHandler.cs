@@ -1,16 +1,19 @@
-﻿using System;
+using System;
+using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Messaging.Events;
-using Orchard.ContentManagement;
 using Orchard.Messaging.Models;
 using Orchard.Security;
 
-namespace Orchard.Email.Services {
+namespace Orchard.Email.Services
+{
     [Obsolete]
-    public class EmailMessageEventHandler : IMessageEventHandler {
+    public class EmailMessageEventHandler : IMessageEventHandler
+    {
         private readonly IContentManager _contentManager;
 
-        public EmailMessageEventHandler(IContentManager contentManager) {
+        public EmailMessageEventHandler(IContentManager contentManager)
+        {
             _contentManager = contentManager;
 
             Logger = NullLogger.Instance;
@@ -18,9 +21,12 @@ namespace Orchard.Email.Services {
 
         public ILogger Logger { get; set; }
 
-        public void Sending(MessageContext context) {
-            if (context.Recipients != null) {
-                foreach (var rec in context.Recipients) {
+        public void Sending(MessageContext context)
+        {
+            if (context.Recipients != null)
+            {
+                foreach (var rec in context.Recipients)
+                {
                     var contentItem = _contentManager.Get(rec.Id);
                     if (contentItem == null)
                         return;
@@ -33,17 +39,21 @@ namespace Orchard.Email.Services {
                 }
             }
 
-            foreach (var address in context.Addresses) {
-                try {
+            foreach (var address in context.Addresses)
+            {
+                try
+                {
                     context.MailMessage.To.Add(address);
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     Logger.Error(e, "Unexpected error while trying to send email.");
                 }
             }
         }
 
-        public void Sent(MessageContext context) {
+        public void Sent(MessageContext context)
+        {
         }
     }
 }

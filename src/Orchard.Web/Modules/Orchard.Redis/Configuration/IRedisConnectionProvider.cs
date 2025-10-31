@@ -1,8 +1,10 @@
-﻿using StackExchange.Redis;
+using StackExchange.Redis;
 
-namespace Orchard.Redis.Configuration {
+namespace Orchard.Redis.Configuration
+{
 
-    public interface IRedisConnectionProvider : ISingletonDependency {
+    public interface IRedisConnectionProvider : ISingletonDependency
+    {
         ConnectionMultiplexer GetConnection(string connectionString);
         string GetConnectionString(string service);
     }

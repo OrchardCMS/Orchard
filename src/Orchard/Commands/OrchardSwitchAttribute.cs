@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.Commands {
+namespace Orchard.Commands
+{
     [AttributeUsage(AttributeTargets.Property)]
-    public class OrchardSwitchAttribute : Attribute {
+    public class OrchardSwitchAttribute : Attribute
+    {
     }
 }

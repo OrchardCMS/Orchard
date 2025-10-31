@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 
@@ -16,14 +16,17 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.UI.Notify;
 
-namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
+namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers
+{
     [OrchardFeature("Orchard.Blogs.LocalizationExtensions")]
-    public class BlogPostPartHandler : ContentHandler {
+    public class BlogPostPartHandler : ContentHandler
+    {
         private readonly IContentManager _contentManager;
         private readonly IAutorouteService _routeService;
         private readonly ILocalizationService _localizationService;
 
-        public BlogPostPartHandler(RequestContext requestContext, IContentManager contentManager, IAutorouteService routeService, ILocalizationService localizationService, INotifier notifier) {
+        public BlogPostPartHandler(RequestContext requestContext, IContentManager contentManager, IAutorouteService routeService, ILocalizationService localizationService, INotifier notifier)
+        {
             _contentManager = contentManager;
             _routeService = routeService;
             _localizationService = localizationService;
@@ -41,16 +44,20 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
         public Localizer T { get; set; }
 
         //This Method checks the blog post's culture and it's parent blog's culture and moves it to the correct blog if they aren't equal.
-        private void MigrateBlogPost(ContentItem blogPost) {
-            if (!blogPost.Has<LocalizationPart>() || !blogPost.Has<BlogPostPart>()) {
+        private void MigrateBlogPost(ContentItem blogPost)
+        {
+            if (!blogPost.Has<LocalizationPart>() || !blogPost.Has<BlogPostPart>())
+            {
                 return;
             }
             //bolgPost just cloned for translation, never saved
-            if (blogPost.As<CommonPart>().Container == null) {
+            if (blogPost.As<CommonPart>().Container == null)
+            {
                 return;
             }
             var blog = _contentManager.Get(blogPost.As<CommonPart>().Container.Id);
-            if (!blog.Has<LocalizationPart>() || blog.As<LocalizationPart>().Culture == null) {
+            if (!blog.Has<LocalizationPart>() || blog.As<LocalizationPart>().Culture == null)
+            {
                 return;
             }
 
@@ -59,16 +66,19 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             var blogPostCulture = blogPost.As<LocalizationPart>().Culture;
 
             //if the post is a different culture than the parent blog change the post's parent blog to the right localization...
-            if (blogPostCulture != null && (blogPostCulture.Id != blogCulture.Id)) {
+            if (blogPostCulture != null && (blogPostCulture.Id != blogCulture.Id))
+            {
                 //Get the id of the current blog
                 var blogids = new HashSet<int> { blog.As<BlogPart>().ContentItem.Id };
 
                 //seek for same culture blog
                 var realBlog = _localizationService.GetLocalizations(blog)
                     .SingleOrDefault(w => w.Culture?.Culture == blogPostCulture.Culture);
-                if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
+                if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id)
+                {
                     blogPost.As<ICommonPart>().Container = realBlog;
-                    if (blogPost.Has<AutoroutePart>()) {
+                    if (blogPost.Has<AutoroutePart>())
+                    {
                         _routeService.RemoveAliases(blogPost.As<AutoroutePart>());
                         blogPost.As<AutoroutePart>().DisplayAlias = _routeService.GenerateAlias(blogPost.As<AutoroutePart>());
                         _routeService.PublishAlias(blogPost.As<AutoroutePart>());

@@ -1,13 +1,16 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.UI.Navigation;
 
-namespace Orchard.AuditTrail.Menus {
+namespace Orchard.AuditTrail.Menus
+{
     [OrchardFeature("Orchard.AuditTrail.RecycleBin")]
-    public class RecycleBinAdminMenu : Component, INavigationProvider {
+    public class RecycleBinAdminMenu : Component, INavigationProvider
+    {
 
-        public string MenuName { get { return "admin"; } }
+        public string MenuName => "admin";
 
-        public void GetNavigation(NavigationBuilder builder) {
+        public void GetNavigation(NavigationBuilder builder)
+        {
             builder
                 .Add(T("Audit Trail"), "12", auditTrail => auditTrail
                     .Add(T("Recycle Bin"), "2", history => history

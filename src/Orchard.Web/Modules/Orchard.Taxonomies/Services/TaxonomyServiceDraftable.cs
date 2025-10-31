@@ -9,9 +9,11 @@ using Orchard.Security;
 using Orchard.Taxonomies.Models;
 using Orchard.UI.Notify;
 
-namespace Orchard.Taxonomies.Services {
+namespace Orchard.Taxonomies.Services
+{
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
-    public class TaxonomyServiceDraftable : TaxonomyService, ITaxonomyService {
+    public class TaxonomyServiceDraftable : TaxonomyService, ITaxonomyService
+    {
         private readonly IRepository<TermContentItem> _termContentItemRepository;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
@@ -40,7 +42,8 @@ namespace Orchard.Taxonomies.Services {
                 services,
                 processingEngine,
                 shellSettings,
-                shellDescriptorManager) {
+                shellDescriptorManager)
+        {
             _termContentItemRepository = termContentItemRepository;
             _contentManager = contentManager;
             _notifier = notifier;
@@ -51,22 +54,27 @@ namespace Orchard.Taxonomies.Services {
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
         }
-        
-        public override TaxonomyPart GetTaxonomy(int id) {
+
+        public override TaxonomyPart GetTaxonomy(int id)
+        {
             return _contentManager.Get(id, VersionOptions.Latest).As<TaxonomyPart>();
         }
-        
-        public override IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+
+        public override IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery()
+        {
             return base.GetTaxonomiesQuery().ForVersion(VersionOptions.Latest);
         }
 
-        public override IContentQuery<TermPart, TermPartRecord> GetTermsQuery() {
+        public override IContentQuery<TermPart, TermPartRecord> GetTermsQuery()
+        {
             return base.GetTermsQuery().ForVersion(VersionOptions.Latest);
         }
 
-        protected override void PublishTerm(TermPart term) {
+        protected override void PublishTerm(TermPart term)
+        {
             // Only publish the Term if it was published already.
-            if (term.ContentItem.HasPublished() && !term.ContentItem.IsPublished()) {
+            if (term.ContentItem.HasPublished() && !term.ContentItem.IsPublished())
+            {
                 var contentItem = _contentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
                 _contentManager.Publish(contentItem);
             }

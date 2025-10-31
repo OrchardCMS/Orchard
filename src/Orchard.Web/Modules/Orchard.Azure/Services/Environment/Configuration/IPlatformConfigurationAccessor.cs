@@ -1,9 +1,11 @@
-﻿namespace Orchard.Azure.Services.Environment.Configuration {
+namespace Orchard.Azure.Services.Environment.Configuration
+{
 
     /// <summary>
     /// Represents a service for reading configuration settings from the underlying platform configuration.
     /// </summary>
-    public interface IPlatformConfigurationAccessor : IDependency {
+    public interface IPlatformConfigurationAccessor : IDependency
+    {
 
         /// <summary>
         /// Reads a configuration setting from the underlying platform configuration.

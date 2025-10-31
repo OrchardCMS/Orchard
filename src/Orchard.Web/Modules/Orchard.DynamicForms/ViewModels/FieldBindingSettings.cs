@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 
-namespace Orchard.DynamicForms.ViewModels {
-    public class FieldBindingSettings {
-        public FieldBindingSettings() {
+namespace Orchard.DynamicForms.ViewModels
+{
+    public class FieldBindingSettings
+    {
+        public FieldBindingSettings()
+        {
             Bindings = new List<BindingSettings>();
         }
 

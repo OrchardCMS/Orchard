@@ -1,22 +1,28 @@
-﻿using System.IO;
+using System;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Orchard.Environment.Configuration;
 using Orchard.Utility.Extensions;
-using System;
 
-namespace Orchard.Security.Providers {
-    public class DefaultEncryptionService : IEncryptionService {
+namespace Orchard.Security.Providers
+{
+    public class DefaultEncryptionService : IEncryptionService
+    {
         private readonly ShellSettings _shellSettings;
 
-        public DefaultEncryptionService(ShellSettings shellSettings ) {
+        public DefaultEncryptionService(ShellSettings shellSettings)
+        {
             _shellSettings = shellSettings;
         }
 
-        public byte[] Decode(byte[] encodedData) {
-                // extract parts of the encoded data
-            using (var symmetricAlgorithm = CreateSymmetricAlgorithm()) {
-                using (var hashAlgorithm = CreateHashAlgorithm()) {
+        public byte[] Decode(byte[] encodedData)
+        {
+            // extract parts of the encoded data
+            using (var symmetricAlgorithm = CreateSymmetricAlgorithm())
+            {
+                using (var hashAlgorithm = CreateHashAlgorithm())
+                {
                     var iv = new byte[symmetricAlgorithm.BlockSize / 8];
                     var signature = new byte[hashAlgorithm.HashSize / 8];
                     var data = new byte[encodedData.Length - iv.Length - signature.Length];
@@ -28,15 +34,18 @@ namespace Orchard.Security.Providers {
                     // validate the signature
                     var mac = hashAlgorithm.ComputeHash(iv.Concat(data).ToArray());
 
-                    if (!mac.SequenceEqual(signature)) {
+                    if (!mac.SequenceEqual(signature))
+                    {
                         // message has been tampered
                         throw new ArgumentException();
                     }
 
                     symmetricAlgorithm.IV = iv;
 
-                    using (var ms = new MemoryStream()) {
-                        using (var cs = new CryptoStream(ms, symmetricAlgorithm.CreateDecryptor(), CryptoStreamMode.Write)) {
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var cs = new CryptoStream(ms, symmetricAlgorithm.CreateDecryptor(), CryptoStreamMode.Write))
+                        {
                             cs.Write(data, 0, data.Length);
                             cs.FlushFinalBlock();
                         }
@@ -46,19 +55,23 @@ namespace Orchard.Security.Providers {
             }
         }
 
-        public byte[] Encode(byte[] data) { 
+        public byte[] Encode(byte[] data)
+        {
             // cipherText ::= IV || ENC(EncryptionKey, IV, plainText) || HMAC(SigningKey, IV || ENC(EncryptionKey, IV, plainText))
 
             byte[] encryptedData;
             byte[] iv;
 
-            using ( var ms = new MemoryStream() ) {
-                using (var symmetricAlgorithm = CreateSymmetricAlgorithm()) {
+            using (var ms = new MemoryStream())
+            {
+                using (var symmetricAlgorithm = CreateSymmetricAlgorithm())
+                {
                     // generate a new IV each time the Encode is called
                     symmetricAlgorithm.GenerateIV();
                     iv = symmetricAlgorithm.IV;
 
-                    using (var cs = new CryptoStream(ms, symmetricAlgorithm.CreateEncryptor(), CryptoStreamMode.Write)) {
+                    using (var cs = new CryptoStream(ms, symmetricAlgorithm.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
                         cs.Write(data, 0, data.Length);
                         cs.FlushFinalBlock();
                     }
@@ -70,20 +83,23 @@ namespace Orchard.Security.Providers {
             byte[] signedData;
 
             // signing IV || encrypted data
-            using (var hashAlgorithm = CreateHashAlgorithm()) {
+            using (var hashAlgorithm = CreateHashAlgorithm())
+            {
                 signedData = hashAlgorithm.ComputeHash(iv.Concat(encryptedData).ToArray());
             }
 
             return iv.Concat(encryptedData).Concat(signedData).ToArray();
         }
 
-        private SymmetricAlgorithm CreateSymmetricAlgorithm() {
+        private SymmetricAlgorithm CreateSymmetricAlgorithm()
+        {
             var algorithm = SymmetricAlgorithm.Create(_shellSettings.EncryptionAlgorithm);
             algorithm.Key = _shellSettings.EncryptionKey.ToByteArray();
             return algorithm;
         }
 
-        private HMAC CreateHashAlgorithm() {
+        private HMAC CreateHashAlgorithm()
+        {
             var algorithm = HMAC.Create(_shellSettings.HashAlgorithm);
             algorithm.Key = _shellSettings.HashKey.ToByteArray();
             return algorithm;

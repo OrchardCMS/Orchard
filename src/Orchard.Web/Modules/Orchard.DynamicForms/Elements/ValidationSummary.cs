@@ -1,13 +1,11 @@
-﻿using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.DynamicForms.Elements {
-    public class ValidationSummary : Element {
-        public override string Category {
-            get { return "Forms"; }
-        }
+namespace Orchard.DynamicForms.Elements
+{
+    public class ValidationSummary : Element
+    {
+        public override string Category => "Forms";
 
-        public override bool HasEditor {
-            get { return false; }
-        }
+        public override bool HasEditor => false;
     }
 }

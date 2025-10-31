@@ -1,12 +1,16 @@
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 
-namespace Orchard.Comments.ViewModels {
-    public class CommentCountViewModel {
-        public CommentCountViewModel() {
+namespace Orchard.Comments.ViewModels
+{
+    public class CommentCountViewModel
+    {
+        public CommentCountViewModel()
+        {
         }
 
-        public CommentCountViewModel(CommentsPart part) {
+        public CommentCountViewModel(CommentsPart part)
+        {
             Item = part.ContentItem;
             CommentCount = part.Comments.Count;
             PendingCount = part.PendingComments.Count;

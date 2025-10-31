@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -10,12 +9,15 @@ using Orchard.UI.Zones;
 using Orchard.Utility.Extensions;
 using ContentItem = Orchard.ContentManagement.ContentItem;
 
-namespace Orchard.Layouts.Framework.Display {
-    public class ElementDisplay : Component, IElementDisplay {
+namespace Orchard.Layouts.Framework.Display
+{
+    public class ElementDisplay : Component, IElementDisplay
+    {
         private readonly IShapeFactory _shapeFactory;
         private readonly IElementEventHandler _elementEventHandlerHandler;
 
-        public ElementDisplay(IShapeFactory shapeFactory, IElementEventHandler elementEventHandlerHandler) {
+        public ElementDisplay(IShapeFactory shapeFactory, IElementEventHandler elementEventHandlerHandler)
+        {
             _shapeFactory = shapeFactory;
             _elementEventHandlerHandler = elementEventHandlerHandler;
         }
@@ -24,12 +26,14 @@ namespace Orchard.Layouts.Framework.Display {
             Element element,
             IContent content,
             string displayType = null,
-            IUpdateModel updater = null) {
+            IUpdateModel updater = null)
+        {
 
             var typeName = element.GetType().Name;
             var category = element.Category.ToSafeName();
             var drivers = element.Descriptor.GetDrivers().ToList();
-            var createShapeContext = new ElementCreatingDisplayShapeContext {
+            var createShapeContext = new ElementCreatingDisplayShapeContext
+            {
                 Element = element,
                 DisplayType = displayType,
                 Content = content,
@@ -47,12 +51,13 @@ namespace Orchard.Layouts.Framework.Display {
             var elementShape = (dynamic)_shapeFactory.Create("Element", elementShapeArguments, () => new ZoneHolding(() => _shapeFactory.Create("ElementZone")));
 
             elementShape.Metadata.DisplayType = displayType;
-            elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}", typeName));
-            elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}", typeName, displayType));
-            elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, category));
-            elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, category));
+            elementShape.Metadata.Alternates.Add(string.Format("Elements_{0}", typeName));
+            elementShape.Metadata.Alternates.Add(string.Format("Elements_{0}_{1}", typeName, displayType));
+            elementShape.Metadata.Alternates.Add(string.Format("Elements_{0}__{1}", typeName, category));
+            elementShape.Metadata.Alternates.Add(string.Format("Elements_{0}_{1}__{2}", typeName, displayType, category));
 
-            var displayingContext = new ElementDisplayingContext {
+            var displayingContext = new ElementDisplayingContext
+            {
                 Element = element,
                 ElementShape = elementShape,
                 DisplayType = displayType,
@@ -68,13 +73,17 @@ namespace Orchard.Layouts.Framework.Display {
 
             var container = element as Container;
 
-            if (container != null) {
-                if (container.Elements.Any()) {
+            if (container != null)
+            {
+                if (container.Elements.Any())
+                {
                     var childIndex = 0;
-                    foreach (var child in container.Elements) {
+                    foreach (var child in container.Elements)
+                    {
                         var childShape = DisplayElement(child, content, displayType: displayType, updater: updater);
 
-                        if (childShape != null) {
+                        if (childShape != null)
+                        {
                             childShape.Parent = elementShape;
                             elementShape.Add(childShape, childIndex++.ToString());
                         }
@@ -82,7 +91,8 @@ namespace Orchard.Layouts.Framework.Display {
                 }
             }
 
-            var displayedContext = new ElementDisplayedContext {
+            var displayedContext = new ElementDisplayedContext
+            {
                 Element = element,
                 ElementShape = elementShape,
                 DisplayType = displayType,
@@ -99,11 +109,13 @@ namespace Orchard.Layouts.Framework.Display {
             return elementShape;
         }
 
-        public dynamic DisplayElements(IEnumerable<Element> elements, IContent content, string displayType = null, IUpdateModel updater = null) {
+        public dynamic DisplayElements(IEnumerable<Element> elements, IContent content, string displayType = null, IUpdateModel updater = null)
+        {
             var layoutRoot = (dynamic)_shapeFactory.Create("LayoutRoot");
             var index = 0;
 
-            foreach (var element in elements) {
+            foreach (var element in elements)
+            {
                 var elementShape = DisplayElement(element, content, displayType, updater);
                 layoutRoot.Add(elementShape, index++.ToString());
             }
@@ -111,7 +123,8 @@ namespace Orchard.Layouts.Framework.Display {
             return layoutRoot;
         }
 
-        private static INamedEnumerable<object> CreateArguments(Element element, IContent content) {
+        private static INamedEnumerable<object> CreateArguments(Element element, IContent content)
+        {
             var children = new List<dynamic>();
             var dictionary = new Dictionary<string, object> {
                 {"Element", element},

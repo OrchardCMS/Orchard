@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -9,15 +9,18 @@ using Orchard.Services;
 using Orchard.Settings;
 using RestEase;
 
-namespace Orchard.MediaLibrary.WebSearch.Providers {
+namespace Orchard.MediaLibrary.WebSearch.Providers
+{
     [OrchardFeature("Orchard.MediaLibrary.WebSearch.Pixabay")]
-    public class PixabayWebSearchProvider : IWebSearchProvider {
+    public class PixabayWebSearchProvider : IWebSearchProvider
+    {
         private const string PixabayBaseUrl = "https://pixabay.com";
 
         private readonly ISiteService _siteService;
         private readonly IJsonConverter _jsonConverter;
 
-        public PixabayWebSearchProvider(ISiteService siteService, IJsonConverter jsonConverter) {
+        public PixabayWebSearchProvider(ISiteService siteService, IJsonConverter jsonConverter)
+        {
             _siteService = siteService;
             _jsonConverter = jsonConverter;
         }
@@ -29,15 +32,18 @@ namespace Orchard.MediaLibrary.WebSearch.Providers {
 
         public IWebSearchSettings Settings => _settings;
 
-        public IEnumerable<WebSearchResult> GetImages(string query) {
+        public IEnumerable<WebSearchResult> GetImages(string query)
+        {
             var client = RestClient.For<IPixabayApi>(PixabayBaseUrl);
 
             var apiResponse = client.GetImagesAsync(this.GetApiKey(), query);
             var apiResult = _jsonConverter.Deserialize<dynamic>(apiResponse.Result);
             var webSearchResult = new List<WebSearchResult>();
 
-            foreach (var hit in apiResult.hits) {
-                webSearchResult.Add(new WebSearchResult() {
+            foreach (var hit in apiResult.hits)
+            {
+                webSearchResult.Add(new WebSearchResult()
+                {
                     ThumbnailUrl = hit.previewURL,
                     Width = hit.imageWidth,
                     Height = hit.imageHeight,

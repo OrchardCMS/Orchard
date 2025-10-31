@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,16 +45,18 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
     [TestFixture]
     public class ObjectDumperTests
     {
-        private static void ComparareJsonObject(JObject expectedResult, string json) {
+        private static void ComparareJsonObject(JObject expectedResult, string json)
+        {
             var objectDumperJson = JToken.Parse("{" + json + "}");
 
-            string message = String.Format("expected: {0} \r\nresult:{1}", expectedResult.ToString(Formatting.Indented), objectDumperJson.ToString(Formatting.Indented));
+            string message = string.Format("expected: {0} \r\nresult:{1}", expectedResult.ToString(Formatting.Indented), objectDumperJson.ToString(Formatting.Indented));
 
             Assert.IsTrue(JToken.DeepEquals(expectedResult, objectDumperJson), message);
         }
 
         [Test]
-        public void DumpNull() {
+        public void DumpNull()
+        {
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(null, "Model");
 
@@ -63,14 +65,15 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var json = stringBuilder.ToString();
 
             var jObject = new JObject(
-                new JProperty("name", "Model"), 
+                new JProperty("name", "Model"),
                 new JProperty("value", "null"));
 
             ComparareJsonObject(jObject, json);
         }
 
         [Test]
-        public void DumpValueTypeInteger() {
+        public void DumpValueTypeInteger()
+        {
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(1337, "Model");
 
@@ -79,14 +82,15 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var json = stringBuilder.ToString();
 
             var jObject = new JObject(
-                new JProperty("name", "Model"), 
+                new JProperty("name", "Model"),
                 new JProperty("value", "1337"));
 
             ComparareJsonObject(jObject, json);
         }
 
         [Test]
-        public void DumpValueTypeBoolean() {
+        public void DumpValueTypeBoolean()
+        {
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(true, "Model");
 
@@ -95,14 +99,15 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var json = stringBuilder.ToString();
 
             var jObject = new JObject(
-                new JProperty("name", "Model"), 
+                new JProperty("name", "Model"),
                 new JProperty("value", "True"));
 
             ComparareJsonObject(jObject, json);
         }
 
         [Test]
-        public void DumpString() {
+        public void DumpString()
+        {
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump("Never gonna give you up", "Model");
 
@@ -118,13 +123,15 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpEnumerable() {
+        public void DumpEnumerable()
+        {
             var enumerable = new[] { 1, 2, 3 }.AsEnumerable();
 
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(enumerable, "Model");
 
-            Assert.Throws(typeof(NullReferenceException), () => {
+            Assert.Throws(typeof(NullReferenceException), () =>
+            {
                 var stringBuilder = new StringBuilder();
                 ObjectDumper.ConvertToJSon(xElement, stringBuilder);
                 var json = stringBuilder.ToString();
@@ -132,7 +139,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpEnumerable_DepthTwo() {
+        public void DumpEnumerable_DepthTwo()
+        {
             var enumerable = new[] { 1, 2, 3 }.AsEnumerable();
 
             var objectDumper = new ObjectDumper(2);
@@ -143,17 +151,17 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var json = stringBuilder.ToString();
 
             var jObject = new JObject(
-                new JProperty("name", "Model"), 
-                new JProperty("value", "Int32[]"), 
+                new JProperty("name", "Model"),
+                new JProperty("value", "Int32[]"),
                 new JProperty("children", new JArray(
                     new JObject(
-                        new JProperty("name", "[0]"), 
+                        new JProperty("name", "[0]"),
                         new JProperty("value", "1")),
                     new JObject(
-                        new JProperty("name", "[1]"), 
+                        new JProperty("name", "[1]"),
                         new JProperty("value", "2")),
                     new JObject(
-                        new JProperty("name", "[2]"), 
+                        new JProperty("name", "[2]"),
                         new JProperty("value", "3"))
                     )));
 
@@ -161,13 +169,15 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpDictionary() {
-            var dictionary = new Dictionary<string, int> { { "One", 1 }, { "Two", 2 }, {"Three", 3} };
+        public void DumpDictionary()
+        {
+            var dictionary = new Dictionary<string, int> { { "One", 1 }, { "Two", 2 }, { "Three", 3 } };
 
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(dictionary, "Model");
 
-            Assert.Throws(typeof(NullReferenceException), () => {
+            Assert.Throws(typeof(NullReferenceException), () =>
+            {
                 var stringBuilder = new StringBuilder();
                 ObjectDumper.ConvertToJSon(xElement, stringBuilder);
                 var json = stringBuilder.ToString();
@@ -175,7 +185,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpDictionary_DepthTwo() {
+        public void DumpDictionary_DepthTwo()
+        {
             var dictionary = new Dictionary<string, int> { { "One", 1 }, { "Two", 2 }, { "Three", 3 } };
 
             var objectDumper = new ObjectDumper(2);
@@ -204,7 +215,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpContentItem_DepthTwo() {
+        public void DumpContentItem_DepthTwo()
+        {
             var contentItem = new ContentItem { ContentType = "TestContentType" };
             var testingPart = new ContentPart { TypePartDefinition = new ContentTypePartDefinition(new ContentPartDefinition("TestingPart"), new SettingsDictionary()) };
             contentItem.Weld(testingPart);
@@ -235,7 +247,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpContentItem_DepthFour() {
+        public void DumpContentItem_DepthFour()
+        {
             var contentItem = new ContentItem { ContentType = "TestContentType" };
             var testingPart = new ContentPart { TypePartDefinition = new ContentTypePartDefinition(new ContentPartDefinition("TestingPart"), new SettingsDictionary()) };
             contentItem.Weld(testingPart);
@@ -295,7 +308,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpContentItem_DepthSix() {
+        public void DumpContentItem_DepthSix()
+        {
             var contentItem = new ContentItem { ContentType = "TestContentType" };
             var testingPart = new ContentPart { TypePartDefinition = new ContentTypePartDefinition(new ContentPartDefinition("TestingPart"), new SettingsDictionary()) };
             contentItem.Weld(testingPart);
@@ -377,7 +391,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpObject_DepthOne() {
+        public void DumpObject_DepthOne()
+        {
             var objectDumper = new ObjectDumper(1);
             var xElement = objectDumper.Dump(new TestObject
             {
@@ -386,7 +401,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                 SomeString = "Never gonna give you up"
             }, "Model");
 
-            Assert.Throws(typeof (NullReferenceException), () => {
+            Assert.Throws(typeof(NullReferenceException), () =>
+            {
                 var stringBuilder = new StringBuilder();
                 ObjectDumper.ConvertToJSon(xElement, stringBuilder);
                 var json = stringBuilder.ToString();
@@ -394,7 +410,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpObject_DepthTwo() {
+        public void DumpObject_DepthTwo()
+        {
             var objectDumper = new ObjectDumper(2);
             var xElement = objectDumper.Dump(new TestObject
             {
@@ -430,17 +447,19 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpObjectAndChild_DepthTwo() {
+        public void DumpObjectAndChild_DepthTwo()
+        {
             var objectDumper = new ObjectDumper(2);
             var xElement = objectDumper.Dump(new TestObject
             {
                 SomeInteger = 1337,
                 SomeBoolean = true,
                 SomeString = "Never gonna give you up",
-                ChildObject = new TestObject() {
+                ChildObject = new TestObject()
+                {
                     SomeInteger = 58008,
                     SomeBoolean = false,
-                    SomeString = "Never gonna let you down",                    
+                    SomeString = "Never gonna let you down",
                 }
             }, "Model");
 
@@ -467,17 +486,19 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpObjectAndChild_DepthThree() {
+        public void DumpObjectAndChild_DepthThree()
+        {
             var objectDumper = new ObjectDumper(3);
             var xElement = objectDumper.Dump(new TestObject
             {
                 SomeInteger = 1337,
                 SomeBoolean = true,
                 SomeString = "Never gonna give you up",
-                ChildObject = new TestObject() {
+                ChildObject = new TestObject()
+                {
                     SomeInteger = 58008,
                     SomeBoolean = false,
-                    SomeString = "Never gonna let you down",                    
+                    SomeString = "Never gonna let you down",
                 }
             }, "Model");
 
@@ -523,10 +544,13 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpIShape_DepthOne() {
+        public void DumpIShape_DepthOne()
+        {
             var objectDumper = new ObjectDumper(1);
-            var xElement = objectDumper.Dump(new TestIShape {
-                Metadata = new ShapeMetadata() {
+            var xElement = objectDumper.Dump(new TestIShape
+            {
+                Metadata = new ShapeMetadata()
+                {
                     Type = "TestContentType",
                     DisplayType = "Detail",
                     Alternates = new[] { "TestContentType_Detail", "TestContentType_Detail_2" },
@@ -539,7 +563,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                 SomeString = "Never gonna give you up"
             }, "Model");
 
-            Assert.Throws(typeof(NullReferenceException), () => {
+            Assert.Throws(typeof(NullReferenceException), () =>
+            {
                 var stringBuilder = new StringBuilder();
                 ObjectDumper.ConvertToJSon(xElement, stringBuilder);
                 var json = stringBuilder.ToString();
@@ -547,10 +572,13 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpIShape_DepthTwo() {
+        public void DumpIShape_DepthTwo()
+        {
             var objectDumper = new ObjectDumper(2);
-            var xElement = objectDumper.Dump(new TestIShape {
-                Metadata = new ShapeMetadata() {
+            var xElement = objectDumper.Dump(new TestIShape
+            {
+                Metadata = new ShapeMetadata()
+                {
                     Type = "TestContentType",
                     DisplayType = "Detail",
                     Alternates = new[] { "TestContentType_Detail", "TestContentType_Detail_2" },
@@ -575,10 +603,13 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpIShape_DepthThree() {
+        public void DumpIShape_DepthThree()
+        {
             var objectDumper = new ObjectDumper(3);
-            var xElement = objectDumper.Dump(new TestIShape {
-                Metadata = new ShapeMetadata() {
+            var xElement = objectDumper.Dump(new TestIShape
+            {
+                Metadata = new ShapeMetadata()
+                {
                     Type = "TestContentType",
                     DisplayType = "Detail",
                     Alternates = new[] { "TestContentType_Detail", "TestContentType_Detail_2" },
@@ -603,10 +634,13 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpIShape_DepthFour() {
+        public void DumpIShape_DepthFour()
+        {
             var objectDumper = new ObjectDumper(4);
-            var xElement = objectDumper.Dump(new TestIShape {
-                Metadata = new ShapeMetadata() {
+            var xElement = objectDumper.Dump(new TestIShape
+            {
+                Metadata = new ShapeMetadata()
+                {
                     Type = "TestContentType",
                     DisplayType = "Detail",
                     Alternates = new[] { "TestContentType_Detail", "TestContentType_Detail_2" },
@@ -626,12 +660,13 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var jObject = new JObject(
                 new JProperty("name", "Model"),
                 new JProperty("value", "TestContentType Shape"));
-           
+
             ComparareJsonObject(jObject, json);
         }
 
         [Test]
-        public void DumpShape_DepthOne() {
+        public void DumpShape_DepthOne()
+        {
             var objectDumper = new ObjectDumper(1);
             var testShape = new TestShape
             {
@@ -667,7 +702,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpShape_DepthTwo() {
+        public void DumpShape_DepthTwo()
+        {
             var objectDumper = new ObjectDumper(2);
             var testShape = new TestShape
             {
@@ -706,7 +742,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpShape_DepthThree() {
+        public void DumpShape_DepthThree()
+        {
             var objectDumper = new ObjectDumper(3);
             var testShape = new TestShape
             {
@@ -738,7 +775,7 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
             var jObject = new JObject(
                 new JProperty("name", "Model"),
                 new JProperty("value", "TestContentType Shape"),
-                new JProperty("children",new JArray(
+                new JProperty("children", new JArray(
                     new JObject(
                         new JProperty("name", "Classes"),
                         new JProperty("value", "List&lt;String&gt;"),
@@ -764,7 +801,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpShape_DepthFour() {
+        public void DumpShape_DepthFour()
+        {
             var objectDumper = new ObjectDumper(4);
             var testShape = new TestShape
             {
@@ -828,7 +866,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpShapeAndChild_DepthFour() {
+        public void DumpShapeAndChild_DepthFour()
+        {
             var objectDumper = new ObjectDumper(4);
             var testShape = new TestShape
             {
@@ -906,7 +945,8 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         }
 
         [Test]
-        public void DumpShapeAndChild_DepthSix() {
+        public void DumpShapeAndChild_DepthSix()
+        {
             var objectDumper = new ObjectDumper(6);
             var testShape = new TestShape
             {

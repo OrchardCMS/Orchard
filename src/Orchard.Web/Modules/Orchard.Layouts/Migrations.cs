@@ -1,11 +1,14 @@
-﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
 
-namespace Orchard.Layouts {
-    public class Migrations : DataMigrationImpl {
-        public int Create() {
+namespace Orchard.Layouts
+{
+    public class Migrations : DataMigrationImpl
+    {
+        public int Create()
+        {
 
             SchemaBuilder.CreateTable("ElementBlueprint", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
@@ -65,19 +68,22 @@ namespace Orchard.Layouts {
             return 3;
         }
 
-        public int UpdateFrom1() {
+        public int UpdateFrom1()
+        {
             SchemaBuilder.AlterTable("ElementBlueprint", table => table.AddColumn<string>("ElementDescription", c => c.WithLength(2048)));
             return 2;
         }
 
-        public int UpdateFrom2() {
+        public int UpdateFrom2()
+        {
             ContentDefinitionManager.AlterTypeDefinition("Layout", type => type
                 .WithIdentity());
 
             return 3;
         }
 
-        private void DefineElementWidget(string widgetTypeName, string widgetDisplayedAs, string elementTypeName) {
+        private void DefineElementWidget(string widgetTypeName, string widgetDisplayedAs, string elementTypeName)
+        {
             ContentDefinitionManager.AlterTypeDefinition(widgetTypeName, type => type
                 .WithPart("CommonPart", p => p
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")

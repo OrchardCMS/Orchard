@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,16 +15,19 @@ using Orchard.Logging;
 using Orchard.Themes.Services;
 using Orchard.UI.Zones;
 
-namespace Orchard.ContentTypes.Services {
+namespace Orchard.ContentTypes.Services
+{
 
-    public class DriverResultPlacement {
+    public class DriverResultPlacement
+    {
         public PlacementInfo PlacementInfo { get; set; }
         public PlacementSettings PlacementSettings { get; set; }
         public DriverResult ShapeResult { get; set; }
         public dynamic Shape { get; set; }
     }
 
-    public class PlacementService : IPlacementService {
+    public class PlacementService : IPlacementService
+    {
         private readonly IContentManager _contentManager;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IExtensionManager _extensionManager;
@@ -47,7 +50,7 @@ namespace Orchard.ContentTypes.Services {
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor
-            ) 
+            )
         {
             _contentManager = contentManager;
             _siteThemeService = siteThemeService;
@@ -65,7 +68,8 @@ namespace Orchard.ContentTypes.Services {
 
         public ILogger Logger { get; set; }
 
-        public IEnumerable<DriverResultPlacement> GetDisplayPlacement(string contentType) {
+        public IEnumerable<DriverResultPlacement> GetDisplayPlacement(string contentType)
+        {
             var content = _contentManager.New(contentType);
             const string actualDisplayType = "Detail";
 
@@ -73,7 +77,7 @@ namespace Orchard.ContentTypes.Services {
             itemShape.ContentItem = content;
             itemShape.Metadata.DisplayType = actualDisplayType;
 
-            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, String.Empty, _shapeFactory);
+            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, string.Empty, _shapeFactory);
             var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
             context.Layout = workContext.Layout;
 
@@ -81,56 +85,68 @@ namespace Orchard.ContentTypes.Services {
 
             var placementSettings = new List<DriverResultPlacement>();
 
-            _contentPartDrivers.Invoke(driver => {
+            _contentPartDrivers.Invoke(driver =>
+            {
                 var result = driver.BuildDisplay(context);
-                if (result != null) {
+                if (result != null)
+                {
                     placementSettings.AddRange(ExtractPlacement(result, context));
                 }
             }, Logger);
 
-            _contentFieldDrivers.Invoke(driver => {
+            _contentFieldDrivers.Invoke(driver =>
+            {
                 var result = driver.BuildDisplayShape(context);
-                if (result != null) {
+                if (result != null)
+                {
                     placementSettings.AddRange(ExtractPlacement(result, context));
                 }
             }, Logger);
 
-            foreach (var placementSetting in placementSettings) {
-                yield return placementSetting;    
-            }
-        }
-
-        public IEnumerable<DriverResultPlacement> GetEditorPlacement(string contentType) {
-            var content = _contentManager.New(contentType);
-
-            dynamic itemShape = CreateItemShape("Content_Edit");
-            itemShape.ContentItem = content;
-            
-            var context = new BuildEditorContext(itemShape, content, String.Empty, _shapeFactory);
-            BindPlacement(context, null, "Content");
-
-            var placementSettings = new List<DriverResultPlacement>();
-
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            foreach (var placementSetting in placementSettings) {
+            foreach (var placementSetting in placementSettings)
+            {
                 yield return placementSetting;
             }
         }
 
-        public IEnumerable<string> GetZones() {
+        public IEnumerable<DriverResultPlacement> GetEditorPlacement(string contentType)
+        {
+            var content = _contentManager.New(contentType);
+
+            dynamic itemShape = CreateItemShape("Content_Edit");
+            itemShape.ContentItem = content;
+
+            var context = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
+            BindPlacement(context, null, "Content");
+
+            var placementSettings = new List<DriverResultPlacement>();
+
+            _contentPartDrivers.Invoke(driver =>
+            {
+                var result = driver.BuildEditor(context);
+                if (result != null)
+                {
+                    placementSettings.AddRange(ExtractPlacement(result, context));
+                }
+            }, Logger);
+
+            _contentFieldDrivers.Invoke(driver =>
+            {
+                var result = driver.BuildEditorShape(context);
+                if (result != null)
+                {
+                    placementSettings.AddRange(ExtractPlacement(result, context));
+                }
+            }, Logger);
+
+            foreach (var placementSetting in placementSettings)
+            {
+                yield return placementSetting;
+            }
+        }
+
+        public IEnumerable<string> GetZones()
+        {
             var theme = _siteThemeService.GetSiteTheme();
             IEnumerable<string> zones = new List<string>();
 
@@ -142,7 +158,8 @@ namespace Orchard.ContentTypes.Services {
                     .ToList();
 
             // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
-            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme))
+            {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
                 if (theme != null && theme.Zones != null)
@@ -155,16 +172,21 @@ namespace Orchard.ContentTypes.Services {
             return zones;
         }
 
-        private IEnumerable<DriverResultPlacement> ExtractPlacement(DriverResult result, BuildShapeContext context) {
-            if (result is CombinedResult) {
-                foreach (var subResult in ((CombinedResult) result).GetResults()) {
-                    foreach (var placement in ExtractPlacement(subResult, context)) {
+        private IEnumerable<DriverResultPlacement> ExtractPlacement(DriverResult result, BuildShapeContext context)
+        {
+            if (result is CombinedResult)
+            {
+                foreach (var subResult in ((CombinedResult)result).GetResults())
+                {
+                    foreach (var placement in ExtractPlacement(subResult, context))
+                    {
                         yield return placement;
                     }
                 }
             }
-            else if (result is ContentShapeResult) {
-                var contentShapeResult = (ContentShapeResult) result;
+            else if (result is ContentShapeResult)
+            {
+                var contentShapeResult = (ContentShapeResult)result;
 
                 var placement = context.FindPlacement(
                     contentShapeResult.GetShapeType(),
@@ -173,12 +195,14 @@ namespace Orchard.ContentTypes.Services {
                     );
 
                 string zone = placement.Location;
-                string position = String.Empty;
+                string position = string.Empty;
 
                 // if no placement is found, it's hidden, e.g., no placement was found for the specific ContentType/DisplayType
-                if (placement.Location != null) {
+                if (placement.Location != null)
+                {
                     var delimiterIndex = placement.Location.IndexOf(':');
-                    if (delimiterIndex >= 0) {
+                    if (delimiterIndex >= 0)
+                    {
                         zone = placement.Location.Substring(0, delimiterIndex);
                         position = placement.Location.Substring(delimiterIndex + 1);
                     }
@@ -189,40 +213,47 @@ namespace Orchard.ContentTypes.Services {
                 dynamic itemShape = CreateItemShape("Content_Edit");
                 itemShape.ContentItem = content;
 
-                if(context is BuildDisplayContext) {
+                if (context is BuildDisplayContext)
+                {
                     var newContext = new BuildDisplayContext(itemShape, content, "Detail", "", context.New);
                     BindPlacement(newContext, "Detail", "Content");
                     contentShapeResult.Apply(newContext);
                 }
-                else {
+                else
+                {
                     var newContext = new BuildEditorContext(itemShape, content, "", context.New);
                     BindPlacement(newContext, null, "Content");
                     contentShapeResult.Apply(newContext);
                 }
 
 
-                yield return new DriverResultPlacement {
+                yield return new DriverResultPlacement
+                {
                     PlacementInfo = placement,
                     Shape = itemShape.Content,
                     ShapeResult = contentShapeResult,
-                    PlacementSettings = new PlacementSettings {
+                    PlacementSettings = new PlacementSettings
+                    {
                         ShapeType = contentShapeResult.GetShapeType(),
                         Zone = zone,
                         Position = position,
-                        Differentiator = contentShapeResult.GetDifferentiator() ?? String.Empty
+                        Differentiator = contentShapeResult.GetDifferentiator() ?? string.Empty
                     }
                 };
             }
         }
 
-        private dynamic CreateItemShape(string actualShapeType) {
+        private dynamic CreateItemShape(string actualShapeType)
+        {
             var zoneHolding = new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty()));
             zoneHolding.Metadata.Type = actualShapeType;
             return zoneHolding;
         }
 
-        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
-            context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
+        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype)
+        {
+            context.FindPlacement = (partShapeType, differentiator, defaultLocation) =>
+            {
 
                 var theme = _siteThemeService.GetSiteTheme();
                 var shapeTable = _shapeTableLocator.Lookup(theme.Id);
@@ -230,8 +261,10 @@ namespace Orchard.ContentTypes.Services {
                 var request = _requestContext.HttpContext.Request;
 
                 ShapeDescriptor descriptor;
-                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
+                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor))
+                {
+                    var placementContext = new ShapePlacementContext
+                    {
                         Content = context.ContentItem,
                         ContentType = context.ContentItem.ContentType,
                         Stereotype = stereotype,
@@ -244,15 +277,17 @@ namespace Orchard.ContentTypes.Services {
                     descriptor.DefaultPlacement = defaultLocation;
 
                     var placement = descriptor.Placement(placementContext);
-                    if (placement != null) {
+                    if (placement != null)
+                    {
                         placement.Source = placementContext.Source;
                         return placement;
                     }
                 }
 
-                return new PlacementInfo {
+                return new PlacementInfo
+                {
                     Location = defaultLocation,
-                    Source = String.Empty
+                    Source = string.Empty
                 };
             };
         }

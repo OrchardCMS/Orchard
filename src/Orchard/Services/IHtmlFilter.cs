@@ -1,5 +1,7 @@
-namespace Orchard.Services {
-    public interface IHtmlFilter : IDependency {
+namespace Orchard.Services
+{
+    public interface IHtmlFilter : IDependency
+    {
         string ProcessContent(string text, HtmlFilterContext context);
     }
 }

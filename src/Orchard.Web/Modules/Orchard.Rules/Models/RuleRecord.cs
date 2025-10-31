@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Rules.Models {
-    public class RuleRecord {
-        public RuleRecord() {
+namespace Orchard.Rules.Models
+{
+    public class RuleRecord
+    {
+        public RuleRecord()
+        {
             Events = new List<EventRecord>();
             Actions = new List<ActionRecord>();
         }

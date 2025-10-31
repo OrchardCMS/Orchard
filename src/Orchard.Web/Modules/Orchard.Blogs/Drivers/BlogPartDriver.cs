@@ -1,16 +1,17 @@
-﻿using System;
+using System;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Blogs.Drivers {
-    public class BlogPartDriver : ContentPartDriver<BlogPart> {
-        protected override string Prefix {
-            get { return "BlogPart"; }
-        }
+namespace Orchard.Blogs.Drivers
+{
+    public class BlogPartDriver : ContentPartDriver<BlogPart>
+    {
+        protected override string Prefix => "BlogPart";
 
-        protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper)
+        {
             return Combined(
                 ContentShape("Parts_Blogs_Blog_Manage",
                     () => shapeHelper.Parts_Blogs_Blog_Manage()),
@@ -27,14 +28,17 @@ namespace Orchard.Blogs.Drivers {
             ContentShape("Parts_Blogs_Blog_Fields",
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix));
 
-        protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper)
+        {
             updater.TryUpdateModel(blogPart, Prefix, null, null);
             return Editor(blogPart, shapeHelper);
         }
 
-        protected override void Importing(BlogPart part, ImportContentContext context) {
+        protected override void Importing(BlogPart part, ImportContentContext context)
+        {
             // Don't do anything if the tag is not specified.
-            if (context.Data.Element(part.PartDefinition.Name) == null) {
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
                 return;
             }
 
@@ -51,13 +55,15 @@ namespace Orchard.Blogs.Drivers {
             );
         }
 
-        protected override void Exporting(BlogPart part, ExportContentContext context) {
+        protected override void Exporting(BlogPart part, ExportContentContext context)
+        {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PostCount", part.PostCount);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FeedProxyUrl", part.FeedProxyUrl);
         }
 
-        protected override void Cloning(BlogPart originalPart, BlogPart clonePart, CloneContentContext context) {
+        protected override void Cloning(BlogPart originalPart, BlogPart clonePart, CloneContentContext context)
+        {
             clonePart.Description = originalPart.Description;
             clonePart.PostCount = originalPart.PostCount;
             clonePart.FeedProxyUrl = originalPart.FeedProxyUrl;

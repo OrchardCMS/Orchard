@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 
-namespace Orchard.Caching {
-    public class DefaultCacheContextAccessor : ICacheContextAccessor {
-        [ThreadStatic]
-        private static IAcquireContext _threadInstance;
+namespace Orchard.Caching
+{
+    public class DefaultCacheContextAccessor : ICacheContextAccessor
+    {
+        [field: ThreadStatic]
+        public static IAcquireContext ThreadInstance { get; set; }
 
-        public static IAcquireContext ThreadInstance {
-            get { return _threadInstance; }
-            set { _threadInstance = value; }
-        }
-
-        public IAcquireContext Current {
+        public IAcquireContext Current
+        {
             get { return ThreadInstance; }
             set { ThreadInstance = value; }
         }

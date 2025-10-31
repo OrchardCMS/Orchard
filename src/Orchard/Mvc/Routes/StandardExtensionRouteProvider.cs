@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -6,20 +6,25 @@ using System.Web.Routing;
 using System.Web.SessionState;
 using Orchard.Environment.ShellBuilders.Models;
 
-namespace Orchard.Mvc.Routes {
-    public class StandardExtensionRouteProvider : IRouteProvider {
+namespace Orchard.Mvc.Routes
+{
+    public class StandardExtensionRouteProvider : IRouteProvider
+    {
         private readonly ShellBlueprint _blueprint;
 
-        public StandardExtensionRouteProvider(ShellBlueprint blueprint) {
+        public StandardExtensionRouteProvider(ShellBlueprint blueprint)
+        {
             _blueprint = blueprint;
         }
 
-        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
             var displayPathsPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
                 x => x.Feature.Descriptor.Extension);
 
-            foreach (var item in displayPathsPerArea) {
+            foreach (var item in displayPathsPerArea)
+            {
                 var areaName = item.Key;
                 var extensionDescriptors = item.Distinct();
 
@@ -37,9 +42,10 @@ namespace Orchard.Mvc.Routes {
                         Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);
 
 
-                        routes.Add(new RouteDescriptor {
+                        routes.Add(new RouteDescriptor
+                        {
                             Priority = -10,
-                            SessionState = defaultSessionState, 
+                            SessionState = defaultSessionState,
                             Route = new Route(
                                 "Admin/" + displayPath + "/{action}/{id}",
                                 new RouteValueDictionary {
@@ -55,7 +61,8 @@ namespace Orchard.Mvc.Routes {
                                 new MvcRouteHandler())
                         });
 
-                        routes.Add(new RouteDescriptor {
+                        routes.Add(new RouteDescriptor
+                        {
                             Priority = -10,
                             SessionState = defaultSessionState,
                             Route = new Route(

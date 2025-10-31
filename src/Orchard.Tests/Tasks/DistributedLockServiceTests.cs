@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,26 +12,31 @@ using Orchard.Tasks.Locking.Records;
 using Orchard.Tasks.Locking.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Tasks {
+namespace Orchard.Tests.Tasks
+{
     [TestFixture]
-    public class DistributedLockServiceTests : DatabaseEnabledTestsBase {
+    public class DistributedLockServiceTests : DatabaseEnabledTestsBase
+    {
         private const string LockName = "Orchard Test Lock";
         private DistributedLockService _distributedLockService;
         private StubApplicationEnvironment _applicationEnvironment;
         private IRepository<DistributedLockRecord> _distributedLockRepository;
         private ITransactionManager _transactionManager;
 
-        protected override IEnumerable<Type> DatabaseTypes {
+        protected override IEnumerable<Type> DatabaseTypes
+        {
             get { yield return typeof(DistributedLockRecord); }
         }
 
-        public override void Register(ContainerBuilder builder) {
+        public override void Register(ContainerBuilder builder)
+        {
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<StubApplicationEnvironment>().As<IApplicationEnvironment>().SingleInstance();
             builder.RegisterType<DistributedLockService>().AsSelf();
         }
 
-        public override void Init() {
+        public override void Init()
+        {
             base.Init();
             _distributedLockService = _container.Resolve<DistributedLockService>();
             _applicationEnvironment = (StubApplicationEnvironment)_container.Resolve<IApplicationEnvironment>();
@@ -40,7 +45,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringLockTwiceOnSameMachineSucceeds() {
+        public void TryAcquiringLockTwiceOnSameMachineSucceeds()
+        {
             IDistributedLock @lock;
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
             var attempt2 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
@@ -51,7 +57,8 @@ namespace Orchard.Tests.Tasks {
 
 
         [Test]
-        public void AcquiringTheLockOnTheSameMachineReturnsTheSameLock() {
+        public void AcquiringTheLockOnTheSameMachineReturnsTheSameLock()
+        {
             IDistributedLock lock1, lock2;
             _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out lock1);
             _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out lock2);
@@ -60,7 +67,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void ReleasingSingleLockDeletesRecord() {
+        public void ReleasingSingleLockDeletesRecord()
+        {
             IDistributedLock lock1;
             _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out lock1);
 
@@ -71,7 +79,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void ReleasingFirstLockDoesntDeleteRecord() {
+        public void ReleasingFirstLockDoesntDeleteRecord()
+        {
             IDistributedLock lock1, lock2;
             _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out lock1);
             _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out lock2);
@@ -84,9 +93,10 @@ namespace Orchard.Tests.Tasks {
             lockRecord = _distributedLockRepository.Table.FirstOrDefault();
             Assert.That(lockRecord, Is.Null);
         }
-        
+
         [Test]
-        public void TryAcquiringLockTwiceFails() {
+        public void TryAcquiringLockTwiceFails()
+        {
             IDistributedLock @lock;
             _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
@@ -98,7 +108,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringNonExpiredActiveLockFails() {
+        public void TryAcquiringNonExpiredActiveLockFails()
+        {
             IDistributedLock @lock;
             CreateNonExpiredActiveLock("Other Machine");
             var success = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock);
@@ -107,7 +118,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringNonExpiredButInactiveLockFromOtherMachineFails() {
+        public void TryAcquiringNonExpiredButInactiveLockFromOtherMachineFails()
+        {
             IDistributedLock @lock;
             CreateNonExpiredActiveLock("Other Machine");
             var success = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock);
@@ -116,7 +128,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringNonExpiredButInactiveLockFromSameMachineSucceeds() {
+        public void TryAcquiringNonExpiredButInactiveLockFromSameMachineSucceeds()
+        {
             IDistributedLock @lock;
             CreateNonExpiredActiveLock("Orchard Machine");
             var success = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock);
@@ -125,7 +138,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringExpiredButActiveLockSucceeds() {
+        public void TryAcquiringExpiredButActiveLockSucceeds()
+        {
             IDistributedLock @lock;
             CreateExpiredButActiveLock("Other Machine");
             var success = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock);
@@ -134,7 +148,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquiringNonExpiredAndActiveLockFromCurrentOwnerSucceeds() {
+        public void TryAcquiringNonExpiredAndActiveLockFromCurrentOwnerSucceeds()
+        {
             IDistributedLock @lock;
             CreateNonExpiredActiveLock(GetMachineName());
             var success = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock);
@@ -143,13 +158,15 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void AcquiringNonExpiredAndActiveLockFromDifferentOwnerThrowsTimeoutException() {
+        public void AcquiringNonExpiredAndActiveLockFromDifferentOwnerThrowsTimeoutException()
+        {
             CreateNonExpiredActiveLock("Other Machine");
             Assert.Throws<TimeoutException>(() => _distributedLockService.AcquireLock(LockName, TimeSpan.FromHours(1), TimeSpan.Zero));
         }
 
         [Test]
-        public void MultipleAcquisitionsFromDifferentMachinesShouldFail() {
+        public void MultipleAcquisitionsFromDifferentMachinesShouldFail()
+        {
             IDistributedLock @lock;
             _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(60), out @lock);
@@ -161,7 +178,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void MultipleAcquisitionsFromDifferentMachinesOnDifferentTenantShouldSucceed() {
+        public void MultipleAcquisitionsFromDifferentMachinesOnDifferentTenantShouldSucceed()
+        {
             IDistributedLock @lock;
             _applicationEnvironment.MachineName = "Orchard Test Machine 1";
             var attempt1 = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromSeconds(60), out @lock);
@@ -174,11 +192,14 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void MultithreadedAcquisitionsShouldNotCauseTransactionErrors() {
+        public void MultithreadedAcquisitionsShouldNotCauseTransactionErrors()
+        {
             var tasks = new List<Task>();
 
-            for (var i = 0; i < 10; i++) {
-                var task = Task.Factory.StartNew(() => {
+            for (var i = 0; i < 10; i++)
+            {
+                var task = Task.Factory.StartNew(() =>
+                {
                     IDistributedLock @lock;
                     Assert.DoesNotThrow(() => _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromHours(1), out @lock));
                 });
@@ -190,17 +211,19 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void TryAcquireActiveLockWithNullTimeoutReturnsFalseImmediately() {
+        public void TryAcquireActiveLockWithNullTimeoutReturnsFalseImmediately()
+        {
             CreateNonExpiredActiveLock("Other Machine");
 
             IDistributedLock @lock;
             var acquired = _distributedLockService.TryAcquireLock(LockName, TimeSpan.FromMinutes(1), out @lock);
-            
+
             Assert.That(acquired, Is.False);
         }
 
         [Test]
-        public void ActiveLockWithUndefinedValidUntilNeverExpires() {
+        public void ActiveLockWithUndefinedValidUntilNeverExpires()
+        {
             CreateNonExpiredActiveLockThatNeverExpires("Other Machine");
 
             _clock.Advance(DateTime.MaxValue - _clock.UtcNow); // Fast forward to the End of Time.
@@ -211,7 +234,8 @@ namespace Orchard.Tests.Tasks {
         }
 
         [Test]
-        public void ActiveLockWithUndefinedValidUntilNeverExpiresUntilReleased() {
+        public void ActiveLockWithUndefinedValidUntilNeverExpiresUntilReleased()
+        {
             IDistributedLock @lock;
 
             // Create a never expiring lock.
@@ -230,9 +254,11 @@ namespace Orchard.Tests.Tasks {
             Assert.That(attempt2, Is.True);
         }
 
-        private DistributedLockRecord CreateLockRecord(DateTime createdUtc, DateTime? validUntilUtc, string machineName) {
-            var record = new DistributedLockRecord {
-                Name = String.Format("DistributedLock:{0}:{1}", ShellSettings.DefaultName, LockName),
+        private DistributedLockRecord CreateLockRecord(DateTime createdUtc, DateTime? validUntilUtc, string machineName)
+        {
+            var record = new DistributedLockRecord
+            {
+                Name = string.Format("DistributedLock:{0}:{1}", ShellSettings.DefaultName, LockName),
                 CreatedUtc = createdUtc,
                 ValidUntilUtc = validUntilUtc,
                 MachineName = machineName,
@@ -243,22 +269,26 @@ namespace Orchard.Tests.Tasks {
             return record;
         }
 
-        private DistributedLockRecord CreateNonExpiredActiveLock(string machineName) {
+        private DistributedLockRecord CreateNonExpiredActiveLock(string machineName)
+        {
             var now = _clock.UtcNow;
             return CreateLockRecord(now, now + TimeSpan.FromHours(1), machineName);
         }
 
-        private DistributedLockRecord CreateExpiredButActiveLock(string machineName) {
+        private DistributedLockRecord CreateExpiredButActiveLock(string machineName)
+        {
             var now = _clock.UtcNow;
             return CreateLockRecord(now, now - TimeSpan.FromHours(1), machineName);
         }
 
-        private DistributedLockRecord CreateNonExpiredActiveLockThatNeverExpires(string machineName) {
+        private DistributedLockRecord CreateNonExpiredActiveLockThatNeverExpires(string machineName)
+        {
             var now = _clock.UtcNow;
             return CreateLockRecord(now, null, machineName);
         }
 
-        private string GetMachineName() {
+        private string GetMachineName()
+        {
             return _applicationEnvironment.GetEnvironmentIdentifier();
         }
     }

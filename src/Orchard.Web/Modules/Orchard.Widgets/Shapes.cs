@@ -1,27 +1,33 @@
-﻿using System;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Widgets {
-    public class Shapes : IShapeTableProvider {
-        public void Discover(ShapeTableBuilder builder) {
+namespace Orchard.Widgets
+{
+    public class Shapes : IShapeTableProvider
+    {
+        public void Discover(ShapeTableBuilder builder)
+        {
             builder.Describe("Widget")
-                .Configure(descriptor => {
+                .Configure(descriptor =>
+                {
                     // todo: have "alternates" for chrome
                     descriptor.Wrappers.Add("Widget_Wrapper");
                 })
-                .OnCreated(created => {
+                .OnCreated(created =>
+                {
                     var widget = created.Shape;
                     widget.Child.Add(created.New.PlaceChildContent(Source: widget));
                 })
-                .OnDisplaying(displaying => {
+                .OnDisplaying(displaying =>
+                {
                     var widget = displaying.Shape;
                     widget.Classes.Add("widget");
 
                     ContentItem contentItem = displaying.Shape.ContentItem;
-                    if (contentItem != null) {
+                    if (contentItem != null)
+                    {
                         var widgetPart = contentItem.As<WidgetPart>();
                         var zoneName = widgetPart.Zone;
 
@@ -35,7 +41,8 @@ namespace Orchard.Widgets {
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
 
                         // using the technical name to add a CSS class and an alternate
-                        if (!String.IsNullOrWhiteSpace(widgetPart.Name)) {
+                        if (!string.IsNullOrWhiteSpace(widgetPart.Name))
+                        {
                             widget.Classes.Add("widget-" + widgetPart.Name);
 
                             // Widget__Name__[Name]
@@ -44,7 +51,8 @@ namespace Orchard.Widgets {
                         }
 
                         // Adding other css classes to the widget.
-                        if (!String.IsNullOrWhiteSpace(widgetPart.CssClasses)) {
+                        if (!string.IsNullOrWhiteSpace(widgetPart.CssClasses))
+                        {
                             widget.Classes.Add(widgetPart.CssClasses);
                         }
 

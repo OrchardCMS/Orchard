@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using Orchard.Data.Migration;
 
-namespace Orchard.JobsQueue {
-    public class Migrations : DataMigrationImpl {
+namespace Orchard.JobsQueue
+{
+    public class Migrations : DataMigrationImpl
+    {
 
-        public int Create() {
+        public int Create()
+        {
             SchemaBuilder.CreateTable("QueuedJobRecord", table => table
                 .Column<int>("Id", c => c.Identity().PrimaryKey())
                 .Column<string>("Message", c => c.WithLength(64))

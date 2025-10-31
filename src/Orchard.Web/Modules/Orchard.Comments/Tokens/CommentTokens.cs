@@ -1,20 +1,21 @@
-﻿using System;
-using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Tokens;
 
-namespace Orchard.Comments.Tokens {
+namespace Orchard.Comments.Tokens
+{
 
-    public class CommentTokens : ITokenProvider {
+    public class CommentTokens : ITokenProvider
+    {
         private readonly IContentManager _contentManager;
         private readonly ICommentService _commentService;
 
         public CommentTokens(
             IContentManager contentManager,
-            ICommentService commentService) {
+            ICommentService commentService)
+        {
             _contentManager = contentManager;
             _commentService = commentService;
             T = NullLocalizer.Instance;
@@ -22,7 +23,8 @@ namespace Orchard.Comments.Tokens {
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeContext context) {
+        public void Describe(DescribeContext context)
+        {
             context.For("Content", T("Comments"), T("Comments"))
                 .Token("CommentedOn", T("Commented On"), T("The content item this comment was created on."))
                 .Token("CommentMessage", T("Comment Message"), T("The text of the comment itself"))
@@ -35,7 +37,8 @@ namespace Orchard.Comments.Tokens {
                 ;
         }
 
-        public void Evaluate(EvaluateContext context) {
+        public void Evaluate(EvaluateContext context)
+        {
             context.For<IContent>("Content")
                 .Token("CommentedOn", content => content.As<CommentPart>().CommentedOn)
                 .Chain("CommentedOn", "Content", content => _contentManager.Get(content.As<CommentPart>().CommentedOn))
@@ -53,9 +56,10 @@ namespace Orchard.Comments.Tokens {
                 ;
         }
 
-        private static string CommentAuthor(IContent comment) {
+        private static string CommentAuthor(IContent comment)
+        {
             var commentPart = comment.As<CommentPart>();
-            return String.IsNullOrWhiteSpace(commentPart.UserName) ? commentPart.Author : commentPart.UserName;
+            return string.IsNullOrWhiteSpace(commentPart.UserName) ? commentPart.Author : commentPart.UserName;
         }
     }
 }

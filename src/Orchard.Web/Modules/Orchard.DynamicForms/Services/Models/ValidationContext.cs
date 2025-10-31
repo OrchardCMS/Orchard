@@ -1,5 +1,7 @@
-﻿namespace Orchard.DynamicForms.Services.Models {
-    public class ValidationContext {
+namespace Orchard.DynamicForms.Services.Models
+{
+    public class ValidationContext
+    {
         public string FieldName { get; set; }
     }
 }

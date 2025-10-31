@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.Core.XmlRpc.Services {
+namespace Orchard.Core.XmlRpc.Services
+{
     /// <summary>
     /// Abstraction to read XML and convert it to rpc entities.
     /// </summary>
-    public class XmlRpcReader : IXmlRpcReader {
+    public class XmlRpcReader : IXmlRpcReader
+    {
         /// <summary>
         /// Provides the mapping function based on a type name.
         /// </summary>
@@ -18,14 +20,15 @@ namespace Orchard.Core.XmlRpc.Services {
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlRpcReader"/> class.
         /// </summary>
-        public XmlRpcReader() {
+        public XmlRpcReader()
+        {
             _dispatch = new Dictionary<string, Func<XElement, XRpcData>>
                 {
                     { "i4", x => new XRpcData<int> { Value = (int)x } },
-                    { "int", x => new XRpcData<int> { Value = (int)x } }, 
-                    { "boolean", x => new XRpcData<bool> { Value = (string)x == "1" } }, 
-                    { "string", x => new XRpcData<string> { Value = (string)x } }, 
-                    { "double", x => new XRpcData<double> { Value = (double)x } }, 
+                    { "int", x => new XRpcData<int> { Value = (int)x } },
+                    { "boolean", x => new XRpcData<bool> { Value = (string)x == "1" } },
+                    { "string", x => new XRpcData<string> { Value = (string)x } },
+                    { "double", x => new XRpcData<double> { Value = (double)x } },
                     { "dateTime.iso8601", x => {
                                                 DateTime parsedDateTime;
 
@@ -37,9 +40,9 @@ namespace Orchard.Core.XmlRpc.Services {
 
                                                 return new XRpcData<DateTime> { Value = parsedDateTime };
                                             } },
-                    { "base64", x => new XRpcData<byte[]> { Value = Convert.FromBase64String((string)x) } }, 
+                    { "base64", x => new XRpcData<byte[]> { Value = Convert.FromBase64String((string)x) } },
                     { "struct", x => XRpcData.For(MapToStruct(x)) },
-                    { "array", x => XRpcData.For(MapToArray(x)) }, 
+                    { "array", x => XRpcData.For(MapToArray(x)) },
                 };
         }
 
@@ -48,8 +51,10 @@ namespace Orchard.Core.XmlRpc.Services {
         /// </summary>
         /// <param name="source">The XML element to be mapped.</param>
         /// <returns>The rpc method call.</returns>
-        public XRpcMethodCall MapToMethodCall(XElement source) {
-            return new XRpcMethodCall {
+        public XRpcMethodCall MapToMethodCall(XElement source)
+        {
+            return new XRpcMethodCall
+            {
                 MethodName = (string)source.Element("methodName"),
                 Params = source.Elements("params").Elements("param").Select(MapToData).ToList()
             };
@@ -60,16 +65,19 @@ namespace Orchard.Core.XmlRpc.Services {
         /// </summary>
         /// <param name="source">The XML element to be mapped.</param>
         /// <returns>The rpc data.</returns>
-        public XRpcData MapToData(XElement source) {
+        public XRpcData MapToData(XElement source)
+        {
             var value = source.Element("value");
-            if (value == null) {
+            if (value == null)
+            {
                 return new XRpcData();
             }
 
             var element = value.Elements().SingleOrDefault();
 
             Func<XElement, XRpcData> dispatch;
-            if (_dispatch.TryGetValue(element.Name.LocalName, out dispatch) == false) {
+            if (_dispatch.TryGetValue(element.Name.LocalName, out dispatch) == false)
+            {
                 throw new ApplicationException("Unknown XmlRpc value type " + element.Name.LocalName);
             }
 
@@ -81,9 +89,11 @@ namespace Orchard.Core.XmlRpc.Services {
         /// </summary>
         /// <param name="source">The XML element to be mapped.</param>
         /// <returns>The rpc struct.</returns>
-        public XRpcStruct MapToStruct(XElement source) {
+        public XRpcStruct MapToStruct(XElement source)
+        {
             var result = new XRpcStruct();
-            foreach (var member in source.Elements("member")) {
+            foreach (var member in source.Elements("member"))
+            {
                 result.Members.Add(
                     (string)member.Element("name"),
                     MapValue(member.Element("value")));
@@ -97,9 +107,11 @@ namespace Orchard.Core.XmlRpc.Services {
         /// </summary>
         /// <param name="source">The XML element to be mapped.</param>
         /// <returns>The rpc array.</returns>
-        public XRpcArray MapToArray(XElement source) {
+        public XRpcArray MapToArray(XElement source)
+        {
             var result = new XRpcArray();
-            foreach (var value in source.Elements("data").Elements("value")) {
+            foreach (var value in source.Elements("data").Elements("value"))
+            {
                 result.Data.Add(MapValue(value));
             }
 
@@ -111,11 +123,13 @@ namespace Orchard.Core.XmlRpc.Services {
         /// </summary>
         /// <param name="source">The XML container to be mapped.</param>
         /// <returns>The rpc data.</returns>
-        private XRpcData MapValue(XContainer source) {
+        private XRpcData MapValue(XContainer source)
+        {
             var element = source.Elements().SingleOrDefault();
 
             Func<XElement, XRpcData> dispatch;
-            if (_dispatch.TryGetValue(element.Name.LocalName, out dispatch) == false) {
+            if (_dispatch.TryGetValue(element.Name.LocalName, out dispatch) == false)
+            {
                 throw new ApplicationException("Unknown XmlRpc value type " + element.Name.LocalName);
             }
 

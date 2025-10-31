@@ -1,5 +1,7 @@
-﻿namespace Orchard.Azure {
-    public class Constants {
+namespace Orchard.Azure
+{
+    public class Constants
+    {
         public const string DevelopmentStorageConnectionString = "UseDevelopmentStorage=true";
 
         public const string ShellSettingsStorageConnectionStringSettingName = "Orchard.Azure.Settings.StorageConnectionString";

@@ -2,19 +2,23 @@ using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
 
-namespace Orchard.UI.Resources {
-    public class ResourceFilter : FilterProvider, IResultFilter {
+namespace Orchard.UI.Resources
+{
+    public class ResourceFilter : FilterProvider, IResultFilter
+    {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly dynamic _shapeFactory;
 
         public ResourceFilter(
-            IWorkContextAccessor workContextAccessor, 
-            IShapeFactory shapeFactory) {
+            IWorkContextAccessor workContextAccessor,
+            IShapeFactory shapeFactory)
+        {
             _workContextAccessor = workContextAccessor;
             _shapeFactory = shapeFactory;
         }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
+        public void OnResultExecuting(ResultExecutingContext filterContext)
+        {
             // should only run on a full view rendering result
             if (!(filterContext.Result is ViewResult))
                 return;
@@ -29,7 +33,8 @@ namespace Orchard.UI.Resources {
             tail.Add(_shapeFactory.FootScripts());
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
+        public void OnResultExecuted(ResultExecutedContext filterContext)
+        {
         }
     }
 }

@@ -1,14 +1,17 @@
-﻿using System;
-using NUnit.Framework;
+using System;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using Orchard.Services;
 
-namespace Orchard.Tests.Services {
+namespace Orchard.Tests.Services
+{
 
     [TestFixture]
-    public class JsonConverterTests {
+    public class JsonConverterTests
+    {
         [Test]
-        public void ShouldConvertPrimitiveTypesToJSon() {
+        public void ShouldConvertPrimitiveTypesToJSon()
+        {
             var converter = new DefaultJsonConverter();
 
             Assert.That(converter.Serialize(12), Is.EqualTo("12"));
@@ -19,7 +22,8 @@ namespace Orchard.Tests.Services {
         }
 
         [Test]
-        public void ShouldConvertAnonymousTypeToJSon() {
+        public void ShouldConvertAnonymousTypeToJSon()
+        {
             dynamic d = JObject.Parse("{number:1000, str:'string', array: [1,2,3,4,5,6]}");
 
             Assert.That((int)d.number, Is.EqualTo(1000));
@@ -28,7 +32,8 @@ namespace Orchard.Tests.Services {
         }
 
         [Test]
-        public void ShouldConvertWellKnownTypeToJSon() {
+        public void ShouldConvertWellKnownTypeToJSon()
+        {
             var converter = new DefaultJsonConverter();
             string result = converter.Serialize(new Animal { Age = 12, Name = "Milou" });
             var o = converter.Deserialize<Animal>(result);
@@ -38,7 +43,8 @@ namespace Orchard.Tests.Services {
         }
 
 
-        public class Animal {
+        public class Animal
+        {
             public int Age { get; set; }
             public string Name { get; set; }
         }

@@ -1,29 +1,36 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Extensions;
 
-namespace Orchard.Core.Contents.Controllers {
-    public abstract class ContentControllerBase : Controller {
+namespace Orchard.Core.Contents.Controllers
+{
+    public abstract class ContentControllerBase : Controller
+    {
         private readonly IContentManager _contentManager;
 
 
-        public ContentControllerBase(IContentManager contentManager) {
+        public ContentControllerBase(IContentManager contentManager)
+        {
             _contentManager = contentManager;
         }
 
 
-        public RedirectToRouteResult GetCustomContentItemRouteRedirection(IContent content, ContentItemRoute contentItemRoute) {
+        public RedirectToRouteResult GetCustomContentItemRouteRedirection(IContent content, ContentItemRoute contentItemRoute)
+        {
             if (content == null) return null;
 
             var itemMetadata = _contentManager.GetItemMetadata(content);
             var currentRoute = RouteData.Values;
 
-            bool isCustomRoute(RouteValueDictionary routeValues) =>
-                !currentRoute.ToRouteString().Equals(routeValues.ToRouteString(), StringComparison.InvariantCultureIgnoreCase);
+            bool isCustomRoute(RouteValueDictionary routeValues)
+            {
+                return !currentRoute.ToRouteString().Equals(routeValues.ToRouteString(), StringComparison.InvariantCultureIgnoreCase);
+            }
 
-            switch (contentItemRoute) {
+            switch (contentItemRoute)
+            {
                 case ContentItemRoute.Admin:
                     if (isCustomRoute(itemMetadata.AdminRouteValues))
                         return RedirectToRoute(itemMetadata.AdminRouteValues);

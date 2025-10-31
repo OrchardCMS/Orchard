@@ -1,5 +1,7 @@
-﻿namespace Orchard.MediaProcessing.Models {
-    public class FilterRecord {
+namespace Orchard.MediaProcessing.Models
+{
+    public class FilterRecord
+    {
         public virtual int Id { get; set; }
 
         public virtual string Description { get; set; }

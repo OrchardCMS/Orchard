@@ -1,23 +1,17 @@
-﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Layouts.Framework.Elements;
 
-namespace Orchard.Layouts.Elements {
+namespace Orchard.Layouts.Elements
+{
     [OrchardFeature("Orchard.Layouts.Snippets")]
-    public class Snippet : Element {
-        public override string Category {
-            get { return "Snippets"; }
-        }
+    public class Snippet : Element
+    {
+        public override string Category => "Snippets";
 
-        public override bool IsSystemElement {
-            get { return true; }
-        }
+        public override bool IsSystemElement => true;
 
-        public override bool HasEditor {
-            get { return false; }
-        }
+        public override bool HasEditor => false;
 
-        public override string ToolboxIcon {
-            get { return "\uf10c"; }
-        }
+        public override string ToolboxIcon => "\uf10c";
     }
 }

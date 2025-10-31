@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
@@ -12,8 +12,10 @@ using Orchard.MediaLibrary.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 
-namespace Orchard.MediaLibrary.Services {
-    public class XmlRpcHandler : IXmlRpcHandler {
+namespace Orchard.MediaLibrary.Services
+{
+    public class XmlRpcHandler : IXmlRpcHandler
+    {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
@@ -27,7 +29,8 @@ namespace Orchard.MediaLibrary.Services {
             IMediaLibraryService mediaLibraryService,
             RouteCollection routeCollection,
             IContentManager contentManager,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices)
+        {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
             _mediaLibraryService = mediaLibraryService;
@@ -39,15 +42,18 @@ namespace Orchard.MediaLibrary.Services {
 
         public Localizer T { get; set; }
 
-        public void SetCapabilities(XElement options) {
+        public void SetCapabilities(XElement options)
+        {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
             options.SetElementValue(XName.Get("supportsFileUpload", manifestUri), "Yes");
         }
 
-        public void Process(XmlRpcContext context) {
+        public void Process(XmlRpcContext context)
+        {
             var urlHelper = new UrlHelper(context.ControllerContext.RequestContext, _routeCollection);
 
-            if (context.Request.MethodName == "metaWeblog.newMediaObject") {
+            if (context.Request.MethodName == "metaWeblog.newMediaObject")
+            {
                 var result = MetaWeblogNewMediaObject(
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
@@ -61,12 +67,14 @@ namespace Orchard.MediaLibrary.Services {
             string userName,
             string password,
             XRpcStruct file,
-            UrlHelper url) {
+            UrlHelper url)
+        {
 
             List<LocalizedString> validationErrors;
             var user = _membershipService.ValidateUser(userName, password, out validationErrors);
             if (!_authorizationService.TryCheckAccess(Permissions.ManageOwnMedia, user, null)
-                && !_authorizationService.TryCheckAccess(Permissions.EditMediaContent, user, null)) {
+                && !_authorizationService.TryCheckAccess(Permissions.EditMediaContent, user, null))
+            {
                 throw new OrchardCoreException(T("Access denied"));
             }
 
@@ -74,38 +82,45 @@ namespace Orchard.MediaLibrary.Services {
             var bits = file.Optional<byte[]>("bits");
 
             string directoryName = Path.GetDirectoryName(name);
-            if (string.IsNullOrWhiteSpace(directoryName)) { // Some clients only pass in a name path that does not contain a directory component.
+            if (string.IsNullOrWhiteSpace(directoryName))
+            { // Some clients only pass in a name path that does not contain a directory component.
                 directoryName = "media";
             }
 
             // If the user only has access to his own folder, rewrite the folder name
-            if (!_authorizationService.TryCheckAccess(Permissions.EditMediaContent, user, null)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.EditMediaContent, user, null))
+            {
                 directoryName = Path.Combine(_mediaLibraryService.GetRootedFolderPath(directoryName));
             }
 
             var filename = Path.GetFileName(name);
 
-            try {
+            try
+            {
                 // delete the file if it already exists, e.g. an updated image in a blog post
                 // it's safe to delete the file as each content item gets a specific folder
                 _mediaLibraryService.DeleteFile(directoryName, filename);
             }
-            catch {
+            catch
+            {
                 // current way to delete a file if it exists
             }
 
             string publicUrl = _mediaLibraryService.UploadMediaFile(directoryName, filename, bits);
-            
+
             var settings = _orchardServices.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
 
             // skip file if the allowed extensions is defined and doesn't match
-            if (settings.IsFileAllowed(filename)) {
+            if (settings.IsFileAllowed(filename))
+            {
                 var mediaPart = _mediaLibraryService.ImportMedia(directoryName, filename);
 
-                try {
+                try
+                {
                     _contentManager.Create(mediaPart);
                 }
-                catch {
+                catch
+                {
                 }
             }
 

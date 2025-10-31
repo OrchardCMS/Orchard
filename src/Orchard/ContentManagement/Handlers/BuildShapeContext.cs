@@ -3,15 +3,18 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Handlers {
-    public class BuildShapeContext {
-        protected BuildShapeContext(IShape shape, IContent content, string groupId, IShapeFactory shapeFactory) {
+namespace Orchard.ContentManagement.Handlers
+{
+    public class BuildShapeContext
+    {
+        protected BuildShapeContext(IShape shape, IContent content, string groupId, IShapeFactory shapeFactory)
+        {
             Shape = shape;
             Content = content;
             ContentItem = content.ContentItem;
             New = shapeFactory;
             GroupId = groupId;
-            FindPlacement = (partType, differentiator, defaultLocation) => new PlacementInfo {Location = defaultLocation, Source = String.Empty};
+            FindPlacement = (partType, differentiator, defaultLocation) => new PlacementInfo { Location = defaultLocation, Source = string.Empty };
         }
 
         public dynamic Shape { get; private set; }

@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using Orchard.Localization.Models;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Services
+{
 
     /// <summary>
     /// Provides conversion and formatting of dates according to the Orchard configured
     /// time zone, culture and calendar (as opposed to the system configured time zone and
     /// culture).
     /// </summary>
-    public interface IDateLocalizationServices : IDependency {
+    public interface IDateLocalizationServices : IDependency
+    {
 
         /// <summary>
         /// Converts a date from UTC to the Orchard configured time zone.

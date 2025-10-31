@@ -1,5 +1,7 @@
-﻿namespace Orchard.Scripting.Compiler {
-    public enum TokenKind {
+namespace Orchard.Scripting.Compiler
+{
+    public enum TokenKind
+    {
         Invalid,
         Eof,
         OpenParen,

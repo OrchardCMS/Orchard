@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Logging;
 
-namespace Orchard.MessageBus.Services {
-    public class DefaultMessageBus : IMessageBus {
+namespace Orchard.MessageBus.Services
+{
+    public class DefaultMessageBus : IMessageBus
+    {
         private readonly IMessageBroker _messageBroker;
         private readonly IHostNameProvider _hostNameProvider;
 
-        public DefaultMessageBus(IEnumerable<IMessageBroker> messageBrokers, IHostNameProvider hostNameProvider) {
+        public DefaultMessageBus(IEnumerable<IMessageBroker> messageBrokers, IHostNameProvider hostNameProvider)
+        {
             _hostNameProvider = hostNameProvider;
             _messageBroker = messageBrokers.FirstOrDefault();
 
@@ -16,9 +19,11 @@ namespace Orchard.MessageBus.Services {
         }
 
         public ILogger Logger { get; set; }
- 
-        public void Subscribe(string channel, Action<string, string> handler) {
-            if (_messageBroker == null) {
+
+        public void Subscribe(string channel, Action<string, string> handler)
+        {
+            if (_messageBroker == null)
+            {
                 return;
             }
 
@@ -26,8 +31,10 @@ namespace Orchard.MessageBus.Services {
             Logger.Debug("{0} subscribed to {1}", _hostNameProvider.GetHostName(), channel);
         }
 
-        public void Publish(string channel, string message) {
-            if (_messageBroker == null) {
+        public void Publish(string channel, string message)
+        {
+            if (_messageBroker == null)
+            {
                 return;
             }
 

@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 
-namespace Orchard.MediaLibrary.Models {
-    public interface IMediaFolder {
+namespace Orchard.MediaLibrary.Models
+{
+    public interface IMediaFolder
+    {
         string Name { get; }
         string MediaPath { get; }
         string User { get; }

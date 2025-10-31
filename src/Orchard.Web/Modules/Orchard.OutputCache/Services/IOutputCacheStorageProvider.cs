@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Orchard.OutputCache.Models;
 
-namespace Orchard.OutputCache.Services {
-    public interface IOutputCacheStorageProvider : IDependency {
+namespace Orchard.OutputCache.Services
+{
+    public interface IOutputCacheStorageProvider : IDependency
+    {
         /// <summary>
         /// Adds a new <see cref="CacheItem"/> or substitute it with a new one if the 
         /// cache key is already used.
@@ -13,7 +15,7 @@ namespace Orchard.OutputCache.Services {
 
         void Remove(string key);
         void RemoveAll();
-        
+
         CacheItem GetCacheItem(string key);
         IEnumerable<CacheItem> GetCacheItems(int skip, int count);
         int GetCacheItemsCount();

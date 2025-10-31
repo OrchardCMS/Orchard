@@ -1,5 +1,7 @@
-﻿namespace Orchard.ContentManagement.Aspects {
-    public interface ITitleAspect : IContent {
+namespace Orchard.ContentManagement.Aspects
+{
+    public interface ITitleAspect : IContent
+    {
         string Title { get; }
     }
 }

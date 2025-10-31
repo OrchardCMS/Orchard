@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Orchard.Tags.Models {
-    public class TagRecord {
-        public TagRecord() {
+namespace Orchard.Tags.Models
+{
+    public class TagRecord
+    {
+        public TagRecord()
+        {
             ContentTags = new List<ContentTagRecord>();
         }
         public virtual int Id { get; set; }

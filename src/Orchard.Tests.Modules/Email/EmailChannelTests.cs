@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
 using Orchard.Messaging.Services;
 using Orchard.Tests.Modules.Stubs;
 
-namespace Orchard.Tests.Modules.Email {
+namespace Orchard.Tests.Modules.Email
+{
     [TestFixture]
-    public class EmailChannelTests {
+    public class EmailChannelTests
+    {
         private IMessageService _messageService;
         private SmtpChannelStub _smtpChannel;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var builder = new ContainerBuilder();
             _smtpChannel = new SmtpChannelStub();
 
@@ -26,16 +29,19 @@ namespace Orchard.Tests.Modules.Email {
         }
 
         [Test]
-        public void CanSendEmailUsingAddresses() {
+        public void CanSendEmailUsingAddresses()
+        {
             _messageService.Send("Email", new Dictionary<string, object>() { { "", null } });
             Assert.That(_smtpChannel.Processed, Is.Not.Null);
         }
 
     }
 
-    public class SmtpChannelStub : IMessageChannel {
+    public class SmtpChannelStub : IMessageChannel
+    {
         public IDictionary<string, object> Processed;
-        public void Process(IDictionary<string, object> parameters) {
+        public void Process(IDictionary<string, object> parameters)
+        {
             Processed = parameters;
         }
     }

@@ -1,11 +1,14 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Orchard.Themes;
 
-namespace Orchard.Core.Common.Controllers {
+namespace Orchard.Core.Common.Controllers
+{
     [Themed]
-    public class ErrorController : Controller {
+    public class ErrorController : Controller
+    {
 
-        public ActionResult NotFound(string url) {
+        public ActionResult NotFound(string url)
+        {
             return HttpNotFound();
         }
     }

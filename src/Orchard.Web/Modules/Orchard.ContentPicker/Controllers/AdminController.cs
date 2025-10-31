@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -18,8 +18,10 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 
-namespace Orchard.ContentPicker.Controllers {
-    public class AdminController : Controller {
+namespace Orchard.ContentPicker.Controllers
+{
+    public class AdminController : Controller
+    {
         private readonly ISiteService _siteService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly INavigationManager _navigationManager;
@@ -32,7 +34,8 @@ namespace Orchard.ContentPicker.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             INavigationManager navigationManager,
             ICultureManager cultureManager,
-            ICultureFilter cultureFilter) {
+            ICultureFilter cultureFilter)
+        {
             _siteService = siteService;
             _contentDefinitionManager = contentDefinitionManager;
             _navigationManager = navigationManager;
@@ -47,29 +50,36 @@ namespace Orchard.ContentPicker.Controllers {
         public Localizer T { get; set; }
 
         [Themed(false)]
-        public ActionResult Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field, string types) {
+        public ActionResult Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field, string types)
+        {
             var menuItems = _navigationManager.BuildMenu("content-picker").ToList();
             var contentPickerMenuItem = menuItems.FirstOrDefault();
-            if (contentPickerMenuItem == null) {
+            if (contentPickerMenuItem == null)
+            {
                 return HttpNotFound();
             }
 
-            if (contentPickerMenuItem.Items.All(x => x.Text.TextHint != "Recent Content")) {
+            if (contentPickerMenuItem.Items.All(x => x.Text.TextHint != "Recent Content"))
+            {
                 // the default tab should not be displayed, redirect to the next one
                 var root = menuItems.FirstOrDefault();
-                if (root == null) {
+                if (root == null)
+                {
                     return HttpNotFound();
                 }
 
                 var firstChild = root.Items.First();
-                if (firstChild == null) {
+                if (firstChild == null)
+                {
                     return HttpNotFound();
                 }
 
                 var routeData = new RouteValueDictionary(firstChild.RouteValues);
                 var queryString = Request.QueryString;
-                foreach (var key in queryString.AllKeys) {
-                    if (!String.IsNullOrEmpty(key)) {
+                foreach (var key in queryString.AllKeys)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                    {
                         routeData[key] = queryString[key];
                     }
                 }
@@ -80,33 +90,39 @@ namespace Orchard.ContentPicker.Controllers {
             ContentPickerFieldSettings settings = null;
 
             // if the picker is loaded for a specific field, apply custom settings
-            if (!String.IsNullOrEmpty(part) && !String.IsNullOrEmpty(field)) {
+            if (!string.IsNullOrEmpty(part) && !string.IsNullOrEmpty(field))
+            {
                 var definition = _contentDefinitionManager.GetPartDefinition(part).Fields.FirstOrDefault(x => x.Name == field);
-                if (definition != null) {
+                if (definition != null)
+                {
                     settings = definition.Settings.GetModel<ContentPickerFieldSettings>();
                 }
             }
 
-            if (settings != null && !String.IsNullOrEmpty(settings.DisplayedContentTypes)) {
+            if (settings != null && !string.IsNullOrEmpty(settings.DisplayedContentTypes))
+            {
                 types = settings.DisplayedContentTypes;
             }
 
             IEnumerable<ContentTypeDefinition> contentTypes;
-            if (!String.IsNullOrEmpty(types)) {
+            if (!string.IsNullOrEmpty(types))
+            {
                 var rawTypes = types.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 contentTypes = _contentDefinitionManager
                     .ListTypeDefinitions()
                     .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)) || rawTypes.Contains(x.Name))
                     .ToArray();
             }
-            else {
+            else
+            {
                 contentTypes = GetListableTypes(false).ToList();
             }
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var query = Services.ContentManager.Query(VersionOptions.Latest, contentTypes.Select(ctd => ctd.Name).ToArray());
 
-            if (!string.IsNullOrEmpty(model.Options.SelectedFilter)) {
+            if (!string.IsNullOrEmpty(model.Options.SelectedFilter))
+            {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.Options.SelectedFilter);
                 if (contentTypeDefinition == null)
                     return HttpNotFound();
@@ -117,8 +133,9 @@ namespace Orchard.ContentPicker.Controllers {
                 query = query.ForType(model.Options.SelectedFilter);
 
             }
-            
-            switch (model.Options.OrderBy) {
+
+            switch (model.Options.OrderBy)
+            {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
@@ -130,7 +147,8 @@ namespace Orchard.ContentPicker.Controllers {
                     break;
             }
 
-            if (!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+            if (!string.IsNullOrWhiteSpace(model.Options.SelectedCulture))
+            {
                 query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
             }
 
@@ -146,7 +164,8 @@ namespace Orchard.ContentPicker.Controllers {
 
             list.AddRange(pageOfContentItems.Select(ci => Services.ContentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            foreach(IShape item in list.Items) {
+            foreach (IShape item in list.Items)
+            {
                 item.Metadata.Type = "ContentPicker";
             }
 
@@ -165,7 +184,8 @@ namespace Orchard.ContentPicker.Controllers {
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }
 
-        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable) {
+        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable)
+        {
             return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Listable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
     }

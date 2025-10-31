@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 using Autofac;
@@ -8,14 +8,17 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Blueprint {
+namespace Orchard.Tests.Environment.Blueprint
+{
     [TestFixture]
-    public class DefaultShellDescriptorCacheTests {
+    public class DefaultShellDescriptorCacheTests
+    {
         private IContainer _container;
         private IAppDataFolder _appDataFolder;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             var clock = new StubClock();
             _appDataFolder = new StubAppDataFolder(clock);
 
@@ -26,14 +29,16 @@ namespace Orchard.Tests.Environment.Blueprint {
         }
 
         [Test]
-        public void FetchReturnsNullForCacheMiss() {
+        public void FetchReturnsNullForCacheMiss()
+        {
             var service = _container.Resolve<IShellDescriptorCache>();
             var descriptor = service.Fetch("No such shell");
             Assert.That(descriptor, Is.Null);
         }
 
         [Test]
-        public void StoreCanBeCalledMoreThanOnceOnTheSameName() {
+        public void StoreCanBeCalledMoreThanOnceOnTheSameName()
+        {
             var service = _container.Resolve<IShellDescriptorCache>();
             var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
             service.Store("Hello", descriptor);
@@ -44,7 +49,8 @@ namespace Orchard.Tests.Environment.Blueprint {
         }
 
         [Test]
-        public void SecondCallUpdatesData() {
+        public void SecondCallUpdatesData()
+        {
             var service = _container.Resolve<IShellDescriptorCache>();
             var descriptor1 = new ShellDescriptor { SerialNumber = 6655321 };
             service.Store("Hello", descriptor1);
@@ -56,17 +62,19 @@ namespace Orchard.Tests.Environment.Blueprint {
         }
 
         [Test]
-        public void AllDataWillRoundTrip() {
+        public void AllDataWillRoundTrip()
+        {
             var service = _container.Resolve<IShellDescriptorCache>();
 
-            var descriptor = new ShellDescriptor {
+            var descriptor = new ShellDescriptor
+            {
                 SerialNumber = 6655321,
-                Features = new[] { 
+                Features = new[] {
                     new ShellFeature { Name = "f2"},
                     new ShellFeature { Name = "f4"},
                 },
-                Parameters = new[] { 
-                    new ShellParameter {Component = "p1", Name = "p2",Value = "p3"}, 
+                Parameters = new[] {
+                    new ShellParameter {Component = "p1", Name = "p2",Value = "p3"},
                     new ShellParameter {Component = "p4",Name = "p5", Value = "p6"},
                 },
             };
@@ -83,11 +91,14 @@ namespace Orchard.Tests.Environment.Blueprint {
         }
     }
 
-    static class DataContractExtensions {
-        public static string ToDataString<T>(this T obj) {
+    static class DataContractExtensions
+    {
+        public static string ToDataString<T>(this T obj)
+        {
             var serializer = new DataContractSerializer(typeof(ShellDescriptor));
             var writer = new StringWriter();
-            using (var xmlWriter = XmlWriter.Create(writer)) {
+            using (var xmlWriter = XmlWriter.Create(writer))
+            {
                 serializer.WriteObject(xmlWriter, obj);
             }
             return writer.ToString();

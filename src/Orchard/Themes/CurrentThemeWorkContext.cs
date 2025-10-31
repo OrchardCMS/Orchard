@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using Orchard.Mvc;
-using Orchard.Mvc.Extensions;
 
 namespace Orchard.Themes
 {
@@ -17,7 +16,8 @@ namespace Orchard.Themes
 
         public Func<WorkContext, T> Get<T>(string name)
         {
-            if (name == "CurrentTheme") {
+            if (name == "CurrentTheme")
+            {
                 var context = _httpContextAccessor.Current();
                 var currentTheme = context != null && context.Request != null
                     ? _themeManager.GetRequestTheme(context.Request.RequestContext)

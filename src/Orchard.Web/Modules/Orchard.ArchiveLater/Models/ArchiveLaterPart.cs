@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 
-namespace Orchard.ArchiveLater.Models {
-    public class ArchiveLaterPart : ContentPart {
-        private readonly LazyField<DateTime?> _scheduledArchiveUtc = new LazyField<DateTime?>();
-        public LazyField<DateTime?> ScheduledArchiveUtc { get { return _scheduledArchiveUtc; } }
+namespace Orchard.ArchiveLater.Models
+{
+    public class ArchiveLaterPart : ContentPart
+    {
+        public LazyField<DateTime?> ScheduledArchiveUtc { get; } = new LazyField<DateTime?>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -6,8 +6,10 @@ using Autofac.Builder;
 using Autofac.Core;
 using Castle.DynamicProxy;
 
-namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
-    public class DynamicProxyContext {
+namespace Orchard.Environment.AutofacUtil.DynamicProxy2
+{
+    public class DynamicProxyContext
+    {
         const string ProxyContextKey = "Orchard.Environment.AutofacUtil.DynamicProxy2.DynamicProxyContext.ProxyContextKey";
         const string InterceptorServicesKey = "Orchard.Environment.AutofacUtil.DynamicProxy2.DynamicProxyContext.InterceptorServicesKey";
 
@@ -18,7 +20,8 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
         /// Static method to resolve the context for a component registration. The context is set
         /// by using the registration builder extension method EnableDynamicProxy(context).
         /// </summary>
-        public static DynamicProxyContext From(IComponentRegistration registration) {
+        public static DynamicProxyContext From(IComponentRegistration registration)
+        {
             object value;
             if (registration.Metadata.TryGetValue(ProxyContextKey, out value))
                 return value as DynamicProxyContext;
@@ -31,7 +34,8 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
         /// </summary>
         public void EnableDynamicProxy<TLimit, TConcreteReflectionActivatorData, TRegistrationStyle>(
             IRegistrationBuilder<TLimit, TConcreteReflectionActivatorData, TRegistrationStyle> registrationBuilder)
-            where TConcreteReflectionActivatorData : ConcreteReflectionActivatorData {
+            where TConcreteReflectionActivatorData : ConcreteReflectionActivatorData
+        {
 
             // associate this context. used later by static DynamicProxyContext.From() method.
             registrationBuilder.WithMetadata(ProxyContextKey, this);
@@ -41,9 +45,11 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
                 registrationBuilder.ActivatorData.ConstructorFinder, this);
 
             // when component is being resolved, this even handler will place the array of appropriate interceptors as the first argument
-            registrationBuilder.OnPreparing(e => {
+            registrationBuilder.OnPreparing(e =>
+            {
                 object value;
-                if (e.Component.Metadata.TryGetValue(InterceptorServicesKey, out value)) {
+                if (e.Component.Metadata.TryGetValue(InterceptorServicesKey, out value))
+                {
                     var interceptorServices = (IEnumerable<Service>)value;
                     var interceptors = interceptorServices.Select(service => e.Context.ResolveService(service)).Cast<IInterceptor>().ToArray();
                     var parameter = new PositionalParameter(0, interceptors);
@@ -56,12 +62,14 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
         /// Called indirectly from the InterceptedBy extension method.
         /// Adds services to the componenent's list of interceptors, activating the need for dynamic proxy
         /// </summary>
-        public void AddInterceptorService(IComponentRegistration registration, Service service) {
+        public void AddInterceptorService(IComponentRegistration registration, Service service)
+        {
             AddProxy(registration.Activator.LimitType);
 
             var interceptorServices = Enumerable.Empty<Service>();
             object value;
-            if (registration.Metadata.TryGetValue(InterceptorServicesKey, out value)) {
+            if (registration.Metadata.TryGetValue(InterceptorServicesKey, out value))
+            {
                 interceptorServices = (IEnumerable<Service>)value;
             }
 
@@ -72,12 +80,14 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
         /// <summary>
         /// Ensures that a proxy has been generated for the particular type in this context
         /// </summary>
-        public void AddProxy(Type type) {
+        public void AddProxy(Type type)
+        {
             Type proxyType;
             if (_cache.TryGetValue(type, out proxyType))
                 return;
 
-            lock (_cache) {
+            lock (_cache)
+            {
                 if (_cache.TryGetValue(type, out proxyType))
                     return;
 
@@ -88,7 +98,8 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
         /// <summary>
         /// Determines if a proxy has been generated for the given type, and returns it.
         /// </summary>
-        public bool TryGetProxy(Type type, out Type proxyType) {
+        public bool TryGetProxy(Type type, out Type proxyType)
+        {
             return _cache.TryGetValue(type, out proxyType);
         }
 

@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using Orchard.Events;
 
-namespace Orchard.Localization.Conditions {
+namespace Orchard.Localization.Conditions
+{
 
-    public interface IConditionProvider : IEventHandler {
+    public interface IConditionProvider : IEventHandler
+    {
         void Evaluate(dynamic evaluationContext);
     }
 
@@ -13,40 +15,47 @@ namespace Orchard.Localization.Conditions {
     {
         private readonly WorkContext _workContext;
 
-        public CultureConditionProvider(WorkContext workContext) {
+        public CultureConditionProvider(WorkContext workContext)
+        {
             _workContext = workContext;
         }
-        
+
         public void Evaluate(dynamic evaluationContext)
         {
-            if (String.Equals(evaluationContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(evaluationContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase))
+            {
                 ProcessCultureCode(evaluationContext);
             }
 
-            if (String.Equals(evaluationContext.FunctionName, "culturelcid", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(evaluationContext.FunctionName, "culturelcid", StringComparison.OrdinalIgnoreCase))
+            {
                 ProcessCultureId(evaluationContext);
             }
 
-            if (String.Equals(evaluationContext.FunctionName, "cultureisrtl", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(evaluationContext.FunctionName, "cultureisrtl", StringComparison.OrdinalIgnoreCase))
+            {
                 ProcessCurrentCultureIsRtl(evaluationContext);
             }
 
-            if (String.Equals(evaluationContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(evaluationContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase))
+            {
                 ProcessLanguageCode(evaluationContext);
             }
         }
 
-        private void ProcessCurrentCultureIsRtl(dynamic ruleContext) {
+        private void ProcessCurrentCultureIsRtl(dynamic ruleContext)
+        {
             var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
-            var isRtl = ((object[]) ruleContext.Arguments)
+            var isRtl = ((object[])ruleContext.Arguments)
                 .Cast<bool>()
                 .SingleOrDefault();
 
-            ruleContext.Result = (isRtl == currentUserCulture.TextInfo.IsRightToLeft);
+            ruleContext.Result = isRtl == currentUserCulture.TextInfo.IsRightToLeft;
         }
 
-        private void ProcessCultureCode(dynamic ruleContext) {
+        private void ProcessCultureCode(dynamic ruleContext)
+        {
             var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
             ruleContext.Result = ((object[])ruleContext.Arguments)
@@ -55,7 +64,8 @@ namespace Orchard.Localization.Conditions {
                 .Any(c => c.Name == currentUserCulture.Name);
         }
 
-        private void ProcessLanguageCode(dynamic ruleContext) {
+        private void ProcessLanguageCode(dynamic ruleContext)
+        {
             var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
             ruleContext.Result = ((object[])ruleContext.Arguments)
@@ -64,7 +74,8 @@ namespace Orchard.Localization.Conditions {
                 .Any(c => c.Name == currentUserCulture.TwoLetterISOLanguageName);
         }
 
-        private void ProcessCultureId(dynamic ruleContext) {
+        private void ProcessCultureId(dynamic ruleContext)
+        {
             var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
             ruleContext.Result = ((object[])ruleContext.Arguments)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
@@ -6,14 +6,17 @@ using Orchard.Logging;
 using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Roles {
-    public class DefaultRoleUpdater : IFeatureEventHandler {
+namespace Orchard.Roles
+{
+    public class DefaultRoleUpdater : IFeatureEventHandler
+    {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
 
         public DefaultRoleUpdater(
             IRoleService roleService,
-            IEnumerable<IPermissionProvider> permissionProviders) {
+            IEnumerable<IPermissionProvider> permissionProviders)
+        {
             _roleService = roleService;
             _permissionProviders = permissionProviders;
 
@@ -22,52 +25,66 @@ namespace Orchard.Roles {
 
         public ILogger Logger { get; set; }
 
-        void IFeatureEventHandler.Installing(Feature feature) {
+        void IFeatureEventHandler.Installing(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Installed(Feature feature) {
+        void IFeatureEventHandler.Installed(Feature feature)
+        {
             AddDefaultRolesForFeature(feature);
         }
 
-        void IFeatureEventHandler.Enabling(Feature feature) {
+        void IFeatureEventHandler.Enabling(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Enabled(Feature feature) {
+        void IFeatureEventHandler.Enabled(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Disabling(Feature feature) {
+        void IFeatureEventHandler.Disabling(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Disabled(Feature feature) {
+        void IFeatureEventHandler.Disabled(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Uninstalling(Feature feature) {
+        void IFeatureEventHandler.Uninstalling(Feature feature)
+        {
         }
 
-        void IFeatureEventHandler.Uninstalled(Feature feature) {
+        void IFeatureEventHandler.Uninstalled(Feature feature)
+        {
         }
 
-        public void AddDefaultRolesForFeature(Feature feature) {
+        public void AddDefaultRolesForFeature(Feature feature)
+        {
             var featureName = feature.Descriptor.Id;
 
             // when another module is being enabled, locate matching permission providers
             var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Id == featureName);
 
-            if (providersForEnabledModule.Any()) {
+            if (providersForEnabledModule.Any())
+            {
                 Logger.Debug("Configuring default roles for module {0}", featureName);
             }
-            else {
+            else
+            {
                 Logger.Debug("No default roles for module {0}", featureName);
             }
 
-            foreach (var permissionProvider in providersForEnabledModule) {
+            foreach (var permissionProvider in providersForEnabledModule)
+            {
                 // get and iterate stereotypical groups of permissions
                 var stereotypes = permissionProvider.GetDefaultStereotypes();
-                foreach (var stereotype in stereotypes) {
+                foreach (var stereotype in stereotypes)
+                {
 
                     // turn those stereotypes into roles
                     var role = _roleService.GetRoleByName(stereotype.Name);
-                    if (role == null) {
+                    if (role == null)
+                    {
                         Logger.Information("Defining new role {0} for permission stereotype", stereotype.Name);
 
                         _roleService.CreateRole(stereotype.Name);
@@ -86,11 +103,13 @@ namespace Orchard.Roles {
                     // update role if set of permissions has increased
                     var additionalPermissionNames = distinctPermissionNames.Except(currentPermissionNames);
 
-                    if (additionalPermissionNames.Any()) {
-                        foreach (var permissionName in additionalPermissionNames) {
+                    if (additionalPermissionNames.Any())
+                    {
+                        foreach (var permissionName in additionalPermissionNames)
+                        {
                             Logger.Information("Default role {0} granted permission {1}", stereotype.Name, permissionName);
                             _roleService.CreatePermissionForRole(role.Name, permissionName);
-                        }                        
+                        }
                     }
                 }
             }

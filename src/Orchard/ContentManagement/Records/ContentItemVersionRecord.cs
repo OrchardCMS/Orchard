@@ -1,9 +1,12 @@
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.Data.Conventions;
 
-namespace Orchard.ContentManagement.Records {
-    public class ContentItemVersionRecord {
-        public ContentItemVersionRecord() {
+namespace Orchard.ContentManagement.Records
+{
+    public class ContentItemVersionRecord
+    {
+        public ContentItemVersionRecord()
+        {
             Infoset = new Infoset();
         }
 
