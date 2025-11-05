@@ -37,5 +37,53 @@ namespace Orchard.Search.Helpers
         {
             return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
         }
+
+        public static string MergeSearchFields(IDictionary<string, string[]> existingSearchFields, IDictionary<string, string[]> searchFieldsToAdd)
+        {
+            var mergedSearchFields = new Dictionary<string, string[]>();
+
+            foreach (var searchFieldsToAddKey in searchFieldsToAdd.Keys)
+            {
+                var mergedSearchDocumentIndexes = Enumerable.Empty<string>();
+
+                if (existingSearchFields.TryGetValue(searchFieldsToAddKey, out var mergedSearchDocumentIndexesArray))
+                {
+                    var existingDocumentIndexes = existingSearchFields[searchFieldsToAddKey];
+
+                    var documentIndexesToAdd = searchFieldsToAdd[searchFieldsToAddKey];
+
+                    foreach (var documentIndexToAdd in documentIndexesToAdd)
+                    {
+                        if (!existingDocumentIndexes.Contains(documentIndexToAdd))
+                        {
+                            mergedSearchDocumentIndexes = mergedSearchDocumentIndexes
+                                .Concat(mergedSearchDocumentIndexesArray.Append(documentIndexToAdd))
+                                .Distinct();
+                        }
+                    }
+                }
+
+                if (mergedSearchDocumentIndexes.Any() && mergedSearchDocumentIndexesArray.Any())
+                {
+                    mergedSearchFields.Add(searchFieldsToAddKey,
+                        mergedSearchDocumentIndexes.Any() ? mergedSearchDocumentIndexes.ToArray() : mergedSearchDocumentIndexesArray);
+                }
+
+                if (!mergedSearchFields.ContainsKey(searchFieldsToAddKey))
+                {
+                    mergedSearchFields.Add(searchFieldsToAddKey, searchFieldsToAdd[searchFieldsToAddKey]);
+                }
+            }
+
+            foreach (var existingSearchFieldsToAdd in existingSearchFields.Keys)
+            {
+                if (!mergedSearchFields.ContainsKey(existingSearchFieldsToAdd))
+                {
+                    mergedSearchFields.Add(existingSearchFieldsToAdd, existingSearchFields[existingSearchFieldsToAdd]);
+                }
+            }
+
+            return SerializeSearchFields(mergedSearchFields);
+        }
     }
 }
