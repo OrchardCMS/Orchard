@@ -13,26 +13,6 @@ using Orchard.Security;
 
 namespace Orchard.Data
 {
-
-    public class SessionLocator : ISessionLocator
-    {
-        private readonly ITransactionManager _transactionManager;
-
-        public SessionLocator(ITransactionManager transactionManager)
-        {
-            _transactionManager = transactionManager;
-            Logger = NullLogger.Instance;
-        }
-
-        public ILogger Logger { get; set; }
-
-        public ISession For(Type entityType)
-        {
-            Logger.Debug("Acquiring session for {0}", entityType);
-            return _transactionManager.GetSession();
-        }
-    }
-
     public class TransactionManager : ITransactionManager, IDisposable
     {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
