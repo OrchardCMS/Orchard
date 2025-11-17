@@ -87,7 +87,9 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators
                 var stub = shapeHelper.Stub(Foo: string.Join(",", part.Foo));
                 if (!string.IsNullOrWhiteSpace(displayType))
                     stub.Metadata.Type = string.Format("{0}.{1}", stub.Metadata.Type, displayType);
-                return ContentShape(stub).Location("TopMeta");
+                return ContentShape("Parts_Stub", () => {
+                    return string.Empty;
+                }).Location("TopMeta");
 
                 //var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 //if (displayType.StartsWith("Summary"))
