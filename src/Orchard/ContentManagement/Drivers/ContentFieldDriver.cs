@@ -306,22 +306,6 @@ namespace Orchard.ContentManagement.Drivers
             return shapeFactory.Create(shapeType);
         }
 
-        [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model)
-        {
-            return new ContentTemplateResult(model, null, Prefix).Location(Zone);
-        }
-        [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model, string template)
-        {
-            return new ContentTemplateResult(model, template, Prefix).Location(Zone);
-        }
-        [Obsolete]
-        public ContentTemplateResult ContentFieldTemplate(object model, string template, string prefix)
-        {
-            return new ContentTemplateResult(model, template, prefix).Location(Zone);
-        }
-
         public CombinedResult Combined(params DriverResult[] results)
         {
             return new CombinedResult(results);
