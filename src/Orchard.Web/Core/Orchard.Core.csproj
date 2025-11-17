@@ -219,7 +219,6 @@
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Navigation\Migrations.cs" />
-    <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
     <Compile Include="Common\Handlers\BodyPartHandler.cs" />
