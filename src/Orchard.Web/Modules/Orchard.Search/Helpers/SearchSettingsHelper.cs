@@ -38,40 +38,22 @@ namespace Orchard.Search.Helpers
             return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
         }
 
+        /// <summary>
+        /// Merging the existing search indexes with their search fields by keeping the existing search indexes
+        /// and their search fields, but replacing the search fields of the existing search indexes.
+        /// </summary>
+        /// <param name="existingSearchFields">The existing search indexes with their search fields.</param>
+        /// <param name="searchFieldsToAdd">The new search indexes with their search fields to import.</param>
+        /// <returns>The merged search indexes with their search fields.</returns>
         public static string MergeSearchFields(IDictionary<string, string[]> existingSearchFields, IDictionary<string, string[]> searchFieldsToAdd)
         {
             var mergedSearchFields = new Dictionary<string, string[]>();
 
-            foreach (var searchFieldsToAddKey in searchFieldsToAdd.Keys)
+            foreach (var newSearchFieldsToAdd in searchFieldsToAdd.Keys)
             {
-                var mergedSearchDocumentIndexes = Enumerable.Empty<string>();
-
-                if (existingSearchFields.TryGetValue(searchFieldsToAddKey, out var mergedSearchDocumentIndexesArray))
+                if (!mergedSearchFields.ContainsKey(newSearchFieldsToAdd))
                 {
-                    var existingDocumentIndexes = existingSearchFields[searchFieldsToAddKey];
-
-                    var documentIndexesToAdd = searchFieldsToAdd[searchFieldsToAddKey];
-
-                    foreach (var documentIndexToAdd in documentIndexesToAdd)
-                    {
-                        if (!existingDocumentIndexes.Contains(documentIndexToAdd))
-                        {
-                            mergedSearchDocumentIndexes = mergedSearchDocumentIndexes
-                                .Concat(mergedSearchDocumentIndexesArray.Append(documentIndexToAdd))
-                                .Distinct();
-                        }
-                    }
-                }
-
-                if (mergedSearchDocumentIndexes.Any() && mergedSearchDocumentIndexesArray.Any())
-                {
-                    mergedSearchFields.Add(searchFieldsToAddKey,
-                        mergedSearchDocumentIndexes.Any() ? mergedSearchDocumentIndexes.ToArray() : mergedSearchDocumentIndexesArray);
-                }
-
-                if (!mergedSearchFields.ContainsKey(searchFieldsToAddKey))
-                {
-                    mergedSearchFields.Add(searchFieldsToAddKey, searchFieldsToAdd[searchFieldsToAddKey]);
+                    mergedSearchFields.Add(newSearchFieldsToAdd, searchFieldsToAdd[newSearchFieldsToAdd]);
                 }
             }
 

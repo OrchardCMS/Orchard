@@ -36,7 +36,9 @@ namespace Orchard.Search.Drivers
                     var model = new SearchSettingsIndexViewModel
                     {
                         SelectedIndex = part.SearchIndex,
-                        AvailableIndexes = _indexManager.HasIndexProvider() ? _indexManager.GetSearchIndexProvider().List().ToList() : new List<string>()
+                        AvailableIndexes = _indexManager.HasIndexProvider()
+                            ? _indexManager.GetSearchIndexProvider().List().ToList()
+                            : new List<string>()
                     };
 
                     if (updater != null)
