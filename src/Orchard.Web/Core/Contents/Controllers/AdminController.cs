@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -17,6 +16,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.Settings;
@@ -166,7 +166,7 @@ namespace Orchard.Core.Contents.Controllers
         }
 
         [HttpPost, ActionName("List")]
-        [Mvc.FormValueRequired("submit.Filter")]
+        [FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options)
         {
             var routeValues = ControllerContext.RouteData.Values;
@@ -189,7 +189,7 @@ namespace Orchard.Core.Contents.Controllers
         }
 
         [HttpPost, ActionName("List")]
-        [Mvc.FormValueRequired("submit.BulkEdit")]
+        [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl)
         {
             if (itemIds != null)
@@ -295,14 +295,14 @@ namespace Orchard.Core.Contents.Controllers
         }
 
         [HttpPost, ActionName("Create")]
-        [Mvc.FormValueRequired("submit.Save")]
+        [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(string id, string returnUrl)
         {
             return CreatePOST(id, returnUrl, contentItem => { return false; });
         }
 
         [HttpPost, ActionName("Create")]
-        [Mvc.FormValueRequired("submit.Publish")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl)
         {
 
@@ -381,14 +381,14 @@ namespace Orchard.Core.Contents.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Save")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl)
         {
             return EditPOST(id, returnUrl, contentItem => { return false; });
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Publish")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl)
         {
             var content = _contentManager.Get(id, VersionOptions.Latest);
@@ -414,7 +414,7 @@ namespace Orchard.Core.Contents.Controllers
         /// <param name="returnUrl"></param>
         /// <returns></returns>
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Unpublish")]
+        [FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int id, string returnUrl)
         {
             return Unpublish(id, returnUrl);
@@ -428,7 +428,7 @@ namespace Orchard.Core.Contents.Controllers
         /// <param name="returnUrl"></param>
         /// <returns></returns>
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Delete")]
+        [FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST(int id, string returnUrl)
         {
             return Remove(id, returnUrl);
@@ -621,23 +621,6 @@ namespace Orchard.Core.Contents.Controllers
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
         {
             ModelState.AddModelError(key, errorMessage.ToString());
-        }
-    }
-
-    [Obsolete("Use Orchard.Mvc.FormValueRequiredAttribute instead.")]
-    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute
-    {
-        private readonly string _submitButtonName;
-
-        public FormValueRequiredAttribute(string submitButtonName)
-        {
-            _submitButtonName = submitButtonName;
-        }
-
-        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
-        {
-            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
-            return !string.IsNullOrEmpty(value);
         }
     }
 }

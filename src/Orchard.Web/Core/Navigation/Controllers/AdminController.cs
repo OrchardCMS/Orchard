@@ -287,7 +287,7 @@ namespace Orchard.Core.Navigation.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Publish")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult EditPOST(int id, string returnUrl)
         {
             return EditPOST(id, returnUrl, contentItem =>
@@ -346,7 +346,7 @@ namespace Orchard.Core.Navigation.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Unpublish")]
+        [FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int id) => Unpublish(id);
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart)

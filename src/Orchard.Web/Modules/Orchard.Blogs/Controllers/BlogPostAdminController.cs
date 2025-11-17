@@ -154,7 +154,7 @@ namespace Orchard.Blogs.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Delete")]
+        [FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST(int blogId, int postId, string returnUrl)
         {
             return Delete(blogId, postId);
@@ -180,7 +180,7 @@ namespace Orchard.Blogs.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Unpublish")]
+        [FormValueRequired("submit.Unpublish")]
         public ActionResult EditUnpublishPOST(int blogId, int postId, string returnUrl)
         {
             return Unpublish(blogId, postId);
