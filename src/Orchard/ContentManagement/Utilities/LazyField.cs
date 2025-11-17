@@ -19,12 +19,6 @@ namespace Orchard.ContentManagement.Utilities
             _loader = loader;
         }
 
-        [Obsolete]
-        public void Loader(Func<T, T> loader)
-        {
-            _loader = () => loader(_value);
-        }
-
         public void Setter(Func<T, T> setter)
         {
             _setter = setter;
