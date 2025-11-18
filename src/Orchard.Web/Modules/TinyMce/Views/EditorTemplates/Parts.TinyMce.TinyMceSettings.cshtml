@@ -1,0 +1,10 @@
+﻿@model TinyMce.Models.TinyMceSettingsPart
+
+<fieldset>
+    <legend>@T("TinyMCE")</legend>
+    <div>
+        <label for="@Html.IdFor(m => m.ValidElements)">@T("Valid Elements")</label>
+        @Html.TextBoxFor(m => m.ValidElements, new { @class = "text large" })
+        <span class="hint">@T("By default, TinyMCE sanitizes input and removes all script tags for security. If you want to disable this sanitization, set the value to: \"*[*],script[type|defer|src|language]\". This configuration allows every element with every attribute, and explicitly adds support for script tags including type, defer, src, and language attributes. Be aware that this completely disables HTML sanitization and should only be used in trusted environments. For more information about configuring allowed elements, refer to the TinyMCE documentation: https://www.tiny.cloud/docs/tinymce/6/content-filtering/#valid_elements")</span>
+    </div>
+</fieldset>

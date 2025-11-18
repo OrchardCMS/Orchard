@@ -8,6 +8,7 @@
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
     var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    var validElements = WorkContext.CurrentSite.As<TinyMce.Models.TinyMceSettingsPart>().ValidElements;
     if (!string.IsNullOrWhiteSpace(urlPrefix)) {
         urlPrefix += "/";
     }
@@ -33,6 +34,7 @@
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
     var contenPickerEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.ContentPicker") ? "true" : "false");
     var tokensHtmlFilterEnabled= @(shellDescriptor.Features.Any(x => x.Name == "Orchard.Tokens.HtmlFilter") ? "true" : "false");
+    var validElements = "@validElements";
     var directionality = "@WorkContext.GetTextDirection((IContent)Model.ContentItem)";
     var language = "@Model.Language";
     var autofocus = "@(Model.AutoFocus == true ? ViewData.TemplateInfo.GetFullHtmlFieldId(propertyName) : null)";
