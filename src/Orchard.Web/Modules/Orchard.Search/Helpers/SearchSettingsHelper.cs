@@ -27,28 +27,25 @@ namespace Orchard.Search.Helpers
             return dictionary;
         }
 
-        public static string SerializeSearchFields(IDictionary<string, string[]> value)
-        {
-            var data = string.Join("|", value.Select(x => string.Format("{0}:{1}", x.Key, string.Join(",", x.Value))));
-            return data;
-        }
+        public static string SerializeSearchFields(IDictionary<string, string[]> value) =>
+            string.Join("|", value.Select(x => string.Format("{0}:{1}", x.Key, string.Join(",", x.Value))));
 
-        public static string[] GetSearchFields(this SearchSettingsPart part, string index)
-        {
-            return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
-        }
+        public static string[] GetSearchFields(this SearchSettingsPart part, string index) =>
+            part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
 
         /// <summary>
-        /// Merging the existing search indexes with their search fields by keeping the existing search indexes
-        /// and their search fields, but replacing the search fields of the existing search indexes.
+        /// Merge existing search index settings with those being imported, with the latter taking precedence.
         /// </summary>
-        /// <param name="existingSearchFields">The existing search indexes with their search fields.</param>
-        /// <param name="searchFieldsToAdd">The new search indexes with their search fields to import.</param>
+        /// <param name="existingSearchFields">The existing search indexes with their search fields. The key is the
+        /// index name and the value is the array of field names.</param>
+        /// <param name="searchFieldsToAdd">The new search indexes with their search fields to import. The key is the
+        /// index name and the value is the array of field names.</param>
         /// <returns>The merged search indexes with their search fields.</returns>
         public static string MergeSearchFields(IDictionary<string, string[]> existingSearchFields, IDictionary<string, string[]> searchFieldsToAdd)
         {
             var mergedSearchFields = new Dictionary<string, string[]>();
 
+            // Process new search fields to add first so they take precedence.
             foreach (var newSearchFieldsToAdd in searchFieldsToAdd.Keys)
             {
                 if (!mergedSearchFields.ContainsKey(newSearchFieldsToAdd))
@@ -57,6 +54,7 @@ namespace Orchard.Search.Helpers
                 }
             }
 
+            // Then add existing search fields that are not already present.
             foreach (var existingSearchFieldsToAdd in existingSearchFields.Keys)
             {
                 if (!mergedSearchFields.ContainsKey(existingSearchFieldsToAdd))
