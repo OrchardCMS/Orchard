@@ -4,11 +4,12 @@
 @using Orchard.Localization
 @using Orchard.Mvc.Extensions
 @using TinyMce.Settings
+@using TinyMce.Models
 @{
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
     var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
-    var validElements = WorkContext.CurrentSite.As<TinyMce.Models.TinyMceSettingsPart>().ValidElements;
+    var validElements = WorkContext.CurrentSite.As<TinyMceSettingsPart>().ValidElements;
     if (!string.IsNullOrWhiteSpace(urlPrefix)) {
         urlPrefix += "/";
     }
