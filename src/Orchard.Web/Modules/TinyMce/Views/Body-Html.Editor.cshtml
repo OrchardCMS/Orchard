@@ -3,8 +3,8 @@
 @using Orchard.Environment.Descriptor.Models
 @using Orchard.Localization
 @using Orchard.Mvc.Extensions
-@using TinyMce.Settings
 @using TinyMce.Models
+@using TinyMce.Settings
 @{
     var propertyName = Model.PropertyName != null ? (string)Model.PropertyName : "Text";
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
