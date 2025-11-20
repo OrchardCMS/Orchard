@@ -9,7 +9,7 @@
     
     var awaiting = [];
     
-    $(imeImage).load(function () {
+    $(imeImage).on('load', function () {
         $(imeImage).off('load');
         for (var i = 0; i < awaiting.length; i++) {
             awaiting[i]();

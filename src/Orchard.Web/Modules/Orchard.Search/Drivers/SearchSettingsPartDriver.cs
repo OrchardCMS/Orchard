@@ -5,6 +5,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Search.Helpers;
 using Orchard.Search.Models;
 using Orchard.Search.ViewModels;
 
@@ -35,7 +36,9 @@ namespace Orchard.Search.Drivers
                     var model = new SearchSettingsIndexViewModel
                     {
                         SelectedIndex = part.SearchIndex,
-                        AvailableIndexes = _indexManager.GetSearchIndexProvider().List().ToList()
+                        AvailableIndexes = _indexManager.HasIndexProvider()
+                            ? _indexManager.GetSearchIndexProvider().List().ToList()
+                            : new List<string>()
                     };
 
                     if (updater != null)
@@ -102,7 +105,9 @@ namespace Orchard.Search.Drivers
 
             context.ImportAttribute(part.PartDefinition.Name, "SearchFields", value =>
             {
-                part.Store("SearchFields", value);
+                part.Store(
+                    "SearchFields",
+                    SearchSettingsHelper.MergeSearchFields(part.SearchFields, SearchSettingsHelper.DeserializeSearchFields(value)));
             });
         }
     }
