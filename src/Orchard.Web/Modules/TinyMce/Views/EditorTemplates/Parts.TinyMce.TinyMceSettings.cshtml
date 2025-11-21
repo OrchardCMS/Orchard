@@ -5,8 +5,8 @@
     <div>
         <label for="@Html.IdFor(m => m.ValidElements)">@T("Valid Elements")</label>
         @Html.TextBoxFor(m => m.ValidElements, new { @class = "text large" })
-        <span class="hint">@T("By default, TinyMCE sanitizes input and removes all script tags for security. If you want to disable this sanitization, set the value to: \"*[*],script[type|defer|src|language]\".")</span>
-        <span class="hint">@T("This configuration allows every element with every attribute, and explicitly adds support for script tags including type, defer, src, and language attributes. Be aware that this completely disables HTML sanitization and should only be used in trusted environments.")</span>
-        <span class="hint">@T("For more information about configuring allowed elements, refer to the <a href=\"https://www.tiny.cloud/docs/tinymce/6/content-filtering/#valid_elements\">TinyMCE documentation</a>.")</span>
+        <span class="hint">@T("Refer to the <a href=\"https://www.tiny.cloud/docs/tinymce/6/content-filtering/#valid_elements\">TinyMCE documentation</a> on configuring allowed elements.")</span>
+        <span class="hint">@T("<br/>By default, TinyMCE sanitizes input and removes all script tags for security. To restore the same behavior as prior to Orchard 1.11 instead, set this value to \"*[*],script[type|defer|src|language]\".")</span>
+        <span class="hint">@T("NOTE: This will allow every element with every attribute, and explicitly adds support for script tags, including the type, defer, src, and language attributes. Be aware that this completely disables HTML sanitization and should only be used in trusted environments.")</span>
     </div>
 </fieldset>
