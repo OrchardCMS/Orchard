@@ -313,6 +313,8 @@
     <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\TinyMceSettingsPartHandler.cs" />
+    <Compile Include="Models\TinyMceSettingsPart.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
@@ -381,6 +383,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Views\DefinitionTemplates\ContentLinksSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.TinyMce.TinyMceSettings.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
