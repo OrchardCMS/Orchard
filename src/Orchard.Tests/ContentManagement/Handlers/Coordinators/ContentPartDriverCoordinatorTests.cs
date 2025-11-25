@@ -90,12 +90,6 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators
                 return ContentShape("Parts_Stub", () => {
                     return string.Empty;
                 }).Location("TopMeta");
-
-                //var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                //if (displayType.StartsWith("Summary"))
-                //    return ContentPartTemplate(viewModel, "StubViewModelTerse").Location("TopMeta");
-
-                //return ContentPartTemplate(viewModel).Location("TopMeta");
             }
 
             protected override DriverResult Editor(StubPart part, dynamic shapeHelper)
