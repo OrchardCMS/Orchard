@@ -6,7 +6,7 @@ namespace Orchard.Themes
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ApplyTheme = new Permission { Description = "Apply a Theme", Name = "ApplyTheme" };
+        public static readonly Permission ApplyTheme = new Permission { Description = "Apply a Theme", Name = "ApplyTheme", IsSecurityCritical = true };
 
         public virtual Feature Feature { get; set; }
 
