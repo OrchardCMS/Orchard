@@ -16,6 +16,7 @@ namespace Orchard.Roles.ViewModels
         public IUserRoles UserRoles { get; set; }
         public IList<UserRoleEntry> Roles { get; set; }
         public IList<int> AuthorizedRoleIds { get; set; }
+        public IEnumerable<string> SecurityCriticalPermissions { get; set; }
     }
 
     public class UserRoleEntry
@@ -23,5 +24,6 @@ namespace Orchard.Roles.ViewModels
         public int RoleId { get; set; }
         public string Name { get; set; }
         public bool Granted { get; set; }
+        public IEnumerable<string> Permissions { get; set; }
     }
 }

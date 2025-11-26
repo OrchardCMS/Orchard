@@ -72,14 +72,17 @@ namespace Orchard.Roles.Drivers
                     {
                         RoleId = x.Id,
                         Name = x.Name,
-                        Granted = userRolesPart.Roles.Contains(x.Name)
+                        Granted = userRolesPart.Roles.Contains(x.Name),
+                        Permissions = _roleService.GetPermissionsForRoleByName(x.Name),
                     });
+
                 var model = new UserRolesViewModel
                 {
                     User = userRolesPart.As<IUser>(),
                     UserRoles = userRolesPart,
                     Roles = allRoles.ToList(),
-                    AuthorizedRoleIds = authorizedRoleIds
+                    AuthorizedRoleIds = authorizedRoleIds,
+                    SecurityCriticalPermissions = _roleService.GetSecurityCriticalPermissions()
                 };
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
             });

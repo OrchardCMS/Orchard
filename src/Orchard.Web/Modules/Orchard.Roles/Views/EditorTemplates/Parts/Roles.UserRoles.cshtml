@@ -2,6 +2,10 @@
 @using Orchard.Roles.ViewModels
 @using System.Linq
 
+@{
+    Style.Require("FontAwesome");
+}
+
 @model UserRolesViewModel
 
 <fieldset>
@@ -22,6 +26,12 @@
                     @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)
                 } else {
                     @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted, new { disabled = true })
+                }
+                @foreach (var permission in entry.Permissions) {
+                    if (Model.SecurityCriticalPermissions.Contains(permission)) {
+                        <i class="fa-solid fa-triangle-exclamation" title="@T("This role contains security critical permissions.")"></i>
+                        break;
+                    }
                 }
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
             </div>
