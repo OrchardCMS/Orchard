@@ -148,7 +148,6 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
     <Compile Include="Containers\Extensions\ContentDefinitionManagerExtensions.cs" />
-    <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
     <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
@@ -161,7 +160,6 @@
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
-    <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
     <Compile Include="Containers\Services\ContainerService.cs" />
     <Compile Include="Containers\Services\ListViewProvider.cs" />
     <Compile Include="Containers\Services\ListViewService.cs" />
@@ -219,7 +217,6 @@
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Navigation\Migrations.cs" />
-    <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
     <Compile Include="Common\Handlers\BodyPartHandler.cs" />
@@ -456,7 +453,6 @@
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettingsViewModel.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
-    <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />

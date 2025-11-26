@@ -10,6 +10,7 @@ using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
@@ -101,7 +102,7 @@ namespace Orchard.Templates.Controllers
         }
 
         [HttpPost, ActionName("List")]
-        [Mvc.FormValueRequired("submit.Filter")]
+        [FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options)
         {
             if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))
@@ -127,7 +128,7 @@ namespace Orchard.Templates.Controllers
         }
 
         [HttpPost, ActionName("List")]
-        [Mvc.FormValueRequired("submit.BulkEdit")]
+        [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl)
         {
             if (!Services.Authorizer.Authorize(Permissions.ManageTemplates, T("Not authorized to manage templates")))

@@ -92,7 +92,6 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\LayerCommands.cs" />
     <Compile Include="Commands\WidgetCommands.cs" />
-    <Compile Include="Conditions\LegacyRulesEvaluator.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ControlWrapper.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
@@ -117,14 +116,10 @@
     <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\IWidgetCommandsService.cs" />
-    <Compile Include="Services\RuleManager.cs" />
     <Compile Include="Services\DefaultLayerEvaluationService.cs" />
     <Compile Include="Services\ILayerEvaluationService.cs" />
-    <Compile Include="Services\IRuleManager.cs" />
-    <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
     <Compile Include="Services\LayerResolverSelector.cs" />
-    <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetCommandsService.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />

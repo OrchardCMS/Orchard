@@ -9,12 +9,10 @@ namespace Orchard.SecureSocketsLayer.Filters
     public class SecureSocketsLayersFilter : FilterProvider, IActionFilter
     {
         private readonly ISecureSocketsLayerService _sslService;
-        private readonly IOrchardServices _orchardServices;
 
-        public SecureSocketsLayersFilter(ISecureSocketsLayerService sslService, IOrchardServices orchardServices)
+        public SecureSocketsLayersFilter(ISecureSocketsLayerService sslService)
         {
             _sslService = sslService;
-            _orchardServices = orchardServices;
         }
         public Localizer T { get; set; }
 

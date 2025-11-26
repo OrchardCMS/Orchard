@@ -51,8 +51,6 @@ namespace Orchard.ImportExport.Commands
         [OrchardSwitch]
         public bool Data { get; set; }
         [OrchardSwitch]
-        public string Steps { get; set; }
-        [OrchardSwitch]
         public string Version { get; set; }
         [OrchardSwitch]
         public bool SiteSettings { get; set; }
@@ -90,8 +88,8 @@ namespace Orchard.ImportExport.Commands
         }
 
         [CommandName("export file")]
-        [CommandHelp("export file [/Filename:<path>] [/ConfigFilename:<path>] [/Types:<type-name-1>, ... ,<type-name-n>] [/Metadata:true|false] [/Data:true|false] [/Version:Published|Draft|Latest] [/SiteSettings:true|false] [/Steps:<custom-step-1>, ... ,<custom-step-n>]\r\n\t" + "Create an export file according to the specified options.")]
-        [OrchardSwitches("Filename,ConfigFilename,Types,Metadata,Data,Version,SiteSettings,Steps")]
+        [CommandHelp("export file [/Filename:<path>] [/ConfigFilename:<path>] [/Types:<type-name-1>, ... ,<type-name-n>] [/Metadata:true|false] [/Data:true|false] [/Version:Published|Draft|Latest] [/SiteSettings:true|false]\r\n\t" + "Create an export file according to the specified options.")]
+        [OrchardSwitches("Filename,ConfigFilename,Types,Metadata,Data,Version,SiteSettings")]
         public void ExportFile()
         {
             // Impersonate the Site owner.
@@ -99,7 +97,7 @@ namespace Orchard.ImportExport.Commands
 
             IEnumerable<IExportAction> actions;
 
-            if (!IsAnySwitchDefined("ConfigFilename", "Types", "Metadata", "Version", "SiteSettings", "Steps"))
+            if (!IsAnySwitchDefined("ConfigFilename", "Types", "Metadata", "Version", "SiteSettings"))
             {
                 // Get default configured actions.
                 actions = GetDefaultConfiguration();
@@ -107,7 +105,7 @@ namespace Orchard.ImportExport.Commands
             else
             {
                 // Read config file if specified.
-                var configurationDocument = UpdateExportConfiguration(ReadExportConfigurationFile(ConfigFilename), Types, Metadata, Data, Version, SiteSettings, Steps);
+                var configurationDocument = UpdateExportConfiguration(ReadExportConfigurationFile(ConfigFilename), Types, Metadata, Data, Version, SiteSettings);
 
                 // Get all the steps based on the configuration.
                 actions = _importExportService.ParseExportActions(configurationDocument);
@@ -145,7 +143,7 @@ namespace Orchard.ImportExport.Commands
             return _exportActions;
         }
 
-        private XDocument UpdateExportConfiguration(XDocument configurationDocument, string types, bool metadata, bool data, string version, bool siteSettings, string customSteps)
+        private XDocument UpdateExportConfiguration(XDocument configurationDocument, string types, bool metadata, bool data, string version, bool siteSettings)
         {
             var buildRecipeElement = GetOrCreateElement(configurationDocument.Root, "BuildRecipe");
             var stepsElement = GetOrCreateElement(buildRecipeElement, "Steps");
@@ -180,20 +178,6 @@ namespace Orchard.ImportExport.Commands
             if (siteSettings)
             {
                 GetOrCreateElement(stepsElement, "Settings");
-            }
-
-            if (!string.IsNullOrEmpty(customSteps))
-            {
-                var customStepsList = customSteps.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var customStepName in customStepsList)
-                {
-                    GetOrCreateElement(stepsElement, customStepName);
-                }
-
-                //Still need CustomStepsStep to support older export steps created by users
-                var customStepsElement = GetOrCreateElement(stepsElement, "CustomSteps");
-                customStepsElement.Attr("Steps", customSteps);
             }
 
             return configurationDocument;

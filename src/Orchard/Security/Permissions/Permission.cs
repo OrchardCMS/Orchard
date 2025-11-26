@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Orchard.Security.Permissions
@@ -15,8 +14,5 @@ namespace Orchard.Security.Permissions
         {
             return new Permission { Name = name };
         }
-
-        [Obsolete("This property is not used anywhere, so it shouldn't be referenced.")]
-        public bool RequiresOwnership { get; set; }
     }
 }

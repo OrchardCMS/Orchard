@@ -403,7 +403,6 @@
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
-    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Messaging\Services\DefaultMessageService.cs" />
     <Compile Include="Messaging\Services\IMessageChannel.cs" />
     <Compile Include="Messaging\Services\IMessageChannelProvider.cs" />
@@ -733,10 +732,6 @@
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
     <Compile Include="Mvc\IHttpContextAccessor.cs" />
-    <Compile Include="Messaging\Events\IMessageEventHandler.cs" />
-    <Compile Include="Messaging\Models\MessageContext.cs" />
-    <Compile Include="Messaging\Services\IMessageManager.cs" />
-    <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
@@ -814,7 +809,6 @@
     <Compile Include="Data\SessionConfigurationCache.cs" />
     <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
-    <Compile Include="Data\ISessionLocator.cs" />
     <Compile Include="Data\DataModule.cs" />
     <Compile Include="Data\Orderable.cs" />
     <Compile Include="Environment\DefaultHostContainer.cs" />

@@ -126,7 +126,7 @@ namespace Orchard.Taxonomies.Controllers
         }
 
         [HttpPost, ActionName("Create")]
-        [Mvc.FormValueRequired("submit.Save")]
+        [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(string returnUrl)
         {
             return CreatePOST(returnUrl, contentItem =>
@@ -137,7 +137,7 @@ namespace Orchard.Taxonomies.Controllers
         }
 
         [HttpPost, ActionName("Create")]
-        [Mvc.FormValueRequired("submit.Publish")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string returnUrl)
         {
 
@@ -195,7 +195,7 @@ namespace Orchard.Taxonomies.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Save")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl)
         {
             return EditPOST(id, returnUrl, contentItem =>
@@ -206,7 +206,7 @@ namespace Orchard.Taxonomies.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [Mvc.FormValueRequired("submit.Publish")]
+        [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl)
         {
             var content = _contentManager.Get(id, VersionOptions.Latest);

@@ -136,7 +136,6 @@
     <Compile Include="Services\RecipeStepExecutor.cs" />
     <Compile Include="Services\RecipeStepQueue.cs" />
     <Compile Include="ViewModels\ContentTypeEntry.cs" />
-    <Compile Include="ViewModels\CustomStepEntry.cs" />
     <Compile Include="ViewModels\ContentBuilderStepViewModel.cs" />
     <Compile Include="ViewModels\RecipeResultViewModel.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />

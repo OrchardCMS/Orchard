@@ -147,8 +147,6 @@
     <Compile Include="Services\DefaultEmailMessageChannelSelector.cs" />
     <Compile Include="Services\ISmtpChannel.cs" />
     <Compile Include="Services\SmtpMessageChannel.cs" />
-    <Compile Include="Services\EmailMessageEventHandler.cs" />
-    <Compile Include="Services\EmailMessagingChannel.cs" />
     <Compile Include="Services\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup>
