@@ -6,5 +6,7 @@ namespace Orchard.Roles.ViewModels
     public class RolesIndexViewModel
     {
         public IList<RoleRecord> Rows { get; set; }
+
+        public IEnumerable<string> SecurityCriticalPermissions { get; set; }
     }
 }

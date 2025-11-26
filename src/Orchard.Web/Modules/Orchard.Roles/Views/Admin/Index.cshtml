@@ -1,8 +1,9 @@
 @model RolesIndexViewModel
 @using Orchard.Roles.ViewModels;
-@using Orchard.Utility.Extensions;
+
 @{
     Script.Require("ShapesBase");
+    Style.Require("FontAwesome");
 
     Layout.Title = T("Roles").ToString();
 }
@@ -34,7 +35,16 @@
             @foreach (var row in Model.Rows) {
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
-                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                    <td>
+                        @foreach (var item in row.RolesPermissions) {
+                            if (Model.SecurityCriticalPermissions.Contains(item.Permission.Name)) {
+                                <i class="fa-solid fa-triangle-exclamation" title="@T("This role contains security critical permissions.")"></i>
+                                break;
+                            }
+
+                        }
+                        @Html.ActionLink(row.Name, "Edit", new { row.Id })
+                    </td>
                     <td>
                         <ul class="action-links">
                             <li class="action-link">

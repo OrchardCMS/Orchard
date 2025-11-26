@@ -65,7 +65,11 @@ namespace Orchard.Roles.Controllers
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList() };
+            var model = new RolesIndexViewModel
+            {
+                Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList(),
+                SecurityCriticalPermissions = _roleService.GetSecurityCriticalPermissions()
+            };
 
             return View(model);
         }
