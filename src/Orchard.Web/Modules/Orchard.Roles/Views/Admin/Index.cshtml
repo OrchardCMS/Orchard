@@ -40,14 +40,10 @@
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
                     <td>
                         @Html.ActionLink(row.Name, "Edit", new { row.Id })
-                        @foreach (var item in row.RolesPermissions)
+                        @if (Model.RolesWithSecurityCriticalPermissions[row.Name])
                         {
-                            if (Model.SecurityCriticalPermissions.Contains(item.Permission.Name))
-                            {
-                                <i class="fa-solid fa-triangle-exclamation" style="color: red"
-                                   title="@T("This role contains security critical permissions.")"></i>
-                                break;
-                            }
+                            <i class="fa-solid fa-triangle-exclamation" style="color: red"
+                                title="@T("This role contains security critical permissions.")"></i>
                         }
                     </td>
                     <td>

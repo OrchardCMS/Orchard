@@ -2,19 +2,22 @@
 @using Orchard.Roles.ViewModels
 @using System.Linq
 
+@model UserRolesViewModel
+
 @{
     Style.Require("FontAwesome");
 }
 
-@model UserRolesViewModel
-
 <fieldset>
     <legend>@T("Roles")</legend>
 
-    @if (Model.Roles.Count > 0) {
+    @if (Model.Roles.Count > 0)
+    {
         var index = 0;
-        foreach (var entry in Model.Roles) {
-            if (SystemRoles.GetSystemRoles().Contains(entry.Name)) {
+        foreach (var entry in Model.Roles)
+        {
+            if (SystemRoles.GetSystemRoles().Contains(entry.Name))
+            {
                 continue;
             }
 
@@ -22,23 +25,26 @@
             @Html.Hidden("Roles[" + index + "].Name", entry.Name)
 
             <div>
-                @if (Model.AuthorizedRoleIds.Contains(entry.RoleId)) {
+                @if (Model.AuthorizedRoleIds.Contains(entry.RoleId))
+                {
                     @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)
-                } else {
+                }
+                else
+                {
                     @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted, new { disabled = true })
                 }
                 <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
-                @foreach (var permission in entry.Permissions) {
-                    if (Model.SecurityCriticalPermissions.Contains(permission)) {
-                        <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T("This role contains security critical permissions.")"></i>
-                        break;
-                    }
+                @if (entry.HasSecurityCriticalPermissions)
+                {
+                    <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T("This role contains security critical permissions.")"></i>
                 }
             </div>
 
             index++;
         }
-    } else {
+    }
+    else
+    {
         <p>@T("There are no roles.")</p>
     }
 </fieldset>
