@@ -6,7 +6,14 @@ namespace Orchard.Packaging
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ManagePackages = new Permission { Description = "Manage packages", Name = "ManagePackages", IsSecurityCritical = true };
+        public static readonly Permission ManagePackages =
+            new Permission
+            {
+                Description = "Manage packages",
+                Name = "ManagePackages",
+                IsSecurityCritical = true,
+                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
+            };
 
         public virtual Feature Feature { get; set; }
 

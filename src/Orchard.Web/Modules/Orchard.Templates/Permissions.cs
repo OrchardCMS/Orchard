@@ -6,7 +6,14 @@ namespace Orchard.Templates
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ManageTemplates = new Permission { Description = "Managing Templates", Name = "ManageTemplates", IsSecurityCritical = true };
+        public static readonly Permission ManageTemplates =
+            new Permission
+            {
+                Description = "Managing Templates",
+                Name = "ManageTemplates",
+                IsSecurityCritical = true,
+                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
+            };
 
         public virtual Feature Feature { get; set; }
 

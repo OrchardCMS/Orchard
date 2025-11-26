@@ -6,7 +6,14 @@ namespace Orchard.Modules
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ManageFeatures = new Permission { Description = "Manage Features", Name = "ManageFeatures", IsSecurityCritical = true };
+        public static readonly Permission ManageFeatures =
+            new Permission
+            {
+                Description = "Manage Features",
+                Name = "ManageFeatures",
+                IsSecurityCritical = true,
+                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
+            };
 
         public virtual Feature Feature { get; set; }
 

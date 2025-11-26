@@ -7,9 +7,21 @@ namespace Orchard.Users
     public class Permissions : IPermissionProvider
     {
         public static readonly Permission ManageUsers =
-            new Permission { Description = "Managing Users", Name = "ManageUsers", IsSecurityCritical = true };
+            new Permission
+            {
+                Description = "Managing Users",
+                Name = "ManageUsers",
+                IsSecurityCritical = true,
+                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
+            };
+
         public static readonly Permission ViewUsers =
-            new Permission { Description = "View List of Users", Name = "ViewUsers", ImpliedBy = new[] { ManageUsers } };
+            new Permission
+            {
+                Description = "View List of Users",
+                Name = "ViewUsers",
+                ImpliedBy = new[] { ManageUsers }
+            };
 
         public virtual Feature Feature { get; set; }
 

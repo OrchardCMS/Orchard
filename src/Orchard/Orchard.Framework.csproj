@@ -170,6 +170,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\PermissionsConstants.cs" />
     <Compile Include="ContentManagement\Extensions\DriverResultExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\CloneContentContext.cs" />
     <Compile Include="ContentManagement\IGlobalCriteriaProvider.cs" />
