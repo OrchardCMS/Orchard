@@ -192,6 +192,7 @@
     <Compile Include="Controllers\InfosetController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\MessagingController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\TaxonomyController.cs" />
     <Compile Include="Services\IUpgradeService.cs" />
@@ -204,6 +205,7 @@
     <Content Include="Views\Infoset\Index.cshtml" />
     <Content Include="Views\Media\Index.cshtml" />
     <Content Include="Views\Menu\Index.cshtml" />
+    <Content Include="Views\Messaging\Index.cshtml" />
     <Content Include="Views\Route\Index.cshtml" />
     <Content Include="Views\Taxonomy\Index.cshtml" />
   </ItemGroup>
