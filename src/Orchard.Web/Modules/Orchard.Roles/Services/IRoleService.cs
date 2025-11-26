@@ -14,6 +14,7 @@ namespace Orchard.Roles.Services
         void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions);
         void DeleteRole(int id);
         IDictionary<string, IEnumerable<Permission>> GetInstalledPermissions();
+        IEnumerable<string> GetSecurityCriticalPermissions();
         IEnumerable<string> GetPermissionsForRole(int id);
 
         IEnumerable<string> GetPermissionsForRoleByName(string name);

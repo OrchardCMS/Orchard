@@ -203,6 +203,22 @@ namespace Orchard.Roles.Services
             return installedPermissions;
         }
 
+        public IEnumerable<string> GetSecurityCriticalPermissions()
+        {
+            var securityCriticalPermissions = new List<string>();
+            foreach (var permissionProvider in _permissionProviders)
+            {
+                var permissions = permissionProvider.GetPermissions();
+                foreach (var permission in permissions)
+                {
+                    if (permission.IsSecurityCritical)
+                        securityCriticalPermissions.Add(permission.Name);
+                }
+            }
+
+            return securityCriticalPermissions;
+        }
+
         public IEnumerable<string> GetPermissionsForRole(int id)
         {
             var permissions = new List<string>();
