@@ -73,7 +73,7 @@ namespace Orchard.Roles.Drivers
                         RoleId = x.Id,
                         Name = x.Name,
                         Granted = userRolesPart.Roles.Contains(x.Name),
-                        Permissions = _roleService.GetPermissionsForRoleByName(x.Name),
+                        Permissions = _roleService.GetPermissionsForRoleByName(x.Name)
                     });
 
                 var model = new UserRolesViewModel
