@@ -36,14 +36,14 @@
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
                     <td>
+                        @Html.ActionLink(row.Name, "Edit", new { row.Id })
                         @foreach (var item in row.RolesPermissions) {
                             if (Model.SecurityCriticalPermissions.Contains(item.Permission.Name)) {
-                                <i class="fa-solid fa-triangle-exclamation" title="@T("This role contains security critical permissions.")"></i>
+                                <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T("This role contains security critical permissions.")"></i>
                                 break;
                             }
 
                         }
-                        @Html.ActionLink(row.Name, "Edit", new { row.Id })
                     </td>
                     <td>
                         <ul class="action-links">

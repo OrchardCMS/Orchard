@@ -27,13 +27,13 @@
                 } else {
                     @Html.CheckBox("Roles[" + index + "].Granted", entry.Granted, new { disabled = true })
                 }
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
                 @foreach (var permission in entry.Permissions) {
                     if (Model.SecurityCriticalPermissions.Contains(permission)) {
-                        <i class="fa-solid fa-triangle-exclamation" title="@T("This role contains security critical permissions.")"></i>
+                        <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T("This role contains security critical permissions.")"></i>
                         break;
                     }
                 }
-                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Roles[index].Granted)">@entry.Name</label>
             </div>
 
             index++;

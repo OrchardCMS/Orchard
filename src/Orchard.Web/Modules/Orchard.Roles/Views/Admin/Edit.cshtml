@@ -24,7 +24,7 @@
         <legend>@T("Permissions")</legend>
         
         <p>@T("Allow - Permission is granted explicitly.")</p>
-        <p>@T("Effective Permission is implied by a higher level permission, or explicitly granted.")</p>
+        <p>@T("Effective - Permission is implied by a higher level permission, or explicitly granted.")</p>
 
         @foreach (var category in Model.RoleCategoryPermissions.Keys) {
         <fieldset>
@@ -45,14 +45,14 @@
                 <tr>
                     <td>@T(permission.Description)</td>
                     <td style="width:60px;">
-                        @if (permission.IsSecurityCritical && !string.IsNullOrEmpty(permission.Hint)) {
-                            <i class="fa-solid fa-triangle-exclamation" title="@T(permission.Hint)"></i>
-                        }
                         @if (Model.CurrentPermissions.Contains(permission.Name)) {
                             <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="checked"/>
                          } 
                          else {
                             <input type="checkbox" value="true" name="Checkbox.@permission.Name"/>
+                        }
+                        @if (permission.IsSecurityCritical && !string.IsNullOrEmpty(permission.Hint)) {
+                            <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T(permission.Hint)"></i>
                         }
                     </td>    
                     <td style="width:60px;">

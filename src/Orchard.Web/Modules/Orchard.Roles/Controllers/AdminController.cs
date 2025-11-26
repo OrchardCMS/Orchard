@@ -263,9 +263,11 @@ namespace Orchard.Roles.Controllers
                 {
                     RoleId = x.Id,
                     Name = x.Name,
-                    Granted = userRolesPart.Roles.Contains(x.Name)
+                    Granted = userRolesPart.Roles.Contains(x.Name),
+                    Permissions = _roleService.GetPermissionsForRoleByName(x.Name)
                 }).ToList(),
-                AuthorizedRoleIds = authorizedRoleIds
+                AuthorizedRoleIds = authorizedRoleIds,
+                SecurityCriticalPermissions = _roleService.GetSecurityCriticalPermissions()
             };
 
             // this calls the same view used by the driver that lets users with higher
