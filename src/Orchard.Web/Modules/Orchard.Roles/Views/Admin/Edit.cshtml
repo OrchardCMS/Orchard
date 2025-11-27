@@ -64,9 +64,7 @@
                                 @if (permission.IsSecurityCritical)
                                 {
                                     <i class="fa-solid fa-triangle-exclamation" style="color: red"
-                                       title="@(string.IsNullOrEmpty(permission.Hint)
-                                            ? T("This permission could allow a user to elevate their other permissions. Grant it with extreme consideration.")
-                                            : T(permission.Hint))"></i>
+                                       title="@T("This permission could allow a user to elevate their other permissions. Grant it with extreme consideration.")"></i>
                                 }
                             </td>
                             <td style="width:60px;">

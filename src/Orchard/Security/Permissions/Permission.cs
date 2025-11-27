@@ -16,8 +16,6 @@ namespace Orchard.Security.Permissions
         /// </summary>
         public bool IsSecurityCritical { get; set; }
 
-        public string Hint { get; set; }
-
         public static Permission Named(string name)
         {
             return new Permission { Name = name };
