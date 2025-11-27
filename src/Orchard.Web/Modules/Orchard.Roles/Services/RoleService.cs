@@ -203,6 +203,9 @@ namespace Orchard.Roles.Services
             return installedPermissions;
         }
 
+        public IEnumerable<string> GetSecurityCriticalPermissions() =>
+            _permissionProviders.SelectMany(pp => pp.GetPermissions().Where(p => p.IsSecurityCritical)).Select(p => p.Name);
+
         public IEnumerable<string> GetPermissionsForRole(int id)
         {
             var permissions = new List<string>();

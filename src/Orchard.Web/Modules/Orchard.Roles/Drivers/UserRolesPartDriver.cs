@@ -67,20 +67,22 @@ namespace Orchard.Roles.Drivers
                 {
                     return null;
                 }
-                var allRoles = _allRoles.Value
-                    .Select(x => new UserRoleEntry
-                    {
-                        RoleId = x.Id,
-                        Name = x.Name,
-                        Granted = userRolesPart.Roles.Contains(x.Name)
-                    });
+
+                var securityCriticalPermissions = _roleService.GetSecurityCriticalPermissions().ToHashSet();
                 var model = new UserRolesViewModel
                 {
                     User = userRolesPart.As<IUser>(),
                     UserRoles = userRolesPart,
-                    Roles = allRoles.ToList(),
-                    AuthorizedRoleIds = authorizedRoleIds
+                    Roles = _allRoles.Value.Select(role => new UserRoleEntry
+                    {
+                        RoleId = role.Id,
+                        Name = role.Name,
+                        Granted = userRolesPart.Roles.Contains(role.Name),
+                        HasSecurityCriticalPermissions = role.RolesPermissions.Any(p => securityCriticalPermissions.Contains(p.Permission.Name))
+                    }).ToList(),
+                    AuthorizedRoleIds = authorizedRoleIds,
                 };
+
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
             });
 

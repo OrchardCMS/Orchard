@@ -1,14 +1,17 @@
+@using Orchard.Roles.ViewModels
+
 @model RolesIndexViewModel
-@using Orchard.Roles.ViewModels;
-@using Orchard.Utility.Extensions;
+
 @{
     Script.Require("ShapesBase");
+    Style.Require("FontAwesome");
 
     Layout.Title = T("Roles").ToString();
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary();
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="Select1" name="roleActions">
@@ -31,18 +34,28 @@
                     <th scope="col"></th>
                 </tr>
             </thead>
-            @foreach (var row in Model.Rows) {
+            @foreach (var row in Model.Rows)
+            {
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
-                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                    <td>
+                        @Html.ActionLink(row.Name, "Edit", new { row.Id })
+                        @if (Model.RolesWithSecurityCriticalPermissions[row.Name])
+                        {
+                            <i class="fa-solid fa-triangle-exclamation" style="color: red"
+                                title="@T("This role contains security critical permissions.")"></i>
+                        }
+                    </td>
                     <td>
                         <ul class="action-links">
                             <li class="action-link">
                                 @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
                             </li>
-                            @if (row.Name != "Administrator") {
+                            @if (row.Name != "Administrator")
+                            {
                                 <li class="action-link">
-                                    <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
+                                    <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.RawUrl})"
+                                       itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                                 </li>
                             }
                         </ul>

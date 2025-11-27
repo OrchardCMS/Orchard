@@ -65,7 +65,16 @@ namespace Orchard.Roles.Controllers
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList() };
+            var securityCriticalPermissions = _roleService.GetSecurityCriticalPermissions().ToHashSet();
+            var roles = _roleService.GetRoles().OrderBy(r => r.Name).ToList();
+
+            var model = new RolesIndexViewModel
+            {
+                Rows = roles,
+                RolesWithSecurityCriticalPermissions = roles.ToDictionary(
+                    role => role.Name,
+                    role => role.RolesPermissions.Any(p => securityCriticalPermissions.Contains(p.Permission.Name)))
+            };
 
             return View(model);
         }
@@ -250,18 +259,21 @@ namespace Orchard.Roles.Controllers
             {
                 return new HttpUnauthorizedResult();
             }
+
+            var securityCriticalPermissions = _roleService.GetSecurityCriticalPermissions().ToHashSet();
             // create the ViewModel used to manage a user's roles
             var model = new UserRolesViewModel
             {
                 User = userRolesPart.As<IUser>(),
                 UserRoles = userRolesPart,
-                Roles = allRoles.Select(x => new UserRoleEntry
+                Roles = allRoles.Select(role => new UserRoleEntry
                 {
-                    RoleId = x.Id,
-                    Name = x.Name,
-                    Granted = userRolesPart.Roles.Contains(x.Name)
+                    RoleId = role.Id,
+                    Name = role.Name,
+                    Granted = userRolesPart.Roles.Contains(role.Name),
+                    HasSecurityCriticalPermissions = role.RolesPermissions.Any(p => securityCriticalPermissions.Contains(p.Permission.Name))
                 }).ToList(),
-                AuthorizedRoleIds = authorizedRoleIds
+                AuthorizedRoleIds = authorizedRoleIds,
             };
 
             // this calls the same view used by the driver that lets users with higher

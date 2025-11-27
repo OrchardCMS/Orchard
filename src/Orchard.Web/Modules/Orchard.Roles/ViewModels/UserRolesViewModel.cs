@@ -23,5 +23,6 @@ namespace Orchard.Roles.ViewModels
         public int RoleId { get; set; }
         public string Name { get; set; }
         public bool Granted { get; set; }
+        public bool HasSecurityCriticalPermissions { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace Orchard.Core.Settings
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ManageSettings = new Permission { Description = "Manage Settings", Name = "ManageSettings" };
+        public static readonly Permission ManageSettings = new Permission { Description = "Manage Settings", Name = "ManageSettings", IsSecurityCritical = true };
 
         public virtual Feature Feature { get; set; }
 
