@@ -12,7 +12,7 @@ namespace Orchard.Security.Permissions
         public IEnumerable<Permission> ImpliedBy { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the permission is security critical.
+        /// Indicates whether this permission could allow a user to elevate their other permissions.
         /// </summary>
         public bool IsSecurityCritical { get; set; }
 
