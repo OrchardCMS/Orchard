@@ -10,14 +10,7 @@ namespace Orchard.Security
     {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
-        public static readonly Permission SiteOwner =
-            new Permission
-            {
-                Name = "SiteOwner",
-                Description = "Site Owners Permission",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
+        public static readonly Permission SiteOwner = new Permission { Name = "SiteOwner", Description = "Site Owners Permission", IsSecurityCritical = true };
 
         public Feature Feature
         {

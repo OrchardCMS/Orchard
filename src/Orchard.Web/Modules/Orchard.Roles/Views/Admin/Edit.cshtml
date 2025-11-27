@@ -61,9 +61,12 @@
                                 {
                                     <input type="checkbox" value="true" name="Checkbox.@permission.Name" />
                                 }
-                                @if (permission.IsSecurityCritical && !string.IsNullOrEmpty(permission.Hint))
+                                @if (permission.IsSecurityCritical)
                                 {
-                                    <i class="fa-solid fa-triangle-exclamation" style="color: red" title="@T(permission.Hint)"></i>
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: red"
+                                       title="@(string.IsNullOrEmpty(permission.Hint)
+                                            ? T("This permission could allow a user to elevate their other permissions. Grant it with extreme consideration.")
+                                            : T(permission.Hint))"></i>
                                 }
                             </td>
                             <td style="width:60px;">

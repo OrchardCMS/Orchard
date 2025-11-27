@@ -12,24 +12,8 @@ namespace Orchard.Roles
     {
         private readonly IRepository<RoleRecord> _roleRepository;
 
-        public static readonly Permission ManageRoles =
-            new Permission
-            {
-                Description = "Managing Roles",
-                Name = "ManageRoles",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
-
-        public static readonly Permission AssignRoles =
-            new Permission
-            {
-                Description = "Assign Roles",
-                Name = "AssignRoles",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint,
-                ImpliedBy = new[] { ManageRoles }
-            };
+        public static readonly Permission ManageRoles = new Permission { Description = "Managing Roles", Name = "ManageRoles", IsSecurityCritical = true, };
+        public static readonly Permission AssignRoles = new Permission { Description = "Assign Roles", Name = "AssignRoles", IsSecurityCritical = true, ImpliedBy = new[] { ManageRoles } };
 
         public virtual Feature Feature { get; set; }
 

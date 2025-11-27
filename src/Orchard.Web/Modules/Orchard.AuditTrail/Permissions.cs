@@ -6,41 +6,10 @@ namespace Orchard.AuditTrail
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission ViewAuditTrail =
-            new Permission
-            {
-                Description = "View audit trail",
-                Name = "ViewAuditTrail",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
-
-        public static readonly Permission ManageAuditTrailSettings =
-            new Permission
-            {
-                Description = "Manage audit trail settings",
-                Name = "ManageAuditTrailSettings",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
-
-        public static readonly Permission ImportAuditTrail =
-            new Permission
-            {
-                Description = "Import audit trail",
-                Name = "ImportAuditTrail",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
-
-        public static readonly Permission ManageClientIpAddressSettings =
-            new Permission
-            {
-                Description = "Manage client IP address settings",
-                Name = "ManageClientIpAddressSettings",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
+        public static readonly Permission ViewAuditTrail = new Permission { Description = "View audit trail", Name = "ViewAuditTrail", IsSecurityCritical = true };
+        public static readonly Permission ManageAuditTrailSettings = new Permission { Description = "Manage audit trail settings", Name = "ManageAuditTrailSettings", IsSecurityCritical = true };
+        public static readonly Permission ImportAuditTrail = new Permission { Description = "Import audit trail", Name = "ImportAuditTrail", IsSecurityCritical = true };
+        public static readonly Permission ManageClientIpAddressSettings = new Permission { Description = "Manage client IP address settings", Name = "ManageClientIpAddressSettings", IsSecurityCritical = true };
 
         public virtual Feature Feature { get; set; }
 

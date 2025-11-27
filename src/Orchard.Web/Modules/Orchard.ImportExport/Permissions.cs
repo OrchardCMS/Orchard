@@ -6,23 +6,8 @@ namespace Orchard.ImportExport
 {
     public class Permissions : IPermissionProvider
     {
-        public static readonly Permission Import =
-            new Permission
-            {
-                Description = "Import Data",
-                Name = "Import",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
-
-        public static readonly Permission Export =
-            new Permission
-            {
-                Description = "Export Data",
-                Name = "Export",
-                IsSecurityCritical = true,
-                Hint = PermissionsConstants.SecurityCriticalPermissionDefaultHint
-            };
+        public static readonly Permission Import = new Permission { Description = "Import Data", Name = "Import", IsSecurityCritical = true };
+        public static readonly Permission Export = new Permission { Description = "Export Data", Name = "Export", IsSecurityCritical = true };
 
         public virtual Feature Feature { get; set; }
 
