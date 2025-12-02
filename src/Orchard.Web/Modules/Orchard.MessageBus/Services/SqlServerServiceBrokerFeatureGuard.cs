@@ -24,7 +24,7 @@ namespace Orchard.MessageBus.Services
     public class SqlServerServiceBrokerFeatureGuard : FilterProvider, IFeatureEventHandler, IActionFilter
     {
         private const string FeatureId = "Orchard.MessageBus.SqlServerServiceBroker";
-        private const string TempDataKey = "Orchard.MessageBus.SqlServerServiceBroker.TempData";
+        private const string TempDataKey = FeatureId + ".TempData";
 
         private readonly ShellSettings _shellSettings;
         private readonly IFeatureManager _featureManager;
