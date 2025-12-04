@@ -97,6 +97,8 @@ namespace Orchard.UI.Resources
 
         public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes)
         {
+            if (string.IsNullOrEmpty(url)) return;
+
             if (!string.IsNullOrEmpty(condition))
             {
                 if (condition == NotIE)
