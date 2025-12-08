@@ -130,6 +130,7 @@
     <Compile Include="Services\IHostNameProvider.cs" />
     <Compile Include="Services\MessageBusNotificationProvider.cs" />
     <Compile Include="Handler\MessageBusHandler.cs" />
+    <Compile Include="Services\SqlServerServiceBrokerFeatureGuard.cs" />
     <Compile Include="SqlServerBrokerMigrations.cs" />
     <Compile Include="Models\MessageRecord.cs" />
     <Compile Include="Services\DefaultMessageBus.cs" />
