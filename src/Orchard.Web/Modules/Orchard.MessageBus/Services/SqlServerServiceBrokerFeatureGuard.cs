@@ -12,14 +12,13 @@ using Orchard.UI.Notify;
 namespace Orchard.MessageBus.Services
 {
     /// <summary>
-    /// Prevents the SQL Server Service Broker feature from being enabled for tenants that are not using
-    /// Microsoft SQL Server as their database provider.
+    /// Prevents the SQL Server Service Broker feature from being enabled for tenants that are not using Microsoft SQL
+    /// Server as their database provider.
     /// </summary>
     /// <remarks>
-    /// The implementation is hackish but there seems to be no other way: if it would use <see cref="Orchard.UI.Notify.INotifier"/>
-    /// it wouldn't work since <see cref="Orchard.UI.Notify.NotifyFilter"/> that writes out notifications to TempData 
-    /// runs before feature events are raised. Thus we have to manually add the messages to TempData, just as the filter 
-    /// would do.
+    /// The implementation is hackish but there seems to be no other way: if it would use <see cref="INotifier"/> it
+    /// wouldn't work since <see cref="NotifyFilter"/> that writes out notifications to TempData runs before feature
+    /// events are raised. Thus we have to manually add the messages to TempData, just as the filter would do.
     /// </remarks>
     public class SqlServerServiceBrokerFeatureGuard : FilterProvider, IFeatureEventHandler, IActionFilter
     {
@@ -82,7 +81,6 @@ namespace Orchard.MessageBus.Services
 
         public void Uninstalling(Feature feature) { }
 
-
         public void Uninstalled(Feature feature) { }
 
         private void AddNotification(LocalizedString message, NotifyType notifyType = NotifyType.Warning)
@@ -92,12 +90,7 @@ namespace Orchard.MessageBus.Services
             if (tempDataDictionary == null) return;
 
             ((TempDataDictionary)tempDataDictionary)["messages"] +=
-                notifyType.ToString() +
-                ":" +
-                message.Text +
-                System.Environment.NewLine +
-                "-" +
-                System.Environment.NewLine;
+                $"{notifyType}:{message.Text}{System.Environment.NewLine}-{System.Environment.NewLine}";
         }
     }
 }
