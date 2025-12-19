@@ -128,7 +128,7 @@ namespace Orchard.Projections.Services
             var queryRecord = _queryRepository.Get(queryId) ?? throw new ArgumentException("queryId");
 
             // Prepare tokens.
-            Dictionary<string, object> tokens = new Dictionary<string, object>();
+            var tokens = new Dictionary<string, object>();
             if (part != null)
             {
                 tokens.Add("Content", part.ContentItem);
@@ -151,17 +151,11 @@ namespace Orchard.Projections.Services
         {
             var availableSortCriteria = DescribeSortCriteria().ToList();
 
-            var queryRecord = _queryRepository.Get(queryId);
-
-            if (queryRecord == null)
-            {
-                throw new ArgumentException("queryId");
-            }
-
+            var queryRecord = _queryRepository.Get(queryId) ?? throw new ArgumentException("queryId");
             var contentItems = new List<ContentItem>();
 
             // Prepare tokens.
-            Dictionary<string, object> tokens = new Dictionary<string, object>();
+            var tokens = new Dictionary<string, object>();
             if (part != null)
             {
                 tokens.Add("Content", part.ContentItem);
@@ -186,7 +180,8 @@ namespace Orchard.Projections.Services
                 return Enumerable.Empty<ContentItem>();
             }
 
-            var groupQuery = _contentManager.HqlQuery().Where(alias => alias.Named("ci"), x => x.InG("Id", ids));
+            var version = queryRecord.VersionScope.ToVersionOptions();
+            var groupQuery = _contentManager.HqlQuery().ForVersion(version).Where(alias => alias.Named("ci"), x => x.InG("Id", ids));
 
             // Iterate over each sort criteria to apply the alterations to the query object.
             foreach (var sortCriterion in queryRecord.SortCriteria.OrderBy(s => s.Position))
@@ -200,8 +195,8 @@ namespace Orchard.Projections.Services
                     Tokens = tokens
                 };
 
-                string category = sortCriterion.Category;
-                string type = sortCriterion.Type;
+                var category = sortCriterion.Category;
+                var type = sortCriterion.Type;
 
                 // Find specific sort criterion.
                 var descriptor = availableSortCriteria
@@ -255,8 +250,8 @@ namespace Orchard.Projections.Services
                         Tokens = tokens
                     };
 
-                    string category = filter.Category;
-                    string type = filter.Type;
+                    var category = filter.Category;
+                    var type = filter.Type;
 
                     // Find specific filter.
                     var descriptor = availableFilters
@@ -287,8 +282,8 @@ namespace Orchard.Projections.Services
                         Tokens = tokens
                     };
 
-                    string category = sortCriterion.Category;
-                    string type = sortCriterion.Type;
+                    var category = sortCriterion.Category;
+                    var type = sortCriterion.Type;
 
                     // Find specific sort criterion.
                     var descriptor = availableSortCriteria
