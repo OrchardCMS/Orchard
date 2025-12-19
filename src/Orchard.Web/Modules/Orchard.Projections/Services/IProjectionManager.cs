@@ -5,6 +5,7 @@ using Orchard.Projections.Descriptors.Filter;
 using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.Property;
 using Orchard.Projections.Descriptors.SortCriterion;
+using Orchard.Projections.Models;
 
 namespace Orchard.Projections.Services
 {
@@ -22,6 +23,11 @@ namespace Orchard.Projections.Services
 
         IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0);
         IEnumerable<ContentItem> GetContentItems(int queryId, ContentPart part, int skip = 0, int count = 0);
+
+        IEnumerable<IHqlQuery> GetContentQueries(
+            QueryPartRecord queryRecord,
+            IEnumerable<SortCriterionRecord> sortCriteria,
+            Dictionary<string, object> tokens);
 
         int GetCount(int queryId);
         int GetCount(int queryId, ContentPart part);
