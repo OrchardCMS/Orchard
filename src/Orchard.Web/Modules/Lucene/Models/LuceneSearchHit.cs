@@ -38,13 +38,19 @@ namespace Lucene.Models
         public string GetString(string name)
         {
             var field = _doc.GetField(name);
-            return field == null ? null : field.StringValue;
+            return field?.StringValue;
         }
 
         public DateTime GetDateTime(string name)
         {
             var field = _doc.GetField(name);
             return field == null ? DateTime.MinValue : DateTools.StringToDate(field.StringValue);
+        }
+
+        public DateTime? GetNullableDateTime(string name)
+        {
+            var field = _doc.GetField(name);
+            return field == null ? default(DateTime?) : DateTools.StringToDate(field.StringValue);
         }
     }
 }
