@@ -1,0 +1,9 @@
+@using Orchard.ContentManagement
+@using Orchard.Users
+
+@if (Authorizer.Authorize(Permissions.ManageUsers, (IContent)Model.ContentItem))
+{
+    <fieldset class="publish-button">
+        <button class="primaryAction" type="submit" name="submit.Publish" value="submit.Publish">@T("Publish")</button>
+    </fieldset>
+}
