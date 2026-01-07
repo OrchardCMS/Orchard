@@ -10,6 +10,8 @@ namespace Orchard.AuditTrail.ViewModels
         {
             SelectedContentItems = new List<RemovedContentItemViewModel>(0);
         }
+
+        public string FilterContentType { get; set; }
         public RecycleBinCommand? RecycleBinCommand { get; set; }
         public IList<RemovedContentItemViewModel> SelectedContentItems { get; set; }
         public IPageOfItems<ContentItem> ContentItems { get; set; }
