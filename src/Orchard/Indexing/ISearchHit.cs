@@ -11,5 +11,6 @@ namespace Orchard.Indexing
         bool GetBoolean(string name);
         string GetString(string name);
         DateTime GetDateTime(string name);
+        DateTime? GetNullableDateTime(string name);
     }
 }
