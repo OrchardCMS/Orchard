@@ -18,12 +18,13 @@ namespace Orchard.Search.Helpers
 
             foreach (var item in items)
             {
-                var pair = item.Split(new[] { ':' }, StringSplitOptions.None);
-                var index = pair[0];
-                var fields = pair[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var pair = item.Split(new[] { ':' });
+                var index = pair[0].Trim();
+                var fields = pair[1].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
 
                 dictionary[index] = fields;
             }
+
             return dictionary;
         }
 
