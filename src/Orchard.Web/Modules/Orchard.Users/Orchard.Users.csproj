@@ -254,6 +254,7 @@
     <Content Include="Views\Account\RequestChallengeEmail.cshtml" />
     <Content Include="Views\Content.UnpublishButton-User.cshtml" />
     <Content Include="Views\Content.DeleteButton-User.cshtml" />
+    <Content Include="Views\Content.PublishButton-User.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\ChangeExpiredPassword.cshtml" />
