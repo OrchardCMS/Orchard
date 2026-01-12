@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: John Murdock, Sébastien Ros
 Website: http://orchardproject.net
-Version: 1.10.4
-OrchardVersion: 1.10.4
+Version: 1.11
+OrchardVersion: 1.11
 Description: Module for processing Media e.g. image resizing
 Category: Media
 Dependencies: Orchard.Forms

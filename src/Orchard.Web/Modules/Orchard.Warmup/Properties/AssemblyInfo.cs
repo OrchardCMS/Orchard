@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 
 
 // CHANGE ON THIS VERSION NEEDS TO BE APPLIED ON WEB.CONFIG TOO 
-[assembly: AssemblyVersion("1.10.4")]
-[assembly: AssemblyFileVersion("1.10.4")]
+[assembly: AssemblyVersion("1.11")]
+[assembly: AssemblyFileVersion("1.11")]
 
