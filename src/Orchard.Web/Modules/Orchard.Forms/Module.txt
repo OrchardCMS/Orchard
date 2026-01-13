@@ -2,8 +2,8 @@ Name: Forms
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://www.orchardproject.net
-Version: 1.10.4
-OrchardVersion: 1.10.4
+Version: 1.11
+OrchardVersion: 1.11
 Description: Provides a system to publish and alter html forms.
 Features:
     Orchard.Forms:

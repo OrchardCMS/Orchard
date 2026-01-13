@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: https://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.10.4
+OrchardVersion: 1.11
 Description: Description for the module
 Features:
     $$ModuleName$$:

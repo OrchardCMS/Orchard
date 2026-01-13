@@ -2,8 +2,8 @@ Name: Projector
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://www.orchardproject.net
-Version: 1.10.4
-OrchardVersion: 1.10.4
+Version: 1.11
+OrchardVersion: 1.11
 Description: Provides methods to control how lists of content items are filtered and displayed
 Category: Content
 Dependencies: Orchard.Tokens, Orchard.Conditions, Orchard.Forms, Feeds, Title
