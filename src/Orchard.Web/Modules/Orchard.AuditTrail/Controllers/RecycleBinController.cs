@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
-using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -28,21 +27,19 @@ namespace Orchard.AuditTrail.Controllers
         private readonly IOrchardServices _services;
         private readonly IRecycleBin _recycleBin;
 
-        public RecycleBinController(IAuthorizer authorizer, IContentManager contentManager, INotifier notifier, IOrchardServices services, IRecycleBin recycleBin)
+        public RecycleBinController(IOrchardServices services, IRecycleBin recycleBin)
         {
-            _authorizer = authorizer;
-            _contentManager = contentManager;
-            _notifier = notifier;
+            _authorizer = services.Authorizer;
+            _contentManager = services.ContentManager;
+            _notifier = services.Notifier;
             _services = services;
             _recycleBin = recycleBin;
-            T = NullLocalizer.Instance;
-            Logger = NullLogger.Instance;
         }
 
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
+        public Localizer T { get; set; } = NullLocalizer.Instance;
+        public ILogger Logger { get; set; } = NullLogger.Instance;
 
-        public ActionResult Index(PagerParameters pagerParameters, AuditTrailOrderBy? orderBy = null)
+        public ActionResult Index(PagerParameters pagerParameters)
         {
             if (!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
@@ -108,10 +105,10 @@ namespace Orchard.AuditTrail.Controllers
         {
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
             var removedContentItems = _recycleBin.List(pager.Page, pager.PageSize);
-            var pagershape = _services.New.Pager(pager).TotalItemCount(removedContentItems.TotalItemCount);
+            var pagerShape = _services.New.Pager(pager).TotalItemCount(removedContentItems.TotalItemCount);
 
             viewModel.ContentItems = removedContentItems;
-            viewModel.Pager = pagershape;
+            viewModel.Pager = pagerShape;
 
             return viewModel;
         }
@@ -143,7 +140,9 @@ namespace Orchard.AuditTrail.Controllers
                 var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
                 if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, contentItem))
                 {
-                    _notifier.Error(T("You need to have permission to delete <strong>{0}</strong> to be able to permanently delete it.", contentItemTitle));
+                    _notifier.Error(
+                        T("You need to have permission to delete <strong>{0}</strong> to be able to permanently delete it.",
+                        contentItemTitle));
                     continue;
                 }
 

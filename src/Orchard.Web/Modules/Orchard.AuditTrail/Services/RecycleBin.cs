@@ -57,13 +57,12 @@ namespace Orchard.AuditTrail.Services
 
         public ContentItem Restore(ContentItem contentItem)
         {
-            var versions = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray();
-            var lastVersion = versions.Last();
+            var lastVersion = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray().Last();
 
-            if (lastVersion.Latest || lastVersion.Published)
-                throw new InvalidOperationException(string.Format("Cannot restore content item with ID {0} ftom the recycle bin, since that item is not deleted", contentItem.Id));
-
-            return _contentManager.Restore(contentItem, VersionOptions.Restore(lastVersion.Number, publish: false));
+            return lastVersion.Latest || lastVersion.Published
+                ? throw new InvalidOperationException(
+                    $"Cannot restore content item with ID {contentItem.Id} from the recycle bin, since that item is not deleted.")
+                : _contentManager.Restore(contentItem, VersionOptions.Restore(lastVersion.Number, publish: false));
         }
 
         private IEnumerable<T> LoadContentItems<T>(IQuery query, QueryHints hints = null) where T : class, IContent
@@ -82,7 +81,7 @@ namespace Orchard.AuditTrail.Services
                 "select max(ContentItemVersionRecord.Id), ContentItemVersionRecord.ContentItemRecord.Id, max(ContentItemVersionRecord.Number) " +
                 "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord ";
 
-            var filter = contentItemIds != null ? "where ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default(string);
+            var filter = contentItemIds != null ? "where ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default;
 
             var group =
                 "group by ContentItemVersionRecord.ContentItemRecord.Id " +
