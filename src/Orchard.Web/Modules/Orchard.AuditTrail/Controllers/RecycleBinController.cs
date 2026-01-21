@@ -73,7 +73,7 @@ namespace Orchard.AuditTrail.Controllers
                 ModelState.AddModelError("RecycleBinCommand", T("Please select an action to execute.").Text);
             }
 
-            if (viewModel.SelectedContentItems == null || !viewModel.SelectedContentItems.Any())
+            if (viewModel.SelectedContentItems == null || !viewModel.SelectedContentItems.Any(item => item.Selected))
             {
                 ModelState.AddModelError("SelectedContentItems", T("Please select one or more content items.").Text);
             }
