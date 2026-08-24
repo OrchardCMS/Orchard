@@ -22,7 +22,7 @@ jobs:
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
 
       - name: Build Precompiled Application
-        run: msbuild Orchard.proj /m /v:minimal /t:Precompiled
+        run: msbuild Orchard.proj /m /v:minimal /t:Precompiled /p:Retries=4 /p:RetryDelayMilliseconds=1000
 
       - name: Generate Release Package Name
         id: package-name
