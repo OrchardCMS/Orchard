@@ -70,6 +70,9 @@ ipch/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 
+# JetBrains Rider user files
+.idea
+
 # CodeRush is a .NET coding add-in
 .cr*/
 
